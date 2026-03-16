@@ -19,20 +19,19 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 
-import jakarta.annotation.Nonnull;
 
 public interface ProgressIndicatorEx extends ProgressIndicator {
   @Deprecated
   @DeprecationInfo("Prefer #addListener(ProgressIndicatorListener)")
-  void addStateDelegate(@Nonnull ProgressIndicatorEx delegate);
+  void addStateDelegate(ProgressIndicatorEx delegate);
 
-  void finish(@Nonnull TaskInfo task);
+  void finish(TaskInfo task);
 
-  boolean isFinished(@Nonnull TaskInfo task);
+  boolean isFinished(TaskInfo task);
 
   boolean wasStarted();
 
   void processFinish();
 
-  void initStateFrom(@Nonnull ProgressIndicator indicator);
+  void initStateFrom(ProgressIndicator indicator);
 }

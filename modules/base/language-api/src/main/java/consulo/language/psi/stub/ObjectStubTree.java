@@ -20,8 +20,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ObjectStubTree<T extends Stub> {
   private String myDebugInfo;
   private final List<T> myPlainList;
 
-  public ObjectStubTree(@Nonnull ObjectStubBase root, boolean withBackReference) {
+  public ObjectStubTree(ObjectStubBase root, boolean withBackReference) {
     myRoot = root;
     myPlainList = enumerateStubs(root);
     if (withBackReference) {
@@ -47,30 +46,30 @@ public class ObjectStubTree<T extends Stub> {
     }
   }
 
-  @Nonnull
+  
   public Stub getRoot() {
     return myRoot;
   }
 
-  @Nonnull
+  
   public List<T> getPlainList() {
     return myPlainList;
   }
 
-  @Nonnull
+  
   List<T> getPlainListFromAllRoots() {
     return getPlainList();
   }
 
   @Deprecated
-  @Nonnull
+  
   public Map<StubIndexKey, Map<Object, int[]>> indexStubTree() {
     return indexStubTree(key -> HashingStrategy.canonical());
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(@Nonnull Function<StubIndexKey<?, ?>, HashingStrategy<?>> keyHashingStrategyFunction) {
+  public Map<StubIndexKey, Map<Object, int[]>> indexStubTree(Function<StubIndexKey<?, ?>, HashingStrategy<?>> keyHashingStrategyFunction) {
     StubIndexSink sink = new StubIndexSink(keyHashingStrategyFunction);
     List<T> plainList = getPlainListFromAllRoots();
     for (int i = 0, plainListSize = plainList.size(); i < plainListSize; i++) {
@@ -82,15 +81,15 @@ public class ObjectStubTree<T extends Stub> {
     return sink.getResult();
   }
 
-  @Nonnull
-  protected List<T> enumerateStubs(@Nonnull Stub root) {
+  
+  protected List<T> enumerateStubs(Stub root) {
     List<T> result = new ArrayList<>();
     //noinspection unchecked
     enumerateStubsInto(root, (List)result);
     return result;
   }
 
-  private static void enumerateStubsInto(@Nonnull Stub root, @Nonnull List<? super Stub> result) {
+  private static void enumerateStubsInto(Stub root, List<? super Stub> result) {
     ((ObjectStubBase)root).id = result.size();
     result.add(root);
     List<? extends Stub> childrenStubs = root.getChildrenStubs();
@@ -101,7 +100,7 @@ public class ObjectStubTree<T extends Stub> {
     }
   }
 
-  public void setDebugInfo(@Nonnull String info) {
+  public void setDebugInfo(String info) {
     ObjectStubTree ref = getStubTree(myRoot);
     if (ref != null) {
       assert ref == this;
@@ -111,7 +110,7 @@ public class ObjectStubTree<T extends Stub> {
   }
 
   @Nullable
-  public static ObjectStubTree getStubTree(@Nonnull ObjectStubBase root) {
+  public static ObjectStubTree getStubTree(ObjectStubBase root) {
     return root.getUserData(STUB_TO_TREE_REFERENCE);
   }
 
@@ -130,13 +129,13 @@ public class ObjectStubTree<T extends Stub> {
     private int myStubIdx;
     private Map<Object, int[]> myProcessingMap;
 
-    private StubIndexSink(@Nonnull Function<StubIndexKey<?, ?>, HashingStrategy<?>> hashingStrategyFunction) {
+    private StubIndexSink(Function<StubIndexKey<?, ?>, HashingStrategy<?>> hashingStrategyFunction) {
       myHashingStrategyFunction = hashingStrategyFunction;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void occurrence(@Nonnull StubIndexKey indexKey, @Nonnull Object value) {
+    public void occurrence(StubIndexKey indexKey, Object value) {
       Map<Object, int[]> map = myResult.get(indexKey);
       if (map == null) {
         map = Maps.newHashMap((HashingStrategy<Object>)myHashingStrategyFunction.apply(indexKey));
@@ -163,7 +162,7 @@ public class ObjectStubTree<T extends Stub> {
       }
     }
 
-    @Nonnull
+    
     public Map<StubIndexKey, Map<Object, int[]>> getResult() {
       myResult.values().forEach(this);
       return myResult;

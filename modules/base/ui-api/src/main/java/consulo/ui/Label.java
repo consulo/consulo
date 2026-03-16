@@ -21,8 +21,7 @@ import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,38 +30,29 @@ import jakarta.annotation.Nullable;
  * For advanced version of label {@link AdvancedLabel}
  */
 public interface Label extends Component, HasMnemonic, HasComponentStyle<LabelStyle>, HasFocus {
-  @Nonnull
   static Label create() {
     return create(LocalizeValue.empty());
   }
-
-  @Nonnull
   @Deprecated
   static Label create(@Nullable String text) {
     return create(LocalizeValue.of(StringUtil.notNullize(text)));
   }
-
-  @Nonnull
-  static Label create(@Nonnull LocalizeValue value) {
+  static Label create(LocalizeValue value) {
     return create(value, LabelOptions.builder().build());
   }
-
-  @Nonnull
-  static Label create(@Nonnull LocalizeValue value, @Nonnull LabelOptions options) {
+  static Label create(LocalizeValue value, LabelOptions options) {
     return UIInternal.get()._Components_label(value, options);
   }
-
-  @Nonnull
   LocalizeValue getText();
 
   @RequiredUIAccess
   @Deprecated
-  default void setText(@Nonnull String text) {
+  default void setText(String text) {
     setText(LocalizeValue.of(text));
   }
 
   @RequiredUIAccess
-  void setText(@Nonnull LocalizeValue text);
+  void setText(LocalizeValue text);
 
   void setImage(@Nullable Image icon);
 

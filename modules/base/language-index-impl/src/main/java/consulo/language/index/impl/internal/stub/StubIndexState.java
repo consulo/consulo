@@ -17,7 +17,6 @@ package consulo.language.index.impl.internal.stub;
 
 import consulo.language.psi.stub.StubIndexKey;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +31,7 @@ public class StubIndexState {
     public StubIndexState() {
     }
 
-    public StubIndexState(@Nonnull Collection<StubIndexKey<?, ?>> keys) {
+    public StubIndexState(Collection<StubIndexKey<?, ?>> keys) {
         for (StubIndexKey key : keys) {
             registeredIndices.add(key.getName());
         }

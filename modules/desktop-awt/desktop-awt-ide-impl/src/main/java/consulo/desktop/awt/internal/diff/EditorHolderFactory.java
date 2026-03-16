@@ -17,12 +17,11 @@ package consulo.desktop.awt.internal.diff;
 
 import consulo.diff.DiffContext;
 import consulo.diff.content.DiffContent;
-import jakarta.annotation.Nonnull;
 
 public abstract class EditorHolderFactory<T extends EditorHolder> {
-  public abstract boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context);
+  public abstract boolean canShowContent(DiffContent content, DiffContext context);
 
-  public abstract boolean wantShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context);
+  public abstract boolean wantShowContent(DiffContent content, DiffContext context);
 
-  public abstract T create(@Nonnull DiffContent content, @Nonnull DiffContext context);
+  public abstract T create(DiffContent content, DiffContext context);
 }

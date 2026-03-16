@@ -20,11 +20,10 @@ import consulo.fileEditor.history.SkipFromDocumentHistory;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 public abstract class DiffVirtualFile extends LightVirtualFile implements VirtualFileWithoutContent, DiffContentVirtualFile, SkipFromDocumentHistory {
-  public DiffVirtualFile(@Nonnull String name) {
+  public DiffVirtualFile(String name) {
     super(name, DiffFileType.INSTANCE, "");
   }
 

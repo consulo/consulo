@@ -31,10 +31,8 @@ import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.Queue;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,7 +46,7 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   private final Set<Module> myModules;
   private final ProjectAwareSearchScope myProjectScope;
 
-  ModuleWithDependentsScope(@Nonnull Module module) {
+  ModuleWithDependentsScope(Module module) {
     super(module.getProject());
     myModule = module;
 
@@ -111,11 +109,11 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return contains(file, false);
   }
 
-  boolean contains(@Nonnull VirtualFile file, boolean myOnlyTests) {
+  boolean contains(VirtualFile file, boolean myOnlyTests) {
     Module moduleOfFile = myProjectFileIndex.getModuleForFile(file);
     if (moduleOfFile == null || !myModules.contains(moduleOfFile)) return false;
     if (myOnlyTests && !myProjectFileIndex.isInTestSourceContent(file)) return false;
@@ -123,12 +121,12 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     return 0;
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return myModules.contains(aModule);
   }
 
@@ -137,7 +135,7 @@ class ModuleWithDependentsScope extends GlobalSearchScope {
     return false;
   }
 
-  @NonNls
+  
   public String toString() {
     return "Module with dependents:" + myModule.getName();
   }

@@ -17,15 +17,14 @@ package consulo.versionControlSystem.log.impl.internal.data.index;
 
 import consulo.versionControlSystem.log.VcsLogStorage;
 import consulo.versionControlSystem.log.impl.internal.data.LoadingDetails;
-import jakarta.annotation.Nonnull;
 
 public class IndexedDetails extends LoadingDetails {
-  @Nonnull
+  
   private final VcsLogIndex myIndex;
   private final int myCommitIndex;
 
-  public IndexedDetails(@Nonnull VcsLogIndex index,
-                        @Nonnull VcsLogStorage storage,
+  public IndexedDetails(VcsLogIndex index,
+                        VcsLogStorage storage,
                         int commitIndex,
                         long loadingTaskIndex) {
     super(() -> storage.getCommitId(commitIndex), loadingTaskIndex);
@@ -33,7 +32,7 @@ public class IndexedDetails extends LoadingDetails {
     myCommitIndex = commitIndex;
   }
 
-  @Nonnull
+  
   @Override
   public String getFullMessage() {
     String message = myIndex.getFullMessage(myCommitIndex);
@@ -41,7 +40,7 @@ public class IndexedDetails extends LoadingDetails {
     return super.getFullMessage();
   }
 
-  @Nonnull
+  
   @Override
   public String getSubject() {
     String message = myIndex.getFullMessage(myCommitIndex);
@@ -51,8 +50,8 @@ public class IndexedDetails extends LoadingDetails {
     return super.getSubject();
   }
 
-  @Nonnull
-  public static String getSubject(@Nonnull String fullMessage) {
+  
+  public static String getSubject(String fullMessage) {
     int subjectEnd = fullMessage.indexOf("\n\n");
     if (subjectEnd > 0) return fullMessage.substring(0, subjectEnd).replace("\n", " ");
     return fullMessage.replace("\n", " ");

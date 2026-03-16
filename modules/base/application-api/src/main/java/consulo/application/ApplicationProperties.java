@@ -18,7 +18,6 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -29,7 +28,7 @@ public final class ApplicationProperties {
   /**
    * @type boolean
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use CONSULO_IN_SANDBOX")
   private static final String IDEA_IS_INTERNAL = "idea.is.internal";
@@ -41,7 +40,7 @@ public final class ApplicationProperties {
   /**
    * @type boolean
    */
-  @Nonnull
+  
   public static final String CONSULO_IN_SANDBOX = "consulo.in.sandbox";
 
   private static final Supplier<Boolean> ourInSandboxValue = LazyValue.notNull(() -> Boolean.getBoolean(CONSULO_IN_SANDBOX));

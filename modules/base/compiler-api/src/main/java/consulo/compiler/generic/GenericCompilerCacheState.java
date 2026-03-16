@@ -15,7 +15,6 @@
  */
 package consulo.compiler.generic;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,23 +24,23 @@ public class GenericCompilerCacheState<Key, SourceState, OutputState> {
     private final SourceState mySourceState;
     private final OutputState myOutputState;
 
-    public GenericCompilerCacheState(@Nonnull Key key, @Nonnull SourceState sourceState, @Nonnull OutputState outputState) {
+    public GenericCompilerCacheState(Key key, SourceState sourceState, OutputState outputState) {
         myKey = key;
         mySourceState = sourceState;
         myOutputState = outputState;
     }
 
-    @Nonnull
+    
     public Key getKey() {
         return myKey;
     }
 
-    @Nonnull
+    
     public SourceState getSourceState() {
         return mySourceState;
     }
 
-    @Nonnull
+    
     public OutputState getOutputState() {
         return myOutputState;
     }

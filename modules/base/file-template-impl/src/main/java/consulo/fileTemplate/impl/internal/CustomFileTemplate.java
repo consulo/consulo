@@ -15,7 +15,6 @@
  */
 package consulo.fileTemplate.impl.internal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -25,35 +24,35 @@ public final class CustomFileTemplate extends FileTemplateBase {
   private String myName;
   private String myExtension;
 
-  public CustomFileTemplate(@Nonnull String name, @Nonnull String extension) {
+  public CustomFileTemplate(String name, String extension) {
     myName = name;
     myExtension = extension;
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
   @Override
-  @Nonnull
+  
   public String getExtension() {
     return myExtension;
   }
 
   @Override
-  public void setExtension(@Nonnull String extension) {
+  public void setExtension(String extension) {
     myExtension = extension;
   }
 
   @Override
-  @Nonnull
+  
   public String getDescription() {
     return "";  // todo: some default description?
   }

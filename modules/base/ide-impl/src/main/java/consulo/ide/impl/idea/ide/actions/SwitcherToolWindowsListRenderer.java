@@ -13,7 +13,6 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
         SpeedSearchBase speedSearch,
         Map<ToolWindow, String> shortcuts,
         boolean pinned,
-        @Nonnull Supplier<Boolean> showEdited
+        Supplier<Boolean> showEdited
     ) {
         mySpeedSearch = speedSearch;
         myShortcuts = shortcuts;
@@ -48,7 +47,7 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
 
     @Override
     @RequiredUIAccess
-    protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
+    protected void customizeCellRenderer(JList<?> list, Object value, int index, boolean selected, boolean hasFocus) {
         setBorder(JBCurrentTheme.listCellBorderFull());
 
         String nameToMatch = "";

@@ -21,7 +21,7 @@ import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**

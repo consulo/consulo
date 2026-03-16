@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.ide;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -30,18 +29,18 @@ import java.util.Enumeration;
 public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
   private final JTree myTree;
 
-  public OccurenceNavigatorSupport(@Nonnull JTree tree) {
+  public OccurenceNavigatorSupport(JTree tree) {
     myTree = tree;
   }
 
   @Nullable
-  protected abstract Navigatable createDescriptorForNode(@Nonnull DefaultMutableTreeNode node);
+  protected abstract Navigatable createDescriptorForNode(DefaultMutableTreeNode node);
 
   /**
    * @return true if this node is an actual occurrence, i.e. the "next/prev occurrence" actions should show this node (as opposed to groups or other nodes which should be skipped)
    * Override in your occurrence support for more efficient impl
    */
-  protected boolean isOccurrenceNode(@Nonnull DefaultMutableTreeNode node) {
+  protected boolean isOccurrenceNode(DefaultMutableTreeNode node) {
     return createDescriptorForNode(node) != null;
   }
 
@@ -69,8 +68,8 @@ public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
     return new OccurenceInfo(editSourceDescriptor, counters.myFoundOccurenceNumber, counters.myOccurencesCount);
   }
 
-  @Nonnull
-  private Counters calculatePosition(@Nonnull DefaultMutableTreeNode foundNode) {
+  
+  private Counters calculatePosition(DefaultMutableTreeNode foundNode) {
     Counters counters = new Counters();
     @SuppressWarnings("unchecked") Enumeration<TreeNode> enumeration = ((DefaultMutableTreeNode)foundNode.getRoot()).preorderEnumeration();
     while (enumeration.hasMoreElements()) {
@@ -108,7 +107,7 @@ public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
     int myOccurencesCount;
   }
 
-  private DefaultMutableTreeNode findNode(@Nonnull JTree tree, boolean forward) {
+  private DefaultMutableTreeNode findNode(JTree tree, boolean forward) {
     TreePath selectionPath = tree.getSelectionPath();
     TreeNode selectedNode = null;
     if (selectionPath != null) {
@@ -117,7 +116,7 @@ public abstract class OccurenceNavigatorSupport implements OccurenceNavigator {
     return findNextNodeAfter(tree, selectedNode, forward);
   }
 
-  public DefaultMutableTreeNode findNextNodeAfter(@Nonnull JTree tree, TreeNode selectedNode, boolean forward) {
+  public DefaultMutableTreeNode findNextNodeAfter(JTree tree, TreeNode selectedNode, boolean forward) {
     if (selectedNode == null) {
       selectedNode = (TreeNode)tree.getModel().getRoot();
     }

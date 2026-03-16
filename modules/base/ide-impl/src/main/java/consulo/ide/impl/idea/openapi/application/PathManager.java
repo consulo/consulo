@@ -22,10 +22,8 @@ import com.sun.jna.TypeMapper;
 import com.sun.jna.platform.FileUtils;
 import consulo.util.lang.Pair;
 import org.jdom.Document;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -44,7 +42,7 @@ public class PathManager {
    * Attempts to detect classpath entry which contains given resource.
    */
   @Nullable
-  public static String getResourceRoot(@Nonnull Class context, String path) {
+  public static String getResourceRoot(Class context, String path) {
     URL url = context.getResource(path);
     if (url == null) {
       url = ClassLoader.getSystemResource(path.substring(1));
@@ -56,7 +54,7 @@ public class PathManager {
    * Attempts to extract classpath entry part from passed URL.
    */
   @Nullable
-  @NonNls
+  
   private static String extractRoot(URL resourceURL, String resourcePath) {
     if (!(StringUtil.startsWithChar(resourcePath, '/') || StringUtil.startsWithChar(resourcePath, '\\'))) {
       //noinspection HardCodedStringLiteral,UseOfSystemOutOrSystemErr
@@ -95,7 +93,7 @@ public class PathManager {
 
 
   @Nullable
-  public static String getJarPathForClass(@Nonnull Class aClass) {
+  public static String getJarPathForClass(Class aClass) {
     String path = "/" + aClass.getName().replace('.', '/') + ".class";
     try {
       CodeSource codeSource = aClass.getProtectionDomain().getCodeSource();
@@ -120,10 +118,10 @@ public class PathManager {
     return resourceRoot != null ? new File(resourceRoot).getAbsolutePath() : null;
   }
 
-  @Nonnull
+  
   public static Collection<String> getUtilClassPath() {
     Class<?>[] classes = {PathManager.class,            // module 'util'
-            Nonnull.class,                // module 'annotations'
+            Nullable.class,               // module 'annotations'
             SystemInfoRt.class,           // module 'util-rt'
             Document.class,               // jDOM
             TypeMapper.class,             // JNA

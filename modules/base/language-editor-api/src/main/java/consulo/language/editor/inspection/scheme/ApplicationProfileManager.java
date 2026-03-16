@@ -19,6 +19,7 @@ import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -35,7 +36,7 @@ public abstract class ApplicationProfileManager implements ProfileManager {
 
   public abstract void fireProfileChanged(Profile profile);
 
-  public abstract void fireProfileChanged(Profile oldProfile, Profile profile, @jakarta.annotation.Nullable NamedScope scope);
+  public abstract void fireProfileChanged(Profile oldProfile, Profile profile, @Nullable NamedScope scope);
 
   public abstract void setRootProfile(String rootProfile);
 

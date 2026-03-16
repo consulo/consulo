@@ -11,8 +11,7 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.fileEditor.*;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.function.Supplier;
@@ -28,7 +27,7 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "forced-soft-wrap";
@@ -37,7 +36,7 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+  public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
     if (!(fileEditor instanceof TextEditor)) return null;
     Editor editor = ((TextEditor)fileEditor).getEditor();
     if (!Boolean.TRUE.equals(editor.getUserData(RealEditor.FORCED_SOFT_WRAPS)) ||

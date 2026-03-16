@@ -23,15 +23,14 @@ import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface PsiParserFacade {
-  @Nonnull
-  static PsiParserFacade getInstance(@Nonnull Project project) {
+  
+  static PsiParserFacade getInstance(Project project) {
     return project.getInstance(PsiParserFacade.class);
   }
   
@@ -42,26 +41,26 @@ public interface PsiParserFacade {
    * @return the created whitespace instance.
    * @throws IncorrectOperationException if the text does not specify a valid whitespace.
    */
-  @Nonnull
-  PsiElement createWhiteSpaceFromText(@Nonnull String s) throws IncorrectOperationException;
+  
+  PsiElement createWhiteSpaceFromText(String s) throws IncorrectOperationException;
 
   /**
    * Creates a line comment for the specified language.
    */
-  @Nonnull
-  PsiComment createLineCommentFromText(@Nonnull LanguageFileType fileType, @Nonnull String text) throws IncorrectOperationException;
+  
+  PsiComment createLineCommentFromText(LanguageFileType fileType, String text) throws IncorrectOperationException;
 
   /**
    * Creates a line comment for the specified language.
    */
-  @Nonnull
-  PsiComment createBlockCommentFromText(@Nonnull Language language, @Nonnull String text) throws IncorrectOperationException;
+  
+  PsiComment createBlockCommentFromText(Language language, String text) throws IncorrectOperationException;
 
   /**
    * Creates a line comment for the specified language or block comment if language doesn't support line ones
    */
-  @Nonnull
-  PsiComment createLineOrBlockCommentFromText(@Nonnull Language lang, @Nonnull String text) throws IncorrectOperationException;
+  
+  PsiComment createLineOrBlockCommentFromText(Language lang, String text) throws IncorrectOperationException;
 
   @Deprecated(forRemoval = true)
   class SERVICE {

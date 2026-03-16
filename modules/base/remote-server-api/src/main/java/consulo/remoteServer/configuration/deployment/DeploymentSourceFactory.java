@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.compiler.artifact.Artifact;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,19 +28,19 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface DeploymentSourceFactory {
-  @Nonnull
+  
   @RequiredReadAction
-  ModuleDeploymentSource createModuleDeploymentSource(@Nonnull Module module);
+  ModuleDeploymentSource createModuleDeploymentSource(Module module);
 
-  @Nonnull
+  
   @RequiredReadAction
-  ModuleDeploymentSource createModuleDeploymentSource(@Nonnull String moduleName);
+  ModuleDeploymentSource createModuleDeploymentSource(String moduleName);
 
-  @Nonnull
+  
   @RequiredReadAction
-  ArtifactDeploymentSource createArtifactDeploymentSource(@Nonnull Artifact artifact);
+  ArtifactDeploymentSource createArtifactDeploymentSource(Artifact artifact);
 
-  @Nonnull
+  
   @RequiredReadAction
-  ArtifactDeploymentSource createArtifactDeploymentSource(@Nonnull String artifactName);
+  ArtifactDeploymentSource createArtifactDeploymentSource(String artifactName);
 }

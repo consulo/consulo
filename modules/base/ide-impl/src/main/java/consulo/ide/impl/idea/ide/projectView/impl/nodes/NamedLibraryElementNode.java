@@ -44,7 +44,6 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +55,6 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         super(project, value, viewSettings);
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
@@ -76,7 +74,7 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return orderEntryContainsFile(getValue().getOrderEntry(), file);
     }
 
@@ -158,7 +156,6 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
         return NavigateOptions.CAN_NAVIGATE_FULL;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenLibrarySettingsText();

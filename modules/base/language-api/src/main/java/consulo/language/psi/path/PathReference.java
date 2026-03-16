@@ -22,8 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -36,17 +35,17 @@ public class PathReference {
   private final String myPath;
   private final Supplier<Image> myIcon;
 
-  public PathReference(@Nonnull String path, @Nonnull Function<PathReference, Image> icon) {
+  public PathReference(String path, Function<PathReference, Image> icon) {
     myPath = path;
     myIcon = LazyValue.nullable(() -> icon.apply(PathReference.this));
   }
 
-  @Nonnull
+  
   public String getPath() {
     return myPath;
   }
 
-  @Nonnull
+  
   public String getTrimmedPath() {
     return trimPath(myPath);
   }

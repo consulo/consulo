@@ -18,21 +18,20 @@ package consulo.versionControlSystem.log.graph;
 import consulo.versionControlSystem.log.graph.GraphLayout;
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.PermanentCommitsInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
 public interface PermanentGraphInfo<CommitId> {
 
-  @Nonnull
+  
   PermanentCommitsInfo<CommitId> getPermanentCommitsInfo();
 
-  @Nonnull
+  
   LinearGraph getLinearGraph();
 
-  @Nonnull
+  
   GraphLayout getPermanentGraphLayout();
 
-  @Nonnull
+  
   Set<Integer> getBranchNodeIds();
 }

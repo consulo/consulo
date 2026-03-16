@@ -16,7 +16,6 @@
 package consulo.execution.ui.console.language;
 
 import consulo.process.ProcessHandler;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,16 +34,16 @@ public class ProcessBackedConsoleExecuteActionHandler extends BaseConsoleExecute
     myProcessHandler = processHandler;
   }
 
-  public void setProcessHandler(@Nonnull ProcessHandler processHandler) {
+  public void setProcessHandler(ProcessHandler processHandler) {
     myProcessHandler = processHandler;
   }
 
   @Override
-  protected void execute(@Nonnull String text, @Nonnull LanguageConsoleView console) {
+  protected void execute(String text, LanguageConsoleView console) {
     processLine(text);
   }
 
-  public void processLine(@Nonnull String line) {
+  public void processLine(String line) {
     sendText(line + "\n");
   }
 

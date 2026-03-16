@@ -18,8 +18,7 @@ package consulo.ide.newModule;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -31,26 +30,26 @@ public class NewModuleContextGroup extends NewModuleContextNode implements Compa
 
   private final Set<NewModuleContextItem> myItems = new TreeSet<>();
 
-  @Nonnull
+  
   private final String myId;
 
-  public NewModuleContextGroup(@Nonnull String id, @Nonnull LocalizeValue name, @Nullable Image image) {
+  public NewModuleContextGroup(String id, LocalizeValue name, @Nullable Image image) {
     super(name, image);
     myId = id;
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
 
   @Override
-  public int compareTo(@Nonnull NewModuleContextGroup o) {
+  public int compareTo(NewModuleContextGroup o) {
     return myId.compareToIgnoreCase(o.myId);
   }
 
-  @Nonnull
-  public NewModuleContextGroup findGroup(@Nonnull String id) {
+  
+  public NewModuleContextGroup findGroup(String id) {
     NewModuleContextGroup group = myGroups.get(id);
     if (group == null) {
       throw new IllegalArgumentException("Group with " + id + " is not registered");
@@ -58,25 +57,25 @@ public class NewModuleContextGroup extends NewModuleContextNode implements Compa
     return group;
   }
 
-  @Nonnull
-  public NewModuleContextGroup addGroup(@Nonnull String id, @Nonnull LocalizeValue name) {
+  
+  public NewModuleContextGroup addGroup(String id, LocalizeValue name) {
     return addGroup(id, name, null);
   }
 
-  @Nonnull
-  public NewModuleContextGroup addGroup(@Nonnull String id, @Nonnull LocalizeValue name, @Nullable Image image) {
+  
+  public NewModuleContextGroup addGroup(String id, LocalizeValue name, @Nullable Image image) {
     return myGroups.computeIfAbsent(id, (s) -> new NewModuleContextGroup(id, name, image));
   }
 
-  public void add(@Nonnull LocalizeValue name, @Nonnull Image icon, NewModuleBuilderProcessor<?> processor) {
+  public void add(LocalizeValue name, Image icon, NewModuleBuilderProcessor<?> processor) {
     myItems.add(new NewModuleContextItem(name, icon, 0, processor));
   }
 
-  public void add(@Nonnull LocalizeValue name, @Nonnull Image icon, int weight, NewModuleBuilderProcessor<?> processor) {
+  public void add(LocalizeValue name, Image icon, int weight, NewModuleBuilderProcessor<?> processor) {
     myItems.add(new NewModuleContextItem(name, icon, weight, processor));
   }
 
-  @Nonnull
+  
   public List<Object> getAll() {
     List<Object> all = new ArrayList<>();
     all.addAll(myGroups.values());

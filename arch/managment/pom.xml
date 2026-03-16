@@ -48,7 +48,7 @@
         <swt.version>3.120.0</swt.version>
         <flatlaf.version>3.7</flatlaf.version>
 
-        <vaadin.flow.version>24.7.3</vaadin.flow.version>
+        <vaadin.flow.version>24.9.13</vaadin.flow.version>
 
         <jackson.version>2.19.0</jackson.version>
 
@@ -57,7 +57,7 @@
 
         <maven.assembly.plugin>3.6.0</maven.assembly.plugin>
         <maven.jar.plugin>3.3.0</maven.jar.plugin>
-        <maven.compiler.plugin>3.13.0</maven.compiler.plugin>
+        <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
         <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
 
@@ -1033,27 +1033,6 @@
                             <goal>instrument</goal>
                         </goals>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>consulo.maven</groupId>
-                <artifactId>notnull-maven-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>production</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>instrument</goal>
-                        </goals>
-                    </execution>
-                    <!--<execution>
-                      <id>test</id>
-                      <phase>process-test-classes</phase>
-                      <goals>
-                        <goal>test-instrument</goal>
-                      </goals>
-                    </execution> -->
                 </executions>
             </plugin>
             <plugin>

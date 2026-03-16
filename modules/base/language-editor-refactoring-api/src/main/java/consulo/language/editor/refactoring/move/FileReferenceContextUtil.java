@@ -26,7 +26,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +53,7 @@ public class FileReferenceContextUtil {
                         new PsiLanguageInjectionHost.InjectedPsiVisitor() {
                             @Override
                             @RequiredReadAction
-                            public void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<PsiLanguageInjectionHost.Shred> places) {
+                            public void visit(PsiFile injectedPsi, List<PsiLanguageInjectionHost.Shred> places) {
                                 encodeFileReferences(injectedPsi);
                             }
                         }

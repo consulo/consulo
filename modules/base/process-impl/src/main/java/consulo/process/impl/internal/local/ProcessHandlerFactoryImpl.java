@@ -24,15 +24,14 @@ import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.local.ProcessHandlerFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 @Singleton
 @ServiceImpl
 public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
-    @Nonnull
+    
     @Override
-    public ProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine, @Nonnull ProcessConsoleType processConsoleType) throws ExecutionException {
+    public ProcessHandler createProcessHandler(GeneralCommandLine commandLine, ProcessConsoleType processConsoleType) throws ExecutionException {
         switch (processConsoleType) {
             case BUILTIN:
                 return new OSProcessHandler(commandLine);
@@ -54,20 +53,20 @@ public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
     }
 
     @Override
-    @Nonnull
-    public OSProcessHandler createColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+    
+    public OSProcessHandler createColoredProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
         return new ColoredProcessHandlerImpl(commandLine);
     }
 
-    @Nonnull
+    
     @Override
-    public ProcessHandler createKillableProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+    public ProcessHandler createKillableProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
         return new KillableProcessHandlerImpl(commandLine, true);
     }
 
-    @Nonnull
+    
     @Override
-    public ProcessHandler createKillableColoredProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+    public ProcessHandler createKillableColoredProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
         return new KillableColoredProcessHandlerImpl(commandLine);
     }
 }

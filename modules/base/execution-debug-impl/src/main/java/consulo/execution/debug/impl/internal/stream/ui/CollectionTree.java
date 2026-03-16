@@ -13,8 +13,7 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.tree.TreePath;
@@ -44,10 +43,10 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
     private boolean myIgnoreInternalSelectionEvents = false;
     private boolean myIgnoreExternalSelectionEvents = false;
 
-    protected CollectionTree(@Nonnull List<TraceElement> traceElements,
-                             @Nonnull GenericEvaluationContext context,
-                             @Nonnull CollectionTreeBuilder collectionTreeBuilder,
-                             @Nonnull String debugName) {
+    protected CollectionTree(List<TraceElement> traceElements,
+                             GenericEvaluationContext context,
+                             CollectionTreeBuilder collectionTreeBuilder,
+                             String debugName) {
         super(context.getProject(), collectionTreeBuilder.getEditorsProvider(), null, XDebuggerActions.INSPECT_TREE_POPUP_GROUP, null);
 
         myDebugName = debugName;
@@ -71,11 +70,11 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
     }
 
     public static CollectionTree create(@Nullable Value streamResult,
-                                        @Nonnull List<TraceElement> traceElements,
-                                        @Nonnull DebuggerCommandLauncher debuggerCommandLauncher,
-                                        @Nonnull GenericEvaluationContext evaluationContext,
-                                        @Nonnull CollectionTreeBuilder collectionTreeBuilder,
-                                        @Nonnull String debugName) {
+                                        List<TraceElement> traceElements,
+                                        DebuggerCommandLauncher debuggerCommandLauncher,
+                                        GenericEvaluationContext evaluationContext,
+                                        CollectionTreeBuilder collectionTreeBuilder,
+                                        String debugName) {
         if (streamResult == null) {
             return new IntermediateTree(traceElements, evaluationContext, collectionTreeBuilder, debugName);
         }
@@ -90,7 +89,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
     }
 
     @Override
-    public @Nullable ColorValue getFileColorForPath(@Nonnull TreePath path) {
+    public @Nullable ColorValue getFileColorForPath(TreePath path) {
         if (isPathHighlighted(path)) {
             Color background = UIUtil.getTreeSelectionBackground(true);
             return COLORS_CACHE.computeIfAbsent(background.getRGB(), rgb -> new LightDarkColorValue(
@@ -108,13 +107,13 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
         myIgnoreInternalSelectionEvents = false;
     }
 
-    public @Nullable Rectangle getRectByValue(@Nonnull TraceElement element) {
+    public @Nullable Rectangle getRectByValue(TraceElement element) {
         TreePath path = myValue2Path.get(element);
         return path == null ? null : getPathBounds(path);
     }
 
     @Override
-    public void highlight(@Nonnull List<TraceElement> elements) {
+    public void highlight(List<TraceElement> elements) {
         clearSelection();
 
         highlightValues(elements);
@@ -124,7 +123,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
     }
 
     @Override
-    public void select(@Nonnull List<TraceElement> elements) {
+    public void select(List<TraceElement> elements) {
         TreePath[] paths = elements.stream().map(myValue2Path::get).toArray(TreePath[]::new);
 
         select(paths);
@@ -138,7 +137,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
     }
 
     @Override
-    public void addSelectionListener(@Nonnull ValuesSelectionListener listener) {
+    public void addSelectionListener(ValuesSelectionListener listener) {
         // TODO: dispose?
         mySelectionDispatcher.addListener(listener);
     }
@@ -150,7 +149,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
 
     public abstract int getItemsCount();
 
-    public void addPaintingListener(@Nonnull PaintingListener listener) {
+    public void addPaintingListener(PaintingListener listener) {
         myPaintingDispatcher.addListener(listener);
     }
 
@@ -160,7 +159,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
         myPaintingDispatcher.getMulticaster().componentPainted();
     }
 
-    private void select(@Nonnull TreePath[] paths) {
+    private void select(TreePath[] paths) {
         if (myIgnoreExternalSelectionEvents) {
             return;
         }
@@ -176,7 +175,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
         myIgnoreExternalSelectionEvents = false;
     }
 
-    private void tryScrollTo(@Nonnull List<TraceElement> elements) {
+    private void tryScrollTo(List<TraceElement> elements) {
         int[] rows = elements.stream().map(myValue2Path::get).filter(Objects::nonNull).mapToInt(this::getRowForPath).sorted().toArray();
         if (rows.length == 0) {
             return;
@@ -198,7 +197,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
         }
     }
 
-    private @Nonnull Rectangle optimizeRowsCountInVisibleRect(@Nonnull int[] rows) {
+    private Rectangle optimizeRowsCountInVisibleRect(int[] rows) {
         // a simple scan-line algorithm to find an optimal subset of visible rows (maximum)
         Rectangle visibleRect = getVisibleRect();
         int height = visibleRect.height;
@@ -249,7 +248,7 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
         return new Rectangle(visibleRect.x, y, visibleRect.width, height);
     }
 
-    private void highlightValues(@Nonnull List<TraceElement> elements) {
+    private void highlightValues(List<TraceElement> elements) {
         myHighlighted = elements.stream().map(myValue2Path::get).collect(Collectors.toSet());
     }
 
@@ -258,17 +257,17 @@ public abstract class CollectionTree extends XDebuggerTree implements TraceConta
         repaint();
     }
 
-    public boolean isHighlighted(@Nonnull TraceElement traceElement) {
+    public boolean isHighlighted(TraceElement traceElement) {
         TreePath path = myValue2Path.get(traceElement);
         return path != null && isPathHighlighted(path);
     }
 
-    private boolean isPathHighlighted(@Nonnull TreePath path) {
+    private boolean isPathHighlighted(TreePath path) {
         return myHighlighted.contains(path) || isPathSelected(path);
     }
 
-    @Nonnull
-    private TreePath getTopPath(@Nonnull TreePath path) {
+    
+    private TreePath getTopPath(TreePath path) {
         TreePath current = path;
         while (current != null && !myPath2Value.containsKey(current)) {
             current = current.getParentPath();

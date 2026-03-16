@@ -29,7 +29,6 @@ import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -42,11 +41,11 @@ import java.util.function.Consumer;
 @Singleton
 @ServiceImpl
 public class ExectutionDebugInternalImpl implements ExectutionDebugInternal {
-    @Nonnull
+    
     @RequiredReadAction
     @Override
     @SuppressWarnings("unchecked")
-    public Image getContentRootIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public Image getContentRootIcon(Project project, VirtualFile file) {
         ProjectFileIndex index = ProjectFileIndex.getInstance(project);
         if (index.isInLibrary(file)) {
             List<OrderEntry> entries = index.getOrderEntriesForFile(file);

@@ -18,7 +18,6 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,49 +32,49 @@ public class RootsAsVirtualFilePointers implements RootProvider {
 
   private final boolean myNoCopyJars;
   private final VirtualFilePointerListener myListener;
-  @Nonnull
+  
   private final Disposable myParent;
 
-  public RootsAsVirtualFilePointers(boolean noCopyJars, VirtualFilePointerListener listener, @Nonnull Disposable parent) {
+  public RootsAsVirtualFilePointers(boolean noCopyJars, VirtualFilePointerListener listener, Disposable parent) {
     myNoCopyJars = noCopyJars;
     myListener = listener;
     myParent = parent;
   }
 
   @Override
-  @Nonnull
-  public VirtualFile[] getFiles(@Nonnull OrderRootType type) {
+  
+  public VirtualFile[] getFiles(OrderRootType type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     return container == null ? VirtualFile.EMPTY_ARRAY : container.getFiles();
   }
 
   @Override
-  @Nonnull
-  public String[] getUrls(@Nonnull OrderRootType type) {
+  
+  public String[] getUrls(OrderRootType type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     return container == null ? ArrayUtil.EMPTY_STRING_ARRAY : container.getUrls();
   }
 
-  public void addRoot(@Nonnull VirtualFile virtualFile, @Nonnull OrderRootType type) {
+  public void addRoot(VirtualFile virtualFile, OrderRootType type) {
     getOrCreateContainer(type).add(virtualFile);
   }
 
-  public void addRoot(@Nonnull String url, @Nonnull OrderRootType type) {
+  public void addRoot(String url, OrderRootType type) {
     getOrCreateContainer(type).add(url);
   }
 
-  public void removeAllRoots(@Nonnull OrderRootType type) {
+  public void removeAllRoots(OrderRootType type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     if (container != null) {
       container.clear();
     }
   }
 
-  public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType type) {
+  public void removeRoot(VirtualFile root, OrderRootType type) {
     removeRoot(root.getUrl(), type);
   }
 
-  public void removeRoot(@Nonnull String url, @Nonnull OrderRootType type) {
+  public void removeRoot(String url, OrderRootType type) {
     VirtualFilePointerContainer container = myRoots.get(type);
     VirtualFilePointer pointer = container == null ? null : container.findByUrl(url);
     if (pointer != null) {
@@ -89,7 +88,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
     }
   }
 
-  public void readExternal(@Nonnull Element element) {
+  public void readExternal(Element element) {
     for (OrderRootType type : OrderRootType.getAllTypes()) {
       read(element, type);
     }
@@ -103,13 +102,13 @@ public class RootsAsVirtualFilePointers implements RootProvider {
     }));
   }
 
-  public void writeExternal(@Nonnull Element element) {
+  public void writeExternal(Element element) {
     for (OrderRootType type : OrderRootType.getSortedRootTypes()) {
       write(element, type);
     }
   }
 
-  public void copyRootsFrom(@Nonnull RootProvider rootContainer) {
+  public void copyRootsFrom(RootProvider rootContainer) {
     removeAllRoots();
     for (OrderRootType rootType : OrderRootType.getAllTypes()) {
       String[] newRoots = rootContainer.getUrls(rootType);
@@ -119,7 +118,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
     }
   }
 
-  private static void setNoCopyJars(@Nonnull String url) {
+  private static void setNoCopyJars(String url) {
     String protocol = VirtualFileManager.extractProtocol(url);
     if (protocol == null) {
       return;
@@ -141,7 +140,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
    * </sourcePath>
    * </roots>
    */
-  private void read(@Nonnull Element roots, @Nonnull OrderRootType type) {
+  private void read(Element roots, OrderRootType type) {
     String sdkRootName = type.getId();
     Element child = sdkRootName == null ? null : roots.getChild(sdkRootName);
     if (child == null) {
@@ -169,7 +168,7 @@ public class RootsAsVirtualFilePointers implements RootProvider {
    * </sourcePath>
    * </roots>
    */
-  private void write(@Nonnull Element roots, @Nonnull OrderRootType type) {
+  private void write(Element roots, OrderRootType type) {
     String sdkRootName = type.getId();
     if (sdkRootName == null) {
       return;
@@ -189,22 +188,22 @@ public class RootsAsVirtualFilePointers implements RootProvider {
   }
 
   @Override
-  public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
+  public void addRootSetChangedListener(RootSetChangedListener listener) {
     throw new RuntimeException();
   }
 
   @Override
-  public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener, @Nonnull Disposable parentDisposable) {
+  public void addRootSetChangedListener(RootSetChangedListener listener, Disposable parentDisposable) {
     throw new RuntimeException();
   }
 
   @Override
-  public void removeRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
+  public void removeRootSetChangedListener(RootSetChangedListener listener) {
     throw new RuntimeException();
   }
 
-  @Nonnull
-  private VirtualFilePointerContainer getOrCreateContainer(@Nonnull OrderRootType rootType) {
+  
+  private VirtualFilePointerContainer getOrCreateContainer(OrderRootType rootType) {
     VirtualFilePointerContainer roots = myRoots.get(rootType);
     if (roots == null) {
       roots = VirtualFilePointerManager.getInstance().createContainer(myParent, myListener);

@@ -17,7 +17,6 @@ package consulo.ui.ex.wizard;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public final class WizardSession<CONTEXT> {
 
   private boolean myFinished;
 
-  public WizardSession(@Nonnull CONTEXT context, @Nonnull List<WizardStep<CONTEXT>> steps) {
+  public WizardSession(CONTEXT context, List<WizardStep<CONTEXT>> steps) {
     myContext = context;
     mySteps = new ArrayList<>(steps);
   }
@@ -46,7 +45,7 @@ public final class WizardSession<CONTEXT> {
     return findNextStepIndex() != -1;
   }
 
-  @Nonnull
+  
   public WizardStep<CONTEXT> next() {
     if (myFinished) {
       throw new IllegalArgumentException("Finished");
@@ -75,7 +74,7 @@ public final class WizardSession<CONTEXT> {
     return step;
   }
 
-  @Nonnull
+  
   public WizardStep<CONTEXT> prev() {
     if (myFinished) {
       throw new IllegalArgumentException("Finished");

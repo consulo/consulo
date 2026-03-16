@@ -22,7 +22,6 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -33,7 +32,7 @@ import java.util.function.Consumer;
 public class CustomOrderEntryTypeExtender implements ExtensionExtender<OrderEntryType> {
   @Override
   @SuppressWarnings("unchecked")
-  public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<OrderEntryType> consumer) {
+  public void extend(ComponentManager componentManager, Consumer<OrderEntryType> consumer) {
     CustomOrderEntryTypeProvider.EP.forEachExtensionSafe((Application)componentManager, it -> {
       consumer.accept(new CustomOrderEntryTypeWrapper<>(it));
     });
@@ -44,7 +43,7 @@ public class CustomOrderEntryTypeExtender implements ExtensionExtender<OrderEntr
     return CustomOrderEntryTypeProvider.EP.hasAnyExtensions(Application.get());
   }
 
-  @Nonnull
+  
   @Override
   public Class<OrderEntryType> getExtensionClass() {
     return OrderEntryType.class;

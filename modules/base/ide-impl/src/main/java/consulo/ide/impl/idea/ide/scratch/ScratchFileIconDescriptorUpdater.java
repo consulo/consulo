@@ -26,7 +26,6 @@ import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -43,7 +42,7 @@ public class ScratchFileIconDescriptorUpdater implements IconDescriptorUpdater {
 
   @RequiredReadAction
   @Override
-  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+  public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
     if (element instanceof PsiFile) {
       VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
       if (virtualFile == null) {

@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,9 +33,9 @@ public interface VersionControlSystemLogInternal {
         return Application.get().getInstance(VersionControlSystemLogInternal.class);
     }
     
-    void showToolTip(@Nonnull JTable table, @Nonnull String text, @Nonnull MouseEvent e);
+    void showToolTip(JTable table, String text, MouseEvent e);
 
-    void showToolTip(@Nonnull JTable myTable, Point point, JComponent tipComponent, boolean now);
+    void showToolTip(JTable myTable, Point point, JComponent tipComponent, boolean now);
 
-    void hideToolTip(@Nonnull MouseEvent e);
+    void hideToolTip(MouseEvent e);
 }

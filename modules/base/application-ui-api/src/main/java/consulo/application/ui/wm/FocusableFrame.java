@@ -17,7 +17,6 @@ package consulo.application.ui.wm;
 
 import consulo.ui.Window;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -25,7 +24,7 @@ import javax.swing.*;
  * @since 24-Feb-22
  */
 public interface FocusableFrame {
-  @Nonnull
+  
   Window getWindow();
 
   default boolean hasFocus() {

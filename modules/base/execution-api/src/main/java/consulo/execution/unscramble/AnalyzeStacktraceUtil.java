@@ -40,8 +40,7 @@ import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,7 +124,7 @@ public class AnalyzeStacktraceUtil {
         }
     }
 
-    public static StacktraceEditorPanel createEditorPanel(Project project, @Nonnull Disposable parentDisposable) {
+    public static StacktraceEditorPanel createEditorPanel(Project project, Disposable parentDisposable) {
         EditorFactory editorFactory = EditorFactory.getInstance();
         Document document = editorFactory.createDocument("");
         Editor editor = editorFactory.createEditor(document, project);
@@ -154,7 +153,7 @@ public class AnalyzeStacktraceUtil {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(Editor.KEY, myEditor);
         }
 
@@ -163,7 +162,7 @@ public class AnalyzeStacktraceUtil {
         }
 
         @RequiredUIAccess
-        public final void setText(@Nonnull String text) {
+        public final void setText(String text) {
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .groupId(this)

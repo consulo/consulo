@@ -25,7 +25,6 @@ import consulo.project.ui.view.SelectInContext;
 import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -36,7 +35,7 @@ import java.util.LinkedHashSet;
 @ExtensionImpl
 public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, DumbAware {
     @Override
-    @Nonnull
+    
     public Collection<SelectInTarget> getSubTargets(SelectInContext context) {
         return ProjectView.getInstance(context.getProject()).getSelectInTargets();
     }
@@ -88,7 +87,7 @@ public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, 
         return 0;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return LocalizeValue.localizeTODO("Project View");

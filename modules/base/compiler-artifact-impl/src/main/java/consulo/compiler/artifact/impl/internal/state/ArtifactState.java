@@ -20,7 +20,6 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
  */
 @Tag("artifact")
 public class ArtifactState {
-  @NonNls public static final String NAME_ATTRIBUTE = "name";
+  public static final String NAME_ATTRIBUTE = "name";
   private String myName;
   private String myOutputPath;
   private String myArtifactType = "plain";

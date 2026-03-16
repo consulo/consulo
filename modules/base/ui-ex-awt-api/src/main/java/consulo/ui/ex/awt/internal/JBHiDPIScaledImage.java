@@ -7,8 +7,7 @@ import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import org.imgscalr.Scalr;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -60,7 +59,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    * @param type   the type
    * @param rm     the rounding mode
    */
-  public JBHiDPIScaledImage(@Nullable Graphics2D g, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+  public JBHiDPIScaledImage(@Nullable Graphics2D g, double width, double height, int type, PaintUtil.RoundingMode rm) {
     this(JBUIScale.sysScale(g), width, height, type, rm);
   }
 
@@ -74,7 +73,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
   /**
    * @see #JBHiDPIScaledImage(GraphicsConfiguration, double, double, int)
    */
-  public JBHiDPIScaledImage(@Nullable JBUI.ScaleContext ctx, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+  public JBHiDPIScaledImage(JBUI.@Nullable ScaleContext ctx, double width, double height, int type, PaintUtil.RoundingMode rm) {
     this(JBUI.sysScale(ctx), width, height, type, rm);
   }
 
@@ -99,11 +98,11 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    * @param rm     the rounding mode to apply when converting width/height to the device space
    * @param type   the type
    */
-  public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+  public JBHiDPIScaledImage(@Nullable GraphicsConfiguration gc, double width, double height, int type, PaintUtil.RoundingMode rm) {
     this(JBUI.sysScale(gc), width, height, type, rm);
   }
 
-  public JBHiDPIScaledImage(double scale, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+  public JBHiDPIScaledImage(double scale, double width, double height, int type, PaintUtil.RoundingMode rm) {
     super(rm.round(width * scale), rm.round(height * scale), type);
     myImage = null;
     myUserWidth = width;
@@ -114,7 +113,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
   /**
    * @see #JBHiDPIScaledImage(Image, double, double, int)
    */
-  public JBHiDPIScaledImage(@Nonnull Image image, int width, int height, int type) {
+  public JBHiDPIScaledImage(Image image, int width, int height, int type) {
     this(image, (double)width, (double)height, type);
   }
 
@@ -127,7 +126,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    * @param height the height in user coordinate space
    * @param type   the type
    */
-  public JBHiDPIScaledImage(@Nonnull Image image, double width, double height, int type) {
+  public JBHiDPIScaledImage(Image image, double width, double height, int type) {
     super(1, 1, type); // a dummy wrapper
     myImage = image;
     myUserWidth = width;
@@ -145,7 +144,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    * @param scaleFactor the scale factor
    * @return scaled instance
    */
-  @Nonnull
+ 
   public JBHiDPIScaledImage scale(double scaleFactor) {
     Image img = myImage == null ? this : myImage;
 
@@ -175,7 +174,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    *
    * @return scaled instance
    */
-  @Nonnull
+ 
   public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight) {
     return scale(targetUserWidth, targetUserHeight, Scalr.Method.QUALITY);
   }
@@ -186,7 +185,7 @@ public final class JBHiDPIScaledImage extends BufferedImage {
    *
    * @return scaled instance
    */
-  @Nonnull
+ 
   public JBHiDPIScaledImage scale(int targetUserWidth, int targetUserHeight, Scalr.Method method) {
     Image img = myImage == null ? this : myImage;
 

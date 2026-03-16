@@ -19,8 +19,7 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -28,7 +27,7 @@ import jakarta.annotation.Nullable;
 public abstract class PomDescriptionProvider implements ElementDescriptionProvider{
   @Override
   @Nullable
-  public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+  public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
     if (element instanceof PomTargetPsiElement) {
       return getElementDescription(((PomTargetPsiElement)element).getTarget(), location);
     }
@@ -36,5 +35,5 @@ public abstract class PomDescriptionProvider implements ElementDescriptionProvid
   }
 
   @Nullable
-  public abstract String getElementDescription(@Nonnull PomTarget element, @Nonnull ElementDescriptionLocation location);
+  public abstract String getElementDescription(PomTarget element, ElementDescriptionLocation location);
 }

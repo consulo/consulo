@@ -18,8 +18,7 @@ package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.Block;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -95,7 +94,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
    *                  {@code null} otherwise
    */
   @Nullable
-  public AbstractBlockWrapper getPrevIndentedSibling(@Nonnull AbstractBlockWrapper current) {
+  public AbstractBlockWrapper getPrevIndentedSibling(AbstractBlockWrapper current) {
     if (myChildren.size() > 10) {
       return getPrevIndentedSiblingFast(current);
     }
@@ -110,7 +109,7 @@ public class CompositeBlockWrapper extends AbstractBlockWrapper {
   }
 
   @Nullable
-  private AbstractBlockWrapper getPrevIndentedSiblingFast(@Nonnull AbstractBlockWrapper current) {
+  private AbstractBlockWrapper getPrevIndentedSiblingFast(AbstractBlockWrapper current) {
     if (myPrevBlockCalculator == null) {
       myPrevBlockCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myChildren);
     }

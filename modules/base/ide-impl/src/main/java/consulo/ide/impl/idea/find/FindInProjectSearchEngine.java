@@ -5,8 +5,7 @@ import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.IdeaIndexBasedFindInProjectSearchEngine;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,13 +25,13 @@ public interface FindInProjectSearchEngine {
    * Constructs a searcher for a given {@param findModel} which serves as a input query.
    */
   @Nullable
-  FindInProjectSearcher createSearcher(@Nonnull FindModel findModel, @Nonnull Project project);
+  FindInProjectSearcher createSearcher(FindModel findModel, Project project);
 
   interface FindInProjectSearcher {
     /**
      * @return files that contain non-trivial search results for corresponding {@link FindModel}.
      */
-    @Nonnull
+    
     Collection<VirtualFile> searchForOccurrences();
 
     /**
@@ -47,6 +46,6 @@ public interface FindInProjectSearchEngine {
      * <p>
      * Called only in case when searcher is not reliable (see {@link FindInProjectSearcher#isReliable()}).
      */
-    boolean isCovered(@Nonnull VirtualFile file);
+    boolean isCovered(VirtualFile file);
   }
 }

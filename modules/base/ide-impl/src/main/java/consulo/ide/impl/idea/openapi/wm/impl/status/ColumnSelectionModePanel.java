@@ -17,7 +17,6 @@ import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -30,7 +29,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
     implements StatusBarWidget.Multiframe, CustomStatusBarWidget, PropertyChangeListener {
     private final TextPanel myTextPanel = new TextPanel();
 
-    public ColumnSelectionModePanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public ColumnSelectionModePanel(Project project, StatusBarWidgetFactory factory) {
         super(project, factory);
         myTextPanel.setVisible(false);
     }
@@ -45,14 +44,14 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
         return new ColumnSelectionModePanel(getProject(), myFactory);
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return myTextPanel;
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         super.install(statusBar);
 
         FocusUtil.addFocusOwnerListener(this, evt -> updateStatus());
@@ -81,17 +80,17 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
     }
 
     @Override
-    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
         updateStatus();
     }
 
     @Override
-    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileClosed(FileEditorManager source, VirtualFile file) {
         updateStatus();
     }
 
     @Override
-    public void propertyChange(@Nonnull PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
         if (EditorEx.PROP_INSERT_MODE.equals(propertyName) || EditorEx.PROP_COLUMN_MODE.equals(propertyName)) {
             updateStatus();
@@ -99,7 +98,7 @@ public class ColumnSelectionModePanel extends EditorBasedWidget
     }
 
     @Override
-    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public void selectionChanged(FileEditorManagerEvent event) {
         updateStatus();
     }
 }

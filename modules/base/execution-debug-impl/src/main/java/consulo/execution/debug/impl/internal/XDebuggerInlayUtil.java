@@ -32,13 +32,12 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
 
 public class XDebuggerInlayUtil {
-  public static void createInlay(@Nonnull Project project, @Nonnull VirtualFile file, int offset, String inlayText) {
+  public static void createInlay(Project project, VirtualFile file, int offset, String inlayText) {
     UIUtil.invokeLaterIfNeeded(() -> {
       FileEditor editor = FileEditorManager.getInstance(project).getSelectedEditor(file);
       if (editor instanceof TextEditor) {
@@ -60,7 +59,7 @@ public class XDebuggerInlayUtil {
     });
   }
 
-  public static void clearInlays(@Nonnull Project project) {
+  public static void clearInlays(Project project) {
     UIUtil.invokeLaterIfNeeded(() -> {
       FileEditor[] editors = FileEditorManager.getInstance(project).getAllEditors();
       for (FileEditor editor : editors) {
@@ -84,7 +83,7 @@ public class XDebuggerInlayUtil {
       myText = "(" + text + ")";
     }
 
-    private static FontInfo getFontInfo(@Nonnull Editor editor) {
+    private static FontInfo getFontInfo(Editor editor) {
       EditorColorsScheme colorsScheme = editor.getColorsScheme();
       FontPreferences fontPreferences = colorsScheme.getFontPreferences();
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
@@ -93,13 +92,13 @@ public class XDebuggerInlayUtil {
     }
 
     @Override
-    public int calcWidthInPixels(@Nonnull Inlay inlay) {
+    public int calcWidthInPixels(Inlay inlay) {
       FontInfo fontInfo = getFontInfo(inlay.getEditor());
       return fontInfo.fontMetrics().stringWidth(myText);
     }
 
     @Override
-    public void paint(@Nonnull Inlay inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+    public void paint(Inlay inlay, Graphics g, Rectangle r, TextAttributes textAttributes) {
       Editor editor = inlay.getEditor();
       TextAttributes attributes = editor.getColorsScheme().getAttributes(DebuggerColors.INLINED_VALUES_EXECUTION_LINE);
       if (attributes == null) return;

@@ -17,8 +17,7 @@ package consulo.task.ui;
 
 import consulo.ui.ex.awt.ValidationInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -30,7 +29,7 @@ public abstract class TaskDialogPanel
 	//@Nls(capitalization = Nls.Capitalization.Title)
 	//public abstract String getName();
 	//
-	@Nonnull
+	
 	public abstract JComponent getPanel();
 
 	@Nullable

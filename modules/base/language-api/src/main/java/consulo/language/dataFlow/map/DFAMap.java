@@ -1,7 +1,7 @@
 package consulo.language.dataFlow.map;
 
 import consulo.language.dataFlow.SetUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 

@@ -16,10 +16,9 @@
 
 package consulo.component.util.config;
 
-import org.jetbrains.annotations.NonNls;
 
 public class IntProperty extends ValueProperty<Integer> {
-  public IntProperty(@NonNls String name, int defaultValue) {
+  public IntProperty(String name, int defaultValue) {
     super(name, defaultValue);
   }
 

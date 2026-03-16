@@ -21,15 +21,14 @@ import consulo.module.content.scope.ModuleSearchScopes;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vojtech Krasa
  */
 public class ExecutionSearchScopeProvider {
-  @Nonnull
-  public static SearchScope createSearchScope(@Nonnull Project project, @Nullable RunProfile runProfile) {
+  
+  public static SearchScope createSearchScope(Project project, @Nullable RunProfile runProfile) {
     Module[] modules = null;
     if (runProfile instanceof SearchScopeProvidingRunProfile) {
       modules = ((SearchScopeProvidingRunProfile)runProfile).getModules();

@@ -9,8 +9,7 @@ import consulo.language.scratch.RootType;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ScratchesNamedScope extends NamedScope {
     public static final String ID = "Scratches and Consoles";
@@ -18,13 +17,13 @@ public class ScratchesNamedScope extends NamedScope {
     public ScratchesNamedScope() {
         super(ID, IdeLocalize.scratchesAndConsoles(), PlatformIconGroup.scopeScratches(), new AbstractPackageSet(IdeLocalize.scratchesAndConsoles().get()) {
             @Override
-            public boolean contains(@Nonnull VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 return ScratchesNamedScope.contains(project, file);
             }
         });
     }
 
-    public static boolean contains(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static boolean contains(Project project, VirtualFile file) {
         RootType rootType = RootType.forFile(file);
         return rootType != null && !(rootType.isHidden() || rootType.isIgnored(project, file));
     }

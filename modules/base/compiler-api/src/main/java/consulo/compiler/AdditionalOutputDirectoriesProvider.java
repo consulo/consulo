@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,6 +29,6 @@ import jakarta.annotation.Nonnull;
 @DeprecationInfo("Use consulo.compiler.ModuleAdditionalOutputDirectoriesProvider")
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface AdditionalOutputDirectoriesProvider {
-    @Nonnull
-    String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);
+    
+    String[] getOutputDirectories(Project project, Module modules);
 }

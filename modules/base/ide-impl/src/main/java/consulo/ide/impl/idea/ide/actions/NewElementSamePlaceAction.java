@@ -20,7 +20,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "NewElementSamePlace")
@@ -30,7 +29,7 @@ public class NewElementSamePlaceAction extends NewElementAction {
         super(actionManager);
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getPopupTitle() {
         return IdeLocalize.titlePopupNewElementSamePlace();

@@ -26,8 +26,7 @@ import consulo.ui.Component;
 import consulo.ui.ex.RelativePoint;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -50,7 +49,7 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
     return mySplitters;
   }
 
-  @Nonnull
+  
   @Override
   public Component getUIContainerComponent() {
     return mySplitters.getUIComponent();
@@ -66,14 +65,14 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
     return null;
   }
 
-  @Nonnull
+  
   @Override
-  public ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point) {
+  public ContentResponse getContentResponse(DockableContent content, RelativePoint point) {
     return null;
   }
 
   @Override
-  public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
+  public void add(DockableContent content, RelativePoint dropTarget) {
 
   }
 
@@ -94,18 +93,18 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
 
   @Nullable
   @Override
-  public Image startDropOver(@Nonnull DockableContent content, RelativePoint point) {
+  public Image startDropOver(DockableContent content, RelativePoint point) {
     return null;
   }
 
   @Nullable
   @Override
-  public Image processDropOver(@Nonnull DockableContent content, RelativePoint point) {
+  public Image processDropOver(DockableContent content, RelativePoint point) {
     return null;
   }
 
   @Override
-  public void resetDropOver(@Nonnull DockableContent content) {
+  public void resetDropOver(DockableContent content) {
 
   }
 

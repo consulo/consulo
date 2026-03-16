@@ -34,10 +34,8 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -54,9 +52,9 @@ import java.util.regex.Pattern;
 @ServiceImpl
 public class LogConsolePreferences extends LogFilterRegistrar {
   private final SortedMap<LogFilter, Boolean> myRegisteredLogFilters = new TreeMap<LogFilter, Boolean>((o1, o2) -> -1);
-  @NonNls
+  
   private static final String FILTER = "filter";
-  @NonNls
+  
   private static final String IS_ACTIVE = "is_active";
 
   public boolean FILTER_ERRORS = false;
@@ -93,7 +91,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   }
 
 
-  public boolean isApplicable(@Nonnull String text, String prevType, boolean checkStandartFilters) {
+  public boolean isApplicable(String text, String prevType, boolean checkStandartFilters) {
     for (LogFilter filter : myRegisteredLogFilters.keySet()) {
       if (myRegisteredLogFilters.get(filter).booleanValue() && !filter.isAcceptable(text)) return false;
     }
@@ -131,7 +129,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
   }
 
   @Nullable
-  public static String getType(@Nonnull String text) {
+  public static String getType(String text) {
     String upcased = StringUtil.toUpperCase(text);
     if (ERROR_PATTERN.matcher(upcased).matches()) return ERROR;
     if (WARNING_PATTERN.matcher(upcased).matches() || WARN_PATTERN.matcher(upcased).matches()) return WARNING;
@@ -148,7 +146,7 @@ public class LogConsolePreferences extends LogFilterRegistrar {
 
   @Override
   public Element getState() {
-    @NonNls Element element = new Element("LogFilters");
+    Element element = new Element("LogFilters");
     try {
       for (LogFilter filter : myRegisteredLogFilters.keySet()) {
         Element filterElement = new Element(FILTER);

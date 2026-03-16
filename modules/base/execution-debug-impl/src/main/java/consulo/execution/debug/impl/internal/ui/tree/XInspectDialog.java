@@ -25,9 +25,7 @@ import consulo.execution.debug.impl.internal.evaluate.XDebuggerTreeCreator;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -37,11 +35,11 @@ import javax.swing.*;
 public class XInspectDialog extends DialogWrapper {
   private final DebuggerTreeWithHistoryPanel<Pair<XValue, String>> myDebuggerTreePanel;
 
-  public XInspectDialog(@Nonnull Project project,
+  public XInspectDialog(Project project,
                         XDebuggerEditorsProvider editorsProvider,
                         XSourcePosition sourcePosition,
-                        @Nonnull String name,
-                        @Nonnull XValue value,
+                        String name,
+                        XValue value,
                         XValueMarkers<?, ?> markers) {
     super(project, false);
 
@@ -67,7 +65,7 @@ public class XInspectDialog extends DialogWrapper {
   }
 
   @Override
-  @NonNls
+  
   protected String getDimensionServiceKey() {
     return "#xdebugger.XInspectDialog";
   }

@@ -22,8 +22,7 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -33,7 +32,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   private final ArtifactEditorContext myContext;
   private final ContentFolderTypeProvider myContentFolderType;
 
-  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, @Nonnull ArtifactEditorContext context, ContentFolderTypeProvider contentFolderType) {
+  public ModuleElementPresentation(@Nullable NamedPointer<Module> modulePointer, ArtifactEditorContext context, ContentFolderTypeProvider contentFolderType) {
     myModulePointer = modulePointer;
     myContext = context;
     myContentFolderType = contentFolderType;
@@ -63,7 +62,7 @@ public class ModuleElementPresentation extends TreeNodePresentation {
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     Module module = findModule();
     presentationData.setIcon(myContentFolderType.getIcon());
 

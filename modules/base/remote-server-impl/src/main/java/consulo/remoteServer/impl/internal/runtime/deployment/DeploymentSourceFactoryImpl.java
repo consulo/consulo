@@ -27,7 +27,6 @@ import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -46,30 +45,30 @@ public class DeploymentSourceFactoryImpl implements DeploymentSourceFactory {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public ModuleDeploymentSource createModuleDeploymentSource(@Nonnull Module module) {
+  public ModuleDeploymentSource createModuleDeploymentSource(Module module) {
     return new ModuleDeploymentSourceImpl(myModulePointerManager.create(module));
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public ModuleDeploymentSource createModuleDeploymentSource(@Nonnull String moduleName) {
+  public ModuleDeploymentSource createModuleDeploymentSource(String moduleName) {
     return new ModuleDeploymentSourceImpl(myModulePointerManager.create(moduleName));
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public ArtifactDeploymentSource createArtifactDeploymentSource(@Nonnull Artifact artifact) {
+  public ArtifactDeploymentSource createArtifactDeploymentSource(Artifact artifact) {
     return new ArtifactDeploymentSourceImpl(myArtifactPointerManager.create(artifact));
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public ArtifactDeploymentSource createArtifactDeploymentSource(@Nonnull String artifactName) {
+  public ArtifactDeploymentSource createArtifactDeploymentSource(String artifactName) {
     return new ArtifactDeploymentSourceImpl(myArtifactPointerManager.create(artifactName));
   }
 }

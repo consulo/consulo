@@ -32,14 +32,13 @@ import consulo.usage.rule.UsageInLibrary;
 import consulo.usage.rule.UsageInModule;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class ModuleGroupingRule implements UsageGroupingRule {
   @Override
-  public UsageGroup groupUsage(@Nonnull Usage usage) {
+  public UsageGroup groupUsage(Usage usage) {
     if (usage instanceof UsageInModule) {
       UsageInModule usageInModule = (UsageInModule)usage;
       Module module = usageInModule.getModule();
@@ -63,7 +62,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     public void update() {
     }
 
-    public LibraryUsageGroup(@Nonnull OrderEntry entry) {
+    public LibraryUsageGroup(OrderEntry entry) {
       myEntry = entry;
     }
 
@@ -73,7 +72,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return myEntry.getPresentableName();
     }
@@ -118,7 +117,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
   private static class ModuleUsageGroup implements UsageGroup, UiDataProvider {
     private final Module myModule;
 
-    public ModuleUsageGroup(@Nonnull Module module) {
+    public ModuleUsageGroup(Module module) {
       myModule = module;
     }
 
@@ -145,7 +144,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return myModule.isDisposed() ? "" : myModule.getName();
     }
@@ -180,7 +179,7 @@ public class ModuleGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       if (!isValid()) return;
       sink.set(LangDataKeys.MODULE_CONTEXT, myModule);
     }

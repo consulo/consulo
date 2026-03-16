@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccessScheduler;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,14 +41,14 @@ public abstract class Animator implements Disposable {
   private boolean myInitialStep;
   private volatile boolean myDisposed;
 
-  public Animator(@NonNls String name,
+  public Animator(String name,
                   int totalFrames,
                   int cycleDuration,
                   boolean repeatable) {
     this(name, totalFrames, cycleDuration, repeatable, true);
   }
 
-  public Animator(@NonNls String name,
+  public Animator(String name,
                   int totalFrames,
                   int cycleDuration,
                   boolean repeatable,

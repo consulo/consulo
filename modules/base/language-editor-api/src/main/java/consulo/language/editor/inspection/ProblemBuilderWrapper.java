@@ -19,8 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -29,83 +28,83 @@ import java.util.Collection;
  * @since 2025-11-09
  */
 public class ProblemBuilderWrapper implements ProblemBuilder {
-    @Nonnull
+    
     protected final ProblemBuilder mySubBuilder;
 
-    public ProblemBuilderWrapper(@Nonnull ProblemBuilder subBuilder) {
+    public ProblemBuilderWrapper(ProblemBuilder subBuilder) {
         mySubBuilder = subBuilder;
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder range(@Nonnull PsiElement element) {
+    public ProblemBuilder range(PsiElement element) {
         return rewrap(mySubBuilder.range(element));
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement) {
+    public ProblemBuilder range(PsiElement element, @Nullable TextRange rangeInElement) {
         return rewrap(mySubBuilder.range(element, rangeInElement));
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+    public ProblemBuilder range(PsiElement startElement, PsiElement endElement) {
         return rewrap(mySubBuilder.range(startElement, endElement));
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public ProblemBuilder rangeByRef(@Nonnull PsiReference reference) {
+    public ProblemBuilder rangeByRef(PsiReference reference) {
         return rewrap(mySubBuilder.rangeByRef(reference));
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder highlightType(@Nonnull ProblemHighlightType highlightType) {
+    public ProblemBuilder highlightType(ProblemHighlightType highlightType) {
         return rewrap(mySubBuilder.highlightType(highlightType));
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder afterEndOfLine() {
         return rewrap(mySubBuilder.afterEndOfLine());
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder afterEndOfLine(boolean isAfterEndOfLine) {
         return rewrap(mySubBuilder.afterEndOfLine(isAfterEndOfLine));
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder onTheFly() {
         return rewrap(mySubBuilder.onTheFly());
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder onTheFly(boolean onTheFly) {
         return rewrap(mySubBuilder.onTheFly(onTheFly));
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder hideTooltip() {
         return rewrap(mySubBuilder.hideTooltip());
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder showTooltip(boolean showTooltip) {
         return rewrap(mySubBuilder.showTooltip(showTooltip));
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder withFix(@Nonnull LocalQuickFix fix) {
+    public ProblemBuilder withFix(LocalQuickFix fix) {
         return rewrap(mySubBuilder.withFix(fix));
     }
 
@@ -114,15 +113,15 @@ public class ProblemBuilderWrapper implements ProblemBuilder {
         return rewrap(mySubBuilder.withOptionalFix(fix));
     }
 
-    @Nonnull
+    
     @Override
     public ProblemBuilder withFixes(LocalQuickFix[] fixes) {
         return rewrap(mySubBuilder.withFixes(fixes));
     }
 
-    @Nonnull
+    
     @Override
-    public ProblemBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes) {
+    public ProblemBuilder withFixes(Collection<? extends LocalQuickFix> localQuickFixes) {
         return rewrap(mySubBuilder.withFixes(localQuickFixes));
     }
 
@@ -131,7 +130,7 @@ public class ProblemBuilderWrapper implements ProblemBuilder {
         mySubBuilder.create();
     }
 
-    protected ProblemBuilder rewrap(@Nonnull ProblemBuilder subBuilder) {
+    protected ProblemBuilder rewrap(ProblemBuilder subBuilder) {
         if (subBuilder != mySubBuilder) {
             throw new IllegalStateException("Expecting builder to stay the same object; or override rewrap() to handle builder change");
         }

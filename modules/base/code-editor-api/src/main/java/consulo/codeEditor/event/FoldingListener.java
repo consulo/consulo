@@ -3,7 +3,6 @@ package consulo.codeEditor.event;
 
 import consulo.codeEditor.CustomFoldRegion;
 import consulo.codeEditor.FoldRegion;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
 /**
@@ -26,7 +25,7 @@ public interface FoldingListener {
      *
      * @param region fold region that is just collapsed or expanded
      */
-    default void onFoldRegionStateChange(@Nonnull FoldRegion region) {
+    default void onFoldRegionStateChange(FoldRegion region) {
     }
 
     /**
@@ -34,7 +33,7 @@ public interface FoldingListener {
      * {@link CustomFoldRegion#update()} call, or due to an implicit update (e.g. when appearance settings change). The changes can happen
      * outside of batch folding operation.
      */
-    default void onCustomFoldRegionPropertiesChange(@Nonnull CustomFoldRegion region,
+    default void onCustomFoldRegionPropertiesChange(CustomFoldRegion region,
                                                     @MagicConstant(flagsFromClass = ChangeFlags.class) int flags) {
     }
 
@@ -43,13 +42,13 @@ public interface FoldingListener {
      * of the region (using {@link FoldingModel#removeFoldRegion(FoldRegion)}, {@link FoldingModelEx#clearFoldRegions()} or
      * {@link FoldRegion#dispose()}), or as a result of document change.
      */
-    default void beforeFoldRegionDisposed(@Nonnull FoldRegion region) {
+    default void beforeFoldRegionDisposed(FoldRegion region) {
     }
 
     /**
      * Informs that the given fold region is about to be removed.
      */
-    default void beforeFoldRegionRemoved(@Nonnull FoldRegion region) {
+    default void beforeFoldRegionRemoved(FoldRegion region) {
     }
 
     /**

@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.scope.CompileScope;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -34,7 +33,7 @@ public interface Compiler {
      *
      * @return the description string.
      */
-    @Nonnull
+    
     String getDescription();
 
     /**
@@ -45,6 +44,6 @@ public interface Compiler {
      */
     boolean validateConfiguration(CompileScope scope);
 
-    default void registerCompilableFileTypes(@Nonnull Consumer<FileType> fileTypeConsumer) {
+    default void registerCompilableFileTypes(Consumer<FileType> fileTypeConsumer) {
     }
 }

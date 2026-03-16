@@ -17,7 +17,6 @@ package consulo.compiler.generic;
 
 import consulo.compiler.generic.CompileItem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,27 +24,27 @@ import jakarta.annotation.Nonnull;
 public abstract class VirtualFileCompileItem<OutputState> extends CompileItem<String, VirtualFilePersistentState, OutputState> {
     protected final VirtualFile myFile;
 
-    public VirtualFileCompileItem(@Nonnull VirtualFile file) {
+    public VirtualFileCompileItem(VirtualFile file) {
         myFile = file;
     }
 
-    @Nonnull
+    
     public VirtualFile getFile() {
         return myFile;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFilePersistentState computeSourceState() {
         return new VirtualFilePersistentState(myFile.getTimeStamp());
     }
 
     @Override
-    public boolean isSourceUpToDate(@Nonnull VirtualFilePersistentState state) {
+    public boolean isSourceUpToDate(VirtualFilePersistentState state) {
         return myFile.getTimeStamp() == state.getSourceTimestamp();
     }
 
-    @Nonnull
+    
     @Override
     public String getKey() {
         return myFile.getUrl();

@@ -21,8 +21,7 @@ import consulo.codeEditor.FoldingModel;
 import consulo.codeEditor.event.FoldingListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -34,20 +33,20 @@ import java.util.List;
 public class TextComponentFoldingModel implements FoldingModel {
 
     @Override
-    public FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText) {
+    public FoldRegion addFoldRegion(int startOffset, int endOffset, String placeholderText) {
         return null;
     }
 
     @Override
-    public boolean addFoldRegion(@Nonnull FoldRegion region) {
+    public boolean addFoldRegion(FoldRegion region) {
         return false;
     }
 
     @Override
-    public void removeFoldRegion(@Nonnull FoldRegion region) {
+    public void removeFoldRegion(FoldRegion region) {
     }
 
-    @Nonnull
+    
     @Override
     public FoldRegion[] getAllFoldRegions() {
         return FoldRegion.EMPTY_ARRAY;
@@ -70,19 +69,19 @@ public class TextComponentFoldingModel implements FoldingModel {
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation) {
+    public void runBatchFoldingOperation(Runnable operation) {
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion) {
+    public void runBatchFoldingOperation(Runnable operation, boolean moveCaretFromCollapsedRegion) {
     }
 
     @Override
-    public void runBatchFoldingOperation(@Nonnull Runnable operation, boolean dontCollapseCaret, boolean moveCaret) {
+    public void runBatchFoldingOperation(Runnable operation, boolean dontCollapseCaret, boolean moveCaret) {
     }
 
     @Override
-    public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
+    public void runBatchFoldingOperationDoNotCollapseCaret(Runnable operation) {
     }
 
     @Override
@@ -96,7 +95,7 @@ public class TextComponentFoldingModel implements FoldingModel {
     }
 
     @Override
-    public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
+    public FoldRegion getFoldingPlaceholderAt(Point p) {
         return null;
     }
 
@@ -122,12 +121,12 @@ public class TextComponentFoldingModel implements FoldingModel {
 
     @Nullable
     @Override
-    public FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
+    public FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
         return null;
     }
 
     @Override
-    public void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable) {
+    public void addListener(FoldingListener listener, Disposable parentDisposable) {
 
     }
 
@@ -141,7 +140,7 @@ public class TextComponentFoldingModel implements FoldingModel {
 
     }
 
-    @Nonnull
+    
     @Override
     public List<FoldRegion> getGroupedRegions(FoldingGroup group) {
         return List.of();
@@ -153,7 +152,7 @@ public class TextComponentFoldingModel implements FoldingModel {
     }
 
     @Override
-    public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
+    public boolean hasDocumentRegionChangedFor(FoldRegion region) {
         return false;
     }
 }

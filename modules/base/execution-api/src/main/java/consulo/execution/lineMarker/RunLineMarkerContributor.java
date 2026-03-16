@@ -33,8 +33,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
@@ -43,8 +42,8 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
   private static final ExtensionPointCacheKey<RunLineMarkerContributor, ByLanguageValue<List<RunLineMarkerContributor>>> KEY =
           ExtensionPointCacheKey.create("RunLineMarkerContributor", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<RunLineMarkerContributor> forLanguage(@Nonnull Language language) {
+  
+  public static List<RunLineMarkerContributor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(RunLineMarkerContributor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -53,13 +52,13 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
     public final AnAction[] actions;
     public final Function<PsiElement, String> tooltipProvider;
 
-    public Info(Image icon, @Nullable Function<PsiElement, String> tooltipProvider, @Nonnull AnAction... actions) {
+    public Info(Image icon, @Nullable Function<PsiElement, String> tooltipProvider, AnAction... actions) {
       this.icon = icon;
       this.actions = actions;
       this.tooltipProvider = tooltipProvider;
     }
 
-    public Info(@Nonnull AnAction action) {
+    public Info(AnAction action) {
       this(action.getTemplatePresentation().getIcon(), element -> getText(action, element), action);
     }
   }
@@ -74,7 +73,7 @@ public abstract class RunLineMarkerContributor implements LanguageExtension {
    * @return null means disabled
    */
   @Nullable
-  protected static String getText(@Nonnull AnAction action, @Nonnull PsiElement element) {
+  protected static String getText(AnAction action, PsiElement element) {
     DataContext parent = DataManager.getInstance().getDataContext();
     DataContext dataContext = DataContext.builder().parent(parent).add(PsiElement.KEY, element).build();
     AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.STATUS_BAR_PLACE, dataContext);

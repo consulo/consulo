@@ -16,7 +16,6 @@
 package consulo.codeEditor.util;
 
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -30,11 +29,11 @@ public final class AWTEditorUtil {
     }
 
 
-    public static int yPositionToLogicalLine(@Nonnull Editor editor, @Nonnull MouseEvent event) {
+    public static int yPositionToLogicalLine(Editor editor, MouseEvent event) {
         return EditorUtil.yPositionToLogicalLine(editor, event.getY());
     }
 
-    public static int yPositionToLogicalLine(@Nonnull Editor editor, @Nonnull Point point) {
+    public static int yPositionToLogicalLine(Editor editor, Point point) {
         return EditorUtil.yPositionToLogicalLine(editor, point.y);
     }
 }

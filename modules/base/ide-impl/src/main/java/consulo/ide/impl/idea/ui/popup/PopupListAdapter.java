@@ -14,8 +14,7 @@ import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.ScrollingUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.InputEvent;
@@ -153,7 +152,7 @@ public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAd
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       sink.set(PlatformDataKeys.SELECTED_ITEM, myList.getSelectedValue());
       sink.set(PlatformDataKeys.SELECTED_ITEMS, myList.getSelectedValues());
     }

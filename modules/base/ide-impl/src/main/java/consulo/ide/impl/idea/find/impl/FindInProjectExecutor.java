@@ -24,8 +24,7 @@ import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageInfoAdapter;
 import consulo.application.util.function.Processor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.table.TableCellRenderer;
 import java.util.Set;
 
@@ -46,12 +45,12 @@ public class FindInProjectExecutor {
     return null;
   }
 
-  public void findUsages(@Nonnull Project project,
-                         @Nonnull ProgressIndicatorEx progressIndicator,
-                         @Nonnull FindUsagesProcessPresentation presentation,
-                         @Nonnull FindModel findModel,
-                         @Nonnull Set<VirtualFile> filesToScanInitially,
-                         @Nonnull Processor<UsageInfoAdapter> onResult) {
+  public void findUsages(Project project,
+                         ProgressIndicatorEx progressIndicator,
+                         FindUsagesProcessPresentation presentation,
+                         FindModel findModel,
+                         Set<VirtualFile> filesToScanInitially,
+                         Processor<UsageInfoAdapter> onResult) {
     FindInProjectUtil.findUsages(findModel, project, presentation, filesToScanInitially, info -> {
       UsageInfoAdapter usage = (UsageInfoAdapter)UsageInfo2UsageAdapter.CONVERTER.apply(info);
 

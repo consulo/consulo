@@ -20,8 +20,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.language.editor.impl.internal.hint.TooltipAction;
 import consulo.language.editor.impl.internal.hint.TooltipRenderer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -29,19 +28,19 @@ import java.util.Collection;
  */
 public interface ErrorStripTooltipRendererProvider {
   @Nullable
-  TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters);
+  TooltipRenderer calcTooltipRenderer(Collection<? extends RangeHighlighter> highlighters);
 
-  @Nonnull
-  TooltipRenderer calcTooltipRenderer(@Nonnull String text);
+  
+  TooltipRenderer calcTooltipRenderer(String text);
 
-  @Nonnull
-  TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width);
+  
+  TooltipRenderer calcTooltipRenderer(String text, int width);
 
-  @Nonnull
-  default TooltipRenderer calcTooltipRenderer(@Nonnull String text, @Nullable TooltipAction action, int width) {
+  
+  default TooltipRenderer calcTooltipRenderer(String text, @Nullable TooltipAction action, int width) {
     return calcTooltipRenderer(text, width);
   }
 
-  @Nonnull
-  TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull Runnable onHide, @Nonnull Editor editor);
+  
+  TrafficTooltipRenderer createTrafficTooltipRenderer(Runnable onHide, Editor editor);
 }

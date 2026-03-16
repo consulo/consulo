@@ -35,8 +35,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.Range;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler {
@@ -56,7 +55,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
 
   @Override
   @RequiredUIAccess
-  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     Project project = editor.getProject();
     if (project == null) return false;
     Document document = editor.getDocument();
@@ -71,7 +70,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
 
   @Nullable
   @RequiredUIAccess
-  private static PsiElement[] getElementList(@Nonnull PsiFile file, int rangeStart, int rangeEnd) {
+  private static PsiElement[] getElementList(PsiFile file, int rangeStart, int rangeEnd) {
     PsiElement startElement = file.findElementAt(rangeStart);
     if (startElement == null) return null;
     PsiElement endElement = rangeEnd > rangeStart ? file.findElementAt(rangeEnd - 1) : startElement;
@@ -146,7 +145,7 @@ public class MoveElementLeftRightActionHandler extends EditorWriteActionHandler 
 
   @Nullable
   @RequiredWriteAction
-  private Range<Integer> findRangeOfElementsToMove(@Nonnull PsiElement[] elements, int startOffset, int endOffset) {
+  private Range<Integer> findRangeOfElementsToMove(PsiElement[] elements, int startOffset, int endOffset) {
     int startIndex = elements.length;
     int endIndex = -1;
     if (startOffset == endOffset) {

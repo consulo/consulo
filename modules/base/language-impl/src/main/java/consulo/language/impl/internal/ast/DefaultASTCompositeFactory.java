@@ -22,8 +22,7 @@ import consulo.language.ast.ICompositeElementType;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
 import consulo.language.impl.ast.ASTCompositeFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,9 +30,9 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl(order = "last")
 public class DefaultASTCompositeFactory implements ASTCompositeFactory {
-  @Nonnull
+  
   @Override
-  public CompositeElement createComposite(@Nonnull IElementType type) {
+  public CompositeElement createComposite(IElementType type) {
     if (type instanceof IFileElementType) {
       return new FileElement(type, null);
     }

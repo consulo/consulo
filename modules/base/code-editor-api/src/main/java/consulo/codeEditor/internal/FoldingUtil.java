@@ -9,8 +9,7 @@ import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -19,13 +18,13 @@ public final class FoldingUtil {
     }
 
     @Nullable
-    public static FoldRegion findFoldRegion(@Nonnull Editor editor, int startOffset, int endOffset) {
+    public static FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset) {
         FoldRegion region = editor.getFoldingModel().getFoldRegion(startOffset, endOffset);
         return region != null && region.isValid() ? region : null;
     }
 
     @Nullable
-    public static FoldRegion findFoldRegionStartingAtLine(@Nonnull Editor editor, int line) {
+    public static FoldRegion findFoldRegionStartingAtLine(Editor editor, int line) {
         if (line < 0 || line >= editor.getDocument().getLineCount()) {
             return null;
         }
@@ -64,13 +63,13 @@ public final class FoldingUtil {
         return range.contains(offset) && range.getStartOffset() != offset;
     }
 
-    public static boolean isHighlighterFolded(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter) {
+    public static boolean isHighlighterFolded(Editor editor, RangeHighlighter highlighter) {
         int startOffset = highlighter instanceof RangeHighlighterEx ? ((RangeHighlighterEx) highlighter).getAffectedAreaStartOffset() : highlighter.getStartOffset();
         int endOffset = highlighter instanceof RangeHighlighterEx ? ((RangeHighlighterEx) highlighter).getAffectedAreaEndOffset() : highlighter.getEndOffset();
         return isTextRangeFolded(editor, new TextRange(startOffset, endOffset));
     }
 
-    public static boolean isTextRangeFolded(@Nonnull Editor editor, @Nonnull TextRange range) {
+    public static boolean isTextRangeFolded(Editor editor, TextRange range) {
         FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(range.getStartOffset());
         return foldRegion != null && range.getEndOffset() <= foldRegion.getEndOffset();
     }
@@ -78,7 +77,7 @@ public final class FoldingUtil {
     /**
      * Iterates fold regions tree in a depth-first order (pre-order)
      */
-    public static Iterator<FoldRegion> createFoldTreeIterator(@Nonnull Editor editor) {
+    public static Iterator<FoldRegion> createFoldTreeIterator(Editor editor) {
         final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
         return new Iterator<FoldRegion>() {
             private int sectionStart;
@@ -120,7 +119,7 @@ public final class FoldingUtil {
         };
     }
 
-    public static void expandRegionAtOffset(@Nonnull Project project, @Nonnull Editor editor, int offset) {
+    public static void expandRegionAtOffset(Project project, Editor editor, int offset) {
         CodeEditorInternalHelper foldingManager = CodeEditorInternalHelper.getInstance();
         foldingManager.updateFoldRegions(project, editor);
 

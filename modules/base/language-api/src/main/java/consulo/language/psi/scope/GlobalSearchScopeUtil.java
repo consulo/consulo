@@ -22,15 +22,14 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
 public class GlobalSearchScopeUtil {
-  @Nonnull
-  public static GlobalSearchScope toGlobalSearchScope(@Nonnull SearchScope scope, @Nonnull Project project) {
+  
+  public static GlobalSearchScope toGlobalSearchScope(SearchScope scope, Project project) {
     if (scope instanceof GlobalSearchScope) {
       return (GlobalSearchScope)scope;
     }
@@ -39,8 +38,8 @@ public class GlobalSearchScopeUtil {
                                                                                                             getLocalScopeFiles((LocalSearchScope)scope)));
   }
 
-  @Nonnull
-  public static Set<VirtualFile> getLocalScopeFiles(@Nonnull LocalSearchScope scope) {
+  
+  public static Set<VirtualFile> getLocalScopeFiles(LocalSearchScope scope) {
     return ApplicationManager.getApplication().runReadAction((Supplier<Set<VirtualFile>>)() -> {
       Set<VirtualFile> files = new LinkedHashSet<>();
       for (PsiElement element : scope.getScope()) {

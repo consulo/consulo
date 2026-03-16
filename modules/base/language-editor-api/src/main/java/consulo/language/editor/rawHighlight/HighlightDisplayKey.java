@@ -17,18 +17,17 @@ package consulo.language.editor.rawHighlight;
 
 import consulo.language.editor.internal.InspectionCache;
 import consulo.language.editor.internal.InspectionCacheService;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class HighlightDisplayKey {
     @Nullable
-    public static HighlightDisplayKey findById(@Nonnull String id) {
+    public static HighlightDisplayKey findById(String id) {
         InspectionCache cache = InspectionCacheService.getInstance().get();
         return cache.findById(id);
     }
 
     @Nullable
-    public static HighlightDisplayKey find(@Nonnull String name) {
+    public static HighlightDisplayKey find(String name) {
         InspectionCache cache = InspectionCacheService.getInstance().get();
         return cache.find(name);
     }
@@ -37,12 +36,12 @@ public class HighlightDisplayKey {
 
     private final String myID;
 
-    public HighlightDisplayKey(@Nonnull String name, @Nonnull String id) {
+    public HighlightDisplayKey(String name, String id) {
         myName = name;
         myID = id;
     }
 
-    @Nonnull
+    
     public String getID() {
         return myID;
     }

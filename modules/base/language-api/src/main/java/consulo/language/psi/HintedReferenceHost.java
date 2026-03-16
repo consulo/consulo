@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-import jakarta.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
@@ -38,9 +37,9 @@ public interface HintedReferenceHost extends PsiElement {
    * @param hints the hints about the desired references
    * @return the array of references, or an empty array if the element has no associated references.
    */
-  @Nonnull
+  
   @RequiredReadAction
-  PsiReference[] getReferences(@Nonnull PsiReferenceService.Hints hints);
+  PsiReference[] getReferences(PsiReferenceService.Hints hints);
 
   /**
    * Normally in {@link PsiElement#findReferenceAt(int)}, all tree hierarchy is traversed bottom-up and each element is asked for references.
@@ -50,5 +49,5 @@ public interface HintedReferenceHost extends PsiElement {
    * @param hints the hints about the desired references
    * @return false if there's no use in asking this element's ancestors for references with specified hints, true otherwise.
    */
-  boolean shouldAskParentForReferences(@Nonnull PsiReferenceService.Hints hints);
+  boolean shouldAskParentForReferences(PsiReferenceService.Hints hints);
 }

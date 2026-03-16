@@ -18,7 +18,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.VcsDirtyScope;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class VcsModifiableDirtyScope extends VcsDirtyScope {
   public abstract void addDirtyFile(FilePath newcomer);

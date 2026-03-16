@@ -26,8 +26,7 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -37,7 +36,7 @@ import java.util.function.Consumer;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DiffRequestFactory {
-  @Nonnull
+  
   public static DiffRequestFactory getInstance() {
     return Application.get().getInstance(DiffRequestFactory.class);
   }
@@ -46,87 +45,87 @@ public interface DiffRequestFactory {
   // Diff
   //
 
-  @Nonnull
-  ContentDiffRequest createFromFiles(@Nullable Project project, @Nonnull VirtualFile file1, @Nonnull VirtualFile file2);
+  
+  ContentDiffRequest createFromFiles(@Nullable Project project, VirtualFile file1, VirtualFile file2);
 
-  @Nonnull
+  
   ContentDiffRequest createFromFiles(@Nullable Project project,
-                                     @Nonnull VirtualFile leftFile,
-                                     @Nonnull VirtualFile baseFile,
-                                     @Nonnull VirtualFile rightFile);
+                                     VirtualFile leftFile,
+                                     VirtualFile baseFile,
+                                     VirtualFile rightFile);
 
-  @Nonnull
-  ContentDiffRequest createClipboardVsValue(@Nonnull String value);
+  
+  ContentDiffRequest createClipboardVsValue(String value);
 
   //
   // Titles
   //
 
-  @Nonnull
-  String getContentTitle(@Nonnull VirtualFile file);
+  
+  String getContentTitle(VirtualFile file);
 
-  @Nonnull
-  String getTitle(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2);
+  
+  String getTitle(VirtualFile file1, VirtualFile file2);
 
-  @Nonnull
-  String getTitle(@Nonnull VirtualFile file);
+  
+  String getTitle(VirtualFile file);
 
   //
   // Merge
   //
 
-  @Nonnull
+  
   MergeRequest createMergeRequest(@Nullable Project project,
                                   @Nullable FileType fileType,
-                                  @Nonnull Document output,
-                                  @Nonnull List<String> textContents,
+                                  Document output,
+                                  List<String> textContents,
                                   @Nullable String title,
-                                  @Nonnull List<String> titles,
+                                  List<String> titles,
                                   @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @Nonnull
+  
   MergeRequest createMergeRequest(@Nullable Project project,
-                                  @Nonnull VirtualFile output,
-                                  @Nonnull List<byte[]> byteContents,
+                                  VirtualFile output,
+                                  List<byte[]> byteContents,
                                   @Nullable String title,
-                                  @Nonnull List<String> contentTitles,
+                                  List<String> contentTitles,
                                   @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @Nonnull
+  
   TextMergeRequest createTextMergeRequest(@Nullable Project project,
-                                          @Nonnull VirtualFile output,
-                                          @Nonnull List<byte[]> byteContents,
+                                          VirtualFile output,
+                                          List<byte[]> byteContents,
                                           @Nullable String title,
-                                          @Nonnull List<String> contentTitles,
+                                          List<String> contentTitles,
                                           @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @Nonnull
+  
   MergeRequest createBinaryMergeRequest(@Nullable Project project,
-                                        @Nonnull VirtualFile output,
-                                        @Nonnull List<byte[]> byteContents,
+                                        VirtualFile output,
+                                        List<byte[]> byteContents,
                                         @Nullable String title,
-                                        @Nonnull List<String> contentTitles,
+                                        List<String> contentTitles,
                                         @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @Nonnull
+  
   MergeRequest createMergeRequestFromFiles(@Nullable Project project,
-                                           @Nonnull VirtualFile output,
-                                           @Nonnull List<VirtualFile> contents,
+                                           VirtualFile output,
+                                           List<VirtualFile> contents,
                                            @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @Nonnull
+  
   MergeRequest createMergeRequestFromFiles(@Nullable Project project,
-                                           @Nonnull VirtualFile output,
-                                           @Nonnull List<VirtualFile> contents,
+                                           VirtualFile output,
+                                           List<VirtualFile> contents,
                                            @Nullable String title,
-                                           @Nonnull List<String> contentTitles,
+                                           List<String> contentTitles,
                                            @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 
-  @Nonnull
+  
   TextMergeRequest createTextMergeRequestFromFiles(@Nullable Project project,
-                                                   @Nonnull VirtualFile output,
-                                                   @Nonnull List<VirtualFile> contents,
+                                                   VirtualFile output,
+                                                   List<VirtualFile> contents,
                                                    @Nullable String title,
-                                                   @Nonnull List<String> contentTitles,
+                                                   List<String> contentTitles,
                                                    @Nullable Consumer<MergeResult> applyCallback) throws InvalidDiffRequestException;
 }

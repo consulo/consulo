@@ -8,14 +8,13 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "EditorTextEnd")
 public class TextEndAction extends TextComponentEditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
-        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             editor.getCaretModel().removeSecondaryCarets();
             int offset = editor.getDocument().getTextLength();
             if (editor instanceof RealEditor) {

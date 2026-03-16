@@ -28,7 +28,6 @@ import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -91,7 +90,7 @@ public abstract class AbstractProjectNode extends ProjectViewNode<Project> {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return ProjectViewPaneImpl.canBeSelectedInProjectView(getProject(), file);
     }
 }

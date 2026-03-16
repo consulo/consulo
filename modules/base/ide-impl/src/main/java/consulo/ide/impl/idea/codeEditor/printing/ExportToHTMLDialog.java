@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.OptionGroup;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -182,7 +181,7 @@ public class ExportToHTMLDialog extends DialogWrapper {
   }
 
   @Override
-  @Nonnull
+  
   protected Action[] createActions() {
     return new Action[]{getOKAction(),getCancelAction(), getHelpAction()};
   }

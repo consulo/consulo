@@ -26,8 +26,7 @@ import consulo.compiler.artifact.ui.ArtifactProblemsHolderBase;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactProblemQuickFix;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -49,22 +48,22 @@ public class ArtifactProblemsHolderImpl extends ArtifactProblemsHolderBase {
   }
 
   @Override
-  public void registerError(@Nonnull String message,
-                            @Nonnull String problemTypeId,
+  public void registerError(String message,
+                            String problemTypeId,
                             @Nullable List<PackagingElement<?>> pathToPlace,
-                            @Nonnull ArtifactProblemQuickFix... quickFixes) {
+                            ArtifactProblemQuickFix... quickFixes) {
     registerProblem(message, pathToPlace, ProjectStructureProblemType.error(problemTypeId), quickFixes);
   }
 
   @Override
-  public void registerWarning(@Nonnull String message,
-                              @Nonnull String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
-                              @Nonnull ArtifactProblemQuickFix... quickFixes) {
+  public void registerWarning(String message,
+                              String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
+                              ArtifactProblemQuickFix... quickFixes) {
     registerProblem(message, pathToPlace, ProjectStructureProblemType.warning(problemTypeId), quickFixes);
   }
 
-  private void registerProblem(@Nonnull String message, @Nullable List<PackagingElement<?>> pathToPlace,
-                               ProjectStructureProblemType problemType, @Nonnull ArtifactProblemQuickFix... quickFixes) {
+  private void registerProblem(String message, @Nullable List<PackagingElement<?>> pathToPlace,
+                               ProjectStructureProblemType problemType, ArtifactProblemQuickFix... quickFixes) {
     String parentPath;
     PackagingElement<?> element;
     if (pathToPlace != null && !pathToPlace.isEmpty()) {

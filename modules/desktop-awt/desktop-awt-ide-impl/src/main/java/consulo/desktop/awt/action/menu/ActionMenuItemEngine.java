@@ -37,8 +37,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.ui.style.Style;
 import consulo.ui.style.StyleManager;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -178,8 +177,8 @@ public class ActionMenuItemEngine {
     public ActionMenuItemEngine(AbstractButton button,
                                 AnAction action,
                                 Presentation presentation,
-                                @Nonnull String place,
-                                @Nonnull DataContext context,
+                                String place,
+                                DataContext context,
                                 boolean enableMnemonics,
                                 boolean prepareNow,
                                 boolean insideCheckedGroup,

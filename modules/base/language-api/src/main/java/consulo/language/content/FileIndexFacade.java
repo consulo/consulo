@@ -23,8 +23,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -41,25 +40,25 @@ public abstract class FileIndexFacade {
     return project.getInstance(FileIndexFacade.class);
   }
 
-  @Nonnull
+  
   public abstract ModificationTracker getRootModificationTracker();
 
-  public abstract boolean isInContent(@Nonnull VirtualFile file);
+  public abstract boolean isInContent(VirtualFile file);
 
-  public abstract boolean isInSource(@Nonnull VirtualFile file);
+  public abstract boolean isInSource(VirtualFile file);
 
-  public abstract boolean isInSourceContent(@Nonnull VirtualFile file);
+  public abstract boolean isInSourceContent(VirtualFile file);
 
-  public abstract boolean isInLibraryClasses(@Nonnull VirtualFile file);
+  public abstract boolean isInLibraryClasses(VirtualFile file);
 
-  public abstract boolean isInLibrarySource(@Nonnull VirtualFile file);
+  public abstract boolean isInLibrarySource(VirtualFile file);
 
-  public abstract boolean isExcludedFile(@Nonnull VirtualFile file);
+  public abstract boolean isExcludedFile(VirtualFile file);
 
-  public abstract boolean isUnderIgnored(@Nonnull VirtualFile file);
+  public abstract boolean isUnderIgnored(VirtualFile file);
 
   @Nullable
-  public abstract Module getModuleForFile(@Nonnull VirtualFile file);
+  public abstract Module getModuleForFile(VirtualFile file);
 
   /**
    * Checks if <code>file</code> is an ancestor of <code>baseDir</code> and none of the files
@@ -69,7 +68,7 @@ public abstract class FileIndexFacade {
    * @param child   the child directory or file to check for ancestry.
    * @return true if it's a valid ancestor, false otherwise.
    */
-  public abstract boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile child);
+  public abstract boolean isValidAncestor(VirtualFile baseDir, VirtualFile child);
 
   public boolean shouldBeFound(GlobalSearchScope scope, VirtualFile virtualFile) {
     return (scope.isSearchOutsideRootModel() || isInContent(virtualFile) || isInLibrarySource(virtualFile)) && !virtualFile.getFileType().isBinary();

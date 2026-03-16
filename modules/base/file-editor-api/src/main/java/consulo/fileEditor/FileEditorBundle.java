@@ -20,7 +20,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.fileEditor.localize.FileEditorLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class FileEditorBundle extends AbstractBundle {
     super(BUNDLE);
   }
 
-  @Nonnull
+  
   public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
     return ourInstance.getMessage(key);
   }

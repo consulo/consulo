@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -78,7 +77,7 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
             }
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTextBoxImpl.this;
@@ -130,14 +129,14 @@ public class DesktopTextBoxImpl extends DocumentSwingValidator<String, DesktopTe
         return toAWTComponent().myForegroundColor;
     }
 
-    @Nonnull
+    
     @Override
     public JTextField getTextField() {
         return toAWTComponent();
     }
 
     @Override
-    public void setPlaceholder(@Nonnull LocalizeValue text) {
+    public void setPlaceholder(LocalizeValue text) {
         MyJBTextField field = toAWTComponent();
         field.putClientProperty("JTextField.placeholderText", text.getNullIfEmpty());
     }

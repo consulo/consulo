@@ -19,8 +19,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;
@@ -198,7 +197,7 @@ public class TopAnomaliesAction extends ActionGroup {
         e.getPresentation().setText("Top " + LIMIT);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return CHILDREN;

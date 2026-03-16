@@ -28,16 +28,15 @@ import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @UsedInPlugin
 public abstract class PsiBasedStripTrailingSpacesFilterFactory extends StripTrailingSpacesFilterFactory {
     private static final Logger LOG = Logger.getInstance(PsiBasedStripTrailingSpacesFilterFactory.class);
 
     @Override
-    @Nonnull
-    public final StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, @Nonnull Document document) {
+    
+    public final StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, Document document) {
         Language language = getDocumentLanguage(document);
         if (language != null && isApplicableTo(language)) {
             PsiFile psiFile = getPsiFile((Project) project, document);
@@ -52,7 +51,7 @@ public abstract class PsiBasedStripTrailingSpacesFilterFactory extends StripTrai
     }
 
     @Nullable
-    public static Language getDocumentLanguage(@Nonnull Document document) {
+    public static Language getDocumentLanguage(Document document) {
         FileDocumentManager manager = FileDocumentManager.getInstance();
         VirtualFile file = manager.getFile(document);
         if (file != null && file.isValid()) {
@@ -61,7 +60,7 @@ public abstract class PsiBasedStripTrailingSpacesFilterFactory extends StripTrai
         return null;
     }
 
-    private static @Nullable PsiFile getPsiFile(@Nullable Project project, @Nonnull Document document) {
+    private static @Nullable PsiFile getPsiFile(@Nullable Project project, Document document) {
         if (project != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
             if (documentManager.isCommitted(document)) {
@@ -77,8 +76,8 @@ public abstract class PsiBasedStripTrailingSpacesFilterFactory extends StripTrai
         return null;
     }
 
-    @Nonnull
-    protected abstract PsiBasedStripTrailingSpacesFilter createFilter(@Nonnull Document document);
+    
+    protected abstract PsiBasedStripTrailingSpacesFilter createFilter(Document document);
 
-    protected abstract boolean isApplicableTo(@Nonnull Language language);
+    protected abstract boolean isApplicableTo(Language language);
 }

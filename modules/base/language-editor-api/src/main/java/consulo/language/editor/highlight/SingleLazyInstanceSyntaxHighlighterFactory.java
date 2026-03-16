@@ -19,7 +19,6 @@ import consulo.annotation.UsedInPlugin;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -29,7 +28,7 @@ public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxH
   private SyntaxHighlighter myValue;
 
   @Override
-  @Nonnull
+  
   public final SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
     if (myValue == null) {
       myValue = createHighlighter();
@@ -37,6 +36,6 @@ public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxH
     return myValue;
   }
 
-  @Nonnull
+  
   protected abstract SyntaxHighlighter createHighlighter();
 }

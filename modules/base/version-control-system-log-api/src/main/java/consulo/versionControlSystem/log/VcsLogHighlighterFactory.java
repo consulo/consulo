@@ -18,17 +18,16 @@ package consulo.versionControlSystem.log;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsLogHighlighterFactory {
-  @Nonnull
-  VcsLogHighlighter createHighlighter(@Nonnull VcsLogData logDataHolder, @Nonnull VcsLogUi logUi);
+  
+  VcsLogHighlighter createHighlighter(VcsLogData logDataHolder, VcsLogUi logUi);
 
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
+  
   String getTitle();
 
   boolean showMenuItem();

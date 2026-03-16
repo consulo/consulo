@@ -16,7 +16,6 @@
 package consulo.codeEditor;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +36,7 @@ public interface EditorGutter {
    *
    * @param provider the provider instance.
    */
-  void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider);
+  void registerTextAnnotation(TextAnnotationGutterProvider provider);
 
   /**
    * Adds a provider for drawing custom text annotations in the editor gutter, with the
@@ -46,11 +45,11 @@ public interface EditorGutter {
    * @param provider the provider instance.
    * @param action   the action to execute when the annotation is clicked.
    */
-  void registerTextAnnotation(@Nonnull TextAnnotationGutterProvider provider, @Nonnull EditorGutterAction action);
+  void registerTextAnnotation(TextAnnotationGutterProvider provider, EditorGutterAction action);
 
   boolean isAnnotationsShown();
 
-  @Nonnull
+  
   List<TextAnnotationGutterProvider> getTextAnnotations();
 
   /**
@@ -58,5 +57,5 @@ public interface EditorGutter {
    */
   void closeAllAnnotations();
 
-  void closeTextAnnotations(@Nonnull Collection<? extends TextAnnotationGutterProvider> annotations);
+  void closeTextAnnotations(Collection<? extends TextAnnotationGutterProvider> annotations);
 }

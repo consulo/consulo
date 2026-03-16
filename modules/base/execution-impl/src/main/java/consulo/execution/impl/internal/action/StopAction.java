@@ -31,8 +31,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -53,7 +52,7 @@ public class StopAction extends DumbAwareAction {
         );
     }
 
-    private static boolean isPlaceGlobal(@Nonnull AnActionEvent e) {
+    private static boolean isPlaceGlobal(AnActionEvent e) {
         return ActionPlaces.isMainMenuOrActionSearch(e.getPlace()) ||
             ActionPlaces.MAIN_TOOLBAR.equals(e.getPlace()) ||
             ActionPlaces.NAVIGATION_BAR_TOOLBAR.equals(e.getPlace()) ||
@@ -61,7 +60,7 @@ public class StopAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean enable = false;
         Image icon = getTemplatePresentation().getIcon();
         LocalizeValue description = getTemplatePresentation().getDescriptionValue();
@@ -112,7 +111,7 @@ public class StopAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         List<RunContentDescriptor> stoppableDescriptors = getActiveStoppableDescriptors(dataContext);
@@ -186,7 +185,7 @@ public class StopAction extends DumbAwareAction {
                 })
                 .addListener(new JBPopupListener() {
                     @Override
-                    public void onClosed(@Nonnull LightweightWindowEvent event) {
+                    public void onClosed(LightweightWindowEvent event) {
                         myActivePopupRef = null;
                     }
                 })
@@ -246,7 +245,7 @@ public class StopAction extends DumbAwareAction {
     }
 
     @Nullable
-    public static RunContentDescriptor getRecentlyStartedContentDescriptor(@Nonnull DataContext dataContext) {
+    public static RunContentDescriptor getRecentlyStartedContentDescriptor(DataContext dataContext) {
         RunContentDescriptor contentDescriptor = dataContext.getData(RunContentDescriptor.KEY);
         if (contentDescriptor != null) {
             // toolwindow case
@@ -259,8 +258,8 @@ public class StopAction extends DumbAwareAction {
         }
     }
 
-    @Nonnull
-    private static List<RunContentDescriptor> getActiveStoppableDescriptors(@Nonnull DataContext dataContext) {
+    
+    private static List<RunContentDescriptor> getActiveStoppableDescriptors(DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         List<RunContentDescriptor> runningProcesses =
             project == null ? Collections.emptyList() : ExecutionManager.getInstance(project).getContentManager().getAllDescriptors();

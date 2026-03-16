@@ -42,8 +42,7 @@ import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +73,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     private boolean myDragCancelled = false;
     private final MyKeymapListener myKeymapListener;
 
-    DesktopStripeButton(@Nonnull DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
+    DesktopStripeButton(DesktopInternalDecorator decorator, DesktopToolWindowPanelImpl pane) {
         myDecorator = decorator;
         myKeymapListener = new MyKeymapListener();
         myPane = pane;
@@ -113,7 +112,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         tooltip.installOn(this);
     }
 
-    @Nonnull
+    
     @Override
     public consulo.ui.Component getComponent() {
         throw new UnsupportedOperationException();
@@ -147,7 +146,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     }
 
     @Override
-    @Nonnull
+    
     public WindowInfoImpl getWindowInfo() {
         return myDecorator.getWindowInfo();
     }
@@ -198,7 +197,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
         return c == this;
     }
 
-    @Nonnull
+    
     public DesktopInternalDecorator getDecorator() {
         return myDecorator;
     }
@@ -346,7 +345,7 @@ public final class DesktopStripeButton extends AnchoredButton implements ActionL
     }
 
     @Override
-    public void apply(@Nonnull WindowInfo info) {
+    public void apply(WindowInfo info) {
         setSelected(info.isVisible() || info.isActive());
         updateState();
     }

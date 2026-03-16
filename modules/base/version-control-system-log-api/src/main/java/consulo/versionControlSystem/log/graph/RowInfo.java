@@ -15,21 +15,20 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface RowInfo<Id> {
 
-  @Nonnull
+  
   Id getCommit();
 
-  @Nonnull
+  
   Id getOneOfHeads();
 
-  @Nonnull
+  
   Collection<? extends PrintElement> getPrintElements();
 
-  @Nonnull
+  
   RowType getRowType();
 }

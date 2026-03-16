@@ -31,8 +31,7 @@ import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -55,11 +54,11 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
     private DirectoryStorageData myStorageData;
 
     public PathDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                     @Nonnull String dir,
-                                     @Nonnull StateSplitterEx splitter,
-                                     @Nonnull Disposable parentDisposable,
+                                     String dir,
+                                     StateSplitterEx splitter,
+                                     Disposable parentDisposable,
                                      @Nullable StateStorageListener listener,
-                                     @Nonnull PathMacrosService pathMacrosService) {
+                                     PathMacrosService pathMacrosService) {
         super(pathMacroSubstitutor, pathMacrosService);
 
         myDir = Path.of(dir);
@@ -67,7 +66,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
     }
 
     @Override
-    public void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result) {
+    public void analyzeExternalChangesAndUpdateIfNeed(Set<String> result) {
         // todo reload only changed file, compute diff
         DirectoryStorageData oldData = myStorageData;
         DirectoryStorageData newData = loadState();
@@ -83,18 +82,18 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
 
     @Nullable
     @Override
-    protected Element getStateAndArchive(@Nonnull DirectoryStorageData storageData, @Nonnull String componentName) {
+    protected Element getStateAndArchive(DirectoryStorageData storageData, String componentName) {
         return storageData.getCompositeStateAndArchive(componentName, mySplitter);
     }
 
-    @Nonnull
+    
     private DirectoryStorageData loadState() {
         DirectoryStorageData storageData = new DirectoryStorageData();
         loadFrom(storageData, myDir, myPathMacroSubstitutor);
         return storageData;
     }
 
-    public void loadFrom(@Nonnull DirectoryStorageData data, @Nonnull Path dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
+    public void loadFrom(DirectoryStorageData data, Path dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
         if (!Files.exists(dir)) {
             return;
         }
@@ -138,14 +137,14 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         }
     }
 
-    public static boolean isStorageFile(@Nonnull Path path) {
+    public static boolean isStorageFile(Path path) {
         String fileName = path.getFileName().toString();
         // ignore system files like .DS_Store on Mac
         return StringUtil.endsWithIgnoreCase(fileName, DirectoryStorageData.DEFAULT_EXT);
     }
 
     @Override
-    @Nonnull
+    
     protected DirectoryStorageData getStorageData(boolean reloadData) {
         if (myStorageData != null && !reloadData) {
             return myStorageData;
@@ -169,13 +168,13 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
         private final Set<String> dirtyFileNames = new SmartHashSet<>();
         private final Set<String> removedFileNames = new SmartHashSet<>();
 
-        private MySaveSession(@Nonnull PathDirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
+        private MySaveSession(PathDirectoryBasedStorage storage, DirectoryStorageData storageData) {
             this.storage = storage;
             originalStorageData = storageData;
         }
 
         @Override
-        public void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, Storage storageSpec) {
+        public void setState(Object component, String componentName, Object state, Storage storageSpec) {
             Element compositeState;
             try {
                 compositeState = DefaultStateSerializer.serializeState(state, storageSpec);
@@ -207,7 +206,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
             }
         }
 
-        private void doSetState(@Nonnull String componentName, @Nullable String fileName, @Nullable Element subState) {
+        private void doSetState(String componentName, @Nullable String fileName, @Nullable Element subState) {
             if (copiedStorageData == null) {
                 copiedStorageData = DirectoryStorageData.setStateAndCloneIfNeed(componentName, fileName, subState, originalStorageData);
                 if (copiedStorageData != null && fileName != null) {
@@ -263,7 +262,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
             storage.myStorageData = copiedStorageData;
         }
 
-        private void saveStates(@Nonnull Path dir) {
+        private void saveStates(Path dir) {
             Element storeElement = new Element(StorageData.COMPONENT);
 
             for (String componentName : copiedStorageData.getComponentNames()) {
@@ -296,7 +295,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
             }
         }
 
-        private void deleteFiles(@Nonnull Path dir) throws IOException {
+        private void deleteFiles(Path dir) throws IOException {
             Files.walk(dir, 1).forEach(path -> {
                 if (removedFileNames.contains(path.getFileName().toString())) {
                     try {

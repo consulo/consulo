@@ -5,8 +5,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -24,7 +23,7 @@ public class PopupLocationTracker {
 
   private static final Collection<ScreenAreaConsumer> ourAreaConsumers = new LinkedHashSet<>();
 
-  public static boolean register(@Nonnull ScreenAreaConsumer consumer) {
+  public static boolean register(ScreenAreaConsumer consumer) {
     if (!Registry.is("ide.use.screen.area.tracker", false)) {
       return true;
     }
@@ -40,7 +39,7 @@ public class PopupLocationTracker {
     return false;
   }
 
-  public static boolean canRectangleBeUsed(@Nonnull Component parent, @Nonnull Rectangle desiredScreenBounds, @Nullable ScreenAreaConsumer excludedConsumer) {
+  public static boolean canRectangleBeUsed(Component parent, Rectangle desiredScreenBounds, @Nullable ScreenAreaConsumer excludedConsumer) {
     if (!Registry.is("ide.use.screen.area.tracker", false)) {
       return true;
     }

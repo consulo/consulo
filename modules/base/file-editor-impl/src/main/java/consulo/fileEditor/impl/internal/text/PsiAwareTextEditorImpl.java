@@ -35,7 +35,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -44,11 +43,10 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
   private TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
   @RequiredUIAccess
-  public PsiAwareTextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Document document, TextEditorProviderImpl provider) {
+  public PsiAwareTextEditorImpl(Project project, VirtualFile file, Document document, TextEditorProviderImpl provider) {
     super(project, file, document, provider);
   }
 
-  @Nonnull
   @Override
   public Runnable loadEditorInBackground() {
     Runnable baseAction = super.loadEditorInBackground();
@@ -69,9 +67,8 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     };
   }
 
-  @Nonnull
   @Override
-  protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, @Nonnull Document document) {
+  protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, Document document) {
     return new PsiAwareTextEditorComponent(project, file, document, this, myTextEditorComponentContainerFactory);
   }
 
@@ -91,11 +88,11 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     private final Project myProject;
     private final VirtualFile myFile;
 
-    private PsiAwareTextEditorComponent(@Nonnull Project project,
-                                        @Nonnull VirtualFile file,
-                                        @Nonnull Document document,
-                                        @Nonnull TextEditorImpl textEditor,
-                                        @Nonnull TextEditorComponentContainerFactory factory) {
+    private PsiAwareTextEditorComponent(Project project,
+                                        VirtualFile file,
+                                        Document document,
+                                        TextEditorImpl textEditor,
+                                        TextEditorComponentContainerFactory factory) {
       super(project, file, document, textEditor, factory);
       myProject = project;
       myFile = file;
@@ -111,7 +108,7 @@ public class PsiAwareTextEditorImpl extends TextEditorImpl {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       super.uiDataSnapshot(sink);
 
       // Lookup bounds — EDT-safe, just UI state

@@ -15,9 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.table.TableCellRenderer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,7 +85,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     markElements(elements, Boolean.TRUE);
   }
 
-  @Nonnull
+  
   public List<T> getMarkedElements() {
     Map<T, Boolean> elementMarkStates = getElementMarkStates();
     List<T> elements = new ArrayList<T>();
@@ -120,21 +119,21 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
   }
 
   private static class BooleanMarkStateDescriptor<T> implements MarkStateDescriptor<T, Boolean> {
-    @Nonnull
+    
     @Override
-    public Boolean getDefaultState(@Nonnull T element) {
+    public Boolean getDefaultState(T element) {
       return Boolean.FALSE;
     }
 
-    @Nonnull
+    
     @Override
-    public Boolean getNextState(@Nonnull T element, @Nonnull Boolean state) {
+    public Boolean getNextState(T element, Boolean state) {
       return !state;
     }
 
     @Nullable
     @Override
-    public Boolean getNextState(@Nonnull Map<T, Boolean> elementsWithStates) {
+    public Boolean getNextState(Map<T, Boolean> elementsWithStates) {
       boolean currentlyMarked = true;
       for (Boolean state : elementsWithStates.values()) {
         currentlyMarked = state;
@@ -146,7 +145,7 @@ public class ElementsChooser<T> extends MultiStateElementsChooser<T, Boolean> {
     }
 
     @Override
-    public boolean isMarked(@Nonnull Boolean state) {
+    public boolean isMarked(Boolean state) {
       return state;
     }
 

@@ -15,9 +15,7 @@
 package consulo.externalSystem.util;
 
 import consulo.util.lang.SystemProperties;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -44,9 +42,9 @@ public class ExternalSystemConstants {
 
   public static final String TREE_CONTEXT_MENU_PLACE = "ExternalSystem.Tree.Context.Menu";
 
-  @Nonnull
+  
   public static final String DEBUG_RUNNER_ID = "ExternalSystemTaskDebugRunner";
-  @Nonnull
+  
   public static final String RUNNER_ID = "ExternalSystemTaskRunner";
 
   public static final boolean VERBOSE_PROCESSING = SystemProperties.getBooleanProperty("external.system.verbose.processing", false);

@@ -19,8 +19,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,43 +30,43 @@ import static consulo.language.editor.rawHighlight.HighlightInfo.FixBuilderBase;
  * @since 2025-12-04
  */
 public abstract class AbstractHighlightInfoFixBuilder<THIS extends FixBuilderBase<THIS>> implements FixBuilderBase<THIS> {
-    @Nonnull
+    
     protected final IntentionAction myAction;
     @Nullable
     protected List<IntentionAction> myOptions = null;
-    @Nonnull
+    
     protected LocalizeValue myDisplayName = LocalizeValue.empty();
     @Nullable
     protected TextRange myFixRange;
     @Nullable
     protected HighlightDisplayKey myKey;
 
-    public AbstractHighlightInfoFixBuilder(@Nonnull IntentionAction action) {
+    public AbstractHighlightInfoFixBuilder(IntentionAction action) {
         myAction = action;
     }
 
-    @Nonnull
+    
     @Override
-    public THIS options(@Nonnull List<IntentionAction> options) {
+    public THIS options(List<IntentionAction> options) {
         myOptions = options;
         return self();
     }
 
-    @Nonnull
+    
     @Override
-    public THIS displayName(@Nonnull LocalizeValue displayName) {
+    public THIS displayName(LocalizeValue displayName) {
         myDisplayName = displayName;
         return self();
     }
 
-    @Nonnull
+    
     @Override
     public THIS fixRange(@Nullable TextRange fixRange) {
         myFixRange = fixRange;
         return self();
     }
 
-    @Nonnull
+    
     @Override
     public THIS key(@Nullable HighlightDisplayKey key) {
         myKey = key;

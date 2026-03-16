@@ -17,12 +17,11 @@ package consulo.logging.attachment;
 
 import consulo.logging.attachment.Attachment;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface ExceptionWithAttachments {
-  @Nonnull
+  
   Attachment[] getAttachments();
 }

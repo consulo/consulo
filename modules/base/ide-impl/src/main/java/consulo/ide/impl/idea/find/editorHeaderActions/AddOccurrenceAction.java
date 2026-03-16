@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class AddOccurrenceAction extends OccurrenceAction {
@@ -29,7 +28,7 @@ public class AddOccurrenceAction extends OccurrenceAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         e.getRequiredData(EditorSearchSession.SESSION_KEY).addNextOccurrence();
     }
 }

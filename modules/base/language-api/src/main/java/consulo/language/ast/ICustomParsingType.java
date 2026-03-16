@@ -19,7 +19,6 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.util.CharTable;
 import consulo.language.parser.PsiBuilder;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens which are more convenient to parse separately.
@@ -38,6 +37,6 @@ public interface ICustomParsingType {
    * @param table {@link CharTable} object used for interning string in the file
    * @return a tree element of this type with a given text.
    */
-  @Nonnull
-  ASTNode parse(@Nonnull CharSequence text, @Nonnull CharTable table);
+  
+  ASTNode parse(CharSequence text, CharTable table);
 }

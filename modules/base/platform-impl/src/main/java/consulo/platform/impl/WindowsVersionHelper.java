@@ -23,7 +23,6 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.W32APIOptions;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Arrays;
@@ -73,7 +72,7 @@ public class WindowsVersionHelper {
         }
     }
 
-    @Nonnull
+    
     public static VS_FIXEDFILEINFO getVersionRaw(String path) {
         path = path.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 
@@ -92,7 +91,7 @@ public class WindowsVersionHelper {
         return lplpBufStructure;
     }
 
-    @Nonnull
+    
     public static String getVersion(String path, int parts) {
         VS_FIXEDFILEINFO rawVersion = getVersionRaw(path);
 

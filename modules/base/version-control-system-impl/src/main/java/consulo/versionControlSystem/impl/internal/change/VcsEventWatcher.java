@@ -26,7 +26,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class VcsEventWatcher implements PostStartupActivity {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     MessageBusConnection connection = project.getMessageBus().connect();
     connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
@@ -57,12 +56,12 @@ public class VcsEventWatcher implements PostStartupActivity {
     }
 
     @Override
-    public void problemsAppeared(@Nonnull VirtualFile file) {
+    public void problemsAppeared(VirtualFile file) {
       ChangesViewManagerImpl.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
 
     @Override
-    public void problemsDisappeared(@Nonnull VirtualFile file) {
+    public void problemsDisappeared(VirtualFile file) {
       ChangesViewManagerImpl.getInstance(myProject).refreshChangesViewNodeAsync(file);
     }
   }

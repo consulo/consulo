@@ -13,8 +13,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 /**
@@ -34,18 +33,18 @@ public abstract class TextFieldCompletionProvider {
     myCaseInsensitivity = caseInsensitivity;
   }
 
-  public void apply(@Nonnull EditorTextField field, @Nonnull String text) {
+  public void apply(EditorTextField field, String text) {
     Project project = field.getProject();
     if (project != null) {
       field.setDocument(createDocument(project, text));
     }
   }
 
-  public void apply(@Nonnull EditorTextField field) {
+  public void apply(EditorTextField field) {
     apply(field, "");
   }
 
-  private Document createDocument(Project project, @Nonnull String text) {
+  private Document createDocument(Project project, String text) {
     FileType fileType = PlainTextLanguage.INSTANCE.getAssociatedFileType();
     assert fileType != null;
 
@@ -63,24 +62,24 @@ public abstract class TextFieldCompletionProvider {
     return myCaseInsensitivity;
   }
 
-  @Nonnull
-  public String getPrefix(@Nonnull String currentTextPrefix) {
+  
+  public String getPrefix(String currentTextPrefix) {
     return currentTextPrefix;
   }
 
-  public abstract void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result);
+  public abstract void addCompletionVariants(String text, int offset, String prefix, CompletionResultSet result);
 
-  @Nonnull
+  
   public EditorTextField createEditor(Project project) {
     return createEditor(project, true);
   }
 
-  @Nonnull
+  
   public EditorTextField createEditor(Project project, boolean shouldHaveBorder) {
     return createEditor(project, shouldHaveBorder, null);
   }
 
-  @Nonnull
+  
   public EditorTextField createEditor(Project project, final boolean shouldHaveBorder, @Nullable final Consumer<Editor> editorConstructionCallback) {
     return new EditorTextField(createDocument(project, ""), project, PlainTextLanguage.INSTANCE.getAssociatedFileType()) {
       @Override

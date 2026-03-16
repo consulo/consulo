@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -23,7 +22,7 @@ class SEListSelectionTracker implements ListSelectionListener {
     private final List<Object> mySelectedItems = new ArrayList<>();
     private boolean myMoreSelected;
 
-    SEListSelectionTracker(@Nonnull JBList<?> list, @Nonnull SearchEverywhereUI.SearchListModel model) {
+    SEListSelectionTracker(JBList<?> list, SearchEverywhereUI.SearchListModel model) {
         myList = list;
         myListModel = model;
     }

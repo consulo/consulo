@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
-import jakarta.annotation.Nonnull;
 
 enum CommitCountStage {
 
@@ -29,7 +28,7 @@ enum CommitCountStage {
     myCount = count;
   }
 
-  @Nonnull
+  
   CommitCountStage next() {
     CommitCountStage[] values = values();
     return ordinal() == values.length - 1 ? this : values[ordinal() + 1];

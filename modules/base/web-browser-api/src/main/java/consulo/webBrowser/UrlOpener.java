@@ -20,13 +20,12 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UrlOpener {
     ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create(UrlOpener.class);
 
-    boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project);
+    boolean openUrl(WebBrowser browser, String url, @Nullable Project project);
 }
 

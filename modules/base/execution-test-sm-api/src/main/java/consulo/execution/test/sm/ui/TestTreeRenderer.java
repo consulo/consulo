@@ -8,7 +8,6 @@ import consulo.ui.ex.awt.RelativeFont;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -34,7 +33,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
 
     @Override
     public void customizeCellRenderer(
-        @Nonnull JTree tree,
+        JTree tree,
         Object value,
         boolean selected,
         boolean expanded,
@@ -89,7 +88,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
         append(text != null ? text : SPACE_STRING, SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
 
-    @Nonnull
+    
     @Override
     public Dimension getPreferredSize() {
         Dimension preferredSize = super.getPreferredSize();
@@ -103,7 +102,7 @@ public class TestTreeRenderer extends ColoredTreeCellRenderer {
         return myConsoleProperties;
     }
 
-    public void setAdditionalRootFormatter(@Nonnull SMRootTestProxyFormatter formatter) {
+    public void setAdditionalRootFormatter(SMRootTestProxyFormatter formatter) {
         myAdditionalRootFormatter = formatter;
     }
 

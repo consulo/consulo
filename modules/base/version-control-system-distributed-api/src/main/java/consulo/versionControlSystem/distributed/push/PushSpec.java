@@ -15,29 +15,28 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * For a single repository, specifies what is pushed and where.
  */
 public class PushSpec<S extends PushSource, T extends PushTarget> {
 
-  @Nonnull
+  
   private S mySource;
-  @Nonnull
+  
   private T myTarget;
 
-  public PushSpec(@Nonnull S source, @Nonnull T target) {
+  public PushSpec(S source, T target) {
     mySource = source;
     myTarget = target;
   }
 
-  @Nonnull
+  
   public S getSource() {
     return mySource;
   }
 
-  @Nonnull
+  
   public T getTarget() {
     return myTarget;
   }

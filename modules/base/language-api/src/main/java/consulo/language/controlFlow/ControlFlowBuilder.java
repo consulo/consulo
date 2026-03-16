@@ -10,8 +10,7 @@ import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +53,7 @@ public class ControlFlowBuilder {
     /**
      * @return "raw" current state of control flow
      */
-    public final @Nonnull ControlFlow getControlFlow() {
+    public final ControlFlow getControlFlow() {
         return new ControlFlowImpl(instructions.toArray(Instruction.EMPTY_ARRAY));
     }
 
@@ -63,7 +62,7 @@ public class ControlFlowBuilder {
      *
      * @return control flow without transparent instructions
      */
-    public final @Nonnull ControlFlow completeControlFlow() {
+    public final ControlFlow completeControlFlow() {
         if (transparentInstructionCount == 0) return getControlFlow();
 
         ArrayList<Instruction> result = new ArrayList<>(instructionCount);
@@ -120,7 +119,7 @@ public class ControlFlowBuilder {
      *
      * @param instruction new instruction
      */
-    public final void addNode(@Nonnull Instruction instruction) {
+    public final void addNode(Instruction instruction) {
         instructions.add(instruction);
         if (prevInstruction != null) {
             addEdge(prevInstruction, instruction);
@@ -184,7 +183,7 @@ public class ControlFlowBuilder {
      *
      * @param instruction target instruction for pending edges
      */
-    public final void checkPending(@Nonnull Instruction instruction) {
+    public final void checkPending(Instruction instruction) {
         PsiElement element = instruction.getElement();
         if (element == null) {
             // if element is null (fake element, we just process all pending)
@@ -219,7 +218,7 @@ public class ControlFlowBuilder {
      * @param element Element to create instruction for
      * @return new instruction
      */
-    public @Nonnull Instruction startNode(@Nullable PsiElement element) {
+    public Instruction startNode(@Nullable PsiElement element) {
         Instruction instruction = new InstructionImpl(this, element);
         addNodeAndCheckPending(instruction);
         return instruction;
@@ -233,7 +232,7 @@ public class ControlFlowBuilder {
      * @param markerName name for debug information
      * @return new transparent instruction
      */
-    public final @Nonnull TransparentInstruction startTransparentNode(@Nullable PsiElement element, String markerName) {
+    public final TransparentInstruction startTransparentNode(@Nullable PsiElement element, String markerName) {
         TransparentInstruction instruction = new TransparentInstructionImpl(this, element, markerName);
         addNodeAndCheckPending(instruction);
         return instruction;
@@ -252,12 +251,12 @@ public class ControlFlowBuilder {
         return instruction;
     }
 
-    public final @Nonnull ControlFlow build(@Nonnull PsiElementVisitor visitor, @Nonnull PsiElement element) {
+    public final ControlFlow build(PsiElementVisitor visitor, PsiElement element) {
         visitFor(visitor, element);
         return completeControlFlow();
     }
 
-    public final void visitFor(@Nonnull PsiElementVisitor visitor, @Nonnull PsiElement element) {
+    public final void visitFor(PsiElementVisitor visitor, PsiElement element) {
         addEntryPointNode(element);
 
         element.acceptChildren(visitor);
@@ -272,7 +271,7 @@ public class ControlFlowBuilder {
         startNode(null);
     }
 
-    public final void updatePendingElementScope(@Nonnull PsiElement parentForScope,
+    public final void updatePendingElementScope(PsiElement parentForScope,
                                                 @Nullable PsiElement newParentScope) {
         processPending((pendingScope, instruction) -> {
             if (pendingScope != null && PsiTreeUtil.isAncestor(parentForScope, pendingScope, false)) {
@@ -287,10 +286,10 @@ public class ControlFlowBuilder {
 
     @FunctionalInterface
     public interface PendingProcessor {
-        void process(@Nullable PsiElement pendingScope, @Nonnull Instruction instruction);
+        void process(@Nullable PsiElement pendingScope, Instruction instruction);
     }
 
-    public void processPending(@Nonnull PendingProcessor processor) {
+    public void processPending(PendingProcessor processor) {
         List<Pair<PsiElement, Instruction>> pending = this.pending;
         this.pending = new ArrayList<>();
         for (Pair<PsiElement, Instruction> pair : pending) {

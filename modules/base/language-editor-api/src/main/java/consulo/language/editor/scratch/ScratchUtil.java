@@ -30,8 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -54,7 +53,7 @@ public class ScratchUtil {
         return rootType != null && !rootType.isHidden();
     }
 
-    public static void updateFileExtension(@Nonnull Project project, @Nullable VirtualFile file) throws IOException {
+    public static void updateFileExtension(Project project, @Nullable VirtualFile file) throws IOException {
         ApplicationManager.getApplication().assertWriteAccessAllowed();
         if (CommandProcessor.getInstance().getCurrentCommand() == null) {
             throw new AssertionError("command required");
@@ -80,7 +79,7 @@ public class ScratchUtil {
         file.rename(ScratchUtil.class, newName);
     }
 
-    public static boolean hasMatchingExtension(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static boolean hasMatchingExtension(Project project, VirtualFile file) {
         FileType expected = getFileTypeFromName(file);
         Language language = LanguageUtil.getLanguageForPsi(project, file);
         FileType actual = language == null ? null : language.getAssociatedFileType();
@@ -88,13 +87,13 @@ public class ScratchUtil {
     }
 
     @Nullable
-    public static FileType getFileTypeFromName(@Nonnull VirtualFile file) {
+    public static FileType getFileTypeFromName(VirtualFile file) {
         String extension = file.getExtension();
         return extension == null ? null : FileTypeManager.getInstance().getFileTypeByExtension(extension);
     }
 
-    @Nonnull
-    public static String getRelativePath(@Nonnull Project project, @Nonnull VirtualFile file) {
+    
+    public static String getRelativePath(Project project, VirtualFile file) {
         RootType rootType = Objects.requireNonNull(RootType.forFile(file));
         String rootPath = ScratchFileService.getInstance().getRootPath(rootType);
         VirtualFile rootFile = LocalFileSystem.getInstance().findFileByPath(rootPath);

@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -44,14 +43,14 @@ public class ShowModulePropertiesAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Module module = e.getRequiredData(LangDataKeys.MODULE_CONTEXT);
         myShowSettingsUtilProvider.get().showProjectStructureDialog(project, it -> it.select(module.getName(), null, true));
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setVisible(e.hasData(Project.KEY) && e.hasData(LangDataKeys.MODULE_CONTEXT));
     }
 }

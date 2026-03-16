@@ -18,8 +18,7 @@ package consulo.language.pratt;
 import consulo.language.parser.ITokenTypeRemapper;
 import consulo.language.lexer.Lexer;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -57,7 +56,7 @@ public abstract class PrattBuilder {
     return false;
   }
 
-  public boolean assertToken(IElementType type, @Nonnull String errorMessage) {
+  public boolean assertToken(IElementType type, String errorMessage) {
     if (checkToken(type)) {
       return true;
     }
@@ -91,7 +90,7 @@ public abstract class PrattBuilder {
   @Nullable
   public abstract String getTokenText();
 
-  public abstract void reduce(@Nonnull IElementType type);
+  public abstract void reduce(IElementType type);
 
   public ListIterator<IElementType> getBackResultIterator() {
     List<IElementType> resultTypes = getResultTypes();

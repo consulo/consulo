@@ -37,8 +37,7 @@ import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Singleton
 @State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))
@@ -137,14 +136,14 @@ public class CodeInsightSettings implements PersistentStateComponent<Element>, C
   }
 
   @Transient
-  @Nonnull
+  
   public SmartBackspaceMode getBackspaceMode() {
     SmartBackspaceMode[] values = SmartBackspaceMode.values();
     return SMART_BACKSPACE >= 0 && SMART_BACKSPACE < values.length ? values[SMART_BACKSPACE] : SmartBackspaceMode.OFF;
   }
 
   @Transient
-  public void setBackspaceMode(@Nonnull SmartBackspaceMode mode) {
+  public void setBackspaceMode(SmartBackspaceMode mode) {
     SMART_BACKSPACE = mode.ordinal();
   }
 

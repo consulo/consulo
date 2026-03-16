@@ -5,7 +5,6 @@ import consulo.build.ui.issue.BuildIssue;
 import consulo.build.ui.issue.BuildIssueProvider;
 import consulo.build.ui.issue.BuildIssueQuickFix;
 import consulo.externalSystem.rt.model.ExternalSystemException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -13,17 +12,17 @@ import jakarta.annotation.Nonnull;
 public class BuildIssueException extends ExternalSystemException implements BuildIssueProvider {
     private final BuildIssue myBuildIssue;
 
-    public BuildIssueException(@Nonnull BuildIssue issue) {
+    public BuildIssueException(BuildIssue issue) {
         super(issue.getDescription(), getQuickfixIds(issue));
         myBuildIssue = issue;
     }
 
     @Override
-    public @Nonnull BuildIssue getBuildIssue() {
+    public BuildIssue getBuildIssue() {
         return myBuildIssue;
     }
 
-    private static String[] getQuickfixIds(@Nonnull BuildIssue issue) {
+    private static String[] getQuickfixIds(BuildIssue issue) {
         return issue.getQuickFixes().stream().map(BuildIssueQuickFix::getId).toArray(String[]::new);
     }
 }

@@ -17,13 +17,12 @@ package consulo.diff.impl.internal.action;
 
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BufferedLineIterator implements Iterator<Pair<Integer, CharSequence>> {
-  @Nonnull
+  
   private final List<Pair<Integer, CharSequence>> myBuffer;
 
   public BufferedLineIterator() {
@@ -40,7 +39,7 @@ public abstract class BufferedLineIterator implements Iterator<Pair<Integer, Cha
     }
   }
 
-  protected void addLine(int line, @Nonnull CharSequence text) {
+  protected void addLine(int line, CharSequence text) {
     myBuffer.add(Pair.create(line, text));
   }
 

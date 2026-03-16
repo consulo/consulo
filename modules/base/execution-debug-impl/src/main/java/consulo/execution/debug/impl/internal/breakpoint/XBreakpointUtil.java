@@ -35,9 +35,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -52,17 +50,17 @@ public class XBreakpointUtil {
         return getType(breakpoint).getShortText(breakpoint);
     }
 
-    public static <B extends XBreakpoint<?>> String getDisplayText(@Nonnull B breakpoint) {
+    public static <B extends XBreakpoint<?>> String getDisplayText(B breakpoint) {
         return getType(breakpoint).getDisplayText(breakpoint);
     }
 
-    public static <B extends XBreakpoint<?>> XBreakpointType<B, ?> getType(@Nonnull B breakpoint) {
+    public static <B extends XBreakpoint<?>> XBreakpointType<B, ?> getType(B breakpoint) {
         //noinspection unchecked
         return (XBreakpointType<B, ?>) breakpoint.getType();
     }
 
     @Nullable
-    public static XBreakpointType<?, ?> findType(@Nonnull @NonNls String id) {
+    public static XBreakpointType<?, ?> findType(String id) {
         for (XBreakpointType breakpointType : getBreakpointTypes()) {
             if (id.equals(breakpointType.getId())) {
                 return breakpointType;
@@ -75,8 +73,8 @@ public class XBreakpointUtil {
         return XBreakpointType.EXTENSION_POINT_NAME.getExtensionList();
     }
 
-    @Nonnull
-    public static Pair<GutterIconRenderer, Object> findSelectedBreakpoint(@Nonnull Project project, @Nonnull Editor editor) {
+    
+    public static Pair<GutterIconRenderer, Object> findSelectedBreakpoint(Project project, Editor editor) {
         int offset = editor.getCaretModel().getOffset();
         Document editorDocument = editor.getDocument();
 
@@ -101,15 +99,15 @@ public class XBreakpointUtil {
     }
 
     @RequiredReadAction
-    public static List<XLineBreakpointType> getAvailableLineBreakpointTypes(@Nonnull Project project,
-                                                                            @Nonnull XSourcePosition position,
+    public static List<XLineBreakpointType> getAvailableLineBreakpointTypes(Project project,
+                                                                            XSourcePosition position,
                                                                             @Nullable Editor editor) {
         return getAvailableLineBreakpointInfo(project, position, editor).first;
     }
 
     @RequiredReadAction
-    private static Pair<List<XLineBreakpointType>, Integer> getAvailableLineBreakpointInfo(@Nonnull Project project,
-                                                                                           @Nonnull XSourcePosition position,
+    private static Pair<List<XLineBreakpointType>, Integer> getAvailableLineBreakpointInfo(Project project,
+                                                                                           XSourcePosition position,
                                                                                            @Nullable Editor editor) {
         int lineStart = position.getLine();
         VirtualFile file = position.getFile();
@@ -168,9 +166,9 @@ public class XBreakpointUtil {
      * - unfolds folded block on the line
      * - if folded, checks if line breakpoints could be toggled inside folded text
      */
-    @Nonnull
-    public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(@Nonnull Project project,
-                                                                    @Nonnull XSourcePosition position,
+    
+    public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(Project project,
+                                                                    XSourcePosition position,
                                                                     @Nullable Editor editor,
                                                                     boolean temporary,
                                                                     boolean moveCaret) {

@@ -29,8 +29,7 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
 import consulo.versionControlSystem.log.impl.internal.ui.render.LabelIcon;
 import consulo.versionControlSystem.log.impl.internal.ui.render.RectanglePainter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,9 +46,9 @@ public class ReferencesPanel extends JPanel {
   public static final int PADDING = 3;
 
   private final int myRefsLimit;
-  @Nonnull
+  
   private List<VcsRef> myReferences;
-  @Nonnull
+  
   protected MultiMap<VcsRefType, VcsRef> myGroupedVisibleReferences;
 
   public ReferencesPanel() {
@@ -64,7 +63,7 @@ public class ReferencesPanel extends JPanel {
     setOpaque(false);
   }
 
-  public void setReferences(@Nonnull List<VcsRef> references) {
+  public void setReferences(List<VcsRef> references) {
     myReferences = references;
 
     List<VcsRef> visibleReferences = (myRefsLimit > 0) ? myReferences.subList(0, Math.min(myReferences.size(), myRefsLimit)) : myReferences;
@@ -114,14 +113,14 @@ public class ReferencesPanel extends JPanel {
     return getFontMetrics(getLabelsFont()).getHeight() + JBUI.scale(PADDING);
   }
 
-  @Nonnull
+  
   protected JBLabel createRestLabel(int restSize) {
     return createLabel("... " + restSize + " more", null);
   }
 
   @Nullable
-  protected Image createIcon(@Nonnull VcsRefType type,
-                            @Nonnull Collection<VcsRef> refs,
+  protected Image createIcon(VcsRefType type,
+                            Collection<VcsRef> refs,
                             int refIndex, int height) {
     if (refIndex == 0) {
       Color color = type.getBackgroundColor();
@@ -131,14 +130,14 @@ public class ReferencesPanel extends JPanel {
     return null;
   }
 
-  private void addWrapped(@Nonnull JBLabel label, @Nonnull JBLabel referent) {
+  private void addWrapped(JBLabel label, JBLabel referent) {
     Wrapper wrapper = new Wrapper(label);
     wrapper.setVerticalSizeReferent(referent);
     add(wrapper);
   }
 
-  @Nonnull
-  protected JBLabel createLabel(@Nonnull String text, @Nullable Image icon) {
+  
+  protected JBLabel createLabel(String text, @Nullable Image icon) {
     JBLabel label = new JBLabel(text, icon, SwingConstants.LEFT);
     label.setFont(getLabelsFont());
     label.setIconTextGap(0);
@@ -146,7 +145,7 @@ public class ReferencesPanel extends JPanel {
     return label;
   }
 
-  @Nonnull
+  
   protected Font getLabelsFont() {
     return VcsHistoryUtil.getCommitDetailsFont();
   }
@@ -161,19 +160,19 @@ public class ReferencesPanel extends JPanel {
     return getCommitDetailsBackground();
   }
 
-  @Nonnull
-  public static Color getLabelColor(@Nonnull Color color) {
+  
+  public static Color getLabelColor(Color color) {
     color = StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 6) : ColorUtil.brighter(color, 6);
     return ColorUtil.desaturate(color, 3);
   }
 
   private static class ReferencePanel extends JPanel {
-    @Nonnull
+    
     private final RectanglePainter myLabelPainter;
-    @Nonnull
+    
     private final VcsRef myReference;
 
-    private ReferencePanel(@Nonnull VcsRef reference) {
+    private ReferencePanel(VcsRef reference) {
       myReference = reference;
       myLabelPainter = new RectanglePainter(false);
       setOpaque(false);

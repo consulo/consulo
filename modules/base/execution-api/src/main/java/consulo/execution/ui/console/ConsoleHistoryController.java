@@ -18,8 +18,7 @@ package consulo.execution.ui.console;
 import consulo.execution.internal.ConsoleHistoryControllerInternal;
 import consulo.execution.ui.console.language.LanguageConsoleView;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public interface ConsoleHistoryController {
         return console.getVirtualFile().getUserData(ConsoleHistoryControllerInternal.CONTROLLER_KEY);
     }
 
-    public static void addToHistory(@Nonnull LanguageConsoleView consoleView, @Nullable String command) {
+    public static void addToHistory(LanguageConsoleView consoleView, @Nullable String command) {
         ConsoleHistoryController controller = getController(consoleView);
         if (controller != null) {
             controller.addToHistory(command);

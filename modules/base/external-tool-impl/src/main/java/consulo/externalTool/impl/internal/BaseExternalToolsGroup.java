@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -42,7 +41,7 @@ public abstract class BaseExternalToolsGroup<T extends Tool> extends SimpleActio
         ActionPlaces.NAVIGATION_BAR_POPUP
     );
 
-    protected BaseExternalToolsGroup(@Nonnull LocalizeValue text) {
+    protected BaseExternalToolsGroup(LocalizeValue text) {
         super(text);
     }
 

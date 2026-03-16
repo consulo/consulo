@@ -22,7 +22,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -53,7 +52,7 @@ public class RemovePackagingElementAction extends LayoutTreeActionBase {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myArtifactEditor.removeSelectedElements();
     }
 }

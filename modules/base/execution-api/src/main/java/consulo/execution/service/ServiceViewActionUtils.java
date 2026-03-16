@@ -5,8 +5,7 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,12 +20,12 @@ public final class ServiceViewActionUtils {
   private ServiceViewActionUtils() {
   }
 
-  public static @Nullable <T> T getTarget(@Nonnull AnActionEvent e, @Nonnull Class<T> clazz) {
+  public static @Nullable <T> T getTarget(AnActionEvent e, Class<T> clazz) {
     Object[] items = e.getData(PlatformDataKeys.SELECTED_ITEMS);
     return items != null && items.length == 1 ? ObjectUtil.tryCast(items[0], clazz) : null;
   }
 
-  public static @Nonnull <T> List<T> getTargets(@Nonnull AnActionEvent e, @Nonnull Class<T> clazz) {
+  public static <T> List<T> getTargets(AnActionEvent e, Class<T> clazz) {
     Object[] items = e.getData(PlatformDataKeys.SELECTED_ITEMS);
     if (items == null) return Collections.emptyList();
 

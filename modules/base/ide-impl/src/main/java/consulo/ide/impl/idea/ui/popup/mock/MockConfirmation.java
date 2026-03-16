@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui.popup.mock;
 
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -32,11 +31,11 @@ public class MockConfirmation extends ListPopupImpl {
     myOnYesText = onYesText;
   }
 
-  public void showInCenterOf(@Nonnull Component aContainer) {
+  public void showInCenterOf(Component aContainer) {
     getStep().onChosen(myOnYesText, true);
   }
 
-  public void showUnderneathOf(@Nonnull Component aComponent) {
+  public void showUnderneathOf(Component aComponent) {
     getStep().onChosen(myOnYesText, true);
   }
 }

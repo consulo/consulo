@@ -41,7 +41,6 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -116,7 +115,7 @@ public class AnnotateLocalFileAction {
     }
   }
 
-  private static void doAnnotate(@Nonnull final Editor editor, @Nonnull final Project project) {
+  private static void doAnnotate(final Editor editor, final Project project) {
     final VirtualFile file = FileDocumentManager.getInstance().getFile(editor.getDocument());
     if (file == null) return;
 
@@ -133,7 +132,7 @@ public class AnnotateLocalFileAction {
 
     Task.Backgroundable annotateTask = new Task.Backgroundable(project, VcsLocalize.retrievingAnnotations().get(), true) {
       @Override
-      public void run(@Nonnull ProgressIndicator indicator) {
+      public void run(ProgressIndicator indicator) {
         try {
           fileAnnotationRef.set(annotationProvider.annotate(file));
         }
@@ -170,8 +169,8 @@ public class AnnotateLocalFileAction {
     ProgressManager.getInstance().run(annotateTask);
   }
 
-  @Nonnull
-  private static List<Editor> getEditors(@Nonnull VcsContext context) {
+  
+  private static List<Editor> getEditors(VcsContext context) {
     Project project = assertNotNull(context.getProject());
     VirtualFile file = assertNotNull(context.getSelectedFile());
     return VcsAnnotateUtil.getEditors(project, file);

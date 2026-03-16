@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +46,7 @@ public class KeyboardModifierListener {
     }
   };
 
-  public void init(@Nonnull JComponent component, @Nonnull Disposable disposable) {
+  public void init(JComponent component, Disposable disposable) {
     assert myWindow == null;
 
     Disposer.register(disposable, new Disposable() {

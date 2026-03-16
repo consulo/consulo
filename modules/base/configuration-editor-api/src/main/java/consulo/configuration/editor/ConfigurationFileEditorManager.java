@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -30,12 +29,12 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ConfigurationFileEditorManager {
     @RequiredUIAccess
-    void open(@Nonnull Project project,
-              @Nonnull Class<? extends ConfigurationFileEditorProvider> providerClass,
-              @Nonnull Map<String, String> params);
+    void open(Project project,
+              Class<? extends ConfigurationFileEditorProvider> providerClass,
+              Map<String, String> params);
 
     @RequiredUIAccess
-    void open(@Nonnull Project project,
-              @Nonnull ConfigurationFileEditorProvider provider,
-              @Nonnull Map<String, String> params);
+    void open(Project project,
+              ConfigurationFileEditorProvider provider,
+              Map<String, String> params);
 }

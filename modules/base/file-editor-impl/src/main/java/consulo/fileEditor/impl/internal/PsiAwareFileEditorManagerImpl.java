@@ -42,7 +42,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Provider;
 
 /**
@@ -92,7 +91,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   }
 
   @Override
-  protected void projectOpened(@Nonnull MessageBusConnection connection) {
+  protected void projectOpened(MessageBusConnection connection) {
     super.projectOpened(connection);
 
     myPsiManager.addPsiTreeChangeListener(myPsiTreeChangeListener);
@@ -100,13 +99,13 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   }
 
   @Override
-  public boolean isProblem(@Nonnull VirtualFile file) {
+  public boolean isProblem(VirtualFile file) {
     return myProblemSolver.get().isProblemFile(file);
   }
 
-  @Nonnull
+  
   @Override
-  public String getFileTooltipText(@Nonnull VirtualFile file) {
+  public String getFileTooltipText(VirtualFile file) {
     StringBuilder tooltipText = new StringBuilder();
     Module module = ModuleUtilCore.findModuleForFile(file, getProject());
     if (module != null) {
@@ -119,7 +118,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   }
 
   @Override
-  protected Editor getOpenedEditor(@Nonnull Editor editor, boolean focusEditor) {
+  protected Editor getOpenedEditor(Editor editor, boolean focusEditor) {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(getProject());
     Document document = editor.getDocument();
     PsiFile psiFile = documentManager.getPsiFile(document);
@@ -136,7 +135,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
     @Override
     @RequiredUIAccess
-    public void propertyChanged(@Nonnull PsiTreeChangeEvent e) {
+    public void propertyChanged(PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
         UIAccess.assertIsUIThread();
         VirtualFile[] openFiles = getOpenFiles();
@@ -149,27 +148,27 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     }
 
     @Override
-    public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+    public void childAdded(PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+    public void childRemoved(PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+    public void childReplaced(PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+    public void childMoved(PsiTreeChangeEvent event) {
       doChange(event);
     }
 
     @Override
-    public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+    public void childrenChanged(PsiTreeChangeEvent event) {
       doChange(event);
     }
 
@@ -199,21 +198,21 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
   private class MyProblemListener implements ProblemListener {
     @Override
-    public void problemsAppeared(@Nonnull VirtualFile file) {
+    public void problemsAppeared(VirtualFile file) {
       updateFile(file);
     }
 
     @Override
-    public void problemsDisappeared(@Nonnull VirtualFile file) {
+    public void problemsDisappeared(VirtualFile file) {
       updateFile(file);
     }
 
     @Override
-    public void problemsChanged(@Nonnull VirtualFile file) {
+    public void problemsChanged(VirtualFile file) {
       updateFile(file);
     }
 
-    private void updateFile(@Nonnull VirtualFile file) {
+    private void updateFile(VirtualFile file) {
       queueUpdateFile(file);
     }
   }

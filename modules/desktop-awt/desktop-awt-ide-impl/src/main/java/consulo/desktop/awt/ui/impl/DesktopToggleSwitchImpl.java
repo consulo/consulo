@@ -22,7 +22,6 @@ import consulo.ui.Component;
 import consulo.ui.ToggleSwitch;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggleSwitchImpl.MyOnOffButton> implements ToggleSwitch {
     class MyOnOffButton extends OnOffButton implements FromSwingComponentWrapper {
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopToggleSwitchImpl.this;
@@ -51,7 +50,7 @@ public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggl
         return component;
     }
 
-    @Nonnull
+    
     @Override
     public Boolean getValue() {
         return toAWTComponent().isSelected();
@@ -60,7 +59,7 @@ public class DesktopToggleSwitchImpl extends SwingComponentDelegate<DesktopToggl
     @RequiredUIAccess
     @Override
     @SuppressWarnings("unchecked")
-    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+    public void setValue(Boolean value, boolean fireListeners) {
         toAWTComponent().setSelected(value);
 
         if (fireListeners) {

@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileManager;
 import consulo.virtualFileSystem.http.RemoteFileState;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -39,12 +38,12 @@ public abstract class HttpXFileSystemImpl extends BaseVirtualFileSystem implemen
     }
 
     @Override
-    public VirtualFile findFileByPath(@Nonnull String path) {
+    public VirtualFile findFileByPath(String path) {
         return findFileByPath(path, false);
     }
 
     @Override
-    public VirtualFile findFileByPath(@Nonnull String path, boolean isDirectory) {
+    public VirtualFile findFileByPath(String path, boolean isDirectory) {
         try {
             String url = VirtualFileManager.constructUrl(myProtocol, path);
             return getRemoteFileManager().getOrCreateFile(url, path, isDirectory);
@@ -55,64 +54,64 @@ public abstract class HttpXFileSystemImpl extends BaseVirtualFileSystem implemen
     }
 
     @Override
-    public void addFileListener(@Nonnull HttpVirtualFileListener listener) {
+    public void addFileListener(HttpVirtualFileListener listener) {
         getRemoteFileManager().addFileListener(listener);
     }
 
     @Override
-    public void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable) {
+    public void addFileListener(HttpVirtualFileListener listener, Disposable parentDisposable) {
         getRemoteFileManager().addFileListener(listener, parentDisposable);
     }
 
     @Override
-    public void removeFileListener(@Nonnull HttpVirtualFileListener listener) {
+    public void removeFileListener(HttpVirtualFileListener listener) {
         getRemoteFileManager().removeFileListener(listener);
     }
 
     @Override
-    public boolean isFileDownloaded(@Nonnull VirtualFile file) {
+    public boolean isFileDownloaded(VirtualFile file) {
         return file instanceof HttpVirtualFile && ((HttpVirtualFile) file).getFileInfo().getState() == RemoteFileState.DOWNLOADED;
     }
 
     @Override
-    @Nonnull
-    public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
+    
+    public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
+    public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
+    public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException {
+    public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public VirtualFile copyFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException {
+    public VirtualFile copyFile(Object requestor, VirtualFile vFile, VirtualFile newParent, String copyName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
+    public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
-    public String extractPresentableUrl(@Nonnull String path) {
+    public String extractPresentableUrl(String path) {
         return VirtualFileManager.constructUrl(myProtocol, path);
     }
 
     @Override
-    public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+    public VirtualFile refreshAndFindFileByPath(String path) {
         return findFileByPath(path);
     }
 
@@ -120,7 +119,7 @@ public abstract class HttpXFileSystemImpl extends BaseVirtualFileSystem implemen
     public void refresh(boolean asynchronous) {
     }
 
-    @Nonnull
+    
     @Override
     public String getProtocol() {
         return myProtocol;

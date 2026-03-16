@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.dnd.FileCopyPasteUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -55,7 +54,7 @@ public class FileDropHandler implements EditorDropHandler {
 
     @Override
     @RequiredUIAccess
-    public void handleDrop(@Nonnull Transferable t, @Nullable Project project, Object editorWindow) {
+    public void handleDrop(Transferable t, @Nullable Project project, Object editorWindow) {
         if (project != null) {
             List<File> fileList = FileCopyPasteUtil.getFileList(t);
             if (fileList != null) {

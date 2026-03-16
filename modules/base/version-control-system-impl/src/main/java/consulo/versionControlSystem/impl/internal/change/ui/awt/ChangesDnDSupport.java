@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -42,18 +41,18 @@ import static java.util.stream.Collectors.toList;
 
 public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final ChangeListManagerImpl myChangeListManager;
-  @Nonnull
+  
   private final Tree myTree;
 
-  public static void install(@Nonnull Project project, @Nonnull Tree tree) {
+  public static void install(Project project, Tree tree) {
     new ChangesDnDSupport(project, tree).install();
   }
 
-  private ChangesDnDSupport(@Nonnull Project project, @Nonnull Tree tree) {
+  private ChangesDnDSupport(Project project, Tree tree) {
     myProject = project;
     myChangeListManager = ChangeListManagerImpl.getInstanceImpl(project);
     myTree = tree;
@@ -69,8 +68,8 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
               .install();
   }
 
-  @Nonnull
-  private DnDImage createDraggedImage(@Nonnull DnDActionInfo info) {
+  
+  private DnDImage createDraggedImage(DnDActionInfo info) {
     String imageText = VcsBundle.message("changes.view.dnd.label", getSelectionCount());
     Image image = DnDAwareTree.getDragImage(myTree, imageText, null).getFirst();
 
@@ -78,7 +77,7 @@ public class ChangesDnDSupport implements DnDDropHandler, DnDTargetChecker {
   }
 
   @Nullable
-  private DnDDragStartBean createDragStartBean(@Nonnull DnDActionInfo info) {
+  private DnDDragStartBean createDragStartBean(DnDActionInfo info) {
     DnDDragStartBean result = null;
 
     if (info.isMove()) {

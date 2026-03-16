@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.function.BiFunction;
 public abstract class MultipleTraitsSpeedSearch<Comp extends JComponent> extends SpeedSearchBase<Comp> {
     protected final List<BiFunction<Object, String, Boolean>> myOrderedConverters;
 
-    public MultipleTraitsSpeedSearch(Comp component, @Nonnull List<BiFunction<Object, String, Boolean>> converters) {
+    public MultipleTraitsSpeedSearch(Comp component, List<BiFunction<Object, String, Boolean>> converters) {
         super(component);
         myOrderedConverters = converters;
     }

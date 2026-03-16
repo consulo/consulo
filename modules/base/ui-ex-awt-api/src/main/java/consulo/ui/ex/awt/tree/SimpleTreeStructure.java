@@ -17,28 +17,27 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
-import jakarta.annotation.Nonnull;
 
 public abstract class SimpleTreeStructure extends AbstractTreeStructure {
-    @Nonnull
+    
     @Override
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         return ((SimpleNode)element).getChildren();
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         return ((SimpleNode)element).getParent();
     }
 
     @Override
-    public boolean isAlwaysLeaf(@Nonnull Object element) {
+    public boolean isAlwaysLeaf(Object element) {
         return ((SimpleNode)element).isAlwaysLeaf();
     }
 
     @Override
-    @Nonnull
-    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         return (NodeDescriptor)element;
     }
 
@@ -78,7 +77,7 @@ public abstract class SimpleTreeStructure extends AbstractTreeStructure {
             myRoot = root;
         }
 
-        @Nonnull
+        
         @Override
         public Object getRootElement() {
             return myRoot;

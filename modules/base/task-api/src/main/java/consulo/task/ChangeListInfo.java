@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.versionControlSystem.change.LocalChangeList;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -43,7 +42,7 @@ public class ChangeListInfo {
   public ChangeListInfo() {
   }
 
-  public ChangeListInfo(@Nonnull LocalChangeList changeList) {
+  public ChangeListInfo(LocalChangeList changeList) {
     id = changeList.getId();
     name = changeList.getName();
     comment = changeList.getComment();

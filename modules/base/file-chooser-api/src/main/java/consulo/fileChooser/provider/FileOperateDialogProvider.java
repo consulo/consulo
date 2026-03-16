@@ -15,7 +15,6 @@
  */
 package consulo.fileChooser.provider;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,10 +23,10 @@ import jakarta.annotation.Nonnull;
 public interface FileOperateDialogProvider {
   String APPLICATION_ID = "application";
 
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
+  
   String getName();
 
   default boolean isAvailable() {

@@ -33,44 +33,43 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 @ExtensionImpl
 public class ApplyPatchMergeTool implements MergeTool {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public MergeViewer createComponent(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public MergeViewer createComponent(MergeContext context, MergeRequest request) {
         return new MyApplyPatchViewer(context, (ApplyPatchMergeRequest)request);
     }
 
     @Override
-    public boolean canShow(@Nonnull MergeContext context, @Nonnull MergeRequest request) {
+    public boolean canShow(MergeContext context, MergeRequest request) {
         return request instanceof ApplyPatchMergeRequest;
     }
 
     private static class MyApplyPatchViewer extends ApplyPatchViewer implements MergeViewer {
-        @Nonnull
+        
         private final MergeContext myMergeContext;
-        @Nonnull
+        
         private final ApplyPatchMergeRequest myMergeRequest;
 
-        public MyApplyPatchViewer(@Nonnull MergeContext context, @Nonnull ApplyPatchMergeRequest request) {
+        public MyApplyPatchViewer(MergeContext context, ApplyPatchMergeRequest request) {
             super(createWrapperDiffContext(context), request);
             myMergeContext = context;
             myMergeRequest = request;
         }
 
-        @Nonnull
-        private static DiffContext createWrapperDiffContext(@Nonnull MergeContext mergeContext) {
+        
+        private static DiffContext createWrapperDiffContext(MergeContext mergeContext) {
             return new MergeImplUtil.ProxyDiffContext(mergeContext);
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         public ToolbarComponents init() {
@@ -86,7 +85,7 @@ public class ApplyPatchMergeTool implements MergeTool {
 
         @Nullable
         @Override
-        public ActionRecord getResolveAction(@Nonnull MergeResult result) {
+        public ActionRecord getResolveAction(MergeResult result) {
             if (result == MergeResult.LEFT || result == MergeResult.RIGHT) {
                 return null;
             }

@@ -29,7 +29,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Singleton
 @ServiceImpl

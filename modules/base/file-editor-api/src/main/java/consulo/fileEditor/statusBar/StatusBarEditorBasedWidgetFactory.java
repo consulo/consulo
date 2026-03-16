@@ -6,27 +6,26 @@ import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class StatusBarEditorBasedWidgetFactory implements StatusBarWidgetFactory {
   @Override
-  public boolean isAvailable(@Nonnull Project project) {
+  public boolean isAvailable(Project project) {
     return true;
   }
 
   @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+  public boolean canBeEnabledOn(StatusBar statusBar) {
     return getTextEditor(statusBar) != null;
   }
 
   @Nullable
-  protected FileEditor getFileEditor(@Nonnull StatusBar statusBar) {
+  protected FileEditor getFileEditor(StatusBar statusBar) {
     return StatusBarUtil.getCurrentFileEditor(statusBar);
   }
 
   @Nullable
-  protected Editor getTextEditor(@Nonnull StatusBar statusBar) {
+  protected Editor getTextEditor(StatusBar statusBar) {
     return StatusBarUtil.getCurrentTextEditor(statusBar);
   }
 }

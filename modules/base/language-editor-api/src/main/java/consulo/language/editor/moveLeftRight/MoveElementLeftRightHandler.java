@@ -26,7 +26,6 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -37,8 +36,8 @@ public interface MoveElementLeftRightHandler extends LanguageExtension {
   ExtensionPointCacheKey<MoveElementLeftRightHandler, ByLanguageValue<List<MoveElementLeftRightHandler>>> KEY =
           ExtensionPointCacheKey.create("MoveElementLeftRightHandler", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<MoveElementLeftRightHandler> forLanguage(@Nonnull Language language) {
+  
+  public static List<MoveElementLeftRightHandler> forLanguage(Language language) {
     return Application.get().getExtensionPoint(MoveElementLeftRightHandler.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -46,7 +45,7 @@ public interface MoveElementLeftRightHandler extends LanguageExtension {
    * Returns a list of sub-elements (usually children) of given PSI element, which can be moved using 'move element left/right' actions.
    * Should return an empty array if there are no such elements.
    */
-  @Nonnull
+  
   @RequiredReadAction
-  PsiElement[] getMovableSubElements(@Nonnull PsiElement element);
+  PsiElement[] getMovableSubElements(PsiElement element);
 }

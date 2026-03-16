@@ -20,7 +20,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.language.content.LanguageContentFolderScopes;
@@ -33,15 +33,14 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
-import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.image.Image;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -70,9 +69,9 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
+    public Component createUIComponentImpl(Disposable parentUIDisposable) {
         ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(getModule());
         myInheritCompilerOutput = RadioButton.create(ProjectLocalize.projectInheritCompileOutputPath());
         myPerModuleCompilerOutput = RadioButton.create(ProjectLocalize.projectModuleCompileOutputPath());
@@ -153,14 +152,14 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
                 else {
                     String compilerOutputUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
                     if (compilerOutputUrl != null) {
-                        commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(compilerOutputUrl)));
+                        commitableFieldPanel.setValue(FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(compilerOutputUrl)));
                     }
                 }
             }
         }
     }
 
-    @Nonnull
+    
     public Module getModule() {
         return getModel().getModule();
     }
@@ -266,11 +265,11 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
         }
     }
 
-    @Nonnull
-    private String buildOutputUrl(@Nonnull ContentFolderTypeProvider provider) {
+    
+    private String buildOutputUrl(ContentFolderTypeProvider provider) {
         ModulesConfigurator modulesConfigurator = getState().getModulesConfigurator();
         String relativePathForProvider = modulesConfigurator.getCompilerOutputUrl() + "/" + ModuleCompilerPathsManager.getRelativePathForProvider(provider, getModule());
-        return FileUtil.toSystemDependentName(VfsUtilCore.urlToPath(relativePathForProvider));
+        return FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(relativePathForProvider));
     }
 
     private static class CommitableFieldPanel {
@@ -320,7 +319,7 @@ public class CompilerOutputsEditor extends ModuleElementsEditor {
                 catch (IOException e) {
                     canonicalPath = path;
                 }
-                return VfsUtilCore.pathToUrl(FileUtil.toSystemIndependentName(canonicalPath));
+                return VirtualFileUtil.pathToUrl(FileUtil.toSystemIndependentName(canonicalPath));
             }
         }
 

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,9 +26,9 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemResolveProjectTaskFactory {
-    @Nonnull
-    ExternalSystemResolveProjectTask createResolveProjectTask(@Nonnull ProjectSystemId externalSystemId,
-                                                              @Nonnull Project project,
-                                                              @Nonnull String projectPath,
+    
+    ExternalSystemResolveProjectTask createResolveProjectTask(ProjectSystemId externalSystemId,
+                                                              Project project,
+                                                              String projectPath,
                                                               boolean isPreviewMode);
 }

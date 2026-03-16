@@ -19,9 +19,8 @@ import consulo.ui.ex.awt.tab.JBTabsPosition;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.impl.*;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -68,7 +67,7 @@ public class SingleRowLayout extends TabLayout {
   }
 
   @Override
-  public boolean isDragOut(@Nonnull TabLabel tabLabel, int deltaX, int deltaY) {
+  public boolean isDragOut(TabLabel tabLabel, int deltaX, int deltaY) {
     return getStrategy().isDragOut(tabLabel, deltaX, deltaY);
   }
 

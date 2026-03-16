@@ -21,7 +21,6 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.OrderRoot;
 import consulo.content.library.ui.LibraryEditor;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,7 +45,7 @@ public abstract class LibraryEditorBase implements LibraryEditor {
 
   public abstract void setProperties(LibraryProperties properties);
 
-  public abstract void setType(@Nonnull LibraryType<?> type);
+  public abstract void setType(LibraryType<?> type);
 
   @Override
   public void addRoots(Collection<? extends OrderRoot> roots) {

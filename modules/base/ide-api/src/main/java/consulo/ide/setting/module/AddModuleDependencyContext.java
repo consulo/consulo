@@ -19,7 +19,6 @@ import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,27 +41,27 @@ public abstract class AddModuleDependencyContext<T> {
     return false;
   }
 
-  @Nonnull
+  
   public ClasspathPanel getClasspathPanel() {
     return myClasspathPanel;
   }
 
-  @Nonnull
+  
   public ModulesConfigurator getModulesConfigurator() {
     return myModulesConfigurator;
   }
 
-  @Nonnull
+  
   public LibrariesConfigurator getLibrariesConfigurator() {
     return myLibrariesConfigurator;
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myClasspathPanel.getProject();
   }
 
-  public final void processAddOrderEntries(@Nonnull T value) {
+  public final void processAddOrderEntries(T value) {
     ModifiableModuleRootLayer currentLayer = (ModifiableModuleRootLayer)myClasspathPanel.getRootModel().getCurrentLayer();
 
     List<OrderEntry> orderEntries = createOrderEntries(currentLayer, value);
@@ -78,6 +77,6 @@ public abstract class AddModuleDependencyContext<T> {
     myClasspathPanel.addItems(items);
   }
 
-  @Nonnull
-  public abstract List<OrderEntry> createOrderEntries(@Nonnull ModifiableModuleRootLayer layer, @Nonnull T value);
+  
+  public abstract List<OrderEntry> createOrderEntries(ModifiableModuleRootLayer layer, T value);
 }

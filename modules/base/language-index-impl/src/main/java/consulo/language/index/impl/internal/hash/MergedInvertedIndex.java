@@ -14,8 +14,7 @@ import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -29,34 +28,34 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Value, FileContent> {
-  @Nonnull
+  
   private final HashBasedMapReduceIndex<Key, Value> myProvidedIndex;
-  @Nonnull
+  
   private final FileContentHashIndex myHashIndex;
-  @Nonnull
+  
   private final UpdatableIndex<Key, Value, FileContent> myBaseIndex;
 
-  @Nonnull
-  public static <Key, Value> MergedInvertedIndex<Key, Value> create(@Nonnull ProvidedIndexExtension<Key, Value> providedExtension,
-                                                                    @Nonnull FileBasedIndexExtension<Key, Value> originalExtension,
-                                                                    @Nonnull UpdatableIndex<Key, Value, FileContent> baseIndex) throws IOException {
+  
+  public static <Key, Value> MergedInvertedIndex<Key, Value> create(ProvidedIndexExtension<Key, Value> providedExtension,
+                                                                    FileBasedIndexExtension<Key, Value> originalExtension,
+                                                                    UpdatableIndex<Key, Value, FileContent> baseIndex) throws IOException {
     File file = providedExtension.getIndexPath();
     HashBasedMapReduceIndex<Key, Value> index = HashBasedMapReduceIndex.create(providedExtension, originalExtension);
     return new MergedInvertedIndex<>(index, ((FileBasedIndexImpl)FileBasedIndex.getInstance()).getFileContentHashIndex(file), baseIndex);
   }
 
-  public MergedInvertedIndex(@Nonnull HashBasedMapReduceIndex<Key, Value> index, @Nonnull FileContentHashIndex hashIndex, @Nonnull UpdatableIndex<Key, Value, FileContent> baseIndex) {
+  public MergedInvertedIndex(HashBasedMapReduceIndex<Key, Value> index, FileContentHashIndex hashIndex, UpdatableIndex<Key, Value, FileContent> baseIndex) {
     myProvidedIndex = index;
     myHashIndex = hashIndex;
     myBaseIndex = baseIndex;
   }
 
-  @Nonnull
+  
   public ProvidedIndexExtension<Key, Value> getProvidedExtension() {
     return myProvidedIndex.getProvidedExtension();
   }
 
-  @Nonnull
+  
   @Override
   public Supplier<Boolean> update(int inputId, @Nullable FileContent content) {
     if (content != null) {
@@ -69,7 +68,7 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
 
 
   @Override
-  public void updateWithMap(@Nonnull AbstractUpdateData<Key, Value> updateData) throws StorageException {
+  public void updateWithMap(AbstractUpdateData<Key, Value> updateData) throws StorageException {
     int fileId = updateData.getInputId();
     if (myHashIndex.getHashId(fileId) != 0) {
       return;
@@ -93,36 +92,36 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
     myBaseIndex.cleanupForNextTest();
   }
 
-  @Nonnull
+  
   @Override
-  public ValueContainer<Value> getData(@Nonnull Key key) throws StorageException {
+  public ValueContainer<Value> getData(Key key) throws StorageException {
     return MergedValueContainer.merge(myBaseIndex.getData(key), myProvidedIndex.getData(key));
   }
 
   @Override
-  public boolean processAllKeys(@Nonnull Predicate<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
+  public boolean processAllKeys(Predicate<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException {
     return myBaseIndex.processAllKeys(processor, scope, idFilter) && myProvidedIndex.processAllKeys(processor, scope, idFilter);
   }
 
-  @Nonnull
+  
   @Override
   public Lock getReadLock() {
     return myBaseIndex.getReadLock();
   }
 
-  @Nonnull
+  
   @Override
   public Lock getWriteLock() {
     return myBaseIndex.getWriteLock();
   }
 
-  @Nonnull
+  
   @Override
   public ReadWriteLock getLock() {
     return myBaseIndex.getLock();
   }
 
-  @Nonnull
+  
   @Override
   public Map<Key, Value> getIndexedFileData(int fileId) throws StorageException {
     Map<Key, Value> data = myBaseIndex.getIndexedFileData(fileId);
@@ -133,7 +132,7 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
   }
 
   @Override
-  public void setIndexedStateForFile(int fileId, @Nonnull VirtualFile file) {
+  public void setIndexedStateForFile(int fileId, VirtualFile file) {
     myBaseIndex.setIndexedStateForFile(fileId, file);
   }
 
@@ -143,7 +142,7 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
   }
 
   @Override
-  public boolean isIndexedStateForFile(int fileId, @Nonnull VirtualFile file) {
+  public boolean isIndexedStateForFile(int fileId, VirtualFile file) {
     return myBaseIndex.isIndexedStateForFile(fileId, file);
   }
 
@@ -158,11 +157,11 @@ public class MergedInvertedIndex<Key, Value> implements UpdatableIndex<Key, Valu
   }
 
   @Override
-  public void removeTransientDataForKeys(int inputId, @Nonnull Collection<? extends Key> keys) {
+  public void removeTransientDataForKeys(int inputId, Collection<? extends Key> keys) {
     myBaseIndex.removeTransientDataForKeys(inputId, keys);
   }
 
-  @Nonnull
+  
   @Override
   public IndexExtension<Key, Value, FileContent> getExtension() {
     return myBaseIndex.getExtension();

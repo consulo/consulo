@@ -21,8 +21,7 @@ import consulo.fileEditor.structureView.event.FileEditorPositionListener;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.TreeModel;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the model for the data displayed in the standard structure view or file structure
@@ -47,7 +46,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
    *
    * @param listener the listener to add.
    */
-  void addEditorPositionListener(@Nonnull FileEditorPositionListener listener);
+  void addEditorPositionListener(FileEditorPositionListener listener);
 
   /**
    * Removes a listener which gets notified when the selection in the editor linked to the
@@ -55,7 +54,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
    *
    * @param listener the listener to remove.
    */
-  void removeEditorPositionListener(@Nonnull FileEditorPositionListener listener);
+  void removeEditorPositionListener(FileEditorPositionListener listener);
 
   /**
    * Adds a listener which gets notified when the data represented by the structure view
@@ -63,7 +62,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
    *
    * @param modelListener the listener to add.
    */
-  void addModelListener(@Nonnull ModelListener modelListener);
+  void addModelListener(ModelListener modelListener);
 
   /**
    * Removes a listener which gets notified when the data represented by the structure view
@@ -71,7 +70,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
    *
    * @param modelListener the listener to remove.
    */
-  void removeModelListener(@Nonnull ModelListener modelListener);
+  void removeModelListener(ModelListener modelListener);
 
   /**
    * Returns the root element of the structure view tree.
@@ -79,7 +78,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
    * @return the structure view root.
    */
   @Override
-  @Nonnull
+  
   StructureViewTreeElement getRoot();
 
   /**
@@ -97,7 +96,7 @@ public interface StructureViewModel extends TreeModel, Disposable {
   }
 
   interface ExpandInfoProvider {
-    boolean isAutoExpand(@Nonnull StructureViewTreeElement element);
+    boolean isAutoExpand(StructureViewTreeElement element);
 
     boolean isSmartExpand();
 

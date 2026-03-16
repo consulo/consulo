@@ -37,7 +37,6 @@ import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -47,12 +46,12 @@ import java.util.concurrent.CompletableFuture;
  */
 public class LanguageEditorNavigationUtil {
     @RequiredUIAccess
-    public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
+    public static boolean activateFileWithPsiElement(PsiElement elt) {
         return activateFileWithPsiElement(elt, true);
     }
 
     @RequiredUIAccess
-    public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt, boolean searchForOpen) {
+    public static boolean activateFileWithPsiElement(PsiElement elt, boolean searchForOpen) {
         return openFileWithPsiElement(elt, searchForOpen, true);
     }
 
@@ -100,11 +99,10 @@ public class LanguageEditorNavigationUtil {
         return false;
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     public static CompletableFuture<?> openFileWithPsiElementAsync(
-        @Nonnull UIAccess uiAccess,
-        @Nonnull PsiElement element,
+        UIAccess uiAccess,
+        PsiElement element,
         boolean searchForOpen,
         boolean requestFocus
     ) {
@@ -128,7 +126,7 @@ public class LanguageEditorNavigationUtil {
     }
 
     @RequiredReadAction
-    private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
+    private static boolean activatePsiElementIfOpen(PsiElement elt, boolean searchForOpen, boolean requestFocus) {
         if (!elt.isValid()) {
             return false;
         }

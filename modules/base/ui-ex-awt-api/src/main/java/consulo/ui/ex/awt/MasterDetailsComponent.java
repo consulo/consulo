@@ -45,8 +45,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import javax.swing.*;
@@ -71,7 +70,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     private JScrollPane myMaster;
 
-    @Nonnull
+    
     private final Provider<MasterDetailsStateService> myMasterDetailsStateService;
     protected final MasterDetailsState myState;
 
@@ -284,7 +283,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+    public JComponent createComponent(Disposable parentUIDisposable) {
         reInitWholePanelIfNeeded();
 
         updateSelectionFromTree();
@@ -830,7 +829,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(false);
             TreePath[] selectionPath = myTree.getSelectionPaths();
@@ -845,7 +844,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             removePaths(myTree.getSelectionPaths());
         }
     }
@@ -864,16 +863,16 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     public static class MyNode extends DefaultMutableTreeNode {
         private boolean myDisplayInBold;
 
-        public MyNode(@Nonnull MasterDetailsConfigurable userObject) {
+        public MyNode(MasterDetailsConfigurable userObject) {
             super(userObject);
         }
 
-        public MyNode(@Nonnull MasterDetailsConfigurable userObject, boolean displayInBold) {
+        public MyNode(MasterDetailsConfigurable userObject, boolean displayInBold) {
             super(userObject);
             myDisplayInBold = displayInBold;
         }
 
-        @Nonnull
+        
         public LocalizeValue getDisplayName() {
             Configurable configurable = ((Configurable)getUserObject());
             LOG.assertTrue(configurable != null, "Tree was already disposed");
@@ -928,16 +927,16 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
                     return null;
                 }
 
-                @Nonnull
+                
                 @Override
                 public LocalizeValue getDisplayName() {
                     return LocalizeValue.empty();
                 }
 
-                @Nonnull
+                
                 @Override
                 @RequiredUIAccess
-                public consulo.ui.Component createOptionsPanel(@Nonnull Disposable uiDisposable) {
+                public consulo.ui.Component createOptionsPanel(Disposable uiDisposable) {
                     return null;
                 }
 

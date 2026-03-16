@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.application.options.colors;
 
 import consulo.colorScheme.ModifiableFontPreferences;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -26,7 +25,7 @@ public class ConsoleFontOptions extends FontOptions {
     super(options, "Console Font");
   }
 
-  @Nonnull
+  
   @Override
   protected ModifiableFontPreferences getFontPreferences() {
     return (ModifiableFontPreferences)getCurrentScheme().getConsoleFontPreferences();

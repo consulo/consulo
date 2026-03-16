@@ -24,8 +24,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ImportTestsFromFileAction extends AbstractImportTestsAction {
     public ImportTestsFromFileAction(SMTRunnerConsoleProperties properties) {
@@ -39,7 +38,7 @@ public class ImportTestsFromFileAction extends AbstractImportTestsAction {
 
     @Nullable
     @Override
-    public VirtualFile getFile(@Nonnull Project project) {
+    public VirtualFile getFile(Project project) {
         FileChooserDescriptor xmlDescriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
             .withFileFilter(virtualFile -> "xml".equals(virtualFile.getExtension()));
         xmlDescriptor.withTitleValue(SMTestLocalize.smTestRunnerImportTestChooseTestFileTitle());

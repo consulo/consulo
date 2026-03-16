@@ -23,32 +23,31 @@ import consulo.compiler.artifact.ModifiableArtifactModel;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.ui.ArtifactEditor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactsStructureConfigurableContext extends PackagingElementResolvingContext {
-  @Nonnull
+  
   ModifiableArtifactModel getOrCreateModifiableArtifactModel();
 
-  CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact);
+  CompositePackagingElement<?> getRootElement(Artifact artifact);
 
-  void editLayout(@Nonnull Artifact artifact, Runnable action);
+  void editLayout(Artifact artifact, Runnable action);
 
   ArtifactEditor getOrCreateEditor(Artifact artifact);
 
-  @Nonnull
-  Artifact getOriginalArtifact(@Nonnull Artifact artifact);
+  
+  Artifact getOriginalArtifact(Artifact artifact);
 
   @Nullable
   ModifiableModuleModel getModifiableModuleModel();
 
   void queueValidation(Artifact artifact);
 
-  @Nonnull
-  ArtifactProjectStructureElement getOrCreateArtifactElement(@Nonnull Artifact artifact);
+  
+  ArtifactProjectStructureElement getOrCreateArtifactElement(Artifact artifact);
 
   ModifiableRootModel getOrCreateModifiableRootModel(Module module);
 

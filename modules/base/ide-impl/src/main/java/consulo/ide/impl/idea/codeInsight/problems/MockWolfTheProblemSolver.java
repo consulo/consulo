@@ -22,7 +22,6 @@ import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -39,17 +38,17 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public void weHaveGotProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems) {
+  public void weHaveGotProblems(VirtualFile virtualFile, List<Problem> problems) {
     if (myDelegate != null) myDelegate.weHaveGotProblems(virtualFile, problems);
   }
 
   @Override
-  public void weHaveGotNonIgnorableProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems) {
+  public void weHaveGotNonIgnorableProblems(VirtualFile virtualFile, List<Problem> problems) {
     if (myDelegate != null) myDelegate.weHaveGotNonIgnorableProblems(virtualFile, problems);
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@Nonnull Predicate<VirtualFile> condition) {
+  public boolean hasProblemFilesBeneath(Predicate<VirtualFile> condition) {
     return false;
   }
 
@@ -59,12 +58,12 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public boolean hasProblemFilesBeneath(@Nonnull Module scope) {
+  public boolean hasProblemFilesBeneath(Module scope) {
     return false;
   }
 
   @Override
-  public void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable) {
+  public void addProblemListener(ProblemListener listener, Disposable parentDisposable) {
     if (myDelegate != null) myDelegate.addProblemListener(listener, parentDisposable);
   }
 
@@ -74,7 +73,7 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
-  public void clearProblems(@Nonnull VirtualFile virtualFile) {
+  public void clearProblems(VirtualFile virtualFile) {
     if (myDelegate != null) myDelegate.clearProblems(virtualFile);
   }
 

@@ -64,8 +64,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -159,12 +158,10 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     }
 
     @Override
-    @Nonnull
     protected CompositeCellRenderer createCellRenderer() {
         return new CompositeCellRenderer();
     }
 
-    @Nonnull
     @Override
     public JBList<Object> createList() {
         myListModel = new SearchListModel();
@@ -208,7 +205,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     }
 
     @RequiredUIAccess
-    public void switchToContributor(@Nonnull String contributorID) {
+    public void switchToContributor(String contributorID) {
         SETab selectedTab = myTabs.stream()
             .filter(tab -> tab.getID().equals(contributorID))
             .findAny()
@@ -275,7 +272,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(PlatformDataKeys.PREDEFINED_TEXT, getSearchPattern());
         sink.set(Project.KEY, myProject);
 
@@ -294,7 +291,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     }
 
     @Override
-    public void registerHint(@Nonnull JBPopup h) {
+    public void registerHint(JBPopup h) {
         if (myHint != null && myHint.isVisible() && myHint != h) {
             myHint.cancel();
         }
@@ -327,12 +324,10 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     }
 
     @Override
-    @Nonnull
     @RequiredUIAccess
     protected JComponent createSettingsPanel() {
         ActionGroup.Builder actionGroup = ActionGroup.newImmutableBuilder();
         actionGroup.add(new DumbAwareActionGroup() {
-            @Nonnull
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 if (e == null || mySelectedTab == null) {
@@ -353,7 +348,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         return toolbarComponent;
     }
 
-    @Nonnull
     public CompletableFuture<?> updateToolbarFuture() {
         if (myToolbar == null) {
             return CompletableFuture.completedFuture(null);
@@ -361,7 +355,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         return myToolbar.updateActionsAsync();
     }
 
-    @Nonnull
     @Override
     protected String getInitialHint() {
         return IdeLocalize.searcheverywhereHistoryShortcutsHint(
@@ -370,7 +363,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         ).get();
     }
 
-    @Nonnull
     @Override
     protected TextBoxWithExtensions createSearchField() {
         TextBoxWithExtensions field = super.createSearchField();
@@ -385,7 +377,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         ScrollingUtil.installMoveDownAction(myResultsList, (JComponent) TargetAWT.to(getSearchField()));
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     protected JPanel createTopLeftPanel() {
@@ -662,9 +653,9 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         projectBusConnection.subscribe(AnActionListener.class, new AnActionListener() {
             @Override
             public void afterActionPerformed(
-                @Nonnull AnAction action,
-                @Nonnull DataContext dataContext,
-                @Nonnull AnActionEvent event
+                AnAction action,
+                DataContext dataContext,
+                AnActionEvent event
             ) {
                 if (action == mySelectedTab.everywhereAction && event.getInputEvent() != null) {
                     myEverywhereAutoSet = false;
@@ -776,7 +767,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         return selectedCommand.getCommand().contains(typedCommand) ? Optional.of(selectedCommand) : Optional.empty();
     }
 
-    @Nonnull
     private static List<SearchEverywhereCommandInfo> getCommandsForCompletion(
         Collection<? extends SearchEverywhereContributor<?>> contributors,
         String enteredCommandPart
@@ -803,7 +793,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
             .collect(Collectors.toList());
     }
 
-    private void onMouseClicked(@Nonnull MouseEvent e) {
+    private void onMouseClicked(MouseEvent e) {
         boolean multiSelectMode = e.isShiftDown() || UIUtil.isControlKeyDown(e);
         if (e.getButton() == MouseEvent.BUTTON1 && !multiSelectMode) {
             e.consume();
@@ -880,7 +870,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         searchFinishedHandler.run();
     }
 
-    @Nonnull
     private List<SearchEverywhereContributor<?>> getAllTabContributors() {
         return ContainerUtil.filter(
             myShownContributors,
@@ -888,7 +877,6 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         );
     }
 
-    @Nonnull
     private Collection<SearchEverywhereContributor<?>> getContributorsForCurrentTab() {
         return isAllTabSelected() ? getAllTabContributors() : Collections.singleton(mySelectedTab.getContributor().get());
     }
@@ -930,7 +918,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     private final ListCellRenderer<Object> myCommandRenderer = new ColoredListCellRenderer<>() {
         @Override
         protected void customizeCellRenderer(
-            @Nonnull JList<?> list,
+            JList<?> list,
             Object value,
             int index,
             boolean selected,
@@ -958,7 +946,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
         @Override
         protected void customizeCellRenderer(
-            @Nonnull JList<?> list,
+            JList<?> list,
             Object value,
             int index,
             boolean selected,
@@ -1171,7 +1159,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
             return res;
         }
 
-        public void removeElement(@Nonnull Object item, SearchEverywhereContributor contributor) {
+        public void removeElement(Object item, SearchEverywhereContributor contributor) {
             int index = contributors().indexOf(contributor);
             if (index < 0) {
                 return;
@@ -1247,12 +1235,10 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
                 .collect(Collectors.groupingBy(SearchEverywhereFoundElementInfo::getContributor, Collectors.toCollection(ArrayList::new)));
         }
 
-        @Nonnull
         private List<SearchEverywhereContributor> contributors() {
             return Lists.transform(listElements, SearchEverywhereFoundElementInfo::getContributor);
         }
 
-        @Nonnull
         private List<Object> values() {
             return Lists.transform(listElements, SearchEverywhereFoundElementInfo::getElement);
         }
@@ -1289,7 +1275,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             stopSearching();
 
             Collection<SearchEverywhereContributor<?>> contributors = getContributorsForCurrentTab();
@@ -1331,7 +1317,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
                     private final ProgressIndicator progressIndicator = new ProgressIndicatorBase();
 
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         progressIndicator.start();
                         TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.createFor(progressIndicator);
 
@@ -1399,7 +1385,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
                     }
 
                     @Override
-                    public void onThrowable(@Nonnull Throwable error) {
+                    public void onThrowable(Throwable error) {
                         progressIndicator.cancel();
                     }
                 });
@@ -1447,7 +1433,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             SearchEverywhereContributor<?> contributor = mySelectedTab == null ? null : mySelectedTab.contributor;
             e.getPresentation().setEnabled(contributor == null || contributor.showInFindResults());
             e.getPresentation().setIcon(
@@ -1461,7 +1447,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         final PersistentSearchEverywhereContributorFilter<?> filter;
         final Runnable rebuildRunnable;
 
-        FiltersAction(@Nonnull PersistentSearchEverywhereContributorFilter<?> filter, @Nonnull Runnable rebuildRunnable) {
+        FiltersAction(PersistentSearchEverywhereContributorFilter<?> filter, Runnable rebuildRunnable) {
             this.filter = filter;
             this.rebuildRunnable = rebuildRunnable;
         }
@@ -1482,18 +1468,18 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         }
 
         private static <T> ElementsChooser<T> createChooser(
-            @Nonnull PersistentSearchEverywhereContributorFilter<T> filter,
-            @Nonnull Runnable rebuildRunnable
+            PersistentSearchEverywhereContributorFilter<T> filter,
+            Runnable rebuildRunnable
         ) {
             ElementsChooser<T> res = new ElementsChooser<>(filter.getAllElements(), false) {
                 @Override
-                protected String getItemText(@Nonnull T value) {
+                protected String getItemText(T value) {
                     return filter.getElementText(value);
                 }
 
                 @Nullable
                 @Override
-                protected Image getItemIcon(@Nonnull T value) {
+                protected Image getItemIcon(T value) {
                     return filter.getElementIcon(value);
                 }
             };
@@ -1510,7 +1496,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     private class CompleteCommandAction extends DumbAwareAction {
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (completeCommand()) {
                 //FeatureUsageData data = SearchEverywhereUsageTriggerCollector.createData(null).addInputEvent(e);
                 //featureTriggered(SearchEverywhereUsageTriggerCollector.COMMAND_COMPLETED, data);
@@ -1519,7 +1505,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(getCompleteCommand().isPresent());
         }
 
@@ -1561,7 +1547,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
     private class SearchListener implements SESearcher.Listener {
         @Override
-        public void elementsAdded(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
+        public void elementsAdded(List<? extends SearchEverywhereFoundElementInfo> list) {
             boolean wasEmpty = myListModel.listElements.isEmpty();
 
             mySelectionTracker.lock();
@@ -1585,13 +1571,13 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
         }
 
         @Override
-        public void elementsRemoved(@Nonnull List<? extends SearchEverywhereFoundElementInfo> list) {
+        public void elementsRemoved(List<? extends SearchEverywhereFoundElementInfo> list) {
             list.forEach(info -> myListModel.removeElement(info.getElement(), info.getContributor()));
         }
 
         @Override
         @RequiredUIAccess
-        public void searchFinished(@Nonnull Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
+        public void searchFinished(Map<SearchEverywhereContributor<?>, Boolean> hasMoreContributors) {
             if (myResultsList.isEmpty() || myListModel.isResultsExpired()) {
                 if (myEverywhereAutoSet && !isEverywhere() && canToggleEverywhere() && !getSearchPattern().isEmpty()) {
                     setEverywhereAuto(true);
@@ -1613,13 +1599,11 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
     }
 
     private final SearchEverywhereContributor<Object> myStubCommandContributor = new SearchEverywhereContributor<>() {
-        @Nonnull
         @Override
         public String getSearchProviderId() {
             return "CommandsContributor";
         }
 
-        @Nonnull
         @Override
         public String getGroupName() {
             return IdeLocalize.searcheverywhereCommandsTabName().get();
@@ -1637,21 +1621,20 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
         @Override
         public void fetchElements(
-            @Nonnull String pattern,
-            @Nonnull ProgressIndicator progressIndicator,
-            @Nonnull Predicate<? super Object> predicate
+            String pattern,
+            ProgressIndicator progressIndicator,
+            Predicate<? super Object> predicate
         ) {
         }
 
         @Override
         @RequiredUIAccess
-        public boolean processSelectedItem(@Nonnull Object selected, int modifiers, @Nonnull String searchText) {
+        public boolean processSelectedItem(Object selected, int modifiers, String searchText) {
             mySearchField.setValue(((SearchEverywhereCommandInfo) selected).getCommandWithPrefix() + " ");
             //featureTriggered(SearchEverywhereUsageTriggerCollector.COMMAND_COMPLETED, null);
             return false;
         }
 
-        @Nonnull
         @Override
         public ListCellRenderer<? super Object> getElementsRenderer() {
             return myCommandRenderer;
@@ -1659,7 +1642,7 @@ public class SearchEverywhereUI extends BigPopupUI implements UiDataProvider, Qu
 
         @Nullable
         @Override
-        public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
+        public Object getDataForItem(Object element, Key dataId) {
             return null;
         }
     };

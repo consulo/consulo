@@ -3,7 +3,6 @@
 package consulo.language.editor.impl.internal.inlay.setting;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -28,11 +27,11 @@ public interface ImmediateConfigurable {
         private final Consumer<Boolean> onUserChanged;
         private final LocalizeValue extendedDescription;
 
-        public Case(@Nonnull LocalizeValue name,
+        public Case(LocalizeValue name,
                     String id,
                     BooleanSupplier loadFromSettings,
                     Consumer<Boolean> onUserChanged,
-                    @Nonnull LocalizeValue extendedDescription) {
+                    LocalizeValue extendedDescription) {
             this.name = name;
             this.id = id;
             this.loadFromSettings = loadFromSettings;
@@ -40,7 +39,7 @@ public interface ImmediateConfigurable {
             this.extendedDescription = extendedDescription;
         }
 
-        @Nonnull
+        
         public LocalizeValue getName() {
             return name;
         }
@@ -57,7 +56,7 @@ public interface ImmediateConfigurable {
             onUserChanged.accept(value);
         }
 
-        @Nonnull
+        
         public LocalizeValue getExtendedDescription() {
             return extendedDescription;
         }

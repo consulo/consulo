@@ -26,8 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey Simonchik
@@ -36,18 +35,18 @@ public class StopProcessAction extends DumbAwareAction {
 
   private final ProcessHandler myProcessHandler;
 
-  public StopProcessAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull ProcessHandler processHandler) {
+  public StopProcessAction(LocalizeValue text, LocalizeValue description, ProcessHandler processHandler) {
     super(text, description, PlatformIconGroup.actionsSuspend());
     myProcessHandler = processHandler;
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     update(e.getPresentation(), getTemplatePresentation(), myProcessHandler);
   }
 
-  public static void update(@Nonnull Presentation presentation,
-                            @Nonnull Presentation templatePresentation,
+  public static void update(Presentation presentation,
+                            Presentation templatePresentation,
                             @Nullable ProcessHandler processHandler) {
     boolean enable = false;
     Image icon = templatePresentation.getIcon();
@@ -71,7 +70,7 @@ public class StopProcessAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     ProcessHandlerStopper.stop(myProcessHandler);
   }
 }

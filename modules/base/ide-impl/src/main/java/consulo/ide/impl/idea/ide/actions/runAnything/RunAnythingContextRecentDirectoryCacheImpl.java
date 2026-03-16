@@ -23,7 +23,6 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.ide.internal.RunAnythingContextRecentDirectoryCache;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -42,8 +41,8 @@ public class RunAnythingContextRecentDirectoryCacheImpl implements
         public List<String> paths = new ArrayList<>();
     }
 
-    @Nonnull
-    public static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
+    
+    public static RunAnythingContextRecentDirectoryCache getInstance(Project project) {
         return project.getInstance(RunAnythingContextRecentDirectoryCache.class);
     }
 
@@ -54,7 +53,7 @@ public class RunAnythingContextRecentDirectoryCacheImpl implements
         return myState.paths;
     }
 
-    @Nonnull
+    
     @Override
     public State getState() {
         return myState;

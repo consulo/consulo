@@ -20,7 +20,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.virtualFileSystem.internal.FileTypeAssocTable;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -35,7 +34,7 @@ public class IgnoredPatternSet {
     return Collections.unmodifiableSet(myMasks);
   }
 
-  public void setIgnoreMasks(@Nonnull Set<String> files) {
+  public void setIgnoreMasks(Set<String> files) {
     clearPatterns();
 
     for (String ignoredFile : files) {
@@ -43,7 +42,7 @@ public class IgnoredPatternSet {
     }
   }
 
-  public void setIgnoreMasks(@Nonnull String list) {
+  public void setIgnoreMasks(String list) {
     clearPatterns();
 
     StringTokenizer tokenizer = new StringTokenizer(list, ";");
@@ -55,14 +54,14 @@ public class IgnoredPatternSet {
     }
   }
 
-  void addIgnoreMask(@Nonnull String ignoredFile) {
+  void addIgnoreMask(String ignoredFile) {
     if (myIgnorePatterns.findAssociatedFileType(ignoredFile) == null) {
       myMasks.add(ignoredFile);
       myIgnorePatterns.addAssociation(FileNameMatcherFactory.getInstance().createMatcher(ignoredFile), Boolean.TRUE);
     }
   }
 
-  public boolean isIgnored(@Nonnull CharSequence fileName) {
+  public boolean isIgnored(CharSequence fileName) {
     if (Objects.equals(myIgnorePatterns.findAssociatedFileType(fileName), Boolean.TRUE)) {
       return true;
     }

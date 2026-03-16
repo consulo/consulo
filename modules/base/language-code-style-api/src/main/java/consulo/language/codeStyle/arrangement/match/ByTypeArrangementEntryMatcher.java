@@ -20,7 +20,6 @@ import consulo.language.codeStyle.arrangement.TypeAwareArrangementEntry;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,19 +36,19 @@ import java.util.Set;
  */
 public class ByTypeArrangementEntryMatcher implements ArrangementEntryMatcher {
 
-  @Nonnull
+  
   private final Set<ArrangementAtomMatchCondition> myTypes = new HashSet<>();
 
-  public ByTypeArrangementEntryMatcher(@Nonnull ArrangementAtomMatchCondition interestedType) {
+  public ByTypeArrangementEntryMatcher(ArrangementAtomMatchCondition interestedType) {
     myTypes.add(interestedType);
   }
 
-  public ByTypeArrangementEntryMatcher(@Nonnull Collection<ArrangementAtomMatchCondition> interestedTypes) {
+  public ByTypeArrangementEntryMatcher(Collection<ArrangementAtomMatchCondition> interestedTypes) {
     myTypes.addAll(interestedTypes);
   }
 
   @Override
-  public boolean isMatched(@Nonnull ArrangementEntry entry) {
+  public boolean isMatched(ArrangementEntry entry) {
     if (entry instanceof TypeAwareArrangementEntry) {
       Set<ArrangementSettingsToken> types = ((TypeAwareArrangementEntry)entry).getTypes();
       for (ArrangementAtomMatchCondition condition : myTypes) {
@@ -64,7 +63,7 @@ public class ByTypeArrangementEntryMatcher implements ArrangementEntryMatcher {
     return false;
   }
 
-  @Nonnull
+  
   public Set<ArrangementAtomMatchCondition> getTypes() {
     return myTypes;
   }

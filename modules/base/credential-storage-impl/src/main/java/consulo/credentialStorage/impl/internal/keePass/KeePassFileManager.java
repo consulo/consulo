@@ -20,7 +20,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.io.IOException;
@@ -182,7 +181,7 @@ public class KeePassFileManager {
         return true;
     }
 
-    public void askAndSetMainKey(AnActionEvent event, @Nonnull LocalizeValue topNote, Runnable onPasswordSet) {
+    public void askAndSetMainKey(AnActionEvent event, LocalizeValue topNote, Runnable onPasswordSet) {
         Component contextComponent = event != null ? event.getData(UIExAWTDataKey.CONTEXT_COMPONENT) : null;
         KeePassDatabase db;
         try {

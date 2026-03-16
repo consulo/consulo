@@ -18,8 +18,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.NotNullizer;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -29,34 +28,34 @@ final class ServiceModel implements Disposable, InvokerSupplier {
     private static final Logger LOG = Logger.getInstance(ServiceModel.class);
 
     static final TreeTraversal NOT_LOADED_LAST_BFS = new TreeTraversal("NOT_LOADED_LAST_BFS") {
-        @Nonnull
+        
         @Override
         public <T> It<T> createIterator(
-            @Nonnull Iterable<? extends T> roots,
-            @Nonnull Function<T, ? extends Iterable<? extends T>> tree
+            Iterable<? extends T> roots,
+            Function<T, ? extends Iterable<? extends T>> tree
         ) {
             return new NotLoadedLastBfsIt<>(roots, tree);
         }
     };
     static final TreeTraversal ONLY_LOADED_BFS = new TreeTraversal("ONLY_LOADED_BFS") {
-        @Nonnull
+        
         @Override
         public <T> It<T> createIterator(
-            @Nonnull Iterable<? extends T> roots,
-            @Nonnull Function<T, ? extends Iterable<? extends T>> tree
+            Iterable<? extends T> roots,
+            Function<T, ? extends Iterable<? extends T>> tree
         ) {
             return new OnlyLoadedBfsIt<>(roots, tree);
         }
     };
     private static final NotNullizer ourNotNullizer = new NotNullizer("ServiceViewTreeTraversal.NotNull");
 
-    @Nonnull
+    
     private final Project myProject;
     private final Invoker myInvoker = InvokerFactory.getInstance().forBackgroundThreadWithoutReadAction(this);
     private final List<ServiceViewItem> myRoots = Lists.newLockFreeCopyOnWriteList();
     private final List<ServiceModelEventListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    ServiceModel(@Nonnull Project project) {
+    ServiceModel(Project project) {
         myProject = project;
     }
 
@@ -64,21 +63,21 @@ final class ServiceModel implements Disposable, InvokerSupplier {
     public void dispose() {
     }
 
-    @Nonnull
+    
     @Override
     public Invoker getInvoker() {
         return myInvoker;
     }
 
-    void addEventListener(@Nonnull ServiceModelEventListener listener) {
+    void addEventListener(ServiceModelEventListener listener) {
         myListeners.add(listener);
     }
 
-    void removeEventListener(@Nonnull ServiceModelEventListener listener) {
+    void removeEventListener(ServiceModelEventListener listener) {
         myListeners.remove(listener);
     }
 
-    @Nonnull
+    
     List<? extends ServiceViewItem> getRoots() {
         return myRoots;
     }
@@ -147,8 +146,8 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         return null;
     }
 
-    @Nonnull
-    CancellablePromise<?> handle(@Nonnull ServiceEventListener.ServiceEvent e) {
+    
+    CancellablePromise<?> handle(ServiceEventListener.ServiceEvent e) {
         Runnable handler = () -> {
             LOG.debug("Handle event: " + e);
             switch (e.type) {
@@ -587,7 +586,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
     static final class ContributorNode extends ServiceViewItem {
         private final Project myProject;
 
-        ContributorNode(@Nonnull Project project, @Nonnull ServiceViewContributor<?> contributor) {
+        ContributorNode(Project project, ServiceViewContributor<?> contributor) {
             super(contributor, null, contributor, contributor.getViewDescriptor(project));
             myProject = project;
         }
@@ -608,11 +607,11 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         private volatile boolean myLoaded;
 
         ServiceNode(
-            @Nonnull Object service,
+            Object service,
             @Nullable ServiceViewItem parent,
-            @Nonnull ServiceViewContributor<?> contributor,
-            @Nonnull ServiceViewDescriptor viewDescriptor,
-            @Nonnull Project project,
+            ServiceViewContributor<?> contributor,
+            ServiceViewDescriptor viewDescriptor,
+            Project project,
             @Nullable ServiceViewContributor<?> providingContributor
         ) {
             super(service, parent, contributor, viewDescriptor);
@@ -622,7 +621,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             myLoaded = !(providingContributor instanceof ServiceViewLazyContributor);
         }
 
-        @Nonnull
+        
         @Override
         List<ServiceViewItem> getChildren() {
             List<ServiceViewItem> children = super.getChildren();
@@ -669,7 +668,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
             return myProvidingContributor;
         }
 
-        @Nonnull
+        
         private Object getService() {
             return myProvidingContributor != null ? myProvidingContributor : getValue();
         }
@@ -677,10 +676,10 @@ final class ServiceModel implements Disposable, InvokerSupplier {
 
     static final class ServiceGroupNode extends ServiceViewItem {
         ServiceGroupNode(
-            @Nonnull Object group,
+            Object group,
             @Nullable ServiceViewItem parent,
-            @Nonnull ServiceViewContributor<?> contributor,
-            @Nonnull ServiceViewDescriptor viewDescriptor
+            ServiceViewContributor<?> contributor,
+            ServiceViewDescriptor viewDescriptor
         ) {
             super(group, parent, contributor, viewDescriptor);
         }
@@ -716,7 +715,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         Deque<T> myNotLoadedQueue = new ArrayDeque<>();
         T myTop;
 
-        NotLoadedLastBfsIt(@Nonnull Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
+        NotLoadedLastBfsIt(Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             JBIterable.from(roots).map(ourNotNullizer::notNullize).addAllTo(myQueue);
         }
@@ -755,7 +754,7 @@ final class ServiceModel implements Disposable, InvokerSupplier {
         Deque<T> myQueue = new ArrayDeque<>();
         T myTop;
 
-        OnlyLoadedBfsIt(@Nonnull Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
+        OnlyLoadedBfsIt(Iterable<? extends T> roots, Function<? super T, ? extends Iterable<? extends T>> tree) {
             super(tree);
             JBIterable.from(roots).map(ourNotNullizer::notNullize).addAllTo(myQueue);
         }

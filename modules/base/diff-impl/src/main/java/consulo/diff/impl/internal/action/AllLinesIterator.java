@@ -18,16 +18,15 @@ package consulo.diff.impl.internal.action;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.document.Document;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
 public class AllLinesIterator implements Iterator<Pair<Integer, CharSequence>> {
-  @Nonnull
+  
   private final Document myDocument;
   private int myLine = 0;
 
-  public AllLinesIterator(@Nonnull Document document) {
+  public AllLinesIterator(Document document) {
     myDocument = document;
   }
 

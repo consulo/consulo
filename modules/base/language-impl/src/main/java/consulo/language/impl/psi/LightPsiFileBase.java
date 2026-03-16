@@ -19,7 +19,6 @@ package consulo.language.impl.psi;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElementVisitor;
-import jakarta.annotation.Nonnull;
 
 public abstract class LightPsiFileBase extends LightPsiFileImpl {
   public LightPsiFileBase(FileViewProvider provider, Language language) {
@@ -32,7 +31,7 @@ public abstract class LightPsiFileBase extends LightPsiFileImpl {
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
+  public void accept(PsiElementVisitor visitor) {
     visitor.visitFile(this);
   }
 }

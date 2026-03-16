@@ -22,8 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -179,13 +178,13 @@ public abstract class ParenthesesInsertHandler<T extends LookupElement> implemen
   }
 
   @Nullable
-  protected PsiElement findExistingLeftParenthesis(@Nonnull InsertionContext context) {
+  protected PsiElement findExistingLeftParenthesis(InsertionContext context) {
     PsiElement element = findNextToken(context);
     return isToken(element, String.valueOf(myLeftParenthesis)) ? element : null;
   }
 
   @Nullable
-  protected PsiElement findNextToken(@Nonnull InsertionContext context) {
+  protected PsiElement findNextToken(InsertionContext context) {
     PsiFile file = context.getFile();
     PsiElement element = file.findElementAt(context.getTailOffset());
     if (element instanceof PsiWhiteSpace) {

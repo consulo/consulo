@@ -22,30 +22,29 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class UnversionedViewDialog extends SpecificFilesViewDialog {
 
-  public UnversionedViewDialog(@Nonnull Project project) {
+  public UnversionedViewDialog(Project project) {
     super(project, "Unversioned Files", ChangesListViewImpl.UNVERSIONED_FILES_DATA_KEY,
           ChangeListManagerEx.getInstanceEx(project).getUnversionedFiles());
   }
 
   @Override
-  protected void addCustomActions(@Nonnull DefaultActionGroup group, @Nonnull ActionToolbar actionToolbar) {
+  protected void addCustomActions(DefaultActionGroup group, ActionToolbar actionToolbar) {
     group.add(getUnversionedActionGroup());
 
     myView.setMenuActions(getUnversionedActionGroup());
   }
 
-  @Nonnull
+  
   public static ActionGroup getUnversionedActionGroup() {
     return (ActionGroup)ActionManager.getInstance().getAction("Unversioned.Files.Dialog");
   }
 
-  @Nonnull
+  
   @Override
   protected List<VirtualFile> getFiles() {
     return ((ChangeListManagerEx)myChangeListManager).getUnversionedFiles();

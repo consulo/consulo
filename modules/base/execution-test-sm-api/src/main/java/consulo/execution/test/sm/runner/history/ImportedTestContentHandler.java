@@ -26,7 +26,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import jakarta.annotation.Nonnull;
 
 public class ImportedTestContentHandler extends DefaultHandler {
     private final GeneralTestEventsProcessor myProcessor;
@@ -104,7 +103,7 @@ public class ImportedTestContentHandler extends DefaultHandler {
             }
             else if (TestResultsXmlFormatter.STATUS_IGNORED.equals(myStatus) || TestResultsXmlFormatter.STATUS_SKIPPED.equals(myStatus)) {
                 myProcessor.onTestIgnored(new TestIgnoredEvent(myCurrentTest, "", currentText) {
-                    @Nonnull
+                    
                     @Override
                     public String getIgnoreComment() {
                         return "";

@@ -23,7 +23,6 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ui.ex.awt.ItemRemovable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -61,11 +60,11 @@ class ClasspathTableModel extends AbstractTableModel implements ItemRemovable {
     return myItems.get(row);
   }
 
-  public void addItem(@Nonnull ClasspathTableItem<?> item) {
+  public void addItem(ClasspathTableItem<?> item) {
     myItems.add(item);
   }
 
-  public void addItemAt(@Nonnull ClasspathTableItem<?> item, int row) {
+  public void addItemAt(ClasspathTableItem<?> item, int row) {
     myItems.add(row, item);
   }
 

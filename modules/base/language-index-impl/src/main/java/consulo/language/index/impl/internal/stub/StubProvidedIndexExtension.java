@@ -11,38 +11,37 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.psi.stub.StubIndexExtension;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
 public class StubProvidedIndexExtension implements ProvidedIndexExtension<Integer, SerializedStubTree> {
-  @Nonnull
+  
   private final File myIndexFile;
 
-  public StubProvidedIndexExtension(@Nonnull File file) {
+  public StubProvidedIndexExtension(File file) {
     myIndexFile = file;
   }
 
-  @Nonnull
+  
   @Override
   public File getIndexPath() {
     return myIndexFile;
   }
 
-  @Nonnull
+  
   @Override
   public ID<Integer, SerializedStubTree> getIndexId() {
     return StubUpdatingIndex.INDEX_ID;
   }
 
-  @Nonnull
+  
   @Override
   public KeyDescriptor<Integer> createKeyDescriptor() {
     return EnumeratorIntegerDescriptor.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
   public DataExternalizer<SerializedStubTree> createValueExternalizer() {
     File path = getIndexPath();
@@ -52,7 +51,7 @@ public class StubProvidedIndexExtension implements ProvidedIndexExtension<Intege
   }
 
   @Nullable
-  public <K> ProvidedIndexExtension<K, Void> findProvidedStubIndex(@Nonnull StubIndexExtension<K, ?> extension) {
+  public <K> ProvidedIndexExtension<K, Void> findProvidedStubIndex(StubIndexExtension<K, ?> extension) {
     String name = extension.getKey().getName();
     File path = getIndexPath();
 
@@ -60,25 +59,25 @@ public class StubProvidedIndexExtension implements ProvidedIndexExtension<Intege
     if (!indexPath.exists()) return null;
 
     return new ProvidedIndexExtension<K, Void>() {
-      @Nonnull
+      
       @Override
       public File getIndexPath() {
         return myIndexFile;
       }
 
-      @Nonnull
+      
       @Override
       public ID<K, Void> getIndexId() {
         return (ID)extension.getKey();
       }
 
-      @Nonnull
+      
       @Override
       public KeyDescriptor<K> createKeyDescriptor() {
         return extension.getKeyDescriptor();
       }
 
-      @Nonnull
+      
       @Override
       public DataExternalizer<Void> createValueExternalizer() {
         return VoidDataExternalizer.INSTANCE;

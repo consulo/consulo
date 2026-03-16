@@ -22,7 +22,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.internal.AdditionalCompileScopeProvider;
 import consulo.compiler.scope.CompileScope;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.function.Predicate;
@@ -34,9 +33,9 @@ import java.util.function.Predicate;
 public class ArtifactAdditionalCompileScopeProvider extends AdditionalCompileScopeProvider {
     @Override
     public CompileScope getAdditionalScope(
-        @Nonnull CompileScope baseScope,
-        @Nonnull Predicate<Compiler> filter,
-        @Nonnull Project project
+        CompileScope baseScope,
+        Predicate<Compiler> filter,
+        Project project
     ) {
         if (ArtifactCompileScope.getArtifacts(baseScope) != null) {
             return null;

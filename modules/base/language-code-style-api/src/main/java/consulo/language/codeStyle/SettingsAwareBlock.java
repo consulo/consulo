@@ -15,13 +15,12 @@
  */
 package consulo.language.codeStyle;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
  * @since 2012-09-06
  */
 public interface SettingsAwareBlock extends Block {
-    @Nonnull
+    
     CodeStyleSettings getSettings();
 }

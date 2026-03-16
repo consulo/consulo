@@ -5,7 +5,6 @@ import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -21,17 +20,17 @@ public final class RendererWrapper implements EditorCustomElementRenderer {
     }
 
     @Override
-    public int calcWidthInPixels(@Nonnull Inlay inlay) {
+    public int calcWidthInPixels(Inlay inlay) {
         return myDelegate.calcWidthInPixels(inlay);
     }
 
     @Override
-    public int calcHeightInPixels(@Nonnull Inlay inlay) {
+    public int calcHeightInPixels(Inlay inlay) {
         return myDelegate.calcHeightInPixels(inlay);
     }
 
     @Override
-    public void paint(@Nonnull Inlay inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+    public void paint(Inlay inlay, Graphics g, Rectangle r, TextAttributes textAttributes) {
         myDelegate.paint(inlay, g, r, textAttributes);
         if (myDrawBorder) {
             TextAttributes attributes = inlay.getEditor().getColorsScheme().getAttributes(BLINKING_HIGHLIGHTS_ATTRIBUTES);

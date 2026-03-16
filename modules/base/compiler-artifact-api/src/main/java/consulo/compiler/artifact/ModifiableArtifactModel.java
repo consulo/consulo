@@ -19,31 +19,30 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.event.ArtifactListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ModifiableArtifactModel extends ArtifactModel {
 
-  @Nonnull
-  ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType);
+  
+  ModifiableArtifact addArtifact(String name, ArtifactType artifactType);
 
-  @Nonnull
-  ModifiableArtifact addArtifact(@Nonnull String name, @Nonnull ArtifactType artifactType, CompositePackagingElement<?> rootElement);
+  
+  ModifiableArtifact addArtifact(String name, ArtifactType artifactType, CompositePackagingElement<?> rootElement);
 
-  void removeArtifact(@Nonnull Artifact artifact);
+  void removeArtifact(Artifact artifact);
 
-  @Nonnull
-  ModifiableArtifact getOrCreateModifiableArtifact(@Nonnull Artifact artifact);
+  
+  ModifiableArtifact getOrCreateModifiableArtifact(Artifact artifact);
 
   @Nullable
   Artifact getModifiableCopy(Artifact artifact);
 
-  void addListener(@Nonnull ArtifactListener listener);
+  void addListener(ArtifactListener listener);
 
-  void removeListener(@Nonnull ArtifactListener listener);
+  void removeListener(ArtifactListener listener);
 
   boolean isModified();
 

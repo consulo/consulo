@@ -28,7 +28,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ToggleWindowedMode")
 public class ToggleWindowedModeAction extends ToggleAction implements DumbAware {
@@ -71,7 +70,7 @@ public class ToggleWindowedModeAction extends ToggleAction implements DumbAware 
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         if (Platform.current().os().isMac()) {

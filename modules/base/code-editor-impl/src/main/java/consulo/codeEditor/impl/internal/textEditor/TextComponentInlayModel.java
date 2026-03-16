@@ -3,8 +3,7 @@ package consulo.codeEditor.impl.internal.textEditor;
 
 import consulo.codeEditor.*;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -13,58 +12,58 @@ import java.util.List;
 public class TextComponentInlayModel implements InlayModel {
     @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, int priority, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, int priority, T renderer) {
         return null;
     }
 
     @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, boolean relatesToPrecedingText, T renderer) {
         return null;
     }
 
     @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, @Nonnull InlayProperties properties, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addInlineElement(int offset, InlayProperties properties, T renderer) {
         return null;
     }
 
     @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, boolean relatesToPrecedingText, boolean showAbove, int priority, T renderer) {
         return null;
     }
 
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, @Nonnull InlayProperties properties, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addBlockElement(int offset, InlayProperties properties, T renderer) {
         return null;
     }
 
     @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, boolean relatesToPrecedingText, T renderer) {
         return null;
     }
 
     @Nullable
     @Override
-    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, @Nonnull InlayProperties properties, @Nonnull T renderer) {
+    public <T extends EditorCustomElementRenderer> Inlay<T> addAfterLineEndElement(int offset, InlayProperties properties, T renderer) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getInlineElementsInRange(int startOffset, int endOffset) {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getBlockElementsInRange(int startOffset, int endOffset) {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getBlockElementsForVisualLine(int visualLine, boolean above) {
         return Collections.emptyList();
@@ -77,23 +76,23 @@ public class TextComponentInlayModel implements InlayModel {
 
     @Nullable
     @Override
-    public Inlay getInlineElementAt(@Nonnull VisualPosition visualPosition) {
+    public Inlay getInlineElementAt(VisualPosition visualPosition) {
         return null;
     }
 
     @Nullable
     @Override
-    public Inlay getElementAt(@Nonnull Point point) {
+    public Inlay getElementAt(Point point) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getAfterLineEndElementsInRange(int startOffset, int endOffset) {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public List<Inlay<?>> getAfterLineEndElementsForLogicalLine(int logicalLine) {
         return Collections.emptyList();
@@ -104,6 +103,6 @@ public class TextComponentInlayModel implements InlayModel {
     }
 
     @Override
-    public void addListener(@Nonnull Listener listener, @Nonnull Disposable disposable) {
+    public void addListener(Listener listener, Disposable disposable) {
     }
 }

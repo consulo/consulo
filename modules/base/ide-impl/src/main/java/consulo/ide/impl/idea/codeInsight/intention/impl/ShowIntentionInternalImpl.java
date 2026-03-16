@@ -24,8 +24,7 @@ import consulo.language.editor.internal.intention.ShowIntentionInternal;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.function.BiPredicate;
@@ -38,22 +37,22 @@ import java.util.function.BiPredicate;
 @ServiceImpl
 public class ShowIntentionInternalImpl implements ShowIntentionInternal {
     @Override
-    public boolean markActionInvoked(@Nonnull Project project, @Nonnull Editor editor, @Nonnull IntentionAction action) {
+    public boolean markActionInvoked(Project project, Editor editor, IntentionAction action) {
         return ShowIntentionsPass.markActionInvoked(project, editor, action);
     }
 
     @Nullable
     @Override
-    public Pair<PsiFile, Editor> chooseBetweenHostAndInjected(@Nonnull PsiFile hostFile,
-                                                              @Nonnull Editor hostEditor,
+    public Pair<PsiFile, Editor> chooseBetweenHostAndInjected(PsiFile hostFile,
+                                                              Editor hostEditor,
                                                               @Nullable PsiFile injectedFile,
-                                                              @RequiredReadAction @Nonnull BiPredicate<? super PsiFile, ? super Editor> predicate) {
+                                                              @RequiredReadAction BiPredicate<? super PsiFile, ? super Editor> predicate) {
         return ShowIntentionActionsHandler.chooseBetweenHostAndInjected(hostFile, hostEditor, injectedFile, predicate);
     }
 
     @RequiredReadAction
     @Override
-    public boolean availableFor(@Nonnull PsiFile psiFile, @Nonnull Editor editor, @Nonnull IntentionAction action) {
+    public boolean availableFor(PsiFile psiFile, Editor editor, IntentionAction action) {
         return ShowIntentionActionsHandler.availableFor(psiFile, editor, action);
     }
 }

@@ -17,8 +17,8 @@ package consulo.compiler.artifact.element;
 
 import consulo.compiler.artifact.ArtifactType;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -29,9 +29,9 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
     List<? extends PackagingElement<?>> substitution = getSubstitution(resolvingContext, artifactType);
     if (substitution == null) return;
 
@@ -46,7 +46,7 @@ public abstract class ComplexPackagingElement<S> extends PackagingElement<S> {
   }
 
 
-  @jakarta.annotation.Nullable
-  public abstract List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType);
+  @Nullable
+  public abstract List<? extends PackagingElement<?>> getSubstitution(PackagingElementResolvingContext context, ArtifactType artifactType);
 
 }

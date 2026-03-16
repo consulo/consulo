@@ -28,8 +28,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -115,7 +114,7 @@ public class CompositeCheckoutListener implements CheckoutProvider.Listener {
     }
 
     @Nullable
-    static Project findProjectByBaseDirLocation(@Nonnull File directory) {
+    static Project findProjectByBaseDirLocation(File directory) {
         return ContainerUtil.find(ProjectManager.getInstance().getOpenProjects(), project -> {
             VirtualFile baseDir = project.getBaseDir();
             return baseDir != null && FileUtil.filesEqual(VirtualFileUtil.virtualToIoFile(baseDir), directory);

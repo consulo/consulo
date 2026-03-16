@@ -32,8 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,9 +51,9 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
   private final boolean myChooseJarContents;
   private final boolean myChooseMultiple;
 
-  @Nonnull
+  
   private LocalizeValue myTitleValue = FileChooserLocalize.fileChooserDefaultTitle();
-  @Nonnull
+  
   private LocalizeValue myDescriptionValue = LocalizeValue.empty();
 
   private boolean myHideIgnored = true;
@@ -84,7 +83,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     myChooseMultiple = chooseMultiple;
   }
 
-  public FileChooserDescriptor(@Nonnull FileChooserDescriptor d) {
+  public FileChooserDescriptor(FileChooserDescriptor d) {
     this(d.isChooseFiles(), d.isChooseFolders(), d.isChooseJars(), d.isChooseJarsAsFiles(), d.isChooseJarContents(), d.isChooseMultiple());
     withTitleValue(d.getTitleValue());
     withDescriptionValue(d.getDescriptionValue());
@@ -127,7 +126,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return isChooseMultiple();
   }
 
-  @Nonnull
+  
   public LocalizeValue getTitleValue() {
     return myTitleValue;
   }
@@ -145,7 +144,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     withTitle(title);
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #withTitleValue(LocalizeValue)")
   public FileChooserDescriptor withTitle(@Nullable String title) {
@@ -153,8 +152,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
-  @Nonnull
-  public FileChooserDescriptor withTitleValue(@Nonnull LocalizeValue title) {
+  
+  public FileChooserDescriptor withTitleValue(LocalizeValue title) {
     myTitleValue = title;
     return this;
   }
@@ -165,7 +164,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     withDescription(description);
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #withDescription(LocalizeValue)")
   public FileChooserDescriptor withDescription(@Nullable String description) {
@@ -173,8 +172,8 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
-  @Nonnull
-  public FileChooserDescriptor withDescriptionValue(@Nonnull LocalizeValue description) {
+  
+  public FileChooserDescriptor withDescriptionValue(LocalizeValue description) {
     myDescriptionValue = description;
     return this;
   }
@@ -186,7 +185,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return StringUtil.nullize(myDescriptionValue.get());
   }
 
-  @Nonnull
+  
   public LocalizeValue getDescriptionValue() {
     return myDescriptionValue;
   }
@@ -204,16 +203,16 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return this;
   }
 
-  @Nonnull
+  
   public List<VirtualFile> getRoots() {
     return Collections.unmodifiableList(myRoots);
   }
 
-  public void setRoots(@Nonnull VirtualFile... roots) {
+  public void setRoots(VirtualFile... roots) {
     withRoots(roots);
   }
 
-  public void setRoots(@Nonnull List<VirtualFile> roots) {
+  public void setRoots(List<VirtualFile> roots) {
     withRoots(roots);
   }
 
@@ -221,7 +220,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return withRoots(Arrays.asList(roots));
   }
 
-  public FileChooserDescriptor withRoots(@Nonnull List<VirtualFile> roots) {
+  public FileChooserDescriptor withRoots(List<VirtualFile> roots) {
     myRoots.clear();
     myRoots.addAll(roots);
     return this;
@@ -334,7 +333,7 @@ public class FileChooserDescriptor extends UserDataHolderBase implements Cloneab
     return VirtualFileManager.getInstance().getFileIcon(file, null, Iconable.ICON_FLAG_READ_STATUS);
   }
 
-  @Nonnull
+  
   protected static Image dressIcon(VirtualFile file, Image baseIcon) {
     return file.isValid() && file.is(VFileProperty.SYMLINK) ? ImageEffects.layered(baseIcon, PlatformIconGroup.nodesSymlink()) : baseIcon;
   }

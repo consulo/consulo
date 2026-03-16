@@ -6,8 +6,7 @@ import consulo.language.editor.inspection.IntentionAndQuickFixAction;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Intention action that is used as a variant of [IntentionActionWithChoice].
@@ -50,7 +49,7 @@ public abstract class ChoiceVariantIntentionAction extends IntentionAndQuickFixA
     }
 
     @Override
-    public int compareTo(@Nonnull IntentionAction other) {
+    public int compareTo(IntentionAction other) {
         int i = this.getText().compareTo(other.getText());
         if (i != 0) {
             return i;

@@ -22,16 +22,14 @@ import consulo.versionControlSystem.internal.VcsShowConfirmationOptionImpl;
 import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import java.util.HashMap;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
 public class ProjectLevelVcsManagerSerialization {
-  @NonNls private static final String OPTIONS_SETTING = "OptionsSetting";
-  @NonNls private static final String CONFIRMATIONS_SETTING = "ConfirmationsSetting";
-  @NonNls private static final String VALUE_ATTTIBUTE = "value";
-  @NonNls private static final String ID_ATTRIBUTE = "id";
+  private static final String OPTIONS_SETTING = "OptionsSetting";
+  private static final String CONFIRMATIONS_SETTING = "ConfirmationsSetting";
+  private static final String VALUE_ATTTIBUTE = "value";
+  private static final String ID_ATTRIBUTE = "id";
 
   // read-only can be kept here
   private final Map<String, VcsShowConfirmationOption.Value> myReadValue;
@@ -74,7 +72,7 @@ public class ProjectLevelVcsManagerSerialization {
     }
   }
 
-  public void writeExternalUtil(@Nonnull Element element, @Nonnull OptionsAndConfirmations optionsAndConfirmations) throws WriteExternalException {
+  public void writeExternalUtil(Element element, OptionsAndConfirmations optionsAndConfirmations) throws WriteExternalException {
     Map<String, VcsShowOptionsSettingImpl> options = optionsAndConfirmations.getOptions();
     Map<String, VcsShowConfirmationOptionImpl> confirmations = optionsAndConfirmations.getConfirmations();
 

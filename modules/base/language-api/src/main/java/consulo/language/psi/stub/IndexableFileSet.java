@@ -18,13 +18,12 @@ package consulo.language.psi.stub;
 import consulo.content.ContentIterator;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface IndexableFileSet {
-    boolean isInSet(@Nonnull VirtualFile file);
+    boolean isInSet(VirtualFile file);
 
-    void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator);
+    void iterateIndexableFilesIn(VirtualFile file, ContentIterator iterator);
 }

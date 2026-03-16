@@ -17,9 +17,8 @@ package consulo.ide.impl.idea.openapi.editor;
 
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferableData;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.Arrays;
@@ -32,7 +31,7 @@ public class CaretStateTransferableData implements TextBlockTransferableData {
   public final int[] startOffsets;
   public final int[] endOffsets;
 
-  public CaretStateTransferableData(@Nonnull int[] startOffsets, @Nonnull int[] endOffsets) {
+  public CaretStateTransferableData(int[] startOffsets, int[] endOffsets) {
     this.startOffsets = startOffsets;
     this.endOffsets = endOffsets;
   }

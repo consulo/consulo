@@ -24,7 +24,6 @@ import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
   private final PsiElement[] myElementsToMove;
@@ -55,7 +54,7 @@ class MoveFilesOrDirectoriesViewDescriptor implements UsageViewDescriptor {
   }
 
   @Override
-  @Nonnull
+  
   public PsiElement[] getElements() {
     return myElementsToMove;
   }

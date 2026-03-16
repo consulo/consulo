@@ -1,20 +1,19 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language;
 
-import jakarta.annotation.Nonnull;
 
 final class LanguageKindMatcher extends LanguageMatcher {
 
   private final
-  @Nonnull
+  
   Language myLanguage;
 
-  LanguageKindMatcher(@Nonnull Language language) {
+  LanguageKindMatcher(Language language) {
     myLanguage = language;
   }
 
   @Override
-  public boolean matchesLanguage(@Nonnull Language language) {
+  public boolean matchesLanguage(Language language) {
     return language.isKindOf(myLanguage);
   }
 

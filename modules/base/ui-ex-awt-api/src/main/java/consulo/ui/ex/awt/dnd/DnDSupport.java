@@ -20,8 +20,7 @@ import consulo.disposer.Disposer;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;
@@ -88,7 +87,7 @@ public class DnDSupport implements DnDTarget, DnDSource, Disposable {
   }
 
   @Override
-  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
+  public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
     if (myImageProvider != null) {
       DnDImage image = myImageProvider.apply(new DnDActionInfo(action, dragOrigin));
       if (image != null) {
@@ -152,10 +151,10 @@ public class DnDSupport implements DnDTarget, DnDSource, Disposable {
   }
 
   private static class DnDNativeTargetWrapper implements DnDNativeTarget {
-    @Nonnull
+    
     private final DnDTarget myTarget;
 
-    private DnDNativeTargetWrapper(@Nonnull DnDTarget target) {
+    private DnDNativeTargetWrapper(DnDTarget target) {
       myTarget = target;
     }
 

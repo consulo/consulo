@@ -40,7 +40,6 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -91,7 +90,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  @Nonnull
+  
   public State getState() {
     return myState;
   }

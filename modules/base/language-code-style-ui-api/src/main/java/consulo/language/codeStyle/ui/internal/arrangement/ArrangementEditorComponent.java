@@ -17,7 +17,6 @@ package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,18 +26,18 @@ import java.awt.*;
  */
 public class ArrangementEditorComponent implements ArrangementRepresentationAware, ArrangementAnimationManager.Callback, ArrangementEditorAware {
 
-  @Nonnull
+  
   private final ArrangementMatchingRulesControl myList;
-  @Nonnull
+  
   private final JComponent myComponent;
-  @Nonnull
+  
   private final Insets myBorderInsets;
-  @Nonnull
+  
   private final ArrangementMatchingRuleEditor myEditor;
 
   private final int myRow;
 
-  public ArrangementEditorComponent(@Nonnull ArrangementMatchingRulesControl list, int row, @Nonnull ArrangementMatchingRuleEditor editor) {
+  public ArrangementEditorComponent(ArrangementMatchingRulesControl list, int row, ArrangementMatchingRuleEditor editor) {
     myList = list;
     myRow = row;
     myEditor = editor;
@@ -58,7 +57,7 @@ public class ArrangementEditorComponent implements ArrangementRepresentationAwar
     //myComponent = new ArrangementAnimationPanel(borderPanel, true, false);
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return myComponent;

@@ -17,8 +17,7 @@ package consulo.ui.ex.awt.tab;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awt.util.TimedDeadzone;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -76,19 +75,19 @@ public interface JBTabsPresentation {
 
   JBTabsPresentation setFocusCycle(boolean root);
 
-  @Nonnull
+  
   JBTabsPresentation setToDrawBorderIfTabsHidden(boolean draw);
 
-  @Nonnull
+  
   JBTabs getJBTabs();
 
-  @Nonnull
+  
   JBTabsPresentation setActiveTabFillIn(@Nullable Color color);
 
-  @Nonnull
+  
   JBTabsPresentation setTabLabelActionsMouseDeadzone(TimedDeadzone.Length length);
 
-  @Nonnull
+  
   JBTabsPresentation setTabsPosition(JBTabsPosition position);
 
   JBTabsPosition getTabsPosition();

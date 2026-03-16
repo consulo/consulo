@@ -35,8 +35,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -60,7 +59,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
         this(BookmarkLocalize.actionBookmarksShowText(), BookmarkLocalize.actionBookmarksShowDescription());
     }
 
-    public BookmarksAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    public BookmarksAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
@@ -71,7 +70,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (myLastPopup != null && myLastPopup.isVisible()) {
             myLastPopup.cancel();
             myLastPopup = null;
@@ -96,7 +95,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
 
         popup.addListener(new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 myLastPopup = null;
             }
         });
@@ -104,7 +103,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
         new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Object selectedValue = list.getSelectedValue();
                 if (selectedValue instanceof BookmarkItem) {
                     itemChosen((BookmarkItem) selectedValue, project, popup, true);

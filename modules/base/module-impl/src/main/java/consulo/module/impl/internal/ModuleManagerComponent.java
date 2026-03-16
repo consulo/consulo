@@ -32,8 +32,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.localize.ModuleLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -48,15 +47,12 @@ import java.util.concurrent.CompletableFuture;
 public class ModuleManagerComponent extends ModuleManagerImpl {
     public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
 
-    @Nonnull
     private final ProgressManager myProgressManager;
-    @Nonnull
     private final MessageBusConnection myConnection;
-    @Nonnull
     private final ComponentBinding myComponentBinding;
 
     @Inject
-    public ModuleManagerComponent(Project project, @Nonnull ProgressManager progressManager, @Nonnull ComponentBinding componentBinding) {
+    public ModuleManagerComponent(Project project, ProgressManager progressManager, ComponentBinding componentBinding) {
         super(project);
         myComponentBinding = componentBinding;
         myConnection = myMessageBus.connect(project);
@@ -75,13 +71,12 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
         });
     }
 
-    @Nonnull
     @Override
-    protected ModuleEx createModule(@Nonnull String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
+    protected ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
         return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
     }
 
-    public void loadModulesNew(@Nonnull ProgressIndicator indicator) {
+    public void loadModulesNew(ProgressIndicator indicator) {
         StatCollector stat = new StatCollector();
 
         stat.markWith("load modules", () -> loadModules(myModuleModel, indicator, true));

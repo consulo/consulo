@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.collection.WeakList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -197,7 +196,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
     return myStack.isEmpty() || myStack.peek().isDisposed() ? null : myStack.peek().getContent();
   }
 
-  @Nonnull
+  
   @Override
   public Stream<JBPopup> getPopupStream() {
     return myStack.stream();

@@ -60,8 +60,7 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.*;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
@@ -88,7 +87,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
 
     private static final Logger LOG = Logger.getInstance(ChangesViewManagerImpl.class);
 
-    @Nonnull
+    
     private final ChangesListViewImpl myView;
     private JPanel myProgressLabel;
 
@@ -96,39 +95,39 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
 
     private boolean myDisposed = false;
 
-    @Nonnull
+    
     private final ChangeListListener myListener = new MyChangeListListener();
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ChangesViewContentI myContentManager;
 
-    @Nonnull
+    
     private ChangesViewManagerImpl.State myState = new ChangesViewManagerImpl.State();
 
     private JBSplitter mySplitter;
 
     private boolean myDetailsOn;
-    @Nonnull
+    
     private final NotNullLazyValue<CacheChangeProcessorBridge> myDiffDetails = new NotNullLazyValue<>() {
-        @Nonnull
+        
         @Override
         protected CacheChangeProcessorBridge compute() {
             return myProject.getInstance(CacheChangeProcessorBridgeFactory.class).create(new MyChangeProcessor());
         }
     };
 
-    @Nonnull
+    
     private final TreeSelectionListener myTsl;
     private Content myContent;
 
-    @Nonnull
-    public static ChangesViewManager getInstance(@Nonnull Project project) {
+    
+    public static ChangesViewManager getInstance(Project project) {
         return project.getInstance(ChangesViewManager.class);
     }
 
     @Inject
-    public ChangesViewManagerImpl(@Nonnull Project project, @Nonnull ChangesViewContentI contentManager) {
+    public ChangesViewManagerImpl(Project project, ChangesViewContentI contentManager) {
         myProject = project;
         myContentManager = contentManager;
         myView = new ChangesListViewImpl(project);
@@ -300,7 +299,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         return Platform.current().os().isMac() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
     }
 
-    private void updateProgressComponent(@Nonnull Supplier<JComponent> progress) {
+    private void updateProgressComponent(Supplier<JComponent> progress) {
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(() -> {
             if (myProgressLabel != null) {
@@ -326,7 +325,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         });
     }
 
-    @Nonnull
+    
     public static Supplier<JComponent> createTextStatusFactory(final String text, final boolean isError) {
         return new Supplier<JComponent>() {
             @Override
@@ -387,14 +386,14 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         changeDetails();
     }
 
-    @Nonnull
+    
     @Override
     public ChangesViewManagerImpl.State getState() {
         return myState;
     }
 
     @Override
-    public void loadState(@Nonnull ChangesViewManagerImpl.State state) {
+    public void loadState(ChangesViewManagerImpl.State state) {
         myState = state;
     }
 
@@ -421,7 +420,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
     }
 
     @Override
-    public void refreshChangesViewNodeAsync(@Nonnull final VirtualFile file) {
+    public void refreshChangesViewNodeAsync(final VirtualFile file) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -430,7 +429,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         }, myProject.getDisposed());
     }
 
-    private void refreshChangesViewNode(@Nonnull VirtualFile file) {
+    private void refreshChangesViewNode(VirtualFile file) {
         ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
         Object userObject = changeListManager.isUnversioned(file) ? file : changeListManager.getChange(file);
 
@@ -535,13 +534,13 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return !myState.myShowFlatten;
         }
 
         @RequiredUIAccess
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             setShowFlattenMode(!state);
         }
     }
@@ -556,13 +555,13 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myState.myShowIgnored;
         }
 
         @RequiredUIAccess
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myState.myShowIgnored = state;
             refreshView();
         }
@@ -574,13 +573,13 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myDetailsOn;
         }
 
         @RequiredUIAccess
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myDetailsOn = state;
             VcsConfiguration.getInstance(myProject).LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN = myDetailsOn;
             changeDetails();
@@ -607,7 +606,7 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
             return ProjectIdeFocusManager.getInstance(myProject).getFocusedDescendantFor(component) != null;
         }
 
-        @Nonnull
+        
         @Override
         public List<Change> getSelectedChanges() {
             List<Change> result = myView.getSelectedChanges().collect(toList());
@@ -617,14 +616,14 @@ public class ChangesViewManagerImpl implements ChangesViewManager, Disposable, P
             return result;
         }
 
-        @Nonnull
+        
         @Override
         public List<Change> getAllChanges() {
             return myView.getChanges().collect(toList());
         }
 
         @Override
-        public void selectChange(@Nonnull Change change) {
+        public void selectChange(Change change) {
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) myView.getModel().getRoot();
             DefaultMutableTreeNode node = TreeUtil.findNodeWithObject(root, change);
             if (node != null) {

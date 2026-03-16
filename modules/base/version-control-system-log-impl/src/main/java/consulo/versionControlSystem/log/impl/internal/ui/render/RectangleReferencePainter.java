@@ -27,8 +27,7 @@ import consulo.versionControlSystem.log.VcsLogRefManager;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
 import consulo.versionControlSystem.log.impl.internal.paint.PaintParameters;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RectangleReferencePainter implements ReferencePainter {
-  @Nonnull
+  
   private List<Pair<String, Color>> myLabels = new ArrayList<>();
   private int myHeight = JBUI.scale(22);
   private int myWidth = 0;
@@ -52,11 +51,11 @@ public class RectangleReferencePainter implements ReferencePainter {
 
   @Override
   public void customizePainter(
-    @Nonnull JComponent component,
-    @Nonnull Collection<VcsRef> references,
+    JComponent component,
+    Collection<VcsRef> references,
     @Nullable VcsLogRefManager manager,
-    @Nonnull Color background,
-    @Nonnull Color foreground
+    Color background,
+    Color foreground
   ) {
     FontMetrics metrics = component.getFontMetrics(getReferenceFont());
     myHeight = metrics.getHeight() + RectanglePainter.TOP_TEXT_PADDING + RectanglePainter.BOTTOM_TEXT_PADDING;
@@ -76,7 +75,7 @@ public class RectangleReferencePainter implements ReferencePainter {
     }
   }
 
-  public void paint(@Nonnull Graphics2D g2, int x, int y, int height) {
+  public void paint(Graphics2D g2, int x, int y, int height) {
     if (myLabels.isEmpty()) return;
 
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);
@@ -96,8 +95,8 @@ public class RectangleReferencePainter implements ReferencePainter {
     config.restore();
   }
 
-  @Nonnull
-  public static Color getLabelColor(@Nonnull Color color) {
+  
+  public static Color getLabelColor(Color color) {
     color = StyleManager.get().getCurrentStyle().isDark() ? ColorUtil.darker(color, 6) : ColorUtil.brighter(color, 6);
     return ColorUtil.desaturate(color, 3);
   }

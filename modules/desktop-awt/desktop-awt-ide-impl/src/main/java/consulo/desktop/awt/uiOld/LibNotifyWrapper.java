@@ -25,7 +25,6 @@ import com.sun.jna.Pointer;
 import consulo.container.boot.ContainerPathManager;
 import consulo.desktop.awt.ui.util.AppIconUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Fokin
@@ -77,7 +76,7 @@ class LibNotifyWrapper implements SystemNotificationsImpl.Notifier {
   }
 
   @Override
-  public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
+  public void notify(String name, String title, String description) {
     synchronized (myLock) {
       if (!myDisposed) {
         Pointer notification = myLibNotify.notify_notification_new(title, description, myIcon);

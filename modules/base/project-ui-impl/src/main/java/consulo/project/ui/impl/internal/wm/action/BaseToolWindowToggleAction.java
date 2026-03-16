@@ -26,10 +26,9 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 public abstract class BaseToolWindowToggleAction extends ToggleAction implements DumbAware {
-    protected BaseToolWindowToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BaseToolWindowToggleAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
@@ -68,7 +67,7 @@ public abstract class BaseToolWindowToggleAction extends ToggleAction implements
     protected abstract void setSelected(ToolWindow window, boolean state);
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         super.update(e);
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);

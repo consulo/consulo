@@ -24,8 +24,7 @@ import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.ex.action.PresentationFactory;
 import consulo.ui.ex.internal.ActionManagerEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -37,7 +36,7 @@ import java.util.function.Supplier;
  */
 public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
     private final String myPlace;
-    @Nonnull
+    
     private final ActionGroup myGroup;
     private final ActionManagerEx myManager;
     @Nullable
@@ -47,7 +46,7 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
     private Supplier<DataContext> myDataContextProvider;
 
     public UnifiedActionPopupMenuImpl(String place,
-                                      @Nonnull ActionGroup group,
+                                      ActionGroup group,
                                       ActionManagerEx actionManager,
                                       @Nullable PresentationFactory factory) {
         myPlace = place;
@@ -56,20 +55,20 @@ public class UnifiedActionPopupMenuImpl implements ActionPopupMenu {
         myPresentationFactory = factory;
     }
 
-    @Nonnull
+    
     @Override
     public String getPlace() {
         return myPlace;
     }
 
-    @Nonnull
+    
     @Override
     public ActionGroup getActionGroup() {
         return myGroup;
     }
 
     @Override
-    public void setTargetComponent(@Nonnull Component component) {
+    public void setTargetComponent(Component component) {
         myDataContextProvider = () -> DataManager.getInstance().getDataContext(component);
     }
 

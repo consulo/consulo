@@ -22,8 +22,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.SystemProperties;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.BadLocationException;
@@ -48,7 +47,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super();
   }
 
-  public JBLabel(@Nonnull UIUtil.ComponentStyle componentStyle) {
+  public JBLabel(UIUtil.ComponentStyle componentStyle) {
     super();
     setComponentStyle(componentStyle);
   }
@@ -57,22 +56,22 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super(TargetAWT.to(image));
   }
   
-  public JBLabel(@Nonnull String text) {
+  public JBLabel(String text) {
     super(text);
   }
 
-  public JBLabel(@Nonnull String text, @Nonnull UIUtil.ComponentStyle componentStyle) {
+  public JBLabel(String text, UIUtil.ComponentStyle componentStyle) {
     super(text);
     setComponentStyle(componentStyle);
   }
 
-  public JBLabel(@Nonnull String text, @Nonnull UIUtil.ComponentStyle componentStyle, @Nonnull UIUtil.FontColor fontColor) {
+  public JBLabel(String text, UIUtil.ComponentStyle componentStyle, UIUtil.FontColor fontColor) {
     super(text);
     setComponentStyle(componentStyle);
     setFontColor(fontColor);
   }
 
-  public JBLabel(@Nonnull String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
+  public JBLabel(String text, @JdkConstants.HorizontalAlignment int horizontalAlignment) {
     super(text, horizontalAlignment);
   }
 
@@ -84,7 +83,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     super(text, TargetAWT.to(icon), horizontalAlignment);
   }
 
-  public void setComponentStyle(@Nonnull UIUtil.ComponentStyle componentStyle) {
+  public void setComponentStyle(UIUtil.ComponentStyle componentStyle) {
     myComponentStyle = componentStyle;
     UIUtil.applyStyle(componentStyle, this);
   }
@@ -97,7 +96,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     return myFontColor;
   }
 
-  public void setFontColor(@Nonnull UIUtil.FontColor fontColor) {
+  public void setFontColor(UIUtil.FontColor fontColor) {
     myFontColor = fontColor;
   }
 
@@ -306,7 +305,7 @@ public class JBLabel extends JLabel implements AnchorableComponent {
     return this;
   }
 
-  private void updateStyle(@Nonnull JEditorPane pane) {
+  private void updateStyle(JEditorPane pane) {
     myEditorPane.setFont(getFont());
     myEditorPane.setForeground(getForeground());
     EditorKit kit = pane.getEditorKit();

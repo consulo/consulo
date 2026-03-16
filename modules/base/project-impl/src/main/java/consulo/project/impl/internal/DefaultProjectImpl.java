@@ -21,8 +21,7 @@ import consulo.project.ProjectManager;
 import consulo.project.ProjectType;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -33,10 +32,10 @@ public class DefaultProjectImpl extends ProjectImpl {
   private Element myStateElement;
   private boolean myInitialized;
 
-  DefaultProjectImpl(@Nonnull Application application,
-                     @Nonnull ProjectManager manager,
-                     @Nonnull String filePath,
-                     @Nonnull ComponentBinding componentBinding) {
+  DefaultProjectImpl(Application application,
+                     ProjectManager manager,
+                     String filePath,
+                     ComponentBinding componentBinding) {
     super(application, manager, filePath, TEMPLATE_PROJECT_NAME, true, componentBinding);
   }
 
@@ -58,7 +57,6 @@ public class DefaultProjectImpl extends ProjectImpl {
     return myInitialized;
   }
 
-  @Nonnull
   @Override
   public ProjectType getProjectType() {
     return ProjectType.DEFAULT;

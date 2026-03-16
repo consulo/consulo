@@ -33,7 +33,6 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     private final PsiFile myFile;
     private static final Logger LOG = Logger.getInstance(TemplateBuilderImpl.class);
 
-    public TemplateBuilderImpl(@Nonnull PsiElement element) {
+    public TemplateBuilderImpl(PsiElement element) {
         myFile = InjectedLanguageManager.getInstance(element.getProject()).getTopLevelFile(element);
         myDocument = myFile.getViewProvider().getDocument();
         myContainerElement = wrapElement(element);
@@ -127,7 +126,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     }
 
     @Override
-    public void replaceElement(@Nonnull PsiElement element, @Nonnull TextRange textRange, String varName, Expression expression, boolean alwaysStopAt) {
+    public void replaceElement(PsiElement element, TextRange textRange, String varName, Expression expression, boolean alwaysStopAt) {
         TextRange elementTextRange = InjectedLanguageManager.getInstance(element.getProject()).injectedToHost(element, element.getTextRange());
         RangeMarker key = myDocument.createRangeMarker(textRange.shiftRight(elementTextRange.getStartOffset()));
         myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
@@ -136,13 +135,13 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     }
 
     @Override
-    public void replaceElement(@Nonnull PsiElement element, Expression expression) {
+    public void replaceElement(PsiElement element, Expression expression) {
         RangeMarker key = wrapElement(element);
         replaceElement(key, expression);
     }
 
     @Override
-    public void replaceElement(@Nonnull PsiElement element, TextRange rangeWithinElement, Expression expression) {
+    public void replaceElement(PsiElement element, TextRange rangeWithinElement, Expression expression) {
         RangeMarker key = myDocument.createRangeMarker(rangeWithinElement.shiftRight(element.getTextRange().getStartOffset()));
         replaceElement(key, expression);
     }
@@ -182,7 +181,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
         myElements.add(mySelection);
     }
 
-    @Nonnull
+    
     @Override
     public Template buildInlineTemplate() {
         Template template = buildTemplate();
@@ -268,12 +267,12 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     }
 
     @Override
-    public void replaceElement(@Nonnull PsiElement element, String replacementText) {
+    public void replaceElement(PsiElement element, String replacementText) {
         replaceElement(element, new ConstantNode(replacementText));
     }
 
     @Override
-    public void replaceElement(@Nonnull PsiElement element, TextRange rangeWithinElement, String replacementText) {
+    public void replaceElement(PsiElement element, TextRange rangeWithinElement, String replacementText) {
         RangeMarker key = myDocument.createRangeMarker(rangeWithinElement.shiftRight(element.getTextRange().getStartOffset()));
         ConstantNode value = new ConstantNode(replacementText);
         replaceElement(key, value);
@@ -292,7 +291,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     }
 
     @Override
-    public void run(@Nonnull Editor editor, boolean inline) {
+    public void run(Editor editor, boolean inline) {
         Template template = inline ? buildInlineTemplate() : buildTemplate();
 
         editor.getDocument().replaceString(myContainerElement.getStartOffset(), myContainerElement.getEndOffset(), "");

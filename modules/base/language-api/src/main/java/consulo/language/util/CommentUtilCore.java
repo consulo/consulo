@@ -27,8 +27,7 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CommentUtilCore {
   @RequiredReadAction
@@ -57,7 +56,7 @@ public class CommentUtilCore {
     return isComment(element);
   }
 
-  public static boolean isCommentToken(@Nonnull IElementType tokenType, @Nonnull LanguageVersion languageVersion) {
+  public static boolean isCommentToken(IElementType tokenType, LanguageVersion languageVersion) {
     Language language = tokenType.getLanguage();
     if(language != languageVersion.getLanguage()) {
       return false;

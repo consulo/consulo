@@ -24,8 +24,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "FileChooser.GotoModule")
 public final class GotoModuleDirectory extends FileChooserAction {
@@ -38,7 +37,7 @@ public final class GotoModuleDirectory extends FileChooserAction {
     }
 
     @Override
-    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    protected void actionPerformed(FileSystemTree fileSystemTree, AnActionEvent e) {
         VirtualFile moduleDir = getModuleDir(e);
         if (moduleDir != null) {
             fileSystemTree.select(moduleDir, () -> fileSystemTree.expand(moduleDir, null));
@@ -46,7 +45,7 @@ public final class GotoModuleDirectory extends FileChooserAction {
     }
 
     @Override
-    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         VirtualFile moduleDir = getModuleDir(e);
         presentation.setEnabled(moduleDir != null && fileSystemTree.isUnderRoots(moduleDir));

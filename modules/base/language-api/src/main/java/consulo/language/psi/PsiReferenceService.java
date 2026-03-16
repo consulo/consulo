@@ -22,8 +22,7 @@ import consulo.application.Application;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -50,11 +49,11 @@ public abstract class PsiReferenceService {
    * @return the references
    */
   @RequiredReadAction
-  public abstract List<PsiReference> getReferences(@Nonnull PsiElement element, @Nonnull Hints hints);
+  public abstract List<PsiReference> getReferences(PsiElement element, Hints hints);
 
-  @Nonnull
+  
   @RequiredReadAction
-  public PsiReference[] getContributedReferences(@Nonnull PsiElement element) {
+  public PsiReference[] getContributedReferences(PsiElement element) {
     List<PsiReference> list = getReferences(element, Hints.NO_HINTS);
     return ContainerUtil.toArray(list, PsiReference.ARRAY_FACTORY);
   }

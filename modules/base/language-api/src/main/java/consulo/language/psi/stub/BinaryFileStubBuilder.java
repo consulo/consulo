@@ -23,8 +23,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public interface BinaryFileStubBuilder {
         return map.get(fileType);
     }
 
-    @Nonnull
+    
     FileType getFileType();
 
     boolean acceptsFile(VirtualFile file);

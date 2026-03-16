@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.*;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Locale;
 import java.util.Map;
@@ -82,7 +81,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
     JTextArea area = new JTextArea();
@@ -110,7 +109,7 @@ public class AboutNewDialog extends WholeWestDialogWrapper {
     return Couple.of(ScrollPaneFactory.createScrollPane(area, true), eastPanel);
   }
 
-  @Nonnull
+  
   private String buildAboutInfo() {
 
     ApplicationInfo info = ApplicationInfo.getInstance();

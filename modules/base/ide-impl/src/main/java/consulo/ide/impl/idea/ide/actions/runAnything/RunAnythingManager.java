@@ -18,8 +18,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -39,21 +38,21 @@ public class RunAnythingManager {
     private String mySelectedText;
 
     @Inject
-    public RunAnythingManager(@Nonnull Project project) {
+    public RunAnythingManager(Project project) {
         myProject = project;
     }
 
-    public static RunAnythingManager getInstance(@Nonnull Project project) {
+    public static RunAnythingManager getInstance(Project project) {
         return project.getInstance(RunAnythingManager.class);
     }
 
     @RequiredUIAccess
-    public void show(@Nullable String searchText, @Nonnull AnActionEvent initEvent) {
+    public void show(@Nullable String searchText, AnActionEvent initEvent) {
         show(searchText, true, initEvent);
     }
 
     @RequiredUIAccess
-    public void show(@Nullable String searchText, boolean selectSearchText, @Nonnull AnActionEvent initEvent) {
+    public void show(@Nullable String searchText, boolean selectSearchText, AnActionEvent initEvent) {
         IdeEventQueueProxy.getInstance().closeAllPopups(false);
 
         Project project = initEvent.getData(Project.KEY);
@@ -163,8 +162,8 @@ public class RunAnythingManager {
     }
 
     @SuppressWarnings("Duplicates")
-    @Nonnull
-    private RunAnythingPopupUI createView(@Nonnull AnActionEvent event) {
+    
+    private RunAnythingPopupUI createView(AnActionEvent event) {
         RunAnythingPopupUI view = new RunAnythingPopupUI(event);
 
         view.setSearchFinishedHandler(() -> {

@@ -39,7 +39,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +52,9 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
     @Override
     @RequiredReadAction
     public void collectActions(
-        @Nonnull Editor hostEditor,
-        @Nonnull PsiFile hostFile,
-        @Nonnull IntentionsInfo intentions,
+        Editor hostEditor,
+        PsiFile hostFile,
+        IntentionsInfo intentions,
         int passIdToShowIntentionsFor,
         int offset
     ) {
@@ -82,11 +81,11 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
      */
     @RequiredReadAction
     private static void collectIntentionsFromDoNotShowLeveledInspections(
-        @Nonnull final Project project,
-        @Nonnull final PsiFile hostFile,
-        @Nonnull PsiElement psiElement,
+        final Project project,
+        final PsiFile hostFile,
+        PsiElement psiElement,
         final int offset,
-        @Nonnull final IntentionsInfo intentions
+        final IntentionsInfo intentions
     ) {
         if (!psiElement.isPhysical()) {
             VirtualFile virtualFile = hostFile.getVirtualFile();
@@ -147,7 +146,7 @@ public class DoNotShowInspectionIntentionMenuContributor implements IntentionMen
             ProblemsHolder holder = new ProblemsHolderImpl(InspectionManager.getInstance(project), hostFile, true) {
                 @Override
                 @RequiredReadAction
-                public void registerProblem(@Nonnull ProblemDescriptor problemDescriptor) {
+                public void registerProblem(ProblemDescriptor problemDescriptor) {
                     super.registerProblem(problemDescriptor);
                     TextRange range = problemDescriptor instanceof ProblemDescriptorBase problemDescriptorBase
                         ? problemDescriptorBase.getTextRange()

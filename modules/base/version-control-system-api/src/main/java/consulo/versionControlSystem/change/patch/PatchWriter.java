@@ -19,8 +19,7 @@ import consulo.component.extension.Extensions;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.CommitContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,12 +33,12 @@ public class PatchWriter {
     }
 
     public static void writePatches(
-        @Nonnull Project project,
+        Project project,
         String fileName,
         @Nullable String basePath,
         List<FilePatch> patches,
         CommitContext commitContext,
-        @Nonnull Charset charset
+        Charset charset
     ) throws IOException {
         String lineSeparator = CodeStyle.getSettings(project).getLineSeparator();
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), charset)) {

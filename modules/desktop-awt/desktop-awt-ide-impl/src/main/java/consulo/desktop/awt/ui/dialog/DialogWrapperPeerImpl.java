@@ -72,8 +72,7 @@ import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,10 +96,10 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     private final boolean myPerProjectModality;
 
     protected DialogWrapperPeerImpl(
-        @Nonnull DialogWrapper wrapper,
+        DialogWrapper wrapper,
         @Nullable Project project,
         boolean canBeParent,
-        @Nonnull DialogWrapper.IdeModalityType ideModalityType
+        DialogWrapper.IdeModalityType ideModalityType
     ) {
         myWrapper = wrapper;
         myWindowManager = null;
@@ -166,11 +165,11 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
      * @param canBeParent specifies whether the dialog can be parent for other windows. This parameter is used
      *                    by <code>WindowManager</code>.
      */
-    protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
+    protected DialogWrapperPeerImpl(DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
         this(wrapper, project, canBeParent, DialogWrapper.IdeModalityType.IDE);
     }
 
-    protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, boolean canBeParent) {
+    protected DialogWrapperPeerImpl(DialogWrapper wrapper, boolean canBeParent) {
         this(wrapper, (Project)null, canBeParent);
     }
 
@@ -193,7 +192,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
      * @param parent parent component which is used to calculate heavy weight window ancestor.
      *               <code>parent</code> cannot be <code>null</code> and must be showing.
      */
-    protected DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, @Nonnull Component parent, boolean canBeParent) {
+    protected DialogWrapperPeerImpl(DialogWrapper wrapper, Component parent, boolean canBeParent) {
         myWrapper = wrapper;
         myCanBeParent = canBeParent;
 
@@ -212,7 +211,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
     }
 
     public DialogWrapperPeerImpl(
-        @Nonnull DialogWrapper wrapper,
+        DialogWrapper wrapper,
         Window owner,
         boolean canBeParent,
         DialogWrapper.IdeModalityType ideModalityType
@@ -236,13 +235,13 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
      * @see DialogWrapper#DialogWrapper(boolean, boolean)
      */
     @Deprecated
-    public DialogWrapperPeerImpl(@Nonnull DialogWrapper wrapper, boolean canBeParent, boolean applicationModalIfPossible) {
+    public DialogWrapperPeerImpl(DialogWrapper wrapper, boolean canBeParent, boolean applicationModalIfPossible) {
         this(wrapper, null, canBeParent, applicationModalIfPossible);
     }
 
     @Deprecated
     public DialogWrapperPeerImpl(
-        @Nonnull DialogWrapper wrapper,
+        DialogWrapper wrapper,
         Window owner,
         boolean canBeParent,
         boolean applicationModalIfPossible
@@ -275,8 +274,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDialog.addKeyListener(listener);
     }
 
-    @Nonnull
-    private AbstractDialog createDialog(@Nullable Window owner, @Nonnull DialogWrapper.IdeModalityType ideModalityType) {
+    private AbstractDialog createDialog(@Nullable Window owner, DialogWrapper.IdeModalityType ideModalityType) {
         if (isHeadless()) {
             return new HeadlessDialog(myWrapper);
         }
@@ -301,7 +299,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
     }
 
-    @Nonnull
     @Deprecated
     private AbstractDialog createDialog(@Nullable Window owner) {
         return createDialog(owner, DialogWrapper.IdeModalityType.IDE);
@@ -443,14 +440,13 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         myDialog.setResizable(resizable);
     }
 
-    @Nonnull
     @Override
     public Point getLocation() {
         return myDialog.getLocation();
     }
 
     @Override
-    public void setLocation(@Nonnull Point p) {
+    public void setLocation(Point p) {
         myDialog.setLocation(p);
     }
 
@@ -509,7 +505,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         return result;
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     public AsyncResult<Void> showAsync() {
@@ -574,7 +569,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     private class AnCancelAction extends AnAction implements DumbAware {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             e.getPresentation().setEnabled(false);
             if (focusOwner instanceof JComponent && SpeedSearchBase.hasActiveSpeedSearch((JComponent)focusOwner)) {
@@ -640,7 +635,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         private final WeakReference<Project> myProject;
         private final ActionCallback myFocusedCallback;
 
-        public MyDialog(Window owner, DialogWrapper dialogWrapper, Project project, @Nonnull ActionCallback focused) {
+        public MyDialog(Window owner, DialogWrapper dialogWrapper, Project project, ActionCallback focused) {
             super(TargetAWT.from(owner), null);
             myDialogWrapper = new WeakReference<>(dialogWrapper);
             myProject = project != null ? new WeakReference<>(project) : null;
@@ -667,7 +662,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
-        public void putInfo(@Nonnull Map<String, String> info) {
+        public void putInfo(Map<String, String> info) {
             info.put("dialog", getTitle());
         }
 
@@ -682,7 +677,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
             if (wrapper instanceof UiDataProvider uiProvider) {
                 sink.uiDataSnapshot(uiProvider);
@@ -718,7 +713,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             super.setBounds(r);
         }
 
-        @Nonnull
         @Override
         protected JRootPane createRootPane() {
             return new DialogRootPane();
@@ -806,7 +800,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             return SoftReference.dereference(myProject);
         }
 
-        @Nonnull
         @Override
         public IdeFocusManager getFocusManager() {
             Project project = getProject();
@@ -992,7 +985,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
                 putClientProperty("DIALOG_ROOT_PANE", true);
             }
 
-            @Nonnull
             @Override
             protected JLayeredPane createLayeredPane() {
                 JLayeredPane p = new JBLayeredPane();
@@ -1043,7 +1035,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
 
             @Override
-            public void uiDataSnapshot(@Nonnull DataSink sink) {
+            public void uiDataSnapshot(DataSink sink) {
                 DialogWrapper wrapper = myDialogWrapper.get();
                 if (wrapper != null) {
                     sink.lazy(PlatformDataKeys.UI_DISPOSABLE, () -> wrapper.getDisposable());
@@ -1051,7 +1043,6 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
             }
         }
 
-        @Nonnull
         private static WindowStateService getWindowStateService(@Nullable Project project) {
             return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
         }

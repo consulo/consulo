@@ -20,18 +20,17 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class DefaultProjectFactory {
-  @Nonnull
+  
   public static DefaultProjectFactory getInstance() {
     return Application.get().getInstance(DefaultProjectFactory.class);
   }
 
-  @Nonnull
+  
   public abstract Project getDefaultProject();
 }

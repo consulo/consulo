@@ -18,8 +18,7 @@ package consulo.project.ui.wm;
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -27,7 +26,7 @@ import javax.swing.*;
  * @author spLeaner
  */
 public interface CustomStatusBarWidget extends StatusBarWidget {
-    @Nonnull
+    
     default JComponent getComponent() {
         Component uiComponent = getUIComponent();
         if (uiComponent != null) {

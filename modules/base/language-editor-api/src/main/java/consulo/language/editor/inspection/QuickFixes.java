@@ -7,17 +7,16 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class QuickFixes {
   public static final LocalQuickFixAndIntentionActionOnPsiElement EMPTY_FIX = new LocalQuickFixAndIntentionActionOnPsiElement(null) {
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull PsiFile file, @Nullable Editor editor, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+    public void invoke(Project project, PsiFile file, @Nullable Editor editor, PsiElement startElement, PsiElement endElement) {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
       throw new UnsupportedOperationException();
@@ -25,14 +24,14 @@ public final class QuickFixes {
   };
 
   public static final IntentionAndQuickFixAction EMPTY_ACTION = new IntentionAndQuickFixAction() {
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void applyFix(@Nonnull Project project, PsiFile file, @Nullable Editor editor) {
+    public void applyFix(Project project, PsiFile file, @Nullable Editor editor) {
       throw new UnsupportedOperationException();
     }
   };

@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.externalService.statistic.*;
 import consulo.logging.Logger;
 import consulo.util.jdom.JDOMUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -125,19 +124,19 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     }
 
     @Override
-    @Nonnull
+    
     public Set<String> getFeatureIds() {
         lazyLoadFromPluginsFeaturesProviders();
         return myFeatures.keySet();
     }
 
     @Override
-    public FeatureDescriptor getFeatureDescriptor(@Nonnull String id) {
+    public FeatureDescriptor getFeatureDescriptor(String id) {
         lazyLoadFromPluginsFeaturesProviders();
         return getFeatureDescriptorEx(id);
     }
 
-    public FeatureDescriptor getFeatureDescriptorEx(@Nonnull String id) {
+    public FeatureDescriptor getFeatureDescriptorEx(String id) {
         if (WELCOME.equals(id)) {
             return new FeatureDescriptor(
                 WELCOME,
@@ -149,7 +148,7 @@ public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegist
     }
 
     @Override
-    public GroupDescriptor getGroupDescriptor(@Nonnull String id) {
+    public GroupDescriptor getGroupDescriptor(String id) {
         lazyLoadFromPluginsFeaturesProviders();
         return myGroups.get(id);
     }

@@ -28,8 +28,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -44,13 +43,13 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myText;
   }
 
-  protected void setText(@Nonnull LocalizeValue text) {
+  protected void setText(LocalizeValue text) {
     myText = text;
   }
 
@@ -66,7 +65,7 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
 
   @Override
   @RequiredUIAccess
-  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!file.getManager().isInProject(file)) return;
     PsiElement element = getElement(editor, file);
     if (element != null) {
@@ -83,11 +82,11 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
    * @throws IncorrectOperationException
    *
    */
-  public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
+  public abstract void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException;
 
   @Override
   @RequiredReadAction
-  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
     if (file == null) return false;
     PsiManager manager = file.getManager();
     if (manager == null) return false;
@@ -105,11 +104,11 @@ public abstract class SuppressIntentionAction implements Iconable, SyntheticInte
    * @param element the element under caret.
    * @return true if the intention is available, false otherwise.
    */
-  public abstract boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element);
+  public abstract boolean isAvailable(Project project, Editor editor, PsiElement element);
 
   @Nullable
   @RequiredReadAction
-  private static PsiElement getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
+  private static PsiElement getElement(Editor editor, PsiFile file) {
     CaretModel caretModel = editor.getCaretModel();
     int position = caretModel.getOffset();
     return file.findElementAt(position);

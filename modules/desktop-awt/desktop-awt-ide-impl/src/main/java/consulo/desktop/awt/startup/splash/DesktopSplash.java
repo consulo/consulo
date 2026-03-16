@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.application.ApplicationProperties;
 import consulo.desktop.awt.ui.impl.window.JDialogAsUIWindow;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.RootPaneUI;

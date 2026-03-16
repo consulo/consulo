@@ -21,7 +21,6 @@ import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionExtender;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.remoteServer.ServerType;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -31,7 +30,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 @SuppressWarnings("unchecked")
 public class DeployToServerConfigurationTypesRegistrar implements ExtensionExtender<ConfigurationType> {
-    @Nonnull
+    
     public static DeployToServerConfigurationType<?> getConfigurationType(ServerType<?> serverType) {
         return (DeployToServerConfigurationType<?>) Application.get().getExtensionPoint(ConfigurationType.class).findFirstSafe(configurationType -> {
             if (configurationType instanceof DeployToServerConfigurationType deploy) {
@@ -42,7 +41,7 @@ public class DeployToServerConfigurationTypesRegistrar implements ExtensionExten
     }
 
     @Override
-    public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<ConfigurationType> consumer) {
+    public void extend(ComponentManager componentManager, Consumer<ConfigurationType> consumer) {
         componentManager.getExtensionPoint(ServerType.class).forEachExtensionSafe(serverType -> {
             consumer.accept(new DeployToServerConfigurationType(serverType));
         });
@@ -53,7 +52,7 @@ public class DeployToServerConfigurationTypesRegistrar implements ExtensionExten
         return componentManager.getExtensionPoint(ServerType.class).hasAnyExtensions();
     }
 
-    @Nonnull
+    
     @Override
     public Class<ConfigurationType> getExtensionClass() {
         return ConfigurationType.class;

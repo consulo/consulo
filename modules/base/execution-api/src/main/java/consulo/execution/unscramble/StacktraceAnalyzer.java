@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -30,23 +29,23 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface StacktraceAnalyzer {
-  @Nonnull
+  
   LocalizeValue getName();
 
-  boolean isPreferredForProject(@Nonnull Project project);
+  boolean isPreferredForProject(Project project);
 
-  boolean isStacktrace(@Nonnull String trace);
+  boolean isStacktrace(String trace);
 
-  @Nonnull
-  default String normalizeStacktrace(@Nonnull String rawStacktrace) {
+  
+  default String normalizeStacktrace(String rawStacktrace) {
     return rawStacktrace;
   }
 
   /**
    * Parse stacktrace as thread dump, and will show as thread dump if list not empty
    */
-  @Nonnull
-  default List<ThreadState> parseAsThreadDump(@Nonnull String stacktrace) {
+  
+  default List<ThreadState> parseAsThreadDump(String stacktrace) {
     return List.of();
   }
 
@@ -54,7 +53,7 @@ public interface StacktraceAnalyzer {
    * Try parse stacktrace as exception trace, and return ExceptionName if its exception trace
    */
   @Nullable
-  default String parseAsException(@Nonnull String stacktrace) {
+  default String parseAsException(String stacktrace) {
     return null;
   }
 }

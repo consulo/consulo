@@ -18,9 +18,8 @@ package consulo.versionControlSystem;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -77,10 +76,10 @@ public interface CachingCommittedChangesProvider<T extends CommittedChangeList, 
    * @return the name of the concept, or null if the VCS (like CVS) does not use changelist numbering.
    */
   @Nullable
-  @Nls
+  
   String getChangelistTitle();
 
-  boolean isChangeLocallyAvailable(FilePath filePath, @jakarta.annotation.Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
+  boolean isChangeLocallyAvailable(FilePath filePath, @Nullable VcsRevisionNumber localRevision, VcsRevisionNumber changeRevision, T changeList);
 
   /**
    * Returns true if a timer-based refresh of committed changes should be followed by refresh of incoming changes, so that,

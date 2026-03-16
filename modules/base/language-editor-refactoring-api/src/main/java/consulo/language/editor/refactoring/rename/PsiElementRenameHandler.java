@@ -40,8 +40,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageViewUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -57,7 +56,7 @@ public class PsiElementRenameHandler implements RenameHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         PsiElement element = getElement(dataContext);
         if (element == null) {
             element = BaseRefactoringAction.getElementAtCaret(editor, file);
@@ -79,7 +78,7 @@ public class PsiElementRenameHandler implements RenameHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         PsiElement element = elements.length == 1 ? elements[0] : null;
         if (element == null) {
             element = getElement(dataContext);
@@ -134,7 +133,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         return true;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     static LocalizeValue renameabilityStatus(Project project, PsiElement element) {
         if (element == null) {
@@ -242,7 +241,7 @@ public class PsiElementRenameHandler implements RenameHandler {
         return isAvailableOnDataContext(dataContext);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionTitleValue() {
         return LocalizeValue.localizeTODO("Rename Element...");

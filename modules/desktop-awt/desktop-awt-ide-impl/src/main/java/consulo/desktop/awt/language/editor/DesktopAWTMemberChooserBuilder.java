@@ -24,7 +24,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -40,7 +39,7 @@ public class DesktopAWTMemberChooserBuilder<T extends ClassMember> extends Membe
 
   @RequiredUIAccess
   @Override
-  public void showAsync(@Nonnull Project project, @Nonnull Consumer<UserDataHolder> consumer) {
+  public void showAsync(Project project, Consumer<UserDataHolder> consumer) {
     MemberChooserImpl<T> dialog = new MemberChooserImpl<T>(myElements, myAllowEmptySelection, myAllowMultipleSelection, myOptions, project);
     dialog.setTitle(myTitle.get());
     dialog.showAsync().doWhenDone(() -> {

@@ -15,23 +15,20 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-01-16
  */
 public interface AlertValueRemember<V> {
-  void setValue(@Nonnull V value);
+  void setValue(V value);
 
   /**
    * @return null if no value, dialog will show
    */
   @Nullable
   V getValue();
-
-  @Nonnull
   String getMessageBoxText();
 
   default boolean isRememberByDefault() {

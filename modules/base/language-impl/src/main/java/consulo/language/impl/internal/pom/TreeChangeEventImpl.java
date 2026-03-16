@@ -29,8 +29,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.MultiMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -42,29 +41,29 @@ public class TreeChangeEventImpl implements TreeChangeEvent {
   private final PomModelAspect myAspect;
   private final FileElement myFileElement;
 
-  public TreeChangeEventImpl(@Nonnull PomModelAspect aspect, @Nonnull FileElement treeElement) {
+  public TreeChangeEventImpl(PomModelAspect aspect, FileElement treeElement) {
     myAspect = aspect;
     myFileElement = treeElement;
   }
 
   @Override
-  @Nonnull
+  
   public FileElement getRootElement() {
     return myFileElement;
   }
 
   @Override
-  @Nonnull
+  
   public ASTNode[] getChangedElements() {
     return myChangedElements.keySet().toArray(ASTNode.EMPTY_ARRAY);
   }
 
   @Override
-  public TreeChange getChangesByElement(@Nonnull ASTNode element) {
+  public TreeChange getChangesByElement(ASTNode element) {
     return myChangedElements.get((CompositeElement)element);
   }
 
-  public void addElementaryChange(@Nonnull CompositeElement parent) {
+  public void addElementaryChange(CompositeElement parent) {
     TreeChangeImpl existing = myChangedElements.get(parent);
     if (existing != null) {
       existing.clearCache();
@@ -119,20 +118,20 @@ public class TreeChangeEventImpl implements TreeChangeEvent {
    * @return a direct child of {@code ancestor} which contains {@code change}
    */
   @Nullable
-  private static TreeElement findAncestorChild(@Nonnull CompositeElement ancestor, @Nonnull TreeChangeImpl change) {
+  private static TreeElement findAncestorChild(CompositeElement ancestor, TreeChangeImpl change) {
     List<CompositeElement> superParents = change.getSuperParents();
     int index = superParents.indexOf(ancestor);
     return index < 0 ? null : index == 0 ? change.getChangedParent() : superParents.get(index - 1);
   }
 
   @Override
-  @Nonnull
+  
   public PomModelAspect getAspect() {
     return myAspect;
   }
 
   @Override
-  public void merge(@Nonnull PomChangeSet next) {
+  public void merge(PomChangeSet next) {
     for (TreeChangeImpl change : ((TreeChangeEventImpl)next).myChangedElements.values()) {
       TreeChangeImpl existing = myChangedElements.get(change.getChangedParent());
       if (existing != null) {

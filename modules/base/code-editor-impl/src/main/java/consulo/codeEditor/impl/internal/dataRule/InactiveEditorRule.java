@@ -17,15 +17,14 @@ package consulo.codeEditor.impl.internal.dataRule;
 
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataSnapshot;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public final class InactiveEditorRule {
     @Nullable
-    static Editor getData(@Nonnull DataSnapshot dataProvider) {
+    static Editor getData(DataSnapshot dataProvider) {
         return dataProvider.get(Editor.KEY);
     }
 }

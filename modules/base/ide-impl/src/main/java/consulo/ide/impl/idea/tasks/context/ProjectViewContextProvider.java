@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -43,13 +42,13 @@ public class ProjectViewContextProvider extends WorkingContextProvider {
         myPanes = AbstractProjectViewPane.EP_NAME.getExtensionList(project);
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "projectView";
     }
 
-    @Nonnull
+    
     @Override
     public String getDescription() {
         return "Project view state";

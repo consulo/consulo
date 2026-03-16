@@ -22,7 +22,6 @@ import consulo.diff.comparison.iterable.FairDiffIterable;
 import consulo.diff.util.Range;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,29 +30,29 @@ import java.util.List;
  * Given matchings on words, split initial line block into 'logically different' line blocks
  */
 class LineFragmentSplitter {
-  @Nonnull
+  
   private final CharSequence myText1;
-  @Nonnull
+  
   private final CharSequence myText2;
 
-  @Nonnull
+  
   private final List<InlineChunk> myWords1;
-  @Nonnull
+  
   private final List<InlineChunk> myWords2;
-  @Nonnull
+  
   private final FairDiffIterable myIterable;
-  @Nonnull
+  
   private final ProgressIndicator myIndicator;
 
-  @Nonnull
+  
   private final List<WordBlock> myResult = new ArrayList<>();
 
-  public LineFragmentSplitter(@Nonnull CharSequence text1,
-                              @Nonnull CharSequence text2,
-                              @Nonnull List<InlineChunk> words1,
-                              @Nonnull List<InlineChunk> words2,
-                              @Nonnull FairDiffIterable iterable,
-                              @Nonnull ProgressIndicator indicator) {
+  public LineFragmentSplitter(CharSequence text1,
+                              CharSequence text2,
+                              List<InlineChunk> words1,
+                              List<InlineChunk> words2,
+                              FairDiffIterable iterable,
+                              ProgressIndicator indicator) {
     myText1 = text1;
     myText2 = text2;
     myWords1 = words1;
@@ -71,7 +70,7 @@ class LineFragmentSplitter {
   // indexes here are a bit tricky
   // -1 - the beginning of file, words.size() - end of file, everything in between - InlineChunks (words or newlines)
 
-  @Nonnull
+  
   public List<WordBlock> run() {
     for (Range range : myIterable.iterateUnchanged()) {
       int count = range.end1 - range.start1;
@@ -119,7 +118,7 @@ class LineFragmentSplitter {
     last2 = end2;
   }
 
-  @Nonnull
+  
   private WordBlock createBlock(int start1, int start2, int end1, int end2) {
     int startOffset1 = getOffset(myWords1, myText1, start1);
     int startOffset2 = getOffset(myWords2, myText2, start2);
@@ -134,27 +133,27 @@ class LineFragmentSplitter {
     return new WordBlock(new Range(start1, end1, start2, end2), new Range(startOffset1, endOffset1, startOffset2, endOffset2));
   }
 
-  private boolean shouldMergeBlocks(@Nonnull WordBlock lastBlock, @Nonnull WordBlock newBlock) {
+  private boolean shouldMergeBlocks(WordBlock lastBlock, WordBlock newBlock) {
     if (!lastHasEqualWords && !hasEqualWords) return true; // combine lines, that matched only by '\n'
     if (isEqualsIgnoreWhitespace(newBlock) && isEqualsIgnoreWhitespace(lastBlock)) return true; // combine whitespace-only changed lines
     if (noWordsInside(lastBlock) || noWordsInside(newBlock)) return true; // squash block without words in it
     return false;
   }
 
-  private boolean isEqualsIgnoreWhitespace(@Nonnull WordBlock block) {
+  private boolean isEqualsIgnoreWhitespace(WordBlock block) {
     CharSequence sequence1 = myText1.subSequence(block.offsets.start1, block.offsets.end1);
     CharSequence sequence2 = myText2.subSequence(block.offsets.start2, block.offsets.end2);
 
     return StringUtil.equalsIgnoreWhitespaces(sequence1, sequence2);
   }
 
-  @Nonnull
-  private static WordBlock mergeBlocks(@Nonnull WordBlock start, @Nonnull WordBlock end) {
+  
+  private static WordBlock mergeBlocks(WordBlock start, WordBlock end) {
     return new WordBlock(new Range(start.words.start1, end.words.end1, start.words.start2, end.words.end2),
                          new Range(start.offsets.start1, end.offsets.end1, start.offsets.start2, end.offsets.end2));
   }
 
-  private static int getOffset(@Nonnull List<InlineChunk> words, @Nonnull CharSequence text, int index) {
+  private static int getOffset(List<InlineChunk> words, CharSequence text, int index) {
     if (index == -1) return 0;
     if (index == words.size()) return text.length();
     InlineChunk chunk = words.get(index);
@@ -162,16 +161,16 @@ class LineFragmentSplitter {
     return chunk.getOffset2();
   }
 
-  private static boolean isNewline(@Nonnull List<InlineChunk> words1, int index) {
+  private static boolean isNewline(List<InlineChunk> words1, int index) {
     return words1.get(index) instanceof NewlineChunk;
   }
 
-  private static boolean isFirstInLine(@Nonnull List<InlineChunk> words1, int index) {
+  private static boolean isFirstInLine(List<InlineChunk> words1, int index) {
     if (index == 0) return true;
     return words1.get(index - 1) instanceof NewlineChunk;
   }
 
-  private boolean noWordsInside(@Nonnull WordBlock block) {
+  private boolean noWordsInside(WordBlock block) {
     for (int i = block.words.start1; i < block.words.end1; i++) {
       if (!(myWords1.get(i) instanceof NewlineChunk)) return false;
     }
@@ -186,12 +185,12 @@ class LineFragmentSplitter {
   //
 
   public static class WordBlock {
-    @Nonnull
+    
     public final Range words;
-    @Nonnull
+    
     public final Range offsets;
 
-    public WordBlock(@Nonnull Range words, @Nonnull Range offsets) {
+    public WordBlock(Range words, Range offsets) {
       this.words = words;
       this.offsets = offsets;
     }

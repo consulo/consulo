@@ -18,8 +18,7 @@ package consulo.execution.dashboard;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Action for grouping items in a run dashboard (services) tree.
@@ -39,6 +38,6 @@ public interface RunDashboardGroupingRule {
    *
    * @return the rule identifier.
    */
-  @Nonnull
+  
   String getName();
 }

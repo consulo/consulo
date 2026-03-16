@@ -24,8 +24,7 @@ import consulo.index.io.forward.InputDataDiffBuilder;
 import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -42,10 +41,10 @@ public class MapInputDataDiffBuilder<Key, Value> extends InputDataDiffBuilder<Ke
   }
 
   @Override
-  public boolean differentiate(@Nonnull Map<Key, Value> newData,
-                               @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
-                               @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
-                               @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
+  public boolean differentiate(Map<Key, Value> newData,
+                               KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                               KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                               RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException {
     if (ourDiffUpdateEnabled) {
       if (myMap.isEmpty()) {
         EmptyInputDataDiffBuilder.processKeys(newData, addProcessor, myInputId);

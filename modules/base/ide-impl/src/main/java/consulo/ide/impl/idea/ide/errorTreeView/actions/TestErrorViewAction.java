@@ -29,7 +29,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.errorTreeView.ErrorTreeView;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -45,7 +44,7 @@ public abstract class TestErrorViewAction extends AnAction{
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) {
       return;

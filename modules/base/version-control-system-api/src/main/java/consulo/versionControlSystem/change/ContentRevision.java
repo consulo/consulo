@@ -20,8 +20,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -41,7 +40,7 @@ public interface ContentRevision {
   /**
    * @return file path of the revision
    */
-  @Nonnull
+  
   FilePath getFile();
 
   /**
@@ -50,6 +49,6 @@ public interface ContentRevision {
    * the currently uncommitted revision.
    * @return revision ID in terms of version control
    */
-  @Nonnull
+  
   VcsRevisionNumber getRevisionNumber();
 }

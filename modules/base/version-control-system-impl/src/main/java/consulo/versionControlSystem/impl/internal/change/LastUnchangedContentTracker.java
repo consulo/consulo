@@ -22,8 +22,7 @@ import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -39,7 +38,7 @@ public class LastUnchangedContentTracker {
   private static final FileAttribute ACQUIRED_CONTENT_ATTR = new FileAttribute("ACQUIRED_CONTENT_ATTR", 1, true);
   private static final Key<Boolean> VCS_INVALID_FILE_STATUS = Key.create("VCS_INVALID_FILE_STATUS");
 
-  public static void updateLastUnchangedContent(@Nonnull VirtualFile file) {
+  public static void updateLastUnchangedContent(VirtualFile file) {
     if (isTouched(file)) {
       return;
     }
@@ -75,7 +74,7 @@ public class LastUnchangedContentTracker {
   }
 
   @Nullable
-  public static byte[] getLastUnchangedContent(@Nonnull VirtualFile file) {
+  public static byte[] getLastUnchangedContent(VirtualFile file) {
     Integer id = getSavedContentId(file);
     try {
       return id == null ? null : getFS().contentsToByteArray(id);
@@ -133,7 +132,7 @@ public class LastUnchangedContentTracker {
     return getSavedContentId(file) != null;
   }
 
-  public static void forceSavedContent(VirtualFile file, @Nonnull String content) {
+  public static void forceSavedContent(VirtualFile file, String content) {
     saveContentReference(file, getFS().storeUnlinkedContent(content.getBytes(file.getCharset())));
   }
 

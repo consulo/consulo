@@ -20,8 +20,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class DiffFileHighlightFilter implements HighlightInfoFilter {
   @Override
-  public boolean accept(@Nonnull HighlightInfo info, @Nullable PsiFile file) {
+  public boolean accept(HighlightInfo info, @Nullable PsiFile file) {
     if (!DiffPsiFileSupport.isDiffFile(file)) return true;
     if (info.getSeverity() == HighlightSeverity.ERROR) return false;
     return true;

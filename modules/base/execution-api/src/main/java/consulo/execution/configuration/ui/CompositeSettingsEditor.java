@@ -20,7 +20,6 @@ import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.ui.ex.awt.util.Alarm;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.HashSet;
@@ -81,7 +80,7 @@ public abstract class CompositeSettingsEditor<Settings> extends SettingsEditor<S
   }
 
   @Override
-  @Nonnull
+  
   protected final JComponent createEditor() {
     CompositeSettingsBuilder<Settings> builder = getBuilder();
     myEditors = builder.getEditors();

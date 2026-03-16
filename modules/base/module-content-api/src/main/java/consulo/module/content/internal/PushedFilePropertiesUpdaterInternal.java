@@ -17,7 +17,6 @@ package consulo.module.content.internal;
 
 import consulo.module.content.PushedFilePropertiesUpdater;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -26,5 +25,5 @@ import java.util.List;
  * @since 2025-08-20
  */
 public non-sealed interface PushedFilePropertiesUpdaterInternal extends PushedFilePropertiesUpdater {
-    void processAfterVfsChanges(@Nonnull List<? extends VFileEvent> events);
+    void processAfterVfsChanges(List<? extends VFileEvent> events);
 }

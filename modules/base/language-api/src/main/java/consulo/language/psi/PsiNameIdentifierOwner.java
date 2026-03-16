@@ -18,7 +18,7 @@ package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.collection.ArrayFactory;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A PSI element which has a name given by an identifier token in the PSI tree.

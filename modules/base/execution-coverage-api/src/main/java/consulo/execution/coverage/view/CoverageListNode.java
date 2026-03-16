@@ -17,8 +17,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +46,7 @@ public class CoverageListNode extends AbstractTreeNode<PsiNamedElement> {
         myFileStatusManager = FileStatusManager.getInstance(myProject);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<? extends AbstractTreeNode> getChildren() {
@@ -72,7 +71,7 @@ public class CoverageListNode extends AbstractTreeNode<PsiNamedElement> {
         });
     }
 
-    @Nonnull
+    
     @Override
     public FileStatus getFileStatus() {
         PsiFile containingFile = myProject.getApplication().runReadAction(new Supplier<PsiFile>() {

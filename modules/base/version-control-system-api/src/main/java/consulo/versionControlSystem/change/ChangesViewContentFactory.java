@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,13 +26,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ChangesViewContentFactory {
-  @Nonnull
+  
   LocalizeValue getTabName();
 
   default boolean isAvailable() {
     return true;
   }
 
-  @Nonnull
+  
   ChangesViewContentProvider create();
 }

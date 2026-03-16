@@ -23,8 +23,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -38,7 +37,7 @@ public class CodeBlockStartAction extends EditorAction {
         }
 
         @Override
-        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project != null) {
                 CodeBlockUtil.moveCaretToCodeBlockStart(project, editor, false);

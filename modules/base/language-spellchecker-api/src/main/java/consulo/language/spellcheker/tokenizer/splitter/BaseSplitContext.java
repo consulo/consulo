@@ -17,7 +17,6 @@ package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -26,40 +25,40 @@ import java.util.function.Consumer;
  * @since 2025-11-06
  */
 public final class BaseSplitContext implements SplitContext {
-    @Nonnull
+    
     private final String myText;
-    @Nonnull
+    
     private final Consumer<TextRange> myConsumer;
-    @Nonnull
+    
     private final ProgressIndicatorProvider myProgressIndicatorProvider;
 
-    public BaseSplitContext(@Nonnull String text, @Nonnull Consumer<TextRange> consumer) {
+    public BaseSplitContext(String text, Consumer<TextRange> consumer) {
         this(text, consumer, ProgressIndicatorProvider.getInstance());
     }
 
     public BaseSplitContext(
-        @Nonnull String text,
-        @Nonnull Consumer<TextRange> consumer,
-        @Nonnull ProgressIndicatorProvider progressIndicatorProvider
+        String text,
+        Consumer<TextRange> consumer,
+        ProgressIndicatorProvider progressIndicatorProvider
     ) {
         myText = text;
         myConsumer = consumer;
         myProgressIndicatorProvider = progressIndicatorProvider;
     }
 
-    @Nonnull
+    
     @Override
     public String getText() {
         return myText;
     }
 
     @Override
-    public String substring(@Nonnull TextRange range) {
+    public String substring(TextRange range) {
         return range.substring(myText);
     }
 
     @Override
-    public void addWord(@Nonnull TextRange range) {
+    public void addWord(TextRange range) {
         boolean tooShort = (range.getEndOffset() - range.getStartOffset()) <= BaseTokenSplitter.MIN_RANGE_LENGTH;
         if (tooShort) {
             return;

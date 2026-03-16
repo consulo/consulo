@@ -35,8 +35,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +101,7 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
         return super.getFileExt();
     }
 
-    @Nonnull
+    
     @Override
     protected FileType getFileType() {
         if (getDefaultLanguage() != null) {
@@ -193,20 +192,20 @@ public abstract class CustomizableLanguageCodeStylePanel extends CodeStyleAbstra
     }
 
     protected abstract static class OrderedOption {
-        @Nonnull
+        
         private final String optionName;
         @Nullable
         private final OptionAnchor anchor;
         @Nullable
         private final String anchorOptionName;
 
-        protected OrderedOption(@Nonnull String optionName, @Nullable OptionAnchor anchor, @Nullable String anchorOptionName) {
+        protected OrderedOption(String optionName, @Nullable OptionAnchor anchor, @Nullable String anchorOptionName) {
             this.optionName = optionName;
             this.anchor = anchor;
             this.anchorOptionName = anchorOptionName;
         }
 
-        @Nonnull
+        
         public String getOptionName() {
             return optionName;
         }

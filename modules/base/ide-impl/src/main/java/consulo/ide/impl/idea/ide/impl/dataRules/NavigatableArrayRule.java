@@ -17,10 +17,9 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 
 import consulo.dataContext.DataSnapshot;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 public final class NavigatableArrayRule {
-  static Navigatable[] getData(@Nonnull DataSnapshot dataProvider) {
+  static Navigatable[] getData(DataSnapshot dataProvider) {
     Navigatable element = dataProvider.get(Navigatable.KEY);
     return element == null ? null : new Navigatable[]{element};
   }

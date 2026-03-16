@@ -15,20 +15,19 @@
  */
 package consulo.language;
 
-import jakarta.annotation.Nonnull;
 
 final class ExactMatcher extends LanguageMatcher {
 
   private final
-  @Nonnull
+  
   Language myLanguage;
 
-  ExactMatcher(@Nonnull Language language) {
+  ExactMatcher(Language language) {
     myLanguage = language;
   }
 
   @Override
-  public boolean matchesLanguage(@Nonnull Language language) {
+  public boolean matchesLanguage(Language language) {
     return myLanguage.is(language);
   }
 

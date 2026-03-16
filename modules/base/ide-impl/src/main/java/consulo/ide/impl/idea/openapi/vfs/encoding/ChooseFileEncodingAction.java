@@ -19,8 +19,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -40,24 +39,24 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
     }
 
     @Override
-    public abstract void update(@Nonnull AnActionEvent e);
+    public abstract void update(AnActionEvent e);
 
     private void fillCharsetActions(
-        @Nonnull DefaultActionGroup group,
+        DefaultActionGroup group,
         @Nullable final VirtualFile virtualFile,
-        @Nonnull List<? extends Charset> charsets,
-        @Nonnull final Function<? super Charset, String> charsetFilter
+        List<? extends Charset> charsets,
+        final Function<? super Charset, String> charsetFilter
     ) {
         for (final Charset charset : charsets) {
             AnAction action = new DumbAwareAction(charset.displayName(), null, Image.empty(Image.DEFAULT_ICON_SIZE)) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     chosen(virtualFile, charset);
                 }
 
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     super.update(e);
                     String description = charsetFilter.apply(charset);
                     Image defer;
@@ -122,13 +121,13 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
         }
     };
 
-    protected abstract void chosen(@Nullable VirtualFile virtualFile, @Nonnull Charset charset);
+    protected abstract void chosen(@Nullable VirtualFile virtualFile, Charset charset);
 
-    @Nonnull
+    
     protected DefaultActionGroup createCharsetsActionGroup(
         @Nullable String clearItemText,
         @Nullable Charset alreadySelected,
-        @Nonnull Function<? super Charset, String> charsetFilter
+        Function<? super Charset, String> charsetFilter
     ) {
         DefaultActionGroup group = new DefaultActionGroup();
         List<Charset> favorites = new ArrayList<>(EncodingManager.getInstance().getFavorites());
@@ -142,7 +141,7 @@ public abstract class ChooseFileEncodingAction extends ComboBoxAction {
             group.add(new DumbAwareAction(clearItemText, description, null) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     chosen(myVirtualFile, NO_ENCODING);
                 }
             });

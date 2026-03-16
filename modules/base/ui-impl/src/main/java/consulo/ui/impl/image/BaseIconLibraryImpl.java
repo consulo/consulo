@@ -19,8 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.image.IconLibrary;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,14 +36,14 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
         private SimpleReference<ImageReference> myImageRef;
 
-        public ImageState(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG) {
+        public ImageState(byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG) {
             my1xData = _1xData;
             my2xData = _2xdata;
             myIsSVG = isSVG;
         }
 
         @Nullable
-        public ImageReference getOrCreateImage(@Nonnull BaseIconLibraryImpl library, String groupId, String imageId) {
+        public ImageReference getOrCreateImage(BaseIconLibraryImpl library, String groupId, String imageId) {
             SimpleReference<ImageReference> imageRef = myImageRef;
             if (imageRef != null) {
                 return imageRef.get();
@@ -93,7 +92,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
 
     private final Map<String, IconGroup> myRegisteredGroups = new HashMap<>();
 
-    public BaseIconLibraryImpl(@Nonnull String id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
+    public BaseIconLibraryImpl(String id, BaseIconLibraryManager baseIconLibraryManager) {
         myId = id;
         myIconLibraryManager = baseIconLibraryManager;
     }
@@ -128,7 +127,7 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getName() {
         if (myName == null) {
             return myName = LocalizeValue.of(myId);
@@ -137,13 +136,13 @@ public abstract class BaseIconLibraryImpl implements IconLibrary {
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return myId;
     }
 
-    @Nonnull
-    protected abstract ImageReference createImageReference(@Nonnull byte[] _1xData,
+    
+    protected abstract ImageReference createImageReference(byte[] _1xData,
                                                            @Nullable byte[] _2xdata,
                                                            boolean isSVG,
                                                            String groupId,

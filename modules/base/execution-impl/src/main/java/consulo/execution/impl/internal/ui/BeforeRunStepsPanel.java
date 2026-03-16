@@ -37,8 +37,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -217,7 +216,7 @@ class BeforeRunStepsPanel {
         return myRunConfiguration instanceof UnknownRunConfiguration;
     }
 
-    void doAddAction(@Nonnull AnActionEvent e) {
+    void doAddAction(AnActionEvent e) {
         if (isUnknown()) {
             return;
         }
@@ -238,7 +237,7 @@ class BeforeRunStepsPanel {
             AnAction providerAction = new AnAction(provider.getName(), provider.getName(), provider.getIcon(myRunConfiguration)) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     BeforeRunTask task = provider.createTask(myRunConfiguration);
                     if (task == null) {
                         return;
@@ -331,7 +330,7 @@ class BeforeRunStepsPanel {
     private class MyListCellRenderer extends ColoredListCellRenderer<BeforeRunTask> {
         @Override
         protected void customizeCellRenderer(
-            @Nonnull JList<? extends BeforeRunTask> list,
+            JList<? extends BeforeRunTask> list,
             BeforeRunTask value,
             int index,
             boolean selected,

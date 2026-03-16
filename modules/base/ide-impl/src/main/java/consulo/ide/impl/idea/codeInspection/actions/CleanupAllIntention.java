@@ -20,15 +20,14 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CleanupAllIntention extends CleanupIntention {
   public static final CleanupAllIntention INSTANCE = new CleanupAllIntention();
 
   private CleanupAllIntention() {}
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.cleanupInFile();

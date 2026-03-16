@@ -38,8 +38,7 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -50,7 +49,7 @@ import java.util.function.Predicate;
 
 public class HighlightInfoImpl implements HighlightInfo {
     private class MyFixBuilder extends AbstractHighlightInfoFixBuilder<FixBuilder> implements FixBuilder {
-        public MyFixBuilder(@Nonnull IntentionAction action) {
+        public MyFixBuilder(IntentionAction action) {
             super(action);
         }
 
@@ -82,7 +81,7 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     public final TextAttributes myForcedTextAttributes;
     public final TextAttributesKey myForcedTextAttributesKey;
-    @Nonnull
+    
     private final HighlightInfoType myType;
     private final int myStartOffset;
     private final int myEndOffset;
@@ -90,11 +89,11 @@ public class HighlightInfoImpl implements HighlightInfo {
     public List<Pair<IntentionActionDescriptor, TextRange>> myQuickFixActionRanges;
     public List<Pair<IntentionActionDescriptor, RangeMarker>> myQuickFixActionMarkers;
 
-    @Nonnull
+    
     private final LocalizeValue myDescription;
-    @Nonnull
+    
     private final LocalizeValue myToolTip;
-    @Nonnull
+    
     private final HighlightSeverity mySeverity;
     private final GutterMark myGutterIconRenderer;
     private final ProblemGroup myProblemGroup;
@@ -120,11 +119,11 @@ public class HighlightInfoImpl implements HighlightInfo {
      * Returns the HighlightInfo instance from which the given range highlighter was created, or null if there isn't any.
      */
     @Nullable
-    public static HighlightInfoImpl fromRangeHighlighter(@Nonnull RangeHighlighter highlighter) {
+    public static HighlightInfoImpl fromRangeHighlighter(RangeHighlighter highlighter) {
         return highlighter.getErrorStripeTooltip() instanceof HighlightInfoImpl highlightInfo ? highlightInfo : null;
     }
 
-    @Nonnull
+    
     public ProperTextRange getFixTextRange() {
         return new ProperTextRange(myFixStartOffset, myFixEndOffset);
     }
@@ -142,19 +141,19 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myNavigationShift;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getToolTip() {
         return myToolTip;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return myDescription;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfoType getType() {
         return myType;
@@ -186,7 +185,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         setFlag(BIJECTIVE_MASK, bijective);
     }
 
-    @Nonnull
+    
     @Override
     public HighlightSeverity getSeverity() {
         return mySeverity;
@@ -233,7 +232,7 @@ public class HighlightInfoImpl implements HighlightInfo {
      */
     @Nullable
     @SuppressWarnings("deprecation")
-    public ColorValue getErrorStripeMarkColor(@Nonnull PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
+    public ColorValue getErrorStripeMarkColor(PsiElement element, @Nullable EditorColorsScheme colorsScheme) {
         if (myForcedTextAttributes != null) {
             return myForcedTextAttributes.getErrorStripeColor();
         }
@@ -270,7 +269,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return attributes == null ? null : attributes.getErrorStripeColor();
     }
 
-    @Nonnull
+    
     private static EditorColorsScheme getColorsScheme(@Nullable EditorColorsScheme customScheme) {
         return customScheme != null ? customScheme : EditorColorsManager.getInstance().getGlobalScheme();
     }
@@ -287,12 +286,12 @@ public class HighlightInfoImpl implements HighlightInfo {
     public HighlightInfoImpl(
         @Nullable TextAttributes forcedTextAttributes,
         @Nullable TextAttributesKey forcedTextAttributesKey,
-        @Nonnull HighlightInfoType type,
+        HighlightInfoType type,
         int startOffset,
         int endOffset,
-        @Nonnull LocalizeValue escapedDescription,
-        @Nonnull LocalizeValue escapedToolTip,
-        @Nonnull HighlightSeverity severity,
+        LocalizeValue escapedDescription,
+        LocalizeValue escapedToolTip,
+        HighlightSeverity severity,
         boolean afterEndOfLine,
         @Nullable Boolean needsUpdateOnTyping,
         boolean isFileLevelAnnotation,
@@ -356,7 +355,7 @@ public class HighlightInfoImpl implements HighlightInfo {
             && that.getDescription().equals(getDescription());
     }
 
-    public boolean equalsByActualOffset(@Nonnull HighlightInfoImpl info) {
+    public boolean equalsByActualOffset(HighlightInfoImpl info) {
         return info == this
             || info.getSeverity() == getSeverity()
             && info.getActualStartOffset() == getActualStartOffset()
@@ -396,8 +395,8 @@ public class HighlightInfoImpl implements HighlightInfo {
         return s;
     }
 
-    @Nonnull
-    public static Builder newHighlightInfo(@Nonnull HighlightInfoType type) {
+    
+    public static Builder newHighlightInfo(HighlightInfoType type) {
         return new HighlightInfoBuilder(type);
     }
 
@@ -405,7 +404,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         myGroup = group;
     }
 
-    static boolean isAcceptedByFilters(@Nonnull HighlightInfoImpl info, @Nullable PsiElement psiElement) {
+    static boolean isAcceptedByFilters(HighlightInfoImpl info, @Nullable PsiElement psiElement) {
         PsiFile file = psiElement == null ? null : psiElement.getContainingFile();
         boolean acceptedByFilters = Application.get().getExtensionPoint(HighlightInfoFilter.class)
             .allMatchSafe(filter -> filter.accept(info, file));
@@ -425,13 +424,13 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myProblemGroup;
     }
 
-    @Nonnull
-    public static HighlightInfoImpl fromAnnotation(@Nonnull Annotation annotation) {
+    
+    public static HighlightInfoImpl fromAnnotation(Annotation annotation) {
         return fromAnnotation(annotation, false);
     }
 
-    @Nonnull
-    public static HighlightInfoImpl fromAnnotation(@Nonnull Annotation annotation, boolean batchMode) {
+    
+    public static HighlightInfoImpl fromAnnotation(Annotation annotation, boolean batchMode) {
         TextAttributes forcedAttributes = annotation.getEnforcedTextAttributes();
         TextAttributesKey key = annotation.getTextAttributes();
         TextAttributesKey forcedAttributesKey = forcedAttributes == null && key != HighlighterColors.NO_HIGHLIGHTING ? key : null;
@@ -472,8 +471,8 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     private static final String ANNOTATOR_INSPECTION_SHORT_NAME = "Annotator";
 
-    @Nonnull
-    private static HighlightInfoType convertType(@Nonnull Annotation annotation) {
+    
+    private static HighlightInfoType convertType(Annotation annotation) {
         ProblemHighlightType type = annotation.getHighlightType();
         return switch (type) {
             case LIKE_UNKNOWN_SYMBOL -> HighlightInfoType.WRONG_REF;
@@ -525,7 +524,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return isFlagSet(FROM_INJECTION_MASK);
     }
 
-    @Nonnull
+    
     public String getText() {
         if (isFileLevelAnnotation()) {
             return "";
@@ -540,9 +539,9 @@ public class HighlightInfoImpl implements HighlightInfo {
         return highlighter.getDocument().getText(TextRange.create(highlighter));
     }
 
-    @Nonnull
+    
     @Override
-    public FixBuilder newFix(@Nonnull IntentionAction action) {
+    public FixBuilder newFix(IntentionAction action) {
         return new MyFixBuilder(action);
     }
 
@@ -550,7 +549,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     public void registerFix(
         @Nullable IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nonnull LocalizeValue displayName,
+        LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     ) {
@@ -574,14 +573,14 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
 
     @Override
-    public void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition) {
+    public void unregisterQuickFix(Predicate<? super IntentionAction> condition) {
         if (myQuickFixActionRanges != null) {
             myQuickFixActionRanges.removeIf(pair -> condition.test(pair.first.getAction()));
         }
     }
 
     @Override
-    public void forEachQuickFix(@Nonnull BiConsumer<IntentionAction, TextRange> consumer) {
+    public void forEachQuickFix(BiConsumer<IntentionAction, TextRange> consumer) {
         if (myQuickFixActionRanges != null) {
             for (Pair<IntentionActionDescriptor, TextRange> range : myQuickFixActionRanges) {
                 IntentionAction action = range.getFirst().getAction();

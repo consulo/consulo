@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.actions;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author nik

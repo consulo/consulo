@@ -21,8 +21,7 @@ import consulo.language.editor.util.UsedColors;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @see RainbowVisitorFactory
@@ -31,17 +30,17 @@ public abstract class RainbowVisitor implements HighlightVisitor {
     private HighlightInfoHolder myHolder;
     private RainbowHighlighter myRainbowHighlighter;
 
-    @Nonnull
+    
     protected RainbowHighlighter getHighlighter() {
         return myRainbowHighlighter;
     }
 
     @Override
     public final boolean analyze(
-        @Nonnull PsiFile file,
+        PsiFile file,
         boolean updateWholeFile,
-        @Nonnull HighlightInfoHolder holder,
-        @Nonnull Runnable action
+        HighlightInfoHolder holder,
+        Runnable action
     ) {
         myHolder = holder;
         myRainbowHighlighter = new RainbowHighlighter(myHolder.getColorsScheme());
@@ -61,9 +60,9 @@ public abstract class RainbowVisitor implements HighlightVisitor {
 
     @RequiredReadAction
     protected HighlightInfo getInfo(
-        @Nonnull PsiElement context,
-        @Nonnull PsiElement rainbowElement,
-        @Nonnull String name,
+        PsiElement context,
+        PsiElement rainbowElement,
+        String name,
         @Nullable TextAttributesKey colorKey
     ) {
         int colorIndex = UsedColors.getOrAddColorIndex(context, name, getHighlighter().getColorsCount());

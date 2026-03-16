@@ -4,12 +4,11 @@ package consulo.execution.debug.stream.lib;
 import consulo.execution.debug.stream.trace.TerminatorCallHandler;
 import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface TerminalOperation extends Operation {
-  @Nonnull
-  TerminatorCallHandler getTraceHandler(@Nonnull TerminatorStreamCall call, @Nonnull String resultExpression, @Nonnull Dsl dsl);
+  
+  TerminatorCallHandler getTraceHandler(TerminatorStreamCall call, String resultExpression, Dsl dsl);
 }

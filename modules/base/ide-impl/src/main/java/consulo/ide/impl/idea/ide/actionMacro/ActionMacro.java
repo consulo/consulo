@@ -31,7 +31,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 
@@ -211,7 +210,7 @@ public class ActionMacro implements JDOMExternalizable {
     private final List<Integer> myKeyCodes = new ArrayList<>();
     private final List<Integer> myModifiers = new ArrayList<>();
 
-    public TypedDescriptor(@Nonnull String text, List<Integer> keyCodes, List<Integer> modifiers) {
+    public TypedDescriptor(String text, List<Integer> keyCodes, List<Integer> modifiers) {
       myText = text;
       myKeyCodes.addAll(keyCodes);
       myModifiers.addAll(modifiers);

@@ -21,8 +21,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.distributed.internal.BranchHideableActionGroup;
 import consulo.versionControlSystem.distributed.internal.BranchMoreAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -32,19 +31,19 @@ public class BranchActionUtil {
     public static final Comparator<BranchActionGroup> FAVORITE_BRANCH_COMPARATOR =
         Comparator.comparing(branch -> branch.isFavorite() ? -1 : 0);
 
-    public static int getNumOfFavorites(@Nonnull List<? extends BranchActionGroup> branchActions) {
+    public static int getNumOfFavorites(List<? extends BranchActionGroup> branchActions) {
         return ContainerUtil.count(branchActions, BranchActionGroup::isFavorite);
     }
 
-    public static int getNumOfTopShownBranches(@Nonnull List<? extends BranchActionGroup> branchActions) {
+    public static int getNumOfTopShownBranches(List<? extends BranchActionGroup> branchActions) {
         int numOfFavorites = getNumOfFavorites(branchActions);
         return branchActions.size() > DvcsBranchPopup.MyMoreIndex.MAX_BRANCH_NUM && numOfFavorites > 0 ? numOfFavorites : DvcsBranchPopup.MyMoreIndex.MAX_BRANCH_NUM;
     }
 
     public static void wrapWithMoreActionIfNeeded(
-        @Nonnull Project project,
-        @Nonnull ActionGroup.Builder parentGroup,
-        @Nonnull List<? extends ActionGroup> actionList,
+        Project project,
+        ActionGroup.Builder parentGroup,
+        List<? extends ActionGroup> actionList,
         int maxIndex,
         @Nullable String settingName
     ) {
@@ -52,9 +51,9 @@ public class BranchActionUtil {
     }
 
     public static void wrapWithMoreActionIfNeeded(
-        @Nonnull Project project,
-        @Nonnull ActionGroup.Builder parentGroup,
-        @Nonnull List<? extends ActionGroup> actionList,
+        Project project,
+        ActionGroup.Builder parentGroup,
+        List<? extends ActionGroup> actionList,
         int maxIndex,
         @Nullable String settingName,
         boolean defaultExpandValue

@@ -19,7 +19,7 @@ package consulo.ui.ex.awt.internal;
 import consulo.ui.ex.Painter;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;

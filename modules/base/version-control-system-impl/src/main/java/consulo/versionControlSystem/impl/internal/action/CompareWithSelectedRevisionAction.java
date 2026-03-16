@@ -49,8 +49,7 @@ import consulo.versionControlSystem.impl.internal.history.VcsHistoryProviderBack
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -131,18 +130,18 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
     }
 
     @Override
-    public void update(@Nonnull VcsContext e, @Nonnull Presentation presentation) {
+    public void update(VcsContext e, Presentation presentation) {
         AbstractShowDiffAction.updateDiffAction(presentation, e, VcsBackgroundableActions.COMPARE_WITH);
     }
 
     @Override
-    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+    protected boolean forceSyncUpdate(AnActionEvent e) {
         return true;
     }
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext vcsContext) {
+    protected void actionPerformed(VcsContext vcsContext) {
         VirtualFile file = vcsContext.getSelectedFiles()[0];
         Project project = vcsContext.getProject();
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
@@ -306,7 +305,7 @@ public class CompareWithSelectedRevisionAction extends AbstractVcsAction {
                 return table.convertRowIndexToModel(viewIndex);
             }
 
-            @Nonnull
+            
             @Override
             protected Object[] getAllElements() {
                 return revisions.toArray();

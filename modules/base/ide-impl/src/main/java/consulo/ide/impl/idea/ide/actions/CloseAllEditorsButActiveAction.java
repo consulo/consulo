@@ -27,7 +27,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -39,7 +38,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
         VirtualFile selectedFile;
@@ -58,7 +57,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);
         if (project == null) {

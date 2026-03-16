@@ -21,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.usage.PsiElementUsageTarget;
 import consulo.usage.PsiElementUsageTargetFactory;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceImpl
 public class PsiElementUsageTargetFactoryImpl implements PsiElementUsageTargetFactory {
-  @Nonnull
+  
   @Override
   public PsiElementUsageTarget create(PsiElement element) {
     return new PsiElement2UsageTargetAdapter(element);

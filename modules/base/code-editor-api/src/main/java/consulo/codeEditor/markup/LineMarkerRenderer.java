@@ -17,7 +17,6 @@ package consulo.codeEditor.markup;
 
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -56,7 +55,7 @@ public interface LineMarkerRenderer {
    * <p>
    * Corresponding rectangle will be passed to renderer in {@link #paint(Editor, Graphics, Rectangle)} method.
    */
-  @Nonnull
+  
   default Position getPosition() {
     return Position.RIGHT;
   }

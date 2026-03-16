@@ -25,7 +25,6 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "TemplateProjectStructure")
 public class TemplateProjectStructureAction extends AnAction implements DumbAware {
@@ -35,7 +34,7 @@ public class TemplateProjectStructureAction extends AnAction implements DumbAwar
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
         ShowSettingsUtil.getInstance().showProjectStructureDialog(defaultProject);
     }

@@ -27,8 +27,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.ResourceUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +38,7 @@ import java.net.URL;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class InspectionTool implements BatchSuppressableTool {
-    @Nonnull
+    
     public InspectionToolState<?> createStateProvider() {
         return DummyInspectionToolState.INSTANCE;
     }
@@ -55,7 +54,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     }
 
     @Override
-    public boolean isSuppressedFor(@Nonnull PsiElement element) {
+    public boolean isSuppressedFor(PsiElement element) {
         for (InspectionSuppressor suppressor : SuppressionUtil.getSuppressors(element)) {
             String toolId = getSuppressId();
             if (suppressor.isSuppressedFor(element, toolId)) {
@@ -73,7 +72,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return getShortName();
     }
 
-    @Nonnull
+    
     @Override
     public SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element) {
         if (element != null) {
@@ -89,10 +88,10 @@ public abstract class InspectionTool implements BatchSuppressableTool {
     public void cleanup(Project project) {
     }
 
-    @Nonnull
+    
     public abstract LocalizeValue getGroupDisplayName();
 
-    @Nonnull
+    
     public LocalizeValue[] getGroupPath() {
         LocalizeValue groupDisplayName = getGroupDisplayName().orIfEmpty(InspectionLocalize.inspectionGeneralToolsGroupName());
 
@@ -105,25 +104,25 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         }
     }
 
-    @Nonnull
+    
     public abstract LocalizeValue getDisplayName();
 
-    @Nonnull
+    
     public String getShortName() {
         return getShortName(getClass().getSimpleName());
     }
 
-    @Nonnull
-    public static String getShortName(@Nonnull Class<? extends InspectionTool> clazz) {
+    
+    public static String getShortName(Class<? extends InspectionTool> clazz) {
         return getShortName(clazz.getSimpleName());
     }
 
-    @Nonnull
-    public static String getShortName(@Nonnull String className) {
+    
+    public static String getShortName(String className) {
         return StringUtil.trimEnd(StringUtil.trimEnd(className, "Inspection"), "InspectionBase");
     }
 
-    @Nonnull
+    
     public abstract HighlightDisplayLevel getDefaultLevel();
 
     public boolean isEnabledByDefault() {
@@ -138,12 +137,12 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return null;
     }
 
-    @Nonnull
+    
     public static LocalizeValue getGeneralGroupName() {
         return InspectionLocalize.inspectionGeneralToolsGroupName();
     }
 
-    @Nonnull
+    
     public LocalizeValue getDescription() {
         return LocalizeValue.empty();
     }
@@ -175,7 +174,7 @@ public abstract class InspectionTool implements BatchSuppressableTool {
         return ResourceUtil.getResource(getDescriptionContextClass(), "/inspectionDescriptions", fileName);
     }
 
-    @Nonnull
+    
     @Deprecated
     protected Class<? extends InspectionTool> getDescriptionContextClass() {
         return getClass();

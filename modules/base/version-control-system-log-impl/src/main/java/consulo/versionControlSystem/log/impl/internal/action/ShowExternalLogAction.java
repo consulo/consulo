@@ -38,8 +38,7 @@ import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.VcsRootChecker;
 import consulo.versionControlSystem.log.impl.internal.VcsLogContentProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,13 +55,13 @@ public class ShowExternalLogAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         SequencedMap<VcsKey, List<VirtualFile>> roots = selectRoots(project);
         if (roots.isEmpty()) {
@@ -111,11 +110,11 @@ public class ShowExternalLogAction extends DumbAwareAction {
 //        }
     }
 
-    @Nonnull
+    
     private static MyContentComponent createManagerAndContent(
-        @Nonnull Project project,
-        @Nonnull AbstractVcs vcs,
-        @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots,
+        Project project,
+        AbstractVcs vcs,
+        SequencedMap<VcsKey, List<VirtualFile>> roots,
         @Nullable String tabName
     ) {
         for (Map.Entry<VcsKey, List<VirtualFile>> entry : roots.entrySet()) {
@@ -139,13 +138,13 @@ public class ShowExternalLogAction extends DumbAwareAction {
         return null;
     }
 
-    @Nonnull
-    private static String calcLogId(@Nonnull List<VirtualFile> roots) {
+    
+    private static String calcLogId(List<VirtualFile> roots) {
         return EXTERNAL + " " + StringUtil.join(roots, VirtualFile::getPath, File.pathSeparator);
     }
 
-    @Nonnull
-    private static String calcTabName(@Nonnull ContentManager cm, @Nonnull List<VirtualFile> roots) {
+    
+    private static String calcTabName(ContentManager cm, List<VirtualFile> roots) {
         String name = VcsLogContentProvider.TAB_NAME + " (" + roots.get(0).getName();
         if (roots.size() > 1) {
             name += "+";
@@ -161,12 +160,12 @@ public class ShowExternalLogAction extends DumbAwareAction {
         return candidate;
     }
 
-    private static boolean hasContentsWithName(@Nonnull ContentManager cm, @Nonnull String candidate) {
+    private static boolean hasContentsWithName(ContentManager cm, String candidate) {
         return ContainerUtil.exists(cm.getContents(), content -> content.getDisplayName().equals(candidate));
     }
 
-    @Nonnull
-    private static SequencedMap<VcsKey, List<VirtualFile>> selectRoots(@Nonnull Project project) {
+    
+    private static SequencedMap<VcsKey, List<VirtualFile>> selectRoots(Project project) {
         ExtensionPoint<VcsRootChecker> checkers = project.getApplication().getExtensionPoint(VcsRootChecker.class);
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, true, false, true);
@@ -184,9 +183,9 @@ public class ShowExternalLogAction extends DumbAwareAction {
     }
 
     private static boolean checkIfProjectLogMatches(
-        @Nonnull Project project,
-        @Nonnull ContentManager cm,
-        @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots
+        Project project,
+        ContentManager cm,
+        SequencedMap<VcsKey, List<VirtualFile>> roots
     ) {
         ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
 
@@ -213,7 +212,7 @@ public class ShowExternalLogAction extends DumbAwareAction {
         return false;
     }
 
-    private static boolean checkIfAlreadyOpened(@Nonnull ContentManager cm, @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots) {
+    private static boolean checkIfAlreadyOpened(ContentManager cm, SequencedMap<VcsKey, List<VirtualFile>> roots) {
         Content toSelect = null;
 
         for (Content content : cm.getContents()) {
@@ -240,12 +239,12 @@ public class ShowExternalLogAction extends DumbAwareAction {
     }
 
     private static class MyContentComponent extends JPanel {
-        @Nonnull
+        
         private final Collection<VirtualFile> myRoots;
-        @Nonnull
+        
         private final Disposable myDisposable;
 
-        MyContentComponent(@Nonnull JComponent actualComponent, @Nonnull Collection<VirtualFile> roots, @Nonnull Disposable disposable) {
+        MyContentComponent(JComponent actualComponent, Collection<VirtualFile> roots, Disposable disposable) {
             super(new BorderLayout());
             myDisposable = disposable;
             myRoots = roots;
@@ -254,15 +253,15 @@ public class ShowExternalLogAction extends DumbAwareAction {
     }
 
 //    private static class ShowLogInDialogTask extends Task.Backgroundable {
-//        @Nonnull
+//        
 //        private final Project myProject;
-//        @Nonnull
+//        
 //        private final SequencedMap<VcsKey, List<VirtualFile>> myRoots;
-//        @Nonnull
+//        
 //        private final GitVcs myVcs;
 //        private GitVersion myVersion;
 //
-//        private ShowLogInDialogTask(@Nonnull Project project, @Nonnull SequencedMap<VcsKey, List<VirtualFile>> roots) {
+//        private ShowLogInDialogTask(Project project, SequencedMap<VcsKey, List<VirtualFile>> roots) {
 //            super(project, LocalizeValue.localizeTODO("Loading External Log..."), true);
 //            myProject = project;
 //            myRoots = roots;
@@ -270,7 +269,7 @@ public class ShowExternalLogAction extends DumbAwareAction {
 //        }
 //
 //        @Override
-//        public void run(@Nonnull ProgressIndicator indicator) {
+//        public void run(ProgressIndicator indicator) {
 //            myVersion = myVcs.getVersion();
 //            if (myVersion.isNull()) {
 //                myVcs.checkVersion();

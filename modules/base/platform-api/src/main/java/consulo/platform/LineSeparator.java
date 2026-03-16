@@ -17,8 +17,7 @@ package consulo.platform;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -37,13 +36,13 @@ public enum LineSeparator {
   private final String mySeparatorString;
   private final byte[] myBytes;
 
-  LineSeparator(@Nonnull String separatorString) {
+  LineSeparator(String separatorString) {
     mySeparatorString = separatorString;
     myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
   }
 
-  @Nonnull
-  public static LineSeparator fromString(@Nonnull String string) {
+  
+  public static LineSeparator fromString(String string) {
     for (LineSeparator separator : values()) {
       if (separator.getSeparatorString().equals(string)) {
         return separator;
@@ -53,12 +52,12 @@ public enum LineSeparator {
     return Platform.current().os().lineSeparator();
   }
 
-  @Nonnull
+  
   public String getSeparatorString() {
     return mySeparatorString;
   }
 
-  @Nonnull
+  
   public byte[] getSeparatorBytes() {
     return myBytes;
   }
@@ -68,7 +67,7 @@ public enum LineSeparator {
   }
 
   @Nullable
-  public static LineSeparator detectSeparators(@Nonnull CharSequence text) {
+  public static LineSeparator detectSeparators(CharSequence text) {
     int index = StringUtil.indexOfAny(text, "\n\r");
     if (index == -1) return null;
     if (StringUtil.startsWith(text, index, "\r\n")) return LineSeparator.CRLF;
@@ -78,7 +77,7 @@ public enum LineSeparator {
   }
 
   @Nullable
-  public static LineSeparator getLineSeparatorAt(@Nonnull CharSequence text, int index) {
+  public static LineSeparator getLineSeparatorAt(CharSequence text, int index) {
     if (index < 0 || index >= text.length()) {
       return null;
     }

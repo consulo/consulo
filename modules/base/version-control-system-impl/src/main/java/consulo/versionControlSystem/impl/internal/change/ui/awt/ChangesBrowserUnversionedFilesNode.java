@@ -16,11 +16,10 @@
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public class ChangesBrowserUnversionedFilesNode extends ChangesBrowserSpecificFilesNode {
 
-  public ChangesBrowserUnversionedFilesNode(@Nonnull Project project,
+  public ChangesBrowserUnversionedFilesNode(Project project,
                                             int unversionedSize,
                                             int unversionedDirsSize,
                                             boolean manyUnversioned) {

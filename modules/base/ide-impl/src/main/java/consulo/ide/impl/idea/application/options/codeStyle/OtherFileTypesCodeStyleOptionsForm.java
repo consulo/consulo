@@ -30,8 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +46,7 @@ public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
     private JPanel myTopPanel;
 
     @RequiredUIAccess
-    protected OtherFileTypesCodeStyleOptionsForm(@Nonnull CodeStyleSettings settings) {
+    protected OtherFileTypesCodeStyleOptionsForm(CodeStyleSettings settings) {
         super(settings);
         init();
         myIndentOptionsEditor = new IndentOptionsEditorWithSmartTabs();
@@ -66,7 +65,7 @@ public class OtherFileTypesCodeStyleOptionsForm extends CodeStyleAbstractPanel {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     protected FileType getFileType() {
         return PlainTextFileType.INSTANCE;

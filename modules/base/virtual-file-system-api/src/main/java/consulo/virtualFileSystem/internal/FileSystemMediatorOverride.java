@@ -20,7 +20,7 @@ import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.util.jna.JnaLoader;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

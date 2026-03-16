@@ -31,27 +31,26 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx {
-    @Nonnull
+    
     private String myName;
 
     @Nullable
     private final VirtualFilePointer myDirVirtualFilePointer;
 
-    public ModuleImpl(@Nonnull String name, @Nullable String dirUrl, @Nonnull Project project, @Nonnull ComponentBinding componentBinding) {
+    public ModuleImpl(String name, @Nullable String dirUrl, Project project, ComponentBinding componentBinding) {
         super(project, "Module " + name, ComponentScope.MODULE, componentBinding);
         myName = name;
         myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
     }
 
     @Override
-    public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    public void executeNonCancelableSection(Runnable runnable) {
         PlatformComponentManagerImpl application = (BaseApplication) getApplication();
         application.executeNonCancelableSection(runnable);
     }
@@ -62,7 +61,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Application getApplication() {
         return getProject().getApplication();
@@ -74,7 +73,7 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
 
         builder.bind(Module.class).to(this);
@@ -104,27 +103,27 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return (Project) myParent;
     }
 
     @Override
-    @Nonnull
+    
     public String getName() {
         return myName;
     }
 
     @Nullable
     @Override
-    public <T extends ModuleExtension<T>> T getExtension(@Nonnull String key) {
+    public <T extends ModuleExtension<T>> T getExtension(String key) {
         ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
         return manager.getExtension(key);
     }
 
     @Nullable
     @Override
-    public <T extends ModuleExtension<T>> T getExtension(@Nonnull Class<T> clazz) {
+    public <T extends ModuleExtension<T>> T getExtension(Class<T> clazz) {
         ModuleRootManagerImpl manager = (ModuleRootManagerImpl) ModuleRootManager.getInstance(this);
         return manager.getExtension(clazz);
     }

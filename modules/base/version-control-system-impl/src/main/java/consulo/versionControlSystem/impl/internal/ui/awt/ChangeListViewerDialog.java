@@ -36,8 +36,7 @@ import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -123,7 +122,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements UiDataProvi
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(VcsDataKeys.CHANGES, myChanges);
     if (myChangeList instanceof VcsRevisionNumberAware) {
       sink.set(VcsDataKeys.VCS_REVISION_NUMBER, ((VcsRevisionNumberAware)myChangeList).getRevisionNumber());
@@ -149,7 +148,7 @@ public class ChangeListViewerDialog extends DialogWrapper implements UiDataProvi
       }
 
       @Override
-      public void uiDataSnapshot(@Nonnull DataSink sink) {
+      public void uiDataSnapshot(DataSink sink) {
         super.uiDataSnapshot(sink);
         ChangeListViewerDialog.this.uiDataSnapshot(sink);
       }
@@ -197,7 +196,6 @@ public class ChangeListViewerDialog extends DialogWrapper implements UiDataProvi
     super.dispose();
   }
 
-  @Nonnull
   @Override
   protected Action[] createActions() {
     Action cancelAction = getCancelAction();

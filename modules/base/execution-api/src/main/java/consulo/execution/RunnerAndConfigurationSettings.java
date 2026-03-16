@@ -18,8 +18,7 @@ package consulo.execution;
 import consulo.execution.configuration.*;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ProgramRunner;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -103,7 +102,7 @@ public interface RunnerAndConfigurationSettings {
    * @return the settings, or null if the runner doesn't provide any settings or the settings aren't configured for this configuration.
    */
   @Nullable
-  RunnerSettings getRunnerSettings(@Nonnull ProgramRunner runner);
+  RunnerSettings getRunnerSettings(ProgramRunner runner);
 
   /**
    * Returns the configuration-managed settings for the specified runner.
@@ -113,7 +112,7 @@ public interface RunnerAndConfigurationSettings {
    * configured for this configuration.
    */
   @Nullable
-  ConfigurationPerRunnerSettings getConfigurationSettings(@Nonnull ProgramRunner runner);
+  ConfigurationPerRunnerSettings getConfigurationSettings(ProgramRunner runner);
 
   /**
    * Checks whether the run configuration settings are valid.
@@ -136,7 +135,7 @@ public interface RunnerAndConfigurationSettings {
    */
   void checkSettings(@Nullable Executor executor) throws RuntimeConfigurationException;
 
-  boolean canRunOn(@Nonnull ExecutionTarget target);
+  boolean canRunOn(ExecutionTarget target);
 
   /**
    * Returns a factory object which can be used to create a copy of this configuration.

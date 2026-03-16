@@ -14,8 +14,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -23,19 +22,19 @@ import java.util.List;
  * @author Nikolay Matveev
  */
 public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElement> extends AnAction {
-    @Nonnull
+    
     protected final Class<T> myClass;
-    @Nonnull
+    
     protected final Class<? extends PsiFile> myFileClass;
 
-    protected SelectionBasedPsiElementInternalAction(@Nonnull Class<T> aClass, @Nonnull Class<? extends PsiFile> fileClass) {
+    protected SelectionBasedPsiElementInternalAction(Class<T> aClass, Class<? extends PsiFile> fileClass) {
         myClass = aClass;
         myFileClass = fileClass;
     }
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         Editor editor = e.getRequiredData(Editor.KEY);
         PsiFile file = e.getData(PsiFile.KEY);
         if (file == null) {
@@ -61,7 +60,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
         }
     }
 
-    protected void showError(@Nonnull Editor editor) {
+    protected void showError(Editor editor) {
         Application.get().invokeLater(() -> {
             String errorHint = "Cannot find element of class " + myClass.getSimpleName() + " at selection/offset";
             HintManager.getInstance().showErrorHint(editor, errorHint);
@@ -69,7 +68,7 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     }
 
     @RequiredReadAction
-    private void performOnElement(@Nonnull Editor editor, @Nonnull T first) {
+    private void performOnElement(Editor editor, T first) {
         TextRange textRange = first.getTextRange();
         editor.getSelectionModel().setSelection(textRange.getStartOffset(), textRange.getEndOffset());
         String informationHint = getInformationHint(first);
@@ -82,14 +81,14 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     }
 
     @Nullable
-    protected abstract String getInformationHint(@Nonnull T element);
+    protected abstract String getInformationHint(T element);
 
-    @Nonnull
+    
     protected abstract String getErrorHint();
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected List<T> getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected List<T> getElement(Editor editor, PsiFile file) {
         SelectionModel selectionModel = editor.getSelectionModel();
         if (selectionModel.hasSelection()) {
             return ContainerUtil.list(getElementFromSelection(file, selectionModel));
@@ -97,22 +96,22 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
         return getElementAtOffset(editor, file);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected List<T> getElementAtOffset(@Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected List<T> getElementAtOffset(Editor editor, PsiFile file) {
         return ContainerUtil.list(PsiTreeUtil.findElementOfClassAtOffset(file, editor.getCaretModel().getOffset(), myClass, false));
     }
 
     @Nullable
     @RequiredReadAction
-    protected T getElementFromSelection(@Nonnull PsiFile file, @Nonnull SelectionModel selectionModel) {
+    protected T getElementFromSelection(PsiFile file, SelectionModel selectionModel) {
         int selectionStart = selectionModel.getSelectionStart();
         int selectionEnd = selectionModel.getSelectionEnd();
         return PsiTreeUtil.findElementOfClassAtRange(file, selectionStart, selectionEnd, myClass);
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         boolean enabled = Application.get().isInternal() && e.hasData(Editor.KEY) && myFileClass.isInstance(e.getData(PsiFile.KEY));
         e.getPresentation().setEnabledAndVisible(enabled);
     }

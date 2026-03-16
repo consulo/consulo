@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;

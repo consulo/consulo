@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.awt.ScrollBarUIConstants;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,11 +50,11 @@ public abstract class Updater<Painter extends ErrorStripePainter> implements Dis
     }
   };
 
-  protected Updater(@Nonnull Painter painter, JScrollPane pane) {
+  protected Updater(Painter painter, JScrollPane pane) {
     this(painter, pane.getVerticalScrollBar());
   }
 
-  protected Updater(@Nonnull Painter painter, JScrollBar bar) {
+  protected Updater(Painter painter, JScrollBar bar) {
     myPainter = painter;
     myScrollBar = bar;
     myScrollBar.addMouseListener(myMouseAdapter);

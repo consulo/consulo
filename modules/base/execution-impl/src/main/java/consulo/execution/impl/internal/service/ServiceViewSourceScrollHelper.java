@@ -19,7 +19,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,13 +28,13 @@ final class ServiceViewSourceScrollHelper {
   private static final String AUTO_SCROLL_TO_SOURCE_PROPERTY = "service.view.auto.scroll.to.source";
   private static final String AUTO_SCROLL_FROM_SOURCE_PROPERTY = "service.view.auto.scroll.from.source";
 
-  @Nonnull
-  static AutoScrollToSourceHandler createAutoScrollToSourceHandler(@Nonnull Project project) {
+  
+  static AutoScrollToSourceHandler createAutoScrollToSourceHandler(Project project) {
     return new ServiceViewAutoScrollToSourceHandler(project);
   }
 
-  static void installAutoScrollSupport(@Nonnull Project project, @Nonnull ToolWindow toolWindow,
-                                       @Nonnull AutoScrollToSourceHandler toSourceHandler) {
+  static void installAutoScrollSupport(Project project, ToolWindow toolWindow,
+                                       AutoScrollToSourceHandler toSourceHandler) {
     ServiceViewAutoScrollFromSourceHandler fromSourceHandler = new ServiceViewAutoScrollFromSourceHandler(project, toolWindow);
     fromSourceHandler.install();
     DefaultActionGroup additionalGearActions = new DefaultActionGroup(toSourceHandler.createToggleAction(),
@@ -48,14 +47,14 @@ final class ServiceViewSourceScrollHelper {
     toolWindow.setTitleActions(new ScrollFromEditorAction(fromSourceHandler));
   }
 
-  private static boolean isAutoScrollFromSourceEnabled(@Nonnull Project project) {
+  private static boolean isAutoScrollFromSourceEnabled(Project project) {
     return ProjectPropertiesComponent.getInstance(project).getBoolean(AUTO_SCROLL_FROM_SOURCE_PROPERTY, false);
   }
 
   private static final class ServiceViewAutoScrollToSourceHandler extends AutoScrollToSourceHandler {
     private final Project myProject;
 
-    ServiceViewAutoScrollToSourceHandler(@Nonnull Project project) {
+    ServiceViewAutoScrollToSourceHandler(Project project) {
       myProject = project;
     }
 
@@ -71,7 +70,7 @@ final class ServiceViewSourceScrollHelper {
   }
 
   private static final class ServiceViewAutoScrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
-    ServiceViewAutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    ServiceViewAutoScrollFromSourceHandler(Project project, ToolWindow toolWindow) {
       super(project, toolWindow.getComponent(), toolWindow.getContentManager());
     }
 
@@ -86,11 +85,11 @@ final class ServiceViewSourceScrollHelper {
     }
 
     @Override
-    protected void selectElementFromEditor(@Nonnull FileEditor editor) {
+    protected void selectElementFromEditor(FileEditor editor) {
       select(editor);
     }
 
-    private Promise<Void> select(@Nonnull FileEditor editor) {
+    private Promise<Void> select(FileEditor editor) {
       VirtualFile virtualFile = editor.getFile();
       if (virtualFile == null) {
         return Promises.rejectedPromise("Virtual file is null");
@@ -112,14 +111,14 @@ final class ServiceViewSourceScrollHelper {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       e.getPresentation().setEnabledAndVisible(project != null && !isAutoScrollFromSourceEnabled(project));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       Project project = e.getRequiredData(Project.KEY);
 
       FileEditorManager manager = FileEditorManager.getInstance(project);

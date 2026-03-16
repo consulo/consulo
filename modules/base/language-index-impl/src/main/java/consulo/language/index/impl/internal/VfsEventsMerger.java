@@ -20,8 +20,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,17 +30,17 @@ class VfsEventsMerger {
   private static final boolean DEBUG = false;
   //static final boolean DEBUG = (true);
 
-  void recordFileEvent(@Nonnull VirtualFile file, boolean contentChange) {
+  void recordFileEvent(VirtualFile file, boolean contentChange) {
     if (DEBUG) System.out.println("Request build indices for file:" + file.getPath() + ", contentChange:" + contentChange);
     updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, contentChange ? FILE_CONTENT_CHANGED : FILE_ADDED);
   }
 
-  void recordBeforeFileEvent(@Nonnull VirtualFile file, boolean contentChanged) {
+  void recordBeforeFileEvent(VirtualFile file, boolean contentChanged) {
     if (DEBUG) System.out.println("Request invalidate indices for file:" + file.getPath() + ", contentChange:" + contentChanged);
     updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, contentChanged ? BEFORE_FILE_CONTENT_CHANGED : FILE_REMOVED);
   }
 
-  void recordTransientStateChangeEvent(@Nonnull VirtualFile file) {
+  void recordTransientStateChangeEvent(VirtualFile file) {
     if (DEBUG) System.out.println("Transient state changed for file:" + file.getPath());
     updateChange(FileBasedIndexImpl.getIdMaskingNonIdBasedFile(file), file, FILE_TRANSIENT_STATE_CHANGED);
   }
@@ -53,7 +52,7 @@ class VfsEventsMerger {
   }
 
   // NB: this code is executed not only during vfs events dispatch (in write action) but also during requestReindex (in read action)
-  private void updateChange(int fileId, @Nonnull VirtualFile file, @EventMask short mask) {
+  private void updateChange(int fileId, VirtualFile file, @EventMask short mask) {
     while (true) {
       ChangeInfo existingChangeInfo = myChangeInfos.get(fileId);
       ChangeInfo newChangeInfo = new ChangeInfo(file, mask, existingChangeInfo);
@@ -64,7 +63,7 @@ class VfsEventsMerger {
     }
   }
 
-  void applyMergedEvents(@Nonnull VfsEventsMerger merger) {
+  void applyMergedEvents(VfsEventsMerger merger) {
     for (ChangeInfo info : merger.myChangeInfos.values()) {
       updateChange(info.getFileId(), info.file, info.eventMask);
     }
@@ -72,7 +71,7 @@ class VfsEventsMerger {
 
   @FunctionalInterface
   public interface VfsEventProcessor {
-    boolean process(@Nonnull ChangeInfo changeInfo);
+    boolean process(ChangeInfo changeInfo);
   }
 
   // 1. Method can be invoked in several threads
@@ -80,7 +79,7 @@ class VfsEventsMerger {
   // with the processing then set of events will be not empty
   // 3. Method regularly checks for cancellations (thus can finish with PCEs) but event processor should process the change info atomically
   // (without PCE)
-  boolean processChanges(@Nonnull VfsEventProcessor eventProcessor) {
+  boolean processChanges(VfsEventProcessor eventProcessor) {
     if (!myChangeInfos.isEmpty()) {
       int[] fileIds = myChangeInfos.keys(); // snapshot of the keys
       for (int fileId : fileIds) {
@@ -109,7 +108,7 @@ class VfsEventsMerger {
     return myChangeInfos.size();
   }
 
-  @Nonnull
+  
   Stream<VirtualFile> getChangedFiles() {
     return myChangeInfos.values().stream().map(ChangeInfo::getFile);
   }
@@ -132,7 +131,7 @@ class VfsEventsMerger {
     @EventMask
     private final short eventMask;
 
-    ChangeInfo(@Nonnull VirtualFile file, @EventMask short eventMask, @Nullable ChangeInfo previous) {
+    ChangeInfo(VirtualFile file, @EventMask short eventMask, @Nullable ChangeInfo previous) {
       this.file = file;
       this.eventMask = mergeEventMask(previous == null ? 0 : previous.eventMask, eventMask);
     }
@@ -177,7 +176,7 @@ class VfsEventsMerger {
       return (eventMask & FILE_TRANSIENT_STATE_CHANGED) != 0;
     }
 
-    @Nonnull
+    
     VirtualFile getFile() {
       return file;
     }

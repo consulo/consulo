@@ -18,8 +18,7 @@ package consulo.compiler.artifact.ui;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -31,7 +30,7 @@ public abstract class TreeNodePresentation {
     return getPresentableName();
   }
 
-  public abstract void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+  public abstract void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                               SimpleTextAttributes commentAttributes);
 
   @Nullable

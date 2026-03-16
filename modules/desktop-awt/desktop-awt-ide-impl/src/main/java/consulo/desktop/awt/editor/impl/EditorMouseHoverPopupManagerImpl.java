@@ -60,8 +60,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -105,7 +104,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         multicaster.addCaretListener(
             new CaretListener() {
                 @Override
-                public void caretPositionChanged(@Nonnull CaretEvent event) {
+                public void caretPositionChanged(CaretEvent event) {
                     Editor editor = event.getEditor();
                     if (editor == SoftReference.dereference(myCurrentEditor)) {
                         DocumentationManager.getInstance(editor.getProject()).setAllowContentUpdateFromContext(true);
@@ -145,8 +144,8 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
     }
 
     private void scheduleProcessing(
-        @Nonnull Editor editor,
-        @Nonnull Context context,
+        Editor editor,
+        Context context,
         boolean updateExistingPopup,
         boolean forceShowing,
         boolean requestFocus
@@ -280,7 +279,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         }
     }
 
-    private static void validatePopupSize(@Nonnull AbstractPopup popup) {
+    private static void validatePopupSize(AbstractPopup popup) {
         JComponent component = popup.getComponent();
         if (component != null) {
             popup.setSize(component.getPreferredSize());
@@ -303,7 +302,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
 
     @Override
     @RequiredUIAccess
-    public void handleMouseMoved(@Nonnull EditorMouseEvent e) {
+    public void handleMouseMoved(EditorMouseEvent e) {
         cancelCurrentProcessing();
 
         if (ignoreEvent(e)) {
@@ -402,8 +401,8 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
 
     @Override
     public void showInfoTooltip(
-        @Nonnull Editor editor,
-        @Nonnull HighlightInfo info,
+        Editor editor,
+        HighlightInfo info,
         int offset,
         boolean requestFocus,
         boolean showImmediately
@@ -455,7 +454,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             return EditorSettingsExternalizable.getInstance().getTooltipsDelay();
         }
 
-        @Nonnull
+        
         @RequiredReadAction
         private VisualPosition getPopupPosition(Editor editor) {
             HighlightInfo highlightInfo = getHighlightInfo();
@@ -482,7 +481,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         }
 
         @Nullable
-        private Info calcInfo(@Nonnull Editor editor) {
+        private Info calcInfo(Editor editor) {
             HighlightInfo info = getHighlightInfo();
             if (info != null && (info.getDescription().isEmpty() || info.getToolTip().isEmpty())) {
                 info = null;
@@ -728,7 +727,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
         private AbstractPopup popup;
         private List<Consumer<AbstractPopup>> consumers = new ArrayList<>();
 
-        private void setPopup(@Nonnull AbstractPopup popup) {
+        private void setPopup(AbstractPopup popup) {
             assert this.popup == null;
             this.popup = popup;
             consumers.forEach(c -> c.accept(popup));
@@ -740,7 +739,7 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             return popup;
         }
 
-        private void performWhenAvailable(@Nonnull Consumer<AbstractPopup> consumer) {
+        private void performWhenAvailable(Consumer<AbstractPopup> consumer) {
             if (popup == null) {
                 consumers.add(consumer);
             }
@@ -749,10 +748,10 @@ public final class EditorMouseHoverPopupManagerImpl implements EditorMouseHoverP
             }
         }
 
-        private void performOnCancel(@Nonnull Runnable runnable) {
+        private void performOnCancel(Runnable runnable) {
             performWhenAvailable(popup -> popup.addListener(new JBPopupListener() {
                 @Override
-                public void onClosed(@Nonnull LightweightWindowEvent event) {
+                public void onClosed(LightweightWindowEvent event) {
                     runnable.run();
                 }
             }));

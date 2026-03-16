@@ -7,8 +7,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessRunner;
 import consulo.process.util.ProcessOutput;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,21 +24,21 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * @param commandLine commandLine to execute on this host
    * @return {@link ProcessHandler}, with which the command is executed (for example with a timeout)
    */
-  @Nonnull
-  public abstract ProcessHandler getProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException;
+  
+  public abstract ProcessHandler getProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
 
   /**
    * @param commandLine commandLine to execute on this host
    * @return output of the corresponding process
    */
-  @Nonnull
-  public ProcessOutput getProcessOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  
+  public ProcessOutput getProcessOutput(GeneralCommandLine commandLine) throws ExecutionException {
     ProcessHandler handler = getProcessHandler(commandLine);
     CapturingProcessRunner runner = new CapturingProcessRunner(handler);
     return runner.runProcess();
   }
 
-  @Nonnull
+  
   public AttachOSHandler getOsHandler() {
     if (myOsHandler == null) {
       myOsHandler = AttachOSHandler.getAttachOsHandler(this);
@@ -56,7 +55,7 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * @throws IOException on stream retrieval error
    */
   @Nullable
-  public abstract InputStream getFileContent(@Nonnull String filePath) throws IOException;
+  public abstract InputStream getFileContent(String filePath) throws IOException;
 
   /**
    * Check if it is possible to read the file on host machine
@@ -64,20 +63,20 @@ public abstract class EnvironmentAwareHost implements XAttachHost {
    * @param filePath path of the file on host machine
    * @throws ExecutionException on stream retrieval error
    */
-  public abstract boolean canReadFile(@Nonnull String filePath) throws ExecutionException;
+  public abstract boolean canReadFile(String filePath) throws ExecutionException;
 
   /**
    * File system prefix for files from this host. It should be noted that the prefixes must be different for different hosts.
    * Path to the host file is obtained by concatenation of hostId and it's on-host path
    */
-  @Nonnull
+  
   public abstract String getFileSystemHostId();
 
   /**
    * @param credentialsObject is a parametrization of a host
    * @return whether the given credentials corresponds the same host
    */
-  public boolean isSameHost(@Nonnull Object credentialsObject) {
+  public boolean isSameHost(Object credentialsObject) {
     return false;
   }
 }

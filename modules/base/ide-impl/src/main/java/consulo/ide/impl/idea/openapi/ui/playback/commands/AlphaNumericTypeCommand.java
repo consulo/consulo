@@ -20,7 +20,7 @@ import consulo.ui.ex.TypingTarget;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.ui.wm.IdeFocusManager;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

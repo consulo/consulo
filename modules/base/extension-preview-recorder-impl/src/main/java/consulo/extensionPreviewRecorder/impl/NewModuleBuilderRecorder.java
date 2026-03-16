@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.ide.newModule.NewModuleBuilder;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.function.Consumer;
@@ -39,7 +38,7 @@ public class NewModuleBuilderRecorder implements ExtensionPreviewRecorder<NewMod
     }
 
     @Override
-    public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+    public void analyze(Consumer<ExtensionPreview> recorder) {
         myApplication.getExtensionPoint(NewModuleBuilder.class).forEachExtensionSafe(it -> {
             ExtensionPreview preview = ExtensionPreview.of(NewModuleBuilder.class, it.getClass().getName(), it);
             recorder.accept(preview);

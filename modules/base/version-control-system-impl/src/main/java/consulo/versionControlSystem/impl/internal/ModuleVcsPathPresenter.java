@@ -27,8 +27,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.impl.internal.util.RelativePathCalculator;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -51,7 +50,7 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
     myFileIndex = fileIndex;
   }
 
-  @Nonnull
+  
   @Override
   public String getPresentableRelativePathFor(VirtualFile file) {
     if (file == null) return "";
@@ -76,7 +75,7 @@ public class ModuleVcsPathPresenter extends VcsPathPresenter {
 
   @Nullable
   @Override
-  public String getPresentableRelativePath(@Nonnull ContentRevision fromRevision, @Nonnull ContentRevision toRevision) {
+  public String getPresentableRelativePath(ContentRevision fromRevision, ContentRevision toRevision) {
     // need to use parent path because the old file is already not there
     FilePath fromPath = fromRevision.getFile();
     FilePath toPath = toRevision.getFile();

@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui.plaf.extend.textBox;
 
 import consulo.desktop.awt.uiOld.components.fields.ExpandableSupport;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.text.JTextComponent;
 import java.util.function.Function;
 
@@ -27,8 +26,8 @@ import java.util.function.Function;
  */
 public class SupportTextBoxWithExpandActionExtender {
   public static final SupportTextBoxWithExpandActionExtender INSTANCE = new SupportTextBoxWithExpandActionExtender();
-  @Nonnull
-  public <T extends JTextComponent> ExpandableSupport<T> createExpandableSupport(@Nonnull T component, Function<? super String, String> onShow, Function<? super String, String> onHide) {
+  
+  public <T extends JTextComponent> ExpandableSupport<T> createExpandableSupport(T component, Function<? super String, String> onShow, Function<? super String, String> onHide) {
     return new ConsuloExpandableSupport<>(component, onShow, onHide);
   }
 }

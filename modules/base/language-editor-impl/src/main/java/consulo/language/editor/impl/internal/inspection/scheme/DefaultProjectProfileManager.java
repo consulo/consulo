@@ -33,10 +33,8 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,18 +47,18 @@ import java.util.Map;
 public abstract class DefaultProjectProfileManager implements ProjectProfileManager, PersistentStateComponent<Element> {
   protected static final Logger LOG = Logger.getInstance(DefaultProjectProfileManager.class);
 
-  @NonNls
+  
   public static final String SCOPES = "scopes";
-  @NonNls
+  
   protected static final String SCOPE = "scope";
-  @NonNls
+  
   public static final String PROFILE = "profile";
-  @NonNls
+  
   protected static final String NAME = "name";
 
   private static final String VERSION = "1.0";
 
-  @Nonnull
+  
   protected final Project myProject;
 
   protected String myProjectProfile;
@@ -78,7 +76,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   private static final String PROJECT_DEFAULT_PROFILE_NAME = "Project Default";
 
-  public DefaultProjectProfileManager(@Nonnull Project project, @Nonnull ApplicationProfileManager applicationProfileManager, @Nonnull DependencyValidationManager holder) {
+  public DefaultProjectProfileManager(Project project, ApplicationProfileManager applicationProfileManager, DependencyValidationManager holder) {
     myProject = project;
     myHolder = holder;
     myApplicationProfileManager = applicationProfileManager;
@@ -86,18 +84,18 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     myListenerPublisher = project.getMessageBus().syncPublisher(ProfileChangeAdapter.class);
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  public synchronized Profile getProfile(@Nonnull String name, boolean returnRootProfileIfNamedIsAbsent) {
+  public synchronized Profile getProfile(String name, boolean returnRootProfileIfNamedIsAbsent) {
     return myProfiles.containsKey(name) ? myProfiles.get(name) : myApplicationProfileManager.getProfile(name, returnRootProfileIfNamedIsAbsent);
   }
 
   @Override
-  public synchronized void updateProfile(@Nonnull Profile profile) {
+  public synchronized void updateProfile(Profile profile) {
     myProfiles.put(profile.getName(), (InspectionProfile)profile);
     myListenerPublisher.profileChanged(profile);
   }
@@ -180,27 +178,27 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     return myProjectProfile != null && !Comparing.strEqual(myProjectProfile, PROJECT_DEFAULT_PROFILE_NAME);
   }
 
-  @Nonnull
+  
   @Override
   public NamedScopesHolder getScopesManager() {
     return myHolder;
   }
 
-  @Nonnull
+  
   @Override
   public synchronized Collection<InspectionProfile> getProfiles() {
     getProjectProfileImpl();
     return myProfiles.values();
   }
 
-  @Nonnull
+  
   @Override
   public synchronized String[] getAvailableProfileNames() {
     return ArrayUtil.toStringArray(myProfiles.keySet());
   }
 
   @Override
-  public synchronized void deleteProfile(@Nonnull String name) {
+  public synchronized void deleteProfile(String name) {
     myProfiles.remove(name);
   }
 
@@ -224,7 +222,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     }
   }
 
-  @Nonnull
+  
   public synchronized Profile getProjectProfileImpl() {
     if (!USE_PROJECT_PROFILE) {
       return myApplicationProfileManager.getRootProfile();
@@ -246,9 +244,9 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
   }
 
   public static class ProfileStateSplitter extends MainConfigurationStateSplitter {
-    @Nonnull
+    
     @Override
-    protected String getSubStateFileName(@Nonnull Element element) {
+    protected String getSubStateFileName(Element element) {
       for (Element option : element.getChildren("option")) {
         if (option.getAttributeValue("name").equals("myName")) {
           return option.getAttributeValue("value");
@@ -257,13 +255,13 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
       throw new IllegalStateException();
     }
 
-    @Nonnull
+    
     @Override
     protected String getComponentStateFileName() {
       return "profiles_settings";
     }
 
-    @Nonnull
+    
     @Override
     protected String getSubStateTagName() {
       return PROFILE;

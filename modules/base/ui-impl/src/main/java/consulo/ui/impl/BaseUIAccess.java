@@ -17,7 +17,6 @@ package consulo.ui.impl;
 
 import consulo.ui.UIAccess;
 import consulo.ui.UIAccessScheduler;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -28,10 +27,10 @@ import java.util.Objects;
 public abstract class BaseUIAccess implements UIAccess {
   protected SingleUIAccessScheduler myUIAccessScheduler;
 
-  @Nonnull
+  
   protected abstract SingleUIAccessScheduler createScheduler();
 
-  @Nonnull
+  
   @Override
   public UIAccessScheduler getScheduler() {
     if (myUIAccessScheduler == null) {

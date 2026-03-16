@@ -3,8 +3,7 @@ package consulo.language.psi.stub;
 
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
@@ -24,7 +23,7 @@ class LazyStubList extends StubList {
   }
 
   @Override
-  void addStub(@Nonnull StubBase<?> stub, @Nullable StubBase<?> parent, @Nullable IStubElementType<?, ?> type) {
+  void addStub(StubBase<?> stub, @Nullable StubBase<?> parent, @Nullable IStubElementType<?, ?> type) {
     // stub is lazily created, so we already know all structure, so do nothing
   }
 
@@ -66,7 +65,7 @@ class LazyStubList extends StubList {
     return myStubs.get(index);
   }
 
-  @Nonnull
+  
   private StubBase<?> instantiateStub(int index) {
     LazyStubData data = myData;
     if (data == null) {

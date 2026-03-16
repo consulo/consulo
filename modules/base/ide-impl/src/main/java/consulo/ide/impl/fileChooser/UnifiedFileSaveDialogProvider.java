@@ -22,8 +22,7 @@ import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -32,19 +31,19 @@ import java.awt.*;
  */
 @ExtensionImpl(order = "last", profiles = ComponentProfiles.UNIFIED)
 public class UnifiedFileSaveDialogProvider implements FileSaveDialogProvider {
-  @Nonnull
+  
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return APPLICATION_ID;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "application";

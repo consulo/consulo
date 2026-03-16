@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem.fileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -23,9 +22,9 @@ import jakarta.annotation.Nonnull;
 public interface FileTypeConsumer {
   String EXTENSION_DELIMITER = ";";
 
-  void consume(@Nonnull FileType fileType);
+  void consume(FileType fileType);
 
-  void consume(@Nonnull FileType fileType, String extensions);
+  void consume(FileType fileType, String extensions);
 
-  void consume(@Nonnull FileType fileType, FileNameMatcher... matchers);
+  void consume(FileType fileType, FileNameMatcher... matchers);
 }

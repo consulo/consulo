@@ -14,8 +14,7 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -29,7 +28,7 @@ import java.text.SimpleDateFormat;
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DateTimeFormatManager.class);
 
-  @Nonnull
+  
   public static DateTimeFormatManager getInstance() {
     return Application.get().getInstance(DateTimeFormatManager.class);
   }
@@ -47,7 +46,7 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
   }
 
   @Override
-  public void loadState(@Nonnull Element state) {
+  public void loadState(Element state) {
     DateTimeFormatManager loaded = XmlSerializer.deserialize(state, DateTimeFormatManager.class);
     XmlSerializerUtil.copyBean(loaded, this);
   }
@@ -87,12 +86,12 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
     return null;
   }
 
-  @Nonnull
+  
   public String getDateFormatPattern() {
     return myPattern;
   }
 
-  public void setDateFormatPattern(@Nonnull String pattern) {
+  public void setDateFormatPattern(String pattern) {
     try {
       new SimpleDateFormat(pattern);
       myPattern = pattern;

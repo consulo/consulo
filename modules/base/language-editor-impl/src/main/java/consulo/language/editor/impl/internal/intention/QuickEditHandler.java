@@ -67,8 +67,7 @@ import consulo.util.lang.*;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -102,7 +101,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     private static final Key<String> REPLACEMENT_KEY = Key.create("REPLACEMENT_KEY");
 
     @RequiredReadAction
-    public QuickEditHandler(Project project, @Nonnull PsiFile injectedFile, PsiFile origFile, Editor editor, QuickEditAction action) {
+    public QuickEditHandler(Project project, PsiFile injectedFile, PsiFile origFile, Editor editor, QuickEditAction action) {
         myProject = project;
         myEditor = editor;
         myAction = action;
@@ -152,7 +151,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             int myEditorCount;
 
             @Override
-            public void editorCreated(@Nonnull EditorFactoryEvent event) {
+            public void editorCreated(EditorFactoryEvent event) {
                 if (event.getEditor().getDocument() != myNewDocument) {
                     return;
                 }
@@ -162,7 +161,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                 if (!myAction.isShowInBalloon()) {
                     new AnAction() {
                         @Override
-                        public void update(@Nonnull AnActionEvent e) {
+                        public void update(AnActionEvent e) {
                             Editor editor = e.getData(Editor.KEY);
                             e.getPresentation().setEnabled(editor != null &&
                                 LookupManager.getActiveLookup(editor) == null &&
@@ -172,7 +171,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
                         @Override
                         @RequiredUIAccess
-                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                        public void actionPerformed(AnActionEvent e) {
                             closeEditor();
                         }
                     }.registerCustomShortcutSet(CommonShortcuts.ESCAPE, event.getEditor().getContentComponent());
@@ -180,7 +179,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             }
 
             @Override
-            public void editorReleased(@Nonnull EditorFactoryEvent event) {
+            public void editorReleased(EditorFactoryEvent event) {
                 if (event.getEditor().getDocument() != myNewDocument) {
                     return;
                 }
@@ -245,7 +244,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
                 new AnAction() {
                     @Override
                     @RequiredUIAccess
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         balloon.hide();
                     }
                 }.registerCustomShortcutSet(CommonShortcuts.ESCAPE, component);
@@ -453,7 +452,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         }
     }
 
-    private void altCommitToOriginal(@Nonnull DocumentEvent e) {
+    private void altCommitToOriginal(DocumentEvent e) {
         PsiFile origPsiFile = PsiDocumentManager.getInstance(myProject).getPsiFile(myOrigDocument);
         String newText = myNewDocument.getText();
         // prepare guarded blocks

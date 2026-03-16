@@ -22,7 +22,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -49,7 +48,7 @@ class UpdateFoldRegionsOperation implements Runnable {
   private final Project myProject;
   private final Editor myEditor;
   private final PsiFile myFile;
-  @Nonnull
+  
   private final ApplyDefaultStateMode myApplyDefaultState;
   private final FoldingMap myElementsToFoldMap = new FoldingMap();
   private final Set<FoldingUpdate.RegionInfo> myRegionInfos = new LinkedHashSet<>();
@@ -57,11 +56,11 @@ class UpdateFoldRegionsOperation implements Runnable {
   private final boolean myKeepCollapsedRegions;
   private final boolean myForInjected;
 
-  UpdateFoldRegionsOperation(@Nonnull Project project,
-                             @Nonnull Editor editor,
-                             @Nonnull PsiFile file,
-                             @Nonnull List<FoldingUpdate.RegionInfo> elementsToFold,
-                             @Nonnull ApplyDefaultStateMode applyDefaultState,
+  UpdateFoldRegionsOperation(Project project,
+                             Editor editor,
+                             PsiFile file,
+                             List<FoldingUpdate.RegionInfo> elementsToFold,
+                             ApplyDefaultStateMode applyDefaultState,
                              boolean keepCollapsedRegions,
                              boolean forInjected) {
     myProject = project;
@@ -95,7 +94,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     foldingModel.clearDocumentRangesModificationStatus();
   }
 
-  private static void applyExpandStatus(@Nonnull List<? extends FoldRegion> newRegions, @Nonnull Map<FoldRegion, Boolean> shouldExpand, @Nonnull Map<FoldingGroup, Boolean> groupExpand) {
+  private static void applyExpandStatus(List<? extends FoldRegion> newRegions, Map<FoldRegion, Boolean> shouldExpand, Map<FoldingGroup, Boolean> groupExpand) {
     for (FoldRegion region : newRegions) {
       FoldingGroup group = region.getGroup();
       Boolean expanded = group == null ? shouldExpand.get(region) : groupExpand.get(group);
@@ -106,11 +105,11 @@ class UpdateFoldRegionsOperation implements Runnable {
     }
   }
 
-  private List<FoldRegion> addNewRegions(@Nonnull EditorFoldingInfoImpl info,
-                                         @Nonnull FoldingModelEx foldingModel,
-                                         @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap,
-                                         @Nonnull Map<FoldRegion, Boolean> shouldExpand,
-                                         @Nonnull Map<FoldingGroup, Boolean> groupExpand) {
+  private List<FoldRegion> addNewRegions(EditorFoldingInfoImpl info,
+                                         FoldingModelEx foldingModel,
+                                         Map<TextRange, Boolean> rangeToExpandStatusMap,
+                                         Map<FoldRegion, Boolean> shouldExpand,
+                                         Map<FoldingGroup, Boolean> groupExpand) {
     List<FoldRegion> newRegions = new ArrayList<>();
     SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(myProject);
     for (FoldingUpdate.RegionInfo regionInfo : myRegionInfos) {
@@ -178,7 +177,7 @@ class UpdateFoldRegionsOperation implements Runnable {
     return oldStatus == null || oldStatus.booleanValue() || FoldingUtil.caretInsideRange(myEditor, range);
   }
 
-  private void removeInvalidRegions(@Nonnull EditorFoldingInfoImpl info, @Nonnull FoldingModelEx foldingModel, @Nonnull Map<TextRange, Boolean> rangeToExpandStatusMap) {
+  private void removeInvalidRegions(EditorFoldingInfoImpl info, FoldingModelEx foldingModel, Map<TextRange, Boolean> rangeToExpandStatusMap) {
     List<FoldRegion> toRemove = new ArrayList<>();
     Ref<FoldingUpdate.RegionInfo> infoRef = Ref.create();
     Set<FoldingGroup> processedGroups = new HashSet<>();
@@ -314,7 +313,7 @@ class UpdateFoldRegionsOperation implements Runnable {
       super(new TreeMap<>(COMPARE_BY_OFFSET_REVERSED));
     }
 
-    @Nonnull
+    
     @Override
     protected Collection<FoldingUpdate.RegionInfo> createCollection() {
       return new ArrayList<>(1);

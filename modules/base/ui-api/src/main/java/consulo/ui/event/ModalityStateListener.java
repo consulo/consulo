@@ -18,12 +18,11 @@ package consulo.ui.event;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @see UIAccess#addModalityStateListener(ModalityStateListener, Disposable)
  */
 public interface ModalityStateListener extends EventListener {
-  void beforeModalityStateChanged(boolean entering, @Nonnull Object modalEntity);
+  void beforeModalityStateChanged(boolean entering, Object modalEntity);
 }

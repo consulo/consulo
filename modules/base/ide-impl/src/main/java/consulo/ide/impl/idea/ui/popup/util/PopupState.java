@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.ui.popup.util;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
@@ -39,12 +38,12 @@ public class PopupState implements JBPopupListener, PopupMenuListener {
   // JBPopupListener
 
   @Override
-  public void beforeShown(@Nonnull LightweightWindowEvent event) {
+  public void beforeShown(LightweightWindowEvent event) {
     markAsShown();
   }
 
   @Override
-  public void onClosed(@Nonnull LightweightWindowEvent event) {
+  public void onClosed(LightweightWindowEvent event) {
     markAsHidden();
   }
 

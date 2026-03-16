@@ -17,7 +17,7 @@ package consulo.language.editor.impl.internal.template;
 
 import consulo.component.persist.*;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;

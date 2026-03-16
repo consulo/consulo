@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -31,25 +30,25 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
   private T myComponent;
 
   @RequiredUIAccess
-  @Nonnull
-  protected abstract T createPanel(@Nonnull Disposable uiDisposable);
+  
+  protected abstract T createPanel(Disposable uiDisposable);
 
   @RequiredUIAccess
-  protected abstract boolean isModified(@Nonnull T component);
+  protected abstract boolean isModified(T component);
 
   @RequiredUIAccess
-  protected abstract void apply(@Nonnull T component) throws ConfigurationException;
+  protected abstract void apply(T component) throws ConfigurationException;
 
   @RequiredUIAccess
-  protected abstract void reset(@Nonnull T component);
+  protected abstract void reset(T component);
 
   @Nullable
-  public final Component getPreferredFocusedComponent(@Nonnull T component) {
+  public final Component getPreferredFocusedComponent(T component) {
     return null;
   }
 
   @RequiredUIAccess
-  protected void disposeUIResources(@Nonnull T component) {
+  protected void disposeUIResources(T component) {
     // nothing
   }
 
@@ -65,7 +64,7 @@ public abstract class SimpleConfigurable<T extends Supplier<? extends Component>
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent(@Nonnull Disposable uiDisposable) {
+  public Component createUIComponent(Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = createPanel(uiDisposable);
     }

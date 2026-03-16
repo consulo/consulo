@@ -20,7 +20,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoPattern;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -68,7 +67,7 @@ public class TodoFilter implements Cloneable{
     return myName;
   }
 
-  public void setName(@Nonnull String name){
+  public void setName(String name){
     myName=name;
   }
 

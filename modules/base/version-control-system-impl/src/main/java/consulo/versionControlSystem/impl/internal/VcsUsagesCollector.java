@@ -21,21 +21,20 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
 @ExtensionImpl
 public class VcsUsagesCollector extends AbstractApplicationUsagesCollector {
   @Override
-  @Nonnull
+  
   public String getGroupId() {
     return "consulo.platform.base:vcs";
   }
 
   @Override
-  @Nonnull
-  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
+  
+  public Set<UsageDescriptor> getProjectUsages(Project project) {
     return ContainerUtil.map2Set(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss(), vcs -> new UsageDescriptor(vcs.getId(), 1));
   }
 }

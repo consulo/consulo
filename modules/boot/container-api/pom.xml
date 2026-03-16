@@ -33,14 +33,39 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>9</java.level>
+    <java.level>8</java.level>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>consulo.maven</groupId>
+        <artifactId>java9-maven-plugin</artifactId>
+        <version>1.3.3</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>gen</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>generate-binary-module-info-nocheck</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-util-nodep</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
       <optional>true</optional>
     </dependency>
   </dependencies>

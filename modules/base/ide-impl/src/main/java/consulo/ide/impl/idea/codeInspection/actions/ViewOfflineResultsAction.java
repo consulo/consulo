@@ -56,8 +56,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -76,17 +75,17 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     private static final Logger LOG = Logger.getInstance(ViewOfflineResultsAction.class);
     private static final String XML_EXTENSION = "xml";
 
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public ViewOfflineResultsAction(@Nonnull Application application) {
+    public ViewOfflineResultsAction(Application application) {
         super(ActionLocalize.actionViewofflineinspectionText(), ActionLocalize.actionViewofflineinspectionDescription());
         myApplication = application;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         presentation.setEnabled(event.hasData(Project.KEY));
         presentation.setVisible(ActionPlaces.MAIN_MENU.equals(event.getPlace()));
@@ -94,7 +93,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
 
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false) {
@@ -169,10 +168,10 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
     public InspectionResultsView showOfflineView(
-        @Nonnull Project project,
+        Project project,
         @Nullable final String profileName,
-        @Nonnull final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
-        @Nonnull String title
+        final Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
+        String title
     ) {
         Profile profile;
         if (profileName != null) {
@@ -200,7 +199,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
                 }
 
                 @Override
-                public HighlightDisplayLevel getErrorLevel(@Nonnull HighlightDisplayKey key, PsiElement element) {
+                public HighlightDisplayLevel getErrorLevel(HighlightDisplayKey key, PsiElement element) {
                     return ((InspectionProfile) InspectionProfileManager.getInstance().getRootProfile()).getErrorLevel(key, element);
                 }
 
@@ -209,7 +208,7 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
                     return false;
                 }
 
-                @Nonnull
+                
                 @Override
                 public String getDisplayName() {
                     return getName();
@@ -219,13 +218,13 @@ public class ViewOfflineResultsAction extends AnAction implements DumbAware {
         return showOfflineView(project, resMap, inspectionProfile, title);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static InspectionResultsView showOfflineView(
-        @Nonnull Project project,
-        @Nonnull Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
-        @Nonnull InspectionProfile inspectionProfile,
-        @Nonnull String title
+        Project project,
+        Map<String, Map<String, Set<OfflineProblemDescriptor>>> resMap,
+        InspectionProfile inspectionProfile,
+        String title
     ) {
         AnalysisScope scope = new AnalysisScope(project);
         InspectionManagerImpl managerEx = (InspectionManagerImpl) InspectionManager.getInstance(project);

@@ -20,7 +20,6 @@ import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 public class ToggleRegex extends EditorSearchToggleAction implements Embeddable {
     public ToggleRegex() {
@@ -38,12 +37,12 @@ public class ToggleRegex extends EditorSearchToggleAction implements Embeddable 
     }
 
     @Override
-    protected boolean isSelected(@Nonnull SearchSession session) {
+    protected boolean isSelected(SearchSession session) {
         return session.getFindModel().isRegularExpressions();
     }
 
     @Override
-    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+    protected void setSelected(SearchSession session, boolean selected) {
         FindModel findModel = session.getFindModel();
         findModel.setRegularExpressions(selected);
         if (selected) {

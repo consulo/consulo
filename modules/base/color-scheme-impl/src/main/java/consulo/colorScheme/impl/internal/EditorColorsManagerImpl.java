@@ -35,8 +35,7 @@ import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -68,19 +67,19 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
     private final Map<String, EditorColorsScheme> myDefaultColorsSchemes = new LinkedHashMap<>();
 
     @Inject
-    public EditorColorsManagerImpl(@Nonnull Application application, @Nonnull SchemeManagerFactory schemeManagerFactory) {
+    public EditorColorsManagerImpl(Application application, SchemeManagerFactory schemeManagerFactory) {
         mySchemeManager =
             schemeManagerFactory.createSchemeManager(FILE_SPEC, new BaseSchemeProcessor<EditorColorsScheme, EditorColorsSchemeImpl>() {
-                @Nonnull
+                
                 @Override
-                public EditorColorsSchemeImpl readScheme(@Nonnull Element element) {
+                public EditorColorsSchemeImpl readScheme(Element element) {
                     EditorColorsSchemeImpl scheme = new EditorColorsSchemeImpl(null, EditorColorsManagerImpl.this);
                     scheme.readExternal(element);
                     return scheme;
                 }
 
                 @Override
-                public Element writeScheme(@Nonnull EditorColorsSchemeImpl scheme) {
+                public Element writeScheme(EditorColorsSchemeImpl scheme) {
                     Element root = new Element(SCHEME_NODE_NAME);
                     try {
                         scheme.writeExternal(root);
@@ -92,9 +91,9 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                     return root;
                 }
 
-                @Nonnull
+                
                 @Override
-                public State getState(@Nonnull EditorColorsSchemeImpl scheme) {
+                public State getState(EditorColorsSchemeImpl scheme) {
                     return scheme instanceof ReadOnlyColorsScheme ? State.NON_PERSISTENT : State.POSSIBLY_CHANGED;
                 }
 
@@ -103,7 +102,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                     fireChanges(mySchemeManager.getCurrentScheme());
                 }
 
-                @Nonnull
+                
                 @Override
                 public String getSchemeExtension() {
                     return ".icls";
@@ -114,9 +113,9 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                     return true;
                 }
 
-                @Nonnull
+                
                 @Override
-                public String getName(@Nonnull EditorColorsScheme immutableElement) {
+                public String getName(EditorColorsScheme immutableElement) {
                     return immutableElement.getName();
                 }
             }, RoamingType.DEFAULT);
@@ -159,7 +158,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                 boolean finished;
 
                 @Override
-                public void add(@Nonnull EditorColorKey key, @Nonnull ColorValue colorValue) {
+                public void add(EditorColorKey key, ColorValue colorValue) {
                     if (finished) {
                         throw new IllegalArgumentException("Can't add new keys. Builder closed");
                     }
@@ -170,7 +169,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                 }
 
                 @Override
-                public void add(@Nonnull TextAttributesKey key, @Nonnull AttributesFlyweight attributes) {
+                public void add(TextAttributesKey key, AttributesFlyweight attributes) {
                     if (finished) {
                         throw new IllegalArgumentException("Can't add new keys. Builder closed");
                     }
@@ -182,7 +181,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
                 }
 
                 @Override
-                public void add(@Nonnull TextAttributesKey key, @Nonnull TextAttributesKey baseAttributes, @Nonnull AttributesFlyweight attributes) {
+                public void add(TextAttributesKey key, TextAttributesKey baseAttributes, AttributesFlyweight attributes) {
                     if (finished) {
                         throw new IllegalArgumentException("Can't add new keys. Builder closed");
                     }
@@ -220,7 +219,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
     }
 
     @Override
-    public void addColorsScheme(@Nonnull EditorColorsScheme scheme) {
+    public void addColorsScheme(EditorColorsScheme scheme) {
         if (!isDefaultScheme(scheme) && !StringUtil.isEmpty(scheme.getName())) {
             mySchemeManager.addNewScheme(scheme, true);
         }
@@ -233,7 +232,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
     }
 
     @Override
-    @Nonnull
+    
     public Map<String, EditorColorsScheme> getBundledSchemes() {
         return myDefaultColorsSchemes;
     }
@@ -244,7 +243,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         }
     }
 
-    @Nonnull
+    
     @Override
     public EditorColorsScheme[] getAllSchemes() {
         List<EditorColorsScheme> schemes = mySchemeManager.getAllSchemes();
@@ -291,13 +290,13 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
         mySchemeManager.setCurrentSchemeName(scheme == null ? getDefaultSchemeFromStyle().getName() : scheme.getName());
     }
 
-    @Nonnull
+    
     private EditorColorsScheme getDefaultSchemeFromStyle() {
         Style style = StyleManager.get().getCurrentStyle();
         return getScheme(style.isDark() ? EditorColorsScheme.DARCULA_SCHEME_NAME : EditorColorsScheme.DEFAULT_SCHEME_NAME);
     }
 
-    @Nonnull
+    
     @Override
     public EditorColorsScheme getGlobalScheme() {
         EditorColorsScheme scheme = mySchemeManager.getCurrentScheme();
@@ -309,7 +308,7 @@ public class EditorColorsManagerImpl implements EditorColorsManagerInternal, Per
     }
 
     @Override
-    public EditorColorsScheme getScheme(@Nonnull String schemeName) {
+    public EditorColorsScheme getScheme(String schemeName) {
         return mySchemeManager.findSchemeByName(schemeName);
     }
 

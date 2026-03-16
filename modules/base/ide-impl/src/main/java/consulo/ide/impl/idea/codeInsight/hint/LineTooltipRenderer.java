@@ -27,9 +27,7 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextDelegate;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -54,7 +52,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
      * <br>
      * very nbsp; long nbsp; text nbsp; with nbsp; 'nbsp;' as spaces cannot be break
      */
-    @NonNls
+    
     @Nullable
     protected String myText;
 
@@ -68,21 +66,21 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         void reload(boolean toExpand);
     }
 
-    public LineTooltipRenderer(@Nullable String text, @Nonnull Object[] comparable) {
+    public LineTooltipRenderer(@Nullable String text, Object[] comparable) {
         this(text, 0, comparable);
     }
 
-    public LineTooltipRenderer(@Nullable String text, int width, @Nonnull Object[] comparable) {
+    public LineTooltipRenderer(@Nullable String text, int width, Object[] comparable) {
         super(comparable);
         myCurrentWidth = width;
         myText = text;
     }
 
-    @Nonnull
+    
     private static JPanel createMainPanel(
-        @Nonnull HintHint hintHint,
-        @Nonnull JComponent pane,
-        @Nonnull JEditorPane editorPane,
+        HintHint hintHint,
+        JComponent pane,
+        JEditorPane editorPane,
         boolean newLayout,
         boolean highlightActions,
         boolean hasSeparators
@@ -174,11 +172,11 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
     @Override
     public LightweightHintImpl show(
-        @Nonnull Editor editor,
-        @Nonnull Point p,
+        Editor editor,
+        Point p,
         boolean alignToRight,
-        @Nonnull TooltipGroup group,
-        @Nonnull HintHint hintHint
+        TooltipGroup group,
+        HintHint hintHint
     ) {
         LightweightHintImpl hint = createHint(editor, p, alignToRight, group, hintHint, true, true, true, null);
         if (hint != null) {
@@ -197,11 +195,11 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     }
 
     public LightweightHintImpl createHint(
-        @Nonnull Editor editor,
-        @Nonnull Point p,
+        Editor editor,
+        Point p,
         boolean alignToRight,
-        @Nonnull TooltipGroup group,
-        @Nonnull final HintHint hintHint,
+        TooltipGroup group,
+        final HintHint hintHint,
         boolean newLayout,
         boolean highlightActions,
         boolean limitWidthToScreen,
@@ -305,7 +303,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
             }
 
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 // The tooltip gets the focus if using a screen reader and invocation through a keyboard shortcut.
                 hintHint.setRequestFocus(ScreenReader.isActive() && e.getInputEvent() instanceof KeyEvent);
                 //TooltipActionsLogger.INSTANCE.logShowDescription(e.getProject(), "shortcut", e.getInputEvent(), e.getPlace());
@@ -388,8 +386,8 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
 
     // Java text components don't support specifying color for 'hr' tag, so we need to replace it with something else,
     // if we need a separator with custom color
-    @Nonnull
-    private static String colorizeSeparators(@Nonnull String html) {
+    
+    private static String colorizeSeparators(String html) {
         String body = UIUtil.getHtmlBody(html);
         List<String> parts = StringUtil.split(body, UIUtil.BORDER_LINE, true, false);
         if (parts.size() <= 1) {
@@ -413,18 +411,18 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         return isActiveHtml(dressedText);
     }
 
-    protected boolean canAutoHideOn(@Nonnull TooltipEvent event) {
+    protected boolean canAutoHideOn(TooltipEvent event) {
         return true;
     }
 
     private void reloadFor(
-        @Nonnull LightweightHintImpl hint,
-        @Nonnull Editor editor,
-        @Nonnull Point p,
-        @Nonnull JComponent pane,
+        LightweightHintImpl hint,
+        Editor editor,
+        Point p,
+        JComponent pane,
         boolean alignToRight,
-        @Nonnull TooltipGroup group,
-        @Nonnull HintHint hintHint,
+        TooltipGroup group,
+        HintHint hintHint,
         boolean expand
     ) {
         //required for immediately showing. Otherwise there are several concurrent issues
@@ -437,12 +435,12 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     }
 
     protected void fillPanel(
-        @Nonnull Editor editor,
-        @Nonnull JPanel component,
-        @Nonnull LightweightHintImpl hint,
-        @Nonnull HintHint hintHint,
-        @Nonnull List<? super AnAction> actions,
-        @Nonnull TooltipReloader expandCallback,
+        Editor editor,
+        JPanel component,
+        LightweightHintImpl hint,
+        HintHint hintHint,
+        List<? super AnAction> actions,
+        TooltipReloader expandCallback,
         boolean newLayout,
         boolean highlightActions
     ) {
@@ -450,7 +448,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         hintHint.setBorderInsets(JBUI.insets(0));
     }
 
-    private static boolean handle(@Nonnull String ref, @Nonnull Editor editor) {
+    private static boolean handle(String ref, Editor editor) {
         return TooltipLinkHandlers.handleLink(ref, editor);
     }
 
@@ -554,25 +552,25 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
         }
     }
 
-    protected void onHide(@Nonnull JComponent contentComponent) {
+    protected void onHide(JComponent contentComponent) {
     }
 
-    @Nonnull
+    
     public LineTooltipRenderer createRenderer(@Nullable String text, int width) {
         return new LineTooltipRenderer(text, width, getEqualityObjects());
     }
 
-    @Nonnull
-    protected String dressDescription(@Nonnull Editor editor, @Nonnull String tooltipText, boolean expanded) {
+    
+    protected String dressDescription(Editor editor, String tooltipText, boolean expanded) {
         return tooltipText;
     }
 
-    protected static boolean isActiveHtml(@Nonnull String html) {
+    protected static boolean isActiveHtml(String html) {
         return html.contains("</a>");
     }
 
-    public void addBelow(@Nonnull String text) {
-        @NonNls String newBody;
+    public void addBelow(String text) {
+        String newBody;
         if (myText == null) {
             newBody = UIUtil.getHtmlBody(text);
         }

@@ -21,7 +21,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CallHierarchy")
 public final class BrowseCallHierarchyAction extends BrowseHierarchyActionBase<CallHierarchyProvider> {
@@ -31,7 +30,7 @@ public final class BrowseCallHierarchyAction extends BrowseHierarchyActionBase<C
 
     @Override
     @RequiredUIAccess
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         if (!ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
             e.getPresentation().setTextValue(IdeLocalize.actionBrowseCallHierarchy());
         }

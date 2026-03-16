@@ -15,8 +15,7 @@
  */
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -94,7 +93,7 @@ public interface SoftWrapModel {
    * @param end     end document offset range to use (inclusive)
    * @return        all soft wraps registered for the target document offsets range
    */
-  @Nonnull
+  
   List<? extends SoftWrap> getSoftWrapsForRange(int start, int end);
 
   /**
@@ -103,7 +102,7 @@ public interface SoftWrapModel {
    * @param documentLine    target document line
    * @return                all soft wraps registered for the given document line
    */
-  @Nonnull
+  
   List<? extends SoftWrap> getSoftWrapsForLine(int documentLine);
 
   /**
@@ -131,7 +130,7 @@ public interface SoftWrapModel {
    * @return            <code>true</code> if given visual position points to soft wrap-introduced virtual space;
    *                    <code>false</code> otherwise
    */
-  boolean isInsideSoftWrap(@Nonnull VisualPosition position);
+  boolean isInsideSoftWrap(VisualPosition position);
 
   /**
    * Allows to answer if given visual position points to soft wrap-introduced virtual space or points just before soft wrap.
@@ -140,7 +139,7 @@ public interface SoftWrapModel {
    * @return          <code>true</code> if given visual position points to soft wrap-introduced virtual space;
    *                  <code>false</code> otherwise
    */
-  boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual);
+  boolean isInsideOrBeforeSoftWrap(VisualPosition visual);
 
   /**
    * Callback method to ask soft wrap model to release all resources.

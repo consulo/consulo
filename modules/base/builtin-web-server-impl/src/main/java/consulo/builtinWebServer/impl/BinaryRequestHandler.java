@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 
-import jakarta.annotation.Nonnull;
 import java.util.UUID;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
@@ -28,9 +27,9 @@ public abstract class BinaryRequestHandler {
   /**
    * uuidgen on Mac OS X could be used to generate UUID
    */
-  @Nonnull
+  
   public abstract UUID getId();
 
-  @Nonnull
-  public abstract ChannelHandler getInboundHandler(@Nonnull ChannelHandlerContext context);
+  
+  public abstract ChannelHandler getInboundHandler(ChannelHandlerContext context);
 }

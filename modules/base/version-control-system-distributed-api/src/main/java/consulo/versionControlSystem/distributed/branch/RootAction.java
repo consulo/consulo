@@ -21,8 +21,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The element of the branch popup which allows to show branches of the selected repository.
@@ -33,11 +32,11 @@ import jakarta.annotation.Nullable;
  */
 public class RootAction<T extends Repository> extends ActionGroup {
 
-  @Nonnull
+  
   protected final T myRepository;
-  @Nonnull
+  
   private final ActionGroup myGroup;
-  @Nonnull
+  
   private final String myBranchText;
 
   /**
@@ -45,7 +44,7 @@ public class RootAction<T extends Repository> extends ActionGroup {
    * @param actionsGroup
    * @param branchText
    */
-  public RootAction(@Nonnull T repository, @Nullable T currentRepository, @Nonnull ActionGroup actionsGroup, @Nonnull String branchText) {
+  public RootAction(T repository, @Nullable T currentRepository, ActionGroup actionsGroup, String branchText) {
     super("", true);
     myRepository = repository;
     myGroup = actionsGroup;
@@ -56,17 +55,17 @@ public class RootAction<T extends Repository> extends ActionGroup {
     getTemplatePresentation().setText(DvcsUtil.getShortRepositoryName(repository), false);
   }
 
-  @Nonnull
+  
   public String getCaption() {
     return "Current branch in " + DvcsUtil.getShortRepositoryName(myRepository) + ": " + getDisplayableBranchText();
   }
 
-  @Nonnull
+  
   public String getDisplayableBranchText() {
     return myBranchText;
   }
 
-  @Nonnull
+  
   @Override
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return myGroup.getChildren(e);

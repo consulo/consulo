@@ -15,7 +15,7 @@
  */
 package consulo.diff.fragment;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public interface LineFragment extends DiffFragment {

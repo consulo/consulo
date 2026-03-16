@@ -16,8 +16,7 @@
 package consulo.diff.request;
 
 import consulo.diff.chain.DiffRequestProducer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ErrorDiffRequest extends MessageDiffRequest {
   @Nullable
@@ -25,32 +24,32 @@ public class ErrorDiffRequest extends MessageDiffRequest {
   @Nullable
   private final Throwable myException;
 
-  public ErrorDiffRequest(@Nonnull String message) {
+  public ErrorDiffRequest(String message) {
     this(null, message, null, null);
   }
 
-  public ErrorDiffRequest(@Nullable String title, @Nonnull String message) {
+  public ErrorDiffRequest(@Nullable String title, String message) {
     this(title, message, null, null);
   }
 
-  public ErrorDiffRequest(@Nullable String title, @Nonnull Throwable e) {
+  public ErrorDiffRequest(@Nullable String title, Throwable e) {
     this(title, e.getMessage(), null, e);
   }
 
-  public ErrorDiffRequest(@Nonnull Throwable e) {
+  public ErrorDiffRequest(Throwable e) {
     this(null, e.getMessage(), null, e);
   }
 
-  public ErrorDiffRequest(@Nullable DiffRequestProducer producer, @Nonnull Throwable e) {
+  public ErrorDiffRequest(@Nullable DiffRequestProducer producer, Throwable e) {
     this(producer != null ? producer.getName() : null, e.getMessage(), producer, e);
   }
 
-  public ErrorDiffRequest(@Nullable DiffRequestProducer producer, @Nonnull String message) {
+  public ErrorDiffRequest(@Nullable DiffRequestProducer producer, String message) {
     this(producer != null ? producer.getName() : null, message, producer, null);
   }
 
   public ErrorDiffRequest(@Nullable String title,
-                          @Nonnull String message,
+                          String message,
                           @Nullable DiffRequestProducer producer,
                           @Nullable Throwable e) {
     super(title, message);

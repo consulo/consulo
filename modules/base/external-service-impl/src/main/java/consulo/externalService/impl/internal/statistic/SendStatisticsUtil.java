@@ -22,7 +22,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,7 +32,7 @@ import java.util.*;
 public class SendStatisticsUtil {
     private static final Logger LOG = Logger.getInstance(SendStatisticsUtil.class);
 
-    @Nonnull
+    
     public static StatisticsBean getBean(UsageStatisticsPersistenceComponent component) {
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
 
@@ -61,8 +60,8 @@ public class SendStatisticsUtil {
         return bean;
     }
 
-    @Nonnull
-    private static Map<String, Set<PatchedUsage>> getPatchedUsages(@Nonnull Set<String> disabledGroups, @Nonnull Project[] projects) {
+    
+    private static Map<String, Set<PatchedUsage>> getPatchedUsages(Set<String> disabledGroups, Project[] projects) {
         Map<String, Set<PatchedUsage>> usages = new LinkedHashMap<>();
 
         for (Project project : projects) {

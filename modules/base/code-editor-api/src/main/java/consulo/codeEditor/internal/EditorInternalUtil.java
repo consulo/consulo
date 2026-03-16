@@ -17,14 +17,13 @@ package consulo.codeEditor.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollingModel;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-06-15
  */
 public class EditorInternalUtil {
-    public static void runWithAnimationDisabled(@Nonnull Editor editor, @Nonnull Runnable taskWithScrolling) {
+    public static void runWithAnimationDisabled(Editor editor, Runnable taskWithScrolling) {
         ScrollingModel scrollingModel = editor.getScrollingModel();
         boolean animationWasEnabled = scrollingModel.isAnimationEnabled();
         scrollingModel.disableAnimation();

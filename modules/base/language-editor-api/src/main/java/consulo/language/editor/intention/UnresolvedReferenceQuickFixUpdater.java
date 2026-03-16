@@ -6,7 +6,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Call each registered {@link UnresolvedReferenceQuickFixProvider} for its quick fixes.
@@ -27,5 +26,5 @@ public interface UnresolvedReferenceQuickFixUpdater {
    * This call triggers background calculation of quick fixes supplied by {@link UnresolvedReferenceQuickFixProvider}
    * You can only call it from the highlighting (e.g. your {@link com.intellij.codeInsight.daemon.impl.HighlightVisitor})
    */
-  void registerQuickFixesLater(@Nonnull PsiReference ref, @Nonnull HighlightInfo.Builder info);
+  void registerQuickFixesLater(PsiReference ref, HighlightInfo.Builder info);
 }

@@ -17,8 +17,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -53,7 +52,7 @@ public abstract class CoverageEngine {
      * @param conf Run Configuration
      * @return Coverage enabled configuration with engine specific settings
      */
-    @Nonnull
+    
     public abstract CoverageEnabledConfiguration createCoverageEnabledConfiguration(@Nullable RunConfigurationBase conf);
 
     /**
@@ -72,9 +71,9 @@ public abstract class CoverageEngine {
      */
     @Nullable
     public CoverageSuite createCoverageSuite(
-        @Nonnull CoverageRunner covRunner,
-        @Nonnull String name,
-        @Nonnull CoverageFileProvider coverageDataFileProvider,
+        CoverageRunner covRunner,
+        String name,
+        CoverageFileProvider coverageDataFileProvider,
         @Nullable String[] filters,
         long lastCoverageTimeStamp,
         @Nullable String suiteToMerge,
@@ -113,9 +112,9 @@ public abstract class CoverageEngine {
      */
     @Nullable
     public abstract CoverageSuite createCoverageSuite(
-        @Nonnull CoverageRunner covRunner,
-        @Nonnull String name,
-        @Nonnull CoverageFileProvider coverageDataFileProvider,
+        CoverageRunner covRunner,
+        String name,
+        CoverageFileProvider coverageDataFileProvider,
         @Nullable String[] filters,
         long lastCoverageTimeStamp,
         @Nullable String suiteToMerge,
@@ -136,14 +135,14 @@ public abstract class CoverageEngine {
      */
     @Nullable
     public abstract CoverageSuite createCoverageSuite(
-        @Nonnull CoverageRunner covRunner,
-        @Nonnull String name,
-        @Nonnull CoverageFileProvider coverageDataFileProvider,
-        @Nonnull CoverageEnabledConfiguration config
+        CoverageRunner covRunner,
+        String name,
+        CoverageFileProvider coverageDataFileProvider,
+        CoverageEnabledConfiguration config
     );
 
     @Nullable
-    public abstract CoverageSuite createEmptyCoverageSuite(@Nonnull CoverageRunner coverageRunner);
+    public abstract CoverageSuite createEmptyCoverageSuite(CoverageRunner coverageRunner);
 
     /**
      * Coverage annotator which annotates smth(e.g. Project view nodes / editor) with coverage information
@@ -151,7 +150,7 @@ public abstract class CoverageEngine {
      * @param project Project
      * @return Annotator
      */
-    @Nonnull
+    
     public abstract CoverageAnnotator getCoverageAnnotator(Project project);
 
     /**
@@ -161,7 +160,7 @@ public abstract class CoverageEngine {
      * @param psiFile file
      * @return false if coverage N/A for given file
      */
-    public abstract boolean coverageEditorHighlightingApplicableTo(@Nonnull PsiFile psiFile);
+    public abstract boolean coverageEditorHighlightingApplicableTo(PsiFile psiFile);
 
     /**
      * Checks whether file is accepted by coverage filters or not. Is used in Project View Nodes annotator.
@@ -170,7 +169,7 @@ public abstract class CoverageEngine {
      * @param suite   Coverage suite
      * @return true if included in coverage
      */
-    public abstract boolean acceptedByFilters(@Nonnull PsiFile psiFile, @Nonnull CoverageSuitesBundle suite);
+    public abstract boolean acceptedByFilters(PsiFile psiFile, CoverageSuitesBundle suite);
 
     /**
      * E.g. all *.class files for java source file with several classes
@@ -179,11 +178,11 @@ public abstract class CoverageEngine {
      * @param module
      * @return files
      */
-    @Nonnull
+    
     public Set<File> getCorrespondingOutputFiles(
-        @Nonnull PsiFile srcFile,
+        PsiFile srcFile,
         @Nullable Module module,
-        @Nonnull CoverageSuitesBundle suite
+        CoverageSuitesBundle suite
     ) {
         VirtualFile virtualFile = srcFile.getVirtualFile();
         return virtualFile == null ? Collections.<File>emptySet() : Collections.singleton(VirtualFileUtil.virtualToIoFile(virtualFile));
@@ -196,9 +195,9 @@ public abstract class CoverageEngine {
      * @param chooseSuiteAction @return True if should stop and wait compilation (e.g. for Java). False if we can ignore output (e.g. for Ruby)
      */
     public abstract boolean recompileProjectAndRerunAction(
-        @Nonnull Module module,
-        @Nonnull CoverageSuitesBundle suite,
-        @Nonnull Runnable chooseSuiteAction
+        Module module,
+        CoverageSuitesBundle suite,
+        Runnable chooseSuiteAction
     );
 
     /**
@@ -206,7 +205,7 @@ public abstract class CoverageEngine {
      * E.g. java class qualified name by *.class file of some Java class in corresponding source file
      */
     @Nullable
-    public String getQualifiedName(@Nonnull File outputFile, @Nonnull PsiFile sourceFile) {
+    public String getQualifiedName(File outputFile, PsiFile sourceFile) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile);
         if (virtualFile != null) {
             return getQualifiedName(virtualFile, sourceFile);
@@ -216,22 +215,22 @@ public abstract class CoverageEngine {
 
     @Deprecated
     @Nullable
-    public String getQualifiedName(@Nonnull VirtualFile outputFile, @Nonnull PsiFile sourceFile) {
+    public String getQualifiedName(VirtualFile outputFile, PsiFile sourceFile) {
         return null;
     }
 
-    @Nonnull
-    public abstract Set<String> getQualifiedNames(@Nonnull PsiFile sourceFile);
+    
+    public abstract Set<String> getQualifiedNames(PsiFile sourceFile);
 
     /**
      * Decide include a file or not in coverage report if coverage data isn't available for the file. E.g file wasn't touched by coverage
      * util
      */
     public boolean includeUntouchedFileInCoverage(
-        @Nonnull String qualifiedName,
-        @Nonnull File outputFile,
-        @Nonnull PsiFile sourceFile,
-        @Nonnull CoverageSuitesBundle suite
+        String qualifiedName,
+        File outputFile,
+        PsiFile sourceFile,
+        CoverageSuitesBundle suite
     ) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile);
         return virtualFile != null && includeUntouchedFileInCoverage(qualifiedName, virtualFile, sourceFile, suite);
@@ -239,10 +238,10 @@ public abstract class CoverageEngine {
 
     @Deprecated
     public boolean includeUntouchedFileInCoverage(
-        @Nonnull String qualifiedName,
-        @Nonnull VirtualFile outputFile,
-        @Nonnull PsiFile sourceFile,
-        @Nonnull CoverageSuitesBundle suite
+        String qualifiedName,
+        VirtualFile outputFile,
+        PsiFile sourceFile,
+        CoverageSuitesBundle suite
     ) {
         return false;
     }
@@ -254,14 +253,14 @@ public abstract class CoverageEngine {
      * @return List (probably empty) of code lines or null if all lines should be marked as uncovered
      */
     @Nullable
-    public List<Integer> collectSrcLinesForUntouchedFile(@Nonnull File classFile, @Nonnull CoverageSuitesBundle suite) {
+    public List<Integer> collectSrcLinesForUntouchedFile(File classFile, CoverageSuitesBundle suite) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(classFile);
         return virtualFile != null ? collectSrcLinesForUntouchedFile(virtualFile, suite) : null;
     }
 
     @Deprecated
     @Nullable
-    public List<Integer> collectSrcLinesForUntouchedFile(@Nonnull VirtualFile classFile, @Nonnull CoverageSuitesBundle suite) {
+    public List<Integer> collectSrcLinesForUntouchedFile(VirtualFile classFile, CoverageSuitesBundle suite) {
         return null;
     }
 
@@ -269,8 +268,8 @@ public abstract class CoverageEngine {
      * Content of brief report which will be shown by click on coverage icon
      */
     public String generateBriefReport(
-        @Nonnull Editor editor,
-        @Nonnull PsiFile psiFile,
+        Editor editor,
+        PsiFile psiFile,
         int lineNumber,
         int startOffset,
         int endOffset,
@@ -280,26 +279,26 @@ public abstract class CoverageEngine {
         return "Hits: " + hits;
     }
 
-    public abstract List<PsiElement> findTestsByNames(@Nonnull String[] testNames, @Nonnull Project project);
+    public abstract List<PsiElement> findTestsByNames(String[] testNames, Project project);
 
     @Nullable
-    public abstract String getTestMethodName(@Nonnull PsiElement element, @Nonnull AbstractTestProxy testProxy);
+    public abstract String getTestMethodName(PsiElement element, AbstractTestProxy testProxy);
 
     /**
      * @return true to enable 'Generate Coverage Report...' action
      */
     public boolean isReportGenerationAvailable(
-        @Nonnull Project project,
-        @Nonnull DataContext dataContext,
-        @Nonnull CoverageSuitesBundle currentSuite
+        Project project,
+        DataContext dataContext,
+        CoverageSuitesBundle currentSuite
     ) {
         return false;
     }
 
     public void generateReport(
-        @Nonnull Project project,
-        @Nonnull DataContext dataContext,
-        @Nonnull CoverageSuitesBundle currentSuite
+        Project project,
+        DataContext dataContext,
+        CoverageSuitesBundle currentSuite
     ) {
     }
 

@@ -17,13 +17,12 @@ package consulo.ui.ex.toolWindow;
 
 import consulo.disposer.Disposable;
 import consulo.ui.Rectangle2D;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Oct-17
  */
 public interface ToolWindowFloatingDecorator extends Disposable {
-  @Nonnull
+  
   Rectangle2D getDecoratorBounds();
 }

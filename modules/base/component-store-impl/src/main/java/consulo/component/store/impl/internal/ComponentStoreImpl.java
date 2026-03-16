@@ -34,8 +34,7 @@ import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 import org.jdom.Element;
 
@@ -66,7 +65,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public <T> StateComponentInfo<T> loadStateIfStorable(@Nonnull T component) {
+  public <T> StateComponentInfo<T> loadStateIfStorable(T component) {
     if (component instanceof SettingsSavingComponent) {
       mySettingsSavingComponents.add((SettingsSavingComponent)component);
     }
@@ -89,7 +88,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public final void save(@Nonnull UIAccess uiAccess, boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public final void save(UIAccess uiAccess, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
     if (externalizationSession != null) {
       String[] names = ArrayUtil.toStringArray(myComponents.keySet());
@@ -113,7 +112,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     doSave(force, externalizationSession == null ? null : externalizationSession.createSaveSessions(force), readonlyFiles);
   }
 
-  protected void doSave(boolean force, @Nullable List<StateStorage.SaveSession> saveSessions, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  protected void doSave(boolean force, @Nullable List<StateStorage.SaveSession> saveSessions, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     if (saveSessions != null) {
       for (StateStorage.SaveSession session : saveSessions) {
         executeSave(session, force, readonlyFiles);
@@ -121,7 +120,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  protected static void executeSave(@Nonnull StateStorage.SaveSession session, boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  protected static void executeSave(StateStorage.SaveSession session, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
     try {
       session.save(force);
     }
@@ -131,7 +130,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> void commitComponent(@Nonnull StateComponentInfo<T> componentInfo, @Nonnull StateStorageManager.ExternalizationSession session, @Nonnull UIAccess uiAccess, boolean force) {
+  private <T> void commitComponent(StateComponentInfo<T> componentInfo, StateStorageManager.ExternalizationSession session, UIAccess uiAccess, boolean force) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
 
     long countToSet = -1;
@@ -170,7 +169,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  private void doAddComponent(@Nonnull String componentName, @Nonnull StateComponentInfo<?> stateComponentInfo) {
+  private void doAddComponent(String componentName, StateComponentInfo<?> stateComponentInfo) {
     StateComponentInfo<?> existing = myComponents.get(componentName);
     if (existing != null && !existing.equals(stateComponentInfo)) {
       LOG.error("Conflicting component name '" + componentName + "': " + existing.getComponent().getClass() + " and " + stateComponentInfo.getComponent().getClass());
@@ -197,7 +196,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  private <T> void loadState(@Nonnull StateComponentInfo<T> componentInfo, @Nullable Collection<? extends StateStorage> changedStorages, boolean reloadData) {
+  private <T> void loadState(StateComponentInfo<T> componentInfo, @Nullable Collection<? extends StateStorage> changedStorages, boolean reloadData) {
     PersistentStateComponent<T> component = componentInfo.getComponent();
     State stateSpec = componentInfo.getState();
     String name = stateSpec.name();
@@ -235,7 +234,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     validateUnusedMacros(name, true);
   }
 
-  private <T> void storeModificationCountAfterLoad(PersistentStateComponent<T> component, @Nonnull StateComponentInfo<T> componentInfo) {
+  private <T> void storeModificationCountAfterLoad(PersistentStateComponent<T> component, StateComponentInfo<T> componentInfo) {
     if (component instanceof PersistentStateComponentWithModificationTracker) {
       long modCount = ((PersistentStateComponentWithModificationTracker<T>)component).getStateModificationCount();
 
@@ -249,7 +248,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Nullable
-  private <T> T loadDefaultState(@Nonnull StateComponentInfo<T> stateComponentInfo, @Nonnull Object component, @Nonnull Class<T> stateClass) {
+  private <T> T loadDefaultState(StateComponentInfo<T> stateComponentInfo, Object component, Class<T> stateClass) {
     String defaultStateFilePath = stateComponentInfo.getState().defaultStateFilePath();
 
     if (StringUtil.isEmpty(defaultStateFilePath)) {
@@ -269,7 +268,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Nullable
-  private <T> T deserializeDefaultStore(@Nonnull Element documentElement, Class<T> stateClass) {
+  private <T> T deserializeDefaultStore(Element documentElement, Class<T> stateClass) {
     PathMacroSubstitutor pathMacroManager = getPathMacroManagerForDefaults();
     if (pathMacroManager != null) {
       pathMacroManager.expandPaths(documentElement);
@@ -278,8 +277,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return DefaultStateSerializer.deserializeState(documentElement, stateClass);
   }
 
-  @Nonnull
-  protected <T> Storage[] getComponentStorageSpecs(@Nonnull PersistentStateComponent<T> persistentStateComponent, @Nonnull State stateSpec, @Nonnull StateStorageOperation operation) {
+  protected <T> Storage[] getComponentStorageSpecs(PersistentStateComponent<T> persistentStateComponent, State stateSpec, StateStorageOperation operation) {
     Storage[] storages = stateSpec.storages();
     if (storages.length == 1) {
       return storages;
@@ -321,11 +319,11 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData) {
+  public void reinitComponents(Set<String> componentNames, boolean reloadData) {
     reinitComponents(componentNames, Collections.<StateStorage>emptySet());
   }
 
-  protected boolean reinitComponent(@Nonnull String componentName, @Nonnull Collection<? extends StateStorage> changedStorages) {
+  protected boolean reinitComponent(String componentName, Collection<? extends StateStorage> changedStorages) {
     StateComponentInfo<?> componentInfo = myComponents.get(componentName);
     if (componentInfo == null) {
       return false;
@@ -336,11 +334,10 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return true;
   }
 
-  @Nonnull
   protected abstract MessageBus getMessageBus();
 
   @Override
-  public boolean reload(@Nonnull Collection<? extends StateStorage> changedStorages) {
+  public boolean reload(Collection<? extends StateStorage> changedStorages) {
     if (changedStorages.isEmpty()) {
       return false;
     }
@@ -365,7 +362,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return true;
   }
 
-  private void reinitComponents(@Nonnull Set<String> componentNames, @Nonnull Collection<? extends StateStorage> changedStorages) {
+  private void reinitComponents(Set<String> componentNames, Collection<? extends StateStorage> changedStorages) {
     MessageBus messageBus = getMessageBus();
     messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateStarted();
     try {

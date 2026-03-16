@@ -27,7 +27,6 @@ import consulo.usage.rule.ImportFilteringRule;
 import consulo.usage.rule.UsageFilteringRule;
 import consulo.usage.rule.UsageFilteringRuleProvider;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -41,8 +40,8 @@ import java.util.List;
 @ExtensionImpl
 public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvider {
     @Override
-    @Nonnull
-    public UsageFilteringRule[] getActiveRules(@Nonnull Project project) {
+    
+    public UsageFilteringRule[] getActiveRules(Project project) {
         List<UsageFilteringRule> rules = new ArrayList<>();
         if (!ImportFilteringUsageViewSetting.getInstance().SHOW_IMPORTS) {
             rules.addAll(ImportFilteringRule.EP_NAME.getExtensionList());
@@ -51,8 +50,8 @@ public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvi
     }
 
     @Override
-    @Nonnull
-    public AnAction[] createFilteringActions(@Nonnull UsageView view) {
+    
+    public AnAction[] createFilteringActions(UsageView view) {
         if (view.getPresentation().isCodeUsages()) {
             JComponent component = view.getComponent();
             ShowImportsAction showImportsAction = new ShowImportsAction(view);

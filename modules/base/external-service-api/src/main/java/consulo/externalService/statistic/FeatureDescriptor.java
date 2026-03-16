@@ -18,20 +18,18 @@ package consulo.externalService.statistic;
 import consulo.application.ApplicationManager;
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class FeatureDescriptor {
-  @Nonnull
+  
   private String myId;
   private String myGroupId;
-  @Nonnull
+  
   private String myTipFileName;
-  @Nonnull
+  
   private String myDisplayName;
   private int myDaysBeforeFirstShowUp;
   private int myDaysBetweenSuccesiveShowUps;
@@ -63,15 +61,15 @@ public class FeatureDescriptor {
     myId = id;
   }
 
-  public FeatureDescriptor(String id, @NonNls String tipFileName, String displayName) {
+  public FeatureDescriptor(String id, String tipFileName, String displayName) {
     myId = id;
     myTipFileName = tipFileName;
     myDisplayName = displayName;
   }
 
-  public FeatureDescriptor(@NonNls String id,
-                           @NonNls String groupId,
-                           @NonNls String tipFileName,
+  public FeatureDescriptor(String id,
+                           String groupId,
+                           String tipFileName,
                            String displayName,
                            int daysBeforeFirstShowUp,
                            int daysBetweenSuccessiveShowUps,
@@ -107,7 +105,7 @@ public class FeatureDescriptor {
     }
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
@@ -116,12 +114,12 @@ public class FeatureDescriptor {
     return myGroupId;
   }
 
-  @Nonnull
+  
   public String getTipFileName() {
     return myTipFileName;
   }
 
-  @Nonnull
+  
   public String getDisplayName() {
     return myDisplayName;
   }

@@ -28,7 +28,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -40,8 +39,8 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
   private final int myFixNumber;
 
 
-  @Nonnull
-  public static IntentionAction wrap(@Nonnull ProblemDescriptor descriptor, int fixNumber) {
+  
+  public static IntentionAction wrap(ProblemDescriptor descriptor, int fixNumber) {
     LOG.assertTrue(fixNumber >= 0, fixNumber);
     QuickFix[] fixes = descriptor.getFixes();
     LOG.assertTrue(fixes != null && fixes.length > fixNumber);
@@ -50,19 +49,19 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
     return fix instanceof IntentionAction ? (IntentionAction)fix : new QuickFixWrapper(descriptor, fixNumber);
   }
 
-  private QuickFixWrapper(@Nonnull ProblemDescriptor descriptor, int fixNumber) {
+  private QuickFixWrapper(ProblemDescriptor descriptor, int fixNumber) {
     myDescriptor = descriptor;
     myFixNumber = fixNumber;
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return myDescriptor.getFixes()[myFixNumber].getName();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     PsiElement psiElement = myDescriptor.getPsiElement();
     if (psiElement == null || !psiElement.isValid()) return false;
     LocalQuickFix fix = getFix();
@@ -70,7 +69,7 @@ public class QuickFixWrapper implements IntentionAction, SyntheticIntentionActio
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     //if (!CodeInsightUtil.prepareFileForWrite(file)) return;
     // consider all local quick fixes do it themselves
 

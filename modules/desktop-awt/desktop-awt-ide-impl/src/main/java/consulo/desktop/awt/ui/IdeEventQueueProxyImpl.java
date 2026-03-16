@@ -20,8 +20,7 @@ import consulo.desktop.awt.ui.keymap.IdeMouseEventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -67,22 +66,22 @@ public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
   }
 
   @Override
-  public void addPostprocessor(@Nonnull Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
+  public void addPostprocessor(Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
     myIdeEventQueue.addPostprocessor(dispatcher, parent);
   }
 
   @Override
-  public boolean containsDispatcher(@Nonnull Predicate<AWTEvent> dispatcher) {
+  public boolean containsDispatcher(Predicate<AWTEvent> dispatcher) {
     return myIdeEventQueue.containsDispatcher(dispatcher);
   }
 
   @Override
-  public void removePostprocessor(@Nonnull Predicate<AWTEvent> dispatcher) {
+  public void removePostprocessor(Predicate<AWTEvent> dispatcher) {
     myIdeEventQueue.removePostprocessor(dispatcher);
   }
 
   @Override
-  public void removeDispatcher(@Nonnull Predicate<AWTEvent> dispatcher) {
+  public void removeDispatcher(Predicate<AWTEvent> dispatcher) {
     myIdeEventQueue.removeDispatcher(dispatcher);
   }
 
@@ -92,7 +91,7 @@ public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
   }
 
   @Override
-  public void blockNextEvents(@Nonnull MouseEvent e) {
+  public void blockNextEvents(MouseEvent e) {
     myIdeEventQueue.blockNextEvents(e);
   }
 
@@ -102,17 +101,17 @@ public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
   }
 
   @Override
-  public void doWhenReady(@Nonnull Runnable runnable) {
+  public void doWhenReady(Runnable runnable) {
     myIdeEventQueue.doWhenReady(runnable);
   }
 
   @Override
-  public void addActivityListener(@Nonnull Runnable runnable, Disposable parentDisposable) {
+  public void addActivityListener(Runnable runnable, Disposable parentDisposable) {
     myIdeEventQueue.addActivityListener(runnable, parentDisposable);
   }
 
   @Override
-  public void removeActivityListener(@Nonnull Runnable runnable) {
+  public void removeActivityListener(Runnable runnable) {
     myIdeEventQueue.removeActivityListener(runnable);
   }
 
@@ -132,7 +131,7 @@ public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
   }
 
   @Override
-  public void disableInputMethods(@Nonnull Disposable parentDisposable) {
+  public void disableInputMethods(Disposable parentDisposable) {
     myIdeEventQueue.disableInputMethods(parentDisposable);
   }
 
@@ -142,12 +141,12 @@ public class IdeEventQueueProxyImpl implements IdeEventQueueProxy {
   }
 
   @Override
-  public void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
+  public void addIdleListener(Runnable runnable, int timeoutMillis) {
     myIdeEventQueue.addIdleListener(runnable, timeoutMillis);
   }
 
   @Override
-  public void removeIdleListener(@Nonnull Runnable runnable) {
+  public void removeIdleListener(Runnable runnable) {
     myIdeEventQueue.removeIdleListener(runnable);
   }
 }

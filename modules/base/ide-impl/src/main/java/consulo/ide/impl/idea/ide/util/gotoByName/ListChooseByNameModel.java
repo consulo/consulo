@@ -6,8 +6,7 @@ import consulo.util.lang.Comparing;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,7 +28,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
     private final String myNotInMessage;
 
     public ListChooseByNameModel(
-        @Nonnull Project project,
+        Project project,
         String prompt,
         String notInMessage,
         List<T> items
@@ -138,7 +137,7 @@ public class ListChooseByNameModel<T extends ChooseByNameItem> extends SimpleCho
         return element instanceof ChooseByNameItem chooseByNameItem ? chooseByNameItem.getName() : null;
     }
 
-    public boolean matches(@Nonnull String name, @Nonnull String pattern) {
+    public boolean matches(String name, String pattern) {
         Pattern compiledPattern = getTaskPattern(pattern);
         return compiledPattern != null && compiledPattern.matcher(name).find();
     }

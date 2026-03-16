@@ -4,8 +4,7 @@ package consulo.codeEditor.impl;
 import consulo.document.Document;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.impl.RangeMarkerTree;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
  * Not thread safe - cannot be used from multiple threads simultaneously.
  */
 public class MarkerTreeWithPartialSums<T extends RangeMarkerImpl & IntSupplier> extends HardReferencingRangeMarkerTree<T> {
-    public MarkerTreeWithPartialSums(@Nonnull Document document) {
+    public MarkerTreeWithPartialSums(Document document) {
         super(document);
     }
 
@@ -54,8 +53,8 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerImpl & IntSupplier> 
     }
 
     @Override
-    @Nonnull
-    protected RMNode<T> createNewNode(@Nonnull T key,
+    
+    protected RMNode<T> createNewNode(T key,
                                                int start,
                                                int end,
                                                boolean greedyToLeft,
@@ -69,7 +68,7 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerImpl & IntSupplier> 
     }
 
     @Override
-    public void correctMax(@Nonnull IntervalNode<T> node, int deltaUpToRoot) {
+    public void correctMax(IntervalNode<T> node, int deltaUpToRoot) {
         super.correctMax(node, deltaUpToRoot);
         ((Node<T>) node).recalculateSubTreeSum();
     }
@@ -77,8 +76,8 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerImpl & IntSupplier> 
     public static final class Node<T extends RangeMarkerImpl & IntSupplier> extends RMNode<T> {
         private int subtreeSum;
 
-        Node(@Nonnull RangeMarkerTree<T> rangeMarkerTree,
-             @Nonnull T key,
+        Node(RangeMarkerTree<T> rangeMarkerTree,
+             T key,
              int start,
              int end,
              boolean greedyToLeft,
@@ -127,7 +126,7 @@ public class MarkerTreeWithPartialSums<T extends RangeMarkerImpl & IntSupplier> 
         }
 
         @Override
-        public void addInterval(@Nonnull T interval) {
+        public void addInterval(T interval) {
             super.addInterval(interval);
             recalculateSubTreeSumUp();
         }

@@ -18,7 +18,7 @@ package consulo.fileTemplate;
 import consulo.language.file.FileTypeManager;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FileTemplateDescriptor {
   private final Image myIcon;

@@ -31,8 +31,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -122,7 +121,7 @@ public class PluginDescriptionPanel {
     public void update(
         @Nullable PluginDescriptor plugin,
         @Nullable PluginTab installedTab,
-        @Nonnull List<PluginDescriptor> allPlugins,
+        List<PluginDescriptor> allPlugins,
         @Nullable String filter,
         boolean forceInstall
     ) {
@@ -304,7 +303,7 @@ public class PluginDescriptionPanel {
     }
 
     @Nullable
-    private static PluginDescriptor findPlugin(@Nonnull List<PluginDescriptor> allPlugins, @Nonnull PluginId pluginId) {
+    private static PluginDescriptor findPlugin(List<PluginDescriptor> allPlugins, PluginId pluginId) {
         return ContainerUtil.find(allPlugins, it -> it.getPluginId() == pluginId);
     }
 
@@ -339,7 +338,7 @@ public class PluginDescriptionPanel {
         return String.format(string, font, margin2, 0, font, 0, margin5);
     }
 
-    @Nonnull
+    
     public JPanel getPanel() {
         return myPanel;
     }

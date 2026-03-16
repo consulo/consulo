@@ -18,7 +18,6 @@ package consulo.disposer.util;
 import consulo.disposer.Disposable;
 import consulo.disposer.internal.DisposerInternal;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,14 +28,9 @@ import java.util.List;
  * @param <E> the type of elements held in this list
  */
 public interface DisposableList<E> extends List<E> {
-  @Nonnull
   static <T> DisposableList<T> create() {
     return DisposerInternal.ourInstance.createList();
   }
-
-  @Nonnull
-  Disposable add(E element, @Nonnull Disposable parentDisposable);
-
-  @Nonnull
-  Disposable add(int index, E element, @Nonnull Disposable parentDisposable);
+  Disposable add(E element, Disposable parentDisposable);
+  Disposable add(int index, E element, Disposable parentDisposable);
 }

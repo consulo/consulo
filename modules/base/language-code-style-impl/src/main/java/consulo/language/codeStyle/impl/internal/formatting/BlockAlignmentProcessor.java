@@ -22,7 +22,6 @@ import consulo.language.codeStyle.internal.AbstractBlockWrapper;
 import consulo.language.codeStyle.internal.AlignmentImpl;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -66,29 +65,29 @@ public interface BlockAlignmentProcessor {
    * @param context     target parameters holder
    * @return            processing result
    */
-  Result applyAlignment(@Nonnull Context context);
+  Result applyAlignment(Context context);
 
   class Context {
 
-    @Nonnull
+    
     public final Document                                             document;
-    @Nonnull
+    
     public final AlignmentImpl                                        alignment;
-    @Nonnull
+    
     public final LeafBlockWrapper targetBlock;
-    @Nonnull
+    
     public final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings;
-    @Nonnull
+    
     public final Map<LeafBlockWrapper, Set<LeafBlockWrapper>>         backwardShiftedAlignedBlocks;
-    @Nonnull
+    
     public final CommonCodeStyleSettings.IndentOptions                indentOptions;
 
-    public Context(@Nonnull Document document,
-                   @Nonnull AlignmentImpl alignment,
-                   @Nonnull LeafBlockWrapper targetBlock,
-                   @Nonnull Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings,
-                   @Nonnull Map<LeafBlockWrapper, Set<LeafBlockWrapper>> backwardShiftedAlignedBlocks,
-                   @Nonnull CommonCodeStyleSettings.IndentOptions indentOptions)
+    public Context(Document document,
+                   AlignmentImpl alignment,
+                   LeafBlockWrapper targetBlock,
+                   Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings,
+                   Map<LeafBlockWrapper, Set<LeafBlockWrapper>> backwardShiftedAlignedBlocks,
+                   CommonCodeStyleSettings.IndentOptions indentOptions)
     {
       this.document = document;
       this.alignment = alignment;

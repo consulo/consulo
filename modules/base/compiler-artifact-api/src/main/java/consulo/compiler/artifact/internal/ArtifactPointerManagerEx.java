@@ -19,7 +19,6 @@ import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ArtifactPointerManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,6 +30,6 @@ public interface ArtifactPointerManagerEx extends ArtifactPointerManager {
    * <p>
    * It will be called from consulo.compiler.artifact.element.ArtifactPackagingElement, while ArtifactManager#loadState()
    */
-  @Nonnull
-  public ArtifactPointer create(@Nonnull ArtifactManager artifactManager, @Nonnull String name);
+  
+  public ArtifactPointer create(ArtifactManager artifactManager, String name);
 }

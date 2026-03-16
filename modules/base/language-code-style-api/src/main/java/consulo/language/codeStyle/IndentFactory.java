@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Internal interface for creating indent instances.
@@ -40,13 +39,13 @@ public interface IndentFactory {
 
     Indent getSpaceIndent(int spaces, boolean relativeToDirectParent);
 
-    Indent getIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+    Indent getIndent(Indent.Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren);
 
-    Indent getIndent(@Nonnull Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+    Indent getIndent(Indent.Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
 
-    Indent getIndent(@Nonnull Indent.Type type, boolean absolute, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
+    Indent getIndent(Indent.Type type, boolean absolute, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren);
 
-    Indent getSmartIndent(@Nonnull Indent.Type type);
+    Indent getSmartIndent(Indent.Type type);
 
-    Indent getSmartIndent(@Nonnull Indent.Type type, boolean relativeToDirectParent);
+    Indent getSmartIndent(Indent.Type type, boolean relativeToDirectParent);
 }

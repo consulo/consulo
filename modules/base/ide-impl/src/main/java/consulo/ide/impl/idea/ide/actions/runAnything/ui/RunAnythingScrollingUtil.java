@@ -7,7 +7,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -27,9 +26,9 @@ public class RunAnythingScrollingUtil {
     protected static final String SELECT_NEXT_ROW_ACTION_ID = ListActions.Down.ID;
 
     public static void installActions(
-        @Nonnull JList list,
-        @Nonnull JTextField focusParent,
-        @Nonnull @RequiredUIAccess Runnable handleFocusParent,
+        JList list,
+        JTextField focusParent,
+        @RequiredUIAccess Runnable handleFocusParent,
         boolean isCycleScrolling
     ) {
         ActionMap actionMap = list.getActionMap();
@@ -42,56 +41,56 @@ public class RunAnythingScrollingUtil {
         installMoveDownAction(list, focusParent, handleFocusParent, isCycleScrolling);
     }
 
-    private static void maybeInstallDefaultShortcuts(@Nonnull JComponent component) {
+    private static void maybeInstallDefaultShortcuts(JComponent component) {
         InputMap map = component.getInputMap(JComponent.WHEN_FOCUSED);
         UIUtil.maybeInstall(map, ListActions.Up.ID, KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
         UIUtil.maybeInstall(map, ListActions.Down.ID, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
     }
 
     private static void installMoveDownAction(
-        @Nonnull JList list,
-        @Nonnull JComponent focusParent,
-        @Nonnull Runnable handleFocusParent,
+        JList list,
+        JComponent focusParent,
+        Runnable handleFocusParent,
         boolean isCycleScrolling
     ) {
         new ScrollingUtil.ListScrollAction(CommonShortcuts.getMoveDown(), focusParent) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 moveDown(list, handleFocusParent, isCycleScrolling);
             }
         };
     }
 
     private static void installMoveUpAction(
-        @Nonnull JList list,
-        @Nonnull JComponent focusParent,
-        @Nonnull Runnable handleFocusParent,
+        JList list,
+        JComponent focusParent,
+        Runnable handleFocusParent,
         boolean isCycleScrolling
     ) {
         new ScrollingUtil.ListScrollAction(CommonShortcuts.getMoveUp(), focusParent) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 moveUp(list, handleFocusParent, isCycleScrolling);
             }
         };
     }
 
-    private static void moveDown(@Nonnull JList list, @Nonnull Runnable handleFocusParent, boolean isCycleScrolling) {
+    private static void moveDown(JList list, Runnable handleFocusParent, boolean isCycleScrolling) {
         move(list, list.getSelectionModel(), list.getModel().getSize(), +1, handleFocusParent, isCycleScrolling);
     }
 
-    private static void moveUp(@Nonnull JList list, @Nonnull Runnable handleFocusParent, boolean isCycleScrolling) {
+    private static void moveUp(JList list, Runnable handleFocusParent, boolean isCycleScrolling) {
         move(list, list.getSelectionModel(), list.getModel().getSize(), -1, handleFocusParent, isCycleScrolling);
     }
 
     private static void move(
-        @Nonnull JList c,
-        @Nonnull ListSelectionModel selectionModel,
+        JList c,
+        ListSelectionModel selectionModel,
         int size,
         int direction,
-        @Nonnull Runnable handleFocusParent,
+        Runnable handleFocusParent,
         boolean isCycleScrolling
     ) {
         if (size == 0) {
@@ -117,15 +116,15 @@ public class RunAnythingScrollingUtil {
     }
 
     private static class MoveAction extends AbstractAction {
-        @Nonnull
+        
         private final String myId;
-        @Nonnull
+        
         private final JList myComponent;
-        @Nonnull
+        
         private final Runnable myHandleFocusParent;
         private final boolean myIsCycleScrolling;
 
-        MoveAction(@Nonnull String id, @Nonnull JList component, @Nonnull Runnable handleFocusParent, boolean isCycleScrolling) {
+        MoveAction(String id, JList component, Runnable handleFocusParent, boolean isCycleScrolling) {
             myId = id;
             myComponent = component;
             myHandleFocusParent = handleFocusParent;

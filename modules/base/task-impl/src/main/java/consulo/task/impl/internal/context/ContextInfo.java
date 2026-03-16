@@ -16,7 +16,7 @@
 
 package consulo.task.impl.internal.context;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev

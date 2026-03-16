@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implementation of {@link RootDetector} which detects a root by presence of files of some specified type under it
@@ -33,14 +32,14 @@ import jakarta.annotation.Nonnull;
 public class FileTypeBasedRootFilter extends RootFilter {
   private final FileType myFileType;
 
-  public FileTypeBasedRootFilter(OrderRootType rootType, boolean jarDirectory, @Nonnull FileType fileType,
+  public FileTypeBasedRootFilter(OrderRootType rootType, boolean jarDirectory, FileType fileType,
                                  String presentableRootTypeName) {
     super(rootType, jarDirectory, presentableRootTypeName);
     myFileType = fileType;
   }
 
   @Override
-  public boolean isAccepted(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator) {
+  public boolean isAccepted(VirtualFile rootCandidate, ProgressIndicator progressIndicator) {
     if (isJarDirectory()) {
       if (!rootCandidate.isDirectory() || !rootCandidate.isInLocalFileSystem()) {
         return false;

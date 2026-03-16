@@ -15,11 +15,10 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class HtmlTableBuilder {
-  @Nonnull
+  
   private final StringBuilder myStringBuilder = new StringBuilder();
 
   public HtmlTableBuilder() {
@@ -36,11 +35,11 @@ public class HtmlTableBuilder {
     return this;
   }
 
-  public HtmlTableBuilder append(@Nonnull String value) {
+  public HtmlTableBuilder append(String value) {
     return append(value, null);
   }
 
-  public HtmlTableBuilder append(@Nonnull String value, @Nullable String align) {
+  public HtmlTableBuilder append(String value, @Nullable String align) {
     myStringBuilder.append("<td");
     if (align != null) {
       myStringBuilder.append(" align=\"").append(align).append("\"");

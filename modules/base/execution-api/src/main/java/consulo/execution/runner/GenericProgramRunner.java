@@ -22,22 +22,21 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public abstract class GenericProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
     @RequiredUIAccess
     @Override
-    protected void execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException {
+    protected void execute(ExecutionEnvironment environment, RunProfileState state) throws ExecutionException {
         ExecutionManager.getInstance(environment.getProject()).startRunProfile((s, e) -> {
             return CompletableFuture.completedFuture(BaseProgramRunner.postProcess(environment, doExecute(state, environment)));
         }, state, environment);
     }
 
     @Nullable
-    protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment environment) throws ExecutionException {
+    protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment environment) throws ExecutionException {
         return null;
     }
 }

@@ -58,8 +58,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.HierarchyEvent;
@@ -379,7 +378,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
   }
 
   @Nullable
-  private FileEditor createTempFileEditor(@Nonnull VirtualFile file) {
+  private FileEditor createTempFileEditor(VirtualFile file) {
     if (file.getLength() > RawFileLoader.getInstance().getMaxIntellisenseFileSize()) return null;
 
     FileEditorProviderManager editorProviderManager = FileEditorProviderManager.getInstance();
@@ -401,7 +400,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       sink.set(ourDataSelectorKey, StructureViewWrapperImpl.this);
     }
   }

@@ -23,8 +23,7 @@ import consulo.ui.WindowOwner;
 import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Project interface class.
@@ -38,7 +37,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   /**
    * @return project annotation
    */
-  @Nonnull
   Application getApplication();
 
   /**
@@ -47,7 +45,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return project name
    */
-  @Nonnull
   String getName();
 
   /**
@@ -87,7 +84,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
    *
    * @return project descriptor file, or empty string for default project
    */
-  @Nonnull
   String getProjectFilePath();
 
   /**
@@ -114,10 +110,9 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
   @Nullable
   VirtualFile getWorkspaceFile();
 
-  @Nonnull
   String getLocationHash();
 
-  void save(@Nonnull UIAccess uiAccess);
+  void save(UIAccess uiAccess);
 
   boolean isOpen();
 
@@ -127,7 +122,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
     return true;
   }
 
-  @Nonnull
   default ProjectType getProjectType() {
     return ProjectType.REGULAR;
   }
@@ -149,7 +143,6 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
     return null;
   }
 
-  @Nonnull
   default UIAccess getUIAccess() {
     return getApplication().getLastUIAccess();
   }

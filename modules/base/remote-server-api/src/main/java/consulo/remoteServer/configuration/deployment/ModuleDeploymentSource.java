@@ -19,14 +19,13 @@ import consulo.component.util.pointer.NamedPointer;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ModuleDeploymentSource extends DeploymentSource {
-  @Nonnull
+  
   NamedPointer<Module> getModulePointer();
 
   @Nullable

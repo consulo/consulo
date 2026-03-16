@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.impl.internal.local.LocalFileSystemBase;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import consulo.virtualFileSystem.util.FilePathHashingStrategy;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -45,14 +44,14 @@ public class RefreshWorker {
   private volatile boolean myCancelled;
   private final LocalFileSystemRefreshWorker myLocalFileSystemRefreshWorker;
 
-  public RefreshWorker(@Nonnull NewVirtualFile refreshRoot, boolean isRecursive) {
+  public RefreshWorker(NewVirtualFile refreshRoot, boolean isRecursive) {
     boolean canUseNioRefresher = refreshRoot.isInLocalFileSystem() && !(refreshRoot.getFileSystem() instanceof TempFileSystem) && Registry.is("vfs.use.nio-based.local.refresh.worker");
     myLocalFileSystemRefreshWorker = canUseNioRefresher ? new LocalFileSystemRefreshWorker(refreshRoot, isRecursive) : null;
     myIsRecursive = isRecursive;
     myRefreshQueue.addLast(refreshRoot);
   }
 
-  @Nonnull
+  
   public List<VFileEvent> getEvents() {
     if (myLocalFileSystemRefreshWorker != null) return myLocalFileSystemRefreshWorker.getEvents();
     return myHelper.getEvents();
@@ -108,7 +107,7 @@ public class RefreshWorker {
     }
   }
 
-  private void processQueue(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence) throws RefreshCancelledException {
+  private void processQueue(NewVirtualFileSystem fs, PersistentFS persistence) throws RefreshCancelledException {
     HashingStrategy<String> strategy = FilePathHashingStrategy.create(fs.isCaseSensitive());
 
     next:
@@ -136,7 +135,7 @@ public class RefreshWorker {
     }
   }
 
-  private boolean fullDirRefresh(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull HashingStrategy<String> strategy, @Nonnull VirtualDirectoryImpl dir) {
+  private boolean fullDirRefresh(NewVirtualFileSystem fs, PersistentFS persistence, HashingStrategy<String> strategy, VirtualDirectoryImpl dir) {
     Pair<String[], VirtualFile[]> snapshot = LocalFileSystemRefreshWorker.getDirectorySnapshot(persistence, dir);
     if (snapshot == null) return false;
     String[] persistedNames = snapshot.getFirst();
@@ -214,14 +213,14 @@ public class RefreshWorker {
     return !isDirectoryChanged(persistence, dir, persistedNames, children);
   }
 
-  private boolean isDirectoryChanged(@Nonnull PersistentFS persistence, @Nonnull VirtualDirectoryImpl dir, @Nonnull String[] persistedNames, @Nonnull VirtualFile[] children) {
+  private boolean isDirectoryChanged(PersistentFS persistence, VirtualDirectoryImpl dir, String[] persistedNames, VirtualFile[] children) {
     return ReadAction.compute(() -> {
       checkCancelled(dir);
       return !Arrays.equals(persistedNames, persistence.list(dir)) || !Arrays.equals(children, dir.getChildren());
     });
   }
 
-  private boolean partialDirRefresh(@Nonnull NewVirtualFileSystem fs, @Nonnull PersistentFS persistence, @Nonnull HashingStrategy<String> strategy, @Nonnull VirtualDirectoryImpl dir) {
+  private boolean partialDirRefresh(NewVirtualFileSystem fs, PersistentFS persistence, HashingStrategy<String> strategy, VirtualDirectoryImpl dir) {
     Pair<List<VirtualFile>, List<String>> snapshot = ReadAction.compute(() -> {
       checkCancelled(dir);
       return pair(dir.getCachedChildren(), dir.getSuspiciousNames());
@@ -276,7 +275,7 @@ public class RefreshWorker {
     return !isDirectoryChanged(dir, cached, wanted);
   }
 
-  private boolean isDirectoryChanged(@Nonnull VirtualDirectoryImpl dir, @Nonnull List<VirtualFile> cached, @Nonnull List<String> wanted) {
+  private boolean isDirectoryChanged(VirtualDirectoryImpl dir, List<VirtualFile> cached, List<String> wanted) {
     return ReadAction.compute(() -> {
       checkCancelled(dir);
       return !cached.equals(dir.getCachedChildren()) || !wanted.equals(dir.getSuspiciousNames());
@@ -284,7 +283,7 @@ public class RefreshWorker {
   }
 
   @Nullable
-  private static ChildInfo childRecord(@Nonnull NewVirtualFileSystem fs, @Nonnull VirtualFile dir, @Nonnull String name) {
+  private static ChildInfo childRecord(NewVirtualFileSystem fs, VirtualFile dir, String name) {
     FakeVirtualFile file = new FakeVirtualFile(dir, name);
     FileAttributes attributes = fs.getAttributes(file);
     if (attributes == null) return null;
@@ -300,7 +299,7 @@ public class RefreshWorker {
     }
   }
 
-  private void checkCancelled(@Nonnull NewVirtualFile stopAt) throws RefreshCancelledException {
+  private void checkCancelled(NewVirtualFile stopAt) throws RefreshCancelledException {
     if (ourTestListener != null) {
       ourTestListener.accept(stopAt);
     }
@@ -314,16 +313,16 @@ public class RefreshWorker {
     }
   }
 
-  private static void forceMarkDirty(@Nonnull NewVirtualFile file) {
+  private static void forceMarkDirty(NewVirtualFile file) {
     file.markClean();  // otherwise consequent markDirty() won't have any effect
     file.markDirty();
   }
 
-  private void checkAndScheduleChildRefresh(@Nonnull NewVirtualFileSystem fs,
-                                            @Nonnull PersistentFS persistence,
+  private void checkAndScheduleChildRefresh(NewVirtualFileSystem fs,
+                                            PersistentFS persistence,
                                             @Nullable NewVirtualFile parent,
-                                            @Nonnull NewVirtualFile child,
-                                            @Nonnull FileAttributes childAttributes) {
+                                            NewVirtualFile child,
+                                            FileAttributes childAttributes) {
     if (!VfsEventGenerationHelper.checkDirty(child)) {
       return;
     }
@@ -354,7 +353,7 @@ public class RefreshWorker {
     }
   }
 
-  private boolean checkAndScheduleFileTypeChange(@Nonnull NewVirtualFileSystem fs, @Nullable NewVirtualFile parent, @Nonnull NewVirtualFile child, @Nonnull FileAttributes childAttributes) {
+  private boolean checkAndScheduleFileTypeChange(NewVirtualFileSystem fs, @Nullable NewVirtualFile parent, NewVirtualFile child, FileAttributes childAttributes) {
     boolean currentIsDirectory = child.isDirectory(), upToDateIsDirectory = childAttributes.isDirectory();
     boolean currentIsSymlink = child.is(VFileProperty.SYMLINK), upToDateIsSymlink = childAttributes.isSymLink();
     boolean currentIsSpecial = child.is(VFileProperty.SPECIAL), upToDateIsSpecial = childAttributes.isSpecial();
@@ -374,7 +373,7 @@ public class RefreshWorker {
     return false;
   }
 
-  private void checkAndScheduleFileNameChange(@Nullable Interner<String> actualNames, @Nonnull VirtualFile child) {
+  private void checkAndScheduleFileNameChange(@Nullable Interner<String> actualNames, VirtualFile child) {
     if (actualNames != null) {
       String currentName = child.getName();
       String actualName = actualNames.get(currentName);

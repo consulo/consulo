@@ -15,15 +15,14 @@
  */
 package consulo.language.psi.stub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 09-Jul-22
  */
 public interface ObjectStubSerializerProvider {
-  @Nonnull
+  
   String getExternalId();
 
   boolean isLazy();

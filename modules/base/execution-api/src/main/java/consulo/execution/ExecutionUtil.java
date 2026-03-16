@@ -40,8 +40,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -53,15 +52,15 @@ public class ExecutionUtil {
     }
 
     public static void handleExecutionError(
-        @Nonnull Project project,
-        @Nonnull String toolWindowId,
-        @Nonnull RunProfile runProfile,
-        @Nonnull ExecutionException e
+        Project project,
+        String toolWindowId,
+        RunProfile runProfile,
+        ExecutionException e
     ) {
         handleExecutionError(project, toolWindowId, runProfile.getName(), e);
     }
 
-    public static void handleExecutionError(@Nonnull ExecutionEnvironment environment, @Nonnull ExecutionException e) {
+    public static void handleExecutionError(ExecutionEnvironment environment, ExecutionException e) {
         handleExecutionError(
             environment.getProject(),
             environment.getExecutor().getToolWindowId(),
@@ -71,10 +70,10 @@ public class ExecutionUtil {
     }
 
     public static void handleExecutionError(
-        @Nonnull Project project,
-        @Nonnull String toolWindowId,
-        @Nonnull String taskName,
-        @Nonnull ExecutionException e
+        Project project,
+        String toolWindowId,
+        String taskName,
+        ExecutionException e
     ) {
         if (e instanceof RunCanceledByUserException) {
             return;
@@ -136,7 +135,7 @@ public class ExecutionUtil {
         });
     }
 
-    public static void restartIfActive(@Nonnull RunContentDescriptor descriptor) {
+    public static void restartIfActive(RunContentDescriptor descriptor) {
         ProcessHandler processHandler = descriptor.getProcessHandler();
         if (processHandler != null && processHandler.isStartNotified() && !processHandler.isProcessTerminating()
             && !processHandler.isProcessTerminated()) {
@@ -144,11 +143,11 @@ public class ExecutionUtil {
         }
     }
 
-    public static void restart(@Nonnull RunContentDescriptor descriptor) {
+    public static void restart(RunContentDescriptor descriptor) {
         restart(descriptor.getComponent());
     }
 
-    public static void restart(@Nonnull Content content) {
+    public static void restart(Content content) {
         restart(content.getComponent());
     }
 
@@ -161,13 +160,13 @@ public class ExecutionUtil {
         }
     }
 
-    public static void restart(@Nonnull ExecutionEnvironment environment) {
+    public static void restart(ExecutionEnvironment environment) {
         if (!ExecutorRegistry.getInstance().isStarting(environment)) {
             ExecutionManager.getInstance(environment.getProject()).restartRunProfile(environment);
         }
     }
 
-    public static void runConfiguration(@Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Executor executor) {
+    public static void runConfiguration(RunnerAndConfigurationSettings configuration, Executor executor) {
         ExecutionEnvironmentBuilder builder = createEnvironment(executor, configuration);
         if (builder != null) {
             ExecutionManager.getInstance(configuration.getConfiguration().getProject()).restartRunProfile(builder.activeTarget().build());
@@ -176,8 +175,8 @@ public class ExecutionUtil {
 
     @Nullable
     public static ExecutionEnvironmentBuilder createEnvironment(
-        @Nonnull Executor executor,
-        @Nonnull RunnerAndConfigurationSettings settings
+        Executor executor,
+        RunnerAndConfigurationSettings settings
     ) {
         try {
             return ExecutionEnvironmentBuilder.create(executor, settings);
@@ -193,7 +192,7 @@ public class ExecutionUtil {
         }
     }
 
-    @Nonnull
+    
     public static Image getIconWithLiveIndicator(@Nullable Image base) {
         if (base == null) {
             return PlatformIconGroup.greenbadge();

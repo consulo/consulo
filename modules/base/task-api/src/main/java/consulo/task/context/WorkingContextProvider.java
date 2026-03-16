@@ -23,7 +23,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
 
 
 /**
@@ -40,7 +39,7 @@ public abstract class WorkingContextProvider {
      *
      * @return provider's name
      */
-    @Nonnull
+    
     public abstract String getId();
 
     /**
@@ -48,7 +47,7 @@ public abstract class WorkingContextProvider {
      *
      * @return
      */
-    @Nonnull
+    
     public abstract String getDescription();
 
     /**

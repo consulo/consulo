@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -58,7 +57,7 @@ public class DesktopAWTUIFontManagerImpl extends UIFontManagerImpl {
     }
   }
 
-  @Nonnull
+  
   @Override
   protected Pair<String, Integer> resolveSystemFontData() {
     return Pair.create("Inter-Regular", 13);

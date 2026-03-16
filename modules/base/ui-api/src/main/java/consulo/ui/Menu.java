@@ -18,19 +18,16 @@ package consulo.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface Menu extends MenuItem {
-    @Nonnull
-    static Menu create(@Nonnull LocalizeValue text) {
+    static Menu create(LocalizeValue text) {
         return UIInternal.get()._Menu_create(text);
     }
 
     @RequiredUIAccess
-    @Nonnull
-    Menu add(@Nonnull MenuItem menuItem);
+    Menu add(MenuItem menuItem);
 }

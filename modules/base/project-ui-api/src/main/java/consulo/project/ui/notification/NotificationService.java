@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,27 +28,27 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface NotificationService {
-    default Notification.Builder newError(@Nonnull NotificationGroup group) {
+    default Notification.Builder newError(NotificationGroup group) {
         return newOfType(group, NotificationType.ERROR);
     }
 
-    default Notification.Builder newWarn(@Nonnull NotificationGroup group) {
+    default Notification.Builder newWarn(NotificationGroup group) {
         return newOfType(group, NotificationType.WARNING);
     }
 
-    default Notification.Builder newInfo(@Nonnull NotificationGroup group) {
+    default Notification.Builder newInfo(NotificationGroup group) {
         return newOfType(group, NotificationType.INFORMATION);
     }
 
-    default Notification.Builder newOfType(@Nonnull NotificationGroup group, @Nonnull NotificationType type) {
+    default Notification.Builder newOfType(NotificationGroup group, NotificationType type) {
         return new Notification.Builder(this, group, type);
     }
 
-    default void notify(@Nonnull Notification notification) {
+    default void notify(Notification notification) {
         notify(notification, null);
     }
 
-    void notify(@Nonnull Notification notification, @Nullable Project project);
+    void notify(Notification notification, @Nullable Project project);
 
     @Deprecated
     @DeprecationInfo("Use injection instead")

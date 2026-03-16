@@ -34,8 +34,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.geom.CubicCurve2D;
@@ -65,18 +64,18 @@ public class DiffDrawUtil {
     private DiffDrawUtil() {
     }
 
-    @Nonnull
+    
     public static ColorValue getDividerColor() {
         return getDividerColor(null);
     }
 
-    @Nonnull
+    
     public static ColorValue getDividerColor(@Nullable Editor editor) {
         return getDividerColorFromScheme(editor != null ? editor.getColorsScheme() : EditorColorsManager.getInstance().getGlobalScheme());
     }
 
-    @Nonnull
-    public static ColorValue getDividerColorFromScheme(@Nonnull EditorColorsScheme scheme) {
+    
+    public static ColorValue getDividerColorFromScheme(EditorColorsScheme scheme) {
         ColorValue gutterBackground = scheme.getColor(EditorColors.GUTTER_BACKGROUND);
         if (gutterBackground == null) {
             gutterBackground = EditorColors.GUTTER_BACKGROUND.getDefaultColorValue();
@@ -84,12 +83,12 @@ public class DiffDrawUtil {
         return gutterBackground;
     }
 
-    public static void drawConnectorLineSeparator(@Nonnull Graphics2D g, int x1, int x2, int start1, int end1, int start2, int end2) {
+    public static void drawConnectorLineSeparator(Graphics2D g, int x1, int x2, int start1, int end1, int start2, int end2) {
         drawConnectorLineSeparator(g, x1, x2, start1, end1, start2, end2, null);
     }
 
     public static void drawConnectorLineSeparator(
-        @Nonnull Graphics2D g,
+        Graphics2D g,
         int x1,
         int x2,
         int start1,
@@ -102,11 +101,11 @@ public class DiffDrawUtil {
     }
 
     public static void drawChunkBorderLine(
-        @Nonnull Graphics2D g,
+        Graphics2D g,
         int x1,
         int x2,
         int y,
-        @Nonnull ColorValue colorValue,
+        ColorValue colorValue,
         boolean doubleLine,
         boolean dottedLine
     ) {
@@ -129,7 +128,7 @@ public class DiffDrawUtil {
     }
 
     public static void drawTrapezium(
-        @Nonnull Graphics2D g,
+        Graphics2D g,
         int x1,
         int x2,
         int start1,
@@ -155,7 +154,7 @@ public class DiffDrawUtil {
     }
 
     public static void drawCurveTrapezium(
-        @Nonnull Graphics2D g,
+        Graphics2D g,
         int x1,
         int x2,
         int start1,
@@ -217,12 +216,12 @@ public class DiffDrawUtil {
     // Impl
     //
 
-    public static int lineToY(@Nonnull Editor editor, int line) {
+    public static int lineToY(Editor editor, int line) {
         return DiffImplUtil.lineToY(editor, line);
     }
 
-    @Nonnull
-    public static TextAttributes getTextAttributes(@Nonnull final TextDiffType type, @Nullable final Editor editor, final boolean ignored) {
+    
+    public static TextAttributes getTextAttributes(final TextDiffType type, @Nullable final Editor editor, final boolean ignored) {
         return new TextAttributes() {
             @Override
             public ColorValue getBackgroundColor() {
@@ -231,8 +230,8 @@ public class DiffDrawUtil {
         };
     }
 
-    @Nonnull
-    private static TextAttributes getStripeTextAttributes(@Nonnull final TextDiffType type, @Nonnull final Editor editor) {
+    
+    private static TextAttributes getStripeTextAttributes(final TextDiffType type, final Editor editor) {
         return new TextAttributes() {
             @Override
             public ColorValue getErrorStripeColor() {
@@ -241,11 +240,11 @@ public class DiffDrawUtil {
         };
     }
 
-    @Nonnull
+    
     private static LineSeparatorRenderer createDiffLineRenderer(
-        @Nonnull Editor editor,
-        @Nonnull TextDiffType type,
-        @Nonnull SeparatorPlacement placement,
+        Editor editor,
+        TextDiffType type,
+        SeparatorPlacement placement,
         boolean doubleLine,
         boolean resolved
     ) {
@@ -260,10 +259,10 @@ public class DiffDrawUtil {
         };
     }
 
-    @Nonnull
+    
     private static LineMarkerRenderer createFoldingGutterLineRenderer(
-        @Nonnull final TextDiffType type,
-        @Nonnull final SeparatorPlacement placement,
+        final TextDiffType type,
+        final SeparatorPlacement placement,
         final boolean doubleLine,
         final boolean resolved
     ) {
@@ -284,7 +283,7 @@ public class DiffDrawUtil {
                 drawChunkBorderLine(g2, x1, x2, y - 1, type.getColor(editor), doubleLine, resolved);
             }
 
-            @Nonnull
+            
             @Override
             public LineMarkerRenderer.Position getPosition() {
                 return LineMarkerRenderer.Position.CUSTOM;
@@ -298,11 +297,11 @@ public class DiffDrawUtil {
 
     // TODO: desync of range and 'border' line markers on typing
 
-    @Nonnull
+    
     public static List<RangeHighlighter> createUnifiedChunkHighlighters(
-        @Nonnull Editor editor,
-        @Nonnull LineRange deleted,
-        @Nonnull LineRange inserted,
+        Editor editor,
+        LineRange deleted,
+        LineRange inserted,
         @Nullable List<DiffFragment> innerFragments
     ) {
         boolean ignored = innerFragments != null;
@@ -337,23 +336,23 @@ public class DiffDrawUtil {
         return list;
     }
 
-    @Nonnull
+    
     public static List<RangeHighlighter> createHighlighter(
-        @Nonnull Editor editor,
+        Editor editor,
         int startLine,
         int endLine,
-        @Nonnull TextDiffType type,
+        TextDiffType type,
         boolean ignored
     ) {
         return new LineHighlighterBuilder(editor, startLine, endLine, type).withIgnored(ignored).done();
     }
 
-    @Nonnull
+    
     public static List<RangeHighlighter> createHighlighter(
-        @Nonnull Editor editor,
+        Editor editor,
         int startLine,
         int endLine,
-        @Nonnull TextDiffType type,
+        TextDiffType type,
         boolean ignored,
         boolean resolved,
         boolean hideWithoutLineNumbers
@@ -364,25 +363,25 @@ public class DiffDrawUtil {
             .done();
     }
 
-    @Nonnull
-    public static List<RangeHighlighter> createInlineHighlighter(@Nonnull Editor editor, int start, int end, @Nonnull TextDiffType type) {
+    
+    public static List<RangeHighlighter> createInlineHighlighter(Editor editor, int start, int end, TextDiffType type) {
         return new InlineHighlighterBuilder(editor, start, end, type).done();
     }
 
-    @Nonnull
-    public static List<RangeHighlighter> createLineMarker(@Nonnull Editor editor, int line, @Nonnull TextDiffType type) {
+    
+    public static List<RangeHighlighter> createLineMarker(Editor editor, int line, TextDiffType type) {
         if (line == 0) {
             return Collections.emptyList();
         }
         return createLineMarker(editor, line - 1, type, SeparatorPlacement.BOTTOM, false, false, true);
     }
 
-    @Nonnull
+    
     private static List<RangeHighlighter> createLineMarker(
-        @Nonnull Editor editor,
+        Editor editor,
         int line,
-        @Nonnull TextDiffType type,
-        @Nonnull SeparatorPlacement placement,
+        TextDiffType type,
+        SeparatorPlacement placement,
         boolean doubleLine,
         boolean resolved,
         boolean paintFoldingOutline
@@ -395,21 +394,21 @@ public class DiffDrawUtil {
         return builder.done();
     }
 
-    @Nonnull
+    
     public static List<RangeHighlighter> createBorderLineMarker(
-        @Nonnull Editor editor,
+        Editor editor,
         int line,
-        @Nonnull SeparatorPlacement placement
+        SeparatorPlacement placement
     ) {
         return new LineMarkerBuilder(editor, line, placement).withRenderer(BORDER_LINE_RENDERER).done();
     }
 
-    @Nonnull
+    
     public static List<RangeHighlighter> createLineSeparatorHighlighter(
-        @Nonnull Editor editor,
+        Editor editor,
         int offset1,
         int offset2,
-        @Nonnull BooleanSupplier condition
+        BooleanSupplier condition
     ) {
         RangeHighlighter marker = editor.getMarkupModel().addRangeHighlighter(
             offset1,
@@ -428,9 +427,9 @@ public class DiffDrawUtil {
     }
 
     private static class LineHighlighterBuilder {
-        @Nonnull
+        
         private final Editor editor;
-        @Nonnull
+        
         private final TextDiffType type;
         private final int startLine;
         private final int endLine;
@@ -439,20 +438,20 @@ public class DiffDrawUtil {
         private boolean resolved = false;
         private boolean hideWithoutLineNumbers = false;
 
-        private LineHighlighterBuilder(@Nonnull Editor editor, int startLine, int endLine, @Nonnull TextDiffType type) {
+        private LineHighlighterBuilder(Editor editor, int startLine, int endLine, TextDiffType type) {
             this.editor = editor;
             this.type = type;
             this.startLine = startLine;
             this.endLine = endLine;
         }
 
-        @Nonnull
+        
         public LineHighlighterBuilder withIgnored(boolean ignored) {
             this.ignored = ignored;
             return this;
         }
 
-        @Nonnull
+        
         public LineHighlighterBuilder withResolved(boolean resolved) {
             this.resolved = resolved;
             return this;
@@ -463,7 +462,7 @@ public class DiffDrawUtil {
             return this;
         }
 
-        @Nonnull
+        
         public List<RangeHighlighter> done() {
             List<RangeHighlighter> highlighters = new ArrayList<>();
 
@@ -525,9 +524,9 @@ public class DiffDrawUtil {
     }
 
     private static class LineMarkerBuilder {
-        @Nonnull
+        
         private final Editor editor;
-        @Nonnull
+        
         private final SeparatorPlacement placement;
         private final int line;
 
@@ -539,45 +538,45 @@ public class DiffDrawUtil {
         @Nullable
         private LineMarkerRenderer gutterRenderer;
 
-        private LineMarkerBuilder(@Nonnull Editor editor, int line, @Nonnull SeparatorPlacement placement) {
+        private LineMarkerBuilder(Editor editor, int line, SeparatorPlacement placement) {
             this.editor = editor;
             this.line = line;
             this.placement = placement;
         }
 
-        @Nonnull
-        public LineMarkerBuilder withType(@Nonnull TextDiffType type) {
+        
+        public LineMarkerBuilder withType(TextDiffType type) {
             this.type = type;
             return this;
         }
 
-        @Nonnull
+        
         public LineMarkerBuilder withResolved(boolean resolved) {
             this.resolved = resolved;
             return this;
         }
 
-        @Nonnull
-        public LineMarkerBuilder withRenderer(@Nonnull LineSeparatorRenderer renderer) {
+        
+        public LineMarkerBuilder withRenderer(LineSeparatorRenderer renderer) {
             this.renderer = renderer;
             return this;
         }
 
-        @Nonnull
+        
         public LineMarkerBuilder withDefaultRenderer(boolean doubleLine) {
             assert type != null;
             this.renderer = createDiffLineRenderer(editor, type, placement, doubleLine, resolved);
             return this;
         }
 
-        @Nonnull
+        
         public LineMarkerBuilder withDefaultGutterRenderer(boolean doubleLine) {
             assert type != null;
             this.gutterRenderer = createFoldingGutterLineRenderer(type, placement, doubleLine, resolved);
             return this;
         }
 
-        @Nonnull
+        
         public List<RangeHighlighter> done() {
             // We won't use addLineHighlighter as it will fail to add marker into empty document.
             //RangeHighlighter highlighter = editor.getMarkupModel().addLineHighlighter(line, HighlighterLayer.SELECTION - 1, null);

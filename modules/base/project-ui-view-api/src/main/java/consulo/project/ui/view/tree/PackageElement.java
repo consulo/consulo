@@ -21,9 +21,8 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiPackage;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -34,11 +33,11 @@ public final class PackageElement implements Queryable, RootsProvider {
 
   @Nullable
   private final Module myModule;
-  @Nonnull
+  
   private final PsiPackage myElement;
   private final boolean myIsLibraryElement;
 
-  public PackageElement(@Nullable Module module, @Nonnull PsiPackage element, boolean isLibraryElement) {
+  public PackageElement(@Nullable Module module, PsiPackage element, boolean isLibraryElement) {
     myModule = module;
     myElement = element;
     myIsLibraryElement = isLibraryElement;
@@ -49,12 +48,12 @@ public final class PackageElement implements Queryable, RootsProvider {
     return myModule;
   }
 
-  @Nonnull
+  
   public PsiPackage getPackage() {
     return myElement;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> getRoots() {
     if (myModule == null) {
@@ -97,7 +96,7 @@ public final class PackageElement implements Queryable, RootsProvider {
 
 
   @Override
-  public void putInfo(@Nonnull Map<String, String> info) {
+  public void putInfo(Map<String, String> info) {
     PsiPackage pkg = getPackage();
     if (pkg instanceof Queryable) {
       ((Queryable)pkg).putInfo(info);

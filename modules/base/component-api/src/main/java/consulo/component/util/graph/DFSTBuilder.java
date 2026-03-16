@@ -25,7 +25,6 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Couple;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -44,12 +43,12 @@ public class DFSTBuilder<Node> {
   private final Node[] myInvT; // number in (enumerate all nodes scc by scc) order -> node
   private final Node[] myAllNodes;
 
-  public DFSTBuilder(@Nonnull Graph<Node> graph) {
+  public DFSTBuilder(Graph<Node> graph) {
     this((OutboundSemiGraph<Node>)graph);
   }
 
   @SuppressWarnings("unchecked")
-  public DFSTBuilder(@Nonnull OutboundSemiGraph<Node> graph) {
+  public DFSTBuilder(OutboundSemiGraph<Node> graph) {
     myAllNodes = (Node[])graph.getNodes().toArray();
     myGraph = graph;
     int size = graph.getNodes().size();
@@ -154,7 +153,7 @@ public class DFSTBuilder<Node> {
       IntLists.reverse(mySCCs);  // have to place SCCs in topological order too
     }
 
-    private void strongConnect(@Nonnull List<List<Node>> sccs) {
+    private void strongConnect(List<List<Node>> sccs) {
       int successor = -1;
       nextNode:
       while (!frames.isEmpty()) {
@@ -210,7 +209,7 @@ public class DFSTBuilder<Node> {
     }
   }
 
-  @Nonnull
+  
   public Comparator<Node> comparator() {
     if (myComparator == null) {
       ObjectIntMap<Node> map = isAcyclic() ? myNodeToNNumber : myNodeToTNumber;
@@ -227,12 +226,12 @@ public class DFSTBuilder<Node> {
     return getCircularDependency() == null;
   }
 
-  @Nonnull
+  
   public Node getNodeByNNumber(int n) {
     return myInvN[n];
   }
 
-  @Nonnull
+  
   public Node getNodeByTNumber(int n) {
     return myInvT[n];
   }
@@ -241,18 +240,18 @@ public class DFSTBuilder<Node> {
    * @return the list containing the number of nodes in strongly connected components.
    * Respective nodes could be obtained via {@link #getNodeByTNumber(int)}.
    */
-  @Nonnull
+  
   public IntList getSCCs() {
     return mySCCs;
   }
 
-  @Nonnull
+  
   public Collection<Collection<Node>> getComponents() {
     final IntList componentSizes = getSCCs();
     if (componentSizes.isEmpty()) return List.of();
 
     return new MyCollection<Collection<Node>>(componentSizes.size()) {
-      @Nonnull
+      
       @Override
       public Iterator<Collection<Node>> iterator() {
         return new MyIterator<Collection<Node>>(componentSizes.size()) {
@@ -265,7 +264,7 @@ public class DFSTBuilder<Node> {
             if (cSize == 0) return List.of();
             offset += cSize;
             return new MyCollection<Node>(cSize) {
-              @Nonnull
+              
               @Override
               public Iterator<Node> iterator() {
                 return new MyIterator<Node>(cSize) {
@@ -322,7 +321,7 @@ public class DFSTBuilder<Node> {
     }
   }
 
-  @Nonnull
+  
   public List<Node> getSortedNodes() {
     List<Node> result = new ArrayList<Node>(myGraph.getNodes());
     Collections.sort(result, comparator());

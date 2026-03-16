@@ -23,8 +23,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.LocalProcessHandler;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -36,9 +35,9 @@ public class ExecUtil {
   private ExecUtil() {
   }
 
-  @Nonnull
-  public static String loadTemplate(@Nonnull ClassLoader loader,
-                                    @Nonnull String templateName,
+  
+  public static String loadTemplate(ClassLoader loader,
+                                    String templateName,
                                     @Nullable Map<String, String> variables) throws IOException {
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed") InputStream stream = loader.getResourceAsStream(templateName);
     if (stream == null) {
@@ -61,10 +60,10 @@ public class ExecUtil {
     return buffer.toString();
   }
 
-  @Nonnull
-  public static File createTempExecutableScript(@Nonnull String prefix,
-                                                @Nonnull String suffix,
-                                                @Nonnull String content) throws IOException, ExecutionException {
+  
+  public static File createTempExecutableScript(String prefix,
+                                                String suffix,
+                                                String content) throws IOException, ExecutionException {
     File tempDir = new File(ContainerPathManager.get().getTempPath());
     File tempFile = FileUtil.createTempFile(tempDir, prefix, suffix, true, true);
     FileUtil.writeToFile(tempFile, content.getBytes(CharsetToolkit.UTF8));
@@ -75,18 +74,18 @@ public class ExecUtil {
   }
 
 
-  @Nonnull
+  
   public static String getOpenCommandPath() {
     return "/usr/bin/open";
   }
 
-  @Nonnull
+  
   public static String getWindowsShellName() {
     return "cmd.exe";
   }
 
   @Nullable
-  public static String execAndReadLine(@Nonnull GeneralCommandLine commandLine) {
+  public static String execAndReadLine(GeneralCommandLine commandLine) {
     try {
       return readFirstLine(commandLine.createProcess().getInputStream(), commandLine.getCharset());
     }
@@ -96,7 +95,7 @@ public class ExecUtil {
   }
 
   @Nullable
-  public static String readFirstLine(@Nonnull InputStream stream, @Nullable Charset cs) {
+  public static String readFirstLine(InputStream stream, @Nullable Charset cs) {
     try {
       try (BufferedReader reader = new BufferedReader(cs == null ? new InputStreamReader(stream) : new InputStreamReader(stream, cs))) {
         return reader.readLine();
@@ -107,10 +106,10 @@ public class ExecUtil {
     }
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use GeneralCommandLine#withSudo()")
-  public static Process sudo(@Nonnull GeneralCommandLine commandLine, @Nonnull String prompt) throws ExecutionException, IOException {
+  public static Process sudo(GeneralCommandLine commandLine, String prompt) throws ExecutionException, IOException {
     LocalProcessHandler handler = (LocalProcessHandler)ProcessHandlerBuilder.create(commandLine.withSudo(prompt)).build();
     return handler.getProcess();
   }

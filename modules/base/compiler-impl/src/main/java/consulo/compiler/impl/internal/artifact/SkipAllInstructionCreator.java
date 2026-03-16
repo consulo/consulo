@@ -18,7 +18,6 @@ package consulo.compiler.impl.internal.artifact;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import consulo.compiler.artifact.element.IncrementalCompilerInstructionCreator;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -29,17 +28,17 @@ public class SkipAllInstructionCreator extends IncrementalCompilerInstructionCre
     }
 
     @Override
-    public void addFileCopyInstruction(@Nonnull VirtualFile file, @Nonnull String outputFileName) {
+    public void addFileCopyInstruction(VirtualFile file, String outputFileName) {
     }
 
     @Override
-    public SkipAllInstructionCreator subFolder(@Nonnull String directoryName) {
+    public SkipAllInstructionCreator subFolder(String directoryName) {
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public IncrementalCompilerInstructionCreator archive(@Nonnull String archiveFileName, @Nonnull ArchivePackageWriter<?> packageWriter) {
+    public IncrementalCompilerInstructionCreator archive(String archiveFileName, ArchivePackageWriter<?> packageWriter) {
         return this;
     }
 }

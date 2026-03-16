@@ -25,12 +25,11 @@ import consulo.dataContext.UiDataRule;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.PasteProvider;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BasicEditorUiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         Editor editor = snapshot.get(Editor.KEY);
         if (editor instanceof EditorEx editorEx) {
             sink.set(CopyProvider.KEY, editorEx.getCopyProvider());

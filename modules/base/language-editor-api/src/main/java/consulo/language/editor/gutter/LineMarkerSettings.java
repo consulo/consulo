@@ -19,14 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class LineMarkerSettings {
-  @Nonnull
+  
   public static LineMarkerSettings getInstance() {
     return Application.get().getInstance(LineMarkerSettings.class);
   }

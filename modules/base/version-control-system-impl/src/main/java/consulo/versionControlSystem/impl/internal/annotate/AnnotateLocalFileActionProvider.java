@@ -19,7 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
-import jakarta.annotation.Nonnull;
+
 
 @ExtensionImpl
 public class AnnotateLocalFileActionProvider implements AnnotateToggleActionProvider {
@@ -43,9 +43,9 @@ public class AnnotateLocalFileActionProvider implements AnnotateToggleActionProv
         AnnotateLocalFileAction.perform(e, selected);
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getActionName(@Nonnull AnActionEvent e) {
+    public LocalizeValue getActionName(AnActionEvent e) {
         return AnnotateVcsVirtualFileActionProvider.getActionNameImpl(e);
     }
 }

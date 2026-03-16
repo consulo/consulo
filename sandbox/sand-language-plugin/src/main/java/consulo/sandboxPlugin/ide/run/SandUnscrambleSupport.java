@@ -21,8 +21,7 @@ import consulo.execution.unscramble.UnscrambleSupport;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,20 +29,20 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class SandUnscrambleSupport implements UnscrambleSupport {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "sand";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Sand");
   }
 
   @Override
-  public boolean isAvailable(@Nonnull StacktraceAnalyzer analyzer) {
+  public boolean isAvailable(StacktraceAnalyzer analyzer) {
     return true;
   }
 

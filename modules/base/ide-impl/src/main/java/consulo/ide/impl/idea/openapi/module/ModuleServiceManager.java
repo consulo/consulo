@@ -20,7 +20,6 @@ import consulo.ide.ServiceManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class ModuleServiceManager {
   @Deprecated
   @DeprecationInfo("Use ServiceManager#getService()")
-  public static <T> T getService(@Nonnull Module module, @Nonnull Class<T> serviceClass) {
+  public static <T> T getService(Module module, Class<T> serviceClass) {
     return ServiceManager.getService(module, serviceClass);
   }
 }

@@ -1,9 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.concurrent;
 
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -25,14 +23,14 @@ public class ThreadDumper {
   private ThreadDumper() {
   }
 
-  @Nonnull
+  
   public static String dumpThreadsToString() {
     StringWriter writer = new StringWriter();
     dumpThreadInfos(getThreadInfos(ManagementFactory.getThreadMXBean(), true), writer);
     return writer.toString();
   }
 
-  @Nonnull
+  
   public static String dumpEdtStackTrace(ThreadInfo[] threadInfos) {
     StringWriter writer = new StringWriter();
     if (threadInfos.length > 0) {
@@ -42,12 +40,12 @@ public class ThreadDumper {
     return writer.toString();
   }
 
-  @Nonnull
+  
   public static ThreadInfo[] getThreadInfos() {
     return getThreadInfos(ManagementFactory.getThreadMXBean(), true);
   }
 
-  @Nonnull
+  
   public static ThreadDump getThreadDumpInfo(ThreadInfo[] threadInfos) {
     sort(threadInfos);
     StringWriter writer = new StringWriter();
@@ -55,8 +53,8 @@ public class ThreadDumper {
     return new ThreadDump(writer.toString(), edtStack, threadInfos);
   }
 
-  @Nonnull
-  public static ThreadInfo[] getThreadInfos(@Nonnull ThreadMXBean threadMXBean, boolean sort) {
+  
+  public static ThreadInfo[] getThreadInfos(ThreadMXBean threadMXBean, boolean sort) {
     ThreadInfo[] threads;
     try {
       threads = threadMXBean.dumpAllThreads(false, false);
@@ -70,7 +68,7 @@ public class ThreadDumper {
     return threads;
   }
 
-  public static boolean isEDT(@Nonnull ThreadInfo info) {
+  public static boolean isEDT(ThreadInfo info) {
     return isEDT(info.getThreadName());
   }
 
@@ -78,7 +76,7 @@ public class ThreadDumper {
     return threadName != null && threadName.startsWith("AWT-EventQueue");
   }
 
-  private static StackTraceElement[] dumpThreadInfos(@Nonnull ThreadInfo[] threadInfo, @Nonnull Writer f) {
+  private static StackTraceElement[] dumpThreadInfos(ThreadInfo[] threadInfo, Writer f) {
     StackTraceElement[] edtStack = null;
     for (ThreadInfo info : threadInfo) {
       if (info != null) {
@@ -91,19 +89,19 @@ public class ThreadDumper {
     return edtStack;
   }
 
-  @Nonnull
-  public static ThreadInfo[] sort(@Nonnull ThreadInfo[] threads) {
+  
+  public static ThreadInfo[] sort(ThreadInfo[] threads) {
     Arrays.sort(threads, THREAD_INFO_COMPARATOR);
     return threads;
   }
 
-  private static void dumpThreadInfo(@Nonnull ThreadInfo info, @Nonnull Writer f) {
+  private static void dumpThreadInfo(ThreadInfo info, Writer f) {
     dumpCallStack(info, f, info.getStackTrace());
   }
 
-  private static void dumpCallStack(@Nonnull ThreadInfo info, @Nonnull Writer f, @Nonnull StackTraceElement[] stackTraceElements) {
+  private static void dumpCallStack(ThreadInfo info, Writer f, StackTraceElement[] stackTraceElements) {
     try {
-      @NonNls StringBuilder sb = new StringBuilder("\"").append(info.getThreadName()).append("\"");
+      StringBuilder sb = new StringBuilder("\"").append(info.getThreadName()).append("\"");
       sb.append(" prio=0 tid=0x0 nid=0x0 ").append(getReadableState(info.getThreadState())).append("\n");
       sb.append("     java.lang.Thread.State: ").append(info.getThreadState()).append("\n");
       if (info.getLockName() != null) {
@@ -128,9 +126,9 @@ public class ThreadDumper {
     }
   }
 
-  public static void dumpCallStack(@Nonnull Thread thread, @Nonnull Writer f, @Nonnull StackTraceElement[] stackTraceElements) {
+  public static void dumpCallStack(Thread thread, Writer f, StackTraceElement[] stackTraceElements) {
     try {
-      @NonNls StringBuilder sb = new StringBuilder("\"").append(thread.getName()).append("\"");
+      StringBuilder sb = new StringBuilder("\"").append(thread.getName()).append("\"");
       sb.append(" prio=0 tid=0x0 nid=0x0 ").append(getReadableState(thread.getState())).append("\n");
       sb.append("     java.lang.Thread.State: ").append(thread.getState()).append("\n");
 
@@ -143,7 +141,7 @@ public class ThreadDumper {
     }
   }
 
-  private static void printStackTrace(@Nonnull Writer f, @Nonnull StackTraceElement[] stackTraceElements) {
+  private static void printStackTrace(Writer f, StackTraceElement[] stackTraceElements) {
     try {
       for (StackTraceElement element : stackTraceElements) {
         f.write("\tat " + element + "\n");
@@ -160,7 +158,7 @@ public class ThreadDumper {
    * @param fullThreadDump lines comprising a thread dump as formatted by {@link #dumpCallStack(ThreadInfo, Writer, StackTraceElement[])}
    */
   @Nullable
-  public static String getEdtStackForCrash(@Nonnull String fullThreadDump, @Nonnull String exceptionType) {
+  public static String getEdtStackForCrash(String fullThreadDump, String exceptionType) {
     // We know that the AWT-EventQueue-* thread is dumped out first (see #sort above), and for each thread, there are at the very least
     // 3 lines printed out before the stack trace. If we don't see any of this, then return early
     List<String> threadDump = Arrays.asList(fullThreadDump.split("\n"));
@@ -211,7 +209,7 @@ public class ThreadDumper {
     return sb.toString().trim();
   }
 
-  private static String getReadableState(@Nonnull Thread.State state) {
+  private static String getReadableState(Thread.State state) {
     switch (state) {
       case BLOCKED:
         return "blocked";

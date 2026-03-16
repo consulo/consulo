@@ -38,8 +38,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.PlainTextLikeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         myPluginAdvertiserRequester = pluginAdvertiserRequester;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "plugin-advertiser";
@@ -83,9 +82,9 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
     @Nullable
     @Override
     public EditorNotificationBuilder buildNotification(
-        @Nonnull VirtualFile file,
-        @Nonnull FileEditor fileEditor,
-        @Nonnull Supplier<EditorNotificationBuilder> builderFactory
+        VirtualFile file,
+        FileEditor fileEditor,
+        Supplier<EditorNotificationBuilder> builderFactory
     ) {
         if (!isValidFile(file)) {
             return null;
@@ -124,7 +123,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         return file.getFileType() instanceof PlainTextLikeFileType;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private EditorNotificationBuilder build(
         VirtualFile virtualFile,
@@ -173,7 +172,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         return builder;
     }
 
-    private boolean isIgnoredFile(@Nonnull VirtualFile virtualFile) {
+    private boolean isIgnoredFile(VirtualFile virtualFile) {
         ExtensionPreview extension = ExtensionPreview.of(FileTypeFactory.class, "*." + virtualFile.getExtension());
 
         if (myUnknownFeaturesCollector.isIgnored(extension)) {

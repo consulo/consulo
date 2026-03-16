@@ -22,7 +22,6 @@ import consulo.component.util.config.BooleanProperty;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -30,8 +29,8 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class ToggleModelAction extends ToggleBooleanProperty.Disablable {
     public ToggleModelAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         Image icon,
         AbstractProperty.AbstractPropertyContainer properties,
         BooleanProperty property

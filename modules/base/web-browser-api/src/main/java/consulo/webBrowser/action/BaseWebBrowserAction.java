@@ -19,13 +19,12 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 final class BaseWebBrowserAction extends BaseOpenInBrowserAction {
     private final WebBrowser browser;
 
-    public BaseWebBrowserAction(@Nonnull WebBrowser browser) {
+    public BaseWebBrowserAction(WebBrowser browser) {
         super(browser);
 
         this.browser = browser;
@@ -33,7 +32,7 @@ final class BaseWebBrowserAction extends BaseOpenInBrowserAction {
 
     @Nullable
     @Override
-    protected WebBrowser getBrowser(@Nonnull AnActionEvent event) {
+    protected WebBrowser getBrowser(AnActionEvent event) {
         return WebBrowserManager.getInstance().isActive(browser) && browser.getPath() != null ? browser : null;
     }
 }

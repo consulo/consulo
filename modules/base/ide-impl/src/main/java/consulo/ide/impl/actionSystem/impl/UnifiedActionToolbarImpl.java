@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -61,14 +60,14 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     public void setTargetComponent(javax.swing.JComponent component) {
     }
 
-    @Nonnull
+    
     @Override
     public javax.swing.JComponent getComponent() {
         // FIXME [VISTALL] just stub - not throw on old ui
         return new JPanel();
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         return myComponent;
@@ -91,7 +90,7 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
         return CompletableFuture.completedFuture(List.of());
@@ -102,7 +101,7 @@ public class UnifiedActionToolbarImpl implements ActionToolbar {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public List<AnAction> getActions() {
         return Collections.emptyList();

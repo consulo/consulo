@@ -22,8 +22,7 @@ import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Stack;
@@ -85,7 +84,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
             return myDescriptor;
         }
 
-        public void setName(@Nonnull LocalizeValue name) {
+        public void setName(LocalizeValue name) {
             myDescriptor = new BaseCommandBuilder(myDescriptor).name(name).build(myDescriptor.command());
         }
 
@@ -94,7 +93,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         }
     }
 
-    @Nonnull
+    
     private final Application myApplication;
 
     protected Command myCurrentCommand;
@@ -104,14 +103,14 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     private final CommandListener eventPublisher;
 
-    public CoreCommandProcessor(@Nonnull Application application) {
+    public CoreCommandProcessor(Application application) {
         myApplication = application;
         MessageBus messageBus = application.getMessageBus();
         messageBus.connect().subscribe(
             CommandListener.class,
             new CommandListener() {
                 @Override
-                public void commandStarted(@Nonnull CommandEvent event) {
+                public void commandStarted(CommandEvent event) {
                     for (CommandListener listener : myListeners) {
                         try {
                             listener.commandStarted(event);
@@ -123,7 +122,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                 }
 
                 @Override
-                public void beforeCommandFinished(@Nonnull CommandEvent event) {
+                public void beforeCommandFinished(CommandEvent event) {
                     for (CommandListener listener : myListeners) {
                         try {
                             listener.beforeCommandFinished(event);
@@ -135,7 +134,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
                 }
 
                 @Override
-                public void commandFinished(@Nonnull CommandEvent event) {
+                public void commandFinished(CommandEvent event) {
                     for (CommandListener listener : myListeners) {
                         try {
                             listener.commandFinished(event);
@@ -188,7 +187,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
         eventPublisher = messageBus.syncPublisher(CommandListener.class);
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public <T> StartableCommandBuilder<T, ? extends StartableCommandBuilder<T, ?>> newCommand() {
@@ -263,7 +262,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @RequiredUIAccess
-    protected void finishCommand(@Nonnull CommandToken command, @Nullable Throwable throwable) {
+    protected void finishCommand(CommandToken command, @Nullable Throwable throwable) {
         UIAccess.assertIsUIThread();
         CommandLog.LOG.assertTrue(myCurrentCommand != null, "no current command in progress");
         fireCommandFinished();
@@ -318,7 +317,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
     @Override
     @RequiredUIAccess
-    public void setCurrentCommandName(@Nonnull LocalizeValue name) {
+    public void setCurrentCommandName(LocalizeValue name) {
         UIAccess.assertIsUIThread();
         Command currentCommand = myCurrentCommand;
         assert currentCommand != null;
@@ -340,7 +339,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getCurrentCommandNameValue() {
         Command currentCommand = myCurrentCommand;
         if (currentCommand != null) {
@@ -375,18 +374,18 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
-    public void addCommandListener(@Nonnull CommandListener listener) {
+    public void addCommandListener(CommandListener listener) {
         myListeners.add(listener);
     }
 
     @Override
-    public void removeCommandListener(@Nonnull CommandListener listener) {
+    public void removeCommandListener(CommandListener listener) {
         myListeners.remove(listener);
     }
 
     @Override
     @RequiredUIAccess
-    public void runUndoTransparentAction(@Nonnull Runnable action) {
+    public void runUndoTransparentAction(Runnable action) {
         if (CommandLog.LOG.isDebugEnabled()) {
             CommandLog.LOG.debug(
                 "runUndoTransparentAction: " + action +
@@ -420,11 +419,11 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     }
 
     @Override
-    public void addAffectedDocuments(@Nullable Project project, @Nonnull Document... docs) {
+    public void addAffectedDocuments(@Nullable Project project, Document... docs) {
     }
 
     @Override
-    public void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files) {
+    public void addAffectedFiles(@Nullable Project project, VirtualFile... files) {
     }
 
     @RequiredUIAccess

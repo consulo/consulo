@@ -15,13 +15,12 @@
  */
 package consulo.ui.ex.awtUnsafe;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-05-11
  */
 public interface AWTComponentProvider {
-  @Nullable
-  java.awt.Component getComponent();
+  java.awt.@Nullable Component getComponent();
 }

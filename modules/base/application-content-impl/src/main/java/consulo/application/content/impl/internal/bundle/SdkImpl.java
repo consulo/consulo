@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 
 public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, Disposable {
@@ -88,7 +87,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   }
 
   @Override
-  @Nonnull
+  
   public SdkTypeId getSdkType() {
     SdkTypeId sdkType = mySdkType;
     if (sdkType == null) {
@@ -103,13 +102,13 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
@@ -153,7 +152,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     myVersionString = null;
   }
 
-  @Nonnull
+  
   @Override
   public Path getHomeNioPath() {
     // TODO [VISTALL] better handle remote paths
@@ -163,7 +162,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     return Path.of("");
   }
 
-  @Nonnull
+  
   @Override
   public Platform getPlatform() {
     // TODO [VISTALL] better handle remote platform
@@ -183,11 +182,11 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     return StandardFileSystems.local().findFileByPath(myHomePath);
   }
 
-  public void readExternal(@Nonnull Element element) {
+  public void readExternal(Element element) {
     readExternal(element, null);
   }
 
-  public void readExternal(@Nonnull Element element, @Nullable SdkTable sdkTable) throws InvalidDataException {
+  public void readExternal(Element element, @Nullable SdkTable sdkTable) throws InvalidDataException {
     Element elementName = assertNotMissing(element, ELEMENT_NAME);
     myName = elementName.getAttributeValue(ATTRIBUTE_VALUE);
     Element typeChild = element.getChild(ELEMENT_TYPE);
@@ -223,14 +222,14 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     }
   }
 
-  @Nonnull
-  private static Element assertNotMissing(@Nonnull Element parent, @Nonnull String childName) {
+  
+  private static Element assertNotMissing(Element parent, String childName) {
     Element child = parent.getChild(childName);
     if (child == null) throw new InvalidDataException("mandatory element '" + childName + "' is missing: " + parent);
     return child;
   }
 
-  public void writeExternal(@Nonnull Element element) {
+  public void writeExternal(Element element) {
     Element name = new Element(ELEMENT_NAME);
     name.setAttribute(ATTRIBUTE_VALUE, myName);
     element.addContent(name);
@@ -273,13 +272,13 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   }
 
   @Override
-  public void setHomeNioPath(@Nonnull Path path) {
+  public void setHomeNioPath(Path path) {
     // TODO [VISTALL] better handle
     setHomePath(path.toAbsolutePath().toString());
   }
 
   @Override
-  @Nonnull
+  
   public SdkImpl clone() {
     SdkImpl newSdk = new SdkImpl(mySdkTable, "", mySdkType);
     copyTo(newSdk);
@@ -287,7 +286,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
   }
 
   @Override
-  @Nonnull
+  
   public RootProvider getRootProvider() {
     return myRootProvider;
   }
@@ -296,7 +295,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     myPredefined = predefined;
   }
 
-  void copyTo(@Nonnull SdkImpl dest) {
+  void copyTo(SdkImpl dest) {
     String name = getName();
     dest.setName(name);
     dest.setHomePath(getHomePath());
@@ -310,14 +309,14 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
   private class MyRootProvider extends RootProviderBase {
     @Override
-    @Nonnull
-    public String[] getUrls(@Nonnull OrderRootType rootType) {
+    
+    public String[] getUrls(OrderRootType rootType) {
       return myRoots.getUrls(rootType);
     }
 
     @Override
-    @Nonnull
-    public VirtualFile[] getFiles(@Nonnull OrderRootType rootType) {
+    
+    public VirtualFile[] getFiles(OrderRootType rootType) {
       return myRoots.getFiles(rootType);
     }
 
@@ -330,7 +329,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
 
   // SdkModificator implementation
   @Override
-  @Nonnull
+  
   public SdkModificator getSdkModificator() {
     SdkImpl sdk = clone();
     sdk.myOrigin = this;
@@ -356,40 +355,40 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     myAdditionalData = data;
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFile[] getRoots(@Nonnull OrderRootType rootType) {
+  public VirtualFile[] getRoots(OrderRootType rootType) {
     return myRoots.getFiles(rootType);
   }
 
-  @Nonnull
+  
   @Override
-  public String[] getUrls(@Nonnull OrderRootType rootType) {
+  public String[] getUrls(OrderRootType rootType) {
     return myRoots.getUrls(rootType);
   }
 
   @Override
-  public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
+  public void addRoot(VirtualFile root, OrderRootType rootType) {
     myRoots.addRoot(root, rootType);
   }
 
   @Override
-  public void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  public void addRoot(String url, OrderRootType rootType) {
     myRoots.addRoot(url, rootType);
   }
 
   @Override
-  public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
+  public void removeRoot(VirtualFile root, OrderRootType rootType) {
     myRoots.removeRoot(root, rootType);
   }
 
   @Override
-  public void removeRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  public void removeRoot(String url, OrderRootType rootType) {
     myRoots.removeRoot(url, rootType);
   }
 
   @Override
-  public void removeRoots(@Nonnull OrderRootType rootType) {
+  public void removeRoots(OrderRootType rootType) {
     myRoots.removeAllRoots(rootType);
   }
 

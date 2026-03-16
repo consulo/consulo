@@ -26,7 +26,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -41,7 +40,7 @@ public class ShowAddPackagingElementPopupAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     DefaultActionGroup group = new DefaultActionGroup();
     for (PackagingElementType type : PackagingElementFactory.getInstance(e.getRequiredData(Project.KEY)).getAllElementTypes()) {
       group.add(new AddNewPackagingElementAction((PackagingElementType<?>)type, myArtifactEditor));

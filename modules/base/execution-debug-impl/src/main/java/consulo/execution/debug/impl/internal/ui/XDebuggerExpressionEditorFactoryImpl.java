@@ -22,8 +22,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.ui.XDebuggerExpressionEditor;
 import consulo.execution.debug.ui.XDebuggerExpressionEditorFactory;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -41,9 +40,9 @@ public class XDebuggerExpressionEditorFactoryImpl implements XDebuggerExpression
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
-    public XDebuggerExpressionEditor create(@Nonnull XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable String historyId, @Nullable XSourcePosition sourcePosition, @Nonnull XExpression text, boolean multiline, boolean editorFont, boolean showEditor) {
+    public XDebuggerExpressionEditor create(XDebuggerEditorsProvider debuggerEditorsProvider, @Nullable String historyId, @Nullable XSourcePosition sourcePosition, XExpression text, boolean multiline, boolean editorFont, boolean showEditor) {
         return new XDebuggerExpressionEditorImpl(myProject, debuggerEditorsProvider, historyId, sourcePosition, text, multiline, editorFont);
     }
 }

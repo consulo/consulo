@@ -38,7 +38,6 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -65,7 +64,7 @@ public class ExternalSystemUiUtil {
    * @param messageType  balloon message type
    * @param message      message to show
    */
-  public static void showBalloon(@Nonnull JComponent component, @Nonnull NotificationType messageType, @Nonnull String message) {
+  public static void showBalloon(JComponent component, NotificationType messageType, String message) {
     BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, messageType, null)
       .setDisposable(ApplicationManager.getApplication())
       .setFadeoutTime(BALLOON_FADEOUT_TIME);
@@ -86,19 +85,19 @@ public class ExternalSystemUiUtil {
     balloon.show(new RelativePoint(component, new Point(x, y)), position);
   }
 
-  @Nonnull
+  
   public static GridBag getLabelConstraints(int indentLevel) {
     Insets insets = new Insets(INSETS, INSETS + INSETS * indentLevel, 0, INSETS);
     return new GridBag().anchor(GridBagConstraints.WEST).weightx(0).insets(insets);
   }
 
-  @Nonnull
+  
   public static GridBag getFillLineConstraints(int indentLevel) {
     Insets insets = new Insets(INSETS, INSETS + INSETS * indentLevel, 0, INSETS);
     return new GridBag().weightx(1).coverLine().fillCellHorizontally().anchor(GridBagConstraints.WEST).insets(insets);
   }
 
-  public static void fillBottom(@Nonnull JComponent component) {
+  public static void fillBottom(JComponent component) {
     component.add(Box.createVerticalGlue(), new GridBag().weightx(1).weighty(1).fillCell().coverLine());
   }
 
@@ -108,7 +107,7 @@ public class ExternalSystemUiUtil {
    * @param settings  target settings to use
    * @param model     UI model to be synced with the given settings
    */
-  public static void apply(@Nonnull final AbstractExternalSystemLocalSettings settings, @Nonnull final ExternalSystemTasksTreeModel model) {
+  public static void apply(final AbstractExternalSystemLocalSettings settings, final ExternalSystemTasksTreeModel model) {
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
       public void run() {
@@ -124,7 +123,7 @@ public class ExternalSystemUiUtil {
     });
   }
 
-  public static void showUi(@Nonnull Object o, boolean show) {
+  public static void showUi(Object o, boolean show) {
     for (Class<?> clazz = o.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
       for (Field field : clazz.getDeclaredFields()) {
         field.setAccessible(true);
@@ -141,7 +140,7 @@ public class ExternalSystemUiUtil {
     }
   }
 
-  public static void disposeUi(@Nonnull Object o) {
+  public static void disposeUi(Object o) {
     for (Class<?> clazz = o.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
       for (Field field : clazz.getDeclaredFields()) {
         field.setAccessible(true);
@@ -158,13 +157,13 @@ public class ExternalSystemUiUtil {
     }
   }
 
-  @Nonnull
-  public static ExternalSystemUiAware getUiAware(@Nonnull ProjectSystemId externalSystemId) {
+  
+  public static ExternalSystemUiAware getUiAware(ProjectSystemId externalSystemId) {
     ExternalSystemManager<?,?,?,?,?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     return manager instanceof ExternalSystemUiAware ? (ExternalSystemUiAware)manager : DefaultExternalSystemUiAware.INSTANCE;
   }
 
-  public static void executeAction(@Nonnull String actionId, @Nonnull InputEvent e) {
+  public static void executeAction(String actionId, InputEvent e) {
     ActionManager actionManager = ActionManager.getInstance();
     AnAction action = actionManager.getAction(actionId);
     if (action == null) {

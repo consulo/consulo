@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.codeInsight.hint;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
@@ -17,7 +16,7 @@ class CancelProgressOnScrolling implements VisibleAreaListener {
   }
 
   @Override
-  public void visibleAreaChanged(@Nonnull VisibleAreaEvent e) {
+  public void visibleAreaChanged(VisibleAreaEvent e) {
     Rectangle oldRect = e.getOldRectangle();
     Rectangle newRect = e.getNewRectangle();
     CompletableFuture<?> promise = myCancellablePromiseRef.get();

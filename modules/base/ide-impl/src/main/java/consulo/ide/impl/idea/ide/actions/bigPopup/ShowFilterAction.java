@@ -16,7 +16,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,12 +30,12 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return myFilterPopup != null && !myFilterPopup.isDisposed();
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         if (state) {
             showPopup(e.getRequiredData(Project.KEY), e.getInputEvent().getComponent());
         }
@@ -47,7 +46,7 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Image icon = getTemplatePresentation().getIcon();
         e.getPresentation().setIcon(isActive() ? ExecutionUtil.getIconWithLiveIndicator(icon) : icon);
         e.getPresentation().setEnabled(isEnabled());
@@ -58,13 +57,13 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
 
     protected abstract boolean isActive();
 
-    private void showPopup(@Nonnull Project project, @Nonnull Component anchor) {
+    private void showPopup(Project project, Component anchor) {
         if (myFilterPopup != null || !anchor.isValid()) {
             return;
         }
         JBPopupListener popupCloseListener = new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 myFilterPopup = null;
             }
         };
@@ -92,7 +91,7 @@ public abstract class ShowFilterAction extends ToggleAction implements DumbAware
         myFilterPopup.showUnderneathOf(anchor);
     }
 
-    @Nonnull
+    
     public String getDimensionServiceKey() {
         return "ShowFilterAction_Filter_Popup";
     }

@@ -20,8 +20,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +28,7 @@ import java.util.Set;
 public abstract class AbstractApplicationUsagesCollector extends UsagesCollector {
   private static final Logger LOG = Logger.getInstance(AbstractApplicationUsagesCollector.class);
 
-  public void persistProjectUsages(@Nonnull Project project) {
+  public void persistProjectUsages(Project project) {
     try {
       Set<UsageDescriptor> projectUsages = getProjectUsages(project);
       persistProjectUsages(project, projectUsages);
@@ -39,21 +38,21 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
     }
   }
 
-  public void persistProjectUsages(@Nonnull Project project, @Nonnull Set<UsageDescriptor> usages) {
+  public void persistProjectUsages(Project project, Set<UsageDescriptor> usages) {
     persistProjectUsages(project, usages, ApplicationStatisticsPersistenceComponent.getInstance());
   }
 
-  public void persistProjectUsages(@Nonnull Project project, @Nonnull Set<UsageDescriptor> usages, @Nonnull ApplicationStatisticsPersistence persistence) {
+  public void persistProjectUsages(Project project, Set<UsageDescriptor> usages, ApplicationStatisticsPersistence persistence) {
     persistence.persistUsages(getGroupId(), project, usages);
   }
 
-  @Nonnull
+  
   public Set<UsageDescriptor> getApplicationUsages() {
     return getApplicationUsages(ApplicationStatisticsPersistenceComponent.getInstance());
   }
 
-  @Nonnull
-  public Set<UsageDescriptor> getApplicationUsages(@Nonnull ApplicationStatisticsPersistence persistence) {
+  
+  public Set<UsageDescriptor> getApplicationUsages(ApplicationStatisticsPersistence persistence) {
     Map<String, Integer> result = new HashMap<String, Integer>();
 
     for (Set<UsageDescriptor> usageDescriptors : persistence.getApplicationData(getGroupId()).values()) {
@@ -68,7 +67,7 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
   }
 
   @Override
-  @Nonnull
+  
   public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
     if (project != null) {
       Set<UsageDescriptor> projectUsages = getProjectUsages(project);
@@ -78,6 +77,6 @@ public abstract class AbstractApplicationUsagesCollector extends UsagesCollector
     return getApplicationUsages();
   }
 
-  @Nonnull
-  public abstract Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException;
+  
+  public abstract Set<UsageDescriptor> getProjectUsages(Project project) throws CollectUsagesException;
 }

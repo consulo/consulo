@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.impl.softwrap.mapping;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -23,11 +22,11 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class SoftWrapAwareDocumentParsingListenerAdapter implements SoftWrapAwareDocumentParsingListener {
   @Override
-  public void onCacheUpdateStart(@Nonnull IncrementalCacheUpdateEvent event) {
+  public void onCacheUpdateStart(IncrementalCacheUpdateEvent event) {
   }
 
   @Override
-  public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
+  public void onRecalculationEnd(IncrementalCacheUpdateEvent event) {
   }
 
   @Override

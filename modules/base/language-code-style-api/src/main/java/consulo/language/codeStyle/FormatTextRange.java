@@ -16,14 +16,13 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 public class FormatTextRange {
-    private @Nonnull
+    private 
     TextRange formattingRange;
     private final boolean processHeadingWhitespace;
 
-    public FormatTextRange(@Nonnull TextRange range, boolean processHeadingSpace) {
+    public FormatTextRange(TextRange range, boolean processHeadingSpace) {
         formattingRange = range;
         processHeadingWhitespace = processHeadingSpace;
     }
@@ -32,7 +31,7 @@ public class FormatTextRange {
         return processHeadingWhitespace;
     }
 
-    public boolean isWhitespaceReadOnly(@Nonnull TextRange range) {
+    public boolean isWhitespaceReadOnly(TextRange range) {
         if (range.getStartOffset() >= formattingRange.getEndOffset()) {
             return true;
         }
@@ -48,16 +47,16 @@ public class FormatTextRange {
         return formattingRange.getStartOffset();
     }
 
-    public boolean isReadOnly(@Nonnull TextRange range) {
+    public boolean isReadOnly(TextRange range) {
         return range.getStartOffset() > formattingRange.getEndOffset() || range.getEndOffset() < formattingRange.getStartOffset();
     }
 
-    @Nonnull
+    
     public TextRange getTextRange() {
         return formattingRange;
     }
 
-    public void setTextRange(@Nonnull TextRange range) {
+    public void setTextRange(TextRange range) {
         formattingRange = range;
     }
 

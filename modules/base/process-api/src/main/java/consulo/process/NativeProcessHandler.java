@@ -16,7 +16,6 @@
 package consulo.process;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +24,6 @@ import jakarta.annotation.Nonnull;
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Better use ProcessHandler methods, since ProcessHandler not always impl it")
 public interface NativeProcessHandler extends ProcessHandler {
-  @Nonnull
+  
   Process getProcess();
 }

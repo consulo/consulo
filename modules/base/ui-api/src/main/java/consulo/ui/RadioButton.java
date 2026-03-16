@@ -19,59 +19,49 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 14-Jun-16
+ * @since 2016-06-14
  */
 public interface RadioButton extends ValueComponent<Boolean>, HasFocus {
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use with LocalizeValue parameter")
-  static RadioButton create(@Nonnull String text) {
+  static RadioButton create(String text) {
     return create(text, false);
   }
 
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use with LocalizeValue parameter")
-  static RadioButton create(@Nonnull String text, boolean selected) {
+  static RadioButton create(String text, boolean selected) {
     return create(LocalizeValue.of(text), selected);
   }
 
-  @Nonnull
-  static RadioButton create(@Nonnull LocalizeValue textValue) {
+  static RadioButton create(LocalizeValue textValue) {
     return create(textValue, false);
   }
 
-  @Nonnull
-  static RadioButton create(@Nonnull LocalizeValue textValue, boolean selected) {
+  static RadioButton create(LocalizeValue textValue, boolean selected) {
     return UIInternal.get()._Components_radioButton(textValue, selected);
   }
 
-  @Nonnull
   @Override
   Boolean getValue();
 
   @Override
   @RequiredUIAccess
-  default void setValue(@Nonnull Boolean value) {
+  default void setValue(@Nullable Boolean value) {
     setValue(value, true);
   }
 
   @Override
   @RequiredUIAccess
-  void setValue(@Nonnull Boolean value, boolean fireListeners);
-
-  @Nonnull
+  void setValue(@Nullable Boolean value, boolean fireListeners);
   LocalizeValue getLabelText();
 
   @RequiredUIAccess
-  void setLabelText(@Nonnull LocalizeValue text);
-
-  @Nonnull
+  void setLabelText(LocalizeValue text);
   default RadioButton toGroup(ValueGroup<Boolean> group) {
     group.add(this);
     return this;

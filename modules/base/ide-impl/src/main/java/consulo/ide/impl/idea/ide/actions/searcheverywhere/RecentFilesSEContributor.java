@@ -16,8 +16,7 @@ import consulo.searchEverywhere.FoundItemDescriptor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,13 +31,13 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
         super(project, context);
     }
 
-    @Nonnull
+    
     @Override
     public String getSearchProviderId() {
         return RecentFilesSEContributor.class.getSimpleName();
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupName() {
         return "Recent Files";
@@ -50,15 +49,15 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
     }
 
     @Override
-    public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
+    public int getElementPriority(Object element, String searchPattern) {
         return super.getElementPriority(element, searchPattern) + 5;
     }
 
     @Override
     public void fetchWeightedElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super FoundItemDescriptor<Object>> predicate
+        String pattern,
+        ProgressIndicator progressIndicator,
+        Predicate<? super FoundItemDescriptor<Object>> predicate
     ) {
         if (myProject == null) {
             return; //nothing to search

@@ -20,7 +20,6 @@ import consulo.externalService.impl.internal.update.PlatformOrPluginUpdateChecke
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -37,7 +36,7 @@ public class PlatformOrPluginsNotificationGroupContributor implements Notificati
     );
 
     @Override
-    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+    public void contribute(Consumer<NotificationGroup> registrator) {
         registrator.accept(ourPluginsLifecycleGroup);
         registrator.accept(PlatformOrPluginUpdateChecker.NOTIFICATION_GROUP);
     }

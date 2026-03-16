@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -41,12 +40,12 @@ public class PluginManager extends PluginManagerCore {
 
     @Nullable
     @Deprecated
-    public static File getPluginPath(@Nonnull Class<?> pluginClass) {
+    public static File getPluginPath(Class<?> pluginClass) {
         return consulo.container.plugin.PluginManager.getPluginPath(pluginClass);
     }
 
     @Deprecated
-    public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
+    public static void handleComponentError(Throwable t, @Nullable Class componentClass, @Nullable Object config) {
         StartupUtil.handleComponentError(t, componentClass, config);
     }
 }

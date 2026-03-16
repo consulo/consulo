@@ -17,8 +17,7 @@ package consulo.index.io;
 
 import consulo.index.io.data.DataExternalizer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -28,12 +27,12 @@ public class VoidDataExternalizer implements DataExternalizer<Void> {
   public static final VoidDataExternalizer INSTANCE = new VoidDataExternalizer();
 
   @Override
-  public void save(@Nonnull DataOutput out, Void value) throws IOException {
+  public void save(DataOutput out, Void value) throws IOException {
   }
 
   @Override
   @Nullable
-  public Void read(@Nonnull DataInput in) throws IOException {
+  public Void read(DataInput in) throws IOException {
     return null;
   }
 }

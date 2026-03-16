@@ -17,8 +17,7 @@ import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -41,21 +40,21 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
     private final CachedValuesFactory myFactory;
 
     @Inject
-    public CachedValuesManagerImpl(@Nonnull Project project, @Nonnull CachedValuesFactory factory) {
+    public CachedValuesManagerImpl(Project project, CachedValuesFactory factory) {
         myProject = project;
         myFactory = factory;
     }
 
-    @Nonnull
+    
     @Override
-    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+    public <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider, boolean trackValue) {
         return myFactory.createCachedValue(provider, trackValue);
     }
 
-    @Nonnull
+    
     @Override
     public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue
     ) {
         return myFactory.createParameterizedCachedValue(provider, trackValue);
@@ -64,9 +63,9 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
     @Nullable
     @Override
     public <T> T getCachedValue(
-        @Nonnull UserDataHolder dataHolder,
-        @Nonnull Key<CachedValue<T>> key,
-        @Nonnull CachedValueProvider<T> provider,
+        UserDataHolder dataHolder,
+        Key<CachedValue<T>> key,
+        CachedValueProvider<T> provider,
         boolean trackValue
     ) {
         CachedValue<T> value = dataHolder.getUserData(key);
@@ -88,7 +87,7 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
         return value.getValue();
     }
 
-    private <T> CachedValue<T> saveInUserData(@Nonnull UserDataHolder dataHolder, @Nonnull Key<CachedValue<T>> key, CachedValue<T> value) {
+    private <T> CachedValue<T> saveInUserData(UserDataHolder dataHolder, Key<CachedValue<T>> key, CachedValue<T> value) {
         trackKeyHolder(dataHolder, key);
 
         if (dataHolder instanceof UserDataHolderEx) {
@@ -107,14 +106,14 @@ public final class CachedValuesManagerImpl extends CachedValuesManager {
     }
 
     @Override
-    protected void trackKeyHolder(@Nonnull UserDataHolder dataHolder, @Nonnull Key<?> key) {
+    protected void trackKeyHolder(UserDataHolder dataHolder, Key<?> key) {
         if (!isClearedOnPluginUnload(dataHolder)) {
             myCacheHolders.put(dataHolder, NULL);
             myKeys.add(key);
         }
     }
 
-    private static boolean isClearedOnPluginUnload(@Nonnull UserDataHolder dataHolder) {
+    private static boolean isClearedOnPluginUnload(UserDataHolder dataHolder) {
         return dataHolder instanceof PsiElement || dataHolder instanceof ASTNode || dataHolder instanceof FileViewProvider;
     }
 

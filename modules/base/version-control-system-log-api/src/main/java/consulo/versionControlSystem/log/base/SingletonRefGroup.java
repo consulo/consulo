@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.base;
 
 import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsRef;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -27,10 +26,10 @@ import java.util.List;
  * {@link RefGroup} containing only one {@link VcsRef}.
  */
 public class SingletonRefGroup implements RefGroup {
-    @Nonnull
+    
     private final VcsRef myRef;
 
-    public SingletonRefGroup(@Nonnull VcsRef ref) {
+    public SingletonRefGroup(VcsRef ref) {
         myRef = ref;
     }
 
@@ -39,19 +38,19 @@ public class SingletonRefGroup implements RefGroup {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myRef.getName();
     }
 
-    @Nonnull
+    
     @Override
     public List<VcsRef> getRefs() {
         return Collections.singletonList(myRef);
     }
 
-    @Nonnull
+    
     @Override
     public List<Color> getColors() {
         return Collections.singletonList(myRef.getType().getBackgroundColor());

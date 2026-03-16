@@ -42,7 +42,6 @@ import consulo.undoRedo.internal.StartMarkAction;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -55,7 +54,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     private Language myLanguage;
 
     @RequiredReadAction
-    public VariableInplaceRenamer(@Nonnull PsiNamedElement elementToRename, Editor editor) {
+    public VariableInplaceRenamer(PsiNamedElement elementToRename, Editor editor) {
         this(elementToRename, editor, elementToRename.getProject());
     }
 

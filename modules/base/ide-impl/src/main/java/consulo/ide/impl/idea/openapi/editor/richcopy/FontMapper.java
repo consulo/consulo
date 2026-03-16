@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.editor.richcopy;
 
 import consulo.awt.hacking.FontManagerFactoryHacking;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +33,8 @@ public class FontMapper {
     FontManagerFactoryHacking.mapLogicFontsToPhysical(logicalFontsToMap, logicalToPhysicalMapping::put);
   }
 
-  @Nonnull
-  public static String getPhysicalFontName(@Nonnull String logicalFontName) {
+  
+  public static String getPhysicalFontName(String logicalFontName) {
     String mapped = logicalToPhysicalMapping.get(logicalFontName);
     return mapped == null ? logicalFontName : mapped;
   }

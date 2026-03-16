@@ -8,8 +8,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface VirtualFilePointerManager extends ModificationTracker {
@@ -17,21 +16,21 @@ public interface VirtualFilePointerManager extends ModificationTracker {
     return RootComponentHolder.getRootComponent().getComponent(VirtualFilePointerManager.class);
   }
 
-  @Nonnull
-  public abstract VirtualFilePointer create(@Nonnull String url, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  
+  public abstract VirtualFilePointer create(String url, Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  @Nonnull
-  public abstract VirtualFilePointer create(@Nonnull VirtualFile file, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  
+  public abstract VirtualFilePointer create(VirtualFile file, Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  @Nonnull
-  public abstract VirtualFilePointer duplicate(@Nonnull VirtualFilePointer pointer, @Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  
+  public abstract VirtualFilePointer duplicate(VirtualFilePointer pointer, Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  @Nonnull
-  public abstract VirtualFilePointerContainer createContainer(@Nonnull Disposable parent);
+  
+  public abstract VirtualFilePointerContainer createContainer(Disposable parent);
 
-  @Nonnull
-  public abstract VirtualFilePointerContainer createContainer(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  
+  public abstract VirtualFilePointerContainer createContainer(Disposable parent, @Nullable VirtualFilePointerListener listener);
 
-  @Nonnull
-  public abstract VirtualFilePointer createDirectoryPointer(@Nonnull String url, boolean recursively, @Nonnull Disposable parent, @Nonnull VirtualFilePointerListener listener);
+  
+  public abstract VirtualFilePointer createDirectoryPointer(String url, boolean recursively, Disposable parent, VirtualFilePointerListener listener);
 }

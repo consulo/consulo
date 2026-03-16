@@ -18,7 +18,6 @@ package consulo.application.util.concurrent;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -29,15 +28,15 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use CompletableFuture")
 public class PooledAsyncResult {
-  @Nonnull
-  public static <V> AsyncResult<V> create(@Nonnull Supplier<AsyncResult<V>> callable) {
+  
+  public static <V> AsyncResult<V> create(Supplier<AsyncResult<V>> callable) {
     AsyncResult<V> result = AsyncResult.undefined();
     AppExecutorUtil.getAppExecutorService().execute(() -> callable.get().notify(result));
     return result;
   }
 
-  @Nonnull
-  public static <V> AsyncResult<V> create(@Nonnull Consumer<AsyncResult<V>> consumer) {
+  
+  public static <V> AsyncResult<V> create(Consumer<AsyncResult<V>> consumer) {
     AsyncResult<V> result = AsyncResult.undefined();
     AppExecutorUtil.getAppExecutorService().execute(() -> consumer.accept(result));
     return result;

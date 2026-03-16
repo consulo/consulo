@@ -23,7 +23,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.NamedItemsListEditor;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -68,17 +67,17 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
     }
   };
 
-  @Nonnull
+  
   private Set<String> myUsedTokenIds;
-  @Nonnull
+  
   private ArrangementStandardSettingsManager mySettingsManager;
-  @Nonnull
+  
   private ArrangementColorsProvider myColorsProvider;
 
-  protected ArrangementRuleAliasesListEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
-                                             @Nonnull ArrangementColorsProvider colorsProvider,
-                                             @Nonnull List<StdArrangementRuleAliasToken> items,
-                                             @Nonnull Set<String> usedTokenIds) {
+  protected ArrangementRuleAliasesListEditor(ArrangementStandardSettingsManager settingsManager,
+                                             ArrangementColorsProvider colorsProvider,
+                                             List<StdArrangementRuleAliasToken> items,
+                                             Set<String> usedTokenIds) {
     super(NAMER, FACTORY, CLONER, COMPARER, items, false, () -> null);
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
@@ -97,7 +96,7 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
     return !myUsedTokenIds.contains(item.getId());
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Custom Composite Tokens");

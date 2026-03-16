@@ -26,22 +26,21 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreeState;
 import consulo.versionControlSystem.change.Change;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ChangeDiffViewerWrapperProvider {
     ExtensionPointName<ChangeDiffViewerWrapperProvider> EP_NAME = ExtensionPointName.create(ChangeDiffViewerWrapperProvider.class);
 
-    @Nonnull
-    ThreeState isEquals(@Nonnull Change change1, @Nonnull Change change2);
+    
+    ThreeState isEquals(Change change1, Change change2);
 
-    boolean canCreate(@Nullable Project project, @Nonnull Change change);
+    boolean canCreate(@Nullable Project project, Change change);
 
-    @Nonnull
+    
     DiffViewerWrapper process(
-        @Nonnull ChangeDiffRequestProducer presentable,
-        @Nonnull UserDataHolder context,
-        @Nonnull ProgressIndicator indicator
+        ChangeDiffRequestProducer presentable,
+        UserDataHolder context,
+        ProgressIndicator indicator
     ) throws DiffRequestProducerException, ProcessCanceledException;
 }

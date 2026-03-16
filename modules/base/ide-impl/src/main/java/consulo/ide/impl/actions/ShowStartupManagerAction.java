@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public class ShowStartupManagerAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myStartupCustomizeManager.get().showAsync(false);
     }
 }

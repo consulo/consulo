@@ -29,8 +29,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,9 +68,9 @@ public class PluginHeaderPanel {
     }
 
     public void update(
-        @Nonnull PluginDescriptor plugin,
+        PluginDescriptor plugin,
         @Nullable PluginTab installedTab,
-        @Nonnull List<PluginDescriptor> allPlugins,
+        List<PluginDescriptor> allPlugins,
         boolean forceInstall
     ) {
         PluginAction action = PluginAction.INSTALL;

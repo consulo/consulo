@@ -16,7 +16,6 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -26,9 +25,9 @@ public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
   private static final Logger LOG = Logger.getInstance(CompletionAutoPopupHandler.class);
   public static volatile Key<Boolean> ourTestingAutopopup = Key.create("TestingAutopopup");
 
-  @Nonnull
+  
   @Override
-  public Result checkAutoPopup(char charTyped, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public Result checkAutoPopup(char charTyped, Project project, Editor editor, PsiFile file) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
 
     if (LOG.isDebugEnabled()) {

@@ -35,8 +35,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,16 +43,16 @@ import java.util.List;
 public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     private static final Logger LOG = Logger.getInstance(CacheDiffRequestChainProcessor.class);
 
-    @Nonnull
+    
     private final DiffRequestChain myRequestChain;
 
-    @Nonnull
+    
     private final SoftHardCacheMap<DiffRequestProducer, DiffRequest> myRequestCache = new SoftHardCacheMap<>(5, 5);
 
-    @Nonnull
+    
     private final DiffTaskQueue myQueue = new DiffTaskQueue();
 
-    public CacheDiffRequestChainProcessor(@Nullable Project project, @Nonnull DiffRequestChain requestChain) {
+    public CacheDiffRequestChainProcessor(@Nullable Project project, DiffRequestChain requestChain) {
         super(project, requestChain);
         myRequestChain = requestChain;
     }
@@ -113,15 +112,15 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     }
 
     @Nullable
-    protected DiffRequest loadRequestFast(@Nonnull DiffRequestProducer producer, boolean useCache) {
+    protected DiffRequest loadRequestFast(DiffRequestProducer producer, boolean useCache) {
         if (!useCache) {
             return null;
         }
         return myRequestCache.get(producer);
     }
 
-    @Nonnull
-    private DiffRequest loadRequest(@Nonnull DiffRequestProducer producer, @Nonnull ProgressIndicator indicator) {
+    
+    private DiffRequest loadRequest(DiffRequestProducer producer, ProgressIndicator indicator) {
         try {
             return producer.process(getContext(), indicator);
         }
@@ -151,7 +150,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         myRequestCache.clear();
     }
 
-    @Nonnull
+    
     @Override
     protected List<AnAction> getNavigationActions() {
         return ContainerUtil.list(
@@ -167,7 +166,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     // Getters
     //
 
-    @Nonnull
+    
     public DiffRequestChain getRequestChain() {
         return myRequestChain;
     }
@@ -206,7 +205,7 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
         return myRequestChain.getRequests().size() > 1;
     }
 
-    @Nonnull
+    
     private AnAction createGoToChangeAction() {
         return GoToChangePopupBuilder.create(myRequestChain, index -> {
             if (index >= 0 && index != myRequestChain.getIndex()) {
@@ -221,17 +220,17 @@ public class CacheDiffRequestChainProcessor extends DiffRequestProcessor {
     //
 
     protected class ReloadRequestAction extends DumbAwareAction {
-        @Nonnull
+        
         private final DiffRequestProducer myProducer;
 
-        public ReloadRequestAction(@Nonnull DiffRequestProducer producer) {
+        public ReloadRequestAction(DiffRequestProducer producer) {
             super("Reload", null, PlatformIconGroup.actionsRefresh());
             myProducer = producer;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myRequestCache.remove(myProducer);
             updateRequest(true);
         }

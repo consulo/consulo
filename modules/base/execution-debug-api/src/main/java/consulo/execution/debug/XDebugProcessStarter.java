@@ -17,7 +17,6 @@ package consulo.execution.debug;
 
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.process.ExecutionException;
-import jakarta.annotation.Nonnull;
 
 /**
  * Factory class for {@link XDebugProcess} implementation. Used by {@link XDebuggerManager} to start a new debugging session
@@ -33,8 +32,8 @@ public interface XDebugProcessStarter {
      * @param session session to be passed to {@link XDebugProcess#XDebugProcess} constructor
      * @return new {@link XDebugProcess} instance
      */
-    @Nonnull
-    public XDebugProcess start(@Nonnull XDebugSession session) throws ExecutionException;
+    
+    public XDebugProcess start(XDebugSession session) throws ExecutionException;
 
     /**
      * If return true {@link #configure(XDebugSessionData)} will be called and {@link XDebugSession} will be activated

@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +68,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent event) {
+    public final void update(AnActionEvent event) {
         Window window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
         boolean enabled = isEnabledFor(window);
         if (enabled && Registry.is("no.window.actions.in.editor")) {
@@ -91,7 +90,7 @@ public abstract class WindowAction extends AnAction implements DumbAware {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (mySizeHelper == null) {
                 mySizeHelper = new JLabel("W"); // Must be sure to invoke label constructor from EDT thread or it may lead to a deadlock
             }

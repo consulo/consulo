@@ -39,7 +39,7 @@ public abstract class RefValueHashMap<K, V> implements Map<K, V> {
 
   private void processQueue() {
     while (true) {
-      //noinspection unchecked
+      @SuppressWarnings("unchecked")
       MyReference<K, V> ref = (MyReference<K, V>)myQueue.poll();
       if (ref == null) {
         return;

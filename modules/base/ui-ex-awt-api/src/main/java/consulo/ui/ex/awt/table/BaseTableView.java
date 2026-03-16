@@ -17,7 +17,6 @@ package consulo.ui.ex.awt.table;
 
 import consulo.logging.Logger;
 import consulo.component.util.config.Storage;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -36,12 +35,12 @@ public class BaseTableView extends JBTable {
     super(model);
   }
 
-  @NonNls
+  
   private static String orderPropertyName(int index) {
     return "Order"+index;
   }
 
-  @NonNls
+  
   private static String widthPropertyName(int index) {
     return "Width" + index;
   }

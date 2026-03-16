@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.LineMarkerRenderer;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -31,7 +30,7 @@ public class DefaultLineMarkerRenderer implements LineMarkerRenderer {
   private static final int THICKNESS = 1;
   private final ColorValue myColor;
 
-  DefaultLineMarkerRenderer(@Nonnull ColorValue color) {
+  DefaultLineMarkerRenderer(ColorValue color) {
     myColor = color;
   }
 

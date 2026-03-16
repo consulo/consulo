@@ -25,8 +25,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ui.ex.UINumericRange;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
@@ -391,7 +390,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
 
     @Override
-    public boolean isUseSoftWraps(@Nonnull SoftWrapAppliancePlaces place) {
+    public boolean isUseSoftWraps(SoftWrapAppliancePlaces place) {
         return myPlacesToUseSoftWraps.contains(place);
     }
 
@@ -401,7 +400,7 @@ public class EditorSettingsExternalizable implements PersistentStateComponent<Ed
     }
 
     @Override
-    public void setUseSoftWraps(boolean use, @Nonnull SoftWrapAppliancePlaces place) {
+    public void setUseSoftWraps(boolean use, SoftWrapAppliancePlaces place) {
         boolean update = use ^ myPlacesToUseSoftWraps.contains(place);
         if (!update) {
             return;

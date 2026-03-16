@@ -25,8 +25,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    *
    * @return the serialization ID (must be unique across all run configuration extensions).
    */
-  @Nonnull
+ 
   protected String getSerializationId() {
     return getClass().getCanonicalName();
   }
@@ -53,7 +52,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param runConfiguration the run configuration being deserialized.
    * @param element          the element with persisted settings.
    */
-  protected void readExternal(@Nonnull T runConfiguration, @Nonnull Element element) {
+  protected void readExternal(T runConfiguration, Element element) {
   }
 
   /**
@@ -62,7 +61,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param runConfiguration the run configuration being serialized.
    * @param element          the element into which the settings should be persisted,
    */
-  protected void writeExternal(@Nonnull T runConfiguration, @Nonnull Element element) {
+  protected void writeExternal(T runConfiguration, Element element) {
     throw new WriteExternalException();
   }
 
@@ -73,8 +72,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param configuration the configuration being edited.
    * @return pair of the editor component (and title), or null if this extension doesn't provide any UI for editing the settings.
    */
-  @Nullable
-  protected <P extends T> Map.Entry<LocalizeValue, SettingsEditor<P>> createEditor(@Nonnull P configuration) {
+  protected <P extends T> Map.@Nullable Entry<LocalizeValue, SettingsEditor<P>> createEditor(P configuration) {
     return null;
   }
 
@@ -83,7 +81,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @return True if extension in general applicable to given run configuration - just to attach settings tab, etc. But extension may be
    *         turned off in its settings. E.g. RCov in general available for given run configuration, but may be turned off.
    */
-  protected abstract boolean isApplicableFor(@Nonnull T configuration);
+  protected abstract boolean isApplicableFor(T configuration);
 
   /**
    *
@@ -91,7 +89,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @return True if extension is turned on in configuration extension settings.
    *         E.g. RCov is turned on for given run configuration.
    */
-  protected abstract boolean isEnabledFor(@Nonnull T applicableConfiguration, @Nullable RunnerSettings runnerSettings);
+  protected abstract boolean isEnabledFor(T applicableConfiguration, @Nullable RunnerSettings runnerSettings);
 
   /**
    * Patches the command line of the process about to be started by the underlying run configuration.
@@ -102,10 +100,10 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param runnerId       the ID of the {@link ProgramRunner} used to start the process.
    * @throws ExecutionException if there was an error configuring the command line and the execution should be canceled.
    */
-  protected abstract void patchCommandLine(@Nonnull T configuration,
+  protected abstract void patchCommandLine(T configuration,
                                            @Nullable RunnerSettings runnerSettings,
-                                           @Nonnull GeneralCommandLine cmdLine,
-                                           @Nonnull String runnerId) throws ExecutionException;
+                                           GeneralCommandLine cmdLine,
+                                           String runnerId) throws ExecutionException;
 
   /**
    * Attaches the extension to a process that has been started.
@@ -114,8 +112,8 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param handler        the ProcessHandler for the running process.
    * @param runnerSettings the runner-specific settings.
    */
-  protected void attachToProcess(@Nonnull T configuration,
-                                 @Nonnull ProcessHandler handler,
+  protected void attachToProcess(T configuration,
+                                 ProcessHandler handler,
                                  @Nullable RunnerSettings runnerSettings) {
 
   }
@@ -128,7 +126,7 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @throws ExecutionException
    *
    */
-  protected void validateConfiguration(@Nonnull T configuration, boolean isExecution) throws Exception {
+  protected void validateConfiguration(T configuration, boolean isExecution) throws Exception {
   }
 
   /**
@@ -137,11 +135,11 @@ public abstract class RunConfigurationExtensionBase<T extends RunConfigurationBa
    * @param configuration Configuration created from context.
    * @param location      the location from which the configuration was created.
    */
-  protected void extendCreatedConfiguration(@Nonnull T configuration,
-                                            @Nonnull Location location) {
+  protected void extendCreatedConfiguration(T configuration,
+                                            Location location) {
 
   }
 
-  protected void extendTemplateConfiguration(@Nonnull T configuration) {
+  protected void extendTemplateConfiguration(T configuration) {
   }
 }

@@ -26,8 +26,7 @@ import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "Refactorings.QuickListPopupAction")
 public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
@@ -41,8 +40,8 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     @Override
     @RequiredUIAccess
     protected void fillActions(@Nullable Project project,
-                               @Nonnull ActionGroup.Builder group,
-                               @Nonnull DataContext dataContext) {
+                               ActionGroup.Builder group,
+                               DataContext dataContext) {
         if (project == null) {
             return;
         }
@@ -55,9 +54,9 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     @RequiredUIAccess
     private static void collectEnabledChildren(
         AnAction action,
-        @Nonnull ActionGroup.Builder destinationGroup,
-        @Nonnull DataContext dataContext,
-        @Nonnull ActionManager actionManager,
+        ActionGroup.Builder destinationGroup,
+        DataContext dataContext,
+        ActionManager actionManager,
         boolean popup
     ) {
         if (action instanceof DefaultActionGroup group) {
@@ -105,7 +104,7 @@ public class RefactoringQuickListPopupAction extends QuickSwitchSchemeAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(
             e.getPlace() == ActionPlaces.MAIN_MENU || e.getPlace() == ActionPlaces.ACTION_PLACE_QUICK_LIST_POPUP_ACTION

@@ -15,8 +15,7 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,7 +39,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
     private final PsiModificationTrackerListener myPublisher;
 
     @Inject
-    public PsiModificationTrackerImpl(@Nonnull Application application, @Nonnull Project project) {
+    public PsiModificationTrackerImpl(Application application, Project project) {
         MessageBus bus = project.getMessageBus();
         myPublisher = bus.syncPublisher(PsiModificationTrackerListener.class);
         bus.connect().subscribe(
@@ -82,7 +81,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
     }
 
     @RequiredWriteAction
-    public void treeChanged(@Nonnull PsiTreeChangeEvent event) {
+    public void treeChanged(PsiTreeChangeEvent event) {
         PsiTreeChangeEventImpl eventImpl = (PsiTreeChangeEventImpl)event;
         if (!canAffectPsi(eventImpl)) {
             return;
@@ -92,13 +91,13 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
         incCountersInner();
     }
 
-    public static boolean canAffectPsi(@Nonnull PsiTreeChangeEventImpl event) {
+    public static boolean canAffectPsi(PsiTreeChangeEventImpl event) {
         PsiTreeChangeEventImpl.PsiEventType code = event.getCode();
         return !(code == PsiTreeChangeEventImpl.PsiEventType.BEFORE_PROPERTY_CHANGE
             || code == PsiTreeChangeEventImpl.PsiEventType.PROPERTY_CHANGED && event.getPropertyName() == PsiTreeChangeEvent.PROP_WRITABLE);
     }
 
-    private void incLanguageCounters(@Nonnull PsiTreeChangeEventImpl event) {
+    private void incLanguageCounters(PsiTreeChangeEventImpl event) {
         PsiTreeChangeEventImpl.PsiEventType code = event.getCode();
         String propertyName = event.getPropertyName();
 
@@ -151,7 +150,7 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
         return myModificationCount.getModificationCount();
     }
 
-    @Nonnull
+    
     @Override
     public ModificationTracker getModificationTracker() {
         return myModificationCount;
@@ -164,14 +163,14 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker {
         myLanguageTrackers.get(language).incModificationCount();
     }
 
-    @Nonnull
-    public ModificationTracker forLanguage(@Nonnull Language language) {
+    
+    public ModificationTracker forLanguage(Language language) {
         SimpleModificationTracker languageTracker = myLanguageTrackers.get(language);
         return () -> languageTracker.getModificationCount() + myAllLanguagesTracker.getModificationCount();
     }
 
-    @Nonnull
-    public ModificationTracker forLanguages(@Nonnull Predicate<? super Language> condition) {
+    
+    public ModificationTracker forLanguages(Predicate<? super Language> condition) {
         return () -> {
             long result = myAllLanguagesTracker.getModificationCount();
             for (Language l : myLanguageTrackers.keySet()) {

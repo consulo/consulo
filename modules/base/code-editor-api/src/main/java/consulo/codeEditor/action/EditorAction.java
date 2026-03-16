@@ -26,8 +26,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -41,22 +40,22 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         setEnabledInModalContext(true);
     }
 
-    protected EditorAction(@Nonnull LocalizeValue text, EditorActionHandler defaultHandler) {
+    protected EditorAction(LocalizeValue text, EditorActionHandler defaultHandler) {
         super(text);
         myHandler = defaultHandler;
         setEnabledInModalContext(true);
     }
 
-    protected EditorAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, EditorActionHandler defaultHandler) {
+    protected EditorAction(LocalizeValue text, LocalizeValue description, EditorActionHandler defaultHandler) {
         super(text, description);
         myHandler = defaultHandler;
         setEnabledInModalContext(true);
     }
 
     protected EditorAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
-        @Nonnull Image icon,
+        LocalizeValue text,
+        LocalizeValue description,
+        Image icon,
         EditorActionHandler defaultHandler
     ) {
         super(text, description, icon);
@@ -69,7 +68,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         return myHandler;
     }
 
-    public final EditorActionHandler setupHandler(@Nonnull EditorActionHandler newHandler) {
+    public final EditorActionHandler setupHandler(EditorActionHandler newHandler) {
         ensureHandlersLoaded();
         EditorActionHandler tmp = myHandler;
         myHandler = newHandler;
@@ -105,19 +104,19 @@ public abstract class EditorAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
         actionPerformed(editor, dataContext);
     }
 
     @Nullable
-    protected Editor getEditor(@Nonnull DataContext dataContext) {
+    protected Editor getEditor(DataContext dataContext) {
         return dataContext.getData(Editor.KEY);
     }
 
     @RequiredUIAccess
-    public final void actionPerformed(Editor editor, @Nonnull DataContext dataContext) {
+    public final void actionPerformed(Editor editor, DataContext dataContext) {
         if (editor == null) {
             return;
         }
@@ -147,7 +146,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         DataContext dataContext = e.getDataContext();
         Editor editor = getEditor(dataContext);
@@ -162,7 +161,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         }
     }
 
-    private static DataContext getProjectAwareDataContext(final Editor editor, @Nonnull final DataContext original) {
+    private static DataContext getProjectAwareDataContext(final Editor editor, final DataContext original) {
         if (original.getData(Project.KEY) == editor.getProject()) {
             return original;
         }
@@ -170,7 +169,7 @@ public abstract class EditorAction extends AnAction implements DumbAware {
         return new DataContext() {
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T getData(@Nonnull Key<T> dataId) {
+            public <T> T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) editor.getProject();
                 }

@@ -17,21 +17,20 @@ package consulo.component.util;
 
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class ActiveRunnable extends ComparableObject.Impl {
 
   protected ActiveRunnable() {
   }
 
-  protected ActiveRunnable(@Nonnull Object object) {
+  protected ActiveRunnable(Object object) {
     super(object);
   }
 
-  protected ActiveRunnable(@Nonnull Object[] objects) {
+  protected ActiveRunnable(Object[] objects) {
     super(objects);
   }
 
-  @Nonnull
+  
   public abstract AsyncResult<Void> run();
 }

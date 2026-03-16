@@ -16,18 +16,21 @@
 package consulo.container.internal;
 
 import consulo.container.boot.ContainerPathManager;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2019-12-06
  */
 public class PathManagerHolder {
+  @Nullable
   private static ContainerPathManager ourInstance;
 
   public static void setInstance(ContainerPathManager instance) {
     ourInstance = instance;
   }
 
+  @Nullable
   public static ContainerPathManager getInstance() {
     return ourInstance;
   }

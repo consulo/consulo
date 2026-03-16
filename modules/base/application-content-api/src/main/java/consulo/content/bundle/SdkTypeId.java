@@ -15,15 +15,14 @@
  */
 package consulo.content.bundle;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 /**
  * @author yole
  */
 public interface SdkTypeId {
-    @Nonnull
+    
     String getId();
 
     @Nullable

@@ -7,8 +7,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.stub.Stub;
 import consulo.language.psi.stub.StubTree;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -17,12 +16,12 @@ public class SpineRef extends SubstrateRef {
   private final PsiFileImpl myFile;
   private final int myIndex;
 
-  public SpineRef(@Nonnull PsiFileImpl file, int index) {
+  public SpineRef(PsiFileImpl file, int index) {
     myFile = file;
     myIndex = index;
   }
 
-  @Nonnull
+  
   @Override
   public ASTNode getNode() {
     return myFile.calcTreeElement().getStubbedSpine().getSpineNodes().get(myIndex);
@@ -47,7 +46,7 @@ public class SpineRef extends SubstrateRef {
     return myFile.isValid();
   }
 
-  @Nonnull
+  
   @Override
   public PsiFile getContainingFile() {
     return myFile;

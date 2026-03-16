@@ -33,8 +33,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
@@ -49,33 +48,33 @@ import java.util.function.Function;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class FileChooserFactoryImpl extends FileChooserFactory {
-  @Nonnull
+  
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class).createFileChooser(descriptor, project, parent);
   }
 
-  @Nonnull
+  
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     Component parentComponent = parent == null ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow((Project)project)) : parent;
     return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class).createPathChooser(descriptor, project, parentComponent);
   }
 
-  @Nonnull
+  
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project) {
+  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project) {
     return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class).createSaveFileDialog(descriptor, project, null);
   }
 
-  @Nonnull
+  
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
+  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, Component parent) {
     return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class).createSaveFileDialog(descriptor, null, parent);
   }
 
   @Override
-  public void installFileCompletion(@Nonnull TextBox textBox, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public void installFileCompletion(TextBox textBox, FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
   }
 
   public static Map<String, String> getMacroMap() {
@@ -89,10 +88,10 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
     return map;
   }
 
-  @Nonnull
-  private static <T extends FileOperateDialogProvider> T findProvider(@Nonnull FileChooserDescriptor fileChooserDescriptor,
-                                                                      @Nonnull Function<FileOperateDialogSettings, String> idFunc,
-                                                                      @Nonnull Class<T> ep) {
+  
+  private static <T extends FileOperateDialogProvider> T findProvider(FileChooserDescriptor fileChooserDescriptor,
+                                                                      Function<FileOperateDialogSettings, String> idFunc,
+                                                                      Class<T> ep) {
     List<T> extensions = Application.get().getExtensionPoint(ep).getExtensionList();
 
     String forceOperateDialogProviderId = fileChooserDescriptor.getForceOperateDialogProviderId();

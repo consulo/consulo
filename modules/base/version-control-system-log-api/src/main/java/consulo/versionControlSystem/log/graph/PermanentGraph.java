@@ -18,8 +18,7 @@ package consulo.versionControlSystem.log.graph;
 import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,57 +33,57 @@ import java.util.function.Predicate;
  * @see VisibleGraph
  */
 public interface PermanentGraph<Id> {
-    @Nonnull
+    
     static <CommitId> PermanentGraph<CommitId> newInstance(
-        @Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-        @Nonnull GraphColorManager<CommitId> graphColorManager,
-        @Nonnull Set<CommitId> branchesCommitId
+        List<? extends GraphCommit<CommitId>> graphCommits,
+        GraphColorManager<CommitId> graphColorManager,
+        Set<CommitId> branchesCommitId
     ) {
         Application application = Application.get();
         PermanentGraphFactory factory = application.getInstance(PermanentGraphFactory.class);
         return factory.newInstance(graphCommits, graphColorManager, branchesCommitId);
     }
 
-    @Nonnull
+    
     VisibleGraph<Id> createVisibleGraph(
-        @Nonnull SortType sortType,
+        SortType sortType,
         @Nullable Set<Id> headsOfVisibleBranches,
         @Nullable Set<Id> matchedCommits
     );
 
-    @Nonnull
+    
     List<GraphCommit<Id>> getAllCommits();
 
-    @Nonnull
-    List<Id> getChildren(@Nonnull Id commit);
+    
+    List<Id> getChildren(Id commit);
 
-    @Nonnull
-    Set<Id> getContainingBranches(@Nonnull Id commit);
+    
+    Set<Id> getContainingBranches(Id commit);
 
-    @Nonnull
-    Predicate<Id> getContainedInBranchCondition(@Nonnull Collection<Id> currentBranchHead);
+    
+    Predicate<Id> getContainedInBranchCondition(Collection<Id> currentBranchHead);
 
     enum SortType {
         Normal(VersionControlSystemLogLocalize.graphSortOffName(), VersionControlSystemLogLocalize.graphSortOffDescription()),
         Bek(VersionControlSystemLogLocalize.graphSortStandardName(), VersionControlSystemLogLocalize.graphSortStandardDescription()),
         LinearBek(VersionControlSystemLogLocalize.graphSortLinearName(), VersionControlSystemLogLocalize.graphSortLinearDescription());
 
-        @Nonnull
+        
         private final LocalizeValue myName;
-        @Nonnull
+        
         private final LocalizeValue myDescription;
 
-        SortType(@Nonnull LocalizeValue name, @Nonnull LocalizeValue description) {
+        SortType(LocalizeValue name, LocalizeValue description) {
             myName = name;
             myDescription = description;
         }
 
-        @Nonnull
+        
         public LocalizeValue getName() {
             return myName;
         }
 
-        @Nonnull
+        
         public LocalizeValue getDescription() {
             return myDescription;
         }

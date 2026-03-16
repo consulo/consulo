@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.intention;
 
-import jakarta.annotation.Nonnull;
 
 public interface IntentionActionDelegate {
-  @Nonnull
+  
   IntentionAction getDelegate();
 
-  @Nonnull
-  static IntentionAction unwrap(@Nonnull IntentionAction action) {
+  
+  static IntentionAction unwrap(IntentionAction action) {
     return action instanceof IntentionActionDelegate ? unwrap(((IntentionActionDelegate)action).getDelegate()) : action;
   }
 }

@@ -16,8 +16,7 @@
 package consulo.ui.ex.awt.util;
 
 import consulo.ui.ex.util.LafProperty;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -105,7 +104,7 @@ public class FocusWatcher implements ContainerListener, FocusListener {
         return myFocusedComponent != null ? myFocusedComponent.get() : null;
     }
 
-    public final void install(@Nonnull Component component) {
+    public final void install(Component component) {
         myTopComponent = component;
         installImpl(component);
     }

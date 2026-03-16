@@ -29,7 +29,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -38,27 +37,27 @@ import java.util.List;
  */
 @ExtensionImpl
 public class ModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Module>, ModuleDependencyContext> {
-  @Nonnull
+  
   @Override
-  public LocalizeValue getActionName(@Nonnull ModuleRootLayer layer) {
+  public LocalizeValue getActionName(ModuleRootLayer layer) {
     return LocalizeValue.localizeTODO("Module");
   }
 
-  @Nonnull
+  
   @Override
-  public Image getIcon(@Nonnull ModuleRootLayer layer) {
+  public Image getIcon(ModuleRootLayer layer) {
     return AllIcons.Nodes.Module;
   }
 
   @Override
-  public ModuleDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public ModuleDependencyContext createContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
     return new ModuleDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public AsyncResult<List<Module>> invoke(@Nonnull ModuleDependencyContext context) {
+  public AsyncResult<List<Module>> invoke(ModuleDependencyContext context) {
     return new ChooseModulesDialog(context.getProject(), context.getNotAddedModules(), "Add Module Dependency", "Select modules for adding as dependency").showAsync2();
   }
 }

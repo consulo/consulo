@@ -19,7 +19,6 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.project.Project;
 import consulo.versionControlSystem.*;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -105,7 +104,7 @@ public class CachesHolder {
   public List<ChangesCacheFile> getAllCaches() {
     final List<ChangesCacheFile> result = new ArrayList<>();
     iterateAllCaches(new Function<>() {
-      @Nonnull
+      
       public Boolean apply(ChangesCacheFile changesCacheFile) {
         result.add(changesCacheFile);
         return false;

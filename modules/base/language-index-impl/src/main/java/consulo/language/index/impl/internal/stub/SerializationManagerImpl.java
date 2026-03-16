@@ -13,7 +13,6 @@ import consulo.util.lang.ShutDownTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -37,7 +36,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
     this(new File(ContainerPathManager.get().getIndexRoot(), "rep.names"), false);
   }
 
-  public SerializationManagerImpl(@Nonnull File nameStorageFile, boolean unmodifiable) {
+  public SerializationManagerImpl(File nameStorageFile, boolean unmodifiable) {
     myFile = nameStorageFile;
     myFile.getParentFile().mkdirs();
     myUnmodifiable = unmodifiable;
@@ -143,7 +142,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
   }
 
   @Override
-  public void serialize(@Nonnull Stub rootStub, @Nonnull OutputStream stream) {
+  public void serialize(Stub rootStub, OutputStream stream) {
     initSerializers();
     try {
       myStubSerializationHelper.serialize(rootStub, stream);
@@ -154,9 +153,9 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
     }
   }
 
-  @Nonnull
+  
   @Override
-  public Stub deserialize(@Nonnull InputStream stream) throws SerializerNotFoundException {
+  public Stub deserialize(InputStream stream) throws SerializerNotFoundException {
     initSerializers();
 
     try {
@@ -170,7 +169,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
   }
 
   @Override
-  public void reSerialize(@Nonnull InputStream inStub, @Nonnull OutputStream outStub, @Nonnull SerializationManager newSerializationManager) throws IOException {
+  public void reSerialize(InputStream inStub, OutputStream outStub, SerializationManager newSerializationManager) throws IOException {
     initSerializers();
     newSerializationManager.initSerializers();
     myStubSerializationHelper.reSerializeStub(new DataInputStream(inStub), new DataOutputStream(outStub), ((SerializationManagerImpl)newSerializationManager).myStubSerializationHelper);

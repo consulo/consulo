@@ -21,8 +21,7 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a breakpoint. This interface isn't supposed to be implemented by a plugin. In order to support breakpoint provide
@@ -38,7 +37,7 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     void setEnabled(boolean enabled);
 
-    @Nonnull
+    
     XBreakpointType<?, P> getType();
 
     P getProperties();
@@ -49,10 +48,10 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
     @Nullable
     Navigatable getNavigatable();
 
-    @Nonnull
+    
     SuspendPolicy getSuspendPolicy();
 
-    void setSuspendPolicy(@Nonnull SuspendPolicy policy);
+    void setSuspendPolicy(SuspendPolicy policy);
 
     boolean isLogMessage();
 
@@ -90,10 +89,10 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
 
     long getTimeStamp();
 
-    @Nonnull
+    
     Project getProject();
 
-    @Nonnull
+    
     XBreakpointManager getBreakpointManager();
 
     void fireBreakpointChanged();

@@ -24,8 +24,7 @@ import consulo.fileChooser.PathChooserDialog;
 import consulo.project.Project;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -34,25 +33,25 @@ import java.awt.*;
  */
 @ExtensionImpl(order = "last", profiles = ComponentProfiles.UNIFIED)
 public class UnifiedFileChooseDialogProvider implements FileChooseDialogProvider {
-  @Nonnull
+  
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new UnifiedChooserDialog((Project)project, descriptor);
   }
 
-  @Nonnull
+  
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new UnifiedChooserDialog((Project)project, descriptor);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return APPLICATION_ID;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "application";

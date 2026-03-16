@@ -28,8 +28,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,20 +48,20 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     private Map<ArtifactPropertiesProvider, ArtifactProperties<?>> myProperties;
 
     public ArtifactImpl(
-        @Nonnull String name,
-        @Nonnull ArtifactType artifactType,
+        String name,
+        ArtifactType artifactType,
         boolean buildOnMake,
-        @Nonnull CompositePackagingElement<?> rootElement,
+        CompositePackagingElement<?> rootElement,
         String outputPath
     ) {
         this(name, artifactType, buildOnMake, rootElement, outputPath, null);
     }
 
     public ArtifactImpl(
-        @Nonnull String name,
-        @Nonnull ArtifactType artifactType,
+        String name,
+        ArtifactType artifactType,
         boolean buildOnMake,
-        @Nonnull CompositePackagingElement<?> rootElement,
+        CompositePackagingElement<?> rootElement,
         String outputPath,
         EventDispatcher<ArtifactListener> dispatcher
     ) {
@@ -86,13 +85,13 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
 
     @Override
-    @Nonnull
+    
     public ArtifactType getArtifactType() {
         return myArtifactType;
     }
 
     @Override
-    @Nonnull
+    
     public String getName() {
         return myName;
     }
@@ -103,7 +102,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
 
     @Override
-    @Nonnull
+    
     public CompositePackagingElement<?> getRootElement() {
         return myRootElement;
     }
@@ -129,7 +128,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
 
     @Override
-    public void setName(@Nonnull String name) {
+    public void setName(String name) {
         String oldName = myName;
         myName = name;
         if (myDispatcher != null) {
@@ -158,7 +157,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
 
     @Override
-    public void setArtifactType(@Nonnull ArtifactType selected) {
+    public void setArtifactType(ArtifactType selected) {
         myArtifactType = selected;
         resetProperties();
     }
@@ -174,7 +173,7 @@ public class ArtifactImpl extends UserDataHolderBase implements ModifiableArtifa
     }
 
     @Override
-    public ArtifactProperties<?> getProperties(@Nonnull ArtifactPropertiesProvider provider) {
+    public ArtifactProperties<?> getProperties(ArtifactPropertiesProvider provider) {
         return myProperties.get(provider);
     }
 

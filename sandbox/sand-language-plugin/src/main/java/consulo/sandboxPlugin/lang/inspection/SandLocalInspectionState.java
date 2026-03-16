@@ -25,7 +25,7 @@ import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

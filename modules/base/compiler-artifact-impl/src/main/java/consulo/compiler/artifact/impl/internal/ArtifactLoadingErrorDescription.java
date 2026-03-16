@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import consulo.module.ConfigurationErrorDescription;
 import consulo.module.ConfigurationErrorType;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -47,7 +46,7 @@ public class ArtifactLoadingErrorDescription extends ConfigurationErrorDescripti
         WriteAction.run(model::commit);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getIgnoreConfirmationMessage() {
         return LocalizeValue.localizeTODO("Would you like to remove artifact '" + myArtifact.getName() + "?");

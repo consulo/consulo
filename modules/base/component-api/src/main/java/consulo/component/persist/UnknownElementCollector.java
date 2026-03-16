@@ -17,7 +17,6 @@ package consulo.component.persist;
 
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -30,8 +29,8 @@ public class UnknownElementCollector {
     myKnownTagNames.add(name);
   }
 
-  @Nonnull
-  public UnknownElementWriter createWriter(@Nonnull Element element) {
+  
+  public UnknownElementWriter createWriter(Element element) {
     Map<String, Element> unknownElements = null;
     Iterator<Element> iterator = element.getChildren().iterator();
     while (iterator.hasNext()) {

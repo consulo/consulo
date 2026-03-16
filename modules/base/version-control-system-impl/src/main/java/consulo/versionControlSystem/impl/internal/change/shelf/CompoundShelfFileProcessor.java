@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change.shelf;
 
 import consulo.versionControlSystem.change.CommitContext;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,25 +23,25 @@ import java.nio.charset.StandardCharsets;
 public class CompoundShelfFileProcessor {
   private final File shelfDir;
 
-  public CompoundShelfFileProcessor(@Nonnull File shelfDir) {
+  public CompoundShelfFileProcessor(File shelfDir) {
     this.shelfDir = shelfDir;
   }
 
   public interface ContentProvider {
-    void writeContentTo(@Nonnull Writer writer, @Nonnull CommitContext commitContext) throws IOException;
+    void writeContentTo(Writer writer, CommitContext commitContext) throws IOException;
   }
 
   public void savePathFile(
-    @Nonnull ContentProvider contentProvider,
-    @Nonnull File patchPath,
-    @Nonnull CommitContext commitContext
+    ContentProvider contentProvider,
+    File patchPath,
+    CommitContext commitContext
   ) throws IOException {
     try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(patchPath), StandardCharsets.UTF_8)) {
       contentProvider.writeContentTo(writer, commitContext);
     }
   }
 
-  @Nonnull
+  
   public File getBaseDir() {
     return shelfDir;
   }

@@ -8,8 +8,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +26,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
     private LightweightHintImpl hint;
 
     @Override
-    public boolean isSupportedFile(@Nonnull PsiFile psiFile) {
+    public boolean isSupportedFile(PsiFile psiFile) {
         for (PreviewHintProvider hintProvider : PreviewHintProvider.EP_NAME.getExtensionList()) {
             if (hintProvider.isSupportedFile(psiFile)) {
                 return true;
@@ -37,7 +36,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
     }
 
     @Override
-    public void show(@Nonnull PsiElement element, @Nonnull Editor editor, @Nonnull Point point, boolean keyTriggered) {
+    public void show(PsiElement element, Editor editor, Point point, boolean keyTriggered) {
         LightweightHintImpl newHint = getHint(element);
         hideCurrentHintIfAny();
         if (newHint == null) {
@@ -59,12 +58,12 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
     }
 
     @Override
-    public void hide(@Nullable PsiElement element, @Nonnull Editor editor) {
+    public void hide(@Nullable PsiElement element, Editor editor) {
         hideCurrentHintIfAny();
     }
 
     @Nullable
-    private static LightweightHintImpl getHint(@Nonnull PsiElement element) {
+    private static LightweightHintImpl getHint(PsiElement element) {
         for (PreviewHintProvider hintProvider : PreviewHintProvider.EP_NAME.getExtensionList()) {
             JComponent preview;
             try {

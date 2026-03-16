@@ -10,8 +10,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRangeScalarUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldRegion {
     private static final Key<Boolean> MUTE_INNER_HIGHLIGHTERS = Key.create("mute.inner.highlighters");
@@ -25,7 +24,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     private boolean myDocumentRegionWasChanged;
     public int mySizeBeforeUpdate; // temporary field used during update on document change
 
-    public FoldRegionImpl(@Nonnull CodeEditorBase editor, int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean shouldNeverExpand) {
+    public FoldRegionImpl(CodeEditorBase editor, int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean shouldNeverExpand) {
         super(editor.getDocument(), startOffset, endOffset, false);
         myGroup = group;
         myShouldNeverExpand = shouldNeverExpand;
@@ -86,7 +85,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     }
 
     @Override
-    @Nonnull
+    
     public String getPlaceholderText() {
         return myPlaceholderText;
     }
@@ -116,7 +115,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     }
 
     @Override
-    protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+    protected void changedUpdateImpl(DocumentEvent e) {
         if (isValid()) {
             int oldStart = intervalStart();
             int oldEnd = intervalEnd();
@@ -133,7 +132,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     }
 
     @Override
-    protected void onReTarget(@Nonnull DocumentEvent e) {
+    protected void onReTarget(DocumentEvent e) {
         alignToValidBoundaries();
     }
 
@@ -173,7 +172,7 @@ public class FoldRegionImpl extends RangeMarkerWithGetterImpl implements FoldReg
     }
 
     @Override
-    public void setPlaceholderText(@Nonnull String text) {
+    public void setPlaceholderText(String text) {
         myPlaceholderText = text;
         ((CodeEditorFoldingModelBase) myEditor.getFoldingModel()).onPlaceholderTextChanged(this);
     }

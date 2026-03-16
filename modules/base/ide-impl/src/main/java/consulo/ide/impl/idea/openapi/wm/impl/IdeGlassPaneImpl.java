@@ -37,7 +37,6 @@ import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.FactoryMap;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
@@ -101,7 +100,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
   }
 
   @Override
-  public boolean test(@Nonnull AWTEvent e) {
+  public boolean test(AWTEvent e) {
     JRootPane eventRootPane = myRootPane;
 
     if (e instanceof MouseEvent) {
@@ -396,11 +395,11 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
     }
   }
 
-  public static boolean hasPreProcessedCursor(@Nonnull JComponent component) {
+  public static boolean hasPreProcessedCursor(JComponent component) {
     return component.getClientProperty(PREPROCESSED_CURSOR_KEY) != null;
   }
 
-  public static boolean savePreProcessedCursor(@Nonnull JComponent component, @Nonnull Cursor cursor) {
+  public static boolean savePreProcessedCursor(JComponent component, Cursor cursor) {
     if (hasPreProcessedCursor(component)) {
       return false;
     }
@@ -410,7 +409,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
   }
 
   @Override
-  public void setCursor(Cursor cursor, @Nonnull Object requestor) {
+  public void setCursor(Cursor cursor, Object requestor) {
     if (cursor == null) {
       myListener2Cursor.remove(requestor);
     }
@@ -527,12 +526,12 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, Predicat
     }
   }
 
-  @Nonnull
-  PaintersHelper getNamedPainters(@Nonnull String name) {
+  
+  PaintersHelper getNamedPainters(String name) {
     return myNamedPainters.get(name);
   }
 
-  @Nonnull
+  
   private PaintersHelper getPainters() {
     return getNamedPainters("glass");
   }

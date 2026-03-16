@@ -22,8 +22,7 @@ import consulo.document.RangeMarker;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.DeprecatedMethodException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public interface FoldingModel {
    * intersects with another existing region)
    */
   @Nullable
-  FoldRegion addFoldRegion(int startOffset, int endOffset, @Nonnull String placeholderText);
+  FoldRegion addFoldRegion(int startOffset, int endOffset, String placeholderText);
 
   /**
    * @deprecated Does nothing
@@ -54,7 +53,7 @@ public interface FoldingModel {
    */
   //@ApiStatus.ScheduledForRemoval(inVersion = "2018")
   @Deprecated
-  default boolean addFoldRegion(@Nonnull FoldRegion region) {
+  default boolean addFoldRegion(FoldRegion region) {
     DeprecatedMethodException.report("Use addFoldRegion(int,int,String) instead");
     return true;
   }
@@ -65,7 +64,7 @@ public interface FoldingModel {
    *
    * @param region the region to remove.
    */
-  void removeFoldRegion(@Nonnull FoldRegion region);
+  void removeFoldRegion(FoldRegion region);
 
   /**
    * Gets the list of all fold regions in the specified editor.
@@ -73,7 +72,7 @@ public interface FoldingModel {
    *
    * @return the array of fold regions, or an empty array if folding is currently disabled.
    */
-  @Nonnull
+  
   FoldRegion[] getAllFoldRegions();
 
   /**
@@ -111,7 +110,7 @@ public interface FoldingModel {
    *
    * @param operation the operation to execute.
    */
-  void runBatchFoldingOperation(@RequiredUIAccess @Nonnull Runnable operation);
+  void runBatchFoldingOperation(@RequiredUIAccess Runnable operation);
 
   /**
    * Runs an operation which is allowed to modify fold regions in the editor by calling
@@ -121,17 +120,17 @@ public interface FoldingModel {
    * @param moveCaretFromCollapsedRegion flag that identifies whether caret position should be changed if it's located inside
    *                                     collapsed fold region after the operation
    */
-  void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion);
+  void runBatchFoldingOperation(Runnable operation, boolean moveCaretFromCollapsedRegion);
 
-  void runBatchFoldingOperation(@Nonnull Runnable operation, boolean dontCollapseCaret, boolean moveCaret);
+  void runBatchFoldingOperation(Runnable operation, boolean dontCollapseCaret, boolean moveCaret);
 
-  void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation);
+  void runBatchFoldingOperationDoNotCollapseCaret(Runnable operation);
 
   void setFoldingEnabled(boolean isEnabled);
 
   boolean isFoldingEnabled();
 
-  FoldRegion getFoldingPlaceholderAt(@Nonnull Point p);
+  FoldRegion getFoldingPlaceholderAt(Point p);
 
   boolean intersectsRegion(int startOffset, int endOffset);
 
@@ -146,18 +145,18 @@ public interface FoldingModel {
   FoldRegion[] fetchTopLevel();
 
   @Nullable
-  FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands);
+  FoldRegion createFoldRegion(int startOffset, int endOffset, String placeholder, @Nullable FoldingGroup group, boolean neverExpands);
 
-  void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable);
+  void addListener(FoldingListener listener, Disposable parentDisposable);
 
   void clearFoldRegions();
 
   void rebuild();
 
-  @Nonnull
+  
   List<FoldRegion> getGroupedRegions(FoldingGroup group);
 
   void clearDocumentRangesModificationStatus();
 
-  boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region);
+  boolean hasDocumentRegionChangedFor(FoldRegion region);
 }

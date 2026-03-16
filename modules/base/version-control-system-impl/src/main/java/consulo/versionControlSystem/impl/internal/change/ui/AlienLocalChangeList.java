@@ -17,11 +17,11 @@ package consulo.versionControlSystem.impl.internal.change.ui;
 
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public class AlienLocalChangeList extends LocalChangeList {
   private final List<Change> myChanges;
@@ -38,12 +38,12 @@ public class AlienLocalChangeList extends LocalChangeList {
     return myChanges;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
@@ -67,7 +67,7 @@ public class AlienLocalChangeList extends LocalChangeList {
     throw new UnsupportedOperationException();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public Object getData() {
     throw new UnsupportedOperationException();

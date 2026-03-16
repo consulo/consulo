@@ -19,8 +19,7 @@ import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author egor
@@ -39,12 +38,12 @@ public interface XExpression {
     return text != null ? new XExpressionImpl(text, null, null, mode) : null;
   }
 
-  @Nonnull
+  
   public static XExpression changeMode(XExpression expression, EvaluationMode mode) {
     return new XExpressionImpl(expression.getExpression(), expression.getLanguage(), expression.getCustomInfo(), mode);
   }
 
-  @Nonnull
+  
   String getExpression();
 
   @Nullable

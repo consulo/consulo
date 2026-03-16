@@ -29,8 +29,7 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.internal.SortByVcsRoots;
 import consulo.versionControlSystem.root.VcsRoot;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -80,12 +79,12 @@ public class IdeaTextPatchBuilder {
     }
   }
 
-  @Nonnull
+  
   public static List<FilePatch> buildPatch(Project project, Collection<Change> changes, String basePath, boolean reversePatch) throws VcsException {
     return buildPatch(project, changes, basePath, reversePatch, false);
   }
 
-  @Nonnull
+  
   public static List<FilePatch> buildPatch(Project project, Collection<Change> changes, String basePath,
                                            boolean reversePatch, boolean includeBaseText) throws VcsException {
     Collection<BeforeAfter<AirContentRevision>> revisions;
@@ -137,7 +136,7 @@ public class IdeaTextPatchBuilder {
           return ts != null ? null : cr.getRevisionNumber().asString();
         }
         @Override
-        @Nonnull
+        
         public PathDescription getPath() {
           return description;
         }
@@ -166,7 +165,7 @@ public class IdeaTextPatchBuilder {
           return ts != null ? null : cr.getRevisionNumber().asString();
         }
         @Override
-        @Nonnull
+        
         public PathDescription getPath() {
           return description;
         }

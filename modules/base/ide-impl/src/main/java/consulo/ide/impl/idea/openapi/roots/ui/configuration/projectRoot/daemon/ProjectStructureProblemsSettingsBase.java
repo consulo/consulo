@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -43,12 +42,12 @@ public class ProjectStructureProblemsSettingsBase implements StructureProblemsSe
   }
 
   @Override
-  public boolean isIgnored(@Nonnull ProjectStructureProblemDescription description) {
+  public boolean isIgnored(ProjectStructureProblemDescription description) {
     return myIgnoredProblems.contains(description.getId());
   }
 
   @Override
-  public void setIgnored(@Nonnull ProjectStructureProblemDescription description, boolean ignored) {
+  public void setIgnored(ProjectStructureProblemDescription description, boolean ignored) {
     String id = description.getId();
     if (ignored) {
       myIgnoredProblems.add(id);

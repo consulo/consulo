@@ -23,8 +23,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -48,7 +47,7 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
 
     @RequiredUIAccess
     @Override
-    public CompletableFuture<?> showAndSelect(@Nullable Project project, @Nonnull String toSelectId) {
+    public CompletableFuture<?> showAndSelect(@Nullable Project project, String toSelectId) {
         CompletableFuture<?> future = new CompletableFuture<>();
         myShowSettingsUtil.showSettingsDialog(project, toSelectId, null).doWhenDone(() -> future.complete(null));
         return future;
@@ -57,8 +56,8 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
     @RequiredUIAccess
     @Override
     public <T extends UnnamedConfigurable> CompletableFuture<?> showAndSelect(@Nullable Project project,
-                                                                              @Nonnull Class<T> toSelect,
-                                                                              @Nonnull Consumer<T> afterSelect) {
+                                                                              Class<T> toSelect,
+                                                                              Consumer<T> afterSelect) {
         CompletableFuture<?> future = new CompletableFuture<>();
         myShowSettingsUtil.showAndSelect(project, toSelect, afterSelect).doWhenDone(() -> future.complete(null));
         return future;
@@ -66,7 +65,7 @@ public class ShowConfigurableServiceImpl implements ShowConfigurableService {
 
     @RequiredUIAccess
     @Override
-    public CompletableFuture<?> show(@Nullable Project project, @Nonnull Class<? extends UnnamedConfigurable> toSelect) {
+    public CompletableFuture<?> show(@Nullable Project project, Class<? extends UnnamedConfigurable> toSelect) {
         CompletableFuture<?> future = new CompletableFuture<>();
         myShowSettingsUtil.showAndSelect(project, toSelect).doWhenDone(() -> future.complete(null));
         return future;

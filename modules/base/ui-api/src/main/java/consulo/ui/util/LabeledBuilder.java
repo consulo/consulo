@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -36,12 +35,12 @@ public class LabeledBuilder {
         text -> !StringUtil.endsWithChar(text, ':') ? text + ":" : text;
 
     @RequiredUIAccess
-    public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
+    public static Component simple(LocalizeValue localizeValue, Component component) {
         return simple(localizeValue, () -> component);
     }
 
     @RequiredUIAccess
-    public static Component simple(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
+    public static Component simple(LocalizeValue localizeValue, PseudoComponent component) {
         HorizontalLayout horizontal = HorizontalLayout.create(5);
         Label label = Label.create(localizeValue.map(SEMICOLON_APPENDER));
         horizontal.add(label);
@@ -52,12 +51,12 @@ public class LabeledBuilder {
     }
 
     @RequiredUIAccess
-    public static Component filled(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
+    public static Component filled(LocalizeValue localizeValue, Component component) {
         return filled(localizeValue, () -> component);
     }
 
     @RequiredUIAccess
-    public static Component filled(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
+    public static Component filled(LocalizeValue localizeValue, PseudoComponent component) {
         DockLayout dock = DockLayout.create();
         Label label = Label.create(localizeValue.map(SEMICOLON_APPENDER));
         label.setTarget(component.getComponent());
@@ -68,12 +67,12 @@ public class LabeledBuilder {
     }
 
     @RequiredUIAccess
-    public static Component sided(@Nonnull LocalizeValue localizeValue, @Nonnull Component component) {
+    public static Component sided(LocalizeValue localizeValue, Component component) {
         return sided(localizeValue, () -> component);
     }
 
     @RequiredUIAccess
-    public static Component sided(@Nonnull LocalizeValue localizeValue, @Nonnull PseudoComponent component) {
+    public static Component sided(LocalizeValue localizeValue, PseudoComponent component) {
         DockLayout dock = DockLayout.create();
         Label label = Label.create(localizeValue);
         label.setTarget(component.getComponent());

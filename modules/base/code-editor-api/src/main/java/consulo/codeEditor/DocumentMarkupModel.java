@@ -21,8 +21,7 @@ import consulo.document.Document;
 import consulo.project.Project;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Manages per-project markup models of documents.
@@ -46,7 +45,7 @@ public final class DocumentMarkupModel {
    */
   @Nullable
   @Contract("_, _, true -> !null")
-  public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+  public static MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
     return CodeEditorInternalHelper.getInstance().forDocument(document, project, create);
   }
 }

@@ -43,8 +43,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -213,12 +212,12 @@ public abstract class PluginTab implements Disposable {
         return myPluginList;
     }
 
-    @Nonnull
+    
     public PluginTab getAvailable() {
         return Objects.requireNonNull(myAvailableTab);
     }
 
-    @Nonnull
+    
     public PluginTab getInstalled() {
         return Objects.requireNonNull(myInstalledTab);
     }
@@ -294,7 +293,7 @@ public abstract class PluginTab implements Disposable {
         return false;
     }
 
-    @Nonnull
+    
     public static Collection<LocalizeValue> getLocalizedTags(PluginDescriptor pluginDescriptor) {
         Set<String> tags = pluginDescriptor.getTags();
         if (!tags.isEmpty()) {
@@ -304,12 +303,12 @@ public abstract class PluginTab implements Disposable {
         return List.of();
     }
 
-    @Nonnull
-    public static LocalizeValue getTagLocalizeValue(@Nonnull String tagId) {
+    
+    public static LocalizeValue getTagLocalizeValue(String tagId) {
         return LocalizeKey.of(RepositoryTagLocalize.ID, tagId).getValue();
     }
 
-    private static boolean isAccepted(Set<String> search, @Nonnull String filter, @Nonnull String description) {
+    private static boolean isAccepted(Set<String> search, String filter, String description) {
         if (StringUtil.containsIgnoreCase(description, filter)) {
             return true;
         }
@@ -320,7 +319,7 @@ public abstract class PluginTab implements Disposable {
     }
 
     public static void notifyPluginsWereInstalled(
-        @Nonnull Collection<? extends PluginDescriptor> installed,
+        Collection<? extends PluginDescriptor> installed,
         Project project
     ) {
         String pluginName = installed.size() == 1 ? installed.iterator().next().getName() : null;

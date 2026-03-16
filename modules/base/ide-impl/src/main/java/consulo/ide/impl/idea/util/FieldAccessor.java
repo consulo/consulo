@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.util;
 
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.util.lang.reflect.ReflectionUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -36,11 +36,11 @@ public class FieldAccessor<E, T> {
   private final String myName;
   private final Class<T> myType;
 
-  public FieldAccessor(@Nonnull Class<E> aClass, @Nonnull String name) {
+  public FieldAccessor(Class<E> aClass, String name) {
     this(aClass, name, null);
   }
 
-  public FieldAccessor(@Nonnull Class<E> aClass, @Nonnull String name, @Nullable Class<T> type) {
+  public FieldAccessor(Class<E> aClass, String name, @Nullable Class<T> type) {
     myClass = aClass;
     myName = name;
     myType = type;

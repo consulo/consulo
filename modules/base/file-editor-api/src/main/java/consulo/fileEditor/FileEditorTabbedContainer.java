@@ -16,7 +16,6 @@
 package consulo.fileEditor;
 
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,19 +24,19 @@ import jakarta.annotation.Nonnull;
 public interface FileEditorTabbedContainer {
   ActionCallback setSelectedIndex(int index);
 
-  @Nonnull
+  
   ActionCallback setSelectedIndex(int indexToSelect, boolean focusEditor);
 
   int getSelectedIndex();
 
   int getTabCount();
 
-  @Nonnull
+  
   default ActionCallback removeTabAt(int componentIndex, int indexToSelect) {
     return removeTabAt(componentIndex, indexToSelect, true);
   }
 
-  @Nonnull
+  
   ActionCallback removeTabAt(int componentIndex, int indexToSelect, boolean transferFocus);
 
   /**

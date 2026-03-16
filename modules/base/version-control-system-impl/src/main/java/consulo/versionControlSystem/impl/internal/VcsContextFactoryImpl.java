@@ -26,7 +26,6 @@ import consulo.versionControlSystem.internal.VcsContextWrapper;
 import consulo.versionControlSystem.impl.internal.change.LocalChangeListImpl;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -36,34 +35,34 @@ import java.util.function.Function;
 @ServiceImpl
 public class VcsContextFactoryImpl implements VcsContextFactory {
   @Override
-  @Nonnull
-  public VcsContext createCachedContextOn(@Nonnull AnActionEvent event) {
+  
+  public VcsContext createCachedContextOn(AnActionEvent event) {
     return VcsContextWrapper.createCachedInstanceOn(event);
   }
 
   @Override
-  @Nonnull
-  public VcsContext createContextOn(@Nonnull AnActionEvent event) {
+  
+  public VcsContext createContextOn(AnActionEvent event) {
     return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOn(@Nonnull VirtualFile virtualFile) {
+  
+  public FilePath createFilePathOn(VirtualFile virtualFile) {
     return createFilePath(virtualFile.getPath(), virtualFile.isDirectory());
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOn(@Nonnull File file) {
+  
+  public FilePath createFilePathOn(File file) {
     String path = file.getPath();
     VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(path);
     return createFilePath(path, vf != null ? vf.isDirectory() : file.isDirectory());
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOn(@Nonnull File file, @Nonnull Function<File, Boolean> detector) {
+  
+  public FilePath createFilePathOn(File file, Function<File, Boolean> detector) {
     VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
     if (virtualFile != null) {
       return createFilePathOn(virtualFile);
@@ -72,44 +71,44 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOn(@Nonnull File file, boolean isDirectory) {
+  
+  public FilePath createFilePathOn(File file, boolean isDirectory) {
     return createFilePath(file.getPath(), isDirectory);
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOnNonLocal(@Nonnull String path, boolean isDirectory) {
+  
+  public FilePath createFilePathOnNonLocal(String path, boolean isDirectory) {
     return new RemoteFilePath(path, isDirectory);
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOnDeleted(@Nonnull File file, boolean isDirectory) {
+  
+  public FilePath createFilePathOnDeleted(File file, boolean isDirectory) {
     return createFilePathOn(file, isDirectory);
   }
 
   @Override
-  @Nonnull
-  public FilePath createFilePathOn(@Nonnull VirtualFile parent, @Nonnull String name) {
+  
+  public FilePath createFilePathOn(VirtualFile parent, String name) {
     return createFilePath(parent, name, false);
   }
 
-  @Nonnull
+  
   @Override
-  public FilePath createFilePath(@Nonnull VirtualFile parent, @Nonnull String fileName, boolean isDirectory) {
+  public FilePath createFilePath(VirtualFile parent, String fileName, boolean isDirectory) {
     return createFilePath(parent.getPath() + "/" + fileName, isDirectory);
   }
 
   @Override
-  @Nonnull
-  public LocalChangeList createLocalChangeList(@Nonnull Project project, @Nonnull String name) {
+  
+  public LocalChangeList createLocalChangeList(Project project, String name) {
     return LocalChangeListImpl.createEmptyChangeListImpl(project, name);
   }
 
-  @Nonnull
+  
   @Override
-  public FilePath createFilePath(@Nonnull String path, boolean isDirectory) {
+  public FilePath createFilePath(String path, boolean isDirectory) {
     return new LocalFilePath(path, isDirectory);
   }
 }

@@ -6,8 +6,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.lexer.FlexAdapter;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.LexerPosition;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class verifies that delegate lexer generates a continuous sequence of tokens (without gaps), and that it
@@ -21,24 +20,24 @@ public final class ValidatingLexerWrapper extends Lexer {
     private IElementType myLastTokenType;
     private boolean myLastValuesActual;
 
-    public ValidatingLexerWrapper(@Nonnull Lexer delegate) {
+    public ValidatingLexerWrapper(Lexer delegate) {
         myDelegate = delegate;
     }
 
     @Override
-    @Nonnull
+    
     public CharSequence getTokenSequence() {
         return myDelegate.getTokenSequence();
     }
 
     @Override
-    @Nonnull
+    
     public String getTokenText() {
         return myDelegate.getTokenText();
     }
 
     @Override
-    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         myDelegate.start(buffer, startOffset, endOffset, initialState);
         myLastValuesActual = false;
     }
@@ -103,8 +102,8 @@ public final class ValidatingLexerWrapper extends Lexer {
         }
     }
 
-    @Nonnull
-    private String buildDiagnosticMessage(@Nonnull String message) {
+    
+    private String buildDiagnosticMessage(String message) {
         return message +
             "; delegateClass=" + myDelegate.getClass().getCanonicalName() +
             "; delegate=" + myDelegate +
@@ -115,19 +114,19 @@ public final class ValidatingLexerWrapper extends Lexer {
     }
 
     @Override
-    @Nonnull
+    
     public LexerPosition getCurrentPosition() {
         return myDelegate.getCurrentPosition();
     }
 
     @Override
-    public void restore(@Nonnull LexerPosition position) {
+    public void restore(LexerPosition position) {
         myDelegate.restore(position);
         myLastValuesActual = false;
     }
 
     @Override
-    @Nonnull
+    
     public CharSequence getBufferSequence() {
         return myDelegate.getBufferSequence();
     }
@@ -137,7 +136,7 @@ public final class ValidatingLexerWrapper extends Lexer {
         return myDelegate.getBufferEnd();
     }
 
-    private void throwException(@Nonnull String message) {
+    private void throwException(String message) {
         Class<? extends Lexer> lexerClass = myDelegate.getClass();
         boolean isFlexAdapter = lexerClass == FlexAdapter.class;
         throw PluginExceptionUtil.createByClass(

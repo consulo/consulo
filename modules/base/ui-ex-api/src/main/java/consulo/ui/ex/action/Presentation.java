@@ -27,8 +27,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -49,7 +48,7 @@ public final class Presentation implements Cloneable {
 
     public static final Function<String, String> NO_MNEMONIC = text -> TextWithMnemonic.parse(text).getText();
 
-    @Nonnull
+    
     public static Presentation newTemplatePresentation() {
         Presentation presentation = new Presentation();
         presentation.myFlags = BitUtil.set(presentation.myFlags, IS_TEMPLATE, true);
@@ -128,7 +127,7 @@ public final class Presentation implements Cloneable {
     public Presentation() {
     }
 
-    public Presentation(@Nonnull LocalizeValue textValue) {
+    public Presentation(LocalizeValue textValue) {
         myTextValue = textValue;
     }
 
@@ -184,7 +183,7 @@ public final class Presentation implements Cloneable {
         return StringUtil.nullize(myTextValue.getValue());
     }
 
-    public void setTextValue(@Nonnull LocalizeValue newTextValue) {
+    public void setTextValue(LocalizeValue newTextValue) {
         LocalizeValue oldValue = myTextValue;
         myTextValue = newTextValue;
 
@@ -193,7 +192,7 @@ public final class Presentation implements Cloneable {
         }
     }
 
-    @Nonnull
+    
     public LocalizeValue getTextValue() {
         return myTextValue;
     }
@@ -225,13 +224,13 @@ public final class Presentation implements Cloneable {
         setText(text, true);
     }
 
-    @Nonnull
+    
     @DeprecationInfo("see #getDescriptionValue")
     public String getDescription() {
         return myDescriptionValue.getValue();
     }
 
-    @Nonnull
+    
     public LocalizeValue getDescriptionValue() {
         return myDescriptionValue;
     }
@@ -243,7 +242,7 @@ public final class Presentation implements Cloneable {
         setDescriptionValue(value);
     }
 
-    public void setDescriptionValue(@Nonnull LocalizeValue newDescriptionValue) {
+    public void setDescriptionValue(LocalizeValue newDescriptionValue) {
         LocalizeValue oldDescription = myDescriptionValue;
         myDescriptionValue = newDescriptionValue;
 
@@ -392,11 +391,11 @@ public final class Presentation implements Cloneable {
         copyFrom(presentation, null, false, false);
     }
 
-    public void copyFrom(@Nonnull Presentation presentation, @Nullable Object customComponent, boolean allFlags) {
+    public void copyFrom(Presentation presentation, @Nullable Object customComponent, boolean allFlags) {
         copyFrom(presentation, customComponent, true, allFlags);
     }
 
-    private void copyFrom(@Nonnull Presentation presentation,
+    private void copyFrom(Presentation presentation,
                           @Nullable Object customComponent,
                           boolean forceNullComponent,
                           boolean allFlags) {
@@ -441,21 +440,21 @@ public final class Presentation implements Cloneable {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T getClientProperty(@Nonnull Key<T> key) {
+    public <T> T getClientProperty(Key<T> key) {
         return (T) myUserMap.get(key.toString());
     }
 
-    public <T> void putClientProperty(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putClientProperty(Key<T> key, @Nullable T value) {
         putClientProperty(key.toString(), value);
     }
 
     @Nullable
-    public Object getClientProperty(@Nonnull String key) {
+    public Object getClientProperty(String key) {
         return myUserMap.get(key);
     }
 
     @Deprecated
-    public void putClientProperty(@Nonnull String key, @Nullable Object value) {
+    public void putClientProperty(String key, @Nullable Object value) {
         Object oldValue = myUserMap.get(key);
         if (Comparing.equal(oldValue, value)) {
             return;
@@ -495,7 +494,7 @@ public final class Presentation implements Cloneable {
      * @see KeepPopupOnPerform
      * @see UISettings#getKeepPopupsForToggles
      */
-    public void setKeepPopupOnPerform(@Nonnull KeepPopupOnPerform mode) {
+    public void setKeepPopupOnPerform(KeepPopupOnPerform mode) {
         boolean requestedBit = mode == KeepPopupOnPerform.IfRequested || mode == KeepPopupOnPerform.Always;
         boolean preferredBit = mode == KeepPopupOnPerform.IfPreferred || mode == KeepPopupOnPerform.Always;
         myFlags = BitUtil.set(myFlags, IS_KEEP_POPUP_IF_REQUESTED, requestedBit);
@@ -505,7 +504,7 @@ public final class Presentation implements Cloneable {
     /**
      * @see Presentation#setKeepPopupOnPerform(KeepPopupOnPerform)
      */
-    @Nonnull
+    
     public KeepPopupOnPerform getKeepPopupOnPerform() {
         boolean requestedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_REQUESTED);
         boolean preferedBit = BitUtil.isSet(myFlags, IS_KEEP_POPUP_IF_PREFERRED);

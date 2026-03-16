@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -45,7 +44,7 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
             return false;
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.empty();
@@ -57,11 +56,11 @@ public abstract class BaseShowSettingsUtil extends ShowSettingsUtil {
         }
     };
 
-    public static String createDimensionKey(@Nonnull Configurable configurable) {
+    public static String createDimensionKey(Configurable configurable) {
         return "#" + configurable.getDisplayName().getId();
     }
 
-    @Nonnull
+    
     public static Configurable[] buildConfigurables(@Nullable Project project) {
         if (project == null) {
             project = ProjectManager.getInstance().getDefaultProject();

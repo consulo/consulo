@@ -33,7 +33,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_COMMENT_LINE)
 public class CommentByLineCommentAction extends MultiCaretCodeInsightAction implements DumbAware {
@@ -42,7 +41,7 @@ public class CommentByLineCommentAction extends MultiCaretCodeInsightAction impl
         setEnabledInModalContext(true);
     }
 
-    @Nonnull
+    
     @Override
     protected MultiCaretCodeInsightActionHandler getHandler() {
         return new CommentByLineCommentHandler();
@@ -50,7 +49,7 @@ public class CommentByLineCommentAction extends MultiCaretCodeInsightAction impl
 
     @Override
     @RequiredReadAction
-    protected boolean isValidFor(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Caret caret, @Nonnull PsiFile file) {
+    protected boolean isValidFor(Project project, Editor editor, Caret caret, PsiFile file) {
         FileType fileType = file.getFileType();
         if (fileType instanceof AbstractFileType abstractFileType) {
             return abstractFileType.getCommenter() != null;

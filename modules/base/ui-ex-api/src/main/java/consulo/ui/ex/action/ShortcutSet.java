@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents a set of keyboard and/or mouse shortcuts.
@@ -28,6 +27,6 @@ public interface ShortcutSet {
    * @return array of keyboard <code>Shortcut</code>s that are in the set.
    * The method returns an empty array if there are no keyboard <code>Shortcuts</code>
    */
-  @Nonnull
+  
   Shortcut[] getShortcuts();
 }

@@ -17,7 +17,7 @@ package consulo.ui.ex.awt.popup;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 @DeprecationInfo("Use ListItemDescriptor")

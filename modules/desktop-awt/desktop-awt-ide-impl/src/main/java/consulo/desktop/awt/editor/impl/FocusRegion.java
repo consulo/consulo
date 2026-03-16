@@ -4,12 +4,11 @@ package consulo.desktop.awt.editor.impl;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.codeEditor.Editor;
 import consulo.document.internal.DocumentEx;
-import jakarta.annotation.Nonnull;
 
 public class FocusRegion extends RangeMarkerImpl {
   private final Editor myEditor;
 
-  FocusRegion(@Nonnull Editor editor, int start, int end) {
+  FocusRegion(Editor editor, int start, int end) {
     super((DocumentEx)editor.getDocument(), start, end, false, false);
     this.myEditor = editor;
   }

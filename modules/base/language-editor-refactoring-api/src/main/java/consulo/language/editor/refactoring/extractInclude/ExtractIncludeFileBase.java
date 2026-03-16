@@ -46,8 +46,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
     protected abstract void doReplaceRange(String includePath, T first, T last);
 
-    @Nonnull
+    
     @RequiredReadAction
     protected String doExtract(PsiDirectory targetDirectory, String targetFileName, T first, T last, Language includingLanguage)
         throws IncorrectOperationException {
@@ -109,7 +108,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         String includePath,
         List<IncludeDuplicate<T>> duplicates,
         Editor editor,
-        @Nonnull Project project
+        Project project
     ) {
         if (duplicates.isEmpty()) {
             return;
@@ -169,10 +168,10 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     protected Language getLanguageForExtract(PsiElement firstExtracted) {
         return firstExtracted.getLanguage();
@@ -193,7 +192,7 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
     @Override
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         myIncludingFile = file;
         if (!editor.getSelectionModel().hasSelection()) {
             LocalizeValue message = RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.noSelection());
@@ -298,13 +297,13 @@ public abstract class ExtractIncludeFileBase<T extends PsiElement> implements Re
         return includePath;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionTitleValue() {
         return RefactoringLocalize.extractIncludeFileActionTitle();
     }
 
-    @Nonnull
+    
     protected LocalizeValue getRefactoringName() {
         return REFACTORING_NAME;
     }

@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.util.ui.JBImageIcon;
 import consulo.ui.ex.awt.ImageUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -54,8 +53,8 @@ public class IconUtil {
   public static consulo.ui.image.Image getEditIcon() {
     return AllIcons.Actions.Edit;
   }
-  @Nonnull
-  public static JBImageIcon createImageIcon(@Nonnull final Image img) {
+  
+  public static JBImageIcon createImageIcon(final Image img) {
     return new JBImageIcon(img) {
       @Override
       public int getIconWidth() {

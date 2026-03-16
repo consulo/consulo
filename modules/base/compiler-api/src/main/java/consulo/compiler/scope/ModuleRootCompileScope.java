@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -91,7 +90,7 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
     }
 
     @Override
-    @Nonnull
+    
     public Module[] getAffectedModules() {
         return myScopeModules.toArray(new Module[myScopeModules.size()]);
     }
@@ -106,7 +105,7 @@ public class ModuleRootCompileScope extends FileIndexCompileScope {
         return indices;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getFiles(FileType fileType) {
         List<VirtualFile> files = new ArrayList<>();

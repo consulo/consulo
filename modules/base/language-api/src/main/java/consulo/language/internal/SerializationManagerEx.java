@@ -19,7 +19,6 @@ import consulo.language.psi.stub.SerializationManager;
 import consulo.language.psi.stub.SerializerNotFoundException;
 import consulo.language.psi.stub.Stub;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,13 +33,13 @@ public abstract class SerializationManagerEx extends SerializationManager {
     return (SerializationManagerEx)SerializationManager.getInstance();
   }
 
-  public abstract void serialize(@Nonnull Stub rootStub, @Nonnull OutputStream stream);
+  public abstract void serialize(Stub rootStub, OutputStream stream);
 
-  @Nonnull
-  public abstract Stub deserialize(@Nonnull InputStream stream) throws SerializerNotFoundException;
+  
+  public abstract Stub deserialize(InputStream stream) throws SerializerNotFoundException;
 
   //@ApiStatus.Experimental
-  public abstract void reSerialize(@Nonnull InputStream inStub, @Nonnull OutputStream outStub, @Nonnull SerializationManager newSerializationManager) throws IOException;
+  public abstract void reSerialize(InputStream inStub, OutputStream outStub, SerializationManager newSerializationManager) throws IOException;
 
   public abstract boolean isNameStorageCorrupted();
 

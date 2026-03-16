@@ -2,10 +2,9 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 public interface CallTransformer<T extends StreamCall> {
-  default @Nonnull T transformCall(@Nonnull T call) {
+  default T transformCall(T call) {
     return call;
   }
 }

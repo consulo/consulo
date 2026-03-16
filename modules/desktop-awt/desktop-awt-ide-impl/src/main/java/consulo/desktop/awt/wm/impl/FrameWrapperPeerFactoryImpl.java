@@ -39,8 +39,7 @@ import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -88,7 +87,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    @Nonnull
     @Override
     public Window getWindow() {
       return toUIWindow();
@@ -129,7 +127,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
       return myOwner.getNorthExtension(extensionClass);
     }
 
@@ -191,7 +189,6 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       });
     }
 
-    @Nonnull
     @Override
     public consulo.ui.Window getWindow() {
       return toUIWindow();
@@ -234,7 +231,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
     }
 
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
       return null;
     }
 
@@ -272,7 +269,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
   }
 
   @Override
-  public void updateWindowIcon(@Nonnull java.awt.Window window, boolean dark) {
+  public void updateWindowIcon(java.awt.Window window, boolean dark) {
     AppIconUtil.updateWindowIcon(window);
   }
 }

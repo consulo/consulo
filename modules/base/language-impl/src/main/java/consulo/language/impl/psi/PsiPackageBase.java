@@ -34,8 +34,7 @@ import consulo.navigation.NavigateOptions;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.IntFunction;
@@ -89,13 +88,13 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return myQualifiedName.hashCode();
     }
 
-    @Nonnull
+    
     @Override
     public String getQualifiedName() {
         return myQualifiedName;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getDirectories() {
@@ -103,10 +102,10 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return ContainerUtil.toArray(collection, PsiDirectory.ARRAY_FACTORY);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public PsiDirectory[] getDirectories(@Nonnull GlobalSearchScope scope) {
+    public PsiDirectory[] getDirectories(GlobalSearchScope scope) {
         List<PsiDirectory> result = null;
         boolean includeLibrarySources = scope.isForceSearchingInLibrarySources();
         Collection<PsiDirectory> directories = getAllDirectories(includeLibrarySources);
@@ -141,13 +140,13 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    public void handleQualifiedNameChange(@Nonnull String newQualifiedName) {
+    public void handleQualifiedNameChange(String newQualifiedName) {
     }
 
     @RequiredWriteAction
     @Override
     @Nullable
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
         PsiDirectory[] dirs = getDirectories();
         for (PsiDirectory dir : dirs) {
@@ -159,7 +158,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     @Override
     @RequiredReadAction
-    public void checkSetName(@Nonnull String name) throws IncorrectOperationException {
+    public void checkSetName(String name) throws IncorrectOperationException {
         for (PsiDirectory dir : getDirectories()) {
             dir.checkSetName(name);
         }
@@ -180,25 +179,25 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiPackage[] getSubPackages() {
         return getSubPackages(GlobalSearchScope.allScope(getProject()));
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public PsiPackage[] getSubPackages(@Nonnull GlobalSearchScope scope) {
+    public PsiPackage[] getSubPackages(GlobalSearchScope scope) {
         return getSubPackages(this, scope);
     }
 
     protected abstract IntFunction<? extends PsiPackage[]> getPackageArrayFactory();
 
-    @Nonnull
+    
     @RequiredReadAction
-    public PsiPackage[] getSubPackages(@Nonnull PsiPackage psiPackage, @Nonnull GlobalSearchScope scope) {
+    public PsiPackage[] getSubPackages(PsiPackage psiPackage, GlobalSearchScope scope) {
         Map<String, PsiPackage> packagesMap = new HashMap<>();
         String qualifiedName = psiPackage.getQualifiedName();
         for (PsiDirectory dir : psiPackage.getDirectories(scope)) {
@@ -218,14 +217,14 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return ContainerUtil.toArray(packagesMap.values(), getPackageArrayFactory());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
         return myManager;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -246,7 +245,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -283,7 +282,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public char[] textToCharArray() {
@@ -292,13 +291,13 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull CharSequence text) {
+    public boolean textMatches(CharSequence text) {
         return false;
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return false;
     }
 
@@ -309,24 +308,24 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
-    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void checkAdd(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -350,7 +349,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     @Override
     @RequiredWriteAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -367,7 +366,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         visitor.visitElement(this);
     }
 
@@ -414,7 +413,7 @@ public abstract class PsiPackageBase extends PsiElementBase implements PsiPackag
 
     @Override
     @RequiredReadAction
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         info.put("packageName", getName());
         info.put("packageQualifiedName", getQualifiedName());
     }

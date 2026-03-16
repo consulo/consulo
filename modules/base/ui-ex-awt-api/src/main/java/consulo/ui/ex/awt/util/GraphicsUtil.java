@@ -21,7 +21,6 @@ import consulo.ui.AntialiasingType;
 import consulo.ui.ex.awt.DesktopAntialiasingType;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,11 +43,11 @@ public class GraphicsUtil {
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
     }
 
-    public static void setupAntialiasing(@Nonnull Graphics g2) {
+    public static void setupAntialiasing(Graphics g2) {
         setupAntialiasing(g2, true, false);
     }
 
-    public static int stringWidth(@Nonnull String text, Font font) {
+    public static int stringWidth(String text, Font font) {
         setupAntialiasing(ourGraphics, true, true);
         return ourGraphics.getFontMetrics(font).stringWidth(text);
     }
@@ -97,7 +96,7 @@ public class GraphicsUtil {
         return new GraphicsConfig(g).paintWithAlpha(alpha);
     }
 
-    public static void paintWithAlpha(Graphics g, float alpha, @Nonnull Runnable paint) {
+    public static void paintWithAlpha(Graphics g, float alpha, Runnable paint) {
         GraphicsConfig config = paintWithAlpha(g, alpha);
         paint.run();
         config.restore();
@@ -127,23 +126,23 @@ public class GraphicsUtil {
      *
      * @see JRootPane#disableTrueDoubleBuffering()
      */
-    @Nonnull
-    public static Graphics safelyGetGraphics(@Nonnull Component c) {
+    
+    public static Graphics safelyGetGraphics(Component c) {
         Graphics safelyGetGraphics = JComponentHacking.safelyGetGraphics(c);
         return safelyGetGraphics != null ? safelyGetGraphics : c.getGraphics();
     }
 
-    public static void setAntialiasingType(@Nonnull JComponent list, DesktopAntialiasingType type) {
+    public static void setAntialiasingType(JComponent list, DesktopAntialiasingType type) {
         list.putClientProperty(RenderingHints.KEY_TEXT_ANTIALIASING, type.getHint());
         list.putClientProperty(RenderingHints.KEY_TEXT_LCD_CONTRAST, UIUtil.getLcdContrastValue());
     }
 
-    public static void setAntialiasingType(@Nonnull JComponent list, AntialiasingType uiType) {
+    public static void setAntialiasingType(JComponent list, AntialiasingType uiType) {
         DesktopAntialiasingType type = DesktopAntialiasingType.from(uiType);
         setAntialiasingType(list, type);
     }
 
-    @Nonnull
+    
     public static AccessToken withTranslated(Graphics2D g, double x, double y) {
         g.translate(x, y);
 
@@ -155,7 +154,7 @@ public class GraphicsUtil {
         };
     }
 
-    @Nonnull
+    
     public static AccessToken withTranslated(Graphics2D g, int x, int y) {
         g.translate(x, y);
 

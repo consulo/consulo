@@ -16,8 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.JBColor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -29,16 +28,16 @@ public class CustomLineBorder implements Border {
     private final Color myColor;
     private final Insets myInsets;
 
-    public CustomLineBorder(@Nullable Color color, @Nonnull Insets insets) {
+    public CustomLineBorder(@Nullable Color color, Insets insets) {
         myColor = color;
         myInsets = insets;
     }
 
-    public CustomLineBorder(@Nonnull Color color, int top, int left, int bottom, int right) {
+    public CustomLineBorder(Color color, int top, int left, int bottom, int right) {
         this(color, new Insets(top, left, bottom, right));
     }
 
-    public CustomLineBorder(@Nonnull Insets insets) {
+    public CustomLineBorder(Insets insets) {
         this(UIUtil.getBorderColor(), insets);
     }
 

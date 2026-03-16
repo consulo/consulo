@@ -23,14 +23,13 @@ import consulo.execution.configuration.RunProfileState;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
  */
 public abstract class DefaultProgramRunner extends GenericProgramRunner {
   @Override
-  protected RunContentDescriptor doExecute(@Nonnull RunProfileState state, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+  protected RunContentDescriptor doExecute(RunProfileState state, ExecutionEnvironment env) throws ExecutionException {
     FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());
     ExecutionResult executionResult = state.execute(env.getExecutor(), this);
     if (executionResult == null) {

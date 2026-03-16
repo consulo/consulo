@@ -30,7 +30,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -44,7 +43,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return ProjectUIViewLocalize.selectInFavorites();
@@ -69,7 +68,7 @@ public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
         }
     }
 
-    private static ActionCallback select(@Nonnull Project project, Object toSelect, VirtualFile virtualFile, boolean requestFocus) {
+    private static ActionCallback select(Project project, Object toSelect, VirtualFile virtualFile, boolean requestFocus) {
         ActionCallback result = new ActionCallback();
 
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);

@@ -23,8 +23,7 @@ import consulo.diff.util.ThreeSide;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -32,17 +31,17 @@ import java.util.function.Consumer;
 public class TextMergeRequestImpl extends TextMergeRequest {
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final DocumentContent myOutput;
-    @Nonnull
+    
     private final List<DocumentContent> myContents;
 
-    @Nonnull
+    
     private final CharSequence myOriginalContent;
 
     @Nullable
     private final String myTitle;
-    @Nonnull
+    
     private final List<String> myTitles;
 
     @Nullable
@@ -50,11 +49,11 @@ public class TextMergeRequestImpl extends TextMergeRequest {
 
     public TextMergeRequestImpl(
         @Nullable Project project,
-        @Nonnull DocumentContent output,
-        @Nonnull CharSequence originalContent,
-        @Nonnull List<DocumentContent> contents,
+        DocumentContent output,
+        CharSequence originalContent,
+        List<DocumentContent> contents,
         @Nullable String title,
-        @Nonnull List<String> contentTitles,
+        List<String> contentTitles,
         @Nullable Consumer<MergeResult> applyCallback
     ) {
         assert contents.size() == 3;
@@ -71,13 +70,13 @@ public class TextMergeRequestImpl extends TextMergeRequest {
         myApplyCallback = applyCallback;
     }
 
-    @Nonnull
+    
     @Override
     public DocumentContent getOutputContent() {
         return myOutput;
     }
 
-    @Nonnull
+    
     @Override
     public List<DocumentContent> getContents() {
         return myContents;
@@ -89,7 +88,7 @@ public class TextMergeRequestImpl extends TextMergeRequest {
         return myTitle;
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getContentTitles() {
         return myTitles;
@@ -97,7 +96,7 @@ public class TextMergeRequestImpl extends TextMergeRequest {
 
     @RequiredUIAccess
     @Override
-    public void applyResult(@Nonnull MergeResult result) {
+    public void applyResult(MergeResult result) {
         CharSequence applyContent;
         switch (result) {
             case CANCEL:

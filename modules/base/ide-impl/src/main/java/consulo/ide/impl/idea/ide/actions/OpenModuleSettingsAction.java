@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -46,7 +45,7 @@ public class OpenModuleSettingsAction extends BaseNavigateToSourceAction {
 
     @RequiredUIAccess
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
 
         if (!isModuleInProjectViewPopup(event)) {
@@ -54,11 +53,11 @@ public class OpenModuleSettingsAction extends BaseNavigateToSourceAction {
         }
     }
 
-    protected static boolean isModuleInProjectViewPopup(@Nonnull AnActionEvent e) {
+    protected static boolean isModuleInProjectViewPopup(AnActionEvent e) {
         return ActionPlaces.PROJECT_VIEW_POPUP.equals(e.getPlace()) && isModuleInContext(e);
     }
 
-    public static boolean isModuleInContext(@Nonnull AnActionEvent e) {
+    public static boolean isModuleInContext(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Module module = e.getData(Module.KEY);
         if (project != null && module != null) {

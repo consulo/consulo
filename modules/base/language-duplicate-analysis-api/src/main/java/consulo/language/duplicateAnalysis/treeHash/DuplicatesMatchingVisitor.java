@@ -17,7 +17,6 @@ import consulo.language.psi.LeafPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,14 +31,14 @@ public class DuplicatesMatchingVisitor extends AbstractMatchingVisitor {
   private final Map<PsiElement, TreeHashResult> myPsiElement2HashAndCost = new HashMap<>();
 
   public DuplicatesMatchingVisitor(NodeSpecificHasherBase nodeSpecificHasher,
-                                   @Nonnull NodeFilter nodeFilter,
+                                   NodeFilter nodeFilter,
                                    int discardCost) {
     myNodeSpecificHasher = nodeSpecificHasher;
     myNodeFilter = nodeFilter;
     myDiscardCost = discardCost;
     myTreeHasher = new TreeHasherBase(null, myNodeSpecificHasher.getDuplicatesProfile(), discardCost, false) {
       @Override
-      protected TreeHashResult hash(@Nonnull PsiElement root, PsiFragment upper, @Nonnull NodeSpecificHasher hasher) {
+      protected TreeHashResult hash(PsiElement root, PsiFragment upper, NodeSpecificHasher hasher) {
         TreeHashResult result = myPsiElement2HashAndCost.get(root);
         if (result == null) {
           result = super.hash(root, upper, hasher);
@@ -51,7 +50,7 @@ public class DuplicatesMatchingVisitor extends AbstractMatchingVisitor {
   }
 
   @Override
-  public boolean matchSequentially(@Nonnull NodeIterator nodes, @Nonnull NodeIterator nodes2) {
+  public boolean matchSequentially(NodeIterator nodes, NodeIterator nodes2) {
     while (true) {
       if (!nodes.hasNext() || !nodes2.hasNext()) {
         return !nodes.hasNext() && !nodes2.hasNext();
@@ -153,7 +152,7 @@ public class DuplicatesMatchingVisitor extends AbstractMatchingVisitor {
   }
 
   @Override
-  protected boolean doMatchInAnyOrder(@Nonnull NodeIterator it1, @Nonnull NodeIterator it2) {
+  protected boolean doMatchInAnyOrder(NodeIterator it1, NodeIterator it2) {
     List<PsiElement> elements1 = new ArrayList<>();
     List<PsiElement> elements2 = new ArrayList<>();
 
@@ -223,7 +222,7 @@ public class DuplicatesMatchingVisitor extends AbstractMatchingVisitor {
     return hash2element.size() == 0;
   }
 
-  @Nonnull
+  
   @Override
   protected NodeFilter getNodeFilter() {
     return myNodeFilter;

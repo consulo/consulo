@@ -27,8 +27,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -46,9 +45,8 @@ public class UIDataObject extends UserDataHolderBase {
     @Nullable
     private Map<BorderPosition, BorderInfo> myBorders;
 
-    @Nonnull
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
-                                                                                     @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
+                                                                                     ComponentEventListener<C, E> listener) {
         EventDispatcher<ComponentEventListener> eventDispatcher = myListeners.computeIfAbsent(eventClass,
             it -> EventDispatcher.create(ComponentEventListener.class)
         );
@@ -57,7 +55,6 @@ public class UIDataObject extends UserDataHolderBase {
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
     public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getDispatcher(Class<E> c) {
         EventDispatcher eventDispatcher = myListeners.computeIfAbsent(c,
             it -> EventDispatcher.create(ComponentEventListener.class)
@@ -67,7 +64,7 @@ public class UIDataObject extends UserDataHolderBase {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return super.getUserData(key);
     }
 
@@ -88,7 +85,6 @@ public class UIDataObject extends UserDataHolderBase {
         myBorders.remove(borderPosition);
     }
 
-    @Nonnull
     public Map<BorderPosition, BorderInfo> getBorders() {
         return myBorders == null ? Map.of() : myBorders;
     }

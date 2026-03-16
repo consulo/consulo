@@ -19,8 +19,7 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author Denis Zhdanov
@@ -37,5 +36,5 @@ public interface ExternalProjectRefreshCallback {
    */
   void onSuccess(@Nullable DataNode<ProjectData> externalProject);
 
-  void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails);
+  void onFailure(String errorMessage, @Nullable String errorDetails);
 }

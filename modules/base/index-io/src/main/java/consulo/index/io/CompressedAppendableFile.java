@@ -12,7 +12,6 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.LimitedInputStream;
 import consulo.util.lang.SystemProperties;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.Arrays;
 
@@ -68,7 +67,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @Nonnull
+  
   public synchronized DataInputStream getStream(long addr) throws IOException {
     initChunkLengthTable();
     loadAppendBuffer();
@@ -158,7 +157,7 @@ public class CompressedAppendableFile {
     });
   }
 
-  @Nonnull
+  
   private synchronized byte[] loadChunk(int chunkNumber) throws IOException {
     try {
       if (myChunkLengthTable == null) initChunkLengthTable();
@@ -182,7 +181,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @Nonnull
+  
   private DataInputStream getChunkStream(File appendFile, int pageNumber) throws IOException {
     assert myFileLength != 0;
     int limit;
@@ -214,7 +213,7 @@ public class CompressedAppendableFile {
     return offset;
   }
 
-  @Nonnull
+  
   protected InputStream getChunkInputStream(File appendFile, long offset, int pageSize) throws IOException {
     FileInputStream in = new FileInputStream(appendFile);
     if (offset > 0) {
@@ -325,7 +324,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @Nonnull
+  
   private static short[] reallocShortTable(short[] table) {
     return ArrayUtil.realloc(table, Math.max(table.length * 8 / 5, table.length + 1));
   }
@@ -334,7 +333,7 @@ public class CompressedAppendableFile {
     return CompressionUtil.writeCompressedWithoutOriginalBufferLength(compressedDataOut, buffer, myAppendBufferLength);
   }
 
-  @Nonnull
+  
   protected byte[] decompress(DataInputStream keysStream) throws IOException {
     return CompressionUtil.readCompressedWithoutOriginalBufferLength(keysStream, myAppendBufferLength);
   }
@@ -349,7 +348,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @Nonnull
+  
   protected File getChunksFile() {
     return new File(myBaseFile.getPath() + ".a");
   }
@@ -389,7 +388,7 @@ public class CompressedAppendableFile {
     }
   }
 
-  @Nonnull
+  
   private File getIncompleteChunkFile() {
     return new File(myBaseFile.getPath() + ".at");
   }
@@ -427,7 +426,7 @@ public class CompressedAppendableFile {
       super(64, 64);
     }
 
-    @Nonnull
+    
     public byte[] get(CompressedAppendableFile file, int page) throws IOException {
       byte[] bytes;
       synchronized (this) {
@@ -473,7 +472,7 @@ public class CompressedAppendableFile {
     }
 
     @Override
-    public int read(@Nonnull byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, int len) throws IOException {
       if (bytesFromCompressedBlock == null) {
         byte[] decompressedBytes = myCurrentPageNumber < myChunkLengthTableSnapshotLength ? ourDecompressedCache.get(CompressedAppendableFile.this, myCurrentPageNumber) : ArrayUtil.EMPTY_BYTE_ARRAY;
         bytesFromCompressedBlock = new ByteArrayInputStream(decompressedBytes, myPageOffset, decompressedBytes.length);

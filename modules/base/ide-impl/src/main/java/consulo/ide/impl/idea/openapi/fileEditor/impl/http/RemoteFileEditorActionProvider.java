@@ -21,7 +21,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,6 +30,6 @@ public abstract class RemoteFileEditorActionProvider {
     public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME =
         ExtensionPointName.create(RemoteFileEditorActionProvider.class);
 
-    @Nonnull
-    public abstract AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file);
+    
+    public abstract AnAction[] createToolbarActions(Project project, HttpVirtualFile file);
 }

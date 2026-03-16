@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -41,8 +40,8 @@ public class NotificationsUtil {
     private static final int TITLE_LIMIT = 1000;
     private static final int CONTENT_LIMIT = 10000;
 
-    @Nonnull
-    public static String buildHtml(@Nonnull Notification notification, @Nullable String style) {
+    
+    public static String buildHtml(Notification notification, @Nullable String style) {
         String title = notification.getTitle();
         String content = notification.getContent();
         if (title.length() > TITLE_LIMIT || content.length() > CONTENT_LIMIT) {
@@ -58,9 +57,9 @@ public class NotificationsUtil {
         return buildHtml(title, null, content, style, "#" + ColorUtil.toHex(getMessageType(notification).getTitleForeground()), null, null);
     }
 
-    @Nonnull
+    
     public static String buildHtml(
-        @Nonnull Notification notification,
+        Notification notification,
         @Nullable String style,
         boolean isContent,
         @Nullable Color color,
@@ -88,7 +87,7 @@ public class NotificationsUtil {
         return buildHtml(title, subtitle, content, style, isContent ? null : colorText, isContent ? colorText : null, contentStyle);
     }
 
-    @Nonnull
+    
     public static String buildHtml(
         @Nullable String title,
         @Nullable String subtitle,
@@ -146,7 +145,7 @@ public class NotificationsUtil {
     }
 
     @Nullable
-    public static HyperlinkListener wrapListener(@Nonnull Notification notification) {
+    public static HyperlinkListener wrapListener(Notification notification) {
         NotificationListener listener = notification.getListener();
         if (listener == null) {
             return null;
@@ -162,8 +161,8 @@ public class NotificationsUtil {
         };
     }
 
-    @Nonnull
-    public static Image getIcon(@Nonnull Notification notification) {
+    
+    public static Image getIcon(Notification notification) {
         Image icon = notification.getIcon();
         if (icon != null) {
             return icon;
@@ -176,8 +175,8 @@ public class NotificationsUtil {
         };
     }
 
-    @Nonnull
-    public static MessageType getMessageType(@Nonnull Notification notification) {
+    
+    public static MessageType getMessageType(Notification notification) {
         return switch (notification.getType()) {
             case WARNING -> MessageType.WARNING;
             case ERROR -> MessageType.ERROR;

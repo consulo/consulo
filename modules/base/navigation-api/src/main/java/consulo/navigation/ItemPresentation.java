@@ -18,7 +18,7 @@ package consulo.navigation;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The presentation of an item in a tree, list or similar view.

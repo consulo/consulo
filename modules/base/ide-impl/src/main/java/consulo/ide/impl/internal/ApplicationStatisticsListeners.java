@@ -32,7 +32,6 @@ import consulo.project.event.ProjectManagerListener;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class ApplicationStatisticsListeners {
   private boolean persistOnClosing = !ApplicationManager.getApplication().isUnitTestMode();
 
   @Inject
-  public ApplicationStatisticsListeners(@Nonnull Application application) {
+  public ApplicationStatisticsListeners(Application application) {
     MessageBus messageBus = application.getMessageBus();
 
     MessageBusConnection connection = messageBus.connect();
@@ -63,7 +62,7 @@ public class ApplicationStatisticsListeners {
 
     connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
-      public void projectClosing(@Nonnull Project project) {
+      public void projectClosing(Project project) {
         if (project.isInitialized()) {
           if (persistOnClosing) {
             doPersistProjectUsages(project);
@@ -73,7 +72,7 @@ public class ApplicationStatisticsListeners {
     });
   }
 
-  private static void doPersistProjectUsages(@Nonnull Project project) {
+  private static void doPersistProjectUsages(Project project) {
     if (DumbService.isDumb(project)) return;
     
     project.getApplication().getExtensionPoint(UsagesCollector.class).forEachExtensionSafe(usagesCollector -> {

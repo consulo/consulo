@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -46,7 +45,7 @@ public class RectanglePainter {
     return getFont();
   }
 
-  public void paint(@Nonnull Graphics2D g2, @Nonnull String text, int paddingX, int paddingY, @Nonnull Color color) {
+  public void paint(Graphics2D g2, String text, int paddingX, int paddingY, Color color) {
     GraphicsConfig config = GraphicsUtil.setupAAPainting(g2);
     g2.setFont(getLabelFont());
     g2.setStroke(new BasicStroke(1.5f));
@@ -71,7 +70,7 @@ public class RectanglePainter {
     config.restore();
   }
 
-  public Dimension calculateSize(@Nonnull String text, @Nonnull FontMetrics metrics) {
+  public Dimension calculateSize(String text, FontMetrics metrics) {
     int width = metrics.stringWidth(text) + 2 * TEXT_PADDING_X;
     int height = metrics.getHeight() + TOP_TEXT_PADDING + BOTTOM_TEXT_PADDING;
     return new Dimension(width, height);

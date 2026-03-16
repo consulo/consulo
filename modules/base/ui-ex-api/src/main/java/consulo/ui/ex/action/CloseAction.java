@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_CLOSE)
 public class CloseAction extends AnAction implements DumbAware {
@@ -33,14 +32,14 @@ public class CloseAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setIcon(e.isFromActionToolbar() ? PlatformIconGroup.actionsCancel() : null);
         e.getPresentation().setEnabled(e.hasData(CloseTarget.KEY));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         e.getRequiredData(CloseTarget.KEY).close();
     }
 

@@ -23,8 +23,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 /**
@@ -46,14 +45,14 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    *                 If true, one should perform no reference resolving and avoid complex checks if possible.
    * @return the array of folding descriptors.
    */
-  @Nonnull
+  
   @RequiredReadAction
-  public abstract FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick);
+  public abstract FoldingDescriptor[] buildFoldRegions(PsiElement root, Document document, boolean quick);
 
   @Override
   @RequiredReadAction
-  @Nonnull
-  public FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode node, @Nonnull Document document) {
+  
+  public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document) {
     return buildFoldRegions(Objects.requireNonNull(node.getPsi()), document, false);
   }
 
@@ -68,7 +67,7 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    */
   @Nullable
   @RequiredReadAction
-  public String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range){
+  public String getPlaceholderText(ASTNode node, TextRange range){
     return getPlaceholderText(node);
   }
 
@@ -80,5 +79,5 @@ public abstract class FoldingBuilderEx implements FoldingBuilder {
    */
   @Override
   @RequiredReadAction
-  public abstract boolean isCollapsedByDefault(@Nonnull ASTNode node);
+  public abstract boolean isCollapsedByDefault(ASTNode node);
 }

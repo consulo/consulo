@@ -26,8 +26,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -38,12 +37,12 @@ import java.util.*;
  */
 public class ArrangementStandardSettingsManagerImpl implements ArrangementStandardSettingsManager {
 
-  @Nonnull
+  
   private final ObjectIntMap<ArrangementSettingsToken> myWidths = ObjectMaps.newObjectIntHashMap();
-  @Nonnull
+  
   private final ObjectIntMap<ArrangementSettingsToken> myWeights = ObjectMaps.newObjectIntHashMap();
 
-  @Nonnull
+  
   private final Comparator<ArrangementSettingsToken> myComparator = (t1, t2) -> {
     if (myWeights.containsKey(t1)) {
       if (myWeights.containsKey(t2)) {
@@ -61,11 +60,11 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
     }
   };
 
-  @Nonnull
+  
   private final ArrangementStandardSettingsAware myDelegate;
-  @Nonnull
+  
   private final ArrangementColorsProvider myColorsProvider;
-  @Nonnull
+  
   private final Collection<Set<ArrangementSettingsToken>> myMutexes;
 
   @Nullable
@@ -75,20 +74,20 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   @Nullable
   private final List<CompositeArrangementSettingsToken> myMatchingTokens;
 
-  @Nonnull
+  
   private final Collection<StdArrangementRuleAliasToken> myRuleAliases;
-  @Nonnull
+  
   private final Set<ArrangementSettingsToken> myRuleAliasMutex;
   @Nullable
   private CompositeArrangementSettingsToken myRuleAliasToken;
 
-  public ArrangementStandardSettingsManagerImpl(@Nonnull ArrangementStandardSettingsAware delegate, @Nonnull ArrangementColorsProvider colorsProvider) {
+  public ArrangementStandardSettingsManagerImpl(ArrangementStandardSettingsAware delegate, ArrangementColorsProvider colorsProvider) {
     this(delegate, colorsProvider, List.of());
   }
 
-  public ArrangementStandardSettingsManagerImpl(@Nonnull ArrangementStandardSettingsAware delegate,
-                                                @Nonnull ArrangementColorsProvider colorsProvider,
-                                                @Nonnull Collection<StdArrangementRuleAliasToken> aliases) {
+  public ArrangementStandardSettingsManagerImpl(ArrangementStandardSettingsAware delegate,
+                                                ArrangementColorsProvider colorsProvider,
+                                                Collection<StdArrangementRuleAliasToken> aliases) {
     myDelegate = delegate;
     myColorsProvider = colorsProvider;
     myMutexes = delegate.getMutexes();
@@ -118,18 +117,18 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   }
 
   @Override
-  @Nonnull
+  
   public Collection<StdArrangementRuleAliasToken> getRuleAliases() {
     return myRuleAliases;
   }
 
   @Override
-  @Nonnull
+  
   public ArrangementStandardSettingsAware getDelegate() {
     return myDelegate;
   }
 
-  private void parseWidths(@Nonnull Collection<CompositeArrangementSettingsToken> compositeTokens, @Nonnull SimpleColoredComponent renderer) {
+  private void parseWidths(Collection<CompositeArrangementSettingsToken> compositeTokens, SimpleColoredComponent renderer) {
     int width = 0;
     for (CompositeArrangementSettingsToken compositeToken : compositeTokens) {
       width = Math.max(width, parseWidth(compositeToken.getToken(), renderer));
@@ -140,7 +139,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
     }
   }
 
-  private void buildWeights(@Nonnull Collection<CompositeArrangementSettingsToken> compositeTokens) {
+  private void buildWeights(Collection<CompositeArrangementSettingsToken> compositeTokens) {
     for (CompositeArrangementSettingsToken token : compositeTokens) {
       myWeights.putInt(token.getToken(), myWeights.size());
       buildWeights(token.getChildren());
@@ -185,15 +184,15 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   }
 
   @Override
-  public boolean isEnabled(@Nonnull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current) {
+  public boolean isEnabled(ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current) {
     if (myRuleAliasMutex.contains(token)) {
       return true;
     }
     return myDelegate.isEnabled(token, current);
   }
 
-  @Nonnull
-  public ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementMatchCondition condition) throws IllegalArgumentException {
+  
+  public ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) throws IllegalArgumentException {
     ArrangementEntryMatcher matcher = ArrangementUtil.buildMatcher(condition);
     if (matcher == null) {
       matcher = myDelegate.buildMatcher(condition);
@@ -202,7 +201,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   }
 
   @Override
-  @Nonnull
+  
   public Collection<Set<ArrangementSettingsToken>> getMutexes() {
     if (myRuleAliasMutex.isEmpty()) {
       return myMutexes;
@@ -213,14 +212,14 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   }
 
   @Override
-  public int getWidth(@Nonnull ArrangementSettingsToken token) {
+  public int getWidth(ArrangementSettingsToken token) {
     if (myWidths.containsKey(token)) {
       return myWidths.getInt(token);
     }
     return parseWidth(token, new SimpleColoredComponent());
   }
 
-  private int parseWidth(@Nonnull ArrangementSettingsToken token, @Nonnull SimpleColoredComponent renderer) {
+  private int parseWidth(ArrangementSettingsToken token, SimpleColoredComponent renderer) {
     renderer.clear();
     String value = getPresentationValue(token);
     renderer.append(value, TextAttributesUtil.fromTextAttributes(myColorsProvider.getTextAttributes(token, true)));
@@ -231,8 +230,8 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
     return Math.max(result, renderer.getPreferredSize().width);
   }
 
-  @Nonnull
-  private static String getPresentationValue(@Nonnull ArrangementSettingsToken token) {
+  
+  private static String getPresentationValue(ArrangementSettingsToken token) {
     if (token instanceof InvertibleArrangementSettingsToken) {
       return ((InvertibleArrangementSettingsToken)token).getInvertedRepresentationValue();
     }
@@ -240,7 +239,7 @@ public class ArrangementStandardSettingsManagerImpl implements ArrangementStanda
   }
 
   @Override
-  public List<ArrangementSettingsToken> sort(@Nonnull Collection<ArrangementSettingsToken> tokens) {
+  public List<ArrangementSettingsToken> sort(Collection<ArrangementSettingsToken> tokens) {
     List<ArrangementSettingsToken> result = new ArrayList<>(tokens);
     result.sort(myComparator);
     return result;

@@ -1,24 +1,23 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.repository.ui;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 
 public class InstalledPackage {
-  @Nonnull
+  
   private final String myName;
   @Nullable
   private final String myVersion;
 
-  public InstalledPackage(@Nonnull String name, @Nullable String version) {
+  public InstalledPackage(String name, @Nullable String version) {
     myName = name;
     myVersion = version;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
@@ -35,7 +34,7 @@ public class InstalledPackage {
 
   @Override
   public
-  @Nonnull
+  
   String toString() {
     return getName();
   }

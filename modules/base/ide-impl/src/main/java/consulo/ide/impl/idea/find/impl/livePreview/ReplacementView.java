@@ -21,8 +21,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;
 
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +30,7 @@ public class ReplacementView extends JPanel {
     private static final String MALFORMED_REPLACEMENT_STRING = "Malformed replacement string";
 
     @Override
-    protected void paintComponent(@Nonnull Graphics graphics) {
+    protected void paintComponent(Graphics graphics) {
     }
 
     public ReplacementView(@Nullable String replacement) {

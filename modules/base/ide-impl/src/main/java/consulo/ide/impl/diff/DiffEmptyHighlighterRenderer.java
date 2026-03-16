@@ -21,20 +21,19 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.util.TextDiffType;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class DiffEmptyHighlighterRenderer implements CustomHighlighterRenderer {
-  @Nonnull
+  
   private final TextDiffType myDiffType;
 
-  public DiffEmptyHighlighterRenderer(@Nonnull TextDiffType diffType) {
+  public DiffEmptyHighlighterRenderer(TextDiffType diffType) {
     myDiffType = diffType;
   }
 
   @Override
-  public void paint(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter, @Nonnull Graphics g) {
+  public void paint(Editor editor, RangeHighlighter highlighter, Graphics g) {
     g.setColor(TargetAWT.to(myDiffType.getColor(editor)));
     Point point = editor.logicalPositionToXY(editor.offsetToLogicalPosition(highlighter.getStartOffset()));
     int endy = point.y + editor.getLineHeight() - 1;

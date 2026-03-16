@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.virtualFileSystem.status.localize.FileStatusLocalize;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("UseJBColor")
 public interface FileStatus {
@@ -44,15 +43,15 @@ public interface FileStatus {
   FileStatus OBSOLETE = FileStatusFactory.getInstance().createFileStatus("OBSOLETE", FileStatusLocalize.fileStatusNameObsolete());
   FileStatus SUPPRESSED = FileStatusFactory.getInstance().createFileStatus("SUPPRESSED", FileStatusLocalize.fileStatusNameSuppressed());
 
-  @Nonnull
+  
   LocalizeValue getText();
 
   @Nullable
   ColorValue getColor();
 
-  @Nonnull
+  
   EditorColorKey getColorKey();
 
-  @Nonnull
+  
   String getId();
 }

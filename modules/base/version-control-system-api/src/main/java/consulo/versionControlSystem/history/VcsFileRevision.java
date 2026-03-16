@@ -19,7 +19,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.versionControlSystem.RepositoryLocation;
 import consulo.versionControlSystem.VcsException;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.Date;
 

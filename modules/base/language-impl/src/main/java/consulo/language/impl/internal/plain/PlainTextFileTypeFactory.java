@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class PlainTextFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+  public void createFileTypes(FileTypeConsumer consumer) {
     consumer.consume(PlainTextFileType.INSTANCE, "txt;sh;bat;cmd;policy;log;cgi;MF;jad;jam;htaccess");
   }
 }

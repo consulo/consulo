@@ -14,7 +14,6 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -29,22 +28,22 @@ import java.util.Objects;
 @ServiceImpl
 @Singleton
 public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposable {
-  @Nonnull
+  
   private final Project myProject;
 
   private boolean myForbid; // for tests only
 
   @Inject
-  public VcsDirtyScopeVfsListener(@Nonnull Project project) {
+  public VcsDirtyScopeVfsListener(Project project) {
     myProject = project;
     AsyncVfsEventsPostProcessor.getInstance().addListener(this, this);
   }
 
-  public static VcsDirtyScopeVfsListener getInstance(@Nonnull Project project) {
+  public static VcsDirtyScopeVfsListener getInstance(Project project) {
     return project.getInstance(VcsDirtyScopeVfsListener.class);
   }
 
-  public static void install(@Nonnull Project project) {
+  public static void install(Project project) {
     getInstance(project);
   }
 
@@ -58,7 +57,7 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
   }
 
   @Override
-  public void filesChanged(@Nonnull List<? extends VFileEvent> events) {
+  public void filesChanged(List<? extends VFileEvent> events) {
     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
     if (myForbid || !vcsManager.hasActiveVcss()) return;
 
@@ -110,15 +109,15 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
    * not recursively, you should add it to files.
    */
   private static class FilesAndDirs {
-    @Nonnull
+    
     VcsDirtyScopeMap files = new VcsDirtyScopeMap();
-    @Nonnull
+    
     VcsDirtyScopeMap dirs = new VcsDirtyScopeMap();
   }
 
-  private static void add(@Nonnull ProjectLevelVcsManager vcsManager,
-                          @Nonnull FilesAndDirs filesAndDirs,
-                          @Nonnull FilePath filePath,
+  private static void add(ProjectLevelVcsManager vcsManager,
+                          FilesAndDirs filesAndDirs,
+                          FilePath filePath,
                           boolean withParentDirectory) {
     VcsRoot vcsRoot = vcsManager.getVcsRootObjectFor(filePath);
     AbstractVcs vcs = vcsRoot != null ? vcsRoot.getVcs() : null;
@@ -139,15 +138,15 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
     }
   }
 
-  private static void add(@Nonnull ProjectLevelVcsManager vcsManager,
-                          @Nonnull FilesAndDirs filesAndDirs,
-                          @Nonnull FilePath filePath) {
+  private static void add(ProjectLevelVcsManager vcsManager,
+                          FilesAndDirs filesAndDirs,
+                          FilePath filePath) {
     add(vcsManager, filesAndDirs, filePath, false);
   }
 
-  private static void addWithParentDirectory(@Nonnull ProjectLevelVcsManager vcsManager,
-                                             @Nonnull FilesAndDirs filesAndDirs,
-                                             @Nonnull FilePath filePath) {
+  private static void addWithParentDirectory(ProjectLevelVcsManager vcsManager,
+                                             FilesAndDirs filesAndDirs,
+                                             FilePath filePath) {
     add(vcsManager, filesAndDirs, filePath, true);
   }
 }

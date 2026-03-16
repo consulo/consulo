@@ -36,8 +36,7 @@ import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.reflect.ReflectionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -51,8 +50,7 @@ public class LogbackLogger implements Logger {
     private final LoggerContext myLoggerContext;
     private final Supplier<String> myName;
 
-    @Nullable
-    private ch.qos.logback.classic.Logger myLogger;
+    private ch.qos.logback.classic.@Nullable Logger myLogger;
 
     LogbackLogger(LoggerContext loggerContext, String name) {
         myLoggerContext = loggerContext;
@@ -64,7 +62,7 @@ public class LogbackLogger implements Logger {
         myName = clazz::getName;
     }
 
-    @Nonnull
+   
     private ch.qos.logback.classic.Logger logger() {
         if (myLogger == null) {
             ch.qos.logback.classic.Logger logger = myLoggerContext.getLogger(myName.get());
@@ -184,7 +182,7 @@ public class LogbackLogger implements Logger {
     }
 
     @Override
-    public void setLevel(@Nonnull LoggerLevel level) throws IllegalAccessException {
+    public void setLevel(LoggerLevel level) throws IllegalAccessException {
         Class callerClass = ReflectionUtil.findCallerClass(1);
         if (callerClass == null) {
             throw new IllegalAccessException("There not caller class");

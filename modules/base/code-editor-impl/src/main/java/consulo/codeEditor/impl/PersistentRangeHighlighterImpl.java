@@ -4,9 +4,7 @@ package consulo.codeEditor.impl;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.event.DocumentEvent;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of the markup element for the editor and document.
@@ -17,10 +15,10 @@ public final class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
     short prevEndOffset;
     byte modificationStamp;
 
-    static @Nonnull PersistentRangeHighlighterImpl create(@Nonnull MarkupModelImpl model,
+    static PersistentRangeHighlighterImpl create(MarkupModelImpl model,
                                                           int offset,
                                                           int layer,
-                                                          @Nonnull HighlighterTargetArea target,
+                                                          HighlighterTargetArea target,
                                                           @Nullable TextAttributesKey textAttributesKey,
                                                           boolean normalizeStartOffset) {
         int line = model.getDocument().getLineNumber(offset);
@@ -41,11 +39,11 @@ public final class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
         return modificationStamp;
     }
 
-    private PersistentRangeHighlighterImpl(@Nonnull MarkupModelImpl model,
+    private PersistentRangeHighlighterImpl(MarkupModelImpl model,
                                            int startOffset,
                                            int endOffset,
                                            int layer,
-                                           @Nonnull HighlighterTargetArea target,
+                                           HighlighterTargetArea target,
                                            @Nullable TextAttributesKey textAttributesKey) {
         super(model, startOffset, endOffset, layer, target, textAttributesKey, false, false);
     }
@@ -56,7 +54,7 @@ public final class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
     }
 
     @Override
-    protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+    protected void changedUpdateImpl(DocumentEvent e) {
         prevStartOffset = (short) intervalStart();
         prevEndOffset = (short) intervalEnd();
         modificationStamp = (byte) e.getDocument().getModificationStamp();
@@ -64,7 +62,7 @@ public final class PersistentRangeHighlighterImpl extends RangeHighlighterImpl {
     }
 
     @Override
-    public @NonNls String toString() {
+    public String toString() {
         return "PersistentRangeHighlighter" +
             (isGreedyToLeft() ? "[" : "(") +
             (isValid() ? "valid" : "invalid") + "," +

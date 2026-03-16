@@ -9,8 +9,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.FileIndentOptionsProvider;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -30,14 +29,14 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
     private CodeStyleSettingsModifier myModifier;
     private final List<Object> myDependencies = new ArrayList<>();
 
-    public TransientCodeStyleSettings(@Nonnull PsiFile psiFile, @Nonnull CodeStyleSettings settings) {
+    public TransientCodeStyleSettings(PsiFile psiFile, CodeStyleSettings settings) {
         super(true, false);
         myPsiFileRef = new WeakReference<>(psiFile);
         copyFrom(settings);
         myDependencies.add(settings.getModificationTracker());
     }
 
-    public void setModifier(@Nonnull CodeStyleSettingsModifier modifier) {
+    public void setModifier(CodeStyleSettingsModifier modifier) {
         myModifier = modifier;
     }
 
@@ -55,7 +54,7 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
         return myPsiFileRef.get();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public IndentOptions getIndentOptionsByFile(
@@ -71,7 +70,7 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
         return OTHER_INDENT_OPTIONS;
     }
 
-    public void applyIndentOptionsFromProviders(@Nonnull PsiFile file) {
+    public void applyIndentOptionsFromProviders(PsiFile file) {
         for (FileIndentOptionsProvider provider : FileIndentOptionsProvider.EP_NAME.getExtensionList()) {
             if (provider.useOnFullReformat()) {
                 IndentOptions indentOptions = provider.getIndentOptions(this, file);
@@ -85,11 +84,11 @@ public final class TransientCodeStyleSettings extends CodeStyleSettings {
         }
     }
 
-    public void addDependency(@Nonnull ModificationTracker dependency) {
+    public void addDependency(ModificationTracker dependency) {
         myDependencies.add(dependency);
     }
 
-    public void addDependencies(@Nonnull List<? extends ModificationTracker> dependencies) {
+    public void addDependencies(List<? extends ModificationTracker> dependencies) {
         myDependencies.addAll(dependencies);
     }
 

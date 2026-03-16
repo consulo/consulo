@@ -4,8 +4,7 @@ import consulo.language.Language;
 import consulo.language.duplicateAnalysis.treeHash.FragmentsCollector;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +15,12 @@ public class DuplicatesProfileCache {
     private DuplicatesProfileCache() {
     }
 
-    public static void clear(@Nonnull DupInfo info) {
+    public static void clear(DupInfo info) {
         ourProfileCache.remove(info);
     }
 
     @Nullable
-    public static DuplicatesProfile getProfile(@Nonnull DupInfo dupInfo, int index) {
+    public static DuplicatesProfile getProfile(DupInfo dupInfo, int index) {
         IntObjectMap<DuplicatesProfile> patternCache = ourProfileCache.get(dupInfo);
         if (patternCache == null) {
             patternCache = IntMaps.newIntObjectHashMap();
@@ -43,25 +42,25 @@ public class DuplicatesProfileCache {
     }
 
     private static final DuplicatesProfile NULL_PROFILE = new DuplicatesProfile() {
-        @Nonnull
+        
         @Override
-        public DuplocateVisitor createVisitor(@Nonnull FragmentsCollector collector) {
+        public DuplocateVisitor createVisitor(FragmentsCollector collector) {
             return null;
         }
 
         @Override
-        public boolean isMyLanguage(@Nonnull Language language) {
+        public boolean isMyLanguage(Language language) {
             return false;
         }
 
-        @Nonnull
+        
         @Override
-        public DuplocatorState getDuplocatorState(@Nonnull Language language) {
+        public DuplocatorState getDuplocatorState(Language language) {
             return null;
         }
 
         @Override
-        public boolean isMyDuplicate(@Nonnull DupInfo info, int index) {
+        public boolean isMyDuplicate(DupInfo info, int index) {
             return false;
         }
     };

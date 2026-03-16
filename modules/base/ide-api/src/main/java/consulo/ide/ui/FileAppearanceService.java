@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.function.Consumer;
 
@@ -31,27 +30,27 @@ public abstract class FileAppearanceService {
     return Application.get().getInstance(FileAppearanceService.class);
   }
 
-  @Nonnull
-  public abstract CellAppearanceEx forVirtualFile(@Nonnull VirtualFile file);
+  
+  public abstract CellAppearanceEx forVirtualFile(VirtualFile file);
 
-  @Nonnull
-  public abstract CellAppearanceEx forIoFile(@Nonnull File file);
+  
+  public abstract CellAppearanceEx forIoFile(File file);
 
-  @Nonnull
-  public abstract CellAppearanceEx forInvalidUrl(@Nonnull String url);
+  
+  public abstract CellAppearanceEx forInvalidUrl(String url);
 
-  @Nonnull
-  public Consumer<ColoredTextContainer> getRenderForVirtualFile(@Nonnull VirtualFile file) {
+  
+  public Consumer<ColoredTextContainer> getRenderForVirtualFile(VirtualFile file) {
     return it -> forVirtualFile(file).customize(it);
   }
 
-  @Nonnull
-  public Consumer<ColoredTextContainer> getRenderForIoFile(@Nonnull File file) {
+  
+  public Consumer<ColoredTextContainer> getRenderForIoFile(File file) {
     return it -> forIoFile(file).customize(it);
   }
 
-  @Nonnull
-  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(@Nonnull String url) {
+  
+  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(String url) {
     return it -> forInvalidUrl(url).customize(it);
   }
 }

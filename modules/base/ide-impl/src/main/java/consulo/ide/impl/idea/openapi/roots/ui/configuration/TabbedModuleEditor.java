@@ -10,8 +10,7 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -20,7 +19,7 @@ import javax.swing.*;
 public class TabbedModuleEditor extends ModuleEditor {
   private TabbedPaneWrapper myTabbedPane;
 
-  public TabbedModuleEditor(Project project, ModulesConfigurator modulesProvider, LibrariesConfigurator librariesConfigurator, @Nonnull Module module) {
+  public TabbedModuleEditor(Project project, ModulesConfigurator modulesProvider, LibrariesConfigurator librariesConfigurator, Module module) {
     super(project, modulesProvider, librariesConfigurator, module);
   }
 
@@ -74,7 +73,7 @@ public class TabbedModuleEditor extends ModuleEditor {
 
   @Override
   @Nullable
-  public ModuleConfigurationEditor getEditor(@Nonnull String displayName) {
+  public ModuleConfigurationEditor getEditor(String displayName) {
     int index = getEditorTabIndex(displayName);
     if (0 <= index && index < myEditors.size()) {
       return myEditors.get(index);

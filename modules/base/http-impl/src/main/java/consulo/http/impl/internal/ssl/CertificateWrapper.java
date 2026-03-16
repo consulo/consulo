@@ -1,6 +1,5 @@
 package consulo.http.impl.internal.ssl;
 
-import jakarta.annotation.Nonnull;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.security.auth.x500.X500Principal;
@@ -22,7 +21,7 @@ public class CertificateWrapper {
     private final Map<String, String> myIssuerFields;
     private final Map<String, String> mySubjectFields;
 
-    public CertificateWrapper(@Nonnull X509Certificate certificate) {
+    public CertificateWrapper(X509Certificate certificate) {
         myCertificate = certificate;
         myIssuerFields = extractFields(certificate.getIssuerX500Principal());
         mySubjectFields = extractFields(certificate.getSubjectX500Principal());
@@ -32,8 +31,8 @@ public class CertificateWrapper {
      * @param name - Common name of desired issuer field
      * @return field value of {@link #NOT_AVAILABLE}. if it doesn't exist
      */
-    @Nonnull
-    public String getIssuerField(@Nonnull CommonField name) {
+    
+    public String getIssuerField(CommonField name) {
         String field = myIssuerFields.get(name.getShortName());
         return field == null ? NOT_AVAILABLE : field;
     }
@@ -42,8 +41,8 @@ public class CertificateWrapper {
      * @param name - Common name of desired subject field
      * @return field value of {@link #NOT_AVAILABLE}, if it doesn't exist
      */
-    @Nonnull
-    public String getSubjectField(@Nonnull CommonField name) {
+    
+    public String getSubjectField(CommonField name) {
         String field = mySubjectFields.get(name.getShortName());
         return field == null ? NOT_AVAILABLE : field;
     }
@@ -53,7 +52,7 @@ public class CertificateWrapper {
      *
      * @return SHA-256 fingerprint or {@link #NOT_AVAILABLE} in case of any error
      */
-    @Nonnull
+    
     public String getSha256Fingerprint() {
         try {
             return DigestUtils.sha256Hex(myCertificate.getEncoded());
@@ -114,7 +113,7 @@ public class CertificateWrapper {
         return myCertificate.getVersion();
     }
 
-    @Nonnull
+    
     public String getSerialNumber() {
         return myCertificate.getSerialNumber().toString();
     }
@@ -185,7 +184,7 @@ public class CertificateWrapper {
         private final String myShortName;
         private final String myLongName;
 
-        CommonField(@Nonnull String shortName, @Nonnull String longName) {
+        CommonField(String shortName, String longName) {
             myShortName = shortName;
             myLongName = longName;
         }

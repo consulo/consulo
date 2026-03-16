@@ -19,30 +19,29 @@ import consulo.codeEditor.Editor;
 import consulo.diff.DiffColors;
 import consulo.diff.localize.DiffLocalize;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface TextDiffType {
-  @Nonnull
+  
   TextDiffType INSERTED = TextDiffTypeFactory.getInstance()
     .createTextDiffType(DiffColors.DIFF_INSERTED, DiffLocalize.diffTypeInsertedName().get());
-  @Nonnull
+  
   TextDiffType DELETED = TextDiffTypeFactory.getInstance()
     .createTextDiffType(DiffColors.DIFF_DELETED, DiffLocalize.diffTypeDeletedName().get());
-  @Nonnull
+  
   TextDiffType MODIFIED = TextDiffTypeFactory.getInstance()
     .createTextDiffType(DiffColors.DIFF_MODIFIED, DiffLocalize.diffTypeChangedName().get());
-  @Nonnull
+  
   TextDiffType CONFLICT = TextDiffTypeFactory.getInstance()
     .createTextDiffType(DiffColors.DIFF_CONFLICT, DiffLocalize.diffTypeConflictName().get());
 
-  @Nonnull
+  
   String getName();
 
-  @Nonnull
+  
   ColorValue getColor(@Nullable Editor editor);
 
-  @Nonnull
+  
   ColorValue getIgnoredColor(@Nullable Editor editor);
 
   @Nullable

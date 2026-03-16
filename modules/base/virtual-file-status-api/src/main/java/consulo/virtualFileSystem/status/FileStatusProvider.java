@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.status;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -27,5 +26,5 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface FileStatusProvider {
     @Nullable
-    FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
+    FileStatus getFileStatus(VirtualFile virtualFile);
 }

@@ -18,14 +18,13 @@ package consulo.versionControlSystem.impl.internal.patch.apply;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface CustomBinaryPatchApplier<T extends FilePatch> {
-  @Nonnull
+  
   ApplyPatchStatus apply(List<Pair<VirtualFile, ApplyFilePatchBase<T>>> patches) throws IOException;
-  @Nonnull
+  
   List<FilePatch> getAppliedPatches();
 }

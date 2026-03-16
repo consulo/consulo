@@ -34,8 +34,7 @@ import consulo.versionControlSystem.distributed.internal.BranchMoreAction;
 import consulo.versionControlSystem.distributed.internal.BranchMoreHideableActionGroup;
 import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,17 +58,17 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     private int myMeanRowHeight;
     @Nullable
     private final String myKey;
-    @Nonnull
+    
     private Dimension myPrevSize = JBUI.emptySize();
 
     private final List<AnAction> mySettingsActions = new ArrayList<>();
     private final List<AnAction> myToolbarActions = new ArrayList<>();
 
     public BranchActionGroupPopup(
-        @Nonnull String title,
-        @Nonnull Project project,
-        @Nonnull Predicate<AnAction> preselectActionCondition,
-        @Nonnull ActionGroup actions,
+        String title,
+        Project project,
+        Predicate<AnAction> preselectActionCondition,
+        ActionGroup actions,
         @Nullable String dimensionKey
     ) {
         super(
@@ -100,10 +99,10 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         myMeanRowHeight = getList().getCellBounds(0, 0).height + UIUtil.getListCellVPadding() * 2;
     }
 
-    private void createTitlePanelToolbar(@Nonnull String dimensionKey) {
+    private void createTitlePanelToolbar(String dimensionKey) {
         ActionGroup actionGroup = new ActionGroup() {
             @Override
-            @Nonnull
+            
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 return myToolbarActions.toArray(AnAction.EMPTY_ARRAY);
             }
@@ -115,20 +114,20 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, null);
                 myInternalSizeChanged = true;
                 pack(true, true);
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(myUserSizeChanged);
             }
         };
         ActionGroup settingsGroup = new ActionGroup(DistributedVcsLocalize.actionBranchactiongrouppopupSettingsText(), true) {
             @Override
-            @Nonnull
+            
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 return mySettingsActions.toArray(AnAction.EMPTY_ARRAY);
             }
@@ -151,7 +150,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     }
 
     //for child popups only
-    private BranchActionGroupPopup(@Nullable WizardPopup aParent, @Nonnull ListPopupStep aStep, @Nullable Object parentValue) {
+    private BranchActionGroupPopup(@Nullable WizardPopup aParent, ListPopupStep aStep, @Nullable Object parentValue) {
         super(aParent, aStep, DataContext.EMPTY_CONTEXT, parentValue);
         // don't store children popup userSize;
         myKey = null;
@@ -176,7 +175,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         popupWindow.addComponentListener(windowListener);
         addListener(new JBPopupAdapter() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 popupWindow.removeComponentListener(windowListener);
                 if (dimensionKey != null && myUserSizeChanged) {
                     ProjectWindowStateService.getInstance(myProject)
@@ -210,7 +209,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         myInternalSizeChanged = false;
     }
 
-    @Nonnull
+    
     private List<BranchMoreAction> getMoreActions() {
         List<BranchMoreAction> result = new ArrayList<>();
         ListPopupModel model = getListModel();
@@ -223,7 +222,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         return result;
     }
 
-    public void addToolbarAction(@Nonnull AnAction action, boolean underSettingsPopup) {
+    public void addToolbarAction(AnAction action, boolean underSettingsPopup) {
         if (underSettingsPopup) {
             mySettingsActions.add(action);
         }
@@ -232,8 +231,8 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         }
     }
 
-    @Nonnull
-    private static ActionGroup createBranchSpeedSearchActionGroup(@Nonnull ActionGroup actions) {
+    
+    private static ActionGroup createBranchSpeedSearchActionGroup(ActionGroup actions) {
         ActionGroup.Builder group = ActionGroup.newImmutableBuilder();
         group.add(actions);
         group.addAll(createSpeedSearchActions(actions, true));
@@ -256,7 +255,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
         trackDimensions(myKey);
     }
 
-    private static List<AnAction> createSpeedSearchActions(@Nonnull ActionGroup parentActionGroup, boolean isFirstLevel) {
+    private static List<AnAction> createSpeedSearchActions(ActionGroup parentActionGroup, boolean isFirstLevel) {
         if (parentActionGroup instanceof BranchHideableActionGroup branchHideableActionGroup) {
             parentActionGroup = branchHideableActionGroup.getDelegate();
         }
@@ -337,7 +336,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
     }
 
     @Override
-    protected boolean shouldBeShowing(@Nonnull AnAction action) {
+    protected boolean shouldBeShowing(AnAction action) {
         if (!super.shouldBeShowing(action)) {
             return false;
         }
@@ -395,14 +394,14 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup implements Bran
             updateInfoComponent(myInfoLabel, additionalInfoAction != null ? additionalInfoAction.getInfoText() : null, isSelected);
         }
 
-        private static Image chooseUpdateIndicatorIcon(@Nonnull BranchActionGroup branchActionGroup) {
+        private static Image chooseUpdateIndicatorIcon(BranchActionGroup branchActionGroup) {
             if (branchActionGroup.hasIncomingCommits()) {
                 return branchActionGroup.hasOutgoingCommits() ? DistributedVersionControlIconGroup.incomingoutgoing() : DistributedVersionControlIconGroup.incoming();
             }
             return branchActionGroup.hasOutgoingCommits() ? DistributedVersionControlIconGroup.outgoing() : null;
         }
 
-        private void updateInfoComponent(@Nonnull ErrorLabel infoLabel, @Nullable String infoText, boolean isSelected) {
+        private void updateInfoComponent(ErrorLabel infoLabel, @Nullable String infoText, boolean isSelected) {
             if (infoText != null) {
                 infoLabel.setVisible(true);
                 infoLabel.setText(infoText);

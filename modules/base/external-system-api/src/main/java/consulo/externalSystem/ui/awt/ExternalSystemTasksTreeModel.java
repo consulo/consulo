@@ -25,8 +25,7 @@ import consulo.externalSystem.model.project.ExternalProjectPojo;
 import consulo.externalSystem.ui.ExternalSystemNodeDescriptor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -38,7 +37,7 @@ import java.util.*;
  */
 public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
 
-  @Nonnull
+  
   private static final Comparator<TreeNode> NODE_COMPARATOR = new Comparator<TreeNode>() {
     @Override
     public int compare(TreeNode t1, TreeNode t2) {
@@ -63,18 +62,18 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   };
 
-  @Nonnull
+  
   private final ExternalSystemUiAware myUiAware;
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
 
-  public ExternalSystemTasksTreeModel(@Nonnull ProjectSystemId externalSystemId) {
+  public ExternalSystemTasksTreeModel(ProjectSystemId externalSystemId) {
     super(new ExternalSystemNode<>(new ExternalSystemNodeDescriptor<>("", "", "", null)));
     myExternalSystemId = externalSystemId;
     myUiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
   }
 
-  private static String getTaskName(@Nonnull ExternalTaskExecutionInfo taskInfo) {
+  private static String getTaskName(ExternalTaskExecutionInfo taskInfo) {
     return taskInfo.getSettings().getTaskNames().get(0);
   }
 
@@ -84,8 +83,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
    * @param project target external project info holder
    */
   @SuppressWarnings("unchecked")
-  @Nonnull
-  public ExternalSystemNode<ExternalProjectPojo> ensureProjectNodeExists(@Nonnull ExternalProjectPojo project) {
+  
+  public ExternalSystemNode<ExternalProjectPojo> ensureProjectNodeExists(ExternalProjectPojo project) {
     ExternalSystemNode<?> root = getRoot();
 
     // Remove outdated projects.
@@ -117,7 +116,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
    *
    * @param payload target payload
    */
-  public void pruneNodes(@Nonnull Object payload) {
+  public void pruneNodes(Object payload) {
     Deque<ExternalSystemNode<?>> toProcess = new ArrayDeque<>();
     toProcess.addFirst(getRoot());
     while (!toProcess.isEmpty()) {
@@ -133,7 +132,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  public void ensureSubProjectsStructure(@Nonnull ExternalProjectPojo topLevelProject, @Nonnull Collection<ExternalProjectPojo> subProjects) {
+  public void ensureSubProjectsStructure(ExternalProjectPojo topLevelProject, Collection<ExternalProjectPojo> subProjects) {
     ExternalSystemNode<ExternalProjectPojo> topLevelProjectNode = ensureProjectNodeExists(topLevelProject);
     Map<String/*config path*/, ExternalProjectPojo> toAdd = new HashMap<>();
     for (ExternalProjectPojo subProject : subProjects) {
@@ -163,7 +162,7 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  public void ensureTasks(@Nonnull String externalProjectConfigPath, @Nonnull Collection<ExternalTaskPojo> tasks) {
+  public void ensureTasks(String externalProjectConfigPath, Collection<ExternalTaskPojo> tasks) {
     if (tasks.isEmpty()) {
       return;
     }
@@ -198,8 +197,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     }
   }
 
-  @Nonnull
-  private ExternalTaskExecutionInfo buildTaskInfo(@Nonnull ExternalTaskPojo task) {
+  
+  private ExternalTaskExecutionInfo buildTaskInfo(ExternalTaskPojo task) {
     ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
     settings.setExternalProjectPath(task.getLinkedExternalProjectPath());
     settings.setTaskNames(Collections.singletonList(task.getName()));
@@ -209,8 +208,8 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
   }
 
   @SuppressWarnings("unchecked")
-  @jakarta.annotation.Nullable
-  private ExternalSystemNode<ExternalProjectPojo> findProjectNode(@Nonnull String configPath) {
+  @Nullable
+  private ExternalSystemNode<ExternalProjectPojo> findProjectNode(String configPath) {
     for (int i = getRoot().getChildCount() - 1; i >= 0; i--) {
       ExternalSystemNode<?> child = getRoot().getChildAt(i);
       Object childElement = child.getDescriptor().getElement();
@@ -228,17 +227,17 @@ public class ExternalSystemTasksTreeModel extends DefaultTreeModel {
     return null;
   }
 
-  @Nonnull
-  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nullable Image icon) {
+  
+  private static <T> ExternalSystemNodeDescriptor<T> descriptor(T element, @Nullable Image icon) {
     return descriptor(element, "", icon);
   }
 
-  @Nonnull
-  private static <T> ExternalSystemNodeDescriptor<T> descriptor(@Nonnull T element, @Nonnull String description, @Nullable Image icon) {
+  
+  private static <T> ExternalSystemNodeDescriptor<T> descriptor(T element, String description, @Nullable Image icon) {
     return new ExternalSystemNodeDescriptor<>(element, element.toString(), description, icon);
   }
 
-  @Nonnull
+  
   public ExternalSystemNode<?> getRoot() {
     return (ExternalSystemNode<?>)super.getRoot();
   }

@@ -18,8 +18,7 @@ import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -36,7 +35,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
   }
 
   @Override
-  public void customizeCellRenderer(@Nonnull JTree tree,
+  public void customizeCellRenderer(JTree tree,
                                     Object value,
                                     boolean selected,
                                     boolean expanded,
@@ -130,15 +129,15 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
         null;
   }
 
-  @Nonnull
+  
   private static EditorColorsScheme getScheme() {
     return EditorColorsManager.getInstance().getSchemeForCurrentUITheme();
   }
 
-  @Nonnull
-  protected SimpleTextAttributes getSimpleTextAttributes(@Nonnull PresentationData presentation,
+  
+  protected SimpleTextAttributes getSimpleTextAttributes(PresentationData presentation,
                                                          ColorValue color,
-                                                         @Nonnull Object node) {
+                                                         Object node) {
     SimpleTextAttributes simpleTextAttributes = getSimpleTextAttributes(presentation, getScheme());
 
     return addColorToSimpleTextAttributes(simpleTextAttributes, color);
@@ -158,7 +157,7 @@ public class NodeRenderer extends ColoredTreeCellRenderer {
   }
 
   private static SimpleTextAttributes getSimpleTextAttributes(@Nullable ItemPresentation presentation,
-                                                              @Nonnull EditorColorsScheme colorsScheme) {
+                                                              EditorColorsScheme colorsScheme) {
     if (presentation instanceof ColoredItemPresentation) {
       TextAttributesKey textAttributesKey = ((ColoredItemPresentation)presentation).getTextAttributesKey();
       if (textAttributesKey == null) return SimpleTextAttributes.REGULAR_ATTRIBUTES;

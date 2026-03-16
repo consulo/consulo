@@ -26,7 +26,6 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ import jakarta.annotation.Nonnull;
 public abstract class UnifiedApplication extends BaseApplication {
     protected static final Logger LOG = Logger.getInstance(BaseApplication.class);
 
-    public UnifiedApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    public UnifiedApplication(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
 
         myLock = new StampedRWLock();
@@ -49,7 +48,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
     }
 

@@ -39,8 +39,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -79,17 +78,17 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
         virtualFileManager.addVirtualFileListener(new VirtualFileListener() {
             @Override
-            public void fileCreated(@Nonnull VirtualFileEvent event) {
+            public void fileCreated(VirtualFileEvent event) {
                 myPackageCache.clear();
             }
 
             @Override
-            public void fileDeleted(@Nonnull VirtualFileEvent event) {
+            public void fileDeleted(VirtualFileEvent event) {
                 myPackageCache.clear();
             }
 
             @Override
-            public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
+            public void fileMoved(VirtualFileMoveEvent event) {
                 myPackageCache.clear();
             }
         }, this);
@@ -105,14 +104,14 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }
 
     @Override
-    public void dropCache(@Nonnull Class<? extends ModuleExtension> extensionClass) {
+    public void dropCache(Class<? extends ModuleExtension> extensionClass) {
         myPackageCache.remove(extensionClass);
     }
 
     @Nullable
     @Override
     @RequiredReadAction
-    public PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass) {
+    public PsiPackage findPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass) {
         ConcurrentMap<String, Object> map = myPackageCache.get(extensionClass);
         if (map != null) {
             Object value = map.get(qualifiedName);
@@ -135,7 +134,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }
 
     @Nullable
-    private PsiPackage createPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass) {
+    private PsiPackage createPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass) {
         Query<VirtualFile> dirs = myDirectoryIndex.get().getDirectoriesByPackageName(qualifiedName, true);
         if (dirs.findFirst() == null) {
             return null;
@@ -157,9 +156,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
     @Nullable
     private PsiPackage createPackageFromProviders(
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Class<? extends ModuleExtension> extensionClass,
-        @Nonnull String qualifiedName
+        VirtualFile virtualFile,
+        Class<? extends ModuleExtension> extensionClass,
+        String qualifiedName
     ) {
         Module moduleForFile = ModuleContentUtil.findModuleForFile(virtualFile, myProject);
         if (moduleForFile == null) {
@@ -181,9 +180,9 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }
 
     private PsiPackage createPackageFromLibrary(
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Class<? extends ModuleExtension> extensionClass,
-        @Nonnull String qualifiedName
+        VirtualFile virtualFile,
+        Class<? extends ModuleExtension> extensionClass,
+        String qualifiedName
     ) {
         if (myProjectFileIndex.isInLibraryClasses(virtualFile)) {
             List<OrderEntry> orderEntriesForFile = myProjectFileIndex.getOrderEntriesForFile(virtualFile);
@@ -209,7 +208,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Nullable
     @Override
     @RequiredReadAction
-    public PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass) {
+    public PsiPackage findPackage(PsiDirectory directory, Class<? extends ModuleExtension> extensionClass) {
         String packageName = myDirectoryIndex.get().getPackageName(directory.getVirtualFile());
         if (packageName == null) {
             return null;
@@ -220,7 +219,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     @Nullable
     @Override
     @RequiredReadAction
-    public PsiPackage findAnyPackage(@Nonnull VirtualFile directory) {
+    public PsiPackage findAnyPackage(VirtualFile directory) {
         String packageName = myDirectoryIndex.get().getPackageName(directory);
         if (packageName == null) {
             return null;
@@ -263,7 +262,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
     @Override
     @RequiredReadAction
-    public PsiPackage findAnyPackage(@Nonnull String packageName) {
+    public PsiPackage findAnyPackage(String packageName) {
         Query<VirtualFile> dirs = myDirectoryIndex.get().getDirectoriesByPackageName(packageName, true);
         if (dirs.findFirst() == null) {
             return null;
@@ -284,7 +283,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
     }
 
     @Nullable
-    private PsiPackage findAnyPackageFromCache(@Nonnull String packageName) {
+    private PsiPackage findAnyPackageFromCache(String packageName) {
         for (ConcurrentMap<String, Object> map : myPackageCache.values()) {
             if (map.get(packageName) instanceof PsiPackage psiPackage) {
                 return psiPackage;
@@ -295,7 +294,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
 
     @Override
     @RequiredReadAction
-    public boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
+    public boolean isValidPackageName(Module module, String packageName) {
         ExtensionPoint<PsiPackageSupportProvider> extensionPoint =
             myProject.getApplication().getExtensionPoint(PsiPackageSupportProvider.class);
 

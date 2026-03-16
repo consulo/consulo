@@ -15,12 +15,11 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface VcsLogHashFilter {
 
-  @Nonnull
+  
   Collection<String> getHashes();
 }

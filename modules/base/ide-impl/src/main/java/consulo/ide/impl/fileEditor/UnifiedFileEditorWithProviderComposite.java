@@ -25,7 +25,6 @@ import consulo.ui.Component;
 import consulo.ui.ex.ComponentContainer;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -55,14 +54,14 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     }
   }
 
-  @Nonnull
+  
   @Override
   public FileEditorProvider[] getProviders() {
     return myProviders;
   }
 
   @Override
-  public void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider) {
+  public void addEditor(FileEditor editor, FileEditorProvider provider) {
 
   }
 
@@ -81,13 +80,13 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
     return myFile;
   }
 
-  @Nonnull
+  
   @Override
   public FileEditor[] getEditors() {
     return myEditors;
   }
 
-  @Nonnull
+  
   @Override
   public FileEditor getSelectedEditor() {
     return myEditors[0];
@@ -99,13 +98,13 @@ public class UnifiedFileEditorWithProviderComposite implements FileEditorWithPro
   }
 
   @Override
-  public List<JComponent> getTopComponents(@Nonnull FileEditor editor) {
+  public List<JComponent> getTopComponents(FileEditor editor) {
     return List.of();
   }
 
-  @Nonnull
+  
   @Override
-  public Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component) {
+  public Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
     return () -> {};
   }
 

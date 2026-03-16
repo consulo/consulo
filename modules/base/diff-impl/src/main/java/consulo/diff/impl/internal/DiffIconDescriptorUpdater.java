@@ -23,7 +23,6 @@ import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiElement;
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ import jakarta.annotation.Nonnull;
 public class DiffIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override
-  public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+  public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
     if (element instanceof PsiBinaryFile binaryFile && binaryFile.getVirtualFile() instanceof DiffVirtualFile) {
       iconDescriptor.setMainIcon(PlatformIconGroup.actionsDiff());
       iconDescriptor.setRightIcon(null);

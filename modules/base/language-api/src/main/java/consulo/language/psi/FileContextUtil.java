@@ -19,8 +19,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -31,13 +30,13 @@ public class FileContextUtil {
   private FileContextUtil() { }
 
   @Nullable
-  public static PsiElement getFileContext(@Nonnull PsiFile file) {
+  public static PsiElement getFileContext(PsiFile file) {
     SmartPsiElementPointer pointer = file.getUserData(INJECTED_IN_ELEMENT);
     return pointer == null ? null : pointer.getElement();
   }
 
   @Nullable
-  public static PsiFile getContextFile(@Nonnull PsiElement element) {
+  public static PsiFile getContextFile(PsiElement element) {
     if (!element.isValid()) return null;
     PsiFile file = element.getContainingFile();
     if (file == null) return null;

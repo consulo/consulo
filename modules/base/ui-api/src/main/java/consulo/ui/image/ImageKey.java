@@ -17,8 +17,7 @@ package consulo.ui.image;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Locale;
 
 /**
@@ -39,14 +38,9 @@ public interface ImageKey extends Image {
   /**
    * ImageID must is case sensitive
    */
-  @Nonnull
-  static ImageKey of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+  static ImageKey of(String groupId, String imageId, int width, int height) {
     return UIInternal.get()._ImageKey_of(groupId, imageId, width, height);
   }
-
-  @Nonnull
   String getGroupId();
-
-  @Nonnull
   String getImageId();
 }

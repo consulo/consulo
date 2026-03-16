@@ -8,7 +8,6 @@ import consulo.usage.TextChunk;
 import consulo.usage.UsageGroup;
 import consulo.usage.UsageViewSettings;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;
@@ -18,15 +17,15 @@ import java.util.Enumeration;
  */
 public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFile {
   private final UsageViewImpl myUsageView;
-  @Nonnull
+  
   private final UsageViewSettings myUsageViewSettings;
 
-  public ExporterToTextFile(@Nonnull UsageViewImpl usageView, @Nonnull UsageViewSettings usageViewSettings) {
+  public ExporterToTextFile(UsageViewImpl usageView, UsageViewSettings usageViewSettings) {
     myUsageView = usageView;
     myUsageViewSettings = usageViewSettings;
   }
 
-  @Nonnull
+  
   @Override
   public String getReportText() {
     StringBuilder buf = new StringBuilder();
@@ -86,14 +85,14 @@ public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFi
     }
   }
 
-  @Nonnull
+  
   @Override
   public String getDefaultFilePath() {
     return myUsageViewSettings.getExportFileName();
   }
 
   @Override
-  public void exportedTo(@Nonnull String filePath) {
+  public void exportedTo(String filePath) {
     myUsageViewSettings.setExportFileName(filePath);
   }
 

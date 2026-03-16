@@ -43,8 +43,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     private boolean myNotLazyStepFinished;
 
-    @Nonnull
+    
     private final String myName;
 
     private List<Class> myNotLazyServices = new ArrayList<>();
@@ -86,7 +85,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     private final ComponentScope myComponentScope;
 
-    @Nonnull
+    
     private final ComponentBinding myComponentBinding;
 
     private Supplier<ThreeState> myDisposedState = () -> {
@@ -94,9 +93,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     };
 
     protected BaseComponentManager(@Nullable ComponentManager parent,
-                                   @Nonnull String name,
+                                   String name,
                                    @Nullable ComponentScope componentScope,
-                                   @Nonnull ComponentBinding componentBinding,
+                                   ComponentBinding componentBinding,
                                    boolean buildInjectionContainer) {
         myParent = parent;
         myName = name;
@@ -151,13 +150,13 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return profiles;
     }
 
-    @Nonnull
+    
     @Override
     public final Supplier<ThreeState> getDisposeState() {
         return myDisposedState;
     }
 
-    @Nonnull
+    
     protected InjectingContainer findRootContainer() {
         InjectingContainer root;
         String jdkModuleMain = Platform.current().jvm().getRuntimeProperty("jdk.module.main");
@@ -190,7 +189,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     }
 
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         builder.bind(ComponentBinding.class).to(myComponentBinding);
     }
 
@@ -247,7 +246,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         }
     }
 
-    protected <T> T runServiceInitialize(@Nonnull InjectingBinding binding, @Nonnull Supplier<T> runnable) {
+    protected <T> T runServiceInitialize(InjectingBinding binding, Supplier<T> runnable) {
         if (!myNotLazyStepFinished && !binding.isLazy() && myCurrentNotLazyServiceClass != null) {
             if (!Objects.equals(binding.getApiClass(), myCurrentNotLazyServiceClass) && InjectingContainer.LOG_INJECTING_PROBLEMS) {
                 LOG.warn(new IllegalAccessException("Initializing not lazy service [" + binding.getApiClass().getName() + "] from another service [" + myCurrentNotLazyServiceClass.getName() + "]"));
@@ -256,12 +255,12 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return runnable.get();
     }
 
-    @Nonnull
+    
     public final ComponentScope getComponentScope() {
         return myComponentScope;
     }
 
-    public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
+    public boolean initializeIfStorableComponent(Object component, boolean service, boolean lazy) {
         return false;
     }
 
@@ -317,7 +316,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return myNotLazyServices.size();
     }
 
-    @Nonnull
+    
     @Override
     public MessageBus getMessageBus() {
         if (myMessageBus == null) {
@@ -328,23 +327,23 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
     @Nullable
     @Override
-    public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+    public <T> T getInstanceIfCreated(Class<T> clazz) {
         if (myInjectingContainer == null) {
             throw throwDisposed();
         }
         return getInjectingContainer().getInstanceIfCreated(clazz);
     }
 
-    @Nonnull
+    
     @Override
-    public <T> T getInstance(@Nonnull Class<T> clazz) {
+    public <T> T getInstance(Class<T> clazz) {
         if (myInjectingContainer == null) {
             throw throwDisposed();
         }
         return getInjectingContainer().getInstance(clazz);
     }
 
-    @Nonnull
+    
     @Override
     public InjectingContainer getInjectingContainer() {
         InjectingContainer container = myInjectingContainer;
@@ -354,7 +353,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         return container;
     }
 
-    @Nonnull
+    
     private RuntimeException throwDisposed() {
         checkCanceled();
         return new ComponentManagerDisposedException("Already disposed: " + this);
@@ -363,9 +362,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     protected void checkCanceled() {
     }
 
-    @Nonnull
+    
     @Override
-    public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+    public <T> ExtensionPoint<T> getExtensionPoint(Class<T> extensionClass) {
         if (myExtensionArea == null) {
             throw throwDisposed();
         }
@@ -374,7 +373,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     }
 
     @Override
-    @Nonnull
+    
     public BooleanSupplier getDisposed() {
         return myDisposedCondition;
     }

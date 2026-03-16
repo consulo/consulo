@@ -17,14 +17,13 @@ package consulo.web.gwt.client.util;
 
 import consulo.web.gwt.shared.ui.state.RGBColorShared;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 20-May-16
  */
 public class GwtStyleUtil {
-  @Nonnull
+  
   public static String toString(RGBColorShared color) {
     return "rgb(" + color.myRed + ", " + color.myGreen + ", " + color.myBlue + ")";
   }

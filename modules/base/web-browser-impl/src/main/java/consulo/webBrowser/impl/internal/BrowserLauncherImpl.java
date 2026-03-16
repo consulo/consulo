@@ -30,8 +30,7 @@ import consulo.webBrowser.DefaultBrowserPolicy;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebBrowserManager;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Future;
@@ -74,8 +73,8 @@ public final class BrowserLauncherImpl extends BrowserLauncherAppless {
     @Override
     protected void checkCreatedProcess(@Nullable final WebBrowser browser,
                                        @Nullable final Project project,
-                                       @Nonnull GeneralCommandLine commandLine,
-                                       @Nonnull final Process process,
+                                       GeneralCommandLine commandLine,
+                                       final Process process,
                                        @Nullable final Runnable launchTask) {
         if (isOpenCommandUsed(commandLine)) {
             Future<?> future = Application.get().executeOnPooledThread(new Runnable() {

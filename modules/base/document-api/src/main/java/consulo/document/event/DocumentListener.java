@@ -18,7 +18,6 @@ package consulo.document.event;
 import consulo.document.Document;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -51,12 +50,12 @@ public interface DocumentListener extends EventListener {
   /**
    * Notifies about {@link Document#setInBulkUpdate(boolean) bulk mode} being enabled.
    */
-  default void bulkUpdateStarting(@Nonnull Document document) {
+  default void bulkUpdateStarting(Document document) {
   }
 
   /**
    * Notifies about {@link Document#setInBulkUpdate(boolean) bulk mode} being disabled.
    */
-  default void bulkUpdateFinished(@Nonnull Document document) {
+  default void bulkUpdateFinished(Document document) {
   }
 }

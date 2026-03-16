@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection.ui.header;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Batkovich
  */
 public interface SaveInputComponentValidator {
 
-  void doSave(@Nonnull String text);
+  void doSave(String text);
 
-  boolean checkValid(@Nonnull String text);
+  boolean checkValid(String text);
 
   void cancel();
 
@@ -38,7 +37,7 @@ public interface SaveInputComponentValidator {
     }
 
     @Override
-    public void doSave(@Nonnull String text) {
+    public void doSave(String text) {
       text = text.trim();
       if (myActive && myDelegate != null) {
         myDelegate.doSave(text);
@@ -47,7 +46,7 @@ public interface SaveInputComponentValidator {
     }
 
     @Override
-    public boolean checkValid(@Nonnull String text) {
+    public boolean checkValid(String text) {
       return myActive && myDelegate != null && myDelegate.checkValid(text.trim());
     }
 

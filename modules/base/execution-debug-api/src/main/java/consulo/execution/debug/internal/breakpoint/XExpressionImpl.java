@@ -19,30 +19,29 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
  */
 public class XExpressionImpl implements XExpression {
-  @Nonnull
+  
   private final String myExpression;
   private final Language myLanguage;
   private final String myCustomInfo;
   private final EvaluationMode myMode;
 
-  public XExpressionImpl(@Nonnull String expression, Language language, String customInfo) {
+  public XExpressionImpl(String expression, Language language, String customInfo) {
     this(expression, language, customInfo, EvaluationMode.EXPRESSION);
   }
 
-  public XExpressionImpl(@Nonnull String expression, Language language, String customInfo, EvaluationMode mode) {
+  public XExpressionImpl(String expression, Language language, String customInfo, EvaluationMode mode) {
     myExpression = expression;
     myLanguage = language;
     myCustomInfo = customInfo;
     myMode = mode;
   }
 
-  @Nonnull
+  
   @Override
   public String getExpression() {
     return myExpression;

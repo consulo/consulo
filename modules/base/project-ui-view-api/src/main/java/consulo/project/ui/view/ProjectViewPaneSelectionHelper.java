@@ -7,8 +7,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.List;
@@ -27,15 +26,15 @@ public interface ProjectViewPaneSelectionHelper {
      * @see AbstractTreeNode#canRepresent
      */
     @Nullable
-    public abstract List<? extends TreePath> computeAdjustedPaths(@Nonnull SelectionDescriptor selectionDescriptor);
+    public abstract List<? extends TreePath> computeAdjustedPaths(SelectionDescriptor selectionDescriptor);
 
     /**
      * @param selectionDescriptor information about target elements and potential {@link TreePath tree paths} for selection found by {@link AbstractProjectViewPane#createVisitor(PsiElement, VirtualFile, List)}  node visitor}
      * @return list of {@link TreePath tree paths} to select, computed from {@code selectionDescriptor} with first suitable selection helper
      * Returns {@link SelectionDescriptor#originalTreePaths original paths} by default
      */
-    @Nonnull
-    public static List<? extends TreePath> getAdjustedPaths(@Nonnull SelectionDescriptor selectionDescriptor) {
+    
+    public static List<? extends TreePath> getAdjustedPaths(SelectionDescriptor selectionDescriptor) {
         for (ProjectViewPaneSelectionHelper helper : EP_NAME.getExtensionList()) {
             List<? extends TreePath> adjustedPaths = helper.computeAdjustedPaths(selectionDescriptor);
             if (adjustedPaths != null) {
@@ -50,13 +49,13 @@ public interface ProjectViewPaneSelectionHelper {
         public final PsiElement targetPsiElement;
         @Nullable
         public final VirtualFile targetVirtualFile;
-        @Nonnull
+        
         public final List<TreePath> originalTreePaths;
 
         public SelectionDescriptor(
             @Nullable PsiElement targetPsiElement,
             @Nullable VirtualFile targetVirtualFile,
-            @Nonnull List<TreePath> originalTreePaths
+            List<TreePath> originalTreePaths
         ) {
             this.targetPsiElement = targetPsiElement;
             this.targetVirtualFile = targetVirtualFile;

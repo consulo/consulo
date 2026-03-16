@@ -19,7 +19,6 @@ import consulo.platform.Platform;
 import consulo.project.DumbService;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.DataInput;
@@ -44,12 +43,12 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   private final DataExternalizer<Integer> myValueExternalizer = new DataExternalizer<Integer>() {
     @Override
-    public void save(@Nonnull DataOutput out, Integer value) throws IOException {
+    public void save(DataOutput out, Integer value) throws IOException {
       out.write(value.intValue() & UsageSearchContext.ANY);
     }
 
     @Override
-    public Integer read(@Nonnull DataInput in) throws IOException {
+    public Integer read(DataInput in) throws IOException {
       return Integer.valueOf(in.readByte() & UsageSearchContext.ANY);
     }
   };
@@ -68,8 +67,8 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
 
   private final DataIndexer<IdIndexEntry, Integer, FileContent> myIndexer = new DataIndexer<IdIndexEntry, Integer, FileContent>() {
     @Override
-    @Nonnull
-    public Map<IdIndexEntry, Integer> map(@Nonnull FileContent inputData) {
+    
+    public Map<IdIndexEntry, Integer> map(FileContent inputData) {
       IdIndexer indexer = IdTableBuilding.getFileTypeIndexer(inputData.getFileType());
       if (indexer != null) {
         return indexer.map(inputData);
@@ -98,37 +97,37 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public ID<IdIndexEntry, Integer> getName() {
     return NAME;
   }
 
-  @Nonnull
+  
   @Override
   public DataIndexer<IdIndexEntry, Integer, FileContent> getIndexer() {
     return myIndexer;
   }
 
-  @Nonnull
+  
   @Override
   public DataExternalizer<Integer> getValueExternalizer() {
     return myValueExternalizer;
   }
 
-  @Nonnull
+  
   @Override
   public KeyDescriptor<IdIndexEntry> getKeyDescriptor() {
     return myKeyDescriptor;
   }
 
-  @Nonnull
+  
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return myInputFilter;
   }
 
-  public static boolean isIndexable(@Nonnull CacheBuilderRegistry cacheBuilderRegistry, FileType fileType) {
+  public static boolean isIndexable(CacheBuilderRegistry cacheBuilderRegistry, FileType fileType) {
     return fileType instanceof LanguageFileType ||
       fileType instanceof CustomSyntaxTableFileType ||
       IdTableBuilding.isIdIndexerRegistered(fileType) ||
@@ -140,7 +139,7 @@ public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> impl
     return true;
   }
 
-  public static boolean hasIdentifierInFile(@Nonnull PsiFile file, @Nonnull String name) {
+  public static boolean hasIdentifierInFile(PsiFile file, String name) {
     PsiUtilCore.ensureValid(file);
     if (file.getVirtualFile() == null || DumbService.isDumb(file.getProject())) {
       return StringUtil.contains(file.getViewProvider().getContents(), name);

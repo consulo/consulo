@@ -26,7 +26,6 @@ import consulo.compiler.artifact.element.ZipArtifactType;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.compiler.artifact.ui.*;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +36,12 @@ import java.util.List;
 public class ArtifactSourceItem extends PackagingSourceItem {
   private final Artifact myArtifact;
 
-  public ArtifactSourceItem(@Nonnull Artifact artifact) {
+  public ArtifactSourceItem(Artifact artifact) {
     myArtifact = artifact;
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
     final ArtifactPointer pointer = ArtifactPointerUtil.getPointerManager(context.getProject()).create(myArtifact, context.getArtifactModel());
     return new DelegatedSourceItemPresentation(new ArtifactElementPresentation(pointer, context)) {
       @Override
@@ -53,8 +52,8 @@ public class ArtifactSourceItem extends PackagingSourceItem {
   }
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
+  
+  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
     Project project = context.getProject();
     ArtifactPointer pointer = ArtifactPointerManager.getInstance(project).create(myArtifact, context.getArtifactModel());
     return Collections.singletonList(PackagingElementFactory.getInstance(context.getProject()).createArtifactElement(pointer, project));
@@ -64,7 +63,7 @@ public class ArtifactSourceItem extends PackagingSourceItem {
     return obj instanceof ArtifactSourceItem && myArtifact.equals(((ArtifactSourceItem)obj).myArtifact);
   }
 
-  @Nonnull
+  
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return myArtifact.getArtifactType() instanceof ZipArtifactType ? PackagingElementOutputKind.JAR_FILES : PackagingElementOutputKind.OTHER;

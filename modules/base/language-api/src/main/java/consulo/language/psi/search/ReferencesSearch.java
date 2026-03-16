@@ -13,8 +13,8 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.project.Project;
 import consulo.project.util.query.DumbAwareSearchParameters;
-import consulo.util.collection.HashingStrategy;import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.util.collection.HashingStrategy;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -42,8 +42,8 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
         private final boolean isSharedOptimizer;
 
         public SearchParameters(
-            @Nonnull PsiElement elementToSearch,
-            @Nonnull SearchScope scope,
+            PsiElement elementToSearch,
+            SearchScope scope,
             boolean ignoreAccessScope,
             @Nullable SearchRequestCollector optimizer
         ) {
@@ -55,7 +55,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
             myProject = PsiUtilCore.getProjectInReadAction(elementToSearch);
         }
 
-        public SearchParameters(@Nonnull PsiElement elementToSearch, @Nonnull SearchScope scope, boolean ignoreAccessScope) {
+        public SearchParameters(PsiElement elementToSearch, SearchScope scope, boolean ignoreAccessScope) {
             this(elementToSearch, scope, ignoreAccessScope, null);
         }
 
@@ -70,12 +70,12 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
         }
 
         @Override
-        @Nonnull
+        
         public Project getProject() {
             return myProject;
         }
 
-        @Nonnull
+        
         public PsiElement getElementToSearch() {
             return myElementToSearch;
         }
@@ -93,7 +93,7 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
          * @deprecated Same as {@link #getScopeDeterminedByUser()}, use {@link #getEffectiveSearchScope} instead
          */
         @Deprecated
-        @Nonnull
+        
         public SearchScope getScope() {
             return myScope;
         }
@@ -102,12 +102,12 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
             return myIgnoreAccessScope;
         }
 
-        @Nonnull
+        
         public SearchRequestCollector getOptimizer() {
             return myOptimizer;
         }
 
-        @Nonnull
+        
         public SearchScope getEffectiveSearchScope() {
             if (myIgnoreAccessScope) {
                 return myScope;
@@ -133,8 +133,8 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param element the element (declaration) the references to which are requested.
      * @return the query allowing to enumerate the references.
      */
-    @Nonnull
-    public static Query<PsiReference> search(@Nonnull PsiElement element) {
+    
+    public static Query<PsiReference> search(PsiElement element) {
         return search(element, GlobalSearchScope.allScope(PsiUtilCore.getProjectInReadAction(element)), false);
     }
 
@@ -145,8 +145,8 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param searchScope the scope in which the search is performed.
      * @return the query allowing to enumerate the references.
      */
-    @Nonnull
-    public static Query<PsiReference> search(@Nonnull PsiElement element, @Nonnull SearchScope searchScope) {
+    
+    public static Query<PsiReference> search(PsiElement element, SearchScope searchScope) {
         return search(element, searchScope, false);
     }
 
@@ -159,8 +159,8 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param ignoreAccessScope if true, references which are invalid because of access rules are included in the results.
      * @return the query allowing to enumerate the references.
      */
-    @Nonnull
-    public static Query<PsiReference> search(@Nonnull PsiElement element, @Nonnull SearchScope searchScope, boolean ignoreAccessScope) {
+    
+    public static Query<PsiReference> search(PsiElement element, SearchScope searchScope, boolean ignoreAccessScope) {
         return search(new SearchParameters(element, searchScope, ignoreAccessScope));
     }
 
@@ -170,8 +170,8 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
      * @param parameters the parameters for the search (contain also the element the references to which are requested).
      * @return the query allowing to enumerate the references.
      */
-    @Nonnull
-    public static Query<PsiReference> search(@Nonnull SearchParameters parameters) {
+    
+    public static Query<PsiReference> search(SearchParameters parameters) {
         Query<PsiReference> result = INSTANCE.createQuery(parameters);
         if (parameters.isSharedOptimizer) {
             return uniqueResults(result);
@@ -184,17 +184,17 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
         return uniqueResults(new MergeQuery<>(result, new SearchRequestQuery(PsiUtilCore.getProjectInReadAction(element), requests)));
     }
 
-    @Nonnull
-    private static Query<PsiReference> uniqueResults(@Nonnull Query<? extends PsiReference> composite) {
+    
+    private static Query<PsiReference> uniqueResults(Query<? extends PsiReference> composite) {
         return new UniqueResultsQuery<>(composite, HashingStrategy.canonical(), ReferenceDescriptor.MAPPER);
     }
 
     public static void searchOptimized(
-        @Nonnull PsiElement element,
-        @Nonnull SearchScope searchScope,
+        PsiElement element,
+        SearchScope searchScope,
         boolean ignoreAccessScope,
-        @Nonnull SearchRequestCollector collector,
-        @Nonnull Predicate<? super PsiReference> processor
+        SearchRequestCollector collector,
+        Predicate<? super PsiReference> processor
     ) {
         searchOptimized(
             element,
@@ -207,12 +207,12 @@ public class ReferencesSearch extends ExtensibleQueryFactory<PsiReference, Refer
     }
 
     public static void searchOptimized(
-        @Nonnull PsiElement element,
-        @Nonnull SearchScope searchScope,
+        PsiElement element,
+        SearchScope searchScope,
         boolean ignoreAccessScope,
-        @Nonnull SearchRequestCollector collector,
+        SearchRequestCollector collector,
         boolean inReadAction,
-        @Nonnull BiPredicate<? super PsiReference, ? super SearchRequestCollector> processor
+        BiPredicate<? super PsiReference, ? super SearchRequestCollector> processor
     ) {
         SearchRequestCollector nested = new SearchRequestCollector(collector.getSearchSession());
         Query<PsiReference> query = search(new SearchParameters(element, searchScope, ignoreAccessScope, nested));

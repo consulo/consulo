@@ -21,7 +21,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionList;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -30,7 +29,7 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface WatchedRootsProvider {
-  @Nonnull
+  
   @RequiredReadAction
   Set<String> getRootsToWatch();
 }

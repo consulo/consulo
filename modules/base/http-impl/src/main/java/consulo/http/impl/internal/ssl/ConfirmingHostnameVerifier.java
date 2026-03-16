@@ -1,6 +1,5 @@
 package consulo.http.impl.internal.ssl;
 
-import jakarta.annotation.Nonnull;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
 import javax.net.ssl.SSLException;
@@ -26,7 +25,7 @@ import java.security.cert.X509Certificate;
 class ConfirmingHostnameVerifier implements X509HostnameVerifier {
     private final X509HostnameVerifier myVerifier;
 
-    public ConfirmingHostnameVerifier(@Nonnull X509HostnameVerifier verifier) {
+    public ConfirmingHostnameVerifier(X509HostnameVerifier verifier) {
         myVerifier = verifier;
     }
 

@@ -25,7 +25,6 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.pattern.ElementPattern;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -37,11 +36,11 @@ public abstract class PsiReferenceProviderByPattern extends PsiReferenceProvider
   private static final ExtensionPointCacheKey<PsiReferenceProviderByPattern, ByLanguageValue<List<PsiReferenceProviderByPattern>>> KEY =
           ExtensionPointCacheKey.create("PsiReferenceProviderByPattern", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<PsiReferenceProviderByPattern> forLanguage(@Nonnull Language language) {
+  
+  public static List<PsiReferenceProviderByPattern> forLanguage(Language language) {
     return Application.get().getExtensionPoint(PsiReferenceProviderByPattern.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nonnull
+  
   public abstract ElementPattern<PsiElement> getElementPattern();
 }

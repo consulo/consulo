@@ -17,15 +17,14 @@
 package consulo.execution.ui.console;
 
 import consulo.process.ProcessHandler;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 public abstract class ConsoleState {
-  @Nonnull
-  public abstract ConsoleState attachTo(@Nonnull ConsoleView console, ProcessHandler processHandler);
+  
+  public abstract ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler);
 
-  @Nonnull
+  
   public abstract ConsoleState dispose();
 
   public boolean isFinished() {
@@ -39,15 +38,15 @@ public abstract class ConsoleState {
   /**
    * @return whether the given line should be folded as a command line if it's first in the console
    */
-  public boolean isCommandLine(@Nonnull String line) {
+  public boolean isCommandLine(String line) {
     return false;
   }
 
-  public void sendUserInput(@Nonnull String input) throws IOException {
+  public void sendUserInput(String input) throws IOException {
   }
 
   public abstract static class NotStartedStated extends ConsoleState {
-    @Nonnull
+    
     @Override
     public ConsoleState dispose() {
       // not disposable

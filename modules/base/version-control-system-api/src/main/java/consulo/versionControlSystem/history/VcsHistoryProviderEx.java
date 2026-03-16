@@ -17,14 +17,13 @@ package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface VcsHistoryProviderEx extends VcsHistoryProvider {
   @Nullable
   VcsFileRevision getLastRevision(FilePath filePath) throws VcsException;
 
-  void reportAppendableHistory(@Nonnull FilePath path,
+  void reportAppendableHistory(FilePath path,
                                @Nullable VcsRevisionNumber startingRevision,
-                               @Nonnull VcsAppendableHistorySessionPartner partner) throws VcsException;
+                               VcsAppendableHistorySessionPartner partner) throws VcsException;
 }

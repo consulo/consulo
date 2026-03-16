@@ -18,8 +18,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ToolbarDecorator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -55,21 +54,21 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
     removeButton.setEnabled(i >= 0);
   }
 
-  public void reset(@Nonnull CodeStyleSettings settings) {
+  public void reset(CodeStyleSettings settings) {
     myModel.clear();
     for (FileSetDescriptor descriptor : settings.getExcludedFiles().getDescriptors()) {
       myModel.addElement(descriptor);
     }
   }
 
-  public void apply(@Nonnull CodeStyleSettings settings) {
+  public void apply(CodeStyleSettings settings) {
     settings.getExcludedFiles().clear();
     for (int i = 0; i < myModel.getSize(); i++) {
       settings.getExcludedFiles().addDescriptor(myModel.get(i));
     }
   }
 
-  public boolean isModified(@Nonnull CodeStyleSettings settings) {
+  public boolean isModified(CodeStyleSettings settings) {
     if (myModel.size() != settings.getExcludedFiles().getDescriptors().size()) return true;
     for (int i = 0; i < myModel.getSize(); i++) {
       if (!myModel.get(i).equals(settings.getExcludedFiles().getDescriptors().get(i))) {
@@ -157,7 +156,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
     }
   }
 
-  public void setSchemesModel(@Nonnull CodeStyleSchemesModel schemesModel) {
+  public void setSchemesModel(CodeStyleSchemesModel schemesModel) {
     mySchemesModel = schemesModel;
   }
 
@@ -199,7 +198,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
     }
   }
 
-  private void ensureScopeExists(@Nonnull NamedScopeDescriptor descriptor) {
+  private void ensureScopeExists(NamedScopeDescriptor descriptor) {
     List<NamedScopesHolder> holders = getScopeHolders();
     for (NamedScopesHolder holder : holders) {
       if (holder.getScope(descriptor.getName()) != null) return;
@@ -216,7 +215,7 @@ public class ExcludedFilesList extends JBList<FileSetDescriptor> {
   }
 
   @Nullable
-  private FileSetDescriptor findDescriptor(@Nonnull String name) {
+  private FileSetDescriptor findDescriptor(String name) {
     for (int i = 0; i < myModel.size(); i++) {
       if (name.equals(myModel.get(i).getName())) return myModel.get(i);
     }

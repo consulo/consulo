@@ -42,8 +42,7 @@ import consulo.ui.impl.UIDataObject;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -90,13 +89,12 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         return myInitializedComponent != null;
     }
 
-    @Nonnull
     @Override
-    public Disposable addClickListener(@Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+    public Disposable addClickListener(ComponentEventListener<Component, ClickEvent> clickListener) {
         ClickListener awtClickListener = new ClickListener() {
             @Override
             @RequiredUIAccess
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+            public boolean onClick(MouseEvent event, int clickCount) {
                 clickListener.onEvent(new ClickEvent(SwingComponentDelegate.this, DesktopAWTInputDetails.convert(event.getComponent(), event)));
                 return true;
             }
@@ -121,7 +119,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         toAWTComponent().requestFocus();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getToolTipText() {
         JComponent component = (JComponent) toAWTComponent();
@@ -129,12 +126,11 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
     }
 
     @Override
-    public void setToolTipText(@Nonnull LocalizeValue value) {
+    public void setToolTipText(LocalizeValue value) {
         JComponent component = (JComponent) toAWTComponent();
         component.setToolTipText(StringUtil.nullize(value.get()));
     }
 
-    @Nonnull
     @Override
     public T toAWTComponent() {
         if (myInitializedComponent == null) {
@@ -175,48 +171,45 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size2D size) {
+    public void setSize(Size2D size) {
         toAWTComponent().setPreferredSize(TargetAWT.to(size));
     }
 
-    @Nonnull
     @Override
     public Font getFont() {
         return new DesktopFontImpl(toAWTComponent().getFont());
     }
 
     @Override
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
         toAWTComponent().setFont(TargetAWT.to(font));
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         dataObject().putUserData(key, value);
     }
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return dataObject().getUserData(key);
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
-                                                                                     @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
+                                                                                     ComponentEventListener<C, E> listener) {
         return dataObject().addListener(eventClass, listener);
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return dataObject().getDispatcher(eventClass);
     }
 
     @Override
     @RequiredUIAccess
-    public void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
+    public void addBorders(BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
         for (BorderPosition position : BorderPosition.values()) {
             dataObject().addBorder(position, borderStyle, colorKey, width);
         }
@@ -226,7 +219,7 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @RequiredUIAccess
     @Override
-    public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
+    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
         dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
 
         bordersChanged();
@@ -234,7 +227,7 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    public void removeBorder(BorderPosition borderPosition) {
         dataObject().removeBorder(borderPosition);
 
         bordersChanged();
@@ -271,7 +264,6 @@ public abstract class SwingComponentDelegate<T extends java.awt.Component> imple
         component.setBorder(new UIComponentBorder(borders));
     }
 
-    @Nonnull
     protected UIDataObject dataObject() {
         JComponent component = (JComponent) toAWTComponent();
         UIDataObject dataObject = (UIDataObject) component.getClientProperty(UIDataObject.class);

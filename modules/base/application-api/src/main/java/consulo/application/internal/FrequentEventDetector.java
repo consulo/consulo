@@ -20,7 +20,6 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,13 +51,13 @@ public class FrequentEventDetector {
     this(eventCountThreshold, timeSpanMs, Level.INFO);
   }
 
-  public FrequentEventDetector(int eventCountThreshold, int timeSpanMs, @Nonnull Level level) {
+  public FrequentEventDetector(int eventCountThreshold, int timeSpanMs, Level level) {
     myEventCountThreshold = eventCountThreshold;
     myTimeSpanMs = timeSpanMs;
     myLevel = level;
   }
 
-  public void eventHappened(@Nonnull Object event) {
+  public void eventHappened(Object event) {
     if (!enabled) return;
     if (myEventsPosted.incrementAndGet() > myEventCountThreshold) {
       boolean shouldLog = false;
@@ -102,7 +101,7 @@ public class FrequentEventDetector {
     }
   }
 
-  public static void disableUntil(@Nonnull Disposable reenable) {
+  public static void disableUntil(Disposable reenable) {
     enabled = false;
     Disposer.register(reenable, () -> enabled = true);
   }

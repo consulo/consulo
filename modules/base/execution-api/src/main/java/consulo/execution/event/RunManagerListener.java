@@ -18,31 +18,30 @@ package consulo.execution.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.execution.RunnerAndConfigurationSettings;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventListener;
 
 @TopicAPI(ComponentScope.PROJECT)
 @SuppressWarnings("deprecation")
 public interface RunManagerListener extends EventListener {
-  default void runConfigurationAdded(@Nonnull RunManagerListenerEvent event) {
+  default void runConfigurationAdded(RunManagerListenerEvent event) {
     runConfigurationAdded(event.getSettings());
   }
 
-  default void runConfigurationChanged(@Nonnull RunManagerListenerEvent event) {
+  default void runConfigurationChanged(RunManagerListenerEvent event) {
     runConfigurationChanged(event.getSettings(), event.getExistingId());
   }
 
-  default void runConfigurationRemoved(@Nonnull RunManagerListenerEvent event) {
+  default void runConfigurationRemoved(RunManagerListenerEvent event) {
     runConfigurationRemoved(event.getSettings());
   }
 
-  default void runConfigurationSelected(@Nonnull RunManagerListenerEvent event) {
+  default void runConfigurationSelected(RunManagerListenerEvent event) {
     runConfigurationSelected(event.getSettings());
   }
 
-  default void beforeRunTasksChanged(@Nonnull RunManagerListenerEvent event) {
+  default void beforeRunTasksChanged(RunManagerListenerEvent event) {
   }
 
   @Deprecated
@@ -55,20 +54,20 @@ public interface RunManagerListener extends EventListener {
   }
 
   @Deprecated
-  default void runConfigurationAdded(@Nonnull RunnerAndConfigurationSettings settings) {
+  default void runConfigurationAdded(RunnerAndConfigurationSettings settings) {
   }
 
   @Deprecated
-  default void runConfigurationRemoved(@Nonnull RunnerAndConfigurationSettings settings) {
+  default void runConfigurationRemoved(RunnerAndConfigurationSettings settings) {
   }
 
   @Deprecated
-  default void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings, String existingId) {
+  default void runConfigurationChanged(RunnerAndConfigurationSettings settings, String existingId) {
     runConfigurationChanged(settings);
   }
 
   @Deprecated
-  default void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
+  default void runConfigurationChanged(RunnerAndConfigurationSettings settings) {
   }
 
   default void beginUpdate() {

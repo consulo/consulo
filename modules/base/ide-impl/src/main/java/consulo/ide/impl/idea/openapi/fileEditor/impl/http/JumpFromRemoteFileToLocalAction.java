@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.ui.FileAppearanceService;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -35,7 +34,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.http.RemoteFileState;
-import jakarta.annotation.Nonnull;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -63,7 +62,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         String url = myFile.getUrl();
         String fileName = myFile.getName();
         Collection<VirtualFile> files = findLocalFiles(myProject, url, fileName);
@@ -77,11 +76,11 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
             navigateToFile(myProject, ContainerUtil.getFirstItem(files, null));
         }
         else {
-            JList<VirtualFile> list = new JBList<>(VfsUtilCore.toVirtualFileArray(files));
+            JList<VirtualFile> list = new JBList<>(VirtualFileUtil.toVirtualFileArray(files));
             list.setCellRenderer(new ColoredListCellRenderer<>() {
                 @Override
                 protected void customizeCellRenderer(
-                    @Nonnull JList<? extends VirtualFile> list,
+                    JList<? extends VirtualFile> list,
                     VirtualFile value,
                     int index,
                     boolean selected,
@@ -103,7 +102,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
         }
     }
 
-    public static Collection<VirtualFile> findLocalFiles(@Nonnull Project project, @Nonnull String url, @Nonnull String fileName) {
+    public static Collection<VirtualFile> findLocalFiles(Project project, String url, String fileName) {
         VirtualFile file = project.getApplication().getExtensionPoint(LocalFileFinder.class)
             .computeSafeIfAny(finder -> finder.findLocalFile(url, project));
         if (file != null) {
@@ -112,7 +111,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
         return FilenameIndex.getVirtualFilesByName(project, fileName, GlobalSearchScope.allScope(project));
     }
 
-    private static void navigateToFile(Project project, @Nonnull VirtualFile file) {
+    private static void navigateToFile(Project project, VirtualFile file) {
         new OpenFileDescriptorImpl(project, file).navigate(true);
     }
 }

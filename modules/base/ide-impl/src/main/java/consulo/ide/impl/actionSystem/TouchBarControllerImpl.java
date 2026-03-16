@@ -24,8 +24,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.internal.TouchBarControllerInternal;
 import consulo.ui.ex.internal.TouchBarFacade;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -70,7 +69,7 @@ public class TouchBarControllerImpl implements TouchBarControllerInternal {
     }
 
     @Override
-    public void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent) {
+    public void showPopupItems(JBPopup popup, JComponent popupComponent) {
         if (myFacade == null) {
             return;
         }
@@ -79,7 +78,7 @@ public class TouchBarControllerImpl implements TouchBarControllerInternal {
     }
 
     @Override
-    public void onUpdateEditorHeader(@Nonnull Object editor, JComponent header) {
+    public void onUpdateEditorHeader(Object editor, JComponent header) {
         if (myFacade == null) {
             return;
         }
@@ -93,7 +92,7 @@ public class TouchBarControllerImpl implements TouchBarControllerInternal {
     }
 
     @Override
-    public void setButtonActions(@Nonnull JComponent component, Collection<? extends JButton> buttons, Collection<? extends JButton> principal, JButton defaultButton, @Nullable ActionGroup extraActions) {
+    public void setButtonActions(JComponent component, Collection<? extends JButton> buttons, Collection<? extends JButton> principal, JButton defaultButton, @Nullable ActionGroup extraActions) {
         if (myFacade == null) {
             return;
         }
@@ -103,12 +102,12 @@ public class TouchBarControllerImpl implements TouchBarControllerInternal {
 
     @Nullable
     @Override
-    public Disposable showWindowActions(@Nonnull Component contentPane) {
+    public Disposable showWindowActions(Component contentPane) {
         return myFacade == null ? null : myFacade.showWindowActions(contentPane);
     }
 
     @Override
-    public void setActions(@Nonnull JComponent component, @Nullable ActionGroup group) {
+    public void setActions(JComponent component, @Nullable ActionGroup group) {
         if (myFacade == null) {
             return;
         }

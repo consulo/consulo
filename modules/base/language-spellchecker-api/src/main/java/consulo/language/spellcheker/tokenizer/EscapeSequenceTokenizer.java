@@ -7,7 +7,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.spellcheker.tokenizer.splitter.PlainTextTokenSplitter;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class EscapeSequenceTokenizer<T extends PsiElement> extends Tokenizer<T> {
     private static final Key<int[]> ESCAPE_OFFSETS = Key.create("escape.tokenizer.offsets");
@@ -30,7 +29,7 @@ public abstract class EscapeSequenceTokenizer<T extends PsiElement> extends Toke
         }
     }
 
-    @Nonnull
+    
     @Override
     public TextRange getHighlightingRange(PsiElement element, int offset, TextRange range) {
         int[] offsets = element.getUserData(ESCAPE_OFFSETS);

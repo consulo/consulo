@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.io.FileTooBigException;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,20 +32,20 @@ import java.nio.file.Path;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface RawFileLoader {
-    @Nonnull
+    
     static RawFileLoader getInstance() {
         return Application.get().getInstance(RawFileLoader.class);
     }
 
-    default byte[] loadFileBytes(@Nonnull Path path) throws IOException, FileTooBigException {
+    default byte[] loadFileBytes(Path path) throws IOException, FileTooBigException {
         return loadFileBytes(path.toFile());
     }
 
-    @Nonnull
-    byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException;
+    
+    byte[] loadFileBytes(File file) throws IOException, FileTooBigException;
 
-    @Nonnull
-    default String loadFileText(@Nonnull File file, @Nonnull Charset charset) throws IOException, FileTooBigException {
+    
+    default String loadFileText(File file, Charset charset) throws IOException, FileTooBigException {
         return new String(loadFileBytes(file), charset);
     }
 

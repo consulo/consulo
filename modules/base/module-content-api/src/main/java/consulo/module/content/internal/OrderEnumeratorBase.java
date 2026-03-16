@@ -28,8 +28,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +55,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   protected RootModelProvider myModulesProvider;
   private final OrderRootsCache myCache;
 
-  public OrderEnumeratorBase(@Nullable Module module, @Nonnull Project project, @Nullable OrderRootsCache cache) {
+  public OrderEnumeratorBase(@Nullable Module module, Project project, @Nullable OrderRootsCache cache) {
     myCache = cache;
     List<OrderEnumerationPolicy> customHandlers = null;
     for (OrderEnumerationPolicy policy : project.getApplication().getExtensionList(OrderEnumerationPolicy.class)) {
@@ -136,7 +135,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public OrderEnumerator using(@Nonnull RootModelProvider provider) {
+  public OrderEnumerator using(RootModelProvider provider) {
     myModulesProvider = provider;
     return this;
   }
@@ -152,12 +151,12 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public OrderRootsEnumerator roots(@Nonnull OrderRootType rootType) {
+  public OrderRootsEnumerator roots(OrderRootType rootType) {
     return new OrderRootsEnumeratorImpl(this, rootType);
   }
 
   @Override
-  public OrderRootsEnumerator roots(@Nonnull Function<OrderEntry, OrderRootType> rootTypeProvider) {
+  public OrderRootsEnumerator roots(Function<OrderEntry, OrderRootType> rootTypeProvider) {
     return new OrderRootsEnumeratorImpl(this, rootTypeProvider);
   }
 
@@ -272,7 +271,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public void forEachLibrary(@Nonnull Processor<Library> processor) {
+  public void forEachLibrary(Processor<Library> processor) {
     forEach(orderEntry -> {
       if (orderEntry instanceof LibraryOrderEntry) {
         Library library = ((LibraryOrderEntry)orderEntry).getLibrary();
@@ -285,7 +284,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public void forEachModule(@Nonnull Processor<Module> processor) {
+  public void forEachModule(Processor<Module> processor) {
     forEach(orderEntry -> {
       if (myRecursively && orderEntry instanceof ModuleSourceOrderEntry) {
         Module module = ((ModuleSourceOrderEntry)orderEntry).getRootModel().getModule();
@@ -302,7 +301,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   }
 
   @Override
-  public <R> R process(@Nonnull RootPolicy<R> policy, R initialValue) {
+  public <R> R process(RootPolicy<R> policy, R initialValue) {
     OrderEntryProcessor<R> processor = new OrderEntryProcessor<>(policy, initialValue);
     forEach(processor);
     return processor.myValue;
@@ -332,7 +331,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
     return myProductionOnly;
   }
 
-  public boolean isRootModuleModel(@Nonnull ModuleRootModel rootModel) {
+  public boolean isRootModuleModel(ModuleRootModel rootModel) {
     return false;
   }
 
@@ -341,7 +340,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
    *
    * @param processor processor
    */
-  public abstract void processRootModules(@Nonnull Processor<Module> processor);
+  public abstract void processRootModules(Processor<Module> processor);
 
   private class OrderEntryProcessor<R> implements Processor<OrderEntry> {
     private R myValue;

@@ -19,7 +19,6 @@ import consulo.ui.ex.action.CompactActionGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,7 +28,7 @@ public class DefaultCompactActionGroup extends DefaultActionGroup implements Com
         super();
     }
 
-    public DefaultCompactActionGroup(@Nonnull AnAction... actions) {
+    public DefaultCompactActionGroup(AnAction... actions) {
         super(actions);
     }
 

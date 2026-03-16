@@ -6,8 +6,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.Arrays;
 
@@ -18,19 +17,19 @@ import java.util.Arrays;
  * Last, you must call {@link #commitChanges()}
  */
 public interface SdkModificator {
-  @Nonnull
+  
   String getName();
 
-  void setName(@Nonnull String name);
+  void setName(String name);
 
   String getHomePath();
 
   void setHomePath(String path);
 
-  @Nonnull
+  
   Path getHomeNioPath();
 
-  void setHomeNioPath(@Nonnull Path path);
+  void setHomeNioPath(Path path);
 
   @Nullable
   String getVersionString();
@@ -41,26 +40,26 @@ public interface SdkModificator {
 
   void setSdkAdditionalData(SdkAdditionalData data);
 
-  @Nonnull
-  VirtualFile[] getRoots(@Nonnull OrderRootType rootType);
+  
+  VirtualFile[] getRoots(OrderRootType rootType);
 
-  @Nonnull
-  default Object[] getUrls(@Nonnull OrderRootType rootType) {
+  
+  default Object[] getUrls(OrderRootType rootType) {
     return Arrays.stream(getRoots(rootType)).map(VirtualFile::getUrl).toArray(ArrayUtil.STRING_ARRAY_FACTORY);
   }
 
-  void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType);
+  void addRoot(VirtualFile root, OrderRootType rootType);
 
-  default void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  default void addRoot(String url, OrderRootType rootType) {
     VirtualFile rootFile = VirtualFileManager.getInstance().findFileByUrl(url);
     if (rootFile != null) {
       addRoot(rootFile, rootType);
     }
   }
 
-  void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType);
+  void removeRoot(VirtualFile root, OrderRootType rootType);
 
-  default void removeRoot(@Nonnull String url, @Nonnull OrderRootType rootType) {
+  default void removeRoot(String url, OrderRootType rootType) {
     for (VirtualFile file : getRoots(rootType)) {
       if (file.getUrl().equals(url)) {
         removeRoot(file, rootType);
@@ -69,7 +68,7 @@ public interface SdkModificator {
     }
   }
 
-  void removeRoots(@Nonnull OrderRootType rootType);
+  void removeRoots(OrderRootType rootType);
 
   void removeAllRoots();
 

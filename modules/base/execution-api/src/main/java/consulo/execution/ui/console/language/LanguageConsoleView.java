@@ -25,43 +25,42 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author gregsh
  */
 public interface LanguageConsoleView extends ConsoleView, Disposable {
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   String getTitle();
 
   void setTitle(String title);
 
-  @Nonnull
+  
   PsiFile getFile();
 
-  @Nonnull
+  
   VirtualFile getVirtualFile();
 
-  @Nonnull
+  
   EditorEx getCurrentEditor();
 
-  @Nonnull
+  
   EditorEx getConsoleEditor();
 
-  @Nonnull
+  
   Document getEditorDocument();
 
-  @Nonnull
+  
   EditorEx getHistoryViewer();
 
-  @Nonnull
+  
   Language getLanguage();
 
-  void setLanguage(@Nonnull Language language);
+  void setLanguage(Language language);
 
   @Nullable
   String getPrompt();
@@ -71,9 +70,9 @@ public interface LanguageConsoleView extends ConsoleView, Disposable {
 
   void setPrompt(@Nullable String prompt);
 
-  void setPromptAttributes(@Nonnull ConsoleViewContentType textAttributes);
+  void setPromptAttributes(ConsoleViewContentType textAttributes);
 
-  void setInputText(@Nonnull String inputText);
+  void setInputText(String inputText);
 
   boolean isEditable();
 

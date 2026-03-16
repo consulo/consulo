@@ -18,7 +18,6 @@ package consulo.localHistory.impl.internal.change;
 
 import consulo.localHistory.impl.internal.Content;
 import consulo.localHistory.impl.internal.StreamUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -28,12 +27,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class PutLabelChange extends Change {
-  @Nonnull
+  
   private final String myName;
-  @Nonnull
+  
   private final String myProjectId;
 
-  public PutLabelChange(long id, @Nonnull String name, @Nonnull String projectId) {
+  public PutLabelChange(long id, String name, String projectId) {
     super(id);
     myName = name;
     myProjectId = projectId;
@@ -52,12 +51,12 @@ public class PutLabelChange extends Change {
     StreamUtil.writeString(out, myProjectId);
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   public String getProjectId() {
     return myProjectId;
   }

@@ -5,10 +5,8 @@ import consulo.configurable.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
-import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
 
@@ -69,7 +67,7 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
     }
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "tasks.timeTracking";
@@ -81,7 +79,7 @@ public class TimeTrackingConfigurable implements SearchableConfigurable, Configu
     return null;
   }
 
-  @Nls
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Time Tracking");

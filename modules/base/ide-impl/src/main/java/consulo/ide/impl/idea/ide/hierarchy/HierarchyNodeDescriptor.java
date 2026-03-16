@@ -25,8 +25,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.usage.UsageTreeColors;
 import consulo.usage.UsageTreeColorsScheme;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
     protected CompositeAppearance myHighlightedText;
@@ -34,9 +33,9 @@ public abstract class HierarchyNodeDescriptor extends SmartElementDescriptor {
     protected final boolean myIsBase;
 
     protected HierarchyNodeDescriptor(
-        @Nonnull Project project,
+        Project project,
         NodeDescriptor parentDescriptor,
-        @Nonnull PsiElement element,
+        PsiElement element,
         boolean isBase
     ) {
         super(project, parentDescriptor, element);

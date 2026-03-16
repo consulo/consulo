@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -12,13 +11,13 @@ public abstract class ClickListener {
   private static final int EPS = 4;
   private MouseAdapter myListener;
 
-  public abstract boolean onClick(@Nonnull MouseEvent event, int clickCount);
+  public abstract boolean onClick(MouseEvent event, int clickCount);
 
-  public void installOn(@Nonnull Component c) {
+  public void installOn(Component c) {
     installOn(c, false);
   }
 
-  public void installOn(@Nonnull Component c, boolean allowDragWhileClicking) {
+  public void installOn(Component c, boolean allowDragWhileClicking) {
     myListener = new MouseAdapter() {
       private Point pressPoint;
       private Point lastClickPoint;

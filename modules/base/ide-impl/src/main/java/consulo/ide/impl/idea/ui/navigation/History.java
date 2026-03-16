@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public final class History {
   private boolean myNavigatedNow;
   private final CopyOnWriteArraySet<HistoryListener> myListeners = new CopyOnWriteArraySet<>();
 
-  public History(@Nonnull Place.Navigator root) {
+  public History(Place.Navigator root) {
     myRoot = root;
   }
 
@@ -50,7 +49,7 @@ public final class History {
     }
   }
 
-  public void pushPlace(@Nonnull Place place) {
+  public void pushPlace(Place place) {
     while (myCurrentPos > 0 && myHistory.size() > 0 && myCurrentPos < myHistory.size() - 1) {
       myHistory.remove(myHistory.size() - 1);
     }

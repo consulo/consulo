@@ -24,8 +24,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -36,8 +35,8 @@ import java.util.List;
 public interface AnnotatorFactory extends LanguageExtension {
   ExtensionPointCacheKey<AnnotatorFactory, ByLanguageValue<List<AnnotatorFactory>>> KEY = ExtensionPointCacheKey.create("AnnotatorFactory", LanguageOneToMany.build(true));
 
-  @Nonnull
-  static List<AnnotatorFactory> forLanguage(@Nonnull Project project, @Nonnull Language language) {
+  
+  static List<AnnotatorFactory> forLanguage(Project project, Language language) {
     return project.getExtensionPoint(AnnotatorFactory.class).getOrBuildCache(KEY).requiredGet(language);
   }
 

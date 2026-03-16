@@ -4,8 +4,7 @@ package consulo.execution.impl.internal.service;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.awt.*;
@@ -14,7 +13,7 @@ import java.awt.event.MouseEvent;
 public final class ServiceViewTreeLinkMouseListener extends RepaintLinkMouseListenerBase<Object> {
   private final Tree myTree;
 
-  public ServiceViewTreeLinkMouseListener(@Nonnull Tree tree) {
+  public ServiceViewTreeLinkMouseListener(Tree tree) {
     myTree = tree;
   }
 
@@ -32,7 +31,7 @@ public final class ServiceViewTreeLinkMouseListener extends RepaintLinkMouseList
 
   @Nullable
   @Override
-  protected Object getTagAt(@Nonnull MouseEvent e) {
+  protected Object getTagAt(MouseEvent e) {
     TreePath path = myTree.getPathForLocation(e.getX(), e.getY());
     if (path == null) return null;
 

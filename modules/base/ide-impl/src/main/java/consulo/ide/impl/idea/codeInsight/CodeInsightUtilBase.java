@@ -22,7 +22,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -32,8 +31,8 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Arrays;
@@ -73,12 +72,12 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
   }
 
   @Override
-  public boolean preparePsiElementsForWrite(@Nonnull PsiElement... elements) {
+  public boolean preparePsiElementsForWrite(PsiElement... elements) {
     return preparePsiElementsForWrite(Arrays.asList(elements));
   }
 
   @Override
-  public boolean preparePsiElementsForWrite(@Nonnull Collection<? extends PsiElement> elements) {
+  public boolean preparePsiElementsForWrite(Collection<? extends PsiElement> elements) {
     if (elements.isEmpty()) return true;
     Set<VirtualFile> files = new HashSet<VirtualFile>();
     Project project = null;
@@ -92,7 +91,7 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
       files.add(virtualFile);
     }
     if (!files.isEmpty()) {
-      VirtualFile[] virtualFiles = VfsUtilCore.toVirtualFileArray(files);
+      VirtualFile[] virtualFiles = VirtualFileUtil.toVirtualFileArray(files);
       ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(virtualFiles);
       return !status.hasReadonlyFiles();
     }
@@ -100,14 +99,14 @@ public class CodeInsightUtilBase extends CodeInsightUtilCore {
   }
 
   @Override
-  public boolean prepareVirtualFilesForWrite(@Nonnull Project project, @Nonnull Collection<VirtualFile> files) {
+  public boolean prepareVirtualFilesForWrite(Project project, Collection<VirtualFile> files) {
     ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(files);
     return !status.hasReadonlyFiles();
   }
 
   @Deprecated
   @DeprecationInfo("See LanguageEditorUtil#checkModificationAllowed")
-  public static boolean prepareEditorForWrite(@Nonnull Editor editor) {
+  public static boolean prepareEditorForWrite(Editor editor) {
     return LanguageEditorUtil.checkModificationAllowed(editor);
   }
 }

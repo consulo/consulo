@@ -19,8 +19,8 @@ package consulo.language.psi;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -67,7 +67,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
    * The range is obtained from {@link ElementManipulators}
    * @param element PSI element
    */
-  public PsiReferenceBase(@Nonnull T element) {
+  public PsiReferenceBase(T element) {
     myElement = element;
     mySoft = false;
   }
@@ -76,7 +76,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     myRange = range;
   }
 
-  @Nonnull
+  
   public String getValue() {
     String text = myElement.getText();
     TextRange range = getRangeInElement();
@@ -108,7 +108,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   }
 
   @Override
-  @Nonnull
+  
   public String getCanonicalText() {
     return getValue();
   }
@@ -119,7 +119,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
   }
 
   @Override
-  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
     throw new IncorrectOperationException("Rebind cannot be performed for " + getClass());
   }
 
@@ -175,7 +175,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @jakarta.annotation.Nullable
+    @Nullable
     public PsiElement resolve() {
       ResolveResult[] resolveResults = multiResolve(false);
       return resolveResults.length == 1 ? resolveResults[0].getElement() : null;
@@ -200,7 +200,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
       myResolveTo = resolveTo;
     }
 
-    public Immediate(@Nonnull T element, PsiElement resolveTo) {
+    public Immediate(T element, PsiElement resolveTo) {
       super(element);
       myResolveTo = resolveTo;
     }
@@ -212,13 +212,13 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
     }
 
     @Override
-    @jakarta.annotation.Nullable
+    @Nullable
     public PsiElement resolve() {
       return myResolveTo;
     }
 
     @Override
-    @Nonnull
+    
     public Object[] getVariants() {
       return EMPTY_ARRAY;
     }

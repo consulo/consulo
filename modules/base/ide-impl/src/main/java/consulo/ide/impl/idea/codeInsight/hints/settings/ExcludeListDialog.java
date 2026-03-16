@@ -23,7 +23,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -197,7 +196,7 @@ public class ExcludeListDialog extends DialogWrapper {
         return invalid;
     }
 
-    @Nonnull
+    
     private static LocalizeValue getExcludeListExplanationHTML(Language language) {
         InlayParameterHintsProvider provider = InlayParameterHintsProvider.forLanguage(language);
         if (provider == null) {

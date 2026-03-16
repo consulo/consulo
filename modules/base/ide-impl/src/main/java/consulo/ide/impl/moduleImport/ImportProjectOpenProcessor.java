@@ -40,8 +40,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -60,7 +59,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
 
     @Nullable
     @Override
-    public Image getIcon(@Nonnull VirtualFile file) {
+    public Image getIcon(VirtualFile file) {
         File ioFile = VfsUtil.virtualToIoFile(file);
         for (ModuleImportProvider provider : myProviders) {
             if (provider.canImport(ioFile)) {
@@ -71,7 +70,7 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     @Override
-    public boolean canOpenProject(@Nonnull File file) {
+    public boolean canOpenProject(File file) {
         for (ModuleImportProvider provider : myProviders) {
             if (provider.canImport(file)) {
                 return true;
@@ -81,11 +80,10 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
         return false;
     }
 
-    @Nonnull
     @Override
-    public <I> Coroutine<I, VirtualFile> prepareSteps(@Nonnull UIAccess uiAccess,
-                                                       @Nonnull ProjectOpenContext openContext,
-                                                       @Nonnull Coroutine<I, VirtualFile> in) {
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                       ProjectOpenContext openContext,
+                                                       Coroutine<I, VirtualFile> in) {
         return in
             // Show "open existing or reimport?" dialog + run import if needed
             .then(CompletableFutureStep.<VirtualFile, VirtualFile>await(virtualFile -> {
@@ -123,12 +121,12 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
             }));
     }
 
-    private void askOpenOrReimport(@Nonnull VirtualFile virtualFile,
-                                   @Nonnull File ioPath,
-                                   @Nonnull String expectedProjectPath,
-                                   @Nonnull List<ModuleImportProvider> targetProviders,
-                                   @Nonnull UIAccess uiAccess,
-                                   @Nonnull CompletableFuture<VirtualFile> future) {
+    private void askOpenOrReimport(VirtualFile virtualFile,
+                                   File ioPath,
+                                   String expectedProjectPath,
+                                   List<ModuleImportProvider> targetProviders,
+                                   UIAccess uiAccess,
+                                   CompletableFuture<VirtualFile> future) {
         Alert<ThreeState> alert = Alert.create();
         alert.title(IdeLocalize.titleOpenProject());
         alert.text(IdeLocalize.projectImportOpenExisting(
@@ -163,10 +161,10 @@ public class ImportProjectOpenProcessor extends ProjectOpenProcessor {
         }));
     }
 
-    private void runImport(@Nonnull VirtualFile virtualFile,
-                           @Nonnull List<ModuleImportProvider> targetProviders,
-                           @Nonnull UIAccess uiAccess,
-                           @Nonnull CompletableFuture<VirtualFile> future) {
+    private void runImport(VirtualFile virtualFile,
+                           List<ModuleImportProvider> targetProviders,
+                           UIAccess uiAccess,
+                           CompletableFuture<VirtualFile> future) {
         uiAccess.give(() -> {
             AsyncResult<Pair<ModuleImportContext, ModuleImportProvider<ModuleImportContext>>> result = AsyncResult.undefined();
             ModuleImportProcessor.showImportChooser(null, virtualFile, targetProviders, result);

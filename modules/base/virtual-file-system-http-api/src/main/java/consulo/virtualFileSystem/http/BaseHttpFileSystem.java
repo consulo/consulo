@@ -19,20 +19,19 @@ import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2026-02-07
  */
 public interface BaseHttpFileSystem extends VirtualFileSystem {
-    VirtualFile findFileByPath(@Nonnull String path, boolean isDirectory);
+    VirtualFile findFileByPath(String path, boolean isDirectory);
 
-    boolean isFileDownloaded(@Nonnull VirtualFile file);
+    boolean isFileDownloaded(VirtualFile file);
 
-    void addFileListener(@Nonnull HttpVirtualFileListener listener);
+    void addFileListener(HttpVirtualFileListener listener);
 
-    void addFileListener(@Nonnull HttpVirtualFileListener listener, @Nonnull Disposable parentDisposable);
+    void addFileListener(HttpVirtualFileListener listener, Disposable parentDisposable);
 
-    void removeFileListener(@Nonnull HttpVirtualFileListener listener);
+    void removeFileListener(HttpVirtualFileListener listener);
 }

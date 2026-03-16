@@ -21,7 +21,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointCacheKey;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +46,7 @@ public class OrderRootType {
     myId = id;
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
@@ -58,21 +57,21 @@ public class OrderRootType {
     return getId();
   }
 
-  public boolean isMe(@Nonnull String type) {
+  public boolean isMe(String type) {
     return type.equals(getId());
   }
 
-  @Nonnull
+  
   public static List<OrderRootType> getAllTypes() {
     return Application.get().getExtensionPoint(OrderRootType.class).getExtensionList();
   }
 
-  @Nonnull
+  
   public static List<OrderRootType> getSortedRootTypes() {
     return Application.get().getExtensionPoint(OrderRootType.class).getOrBuildCache(SORTED_KEY);
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use ExtensionInstance#current()")
   public static <T extends OrderRootType> T getOrderRootType(Class<? extends T> orderRootTypeClass) {

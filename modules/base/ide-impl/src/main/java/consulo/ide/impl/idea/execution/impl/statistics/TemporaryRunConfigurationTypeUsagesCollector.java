@@ -19,21 +19,20 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
  */
 @ExtensionImpl
 public class TemporaryRunConfigurationTypeUsagesCollector extends AbstractRunConfigurationTypeUsagesCollector {
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return "consulo.platform.base:run.configuration.type.temp";
   }
 
   @Override
-  protected boolean isApplicable(@Nonnull RunManager runManager, @Nonnull RunConfiguration runConfiguration) {
+  protected boolean isApplicable(RunManager runManager, RunConfiguration runConfiguration) {
     return runManager.isTemporary(runConfiguration);
   }
 }

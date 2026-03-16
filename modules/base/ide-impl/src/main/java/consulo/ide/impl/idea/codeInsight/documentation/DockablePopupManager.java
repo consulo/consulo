@@ -30,18 +30,17 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.ex.update.Activatable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
 public abstract class DockablePopupManager<T extends JComponent & Disposable> {
     protected ToolWindow myToolWindow;
     private Runnable myAutoUpdateRequest;
-    @Nonnull
+    
     protected final Project myProject;
 
-    public DockablePopupManager(@Nonnull Project project) {
+    public DockablePopupManager(Project project) {
         myProject = project;
     }
 
@@ -69,7 +68,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
     protected abstract void doUpdateComponent(Editor editor, PsiFile psiFile);
 
-    protected abstract void doUpdateComponent(@Nonnull PsiElement element);
+    protected abstract void doUpdateComponent(PsiElement element);
 
     protected abstract String getTitle(PsiElement element);
 
@@ -120,7 +119,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
 
         contentManager.addContentManagerListener(new ContentManagerAdapter() {
             @Override
-            public void contentRemoved(@Nonnull ContentManagerEvent event) {
+            public void contentRemoved(ContentManagerEvent event) {
                 restorePopupBehavior();
             }
         });
@@ -156,12 +155,12 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         ToggleAction toggleAutoUpdateAction =
             new ToggleAction(getAutoUpdateTitle(), getAutoUpdateDescription(), AllIcons.General.AutoscrollFromSource) {
                 @Override
-                public boolean isSelected(@Nonnull AnActionEvent e) {
+                public boolean isSelected(AnActionEvent e) {
                     return PropertiesComponent.getInstance().getBoolean(getAutoUpdateEnabledProperty(), getAutoUpdateDefault());
                 }
 
                 @Override
-                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                public void setSelected(AnActionEvent e, boolean state) {
                     PropertiesComponent.getInstance().setValue(getAutoUpdateEnabledProperty(), state, getAutoUpdateDefault());
                     restartAutoUpdate(state);
                 }
@@ -169,11 +168,11 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         return new AnAction[]{createRestorePopupAction(), toggleAutoUpdateAction};
     }
 
-    @Nonnull
+    
     protected AnAction createRestorePopupAction() {
         return new DumbAwareAction("Open as Popup", getRestorePopupDescription(), null) {
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 restorePopupBehavior();
             }
         };
@@ -212,7 +211,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         });
     }
 
-    private void updateComponentInner(@Nonnull DataContext dataContext, boolean requestFocus) {
+    private void updateComponentInner(DataContext dataContext, boolean requestFocus) {
         if (dataContext.getData(Project.KEY) != myProject) {
             return;
         }
@@ -265,7 +264,7 @@ public abstract class DockablePopupManager<T extends JComponent & Disposable> {
         return myToolWindow;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }

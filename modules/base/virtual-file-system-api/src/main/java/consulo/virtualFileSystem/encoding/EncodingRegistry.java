@@ -6,8 +6,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.component.internal.RootComponentHolder;
 import consulo.util.lang.function.ThrowableSupplier;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -15,14 +14,14 @@ import java.util.Objects;
  * @author yole
  */
 public interface EncodingRegistry {
-  boolean isNative2Ascii(@Nonnull VirtualFile virtualFile);
+  boolean isNative2Ascii(VirtualFile virtualFile);
 
   boolean isNative2AsciiForPropertiesFiles();
 
   /**
    * @return charset configured in Settings|File Encodings|IDE encoding
    */
-  @Nonnull
+  
   Charset getDefaultCharset();
 
   /**
@@ -50,10 +49,10 @@ public interface EncodingRegistry {
   /**
    * @return encoding used by default in {@link consulo.ide.impl.idea.execution.configurations.GeneralCommandLine}
    */
-  @Nonnull
+  
   Charset getDefaultConsoleEncoding();
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use constructor injection")
   public static EncodingRegistry getInstance() {
@@ -62,14 +61,14 @@ public interface EncodingRegistry {
 
   @Deprecated
   @DeprecationInfo("Use method with registry inside")
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull VirtualFile fileBefore, @Nonnull ThrowableSupplier<? extends VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(VirtualFile fileBefore, ThrowableSupplier<? extends VirtualFile, E> action) throws E {
     return doActionAndRestoreEncoding(getInstance(), fileBefore, action);
   }
 
   @Nullable
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(@Nonnull EncodingRegistry registry,
-                                                                             @Nonnull VirtualFile fileBefore,
-                                                                             @Nonnull ThrowableSupplier<? extends VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
+                                                                             VirtualFile fileBefore,
+                                                                             ThrowableSupplier<? extends VirtualFile, E> action) throws E {
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
     VirtualFile fileAfter = null;
     try {

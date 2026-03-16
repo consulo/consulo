@@ -21,8 +21,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -31,12 +30,12 @@ import org.jetbrains.annotations.Contract;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedEditorManager {
-    static InjectedEditorManager getInstance(@Nonnull Project project) {
+    static InjectedEditorManager getInstance(Project project) {
         return project.getInstance(InjectedEditorManager.class);
     }
 
     @Nullable
-    Editor openEditorFor(@Nonnull PsiFile file);
+    Editor openEditorFor(PsiFile file);
 
     /**
      * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
@@ -55,7 +54,7 @@ public interface InjectedEditorManager {
     @Contract("null,_->null;!null,_->!null")
     Editor getEditorForInjectedLanguageNoCommit(@Nullable Editor editor, @Nullable PsiFile file);
 
-    Editor getInjectedEditorForInjectedFile(@Nonnull Editor hostEditor, @Nullable PsiFile injectedFile);
+    Editor getInjectedEditorForInjectedFile(Editor hostEditor, @Nullable PsiFile injectedFile);
 
     Caret getCaretForInjectedLanguageNoCommit(@Nullable Caret caret, @Nullable PsiFile file);
 }

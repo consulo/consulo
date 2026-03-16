@@ -48,8 +48,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -81,10 +80,10 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     private final SwitchModeAction mySwitchModeAction;
     private final boolean myIsCodeFragmentEvaluationSupported;
 
-    public XDebuggerEvaluationDialog(@Nonnull XDebugSession session,
-                                     @Nonnull XDebuggerEditorsProvider editorsProvider,
-                                     @Nonnull XDebuggerEvaluator evaluator,
-                                     @Nonnull XExpression text,
+    public XDebuggerEvaluationDialog(XDebugSession session,
+                                     XDebuggerEditorsProvider editorsProvider,
+                                     XDebuggerEvaluator evaluator,
+                                     XExpression text,
                                      @Nullable XSourcePosition sourcePosition) {
         super(TargetAWT.to(WindowManager.getInstance().getWindow(session.getProject())), true);
         mySession = session;
@@ -122,14 +121,14 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
         new AnAction() {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 Project project = e.getData(Project.KEY);
                 e.getPresentation().setEnabled(project != null && LookupManager.getInstance(project).getActiveLookup() == null);
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 //doOKAction(); // do not evaluate on add to watches
                 addToWatches();
             }
@@ -207,7 +206,6 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         }
     }
 
-    @Nonnull
     @Override
     protected Action[] createActions() {
         if (myIsCodeFragmentEvaluationSupported) {
@@ -325,7 +323,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
         return myMainPanel;
     }
 
-    public void startEvaluation(@Nonnull XDebuggerEvaluator.XEvaluationCallback evaluationCallback) {
+    public void startEvaluation(XDebuggerEvaluator.XEvaluationCallback evaluationCallback) {
         XDebuggerEditorBase inputEditor = getInputEditor();
         inputEditor.saveTextInHistory();
         XExpression expression = inputEditor.getExpression();
@@ -371,7 +369,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
 
     private class EvaluationMainPanel extends BorderLayoutPanel implements UiDataProvider {
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(XDebuggerEvaluationDialog.KEY, XDebuggerEvaluationDialog.this);
         }
     }

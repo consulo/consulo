@@ -20,8 +20,7 @@ import consulo.application.content.impl.internal.library.LibraryOwner;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ public class ModuleRootLayerLibraryOwner implements LibraryOwner {
     myModuleRootLayer = moduleRootLayer;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFilePointerListener getListener() {
     return myModuleRootLayer.getRootsChangedListener();

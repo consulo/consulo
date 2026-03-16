@@ -20,7 +20,6 @@ import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MembersPullUp")
 public class PullUpAction extends BasePlatformRefactoringAction {
@@ -35,7 +34,7 @@ public class PullUpAction extends BasePlatformRefactoringAction {
     }
 
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return provider.getPullUpHandler();
     }
 }

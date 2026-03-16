@@ -2,8 +2,7 @@
 
 package consulo.language.psi.stub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +18,12 @@ class MaterialStubList extends StubList {
   }
 
   @Override
-  void addStub(@Nonnull StubBase<?> stub, @Nullable StubBase<?> parent, @Nullable IStubElementType<?, ?> type) {
+  void addStub(StubBase<?> stub, @Nullable StubBase<?> parent, @Nullable IStubElementType<?, ?> type) {
     super.addStub(stub, parent, type);
     myPlainList.add(stub);
   }
 
-  @Nonnull
+  
   @Override
   StubList finalizeLoadingStage() {
     if (!isChildrenLayoutOptimal()) {
@@ -35,7 +34,7 @@ class MaterialStubList extends StubList {
     return super.finalizeLoadingStage();
   }
 
-  @Nonnull
+  
   private StubList createOptimizedCopy() {
     MaterialStubList copy = new MaterialStubList(size());
     new Object() {

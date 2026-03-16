@@ -34,8 +34,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,27 +51,27 @@ public class IntentionActionDescriptor {
     private final Image myIcon;
     private Boolean myCanCleanup;
 
-    public IntentionActionDescriptor(@Nonnull IntentionAction action, List<IntentionAction> options, @Nonnull LocalizeValue displayName) {
+    public IntentionActionDescriptor(IntentionAction action, List<IntentionAction> options, LocalizeValue displayName) {
         this(action, options, displayName, null);
     }
 
-    public IntentionActionDescriptor(@Nonnull IntentionAction action, Image icon) {
+    public IntentionActionDescriptor(IntentionAction action, Image icon) {
         this(action, null, LocalizeValue.empty(), icon);
     }
 
     public IntentionActionDescriptor(
-        @Nonnull IntentionAction action,
+        IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nonnull LocalizeValue displayName,
+        LocalizeValue displayName,
         @Nullable Image icon
     ) {
         this(action, options, displayName, icon, null, null, null);
     }
 
     public IntentionActionDescriptor(
-        @Nonnull IntentionAction action,
+        IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nonnull LocalizeValue displayName,
+        LocalizeValue displayName,
         @Nullable Image icon,
         @Nullable HighlightDisplayKey key,
         @Nullable ProblemGroup problemGroup,
@@ -87,7 +86,7 @@ public class IntentionActionDescriptor {
         mySeverity = severity;
     }
 
-    @Nonnull
+    
     public IntentionAction getAction() {
         return myAction;
     }
@@ -100,7 +99,7 @@ public class IntentionActionDescriptor {
         return HighlightSeverity.INFORMATION.equals(mySeverity);
     }
 
-    public boolean canCleanup(@Nonnull PsiElement element) {
+    public boolean canCleanup(PsiElement element) {
         if (myCanCleanup == null) {
             InspectionProfile profile = InspectionProjectProfileManager.getInstance(element.getProject()).getCurrentProfile();
             HighlightDisplayKey key = myKey;
@@ -116,7 +115,7 @@ public class IntentionActionDescriptor {
     }
 
     @Nullable
-    public List<IntentionAction> getOptions(@Nonnull PsiElement element, @Nullable Editor editor) {
+    public List<IntentionAction> getOptions(PsiElement element, @Nullable Editor editor) {
         if (editor != null && Boolean.FALSE.equals(editor.getUserData(IntentionManager.SHOW_INTENTION_OPTIONS_KEY))) {
             return null;
         }

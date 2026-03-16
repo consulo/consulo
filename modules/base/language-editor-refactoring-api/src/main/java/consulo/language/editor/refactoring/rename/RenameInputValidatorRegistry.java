@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

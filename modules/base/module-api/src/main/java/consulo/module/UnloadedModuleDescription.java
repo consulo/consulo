@@ -16,7 +16,6 @@
 package consulo.module;
 
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -27,9 +26,9 @@ import java.util.List;
  * @author nik
  */
 public interface UnloadedModuleDescription extends ModuleDescription {
-  @Nonnull
+  
   List<VirtualFilePointer> getContentRoots();
 
-  @Nonnull
+  
   List<String> getGroupPath();
 }

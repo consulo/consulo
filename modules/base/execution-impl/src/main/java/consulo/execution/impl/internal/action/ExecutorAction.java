@@ -41,30 +41,26 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class ExecutorAction extends AnAction implements DumbAware {
     private final Executor myExecutor;
-    @Nonnull
     private final ExecutorRegistry myExecutorRegistry;
-    @Nonnull
     private final RunCurrentFileService myRunCurrentFileService;
 
-    public ExecutorAction(@Nonnull ExecutorRegistry executorRegistry,
-                          @Nonnull Executor executor,
-                          @Nonnull RunCurrentFileService runCurrentFileService) {
+    public ExecutorAction(ExecutorRegistry executorRegistry,
+                          Executor executor,
+                          RunCurrentFileService runCurrentFileService) {
         super(executor.getStartActionText(), executor.getDescription(), executor.getIcon());
         myExecutorRegistry = executorRegistry;
         myRunCurrentFileService = runCurrentFileService;
         myExecutor = executor;
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ReadLock.apply(i -> {
             Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
@@ -121,7 +117,6 @@ public class ExecutorAction extends AnAction implements DumbAware {
         }).toCoroutine();
     }
 
-    @Nonnull
     public static Image getInformativeIcon(Project project,
                                            Executor executor,
                                            RunnerAndConfigurationSettings selectedConfiguration) {
@@ -149,13 +144,13 @@ public class ExecutorAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    protected RunnerAndConfigurationSettings getConfiguration(@Nonnull Project project) {
+    protected RunnerAndConfigurationSettings getConfiguration(Project project) {
         return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         RunnerAndConfigurationSettings configuration = getConfiguration(project);
         if (configuration != null) {

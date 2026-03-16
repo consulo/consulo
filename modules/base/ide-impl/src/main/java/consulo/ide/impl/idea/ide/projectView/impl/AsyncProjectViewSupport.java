@@ -32,7 +32,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -49,13 +48,13 @@ class AsyncProjectViewSupport {
   private final StructureTreeModel myStructureTreeModel;
   private final AsyncTreeModel myAsyncTreeModel;
 
-  AsyncProjectViewSupport(@Nonnull Disposable parent, @Nonnull Project project, @Nonnull JTree tree, @Nonnull AbstractTreeStructure structure, @Nonnull Comparator<NodeDescriptor> comparator) {
+  AsyncProjectViewSupport(Disposable parent, Project project, JTree tree, AbstractTreeStructure structure, Comparator<NodeDescriptor> comparator) {
     myStructureTreeModel = new StructureTreeModel<>(structure, comparator, parent);
     myAsyncTreeModel = new AsyncTreeModel(myStructureTreeModel, parent);
     myAsyncTreeModel.setRootImmediately(myStructureTreeModel.getRootImmediately());
     myNodeUpdater = new ProjectFileNodeUpdater(project, myStructureTreeModel.getInvoker()) {
       @Override
-      protected void updateStructure(boolean fromRoot, @Nonnull Set<? extends VirtualFile> updatedFiles) {
+      protected void updateStructure(boolean fromRoot, Set<? extends VirtualFile> updatedFiles) {
         if (fromRoot) {
           updateAll(null);
         }
@@ -77,17 +76,17 @@ class AsyncProjectViewSupport {
     MessageBusConnection connection = project.getMessageBus().connect(parent);
     connection.subscribe(BookmarksListener.class, new BookmarksListener() {
       @Override
-      public void bookmarkAdded(@Nonnull Bookmark bookmark) {
+      public void bookmarkAdded(Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
 
       @Override
-      public void bookmarkRemoved(@Nonnull Bookmark bookmark) {
+      public void bookmarkRemoved(Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
 
       @Override
-      public void bookmarkChanged(@Nonnull Bookmark bookmark) {
+      public void bookmarkChanged(Bookmark bookmark) {
         updateByFile(bookmark.getFile(), false);
       }
     });
@@ -113,7 +112,7 @@ class AsyncProjectViewSupport {
       }
 
       @Override
-      protected boolean addSubtreeToUpdateByElement(@Nonnull PsiElement element) {
+      protected boolean addSubtreeToUpdateByElement(PsiElement element) {
         VirtualFile file = PsiUtilCore.getVirtualFile(element);
         if (file != null) {
           myNodeUpdater.updateFromFile(file);
@@ -131,25 +130,25 @@ class AsyncProjectViewSupport {
       }
 
       @Override
-      public void fileStatusChanged(@Nonnull VirtualFile file) {
+      public void fileStatusChanged(VirtualFile file) {
         updateByFile(file, false);
       }
     }, parent);
     CopyPasteUtil.addDefaultListener(parent, element -> updateByElement(element, false));
     project.getMessageBus().connect(parent).subscribe(ProblemListener.class, new ProblemListener() {
       @Override
-      public void problemsAppeared(@Nonnull VirtualFile file) {
+      public void problemsAppeared(VirtualFile file) {
         updatePresentationsFromRootTo(file);
       }
 
       @Override
-      public void problemsDisappeared(@Nonnull VirtualFile file) {
+      public void problemsDisappeared(VirtualFile file) {
         updatePresentationsFromRootTo(file);
       }
     });
   }
 
-  public void setComparator(@Nonnull Comparator<? super NodeDescriptor> comparator) {
+  public void setComparator(Comparator<? super NodeDescriptor> comparator) {
     myStructureTreeModel.setComparator(comparator);
   }
 
@@ -185,7 +184,7 @@ class AsyncProjectViewSupport {
     }
   }
 
-  private static boolean selectPaths(@Nonnull JTree tree, @Nonnull List<TreePath> paths, @Nonnull TreeVisitor visitor) {
+  private static boolean selectPaths(JTree tree, List<TreePath> paths, TreeVisitor visitor) {
     if (paths.isEmpty()) return false;
     if (paths.size() > 1) {
       if (visitor instanceof ProjectViewNodeVisitor) {
@@ -203,7 +202,7 @@ class AsyncProjectViewSupport {
     return true;
   }
 
-  private static boolean selectPaths(@Nonnull JTree tree, @Nonnull SelectionDescriptor selectionDescriptor) {
+  private static boolean selectPaths(JTree tree, SelectionDescriptor selectionDescriptor) {
     List<? extends TreePath> adjustedPaths = ProjectViewPaneSelectionHelper.getAdjustedPaths(selectionDescriptor);
     adjustedPaths.forEach(it -> tree.expandPath(it));
     TreeUtil.selectPaths(tree, adjustedPaths);
@@ -216,20 +215,20 @@ class AsyncProjectViewSupport {
     if (onDone != null) promise.onSuccess(res -> myAsyncTreeModel.onValidThread(onDone));
   }
 
-  public void update(@Nonnull TreePath path, boolean structure) {
+  public void update(TreePath path, boolean structure) {
     myStructureTreeModel.invalidate(path, structure);
   }
 
-  public void update(@Nonnull List<? extends TreePath> list, boolean structure) {
+  public void update(List<? extends TreePath> list, boolean structure) {
     for (TreePath path : list) update(path, structure);
   }
 
-  public void updateByFile(@Nonnull VirtualFile file, boolean structure) {
+  public void updateByFile(VirtualFile file, boolean structure) {
     LOG.debug(structure ? "updateChildrenByFile: " : "updatePresentationByFile: ", file);
     update(null, file, structure);
   }
 
-  public void updateByElement(@Nonnull PsiElement element, boolean structure) {
+  public void updateByElement(PsiElement element, boolean structure) {
     LOG.debug(structure ? "updateChildrenByElement: " : "updatePresentationByElement: ", element);
     update(element, null, structure);
   }
@@ -240,11 +239,11 @@ class AsyncProjectViewSupport {
     if (visitor != null) acceptAndUpdate(visitor, list, structure);
   }
 
-  private void acceptAndUpdate(@Nonnull TreeVisitor visitor, List<? extends TreePath> list, boolean structure) {
+  private void acceptAndUpdate(TreeVisitor visitor, List<? extends TreePath> list, boolean structure) {
     myAsyncTreeModel.accept(visitor, false).onSuccess(path -> update(list, structure));
   }
 
-  private void updatePresentationsFromRootTo(@Nonnull VirtualFile file) {
+  private void updatePresentationsFromRootTo(VirtualFile file) {
     // find first valid parent for removed file
     while (!file.isValid()) {
       file = file.getParent();
@@ -253,9 +252,8 @@ class AsyncProjectViewSupport {
     SmartList<TreePath> structures = new SmartList<>();
     SmartList<TreePath> presentations = new SmartList<>();
     myAsyncTreeModel.accept(new ProjectViewFileVisitor(file, structures::add) {
-      @Nonnull
       @Override
-      protected Action visit(@Nonnull TreePath path, @Nonnull AbstractTreeNode node, @Nonnull VirtualFile element) {
+      protected Action visit(TreePath path, AbstractTreeNode node, VirtualFile element) {
         Action action = super.visit(path, node, element);
         if (action == Action.CONTINUE) presentations.add(path);
         return action;
@@ -269,9 +267,8 @@ class AsyncProjectViewSupport {
   private void updateAllPresentations() {
     SmartList<TreePath> list = new SmartList<>();
     acceptAndUpdate(new TreeVisitor() {
-      @Nonnull
       @Override
-      public Action visit(@Nonnull TreePath path) {
+      public Action visit(TreePath path) {
         list.add(path);
         return Action.CONTINUE;
       }
@@ -279,7 +276,7 @@ class AsyncProjectViewSupport {
   }
 
   @RequiredUIAccess
-  private static void setModel(@Nonnull JTree tree, @Nonnull AsyncTreeModel model) {
+  private static void setModel(JTree tree, AsyncTreeModel model) {
     RestoreSelectionListener listener = new RestoreSelectionListener();
     tree.addTreeSelectionListener(listener);
     tree.setModel(model);

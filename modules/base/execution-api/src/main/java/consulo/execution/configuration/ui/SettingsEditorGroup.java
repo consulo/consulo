@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
         addEditor(LocalizeValue.ofNullable(name), editor);
     }
 
-    public void addEditor(@Nonnull LocalizeValue name, @Nonnull SettingsEditor<T> editor) {
+    public void addEditor(LocalizeValue name, SettingsEditor<T> editor) {
         Disposer.register(this, editor);
         myEditors.add(Pair.create(name, editor));
     }
@@ -50,7 +49,7 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
         myEditors.addAll(group.myEditors);
     }
 
-    @Nonnull
+    
     public List<Pair<LocalizeValue, SettingsEditor<T>>> getEditors() {
         return myEditors;
     }
@@ -64,7 +63,7 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
     }
 
     @Override
-    @Nonnull
+    
     public JComponent createEditor() {
         throw new UnsupportedOperationException("This method should never be called!");
     }

@@ -25,7 +25,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;

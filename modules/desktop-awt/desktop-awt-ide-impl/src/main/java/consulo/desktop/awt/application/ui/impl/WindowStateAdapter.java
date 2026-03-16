@@ -1,9 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.application.ui.impl;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.Window;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -11,13 +10,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 final class WindowStateAdapter extends WindowAdapter implements ComponentListener {
-  @Nonnull
-  static WindowStateBean getState(@Nonnull Window window) {
+  
+  static WindowStateBean getState(Window window) {
     return getAdapter(window).myWindowState;
   }
 
-  @Nonnull
-  private static WindowStateAdapter getAdapter(@Nonnull Window window) {
+  
+  private static WindowStateAdapter getAdapter(Window window) {
     for (ComponentListener listener : window.getComponentListeners()) {
       if (listener instanceof WindowStateAdapter) {
         return (WindowStateAdapter)listener;
@@ -29,7 +28,7 @@ final class WindowStateAdapter extends WindowAdapter implements ComponentListene
 
   private final WindowStateBean myWindowState = new WindowStateBean();
 
-  private WindowStateAdapter(@Nonnull Window window) {
+  private WindowStateAdapter(Window window) {
     myWindowState.applyFrom(window);
     window.addComponentListener(this);
     window.addWindowListener(this);

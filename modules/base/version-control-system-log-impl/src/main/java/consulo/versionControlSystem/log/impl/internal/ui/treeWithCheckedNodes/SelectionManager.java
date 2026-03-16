@@ -19,7 +19,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.internal.PlusMinus;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Collection;

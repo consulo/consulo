@@ -28,8 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -43,7 +42,7 @@ public abstract class DiffElement<T> {
 
   public abstract String getPath();
 
-  @Nonnull
+  
   public abstract String getName();
 
   public String getPresentablePath() {
@@ -75,7 +74,7 @@ public abstract class DiffElement<T> {
   @Nullable
   public abstract byte[] getContent() throws IOException;
 
-  @Nonnull
+  
   public Charset getCharset() {
     return EncodingManager.getInstance().getDefaultCharset();
   }
@@ -96,8 +95,8 @@ public abstract class DiffElement<T> {
    *
    * @see DiffRequestProducer#process
    */
-  @Nonnull
-  public DiffContent createDiffContent(@Nullable Project project, @Nonnull ProgressIndicator indicator)
+  
+  public DiffContent createDiffContent(@Nullable Project project, ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     try {
       T src = getValue();

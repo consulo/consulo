@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.style.StyleManager;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -40,7 +39,7 @@ public final class Grayer extends Graphics2DDelegate {
     super.setColor(color);
   }
 
-  @Nonnull
+  
   @Override
   public Graphics create() {
     return new Grayer((Graphics2D)super.create(), myBackground);

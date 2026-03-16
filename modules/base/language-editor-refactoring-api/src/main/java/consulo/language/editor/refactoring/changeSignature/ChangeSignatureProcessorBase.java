@@ -37,8 +37,7 @@ import consulo.undoRedo.UndoableAction;
 import consulo.usage.MoveRenameUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -64,7 +63,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
     }
 
     @Override
-    @Nonnull
+    
     protected UsageInfo[] findUsages() {
         List<UsageInfo> infos = new ArrayList<>();
 
@@ -103,7 +102,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
 
     @Override
-    protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
+    protected boolean isPreviewUsages(UsageInfo[] usages) {
         for (ChangeSignatureUsageProcessor processor : ChangeSignatureUsageProcessor.EP_NAME.getExtensionList()) {
             if (processor.shouldPreviewUsages(myChangeInfo, usages)) {
                 return true;
@@ -128,7 +127,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
     @Nullable
     @Override
-    protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
+    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(getChangeInfo().getMethod());
         return data;
@@ -136,7 +135,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
 
     @Override
     @RequiredReadAction
-    protected void performRefactoring(@Nonnull UsageInfo[] usages) {
+    protected void performRefactoring(UsageInfo[] usages) {
         RefactoringTransaction transaction = getTransaction();
         RefactoringElementListener elementListener =
             transaction == null ? null : transaction.getElementListener(myChangeInfo.getMethod());
@@ -209,7 +208,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     protected LocalizeValue getCommandName() {

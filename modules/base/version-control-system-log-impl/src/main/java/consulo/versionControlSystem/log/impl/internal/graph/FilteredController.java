@@ -20,18 +20,17 @@ import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.LinearGraphUtils;
 import consulo.versionControlSystem.log.graph.PermanentGraphInfo;
 import consulo.versionControlSystem.log.impl.internal.util.UnsignedBitSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
 public class FilteredController extends CascadeController {
-  @Nonnull
+  
   private final CollapsedGraph myCollapsedGraph;
 
-  protected FilteredController(@Nonnull CascadeController delegateLinearGraphController,
-                               @Nonnull PermanentGraphInfo permanentGraphInfo,
-                               @Nonnull Set<Integer> matchedIds) {
+  protected FilteredController(CascadeController delegateLinearGraphController,
+                               PermanentGraphInfo permanentGraphInfo,
+                               Set<Integer> matchedIds) {
     super(delegateLinearGraphController, permanentGraphInfo);
     UnsignedBitSet initVisibility = new UnsignedBitSet();
     for (Integer matchedId : matchedIds) initVisibility.set(matchedId, true);
@@ -40,36 +39,36 @@ public class FilteredController extends CascadeController {
     DottedFilterEdgesGenerator.update(myCollapsedGraph, 0, myCollapsedGraph.getDelegatedGraph().nodesCount() - 1);
   }
 
-  @Nonnull
+  
   @Override
-  public LinearGraphAnswer performLinearGraphAction(@Nonnull LinearGraphAction action) {
+  public LinearGraphAnswer performLinearGraphAction(LinearGraphAction action) {
     // filter prohibits any actions on delegate graph for now
     LinearGraphAnswer answer = performAction(action);
     if (answer != null) return answer;
     return LinearGraphUtils.DEFAULT_GRAPH_ANSWER;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
-  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(GraphElement graphElement) {
     // filter prohibits any actions on delegate graph for now
     return null;
   }
 
-  @Nonnull
+  
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer) {
     if (delegateAnswer == LinearGraphUtils.DEFAULT_GRAPH_ANSWER) return delegateAnswer;
     throw new UnsupportedOperationException(); // todo fix later
   }
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getCompiledGraph() {
     return myCollapsedGraph.getCompiledGraph();

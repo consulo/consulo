@@ -29,8 +29,7 @@ import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.impl.internal.util.FileImplUtil;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +43,7 @@ import java.util.List;
 class FilePointerPartNode {
     private static final FilePointerPartNode[] EMPTY_ARRAY = new FilePointerPartNode[0];
     private final int nameId; // name id of the VirtualFile corresponding to this node
-    @Nonnull
+    
     FilePointerPartNode[] children = EMPTY_ARRAY; // sorted by this.getName()
     final FilePointerPartNode parent;
     // file pointers for this exact path (e.g. concatenation of all "part" fields down from the root).
@@ -59,20 +58,20 @@ class FilePointerPartNode {
     int pointersUnder;   // number of alive pointers in this node plus all nodes beneath
     private static final VirtualFileManager ourFileManager = VirtualFileManager.getInstance();
 
-    private FilePointerPartNode(int nameId, @Nonnull FilePointerPartNode parent) {
+    private FilePointerPartNode(int nameId, FilePointerPartNode parent) {
         assert nameId > 0 : nameId + "; " + getClass();
         this.nameId = nameId;
         this.parent = parent;
     }
 
-    boolean urlEndsWithName(@Nonnull String urlAfter, VirtualFile fileAfter) {
+    boolean urlEndsWithName(String urlAfter, VirtualFile fileAfter) {
         if (fileAfter != null) {
             return nameId == getNameId(fileAfter);
         }
         return StringUtil.endsWith(urlAfter, getName());
     }
 
-    @Nonnull
+    
     static FilePointerPartNode createFakeRoot() {
         return new FilePointerPartNode(null) {
             @Override
@@ -80,7 +79,7 @@ class FilePointerPartNode {
                 return "root -> " + children.length;
             }
 
-            @Nonnull
+            
             @Override
             CharSequence getName() {
                 return "";
@@ -94,12 +93,12 @@ class FilePointerPartNode {
         this.parent = parent;
     }
 
-    @Nonnull
+    
     static CharSequence fromNameId(int nameId) {
         return FileNameCache.getVFileName(nameId);
     }
 
-    @Nonnull
+    
     CharSequence getName() {
         return FileNameCache.getVFileName(nameId);
     }
@@ -120,7 +119,7 @@ class FilePointerPartNode {
                                           int childNameId,
                                           @Nullable List<? super FilePointerPartNode> outDirs,
                                           boolean createIfNotFound,
-                                          @Nonnull VirtualFileSystem fs) {
+                                          VirtualFileSystem fs) {
         assert childNameId != -1 && (parent == null) == (parentNameId == -1);
         FilePointerPartNode leaf;
         if (parent == null) {
@@ -143,7 +142,7 @@ class FilePointerPartNode {
         return file == null ? -1 : ((VirtualFileSystemEntry) file).getNameId();
     }
 
-    private FilePointerPartNode findByExistingNameId(@Nullable VirtualFile parent, int childNameId, @Nullable List<? super FilePointerPartNode> outDirs, @Nonnull VirtualFileSystem fs) {
+    private FilePointerPartNode findByExistingNameId(@Nullable VirtualFile parent, int childNameId, @Nullable List<? super FilePointerPartNode> outDirs, VirtualFileSystem fs) {
         if (childNameId <= 0) {
             throw new IllegalArgumentException("invalid argument childNameId: " + childNameId);
         }
@@ -167,7 +166,7 @@ class FilePointerPartNode {
 
 
     // returns start index of the name (i.e. path[return..length) is considered a name)
-    private static int extractName(@Nonnull CharSequence path, int length) {
+    private static int extractName(CharSequence path, int length) {
         if (length == 1 && path.charAt(0) == '/') {
             return 0; // in case of TEMP file system there is this weird ROOT file
         }
@@ -211,7 +210,7 @@ class FilePointerPartNode {
         return this.nameId == nameId;
     }
 
-    private int binarySearchChildByName(@Nonnull CharSequence name) {
+    private int binarySearchChildByName(CharSequence name) {
         return ObjectUtil.binarySearch(0, children.length, i -> {
             FilePointerPartNode child = children[i];
             CharSequence childName = child.getName();
@@ -230,7 +229,7 @@ class FilePointerPartNode {
      * ({@code (parent != null ? parent.getPath() : "") + (separator ? "/" : "") + childName}) and all nodes under this node with recursive directory pointers whose
      * path is ancestor of the given path.
      */
-    void addRelevantPointersFrom(@Nullable VirtualFile parent, int childNameId, @Nonnull List<? super FilePointerPartNode> out, boolean addSubdirectoryPointers, @Nonnull VirtualFileSystem fs) {
+    void addRelevantPointersFrom(@Nullable VirtualFile parent, int childNameId, List<? super FilePointerPartNode> out, boolean addSubdirectoryPointers, VirtualFileSystem fs) {
         if (childNameId <= 0) {
             throw new IllegalArgumentException("invalid argument childNameId: " + childNameId);
         }
@@ -263,7 +262,7 @@ class FilePointerPartNode {
         return false;
     }
 
-    private static void addAllPointersStrictlyUnder(@Nonnull FilePointerPartNode node, @Nonnull List<? super FilePointerPartNode> out) {
+    private static void addAllPointersStrictlyUnder(FilePointerPartNode node, List<? super FilePointerPartNode> out) {
         for (FilePointerPartNode child : node.children) {
             if (child.leaves != null) {
                 out.add(child);
@@ -320,7 +319,7 @@ class FilePointerPartNode {
     }
 
     // returns root node
-    @Nonnull
+    
     FilePointerPartNode remove() {
         int pointersNumber = leavesNumber();
         assert leaves != null : toString();
@@ -429,7 +428,7 @@ class FilePointerPartNode {
         return leaves == null ? null : leaves instanceof VirtualFilePointerImpl ? (VirtualFilePointerImpl) leaves : ((VirtualFilePointerImpl[]) leaves)[0];
     }
 
-    @Nonnull
+    
     private String getUrl() {
         return parent == null ? getName().toString() : parent.getUrl() + "/" + getName();
     }
@@ -439,7 +438,7 @@ class FilePointerPartNode {
         return leaves == null ? 0 : leaves instanceof VirtualFilePointerImpl ? 1 : ((VirtualFilePointerImpl[]) leaves).length;
     }
 
-    void addAllPointersTo(@Nonnull Collection<? super VirtualFilePointerImpl> outList) {
+    void addAllPointersTo(Collection<? super VirtualFilePointerImpl> outList) {
         Object leaves = this.leaves;
         if (leaves == null) {
             return;
@@ -452,8 +451,8 @@ class FilePointerPartNode {
         }
     }
 
-    @Nonnull
-    FilePointerPartNode findOrCreateNodeByFile(@Nonnull VirtualFile file, @Nonnull NewVirtualFileSystem fs) {
+    
+    FilePointerPartNode findOrCreateNodeByFile(VirtualFile file, NewVirtualFileSystem fs) {
         int nameId = getNameId(file);
         VirtualFile parent = getParentThroughJars(file, fs);
         int parentNameId = getNameId(parent);
@@ -461,7 +460,7 @@ class FilePointerPartNode {
     }
 
     // for "file://a/b/c.txt" return "a/b", for "jar://a/b/j.jar!/c.txt" return "/a/b/j.jar"
-    private static VirtualFile getParentThroughJars(@Nonnull VirtualFile file, @Nonnull VirtualFileSystem fs) {
+    private static VirtualFile getParentThroughJars(VirtualFile file, VirtualFileSystem fs) {
         VirtualFile parent = file.getParent();
         if (parent == null && fs instanceof BaseArchiveFileSystem archiveFileSystem) {
             VirtualFile local = archiveFileSystem.getLocalByEntry(file);
@@ -472,8 +471,8 @@ class FilePointerPartNode {
         return parent;
     }
 
-    @Nonnull
-    static FilePointerPartNode findOrCreateNodeByPath(@Nonnull FilePointerPartNode rootNode, @Nonnull String path, @Nonnull NewVirtualFileSystem fs) {
+    
+    static FilePointerPartNode findOrCreateNodeByPath(FilePointerPartNode rootNode, String path, NewVirtualFileSystem fs) {
         List<String> names = splitNames(path);
         NewVirtualFile fsRoot = null;
 
@@ -519,8 +518,8 @@ class FilePointerPartNode {
         return currentNode;
     }
 
-    @Nonnull
-    private static List<String> splitNames(@Nonnull String path) {
+    
+    private static List<String> splitNames(String path) {
         List<String> names = new ArrayList<>(20);
         int end = path.length();
         if (end == 0) {
@@ -543,9 +542,9 @@ class FilePointerPartNode {
     }
 
     private static VirtualFile findFileFromRoot(
-        @Nonnull NewVirtualFile root,
-        @Nonnull NewVirtualFileSystem fs,
-        @Nonnull List<String> names,
+        NewVirtualFile root,
+        NewVirtualFileSystem fs,
+        List<String> names,
         int startIndex
     ) {
         VirtualFile file = root;

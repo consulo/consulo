@@ -21,7 +21,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx {
   protected abstract Image getIcon();
@@ -31,7 +30,7 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
   protected abstract String getPrimaryText();
 
   @Override
-  public void customize(@Nonnull ColoredTextContainer component) {
+  public void customize(ColoredTextContainer component) {
     component.setIcon(getIcon());
     component.append(getPrimaryText(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     String secondaryText = getSecondaryText();
@@ -40,7 +39,7 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
     }
   }
 
-  @Nonnull
+  
   public String getText() {
     String secondaryText = getSecondaryText();
     if (secondaryText != null && secondaryText.length() > 0) {

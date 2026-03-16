@@ -22,7 +22,7 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Supplier;

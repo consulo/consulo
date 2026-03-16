@@ -23,8 +23,7 @@ import consulo.codeEditor.event.SelectionListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -136,17 +135,15 @@ public class ImaginarySelectionModel implements SelectionModel {
     }
 
     @Override
-    public void setBlockSelection(@Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+    public void setBlockSelection(LogicalPosition blockStart, LogicalPosition blockEnd) {
         throw myEditor.notImplemented();
     }
 
-    @Nonnull
     @Override
     public int[] getBlockSelectionStarts() {
         return new int[]{getSelectionStart()};
     }
 
-    @Nonnull
     @Override
     public int[] getBlockSelectionEnds() {
         return new int[]{getSelectionEnd()};
@@ -158,12 +155,12 @@ public class ImaginarySelectionModel implements SelectionModel {
     }
 
     @Override
-    public void addSelectionListener(@Nonnull SelectionListener listener) {
+    public void addSelectionListener(SelectionListener listener) {
         LOG.info("Called ImaginarySelectionModel#addSelectionListener which is stubbed and has no implementation");
     }
 
     @Override
-    public void removeSelectionListener(@Nonnull SelectionListener listener) {
+    public void removeSelectionListener(SelectionListener listener) {
         LOG.info("Called ImaginarySelectionModel#removeSelectionListener which is stubbed and has no implementation");
     }
 }

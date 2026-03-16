@@ -37,8 +37,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -49,24 +48,24 @@ import java.util.List;
 class MultilinePopupBuilder {
     private static final char[] SEPARATORS = {'|', '\n'};
 
-    @Nonnull
+    
     private final EditorTextField myTextField;
 
     MultilinePopupBuilder(
-        @Nonnull Project project,
-        @Nonnull Collection<String> values,
-        @Nonnull String initialValue,
+        Project project,
+        Collection<String> values,
+        String initialValue,
         boolean supportsNegativeValues
     ) {
         myTextField = createTextField(project, values, supportsNegativeValues, initialValue);
     }
 
-    @Nonnull
+    
     private static EditorTextField createTextField(
-        @Nonnull Project project,
+        Project project,
         Collection<String> values,
         boolean supportsNegativeValues,
-        @Nonnull String initialValue
+        String initialValue
     ) {
         TextFieldWithCompletion textField =
             new TextFieldWithCompletion(
@@ -88,7 +87,7 @@ class MultilinePopupBuilder {
         return textField;
     }
 
-    @Nonnull
+    
     JBPopup createPopup() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(myTextField, BorderLayout.CENTER);
@@ -104,7 +103,7 @@ class MultilinePopupBuilder {
         AnAction okAction = new DumbAwareAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 unregisterCustomShortcutSet(popup.getContent());
                 popup.closeOk(e.getInputEvent());
             }
@@ -113,7 +112,7 @@ class MultilinePopupBuilder {
         return popup;
     }
 
-    @Nonnull
+    
     List<String> getSelectedValues() {
         return ContainerUtil.mapNotNull(StringUtil.tokenize(myTextField.getText(), new String(SEPARATORS)), value -> {
             String trimmed = value.trim();
@@ -122,7 +121,7 @@ class MultilinePopupBuilder {
     }
 
     private static class MyCompletionProvider extends ValuesCompletionProvider.ValuesCompletionProviderDumbAware<String> {
-        MyCompletionProvider(@Nonnull Collection<String> values, boolean supportsNegativeValues) {
+        MyCompletionProvider(Collection<String> values, boolean supportsNegativeValues) {
             super(new DefaultTextCompletionValueDescriptor.StringValueDescriptor(),
                 supportsNegativeValues ? Lists.append(Chars.asList(SEPARATORS), '-') : Chars.asList(SEPARATORS), values, false
             );

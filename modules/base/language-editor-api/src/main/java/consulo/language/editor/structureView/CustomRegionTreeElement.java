@@ -25,8 +25,7 @@ import consulo.navigation.Navigatable;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,13 +43,13 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
   private final CustomRegionTreeElement myParent;
   private List<CustomRegionTreeElement> mySubRegions;
 
-  public CustomRegionTreeElement(@Nonnull PsiElement startElement, @Nonnull CustomFoldingProvider provider, @Nullable CustomRegionTreeElement parent) {
+  public CustomRegionTreeElement(PsiElement startElement, CustomFoldingProvider provider, @Nullable CustomRegionTreeElement parent) {
     myStartElement = startElement;
     myProvider = provider;
     myParent = parent;
   }
 
-  public CustomRegionTreeElement(@Nonnull PsiElement startElement, @Nonnull CustomFoldingProvider provider) {
+  public CustomRegionTreeElement(PsiElement startElement, CustomFoldingProvider provider) {
     this(startElement, provider, null);
   }
 
@@ -69,7 +68,7 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
     return myStartElement instanceof Navigatable n ? n.getNavigateOptions() : NavigateOptions.CANT_NAVIGATE;
   }
 
-  @Nonnull
+  
   @Override
   public ItemPresentation getPresentation() {
     return new ItemPresentation() {
@@ -93,7 +92,7 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
     };
   }
 
-  public void addChild(@Nonnull StructureViewTreeElement childElement) {
+  public void addChild(StructureViewTreeElement childElement) {
     if (mySubRegions != null) {
       for (CustomRegionTreeElement subRegion : mySubRegions) {
         if (subRegion.containsElement(childElement)) {
@@ -105,7 +104,7 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
     myChildElements.add(childElement);
   }
 
-  @Nonnull
+  
   @Override
   public TreeElement[] getChildren() {
     if (mySubRegions == null || mySubRegions.isEmpty()) {
@@ -133,14 +132,14 @@ public class CustomRegionTreeElement implements StructureViewTreeElement {
     return false;
   }
 
-  public CustomRegionTreeElement createNestedRegion(@Nonnull PsiElement element) {
+  public CustomRegionTreeElement createNestedRegion(PsiElement element) {
     if (mySubRegions == null) mySubRegions = new ArrayList<>();
     CustomRegionTreeElement currSubRegion = new CustomRegionTreeElement(element, myProvider, this);
     mySubRegions.add(currSubRegion);
     return currSubRegion;
   }
 
-  public CustomRegionTreeElement endRegion(@Nonnull PsiElement element) {
+  public CustomRegionTreeElement endRegion(PsiElement element) {
     myEndOffset = element.getTextRange().getEndOffset();
     return myParent;
   }

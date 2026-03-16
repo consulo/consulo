@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
@@ -85,9 +84,9 @@ public class CoreStubTreeLoader extends StubTreeLoader {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, @Nullable Throwable cause) {
+  public RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, PsiFileWithStubSupport psiFile, @Nullable Throwable cause) {
     return new RuntimeException();
   }
 }

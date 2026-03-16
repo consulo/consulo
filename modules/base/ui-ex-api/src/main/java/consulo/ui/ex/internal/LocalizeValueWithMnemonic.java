@@ -17,14 +17,13 @@ package consulo.ui.ex.internal;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-10-21
  */
 public interface LocalizeValueWithMnemonic extends LocalizeValue {
-    static TextWithMnemonic get(@Nonnull LocalizeValue localizeValue) {
+    static TextWithMnemonic get(LocalizeValue localizeValue) {
         if (localizeValue instanceof LocalizeValueWithMnemonic withMnemonic) {
             return withMnemonic.mnemonic();
         }
@@ -32,6 +31,6 @@ public interface LocalizeValueWithMnemonic extends LocalizeValue {
         return TextWithMnemonic.parse(localizeValue.get());
     }
 
-    @Nonnull
+    
     TextWithMnemonic mnemonic();
 }

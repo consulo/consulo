@@ -20,12 +20,11 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.DataSnapshot;
 import consulo.dataContext.UiDataRule;
 import consulo.versionControlSystem.VcsDataKeys;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class VcsUiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         sink.lazyValue(VcsDataKeys.CHANGES_SELECTION, VcsChangesSelectionRule::getChangesSelection);
         sink.lazyValue(VcsDataKeys.VCS_REVISION_NUMBERS, VcsRevisionNumberArrayRule::getData);
         sink.lazyValue(VcsDataKeys.VIRTUAL_FILE_STREAM, VirtualFileStreamRule::getData);

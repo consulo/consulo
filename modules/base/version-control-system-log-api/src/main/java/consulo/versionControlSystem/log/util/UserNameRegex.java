@@ -17,15 +17,14 @@ package consulo.versionControlSystem.log.util;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 public class UserNameRegex implements Function<String, String> {
-  @Nonnull
+  
   public static final UserNameRegex EXTENDED_INSTANCE = new UserNameRegex(true);
-  @Nonnull
+  
   private static final char[] BASIC_REGEX_CHARS = new char[]{'.', '^', '$', '*', '[', ']'};
-  @Nonnull
+  
   public static final char[] EXTENDED_REGEX_CHARS = new char[]{'.', '^', '$', '*', '+', '-', '?', '(', ')', '[', ']', '{', '}', '|'};
   private final boolean myExtended;
 

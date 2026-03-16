@@ -29,7 +29,6 @@ import consulo.logging.internal.IdeaLoggingEvent;
 import consulo.logging.internal.LogEventException;
 import consulo.logging.internal.LogMessageEx;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -86,7 +85,7 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
     }
 
-    void appendToLoggers(@Nonnull IdeaLoggingEvent e) {
+    void appendToLoggers(IdeaLoggingEvent e) {
         if (myDialogRunnable != null) {
             return;
         }
@@ -125,8 +124,8 @@ public class DialogAppender<E> extends UnsynchronizedAppenderBase<E> {
         return null;
     }
 
-    @Nonnull
-    private static IdeaLoggingEvent extractLoggingEvent(@Nonnull String strMessage, @Nonnull Throwable throwable) {
+    
+    private static IdeaLoggingEvent extractLoggingEvent(String strMessage, Throwable throwable) {
         //noinspection ThrowableResultOfMethodCallIgnored
         Throwable rootCause = ExceptionUtil.getRootCause(throwable);
         if (rootCause instanceof LogEventException) {

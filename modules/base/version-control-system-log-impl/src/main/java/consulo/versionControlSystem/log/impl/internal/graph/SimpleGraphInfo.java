@@ -22,7 +22,6 @@ import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.versionControlSystem.log.graph.*;
 import consulo.versionControlSystem.log.impl.internal.util.CompressedIntList;
 import consulo.versionControlSystem.log.impl.internal.util.IntList;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,22 +30,22 @@ import static consulo.versionControlSystem.log.graph.LinearGraphUtils.asLiteLine
 
 public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
 
-  @Nonnull
+  
   private final LinearGraph myLinearGraph;
-  @Nonnull
+  
   private final GraphLayout myGraphLayout;
-  @Nonnull
+  
   private final Function<Integer, CommitId> myFunction;
-  @Nonnull
+  
   private final TimestampGetter myTimestampGetter;
-  @Nonnull
+  
   private final Set<Integer> myBranchNodeIds;
 
-  private SimpleGraphInfo(@Nonnull LinearGraph linearGraph,
-                          @Nonnull GraphLayout graphLayout,
-                          @Nonnull Function<Integer, CommitId> function,
-                          @Nonnull TimestampGetter timestampGetter,
-                          @Nonnull Set<Integer> branchNodeIds) {
+  private SimpleGraphInfo(LinearGraph linearGraph,
+                          GraphLayout graphLayout,
+                          Function<Integer, CommitId> function,
+                          TimestampGetter timestampGetter,
+                          Set<Integer> branchNodeIds) {
     myLinearGraph = linearGraph;
     myGraphLayout = graphLayout;
     myFunction = function;
@@ -55,11 +54,11 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
   }
 
   public static <CommitId> SimpleGraphInfo<CommitId> build(
-    @Nonnull LinearGraph linearGraph,
-    @Nonnull GraphLayout oldLayout,
-    @Nonnull PermanentCommitsInfo<CommitId> permanentCommitsInfo,
+    LinearGraph linearGraph,
+    GraphLayout oldLayout,
+    PermanentCommitsInfo<CommitId> permanentCommitsInfo,
     int permanentGraphSize,
-    @Nonnull Set<Integer> branchNodeIds
+    Set<Integer> branchNodeIds
   ) {
     int firstVisibleRow = 1000; // todo get first visible row from table somehow
     int delta = 1000;
@@ -109,7 +108,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     return new SimpleGraphInfo<>(newLinearGraph, newLayout, function, timestampGetter, LinearGraphUtils.convertIdsToNodeIndexes(linearGraph, branchNodeIds));
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
   private static <CommitId> Function<Integer, CommitId> createCommitIdMapFunction(List<CommitId> commitsIdMap) {
       Function<Integer, CommitId> function;
@@ -126,7 +125,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     return function;
   }
 
-  @Nonnull
+  
   private static <CommitId> ObjectIntMap<CommitId> reverseCommitIdMap(PermanentCommitsInfo<CommitId> permanentCommitsInfo, int size) {
     ObjectIntMap<CommitId> result = ObjectMaps.newObjectIntHashMap();
     for (int i = 0; i < size; i++) {
@@ -135,11 +134,11 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     return result;
   }
 
-  @Nonnull
+  
   @Override
   public PermanentCommitsInfo<CommitId> getPermanentCommitsInfo() {
     return new PermanentCommitsInfo<>() {
-      @Nonnull
+      
       @Override
       public CommitId getCommitId(int nodeId) {
         return myFunction.apply(nodeId);
@@ -151,7 +150,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       }
 
       @Override
-      public int getNodeId(@Nonnull CommitId commitId) {
+      public int getNodeId(CommitId commitId) {
         for (int id = 0; id < myLinearGraph.nodesCount(); id++) {
           if (myFunction.apply(id).equals(commitId)) {
             return id;
@@ -160,9 +159,9 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
         return -1;
       }
 
-      @Nonnull
+      
       @Override
-      public Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> heads) {
+      public Set<Integer> convertToNodeIds(Collection<CommitId> heads) {
         Set<Integer> result = new HashSet<>();
         for (int id = 0; id < myLinearGraph.nodesCount(); id++) {
           if (heads.contains(myFunction.apply(id))) {
@@ -174,19 +173,19 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
     };
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getLinearGraph() {
     return myLinearGraph;
   }
 
-  @Nonnull
+  
   @Override
   public GraphLayout getPermanentGraphLayout() {
     return myGraphLayout;
   }
 
-  @Nonnull
+  
   @Override
   public Set<Integer> getBranchNodeIds() {
     return myBranchNodeIds;
@@ -199,7 +198,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       myCommitsIdMap = commitsIdMap;
     }
 
-    @Nonnull
+    
     @Override
     public CommitId apply(Integer dom) {
       return myCommitsIdMap.get(dom);
@@ -213,7 +212,7 @@ public class SimpleGraphInfo<CommitId> implements PermanentGraphInfo<CommitId> {
       myCommitsIdMap = commitsIdMap;
     }
 
-    @Nonnull
+    
     @Override
     public Integer apply(Integer dom) {
       return myCommitsIdMap.get(dom);

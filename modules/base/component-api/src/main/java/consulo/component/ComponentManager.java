@@ -25,8 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreeState;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -52,58 +51,58 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     }
 
     @Override
-    @Nonnull
+    
     default InjectingContainer getInjectingContainer() {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
-    default <T> T getInstance(@Nonnull Class<T> clazz) {
+    
+    default <T> T getInstance(Class<T> clazz) {
         return getInjectingContainer().getInstance(clazz);
     }
 
     @Nullable
-    default <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+    default <T> T getInstanceIfCreated(Class<T> clazz) {
         return getInjectingContainer().getInstanceIfCreated(clazz);
     }
 
-    @Nonnull
-    default <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
+    
+    default <T> T getUnbindedInstance(Class<T> clazz) {
         return getInjectingContainer().getUnbindedInstance(clazz);
     }
 
-    @Nonnull
+    
     default <T> T getUnbindedInstance(
-        @Nonnull Class<T> clazz,
-        @Nonnull Type[] constructorTypes,
-        @Nonnull Function<Object[], T> constructor
+        Class<T> clazz,
+        Type[] constructorTypes,
+        Function<Object[], T> constructor
     ) {
         return getInjectingContainer().getUnbindedInstance(clazz, constructorTypes, constructor);
     }
 
     @Deprecated
     @DeprecationInfo("JetBrains version")
-    default <T> T getService(@Nonnull Class<T> clazz) {
+    default <T> T getService(Class<T> clazz) {
         return getInstance(clazz);
     }
 
     @Deprecated
-    default <T> T getComponent(@Nonnull Class<T> clazz) {
+    default <T> T getComponent(Class<T> clazz) {
         return getInstance(clazz);
     }
 
-    @Nonnull
+    
     MessageBus getMessageBus();
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Prefer safe iteration via methods of ExtensionPoint")
-    default <T> List<T> getExtensionList(@Nonnull Class<T> extensionPointName) {
+    default <T> List<T> getExtensionList(Class<T> extensionPointName) {
         return getExtensionPoint(extensionPointName).getExtensionList();
     }
 
-    @Nonnull
-    default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+    
+    default <T> ExtensionPoint<T> getExtensionPoint(Class<T> extensionClass) {
         throw new UnsupportedOperationException();
     }
 
@@ -111,10 +110,10 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
      * @return condition for this component being disposed.
      * see {@link Application#invokeLater(Runnable, BooleanSupplier)} for the usage example.
      */
-    @Nonnull
+    
     BooleanSupplier getDisposed();
 
-    @Nonnull
+    
     default Supplier<ThreeState> getDisposeState() {
         return () -> isDisposed() ? ThreeState.YES : ThreeState.NO;
     }

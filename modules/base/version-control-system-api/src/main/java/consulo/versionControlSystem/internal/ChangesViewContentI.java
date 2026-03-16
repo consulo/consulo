@@ -19,15 +19,14 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author irengrig
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ChangesViewContentI {
-    static ChangesViewContentI getInstance(@Nonnull Project project) {
+    static ChangesViewContentI getInstance(Project project) {
         return project.getInstance(ChangesViewContentI.class);
     }
 
@@ -40,11 +39,11 @@ public interface ChangesViewContentI {
     @Nullable
     <T> T getActiveComponent(Class<T> aClass);
 
-    default void selectContent(@Nonnull String tabName) {
+    default void selectContent(String tabName) {
         selectContent(tabName, false);
     }
 
-    void selectContent(@Nonnull String tabName, boolean requestFocus);
+    void selectContent(String tabName, boolean requestFocus);
 
-    boolean isContentSelected(@Nonnull String contentName);
+    boolean isContentSelected(String contentName);
 }

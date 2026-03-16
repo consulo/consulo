@@ -31,8 +31,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -72,9 +71,8 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
 
   }
 
-  @Nullable
   @Override
-  public consulo.ui.Window suggestParentWindow(@Nullable Project project) {
+  public consulo.ui.@Nullable Window suggestParentWindow(@Nullable Project project) {
     return null;
   }
 
@@ -86,7 +84,7 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
   }
 
   @Override
-  public StatusBar getStatusBar(@Nonnull Component c) {
+  public StatusBar getStatusBar(Component c) {
     return null;
   }
 
@@ -105,7 +103,7 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public IdeFrame[] getAllProjectFrames() {
     return new IdeFrame[0];
@@ -133,9 +131,9 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state) {
+  public IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state) {
     UIAccess.assertIsUIThread();
 
     DesktopSwtIdeFrameImpl frame = new DesktopSwtIdeFrameImpl(project);
@@ -153,7 +151,7 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
   }
 
   @Override
-  public Component getFocusedComponent(@Nonnull Window window) {
+  public Component getFocusedComponent(Window window) {
     return null;
   }
 
@@ -195,7 +193,7 @@ public class DesktopSwtWindowManagerImpl extends UnifiedWindowManagerImpl implem
   }
 
   @Override
-  public Rectangle getScreenBounds(@Nonnull Project project) {
+  public Rectangle getScreenBounds(Project project) {
     return null;
   }
 

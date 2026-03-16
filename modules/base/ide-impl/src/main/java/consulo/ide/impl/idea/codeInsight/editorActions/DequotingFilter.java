@@ -20,9 +20,8 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DequotingFilter {
-  public abstract boolean skipReplacementQuotesOrBraces(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull String selectedText, char c);
+  public abstract boolean skipReplacementQuotesOrBraces(PsiFile file, Editor editor, String selectedText, char c);
 }

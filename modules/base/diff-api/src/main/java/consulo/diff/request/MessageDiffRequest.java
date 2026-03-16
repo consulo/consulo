@@ -15,22 +15,21 @@
  */
 package consulo.diff.request;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class MessageDiffRequest extends DiffRequest {
   @Nullable private String myTitle;
-  @Nonnull
+  
   private String myMessage;
 
-  public MessageDiffRequest(@Nonnull String message) {
+  public MessageDiffRequest(String message) {
     this(null, message);
   }
 
-  public MessageDiffRequest(@Nullable String title, @Nonnull String message) {
+  public MessageDiffRequest(@Nullable String title, String message) {
     myTitle = title;
     myMessage = message;
   }
@@ -41,7 +40,7 @@ public class MessageDiffRequest extends DiffRequest {
     return myTitle;
   }
 
-  @Nonnull
+  
   public String getMessage() {
     return myMessage;
   }
@@ -50,7 +49,7 @@ public class MessageDiffRequest extends DiffRequest {
     myTitle = title;
   }
 
-  public void setMessage(@Nonnull String message) {
+  public void setMessage(String message) {
     myMessage = message;
   }
 

@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -38,7 +37,7 @@ public class DocCommentPanel {
     private final Layout<?> myRootComponent;
 
     @RequiredUIAccess
-    public DocCommentPanel(@Nonnull LocalizeValue titleValue) {
+    public DocCommentPanel(LocalizeValue titleValue) {
         VerticalLayout layout = VerticalLayout.create();
 
         myRbJavaDocAsIs = RadioButton.create(LanguageEditorRefactoringUILocalize.javadocAsIs());
@@ -63,7 +62,7 @@ public class DocCommentPanel {
         myRootComponent = LabeledLayout.create(titleValue, layout);
     }
 
-    @Nonnull
+    
     public Component getComponent() {
         return myRootComponent;
     }

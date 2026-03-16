@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -31,25 +30,25 @@ import java.util.Arrays;
 import java.util.List;
 
 class ChangesBrowserNodeCopyProvider implements CopyProvider {
-  @Nonnull
+  
   private final JTree myTree;
 
-  ChangesBrowserNodeCopyProvider(@Nonnull JTree tree) {
+  ChangesBrowserNodeCopyProvider(JTree tree) {
     myTree = tree;
   }
 
   @Override
-  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+  public boolean isCopyEnabled(DataContext dataContext) {
     return myTree.getSelectionPaths() != null;
   }
 
   @Override
-  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+  public boolean isCopyVisible(DataContext dataContext) {
     return true;
   }
 
   @Override
-  public void performCopy(@Nonnull DataContext dataContext) {
+  public void performCopy(DataContext dataContext) {
     List<TreePath> paths = ContainerUtil.sorted(Arrays.asList(ObjectUtil.assertNotNull(myTree.getSelectionPaths())), TreeUtil.getDisplayOrderComparator(myTree));
     CopyPasteManager.getInstance().setContents(new StringSelection(StringUtil.join(paths, path -> {
       Object node = path.getLastPathComponent();

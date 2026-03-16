@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.content.internal.scope.CustomScopesProvider;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.wolfAnalyzer.ProblemScopeHolder;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.function.Consumer;
@@ -38,7 +37,7 @@ public class ProblemCustomScopesProvider implements CustomScopesProvider {
     }
 
     @Override
-    public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
+    public void acceptScopes(Consumer<NamedScope> consumer) {
         consumer.accept(myProblemScopeHolder.getProblemsScope());
     }
 }

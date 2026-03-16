@@ -42,8 +42,7 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -188,7 +187,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         });
     }
 
-    @Nonnull
+    
     public JComponent getComponent() {
         return myPanel;
     }
@@ -327,7 +326,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
     }
 
     @Nullable
-    public SearchableConfigurable findConfigurableById(@Nonnull String configurableId) {
+    public SearchableConfigurable findConfigurableById(String configurableId) {
         for (Configurable configurable : myConfigurable2Node.keySet()) {
             if (configurable instanceof SearchableConfigurable) {
                 SearchableConfigurable searchableConfigurable = (SearchableConfigurable) configurable;
@@ -384,7 +383,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
             return map(myConfigurables.get()).toArray(EMPTY_EN_ARRAY);
         }
 
-        @Nonnull
+        
         private List<ConfigurableNode> map(Configurable[] configurables) {
             List<ConfigurableNode> result = new ArrayList<>();
             for (Configurable eachKid : configurables) {
@@ -483,7 +482,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         }
 
         @Override
-        public void setRenderer(@Nonnull BiConsumer<Configurable, TextItemPresentation> renderer) {
+        public void setRenderer(BiConsumer<Configurable, TextItemPresentation> renderer) {
             throw new UnsupportedOperationException("just stub, for comparator");
         }
 

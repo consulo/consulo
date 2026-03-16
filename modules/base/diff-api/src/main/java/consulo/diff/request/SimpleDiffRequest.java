@@ -19,30 +19,29 @@ import consulo.diff.content.DiffContent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class SimpleDiffRequest extends ContentDiffRequest {
   @Nullable
   private final String myTitle;
-  @Nonnull
+  
   private final List<DiffContent> myContents;
-  @Nonnull
+  
   private final List<String> myContentTitles;
 
   public SimpleDiffRequest(@Nullable String title,
-                           @Nonnull DiffContent content1,
-                           @Nonnull DiffContent content2,
+                           DiffContent content1,
+                           DiffContent content2,
                            @Nullable String title1,
                            @Nullable String title2) {
     this(title, ContainerUtil.list(content1, content2), ContainerUtil.list(title1, title2));
   }
 
   public SimpleDiffRequest(@Nullable String title,
-                           @Nonnull DiffContent content1,
-                           @Nonnull DiffContent content2,
-                           @Nonnull DiffContent content3,
+                           DiffContent content1,
+                           DiffContent content2,
+                           DiffContent content3,
                            @Nullable String title1,
                            @Nullable String title2,
                            @Nullable String title3) {
@@ -50,8 +49,8 @@ public class SimpleDiffRequest extends ContentDiffRequest {
   }
 
   public SimpleDiffRequest(@Nullable String title,
-                           @Nonnull List<DiffContent> contents,
-                           @Nonnull List<String> titles) {
+                           List<DiffContent> contents,
+                           List<String> titles) {
     assert contents.size() == titles.size();
 
     myTitle = title;
@@ -59,13 +58,13 @@ public class SimpleDiffRequest extends ContentDiffRequest {
     myContentTitles = titles;
   }
 
-  @Nonnull
+  
   @Override
   public List<DiffContent> getContents() {
     return myContents;
   }
 
-  @Nonnull
+  
   @Override
   public List<String> getContentTitles() {
     return myContentTitles;

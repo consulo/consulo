@@ -35,8 +35,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +52,7 @@ public class MoveHandler implements RefactoringActionHandler {
      */
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         int offset = editor.getCaretModel().getOffset();
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         PsiElement element = file.findElementAt(offset);
@@ -99,7 +98,7 @@ public class MoveHandler implements RefactoringActionHandler {
      */
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         PsiElement targetContainer = dataContext == null ? null : dataContext.getData(LangDataKeys.TARGET_PSI_ELEMENT);
         Set<PsiElement> filesOrDirs = new HashSet<>();
         project.getApplication().getExtensionPoint(MoveHandlerDelegate.class).forEach(delegate -> {
@@ -130,7 +129,7 @@ public class MoveHandler implements RefactoringActionHandler {
      */
     public static void doMove(
         Project project,
-        @Nonnull PsiElement[] elements,
+        PsiElement[] elements,
         PsiElement targetContainer,
         DataContext dataContext,
         MoveCallback callback
@@ -165,7 +164,7 @@ public class MoveHandler implements RefactoringActionHandler {
      * Must be invoked in AtomicAction
      * target container can be null => means that container is not determined yet and must be spacify by the user
      */
-    public static boolean canMove(@Nonnull PsiElement[] elements, PsiElement targetContainer) {
+    public static boolean canMove(PsiElement[] elements, PsiElement targetContainer) {
         return Application.get().getExtensionPoint(MoveHandlerDelegate.class)
             .anyMatchSafe(delegate -> delegate.canMove(elements, targetContainer));
     }

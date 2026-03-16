@@ -49,8 +49,7 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.impl.internal.diff.ChangeGoToChangePopupAction;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +67,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         DataContext dc = e.getDataContext();
 
         Presentation presentation = e.getPresentation();
@@ -87,7 +86,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Iterable<Pair<FilePath, FileStatus>> iterable = e.getRequiredData(VcsDataKeys.UPDATE_VIEW_FILES_ITERABLE);
         Label before = (Label) e.getRequiredData(VcsDataKeys.LABEL_BEFORE);
@@ -101,20 +100,20 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
     private static class MyDiffRequestChain extends UserDataHolderBase implements DiffRequestChain, GoToChangePopupBuilder.Chain {
         @Nullable
         private final Project myProject;
-        @Nonnull
+        
         private final Label myBefore;
-        @Nonnull
+        
         private final Label myAfter;
-        @Nonnull
+        
         private final List<MyDiffRequestProducer> myRequests = new ArrayList<>();
 
         private int myIndex;
 
         public MyDiffRequestChain(
             @Nullable Project project,
-            @Nonnull Iterable<Pair<FilePath, FileStatus>> iterable,
-            @Nonnull Label before,
-            @Nonnull Label after,
+            Iterable<Pair<FilePath, FileStatus>> iterable,
+            Label before,
+            Label after,
             @Nullable FilePath filePath
         ) {
             myProject = project;
@@ -133,7 +132,7 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
             }
         }
 
-        @Nonnull
+        
         @Override
         public List<MyDiffRequestProducer> getRequests() {
             return myRequests;
@@ -149,17 +148,17 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
             myIndex = index;
         }
 
-        @Nonnull
+        
         @Override
-        public AnAction createGoToChangeAction(@Nonnull Consumer<Integer> onSelected) {
+        public AnAction createGoToChangeAction(Consumer<Integer> onSelected) {
             return new ChangeGoToChangePopupAction.Fake<>(this, myIndex, onSelected) {
-                @Nonnull
+                
                 @Override
                 protected FilePath getFilePath(int index) {
                     return myRequests.get(index).getFilePath();
                 }
 
-                @Nonnull
+                
                 @Override
                 protected FileStatus getFileStatus(int index) {
                     return myRequests.get(index).getFileStatus();
@@ -168,35 +167,35 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
         }
 
         private class MyDiffRequestProducer implements DiffRequestProducer {
-            @Nonnull
+            
             private final FileStatus myFileStatus;
-            @Nonnull
+            
             private final FilePath myFilePath;
 
-            public MyDiffRequestProducer(@Nonnull FilePath filePath, @Nonnull FileStatus fileStatus) {
+            public MyDiffRequestProducer(FilePath filePath, FileStatus fileStatus) {
                 myFilePath = filePath;
                 myFileStatus = fileStatus;
             }
 
-            @Nonnull
+            
             @Override
             public String getName() {
                 return getFilePath().getPath();
             }
 
-            @Nonnull
+            
             public FilePath getFilePath() {
                 return myFilePath;
             }
 
-            @Nonnull
+            
             public FileStatus getFileStatus() {
                 return myFileStatus;
             }
 
-            @Nonnull
+            
             @Override
-            public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
+            public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
                 throws DiffRequestProducerException, ProcessCanceledException {
                 try {
                     DiffContent content1;
@@ -229,8 +228,8 @@ public class ShowUpdatedDiffAction extends AnAction implements DumbAware {
             }
         }
 
-        @Nonnull
-        private static byte[] loadContent(@Nonnull FilePath filePointer, @Nonnull Label label) throws DiffRequestProducerException {
+        
+        private static byte[] loadContent(FilePath filePointer, Label label) throws DiffRequestProducerException {
             String path = filePointer.getPresentableUrl();
             ByteContent byteContent = label.getByteContent(FileUtil.toSystemIndependentName(path));
 

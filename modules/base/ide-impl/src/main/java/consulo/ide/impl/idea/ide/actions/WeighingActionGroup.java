@@ -20,8 +20,7 @@ import consulo.ui.ex.action.BasePresentationFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -40,22 +39,22 @@ public abstract class WeighingActionGroup extends ActionGroup {
     private final BasePresentationFactory myPresentationFactory = new BasePresentationFactory();
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         getDelegate().update(e);
     }
 
     protected abstract ActionGroup getDelegate();
 
     @Override
-    @Nonnull
+    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return getDelegate().getChildren(e);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleActions) {
+    public List<AnAction> postProcessVisibleChildren(List<AnAction> visibleActions) {
         LinkedHashSet<AnAction> heaviest = null;
         double maxWeight = DEFAULT_WEIGHT;
 

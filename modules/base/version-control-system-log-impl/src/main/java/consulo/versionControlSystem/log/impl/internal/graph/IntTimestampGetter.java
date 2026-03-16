@@ -20,7 +20,6 @@ import consulo.versionControlSystem.log.graph.TimestampGetter;
 import consulo.versionControlSystem.log.impl.internal.util.FullIntList;
 import consulo.versionControlSystem.log.impl.internal.util.IntList;
 import consulo.versionControlSystem.log.impl.internal.util.SmartDeltaCompressor;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +31,13 @@ public class IntTimestampGetter implements TimestampGetter {
   private static final long MAX_DELTA = Integer.MAX_VALUE - 10;
   private static final int BROKEN_DELTA = Integer.MAX_VALUE;
 
-  @Nonnull
-  public static IntTimestampGetter newInstance(@Nonnull TimestampGetter delegateGetter) {
+  
+  public static IntTimestampGetter newInstance(TimestampGetter delegateGetter) {
     return newInstance(delegateGetter, DEFAULT_BLOCK_SIZE);
   }
 
-  @Nonnull
-  public static IntTimestampGetter newInstance(@Nonnull TimestampGetter delegateGetter, int blockSize) {
+  
+  public static IntTimestampGetter newInstance(TimestampGetter delegateGetter, int blockSize) {
     if (delegateGetter.size() < 0) throw new NegativeArraySizeException("delegateGetter.size() < 0: " + delegateGetter.size());
     if (delegateGetter.size() == 0) throw new IllegalArgumentException("Empty TimestampGetter not supported");
 
@@ -72,7 +71,7 @@ public class IntTimestampGetter implements TimestampGetter {
   // myDeltas[i] = getTimestamp(i + 1) - getTimestamp(i)
   private final IntList myDeltas;
 
-  @Nonnull
+  
   private final Map<Integer, Long> myBrokenDeltas;
 
   private final int myBlockSize;
@@ -80,7 +79,7 @@ public class IntTimestampGetter implements TimestampGetter {
   // saved 0, blockSize, 2 * blockSize, etc.
   private final long[] mySaveTimestamps;
 
-  public IntTimestampGetter(int[] deltas, int blockSize, long[] saveTimestamps, @Nonnull Map<Integer, Long> brokenDeltas) {
+  public IntTimestampGetter(int[] deltas, int blockSize, long[] saveTimestamps, Map<Integer, Long> brokenDeltas) {
     myDeltas = SmartDeltaCompressor.newInstance(new FullIntList(deltas));
     myBlockSize = blockSize;
     mySaveTimestamps = saveTimestamps;

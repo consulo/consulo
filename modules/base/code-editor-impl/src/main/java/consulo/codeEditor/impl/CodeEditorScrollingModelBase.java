@@ -20,7 +20,6 @@ import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.util.DisposableList;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 /**
  * Common part from desktop scrolling model
@@ -40,17 +39,17 @@ public abstract class CodeEditorScrollingModelBase implements ScrollingModelEx {
     }
 
     @Override
-    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+    public void addVisibleAreaListener(VisibleAreaListener listener) {
         myVisibleAreaListeners.add(listener);
     }
 
     @Override
-    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable) {
+    public void addVisibleAreaListener(VisibleAreaListener listener, Disposable disposable) {
         myVisibleAreaListeners.add(listener, disposable);
     }
 
     @Override
-    public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+    public void removeVisibleAreaListener(VisibleAreaListener listener) {
         boolean success = myVisibleAreaListeners.remove(listener);
         LOG.assertTrue(success);
     }

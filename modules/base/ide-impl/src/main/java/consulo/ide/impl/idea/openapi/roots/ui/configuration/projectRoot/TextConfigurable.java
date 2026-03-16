@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.PanelWithText;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -81,7 +80,7 @@ public class TextConfigurable<T> extends NamedConfigurable<T> {
     return myBannerSlogan;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return myDisplayName;

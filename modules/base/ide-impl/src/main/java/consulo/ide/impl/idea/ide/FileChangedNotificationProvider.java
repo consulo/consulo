@@ -32,8 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -49,11 +48,11 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     private final EditorNotifications myEditorNotifications;
 
     @Inject
-    public FileChangedNotificationProvider(@Nonnull Project project,
-                                           @Nonnull FrameStateManager frameStateManager,
-                                           @Nonnull GeneralSettings generalSettings,
-                                           @Nonnull FileEditorManager fileEditorManager,
-                                           @Nonnull EditorNotifications editorNotifications) {
+    public FileChangedNotificationProvider(Project project,
+                                           FrameStateManager frameStateManager,
+                                           GeneralSettings generalSettings,
+                                           FileEditorManager fileEditorManager,
+                                           EditorNotifications editorNotifications) {
         myProject = project;
         myGeneralSettings = generalSettings;
         myEditorNotifications = editorNotifications;
@@ -72,7 +71,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
         MessageBusConnection connection = project.getApplication().getMessageBus().connect(myProject);
         connection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 if (!myProject.isDisposed() && !generalSettings.isSyncOnFrameActivation()) {
                     Set<VirtualFile> openFiles = Set.of(fileEditorManager.getSelectedFiles());
                     for (VFileEvent event : events) {
@@ -86,7 +85,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
         });
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "file-changed-externally";
@@ -95,9 +94,9 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     @RequiredReadAction
     @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file,
-                                                       @Nonnull FileEditor fileEditor,
-                                                       @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    public EditorNotificationBuilder buildNotification(VirtualFile file,
+                                                       FileEditor fileEditor,
+                                                       Supplier<EditorNotificationBuilder> builderFactory) {
         if (!myProject.isDisposed() && !myGeneralSettings.isSyncOnFrameActivation()) {
             VirtualFileSystem fs = file.getFileSystem();
             if (fs instanceof LocalFileSystem) {
@@ -114,7 +113,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
         return null;
     }
 
-    private EditorNotificationBuilder build(@Nonnull VirtualFile file, EditorNotificationBuilder builder) {
+    private EditorNotificationBuilder build(VirtualFile file, EditorNotificationBuilder builder) {
         builder.withText(IdeLocalize.fileChangedExternallyMessage());
         builder.withType(NotificationType.WARNING);
         builder.withAction(IdeLocalize.fileChangedExternallyReload(), (i) -> {

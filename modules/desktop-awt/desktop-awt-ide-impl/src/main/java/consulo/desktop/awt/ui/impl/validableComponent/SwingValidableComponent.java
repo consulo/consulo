@@ -20,7 +20,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.HasValidator;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -32,9 +31,9 @@ public abstract class SwingValidableComponent<V, C extends Component> extends Sw
 
   protected abstract V getValue();
 
-  @Nonnull
+  
   @Override
-  public Disposable addValidator(@Nonnull Validator<V> validator) {
+  public Disposable addValidator(Validator<V> validator) {
     return myValidator.addValidator(validator);
   }
 

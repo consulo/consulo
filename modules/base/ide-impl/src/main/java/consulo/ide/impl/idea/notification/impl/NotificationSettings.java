@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.notification.impl;
 
 import consulo.project.ui.notification.NotificationDisplayType;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author spleaner
@@ -36,12 +35,12 @@ public final class NotificationSettings {
     myShouldReadAloud = shouldReadAloud;
   }
 
-  @Nonnull
+  
   public String getGroupId() {
     return myGroupId;
   }
 
-  @Nonnull
+  
   public NotificationDisplayType getDisplayType() {
     return myDisplayType;
   }
@@ -67,7 +66,7 @@ public final class NotificationSettings {
   }
 
   @Nullable
-  public static NotificationSettings load(@Nonnull Element element) {
+  public static NotificationSettings load(Element element) {
     String displayTypeString = element.getAttributeValue("displayType");
     NotificationDisplayType displayType = NotificationDisplayType.BALLOON;
     boolean shouldLog = !"false".equals(element.getAttributeValue("shouldLog"));
@@ -88,7 +87,7 @@ public final class NotificationSettings {
     return groupId != null ? new NotificationSettings(groupId, displayType, shouldLog, shouldReadAloud) : null;
   }
 
-  @Nonnull
+  
   public Element save() {
     Element result = new Element("notification");
 

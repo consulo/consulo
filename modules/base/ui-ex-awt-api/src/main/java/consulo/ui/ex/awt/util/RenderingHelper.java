@@ -4,7 +4,6 @@ package consulo.ui.ex.awt.util;
 import consulo.platform.Platform;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +24,7 @@ public final class RenderingHelper {
   private int myRightMargin;
   private boolean myShrinkingDisabled;
 
-  public RenderingHelper(@Nonnull JComponent component) {
+  public RenderingHelper(JComponent component) {
     myViewBounds = new Rectangle(component.getWidth(), component.getHeight());
     myHintIndex = getExpandableHintIndex(component);
     Container parent = component.getParent();
@@ -74,7 +73,7 @@ public final class RenderingHelper {
     return myHintIndex == index;
   }
 
-  private static int getExpandableHintIndex(@Nonnull JComponent component) {
+  private static int getExpandableHintIndex(JComponent component) {
     if (component instanceof ComponentWithExpandableItems) {
       ComponentWithExpandableItems<?> c = (ComponentWithExpandableItems<?>)component;
       Collection<?> items = c.getExpandableItemsHandler().getExpandedItems();
@@ -84,7 +83,7 @@ public final class RenderingHelper {
     return -1;
   }
 
-  private static boolean isClientPropertyFalse(@Nonnull JComponent component, @Nonnull Object key, boolean strict) {
+  private static boolean isClientPropertyFalse(JComponent component, Object key, boolean strict) {
     Object property = component.getClientProperty(key);
     return strict ? Boolean.FALSE.equals(property) : !Boolean.TRUE.equals(property);
   }

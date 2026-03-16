@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-import jakarta.annotation.Nonnull;
 
 public interface PairedUnfairLocalInspectionTool extends UnfairLocalInspectionTool {
   /**
@@ -24,6 +23,6 @@ public interface PairedUnfairLocalInspectionTool extends UnfairLocalInspectionTo
    * The returned value can be a short name of this inspection tool, in this case
    * this unfair tool will be run in batch mode.
    */
-  @Nonnull
+  
   String getInspectionForBatchShortName();
 }

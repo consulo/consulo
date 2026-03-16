@@ -21,7 +21,6 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.ide.impl.idea.codeInsight.folding.impl.CollapseExpandDocCommentsHandler;
 
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "CollapseDocComments")
 public class CollapseDocCommentsAction extends BaseCodeInsightAction {
@@ -29,7 +28,7 @@ public class CollapseDocCommentsAction extends BaseCodeInsightAction {
         super(ActionLocalize.actionCollapsedoccommentsText(), ActionLocalize.actionCollapsedoccommentsDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new CollapseExpandDocCommentsHandler(false);

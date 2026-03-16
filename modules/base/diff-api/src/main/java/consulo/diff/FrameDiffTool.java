@@ -19,8 +19,7 @@ import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -30,11 +29,11 @@ public interface FrameDiffTool extends DiffTool {
      * Creates viewer for the given request. Clients should call {@link #canShow(DiffContext, DiffRequest)} first.
      */
     @RequiredUIAccess
-    @Nonnull
-    DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request);
+    
+    DiffViewer createComponent(DiffContext context, DiffRequest request);
 
     interface DiffViewer extends Disposable {
-        @Nonnull
+        
         JComponent getComponent();
 
         @Nullable
@@ -43,7 +42,7 @@ public interface FrameDiffTool extends DiffTool {
         /**
          * Should be called after adding {@link #getComponent()} to the components hierarchy.
          */
-        @Nonnull
+        
         @RequiredUIAccess
         ToolbarComponents init();
 

@@ -18,15 +18,14 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase implements DumbAware, UpToDateLineNumberListener {
-    @Nonnull
+    
     private final FileAnnotation myAnnotation;
-    @Nonnull
+    
     private final AbstractVcs myVcs;
 
     private int currentLine;
@@ -35,8 +34,8 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
         @Nullable String text,
         @Nullable String description,
         @Nullable Image icon,
-        @Nonnull FileAnnotation annotation,
-        @Nonnull AbstractVcs vcs
+        FileAnnotation annotation,
+        AbstractVcs vcs
     ) {
         super(LocalizeValue.ofNullable(text), LocalizeValue.ofNullable(description), icon);
         myAnnotation = annotation;
@@ -44,7 +43,7 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
             e.getPresentation().setEnabledAndVisible(false);
             return;
@@ -68,13 +67,13 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
     protected abstract List<VcsFileRevision> getRevisions();
 
     @Nullable
-    protected AbstractVcs getVcs(@Nonnull AnActionEvent e) {
+    protected AbstractVcs getVcs(AnActionEvent e) {
         return myVcs;
     }
 
     @Nullable
     @Override
-    protected VirtualFile getFile(@Nonnull AnActionEvent e) {
+    protected VirtualFile getFile(AnActionEvent e) {
         VcsFileRevision revision = getFileRevision(e);
         if (revision == null) {
             return null;
@@ -84,7 +83,7 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
         FilePath filePath =
             (revision instanceof VcsFileRevisionEx ? ((VcsFileRevisionEx) revision).getPath() : VcsUtil.getFilePath(myAnnotation.getFile()));
         return new VcsVirtualFile(filePath.getPath(), revision, VcsFileSystem.getInstance()) {
-            @Nonnull
+            
             @Override
             public FileType getFileType() {
                 FileType type = super.getFileType();
@@ -101,7 +100,7 @@ abstract class AnnotateRevisionAction extends AnnotateRevisionActionBase impleme
 
     @Nullable
     @Override
-    protected VcsFileRevision getFileRevision(@Nonnull AnActionEvent e) {
+    protected VcsFileRevision getFileRevision(AnActionEvent e) {
         List<VcsFileRevision> revisions = getRevisions();
         assert revisions != null;
 

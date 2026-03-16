@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,38 +28,38 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface OpenFileDescriptorFactory {
-  @Nonnull
-  static OpenFileDescriptorFactory getInstance(@Nonnull ComponentManager project) {
+  
+  static OpenFileDescriptorFactory getInstance(ComponentManager project) {
     return project.getInstance(OpenFileDescriptorFactory.class);
   }
 
   interface Builder {
-    @Nonnull
+    
     Builder offset(int offset);
 
-    @Nonnull
+    
     Builder line(int line);
 
-    @Nonnull
+    
     Builder column(int column);
 
-    @Nonnull
+    
     Builder persist();
 
-    @Nonnull
+    
     Builder useCurrentWindow(boolean useCurrentWindow);
 
-    @Nonnull
+    
     OpenFileDescriptor build();
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #newBuilder")
-  default Builder builder(@Nonnull VirtualFile file) {
+  default Builder builder(VirtualFile file) {
     return newBuilder(file);
   }
 
-  @Nonnull
-  Builder newBuilder(@Nonnull VirtualFile file);
+  
+  Builder newBuilder(VirtualFile file);
 }

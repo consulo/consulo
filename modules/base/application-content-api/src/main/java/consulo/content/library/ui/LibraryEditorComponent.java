@@ -19,14 +19,13 @@ import consulo.content.library.LibraryProperties;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface LibraryEditorComponent<P extends LibraryProperties> {
-  @Nonnull
+  
   P getProperties();
 
   boolean isNewLibrary();

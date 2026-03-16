@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.*;
@@ -61,7 +60,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     });
   }
 
-  private static void registerUpdaters(@Nonnull Project project, @Nonnull Disposable disposable, @Nonnull Runnable onUpdate) {
+  private static void registerUpdaters(Project project, Disposable disposable, Runnable onUpdate) {
     String scratchPath = FileUtil.toSystemIndependentName(FileUtil.toCanonicalPath(ContainerPathManager.get().getScratchPath()));
     VirtualFileManager.getInstance().addAsyncFileListener(events -> {
       boolean update = JBIterable.from(events).find(e -> {
@@ -86,11 +85,11 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
   }
 
   private static void registerRootTypeUpdater(
-    @Nonnull Project project,
-    @Nonnull RootType rootType,
-    @Nonnull Runnable onUpdate,
-    @Nonnull Disposable parentDisposable,
-    @Nonnull Map<RootType, Disposable> disposables
+    Project project,
+    RootType rootType,
+    Runnable onUpdate,
+    Disposable parentDisposable,
+    Map<RootType, Disposable> disposables
   ) {
     if (rootType.isHidden()) return;
     Disposable rootDisposable = disposables.get(rootType);
@@ -100,7 +99,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       .submitDefault();
   }
 
-  private static VirtualFile getNewParent(@Nonnull VFileEvent e) {
+  private static VirtualFile getNewParent(VFileEvent e) {
     if (e instanceof VFileMoveEvent vfme) {
       return vfme.getNewParent();
     }
@@ -115,7 +114,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
   }
 
-  private static boolean isDirectory(@Nonnull VFileEvent e) {
+  private static boolean isDirectory(VFileEvent e) {
     if (e instanceof VFileCreateEvent vfce) {
       return vfce.isDirectory();
     }
@@ -126,22 +125,22 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
 
   @Nullable
   @RequiredReadAction
-  private static PsiDirectory getDirectory(@Nonnull Project project, @Nonnull RootType rootType) {
+  private static PsiDirectory getDirectory(Project project, RootType rootType) {
     VirtualFile virtualFile = getVirtualFile(rootType);
     return virtualFile == null ? null : PsiManager.getInstance(project).findDirectory(virtualFile);
   }
 
   @Nullable
-  private static VirtualFile getVirtualFile(@Nonnull RootType rootType) {
+  private static VirtualFile getVirtualFile(RootType rootType) {
     String path = ScratchFileService.getInstance().getRootPath(rootType);
     return LocalFileSystem.getInstance().findFileByPath(path);
   }
 
   @Nullable
   private static AbstractTreeNode<?> createRootTypeNode(
-    @Nonnull Project project,
-    @Nonnull RootType rootType,
-    @Nonnull ViewSettings settings
+    Project project,
+    RootType rootType,
+    ViewSettings settings
   ) {
     if (rootType.isHidden()) return null;
     MyRootNode node = new MyRootNode(project, rootType, settings);
@@ -149,10 +148,9 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
   }
 
   @Override
-  @Nonnull
   public Collection<AbstractTreeNode> modify(
-    @Nonnull AbstractTreeNode parent,
-    @Nonnull Collection<AbstractTreeNode> children,
+    AbstractTreeNode parent,
+    Collection<AbstractTreeNode> children,
     ViewSettings settings
   ) {
     Project project = parent instanceof ProjectViewProjectNode ? parent.getProject() : null;
@@ -175,12 +173,11 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return ScratchUtil.isScratch(file);
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode<?>> getChildren() {
       List<AbstractTreeNode<?>> list = new ArrayList<>();
@@ -192,7 +189,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
 
     @Override
-    protected void update(@Nonnull PresentationData presentation) {
+    protected void update(PresentationData presentation) {
       presentation.setPresentableText(getValue());
       presentation.setIcon(PlatformIconGroup.scopeScratches());
     }
@@ -207,17 +204,16 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
   }
 
   public static class MyRootNode extends ProjectViewNode<RootType> implements PsiFileSystemItemFilter {
-    MyRootNode(Project project, @Nonnull RootType type, ViewSettings settings) {
+    MyRootNode(Project project, RootType type, ViewSettings settings) {
       super(project, type, settings);
     }
 
-    @Nonnull
     public RootType getRootType() {
       return Objects.requireNonNull(getValue());
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return getValue().containsFile(file);
     }
 
@@ -227,14 +223,12 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return ScratchTreeStructureProvider.getVirtualFile(getRootType());
     }
 
-    @Nonnull
     @Override
     public Collection<VirtualFile> getRoots() {
       return getDefaultRootsFor(getVirtualFile());
     }
 
     @RequiredReadAction
-    @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
       //noinspection ConstantConditions
@@ -247,7 +241,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
 
     @Override
-    protected void update(@Nonnull PresentationData presentation) {
+    protected void update(PresentationData presentation) {
       presentation.setIcon(PlatformIconGroup.nodesFolder());
       presentation.setPresentableText(getRootType().getDisplayName());
     }
@@ -269,17 +263,16 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
     }
 
     @Override
-    public boolean shouldShow(@Nonnull PsiFileSystemItem item) {
+    public boolean shouldShow(PsiFileSystemItem item) {
       //noinspection ConstantConditions
       return !getRootType().isIgnored(getProject(), item.getVirtualFile());
     }
 
-    @Nonnull
     static Collection<AbstractTreeNode> getDirectoryChildrenImpl(
-      @Nonnull Project project,
+      Project project,
       @Nullable PsiDirectory directory,
-      @Nonnull ViewSettings settings,
-      @Nonnull PsiFileSystemItemFilter filter
+      ViewSettings settings,
+      PsiFileSystemItemFilter filter
     ) {
       List<AbstractTreeNode> result = new ArrayList<>();
       PsiElementProcessor<PsiFileSystemItem> processor = element -> {

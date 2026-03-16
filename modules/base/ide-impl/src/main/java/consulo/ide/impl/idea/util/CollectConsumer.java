@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.util;
 
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -14,7 +13,7 @@ import java.util.function.Consumer;
 public class CollectConsumer<T> implements Consumer<T> {
   private final Collection<T> myResult;
 
-  public CollectConsumer(@Nonnull Collection<T> result) {
+  public CollectConsumer(Collection<T> result) {
     myResult = result;
   }
 
@@ -27,7 +26,7 @@ public class CollectConsumer<T> implements Consumer<T> {
     myResult.add(t);
   }
 
-  @Nonnull
+  
   public Collection<T> getResult() {
     return myResult;
   }

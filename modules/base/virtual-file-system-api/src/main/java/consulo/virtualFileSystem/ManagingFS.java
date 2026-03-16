@@ -6,8 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.function.Function;
@@ -26,16 +25,16 @@ public abstract class ManagingFS implements FileSystemInterface {
   }
 
   @Nullable
-  public abstract DataInputStream readAttribute(@Nonnull VirtualFile file, @Nonnull FileAttribute att);
+  public abstract DataInputStream readAttribute(VirtualFile file, FileAttribute att);
 
-  @Nonnull
-  public abstract DataOutputStream writeAttribute(@Nonnull VirtualFile file, @Nonnull FileAttribute att);
+  
+  public abstract DataOutputStream writeAttribute(VirtualFile file, FileAttribute att);
 
   /**
    * @return a number that's incremented every time something changes for the file: name, size, flags, content.
    * This number is persisted between IDE sessions and so it'll always increase. This method invocation means disk access, so it's not terribly cheap.
    */
-  public abstract int getModificationCount(@Nonnull VirtualFile fileOrDirectory);
+  public abstract int getModificationCount(VirtualFile fileOrDirectory);
 
   /**
    * @return a number that's incremented every time something changes in the VFS, i.e. file hierarchy, names, flags, attributes, contents.
@@ -61,25 +60,25 @@ public abstract class ManagingFS implements FileSystemInterface {
 
   public abstract long getCreationTimestamp();
 
-  public abstract boolean areChildrenLoaded(@Nonnull VirtualFile dir);
+  public abstract boolean areChildrenLoaded(VirtualFile dir);
 
-  public abstract boolean wereChildrenAccessed(@Nonnull VirtualFile dir);
+  public abstract boolean wereChildrenAccessed(VirtualFile dir);
 
   @Nullable
-  public abstract NewVirtualFile findRoot(@Nonnull String path, @Nonnull NewVirtualFileSystem fs);
+  public abstract NewVirtualFile findRoot(String path, NewVirtualFileSystem fs);
 
-  @Nonnull
+  
   public abstract VirtualFile[] getRoots();
 
-  @Nonnull
-  public abstract VirtualFile[] getRoots(@Nonnull NewVirtualFileSystem fs);
+  
+  public abstract VirtualFile[] getRoots(NewVirtualFileSystem fs);
 
-  @Nonnull
+  
   public abstract VirtualFile[] getLocalRoots();
 
   @Nullable
   public abstract VirtualFile findFileById(int id);
 
-  @Nonnull
+  
   public abstract <P, R> Function<P, R> accessDiskWithCheckCanceled(Function<? super P, ? extends R> function);
 }

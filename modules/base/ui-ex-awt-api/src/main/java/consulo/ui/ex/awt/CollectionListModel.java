@@ -2,35 +2,33 @@
 package consulo.ui.ex.awt;
 
 import consulo.util.collection.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.*;
 
 public class CollectionListModel<T> extends AbstractListModel<T> implements EditableModel {
   private final List<T> myItems;
 
-  public CollectionListModel(@Nonnull Collection<? extends T> items) {
+  public CollectionListModel(Collection<? extends T> items) {
     myItems = new ArrayList<>(items);
   }
 
   @SuppressWarnings("UnusedParameters")
-  public CollectionListModel(@Nonnull List<T> items, boolean useListAsIs) {
+  public CollectionListModel(List<T> items, boolean useListAsIs) {
     myItems = items;
   }
 
-  public CollectionListModel(@Nonnull List<? extends T> items) {
+  public CollectionListModel(List<? extends T> items) {
     myItems = new ArrayList<>(items);
   }
 
   @SafeVarargs
-  public CollectionListModel(@Nonnull T... items) {
+  public CollectionListModel(T... items) {
     myItems = ContainerUtil.newArrayList(items);
   }
 
-  @Nonnull
+  
   protected final List<T> getInternalList() {
     return myItems;
   }
@@ -56,31 +54,31 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     fireIntervalAdded(this, i, i);
   }
 
-  public void add(@Nonnull List<? extends T> elements) {
+  public void add(List<? extends T> elements) {
     addAll(myItems.size(), elements);
   }
 
-  public void addAll(int index, @Nonnull List<? extends T> elements) {
+  public void addAll(int index, List<? extends T> elements) {
     if (elements.isEmpty()) return;
 
     myItems.addAll(index, elements);
     fireIntervalAdded(this, index, index + elements.size() - 1);
   }
 
-  public void remove(@Nonnull T element) {
+  public void remove(T element) {
     int index = getElementIndex(element);
     if (index != -1) {
       remove(index);
     }
   }
 
-  public void setElementAt(@Nonnull T item, int index) {
+  public void setElementAt(T item, int index) {
     itemReplaced(myItems.set(index, item), item);
     fireContentsChanged(this, index, index);
   }
 
   @SuppressWarnings("UnusedParameters")
-  protected void itemReplaced(@Nonnull T existingItem, @Nullable T newItem) {
+  protected void itemReplaced(T existingItem, @Nullable T newItem) {
   }
 
   public void remove(int index) {
@@ -99,7 +97,7 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     }
   }
 
-  public void contentsChanged(@Nonnull T element) {
+  public void contentsChanged(T element) {
     int i = myItems.indexOf(element);
     fireContentsChanged(this, i, i);
   }
@@ -112,12 +110,12 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     Collections.sort(myItems, comparator);
   }
 
-  @Nonnull
+  
   public List<T> getItems() {
     return Collections.unmodifiableList(myItems);
   }
 
-  public void replaceAll(@Nonnull List<? extends T> elements) {
+  public void replaceAll(List<? extends T> elements) {
     removeAll();
     add(elements);
   }
@@ -143,7 +141,7 @@ public class CollectionListModel<T> extends AbstractListModel<T> implements Edit
     return true;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return getClass().getName() + " (" + getSize() + " elements)";

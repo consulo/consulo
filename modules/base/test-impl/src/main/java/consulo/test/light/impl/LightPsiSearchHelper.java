@@ -21,7 +21,6 @@ import consulo.language.cacheBuilder.CacheManager;
 import consulo.language.impl.internal.psi.search.PsiSearchHelperImpl;
 import consulo.language.psi.PsiManager;
 import consulo.project.DumbService;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -33,7 +32,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class LightPsiSearchHelper extends PsiSearchHelperImpl {
   @Inject
-  public LightPsiSearchHelper(@Nonnull PsiManager manager,
+  public LightPsiSearchHelper(PsiManager manager,
                               DumbService dumbService,
                               CacheManager cacheManager) {
     super(manager, dumbService, cacheManager);

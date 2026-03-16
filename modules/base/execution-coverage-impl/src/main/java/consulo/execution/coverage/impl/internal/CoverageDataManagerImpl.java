@@ -53,8 +53,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -110,7 +109,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         EditorFactory.getInstance().addEditorFactoryListener(new CoverageEditorFactoryListener(), myProject);
         ProjectManagerListener projectManagerListener = new ProjectManagerListener() {
             @Override
-            public void projectClosing(@Nonnull Project project) {
+            public void projectClosing(Project project) {
                 synchronized (myLock) {
                     myIsProjectClosing = true;
                 }
@@ -313,7 +312,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void coverageGathered(@Nonnull CoverageSuite suite) {
+    public void coverageGathered(CoverageSuite suite) {
         myProject.getApplication().invokeLater(() -> {
             if (myProject.isDisposed()) {
                 return;
@@ -343,7 +342,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
                         return true;
                     }
 
-                    @Nonnull
+                    
                     @Override
                     public LocalizeValue getDoNotShowMessage() {
                         return CommonLocalize.dialogOptionsDoNotShow();
@@ -389,8 +388,8 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
 
     @Override
     public void attachToProcess(
-        @Nonnull ProcessHandler handler,
-        @Nonnull RunConfigurationBase configuration,
+        ProcessHandler handler,
+        RunConfigurationBase configuration,
         RunnerSettings runnerSettings
     ) {
         handler.addProcessListener(new ProcessListener() {
@@ -402,7 +401,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void processGatheredCoverage(@Nonnull RunConfigurationBase configuration, RunnerSettings runnerSettings) {
+    public void processGatheredCoverage(RunConfigurationBase configuration, RunnerSettings runnerSettings) {
         if (runnerSettings instanceof CoverageRunnerData) {
             processGatheredCoverage(configuration);
         }
@@ -423,7 +422,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         }
     }
 
-    protected void renewCoverageData(@Nonnull CoverageSuitesBundle suite) {
+    protected void renewCoverageData(CoverageSuitesBundle suite) {
         if (myCurrentSuitesBundle != null) {
             myCurrentSuitesBundle.getCoverageEngine().getCoverageAnnotator(myProject).renewCoverageData(suite, this);
         }
@@ -490,7 +489,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void selectSubCoverage(@Nonnull CoverageSuitesBundle suite, List<String> testNames) {
+    public void selectSubCoverage(CoverageSuitesBundle suite, List<String> testNames) {
         suite.restoreCoverageData();
         ProjectData data = suite.getCoverageData();
         if (data == null) {
@@ -580,7 +579,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
     }
 
     @Override
-    public void restoreMergedCoverage(@Nonnull CoverageSuitesBundle suite) {
+    public void restoreMergedCoverage(CoverageSuitesBundle suite) {
         mySubCoverageIsActive = false;
         suite.restoreCoverageData();
         renewCoverageData(suite);
@@ -627,7 +626,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         }
     }
 
-    @Nonnull
+    
     private CoverageSuite createCoverageSuite(
         CoverageEnabledConfiguration config,
         String name,
@@ -643,7 +642,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         return suite;
     }
 
-    @Nonnull
+    
     private CoverageSuite createCoverageSuite(
         CoverageRunner coverageRunner,
         String name,
@@ -679,7 +678,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         private final Map<Editor, Runnable> myCurrentEditors = new HashMap<>();
 
         @Override
-        public void editorCreated(@Nonnull EditorFactoryEvent event) {
+        public void editorCreated(EditorFactoryEvent event) {
             synchronized (myLock) {
                 if (myIsProjectClosing) {
                     return;
@@ -737,7 +736,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
         }
 
         @Override
-        public void editorReleased(@Nonnull EditorFactoryEvent event) {
+        public void editorReleased(EditorFactoryEvent event) {
             Editor editor = event.getEditor();
             if (editor.getProject() != myProject) {
                 return;

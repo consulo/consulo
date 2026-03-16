@@ -38,8 +38,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -141,7 +140,7 @@ public class ShelvedChangeImpl implements ShelvedChange {
       if (myFileStatus != FileStatus.ADDED) {
         beforeRevision = new CurrentContentRevision(beforePath) {
           @Override
-          @Nonnull
+          
           public VcsRevisionNumber getRevisionNumber() {
             return new TextRevisionNumber(VcsLocalize.localVersionTitle().get());
           }
@@ -261,13 +260,13 @@ public class ShelvedChangeImpl implements ShelvedChange {
     }
 
     @Override
-    @Nonnull
+    
     public FilePath getFile() {
       return myAfterFilePath;
     }
 
     @Override
-    @Nonnull
+    
     public VcsRevisionNumber getRevisionNumber() {
       return new TextRevisionNumber(VcsLocalize.shelvedVersionName().get());
     }

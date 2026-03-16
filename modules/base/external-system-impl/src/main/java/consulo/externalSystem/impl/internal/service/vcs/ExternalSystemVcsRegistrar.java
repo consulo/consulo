@@ -26,7 +26,6 @@ import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.versionControlSystem.util.VcsUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,13 +49,13 @@ import java.util.List;
  */
 public class ExternalSystemVcsRegistrar {
     @SuppressWarnings("unchecked")
-    public static void handle(@Nonnull Project project) {
+    public static void handle(Project project) {
         project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
             AbstractExternalSystemSettings<?, ?, ?> settings =
                 ((ExternalSystemManager<?, ?, ?, ?, ?>)manager).getSettingsProvider().apply(project);
             settings.subscribe(new ExternalSystemSettingsListenerAdapter() {
                 @Override
-                public void onProjectsLinked(@Nonnull Collection linked) {
+                public void onProjectsLinked(Collection linked) {
                     List<VcsDirectoryMapping> newMappings = new ArrayList<>();
                     LocalFileSystem fileSystem = LocalFileSystem.getInstance();
                     ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);

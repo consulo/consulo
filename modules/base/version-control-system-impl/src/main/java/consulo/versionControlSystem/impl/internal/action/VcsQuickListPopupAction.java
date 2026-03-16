@@ -13,8 +13,7 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.VcsQuickListContentProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     @Override
     protected void fillActions(
         @Nullable Project project,
-        @Nonnull ActionGroup.Builder group,
-        @Nonnull DataContext dataContext
+        ActionGroup.Builder group,
+        DataContext dataContext
     ) {
         if (project == null) {
             return;
@@ -58,8 +57,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void fillVcsPopup(
-        @Nonnull Project project,
-        @Nonnull ActionGroup.Builder group,
+        Project project,
+        ActionGroup.Builder group,
         @Nullable DataContext dataContext,
         @Nullable AbstractVcs vcs
     ) {
@@ -85,8 +84,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void fillGeneralVcsPopup(
-        @Nonnull Project project,
-        @Nonnull ActionGroup.Builder group,
+        Project project,
+        ActionGroup.Builder group,
         @Nullable DataContext dataContext,
         @Nullable AbstractVcs vcs
     ) {
@@ -125,8 +124,8 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
     }
 
     private void fillNonInVcsActions(
-        @Nonnull Project project,
-        @Nonnull ActionGroup.Builder group,
+        Project project,
+        ActionGroup.Builder group,
         @Nullable DataContext dataContext
     ) {
         // add custom vcs actions
@@ -151,13 +150,13 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         addAction("LocalHistory.PutLabel", group);
     }
 
-    private void addActions(@Nonnull List<AnAction> actions, @Nonnull ActionGroup.Builder toGroup) {
+    private void addActions(List<AnAction> actions, ActionGroup.Builder toGroup) {
         for (AnAction action : actions) {
             toGroup.add(action);
         }
     }
 
-    private Pair<SupportedVCS, AbstractVcs> getActiveVCS(@Nonnull Project project, @Nullable DataContext dataContext) {
+    private Pair<SupportedVCS, AbstractVcs> getActiveVCS(Project project, @Nullable DataContext dataContext) {
         AbstractVcs[] activeVcss = getActiveVCSs(project);
         if (activeVcss.length == 0) {
             // no vcs
@@ -198,7 +197,7 @@ public class VcsQuickListPopupAction extends QuickSwitchSchemeAction implements 
         toGroup.add(AnSeparator.create());
     }
 
-    private void addSeparator(ActionGroup.Builder toGroup, @Nonnull LocalizeValue text) {
+    private void addSeparator(ActionGroup.Builder toGroup, LocalizeValue text) {
         toGroup.add(AnSeparator.create(text));
     }
 

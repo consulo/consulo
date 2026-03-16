@@ -17,7 +17,6 @@ package consulo.configurable;
 
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -27,5 +26,5 @@ import java.util.function.Consumer;
  * @since 17-Jul-22
  */
 public interface AdditionalPropertiesProvider {
-  void fillProperties(@Nonnull SimpleConfigurableByProperties.PropertyBuilder builder, Consumer<Component> layoutBuilder);
+  void fillProperties(SimpleConfigurableByProperties.PropertyBuilder builder, Consumer<Component> layoutBuilder);
 }

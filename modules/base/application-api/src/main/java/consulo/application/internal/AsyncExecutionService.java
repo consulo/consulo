@@ -7,7 +7,6 @@ import consulo.application.AppUIExecutor;
 import consulo.application.Application;
 import consulo.application.NonBlockingReadAction;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
 
@@ -16,22 +15,18 @@ import java.util.concurrent.Callable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class AsyncExecutionService {
-    @Nonnull
     public abstract AppUIExecutor createUIExecutor();
 
     /**
      * @deprecated Modality state is no longer used. Use {@link #createUIExecutor()} instead.
      */
     @Deprecated
-    @Nonnull
-    public AppUIExecutor createUIExecutor(@Nonnull ModalityState modalityState) {
+    public AppUIExecutor createUIExecutor(ModalityState modalityState) {
         return createUIExecutor();
     }
 
-    @Nonnull
-    public abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation);
+    public abstract <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation);
 
-    @Nonnull
     public static AsyncExecutionService getService() {
         return Application.get().getInstance(AsyncExecutionService.class);
     }

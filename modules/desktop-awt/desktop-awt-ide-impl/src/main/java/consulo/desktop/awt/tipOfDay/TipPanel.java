@@ -30,7 +30,6 @@ import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +140,7 @@ public class TipPanel extends JPanel implements DialogWrapper.DoNotAskOption {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDoNotShowMessage() {
         return IdeLocalize.checkboxShowTipsOnStartup();

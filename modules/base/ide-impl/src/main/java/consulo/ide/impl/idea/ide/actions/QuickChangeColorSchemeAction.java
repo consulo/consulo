@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -33,8 +32,8 @@ import jakarta.annotation.Nullable;
 public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
     @Override
     protected void fillActions(Project project,
-                               @Nonnull ActionGroup.Builder group,
-                               @Nonnull DataContext dataContext) {
+                               ActionGroup.Builder group,
+                               DataContext dataContext) {
         EditorColorsScheme current = EditorColorsManager.getInstance().getGlobalScheme();
         for (EditorColorsScheme scheme : EditorColorsManager.getInstance().getAllSchemes()) {
             addScheme(group, current, scheme, false);

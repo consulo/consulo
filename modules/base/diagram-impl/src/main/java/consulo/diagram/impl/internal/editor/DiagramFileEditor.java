@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
@@ -57,7 +56,7 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
         myVirtualFile = virtualFile;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
@@ -105,7 +104,7 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
         });
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myVirtualFile.getName();
@@ -127,12 +126,12 @@ public class DiagramFileEditor extends UserDataHolderBase implements FileEditor 
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
 
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
 
     }
 

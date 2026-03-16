@@ -22,7 +22,6 @@ import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.versionControlSystem.internal.LineStatusTrackerI;
 import consulo.versionControlSystem.internal.VcsRange;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -42,7 +41,7 @@ public class CopyLineStatusRangeAction extends BaseLineStatusRangeAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         String content = myLineStatusTracker.getVcsContent(myRange) + "\n";
         CopyPasteManager.getInstance().setContents(new StringSelection(content));
     }

@@ -22,7 +22,6 @@ import consulo.language.impl.internal.psi.DocumentCommitProcessor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -33,15 +32,15 @@ import jakarta.inject.Singleton;
 @Singleton
 public class LightDocumentCommitProcessor implements DocumentCommitProcessor {
   @Override
-  public void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {
+  public void commitSynchronously(Document document, Project project, PsiFile psiFile) {
 
   }
 
   @Override
-  public void commitAsynchronously(@Nonnull Project project,
-                                   @Nonnull Document document,
-                                   @Nonnull Object reason,
-                                   @Nonnull ModalityState modalityState) {
+  public void commitAsynchronously(Project project,
+                                   Document document,
+                                   Object reason,
+                                   ModalityState modalityState) {
 
   }
 }

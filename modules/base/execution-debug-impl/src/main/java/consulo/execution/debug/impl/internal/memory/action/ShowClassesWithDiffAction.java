@@ -8,18 +8,17 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MemoryView.ShowOnlyWithDiff")
 public class ShowClassesWithDiffAction extends ToggleAction implements DumbAware {
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return MemoryViewManager.getInstance().isNeedShowDiffOnly();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
         if (project != null) {
             MemoryViewManager.getInstance().setShowDiffOnly(state);

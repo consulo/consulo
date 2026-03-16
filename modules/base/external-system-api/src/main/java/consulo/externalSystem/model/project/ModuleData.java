@@ -8,8 +8,7 @@ import consulo.externalSystem.service.project.Identifiable;
 import consulo.externalSystem.service.project.Named;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,29 +23,29 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final Map<ExternalSystemSourceType, String> myCompileOutputPaths = new HashMap<>();
-  @Nonnull
+  
   private final String myId;
-  @Nonnull
+  
   private final String myExternalConfigPath;
-  @Nonnull
+  
   private String myModuleDirPath;
   @Nullable
   private String group;
   @Nullable
   private String version;
-  @Nonnull
+  
   private List<File> myArtifacts;
 
   private boolean myInheritProjectCompileOutputPath = true;
 
   @Deprecated
-  public ModuleData(@Nonnull ProjectSystemId owner, @Nonnull String name, @Nonnull String moduleDir, @Nonnull String externalConfigPath) {
+  public ModuleData(ProjectSystemId owner, String name, String moduleDir, String externalConfigPath) {
     this("", owner, name, moduleDir, externalConfigPath);
   }
 
-  public ModuleData(@Nonnull String id, @Nonnull ProjectSystemId owner, @Nonnull String name, @Nonnull String moduleFileDirectoryPath, @Nonnull String externalConfigPath) {
+  public ModuleData(String id, ProjectSystemId owner, String name, String moduleFileDirectoryPath, String externalConfigPath) {
     super(owner, name, name.replaceAll("(/|\\\\)", "_"));
     myId = id;
     myExternalConfigPath = externalConfigPath;
@@ -54,24 +53,24 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     setModuleDirPath(moduleFileDirectoryPath);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myId;
   }
 
-  @Nonnull
+  
   @Override
   public String getLinkedExternalProjectPath() {
     return myExternalConfigPath;
   }
 
-  @Nonnull
+  
   public String getModuleDirPath() {
     return myModuleDirPath;
   }
 
-  public void setModuleDirPath(@Nonnull String path) {
+  public void setModuleDirPath(String path) {
     myModuleDirPath = path;
   }
 
@@ -91,12 +90,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
    * {@link JavaProjectData#getCompileOutputPath() project compile output path} should be used if current module
    * doesn't provide specific compile output path
    */
-  @jakarta.annotation.Nullable
-  public String getCompileOutputPath(@Nonnull ExternalSystemSourceType type) {
+  @Nullable
+  public String getCompileOutputPath(ExternalSystemSourceType type) {
     return myCompileOutputPaths.get(type);
   }
 
-  public void setCompileOutputPath(@Nonnull ExternalSystemSourceType type, @jakarta.annotation.Nullable String path) {
+  public void setCompileOutputPath(ExternalSystemSourceType type, @Nullable String path) {
     if (path == null) {
       myCompileOutputPaths.remove(type);
       return;
@@ -104,12 +103,12 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     myCompileOutputPaths.put(type, ExternalSystemApiUtil.toCanonicalPath(path));
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getGroup() {
     return group;
   }
 
-  public void setGroup(@jakarta.annotation.Nullable String group) {
+  public void setGroup(@Nullable String group) {
     this.group = group;
   }
 
@@ -118,16 +117,16 @@ public class ModuleData extends AbstractNamedData implements Named, ExternalConf
     return version;
   }
 
-  public void setVersion(@jakarta.annotation.Nullable String version) {
+  public void setVersion(@Nullable String version) {
     this.version = version;
   }
 
-  @Nonnull
+  
   public List<File> getArtifacts() {
     return myArtifacts;
   }
 
-  public void setArtifacts(@Nonnull List<File> artifacts) {
+  public void setArtifacts(List<File> artifacts) {
     myArtifacts = artifacts;
   }
 

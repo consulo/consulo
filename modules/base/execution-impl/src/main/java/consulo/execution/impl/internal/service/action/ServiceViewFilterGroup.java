@@ -19,7 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.NonEmptyActionGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

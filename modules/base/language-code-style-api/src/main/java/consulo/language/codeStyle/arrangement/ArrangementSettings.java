@@ -19,7 +19,6 @@ import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -32,17 +31,17 @@ import java.util.List;
  */
 public interface ArrangementSettings extends Cloneable {
 
-  @Nonnull
+  
   List<ArrangementGroupingRule> getGroupings();
 
-  @Nonnull
+  
   List<ArrangementSectionRule> getSections();
 
   /**
    * @deprecated collect match rules from {@link #getSections()}
    * @return
    */
-  @Nonnull
+  
   List<? extends ArrangementMatchRule> getRules();
 
   /**
@@ -51,9 +50,9 @@ public interface ArrangementSettings extends Cloneable {
    * Example: 'public static' rule would have higher priority then 'public'
    * @return list of rules sorted in order of matching
    */
-  @Nonnull
+  
   List<? extends ArrangementMatchRule> getRulesSortedByPriority();
 
-  @Nonnull
+  
   ArrangementSettings clone();
 }

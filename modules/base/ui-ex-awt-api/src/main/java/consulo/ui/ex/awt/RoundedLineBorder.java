@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -55,7 +54,7 @@ public class RoundedLineBorder extends LineBorder {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAntialiasing);
   }
 
-  public void setColor(@Nonnull Color color) {
+  public void setColor(Color color) {
     lineColor = color;
   }
 }

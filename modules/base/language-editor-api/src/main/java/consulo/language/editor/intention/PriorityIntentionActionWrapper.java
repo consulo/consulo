@@ -21,7 +21,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Danila Ponomarenko
@@ -30,27 +29,27 @@ import jakarta.annotation.Nonnull;
 public abstract class PriorityIntentionActionWrapper implements IntentionAction, IntentionActionDelegate {
   private final IntentionAction action;
 
-  private PriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
+  private PriorityIntentionActionWrapper(IntentionAction action) {
     this.action = action;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return action.getText();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return action.isAvailable(project, editor, file);
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     action.invoke(project, editor, file);
   }
 
-  @Nonnull
+  
   @Override
   public IntentionAction getDelegate() {
     return action;
@@ -62,35 +61,35 @@ public abstract class PriorityIntentionActionWrapper implements IntentionAction,
   }
 
   private static class HighPriorityIntentionActionWrapper extends PriorityIntentionActionWrapper implements HighPriorityAction {
-    protected HighPriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
+    protected HighPriorityIntentionActionWrapper(IntentionAction action) {
       super(action);
     }
   }
 
   private static class NormalPriorityIntentionActionWrapper extends PriorityIntentionActionWrapper {
-    protected NormalPriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
+    protected NormalPriorityIntentionActionWrapper(IntentionAction action) {
       super(action);
     }
   }
 
   private static class LowPriorityIntentionActionWrapper extends PriorityIntentionActionWrapper implements LowPriorityAction {
-    protected LowPriorityIntentionActionWrapper(@Nonnull IntentionAction action) {
+    protected LowPriorityIntentionActionWrapper(IntentionAction action) {
       super(action);
     }
   }
 
-  @Nonnull
-  public static IntentionAction highPriority(@Nonnull IntentionAction action) {
+  
+  public static IntentionAction highPriority(IntentionAction action) {
     return new HighPriorityIntentionActionWrapper(action);
   }
 
-  @Nonnull
-  public static IntentionAction normalPriority(@Nonnull IntentionAction action) {
+  
+  public static IntentionAction normalPriority(IntentionAction action) {
     return new NormalPriorityIntentionActionWrapper(action);
   }
 
-  @Nonnull
-  public static IntentionAction lowPriority(@Nonnull IntentionAction action) {
+  
+  public static IntentionAction lowPriority(IntentionAction action) {
     return new LowPriorityIntentionActionWrapper(action);
   }
 }

@@ -43,8 +43,7 @@ import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class CompositePsiElement extends CompositeElement implements PsiElement, NavigationItem {
     private static final Logger LOG = Logger.getInstance(CompositePsiElement.class);
@@ -56,7 +55,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         setPsi(this);
     }
 
-    @Nonnull
+    
     @Override
     public CompositePsiElement clone() {
         CompositePsiElement clone = (CompositePsiElement) super.clone();
@@ -64,7 +63,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return clone;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -87,7 +86,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
 
     @Override
     @RequiredReadAction
-    public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
+    public void acceptChildren(PsiElementVisitor visitor) {
         PsiElement child = getFirstChild();
         while (child != null) {
             child.accept(visitor);
@@ -161,26 +160,26 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    @Nonnull
+    
     public PsiReference[] getReferences() {
         return SharedPsiElementImplUtil.getReferences(this);
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         return addInnerBefore(element, null);
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         return addInnerBefore(element, anchor);
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
         TreeElement elementCopy = ChangeUtil.copyToElement(element);
         TreeElement treeElement = addInternal(elementCopy, elementCopy, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.FALSE);
@@ -188,7 +187,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public final void checkAdd(PsiElement element) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
     }
 
@@ -201,8 +200,8 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     @Override
     @RequiredWriteAction
     public final PsiElement addRangeBefore(
-        @Nonnull PsiElement first,
-        @Nonnull PsiElement last,
+        PsiElement first,
+        PsiElement last,
         PsiElement anchor
     ) throws IncorrectOperationException {
         return SharedImplUtil.addRange(this, first, last, SourceTreeToPsiMap.psiElementToTree(anchor), Boolean.TRUE);
@@ -241,21 +240,21 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
 
     @Override
     @RequiredWriteAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         return SharedImplUtil.doReplace(this, this, newElement);
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) { //TODO: remove this method!!
+    public void accept(PsiElementVisitor visitor) { //TODO: remove this method!!
         visitor.visitElement(this);
     }
 
     @Override
     public boolean processDeclarations(
-        @Nonnull PsiScopeProcessor processor,
-        @Nonnull ResolveState state,
+        PsiScopeProcessor processor,
+        ResolveState state,
         PsiElement lastParent,
-        @Nonnull PsiElement place
+        PsiElement place
     ) {
         return true;
     }
@@ -272,7 +271,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    @Nonnull
+    
     public PsiElement getNavigationElement() {
         return this;
     }
@@ -289,13 +288,13 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
     }
 
     @Override
-    @Nonnull
+    
     public GlobalSearchScope getResolveScope() {
         return ResolveScopeManager.getElementResolveScope(this);
     }
 
     @Override
-    @Nonnull
+    
     public SearchScope getUseScope() {
         return ResolveScopeManager.getElementUseScope(this);
     }
@@ -332,7 +331,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return file == null ? null : file.getModule();
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         Project project = SingleProjectHolder.theOnlyOpenProject();
@@ -347,14 +346,14 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return manager.getProject();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
         return getElementType().getLanguage();
     }
 
-    @Nonnull
+    
     @Override
     public ASTNode getNode() {
         return this;
@@ -376,7 +375,7 @@ public abstract class CompositePsiElement extends CompositeElement implements Ps
         return this == another;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public LanguageVersion getLanguageVersion() {

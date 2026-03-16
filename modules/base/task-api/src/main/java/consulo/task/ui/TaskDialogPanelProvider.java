@@ -23,8 +23,7 @@ import consulo.task.LocalTask;
 import consulo.task.Task;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -35,17 +34,17 @@ import java.util.List;
 public abstract class TaskDialogPanelProvider {
     private final static ExtensionPointName<TaskDialogPanelProvider> EP_NAME = ExtensionPointName.create(TaskDialogPanelProvider.class);
 
-    public static List<TaskDialogPanel> getOpenTaskPanels(@Nonnull Project project, @Nonnull Task task) {
+    public static List<TaskDialogPanel> getOpenTaskPanels(Project project, Task task) {
         return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getOpenTaskPanel(project, task));
     }
 
-    public static List<TaskDialogPanel> getCloseTaskPanels(@Nonnull Project project, @Nonnull LocalTask task) {
+    public static List<TaskDialogPanel> getCloseTaskPanels(Project project, LocalTask task) {
         return ContainerUtil.mapNotNull(EP_NAME.getExtensionList(), provider -> provider.getCloseTaskPanel(project, task));
     }
 
     @Nullable
-    public abstract TaskDialogPanel getOpenTaskPanel(@Nonnull Project project, @Nonnull Task task);
+    public abstract TaskDialogPanel getOpenTaskPanel(Project project, Task task);
 
     @Nullable
-    public abstract TaskDialogPanel getCloseTaskPanel(@Nonnull Project project, @Nonnull LocalTask task);
+    public abstract TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task);
 }

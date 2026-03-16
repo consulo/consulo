@@ -22,8 +22,7 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import consulo.application.ApplicationProperties;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,13 +32,13 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class SandboxUsagesCollector extends UsagesCollector {
-  @Nonnull
+  
   @Override
   public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
     return Collections.singleton(new UsageDescriptor("is.sandbox", ApplicationProperties.isInSandbox() ? 1 : 0));
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return "consulo.platform.base:sandbox";

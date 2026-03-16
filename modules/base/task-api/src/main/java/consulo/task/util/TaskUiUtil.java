@@ -11,8 +11,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.ListCellRendererWrapper;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 
@@ -39,17 +38,17 @@ public class TaskUiUtil {
     /**
      * Should be called only from EDT, so current modality state can be captured.
      */
-    protected RemoteFetchTask(@Nullable Project project, @Nonnull String title) {
+    protected RemoteFetchTask(@Nullable Project project, String title) {
       this(project, title, Application.get().getCurrentModalityState());
     }
 
-    protected RemoteFetchTask(@Nullable Project project, @Nonnull String title, @Nonnull ModalityState modalityState) {
+    protected RemoteFetchTask(@Nullable Project project, String title, ModalityState modalityState) {
       super(project, title);
       myModalityState = modalityState;
     }
 
     @Override
-    public final void run(@Nonnull ProgressIndicator indicator) {
+    public final void run(ProgressIndicator indicator) {
       try {
         myResult = fetch(indicator);
       }
@@ -70,8 +69,8 @@ public class TaskUiUtil {
       return null;
     }
 
-    @Nonnull
-    protected abstract T fetch(@Nonnull ProgressIndicator indicator) throws Exception;
+    
+    protected abstract T fetch(ProgressIndicator indicator) throws Exception;
 
     protected abstract void updateUI();
   }
@@ -83,7 +82,7 @@ public class TaskUiUtil {
   public static abstract class ComboBoxUpdater<T> extends RemoteFetchTask<Collection<T>> {
     protected final JComboBox myComboBox;
 
-    public ComboBoxUpdater(@Nullable Project project, @Nonnull String title, @Nonnull JComboBox comboBox) {
+    public ComboBoxUpdater(@Nullable Project project, String title, JComboBox comboBox) {
       super(project, title, Application.get().getAnyModalityState());
       myComboBox = comboBox;
     }
@@ -173,7 +172,7 @@ public class TaskUiUtil {
   public static class SimpleComboBoxRenderer<T> extends ListCellRendererWrapper<T> {
     private final String myNullDescription;
 
-    public SimpleComboBoxRenderer(@Nonnull String nullDescription) {
+    public SimpleComboBoxRenderer(String nullDescription) {
       myNullDescription = nullDescription;
     }
 
@@ -182,8 +181,8 @@ public class TaskUiUtil {
       setText(value == null ? myNullDescription : getDescription(value));
     }
 
-    @Nonnull
-    protected String getDescription(@Nonnull T item) {
+    
+    protected String getDescription(T item) {
       return item.toString();
     }
   }

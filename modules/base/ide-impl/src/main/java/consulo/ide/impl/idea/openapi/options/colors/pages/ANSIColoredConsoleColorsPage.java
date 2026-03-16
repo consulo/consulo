@@ -14,8 +14,7 @@ import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.internal.ColorPageWeights;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -99,31 +98,31 @@ public class ANSIColoredConsoleColorsPage implements ColorSettingsPage, Configur
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDisplayName() {
     return ConfigurableLocalize.colorSettingsConsoleName();
   }
 
   @Override
-  @Nonnull
+  
   public AttributesDescriptor[] getAttributeDescriptors() {
     return ATTRS;
   }
 
   @Override
-  @Nonnull
+  
   public ColorDescriptor[] getColorDescriptors() {
     return COLORS;
   }
 
   @Override
-  @Nonnull
+  
   public SyntaxHighlighter getHighlighter() {
      return new DefaultSyntaxHighlighter();
   }
 
   @Override
-  @Nonnull
+  
   public String getDemoText() {
     return IdeLocalize.colorAnsiconsole().get();
   }

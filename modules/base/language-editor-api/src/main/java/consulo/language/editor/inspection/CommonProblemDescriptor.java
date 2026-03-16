@@ -18,8 +18,7 @@ package consulo.language.editor.inspection;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for problems returned by local and global inspection tools.
@@ -40,7 +39,7 @@ public interface CommonProblemDescriptor {
    *
    * @return the template for the problem description.
    */
-  @Nonnull
+  
   LocalizeValue getDescriptionTemplate();
 
   /**

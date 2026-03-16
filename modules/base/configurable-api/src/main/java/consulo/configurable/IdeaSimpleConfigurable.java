@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 @Deprecated
@@ -29,22 +28,22 @@ public final class IdeaSimpleConfigurable<UI extends IdeaConfigurableUi<S>, S> e
   private final Class<UI> uiClass;
   private final Supplier<S> settingsGetter;
 
-  private IdeaSimpleConfigurable(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
+  private IdeaSimpleConfigurable(String id, LocalizeValue displayName, @Nullable String helpTopic, Class<UI> uiClass, Supplier<S> settingsGetter) {
     super(id, displayName, helpTopic);
 
     this.uiClass = uiClass;
     this.settingsGetter = settingsGetter;
   }
 
-  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nullable String helpTopic, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
+  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(String id, LocalizeValue displayName, @Nullable String helpTopic, Class<UI> uiClass, Supplier<S> settingsGetter) {
     return new IdeaSimpleConfigurable<UI, S>(id, displayName, helpTopic, uiClass, settingsGetter);
   }
 
-  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Class<UI> uiClass, @Nonnull Supplier<S> settingsGetter) {
+  public static <UI extends IdeaConfigurableUi<S>, S> IdeaSimpleConfigurable<UI, S> create(String id, LocalizeValue displayName, Class<UI> uiClass, Supplier<S> settingsGetter) {
     return create(id, displayName, id, uiClass, settingsGetter);
   }
 
-  @Nonnull
+  
   @Override
   protected S getSettings() {
     return settingsGetter.get();

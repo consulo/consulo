@@ -38,7 +38,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -49,9 +48,9 @@ import java.util.*;
 public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItemsProvider {
 
   @Override
-  @Nonnull
-  public Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext,
-                                                                  @Nonnull Artifact artifact,
+  
+  public Collection<? extends PackagingSourceItem> getSourceItems(ArtifactEditorContext editorContext,
+                                                                  Artifact artifact,
                                                                   PackagingSourceItem parent) {
     if (parent == null) {
       return createModuleItems(editorContext, artifact, ArrayUtil.EMPTY_STRING_ARRAY);
@@ -67,7 +66,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
 
   private static Collection<? extends PackagingSourceItem> createClasspathItems(ArtifactEditorContext editorContext,
                                                                                 Artifact artifact,
-                                                                                @Nonnull Module module) {
+                                                                                Module module) {
     List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     ModuleRootModel rootModel = editorContext.getModulesProvider().getRootModel(module);
     List<Library> libraries = new ArrayList<Library>();
@@ -99,7 +98,7 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
   }
 
   private static Collection<? extends PackagingSourceItem> createModuleItems(ArtifactEditorContext editorContext, Artifact artifact,
-                                                                             @Nonnull String[] groupPath) {
+                                                                             String[] groupPath) {
     Module[] modules = editorContext.getModulesProvider().getModules();
     List<PackagingSourceItem> items = new ArrayList<PackagingSourceItem>();
     Set<String> groups = new HashSet<String>();
@@ -122,8 +121,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return items;
   }
 
-  private static <T extends ModuleOutputElementTypeBase> boolean canAddModuleOutputType(@Nonnull final ArtifactEditorContext context,
-                                                                                           @Nonnull Artifact artifact,
+  private static <T extends ModuleOutputElementTypeBase> boolean canAddModuleOutputType(final ArtifactEditorContext context,
+                                                                                           Artifact artifact,
                                                                                            T type,
                                                                                            final Module module) {
     final Ref<Boolean> find = new Ref<Boolean>(true);
@@ -151,8 +150,8 @@ public class ModulesAndLibrariesSourceItemsProvider extends PackagingSourceItems
     return false;
   }
 
-  private static List<? extends Library> getNotAddedLibraries(@Nonnull ArtifactEditorContext context,
-                                                              @Nonnull Artifact artifact,
+  private static List<? extends Library> getNotAddedLibraries(ArtifactEditorContext context,
+                                                              Artifact artifact,
                                                               List<Library> librariesList) {
     final Set<VirtualFile> roots = new HashSet<VirtualFile>();
     ArtifactUtil

@@ -16,8 +16,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -122,7 +121,7 @@ public class CoverageSuitesBundle {
         return false;
     }
 
-    @Nonnull
+    
     public CoverageEngine getCoverageEngine() {
         return myEngine;
     }

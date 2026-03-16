@@ -19,7 +19,6 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,15 +27,15 @@ import jakarta.annotation.Nonnull;
 public class DesktopIconLibraryManagerImpl extends BaseIconLibraryManager {
   public static final DesktopIconLibraryManagerImpl ourInstance = new DesktopIconLibraryManagerImpl();
 
-  @Nonnull
+  
   @Override
-  protected BaseIconLibraryImpl createLibrary(@Nonnull String id) {
+  protected BaseIconLibraryImpl createLibrary(String id) {
     return new DesktopAWTIconLibrary(id, this);
   }
 
-  @Nonnull
+  
   @Override
-  public Image inverseIcon(@Nonnull Image image) {
+  public Image inverseIcon(Image image) {
     if (image instanceof DesktopAWTImage awtImage) {
       BaseIconLibraryImpl library = getActiveLibrary();
 

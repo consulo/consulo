@@ -19,7 +19,6 @@ import consulo.desktop.awt.editor.impl.stickyLine.StickyLinesPanel;
 import consulo.desktop.awt.language.editor.DesktopEditorPanelLayer;
 import consulo.ui.ex.awt.JBLayeredPane;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,7 +98,7 @@ public class DesktopEditorLayeredPanel {
         myLayeredPane.add(rootPanel, JBLayeredPane.DEFAULT_LAYER);
     }
 
-    @Nonnull
+    
     public JComponent getPanel() {
         return myLayeredPane;
     }

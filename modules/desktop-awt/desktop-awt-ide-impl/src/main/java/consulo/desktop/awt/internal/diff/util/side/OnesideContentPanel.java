@@ -17,8 +17,7 @@ package consulo.desktop.awt.internal.diff.util.side;
 
 import consulo.desktop.awt.internal.diff.EditorHolder;
 import consulo.desktop.awt.internal.diff.util.DiffContentPanel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ import java.awt.*;
 public class OnesideContentPanel extends JPanel {
   private final DiffContentPanel myPanel;
 
-  public OnesideContentPanel(@Nonnull JComponent content) {
+  public OnesideContentPanel(JComponent content) {
     super(new BorderLayout());
 
     myPanel = new DiffContentPanel(content);
@@ -37,7 +36,7 @@ public class OnesideContentPanel extends JPanel {
     myPanel.setTitle(titles);
   }
 
-  //public void setBreadcrumbs(@Nullable DiffBreadcrumbsPanel breadcrumbs, @Nonnull TextDiffSettings settings) {
+  //public void setBreadcrumbs(@Nullable DiffBreadcrumbsPanel breadcrumbs, TextDiffSettings settings) {
   //  if (breadcrumbs != null) {
   //    myPanel.setBreadcrumbs(breadcrumbs);
   //    myPanel.updateBreadcrumbsPlacement(settings.getBreadcrumbsPlacement());
@@ -50,8 +49,8 @@ public class OnesideContentPanel extends JPanel {
   //  }
   //}
 
-  @Nonnull
-  public static OnesideContentPanel createFromHolder(@Nonnull EditorHolder holder) {
+  
+  public static OnesideContentPanel createFromHolder(EditorHolder holder) {
     return new OnesideContentPanel(holder.getComponent());
   }
 }

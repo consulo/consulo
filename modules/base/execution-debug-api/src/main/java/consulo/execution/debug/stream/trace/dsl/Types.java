@@ -5,7 +5,6 @@ import consulo.execution.debug.stream.trace.impl.handler.type.ArrayType;
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
 import consulo.execution.debug.stream.trace.impl.handler.type.ListType;
 import consulo.execution.debug.stream.trace.impl.handler.type.MapType;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -13,45 +12,45 @@ import java.util.function.Function;
  * @author Vitaliy.Bibaev
  */
 public interface Types {
-  @Nonnull
+  
   GenericType ANY();
 
-  @Nonnull
+  
   GenericType INT();
 
-  @Nonnull
+  
   GenericType LONG();
 
-  @Nonnull
+  
   GenericType BOOLEAN();
 
-  @Nonnull
+  
   GenericType DOUBLE();
 
-  @Nonnull
+  
   GenericType STRING();
 
-  @Nonnull
+  
   GenericType EXCEPTION();
 
-  @Nonnull
+  
   GenericType VOID();
 
-  @Nonnull
+  
   GenericType TIME();
 
-  @Nonnull
-  ArrayType array(@Nonnull GenericType elementType);
+  
+  ArrayType array(GenericType elementType);
 
-  @Nonnull
-  ListType list(@Nonnull GenericType elementsType);
+  
+  ListType list(GenericType elementsType);
 
-  @Nonnull
-  MapType map(@Nonnull GenericType keyType, @Nonnull GenericType valueType);
+  
+  MapType map(GenericType keyType, GenericType valueType);
 
-  @Nonnull
-  MapType linkedMap(@Nonnull GenericType keyType, @Nonnull GenericType valueType);
+  
+  MapType linkedMap(GenericType keyType, GenericType valueType);
 
-  @Nonnull
-  GenericType nullable(@Nonnull Function<Types, GenericType> typeSelector);
+  
+  GenericType nullable(Function<Types, GenericType> typeSelector);
 }

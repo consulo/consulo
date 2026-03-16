@@ -22,8 +22,7 @@ import consulo.document.util.TextRangeUtil;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +46,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
         add(range, processHeadingWhitespace);
     }
 
-    public FormatTextRanges(@Nonnull ChangedRangesInfo changedRangesInfo, @Nonnull List<TextRange> contextRanges) {
+    public FormatTextRanges(ChangedRangesInfo changedRangesInfo, List<TextRange> contextRanges) {
         myInsertedRanges = changedRangesInfo.insertedRanges;
         boolean processHeadingWhitespace = false;
         for (TextRange range : contextRanges) {
@@ -61,12 +60,12 @@ public class FormatTextRanges implements FormattingRangesInfo {
     }
 
     @Override
-    public boolean isWhitespaceReadOnly(@Nonnull TextRange range) {
+    public boolean isWhitespaceReadOnly(TextRange range) {
         return myRanges.stream().allMatch(formatTextRange -> formatTextRange.isWhitespaceReadOnly(range));
     }
 
     @Override
-    public boolean isReadOnly(@Nonnull TextRange range) {
+    public boolean isReadOnly(TextRange range) {
         return myRanges.stream().allMatch(formatTextRange -> formatTextRange.isReadOnly(range));
     }
 
@@ -113,7 +112,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
         return ranges;
     }
 
-    public void setExtendedRanges(@Nonnull List<TextRange> extendedRanges) {
+    public void setExtendedRanges(List<TextRange> extendedRanges) {
         myExtendedRanges.addAll(extendedRanges);
     }
 
@@ -141,12 +140,12 @@ public class FormatTextRanges implements FormattingRangesInfo {
         myExtendToContext = extendToContext;
     }
 
-    public void setDisabledRanges(@Nonnull Collection<TextRange> disabledRanges) {
+    public void setDisabledRanges(Collection<TextRange> disabledRanges) {
         myDisabledRanges.clear();
         myDisabledRanges.addAll(ContainerUtil.sorted(disabledRanges, Segment.BY_START_OFFSET_THEN_END_OFFSET));
     }
 
-    public boolean isInDisabledRange(@Nonnull TextRange textRange) {
+    public boolean isInDisabledRange(TextRange textRange) {
         return TextRangeUtil.intersectsOneOf(textRange, myDisabledRanges);
     }
 }

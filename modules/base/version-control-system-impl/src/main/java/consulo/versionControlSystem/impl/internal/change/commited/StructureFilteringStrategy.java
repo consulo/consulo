@@ -36,7 +36,6 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -47,6 +46,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -70,7 +70,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     return VcsLocalize.filterStructureName().get();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public JComponent getFilterUI() {
     if (myUI == null) {
       myUI = new MyUI();
@@ -103,7 +103,7 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
     myUI.append(changeLists);
   }
 
-  @Nonnull
+  
   public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
     if (mySelection.size() == 0) {
       return changeLists;
@@ -162,8 +162,8 @@ public class StructureFilteringStrategy implements ChangeListFilteringStrategy {
       myScrollPane = ScrollPaneFactory.createScrollPane(myStructureTree);
     }
 
-    @Nonnull
-    private List<FilePath> getFilePathsUnder(@Nonnull ChangesBrowserNode<?> node) {
+    
+    private List<FilePath> getFilePathsUnder(ChangesBrowserNode<?> node) {
       List<FilePath> result = Collections.emptyList();
       Object userObject = node.getUserObject();
 

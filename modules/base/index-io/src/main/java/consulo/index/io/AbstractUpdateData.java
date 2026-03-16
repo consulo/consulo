@@ -3,7 +3,6 @@ package consulo.index.io;
 
 import consulo.index.io.forward.KeyValueUpdateProcessor;
 import consulo.index.io.forward.RemovedKeyProcessor;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -14,9 +13,9 @@ public abstract class AbstractUpdateData<Key, Value> {
     myInputId = id;
   }
 
-  protected abstract boolean iterateKeys(@Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
-                                         @Nonnull KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
-                                         @Nonnull RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException;
+  protected abstract boolean iterateKeys(KeyValueUpdateProcessor<? super Key, ? super Value> addProcessor,
+                                         KeyValueUpdateProcessor<? super Key, ? super Value> updateProcessor,
+                                         RemovedKeyProcessor<? super Key> removeProcessor) throws StorageException;
 
   public abstract boolean newDataIsEmpty();
 

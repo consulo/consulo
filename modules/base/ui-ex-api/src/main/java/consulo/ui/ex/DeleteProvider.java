@@ -18,12 +18,11 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public interface DeleteProvider {
   Key<DeleteProvider> KEY = Key.create(DeleteProvider.class);
 
-  void deleteElement(@Nonnull DataContext dataContext);
+  void deleteElement(DataContext dataContext);
 
-  boolean canDeleteElement(@Nonnull DataContext dataContext);
+  boolean canDeleteElement(DataContext dataContext);
 }

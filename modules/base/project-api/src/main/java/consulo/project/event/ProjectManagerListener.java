@@ -21,7 +21,6 @@ import consulo.annotation.component.TopicAPI;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -36,7 +35,7 @@ public interface ProjectManagerListener extends EventListener {
    *
    * @param project opening project
    */
-  default void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  default void projectOpened(Project project, UIAccess uiAccess) {
     projectOpened(project);
   }
 
@@ -47,7 +46,7 @@ public interface ProjectManagerListener extends EventListener {
    */
   @Deprecated
   @DeprecationInfo("Use projectOpened(Project, UIAccess)")
-  default void projectOpened(@Nonnull Project project) {
+  default void projectOpened(Project project) {
   }
 
   /**
@@ -55,7 +54,7 @@ public interface ProjectManagerListener extends EventListener {
    *
    * @param project closing project
    */
-  default void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  default void projectClosed(Project project, UIAccess uiAccess) {
     projectClosed(project);
   }
 
@@ -66,12 +65,12 @@ public interface ProjectManagerListener extends EventListener {
    */
   @Deprecated
   @DeprecationInfo("Use projectClosed(Project, UIAccess)")
-  default void projectClosed(@Nonnull Project project) {
+  default void projectClosed(Project project) {
   }
 
   /**
    * Invoked on project close before any closing activities
    */
-  default void projectClosing(@Nonnull Project project) {
+  default void projectClosing(Project project) {
   }
 }

@@ -20,7 +20,6 @@ import consulo.util.io.ResourceUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +30,7 @@ import java.net.URL;
 public class ResourceTextDescriptor implements TextDescriptor {
   private final URL myUrl;
 
-  public ResourceTextDescriptor(@Nonnull URL url) {
+  public ResourceTextDescriptor(URL url) {
     myUrl = URLUtil.internProtocol(url);
   }
 

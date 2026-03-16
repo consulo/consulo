@@ -31,7 +31,6 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author lesya
@@ -44,7 +43,7 @@ public class SelectAndCompareWithSelectedRevisionAction extends AbstractVcsActio
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext vcsContext) {
+    protected void actionPerformed(VcsContext vcsContext) {
         VirtualFile file = vcsContext.getSelectedFiles()[0];
         Project project = vcsContext.getProject();
         AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
@@ -64,12 +63,12 @@ public class SelectAndCompareWithSelectedRevisionAction extends AbstractVcsActio
     }
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         AbstractShowDiffAction.updateDiffAction(presentation, vcsContext, VcsBackgroundableActions.COMPARE_WITH);
     }
 
     @Override
-    protected boolean forceSyncUpdate(@Nonnull AnActionEvent e) {
+    protected boolean forceSyncUpdate(AnActionEvent e) {
         return true;
     }
 }

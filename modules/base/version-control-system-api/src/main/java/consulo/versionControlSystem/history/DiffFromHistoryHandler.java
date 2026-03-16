@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.FilePath;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This handler is called when the user selects one or two revisions in the file history and invokes "Show Diff",
@@ -37,7 +36,7 @@ public interface DiffFromHistoryHandler {
    * @param previousRevision the previous revision in the list displayed file history panel, may be {@link VcsFileRevision#NULL}.
    * @param revision         the revision selected in the file history panel.
    */
-  void showDiffForOne(@Nonnull AnActionEvent e, @Nonnull Project project, @Nonnull FilePath filePath, @Nonnull VcsFileRevision previousRevision, @Nonnull VcsFileRevision revision);
+  void showDiffForOne(AnActionEvent e, Project project, FilePath filePath, VcsFileRevision previousRevision, VcsFileRevision revision);
 
   /**
    * Show diff for 2 revisions selected from the file history panel,
@@ -48,6 +47,6 @@ public interface DiffFromHistoryHandler {
    * @param revision1 one of the selected revisions.
    * @param revision2 another selected revision.
    */
-  void showDiffForTwo(@Nonnull Project project, @Nonnull FilePath filePath, @Nonnull VcsFileRevision revision1, @Nonnull VcsFileRevision revision2);
+  void showDiffForTwo(Project project, FilePath filePath, VcsFileRevision revision1, VcsFileRevision revision2);
 
 }

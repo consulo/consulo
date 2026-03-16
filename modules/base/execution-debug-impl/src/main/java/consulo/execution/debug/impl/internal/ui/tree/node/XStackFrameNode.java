@@ -17,13 +17,12 @@ package consulo.execution.debug.impl.internal.ui.tree.node;
 
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class XStackFrameNode extends XValueContainerNode<XStackFrame> {
-  public XStackFrameNode(@Nonnull XDebuggerTree tree, @Nonnull XStackFrame xStackFrame) {
+  public XStackFrameNode(XDebuggerTree tree, XStackFrame xStackFrame) {
     super(tree, null, xStackFrame);
     setLeaf(false);
   }

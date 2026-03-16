@@ -3,8 +3,7 @@ package consulo.build.ui;
 
 import consulo.build.ui.progress.BuildProgressListener;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 public interface BuildProgressObservable {
-    void addListener(@Nonnull BuildProgressListener listener, @Nonnull Disposable disposable);
+    void addListener(BuildProgressListener listener, Disposable disposable);
 }

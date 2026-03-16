@@ -16,7 +16,6 @@
 package consulo.fileEditor.impl.internal;
 
 import consulo.project.ui.wm.dock.DockContainerFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
 public interface DockableEditorContainerFactory extends DockContainerFactory.Persistent {
   String TYPE = "file-editors";
 
-  @Nonnull
+  
   @Override
   default String getId() {
     return TYPE;

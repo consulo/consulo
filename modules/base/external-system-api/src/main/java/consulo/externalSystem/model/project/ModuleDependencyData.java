@@ -1,6 +1,5 @@
 package consulo.externalSystem.model.project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -10,7 +9,7 @@ public class ModuleDependencyData extends AbstractDependencyData<ModuleData> {
 
   private static final long serialVersionUID = 1L;
 
-  public ModuleDependencyData(@Nonnull ModuleData ownerModule, @Nonnull ModuleData module) {
+  public ModuleDependencyData(ModuleData ownerModule, ModuleData module) {
     super(ownerModule, module);
   }
 }

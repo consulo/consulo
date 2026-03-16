@@ -19,7 +19,6 @@ package consulo.undoRedo;
 import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public abstract class GlobalUndoableAction extends BasicUndoableAction {
   public GlobalUndoableAction() {
@@ -29,11 +28,11 @@ public abstract class GlobalUndoableAction extends BasicUndoableAction {
     super(refs);
   }
 
-  public GlobalUndoableAction(@Nonnull Document... docs) {
+  public GlobalUndoableAction(Document... docs) {
     super(docs);
   }
 
-  public GlobalUndoableAction(@Nonnull VirtualFile... files) {
+  public GlobalUndoableAction(VirtualFile... files) {
     super(files);
   }
 

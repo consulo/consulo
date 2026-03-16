@@ -2,16 +2,15 @@
 package consulo.document.event;
 
 import consulo.document.Document;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventObject;
 
 public abstract class DocumentEvent extends EventObject {
-    protected DocumentEvent(@Nonnull Document document) {
+    protected DocumentEvent(Document document) {
         super(document);
     }
 
-    public @Nonnull Document getDocument() {
+    public Document getDocument() {
         return (Document) getSource();
     }
 
@@ -71,9 +70,9 @@ public abstract class DocumentEvent extends EventObject {
 
     public abstract int getNewLength();
 
-    public abstract @Nonnull CharSequence getOldFragment();
+    public abstract CharSequence getOldFragment();
 
-    public abstract @Nonnull CharSequence getNewFragment();
+    public abstract CharSequence getNewFragment();
 
     public abstract long getOldTimeStamp();
 

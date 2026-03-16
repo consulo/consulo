@@ -18,17 +18,16 @@ package consulo.language.internal;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.ProperTextRange;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 public class InjectedHighlightTokenInfo {
-    @Nonnull
+    
     public final IElementType type;
-    @Nonnull
+    
     public final ProperTextRange rangeInsideInjectionHost;
     public final int shredIndex;
     public final TextAttributes attributes;
 
-    public InjectedHighlightTokenInfo(@Nonnull IElementType type, @Nonnull ProperTextRange rangeInsideInjectionHost, int shredIndex, @Nonnull TextAttributes attributes) {
+    public InjectedHighlightTokenInfo(IElementType type, ProperTextRange rangeInsideInjectionHost, int shredIndex, TextAttributes attributes) {
         this.type = type;
         this.rangeInsideInjectionHost = rangeInsideInjectionHost;
         this.shredIndex = shredIndex;

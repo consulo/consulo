@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
@@ -51,14 +50,14 @@ public final class WavePainter2D extends WavePainter {
      * Paints a wave in given coordinate range. {@code y} defines the lower boundary of painted wave.
      */
     @Override
-    public void paint(@Nonnull Graphics2D g, int xStart, int xEnd, int y) {
+    public void paint(Graphics2D g, int xStart, int xEnd, int y) {
         paint(g, (double) xStart, (double) xEnd, (double) y);
     }
 
     /**
      * Paints a wave in given coordinate range. {@code y} defines the lower boundary of painted wave.
      */
-    public void paint(@Nonnull Graphics2D g, double xStart, double xEnd, double y) {
+    public void paint(Graphics2D g, double xStart, double xEnd, double y) {
         Shape clip = g.getClip();
         Rectangle2D rectangle = new Rectangle2D.Double(xStart, y - 3, xEnd - xStart, 3);
         Rectangle2D waveClip = clip != null ? clip.getBounds2D().createIntersection(rectangle) : rectangle;

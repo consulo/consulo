@@ -30,8 +30,7 @@ import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.element.ModuleOutputPackagingElement;
 import consulo.ide.setting.module.ModulesConfigurator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class ArtifactProjectStructureElement extends ProjectStructureElement {
     final CompositePackagingElement<?> rootElement = myArtifactsStructureContext.getRootElement(artifact);
     ArtifactUtil.processPackagingElements(rootElement, null, new PackagingElementProcessor<>() {
       @Override
-      public boolean process(@Nonnull PackagingElement<?> packagingElement, @Nonnull PackagingElementPath path) {
+      public boolean process(PackagingElement<?> packagingElement, PackagingElementPath path) {
         ProjectStructureElement element = getProjectStructureElementFor(packagingElement, ArtifactProjectStructureElement.this.myArtifactsStructureContext);
         if (element != null) {
           usages.add(createUsage(packagingElement, element, path.getPathStringFrom("/", rootElement)));

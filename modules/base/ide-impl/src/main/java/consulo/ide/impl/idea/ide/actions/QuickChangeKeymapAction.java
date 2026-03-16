@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -33,8 +32,8 @@ import jakarta.annotation.Nonnull;
 public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
     @Override
     protected void fillActions(Project project,
-                               @Nonnull ActionGroup.Builder group,
-                               @Nonnull DataContext dataContext) {
+                               ActionGroup.Builder group,
+                               DataContext dataContext) {
         KeymapManagerEx manager = (KeymapManagerEx)KeymapManager.getInstance();
         Keymap current = manager.getActiveKeymap();
         for (Keymap keymap : manager.getAllKeymaps()) {
@@ -52,7 +51,7 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
         group.add(new AnAction(keymap.getPresentableName(), "", keymap == current ? ourCurrentAction : ourNotCurrentAction) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 if (addScheme) {
                     manager.getSchemeManager().addNewScheme(keymap, false);
                 }

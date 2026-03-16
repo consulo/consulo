@@ -19,7 +19,7 @@ import consulo.ui.IntSlider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.web.internal.base.WebUnsupportedComponent;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

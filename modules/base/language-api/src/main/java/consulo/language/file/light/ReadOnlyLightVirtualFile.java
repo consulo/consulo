@@ -3,7 +3,6 @@ package consulo.language.file.light;
 
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -11,13 +10,13 @@ import java.io.OutputStream;
  * @author gregsh
  */
 public class ReadOnlyLightVirtualFile extends LightVirtualFile {
-  public ReadOnlyLightVirtualFile(@Nonnull String name, @Nonnull Language language, @Nonnull CharSequence text) {
+  public ReadOnlyLightVirtualFile(String name, Language language, CharSequence text) {
     super(name, language, text);
     super.setWritable(false);
   }
 
   @Override
-  public final void setContent(Object requestor, @Nonnull CharSequence content, boolean fireEvent) {
+  public final void setContent(Object requestor, CharSequence content, boolean fireEvent) {
     throw new UnsupportedOperationException();
   }
 
@@ -26,7 +25,7 @@ public class ReadOnlyLightVirtualFile extends LightVirtualFile {
     if (writable) throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new UnsupportedOperationException();

@@ -21,8 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.compiler.Compiler;
 import consulo.compiler.scope.CompileScope;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -33,8 +32,8 @@ import java.util.function.Predicate;
 public abstract class AdditionalCompileScopeProvider {
     @Nullable
     public abstract CompileScope getAdditionalScope(
-        @Nonnull CompileScope baseScope,
-        @Nonnull Predicate<Compiler> filter,
-        @Nonnull Project project
+        CompileScope baseScope,
+        Predicate<Compiler> filter,
+        Project project
     );
 }

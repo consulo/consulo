@@ -20,8 +20,7 @@ import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.RootInjectingContainerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
@@ -33,37 +32,37 @@ import java.util.function.Function;
  */
 public class DefaultRootInjectingContainerFactory implements RootInjectingContainerFactory {
   private static final InjectingContainer ROOT = new InjectingContainer() {
-    @Nonnull
+    
     @Override
-    public <T> T getInstance(@Nonnull Class<T> clazz) {
+    public <T> T getInstance(Class<T> clazz) {
       throw new UnsupportedOperationException();
     }
 
     @Nullable
     @Override
-    public <T> T getInstanceIfCreated(@Nonnull Class<T> clazz) {
+    public <T> T getInstanceIfCreated(Class<T> clazz) {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
-    public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
+    public <T> T getUnbindedInstance(Class<T> clazz) {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
-    public <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
+    public <T> T getUnbindedInstance(Class<T> clazz, Type[] constructorTypes, Function<Object[], T> constructor) {
       throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public List<InjectingKey<?>> getKeys() {
       return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public InjectingContainerBuilder childBuilder() {
       return new DefaultInjectingContainerBuilder(null);
@@ -74,7 +73,7 @@ public class DefaultRootInjectingContainerFactory implements RootInjectingContai
     }
   };
 
-  @Nonnull
+  
   @Override
   public InjectingContainer getRoot() {
     return ROOT;

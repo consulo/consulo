@@ -22,13 +22,12 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "rearrange", order = "after reformat")
 public class RearrangeCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
-  @Nonnull
-  public CheckinHandler createHandler(@Nonnull CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
+  
+  public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new RearrangeBeforeCheckinHandler(panel.getProject(), panel);
   }
 }

@@ -19,8 +19,7 @@ package consulo.ui.ex.action.util;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionManagerEx;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,16 +30,16 @@ public class ActionGroupUtil {
     return action2presentation.computeIfAbsent(action, k -> action.getTemplatePresentation().clone());
   }
 
-  public static boolean isGroupEmpty(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e) {
+  public static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e) {
     return isGroupEmpty(actionGroup, e, new HashMap<>());
   }
 
   @Deprecated
-  public static boolean isGroupEmpty(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e, boolean unused) {
+  public static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e, boolean unused) {
     return isGroupEmpty(actionGroup, e, new HashMap<>());
   }
 
-  private static boolean isGroupEmpty(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e, @Nonnull Map<AnAction, Presentation> action2presentation) {
+  private static boolean isGroupEmpty(ActionGroup actionGroup, AnActionEvent e, Map<AnAction, Presentation> action2presentation) {
     AnAction[] actions = actionGroup.getChildren(e);
     for (AnAction action : actions) {
       if (action instanceof AnSeparator) continue;
@@ -60,7 +59,7 @@ public class ActionGroupUtil {
   }
 
   @Nullable
-  public static AnAction getSingleActiveAction(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e, boolean isInModalContext) {
+  public static AnAction getSingleActiveAction(ActionGroup actionGroup, AnActionEvent e, boolean isInModalContext) {
     List<AnAction> children = getEnabledChildren(actionGroup, e, new HashMap<>());
     if (children.size() == 1) {
       return children.get(0);
@@ -68,7 +67,7 @@ public class ActionGroupUtil {
     return null;
   }
 
-  private static List<AnAction> getEnabledChildren(@Nonnull ActionGroup actionGroup, @Nonnull AnActionEvent e, @Nonnull Map<AnAction, Presentation> action2presentation) {
+  private static List<AnAction> getEnabledChildren(ActionGroup actionGroup, AnActionEvent e, Map<AnAction, Presentation> action2presentation) {
     List<AnAction> result = new ArrayList<>();
     AnAction[] actions = actionGroup.getChildren(e);
     for (AnAction action : actions) {
@@ -86,7 +85,7 @@ public class ActionGroupUtil {
     return result;
   }
 
-  private static boolean isActionEnabledAndVisible(@Nonnull AnActionEvent e, @Nonnull Map<AnAction, Presentation> action2presentation, @Nonnull AnAction action) {
+  private static boolean isActionEnabledAndVisible(AnActionEvent e, Map<AnAction, Presentation> action2presentation, AnAction action) {
     Presentation presentation = getPresentation(action, action2presentation);
     AnActionEvent event = new AnActionEvent(e.getInputEvent(), e.getDataContext(), ActionPlaces.UNKNOWN, presentation, ActionManager.getInstance(), e.getModifiers());
     event.setInjectedContext(action.isInInjectedContext());

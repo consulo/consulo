@@ -20,8 +20,7 @@ import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokenType;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Set;
 
 /**
@@ -34,15 +33,15 @@ import java.util.Set;
  */
 public class StdArrangementMatchRule extends ArrangementMatchRule implements Cloneable, Comparable<StdArrangementMatchRule> {
 
-  public StdArrangementMatchRule(@Nonnull StdArrangementEntryMatcher matcher) {
+  public StdArrangementMatchRule(StdArrangementEntryMatcher matcher) {
     super(matcher);
   }
 
-  public StdArrangementMatchRule(@Nonnull StdArrangementEntryMatcher matcher, @Nonnull ArrangementSettingsToken orderType) {
+  public StdArrangementMatchRule(StdArrangementEntryMatcher matcher, ArrangementSettingsToken orderType) {
     super(matcher, orderType);
   }
 
-  @Nonnull
+  
   @Override
   public StdArrangementEntryMatcher getMatcher() {
     return (StdArrangementEntryMatcher)super.getMatcher();
@@ -54,7 +53,7 @@ public class StdArrangementMatchRule extends ArrangementMatchRule implements Clo
   }
 
   @Override
-  public int compareTo(@Nonnull StdArrangementMatchRule o) {
+  public int compareTo(StdArrangementMatchRule o) {
     Set<ArrangementSettingsToken> tokens = ArrangementUtil.extractTokens(getMatcher().getCondition()).keySet();
     Set<ArrangementSettingsToken> tokens1 = ArrangementUtil.extractTokens(o.getMatcher().getCondition()).keySet();
     if (tokens1.containsAll(tokens)) {
@@ -76,7 +75,7 @@ public class StdArrangementMatchRule extends ArrangementMatchRule implements Clo
   }
 
   @Nullable
-  private static String getEntryType(@Nonnull Set<ArrangementSettingsToken> tokens) {
+  private static String getEntryType(Set<ArrangementSettingsToken> tokens) {
     for (ArrangementSettingsToken token : tokens) {
       if (StdArrangementTokenType.ENTRY_TYPE.is(token)) {
         return token.getId();

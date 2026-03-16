@@ -19,7 +19,6 @@ package consulo.language.psi;
 import consulo.logging.Logger;
 import consulo.util.collection.util.WalkingState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -30,40 +29,40 @@ public abstract class PsiWalkingState extends WalkingState<PsiElement> {
 
   private static class PsiTreeGuide implements TreeGuide<PsiElement> {
     @Override
-    public PsiElement getNextSibling(@Nonnull PsiElement element) {
+    public PsiElement getNextSibling(PsiElement element) {
       return element.getNextSibling();
     }
 
     @Override
-    public PsiElement getPrevSibling(@Nonnull PsiElement element) {
+    public PsiElement getPrevSibling(PsiElement element) {
       return element.getPrevSibling();
     }
 
     @Override
-    public PsiElement getFirstChild(@Nonnull PsiElement element) {
+    public PsiElement getFirstChild(PsiElement element) {
       return element.getFirstChild();
     }
 
     @Override
-    public PsiElement getParent(@Nonnull PsiElement element) {
+    public PsiElement getParent(PsiElement element) {
       return element.getParent();
     }
 
     private static final PsiTreeGuide instance = new PsiTreeGuide();
   }
 
-  protected PsiWalkingState(@Nonnull PsiElementVisitor delegate) {
+  protected PsiWalkingState(PsiElementVisitor delegate) {
     super(PsiTreeGuide.instance);
     myVisitor = delegate;
   }
 
   @Override
-  public void visit(@Nonnull PsiElement element) {
+  public void visit(PsiElement element) {
     element.accept(myVisitor);
   }
 
   @Override
-  public void elementStarted(@Nonnull PsiElement element) {
+  public void elementStarted(PsiElement element) {
     if (!startedWalking && element instanceof PsiCompiledElement) {
       LOG.error(element+"; Do not use walking visitor inside compiled PSI since getNextSibling() is too slow there");
     }

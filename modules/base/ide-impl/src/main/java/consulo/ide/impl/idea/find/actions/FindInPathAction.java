@@ -27,7 +27,6 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "FindInPath")
@@ -39,7 +38,7 @@ public class FindInPathAction extends FindReplaceInPathActionBase {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         FindInProjectManager findManager = FindInProjectManager.getInstance(project);
@@ -52,11 +51,11 @@ public class FindInPathAction extends FindReplaceInPathActionBase {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         doUpdate(e);
     }
 
-    static void doUpdate(@Nonnull AnActionEvent e) {
+    static void doUpdate(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         presentation.setEnabled(project != null);
@@ -65,7 +64,7 @@ public class FindInPathAction extends FindReplaceInPathActionBase {
         }
     }
 
-    private static boolean isValidSearchScope(@Nonnull AnActionEvent e) {
+    private static boolean isValidSearchScope(AnActionEvent e) {
         PsiElement[] elements = e.getData(PsiElement.KEY_OF_ARRAY);
         if (elements != null && elements.length == 1 && elements[0] instanceof PsiDirectoryContainer) {
             return true;

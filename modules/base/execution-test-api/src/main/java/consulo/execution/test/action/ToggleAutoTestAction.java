@@ -10,7 +10,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -25,7 +24,7 @@ public class ToggleAutoTestAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         RunContentDescriptor descriptor = e.getData(RunContentDescriptor.KEY);
         return project != null && descriptor != null && getAutoTestManager(project).isAutoTestEnabled(descriptor);
@@ -33,7 +32,7 @@ public class ToggleAutoTestAction extends ToggleAction {
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
         RunContentDescriptor descriptor = e.getData(RunContentDescriptor.KEY);
         ExecutionEnvironment environment = e.getData(ExecutionEnvironment.KEY);

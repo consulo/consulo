@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.accessibility;
 
-import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -31,7 +30,7 @@ import java.awt.*;
 public abstract class AccessibleContextDelegate extends AbstractAccessibleContextDelegate {
   private final AccessibleContext myContext;
 
-  public AccessibleContextDelegate(@Nonnull AccessibleContext context) {
+  public AccessibleContextDelegate(AccessibleContext context) {
     myContext = context;
   }
 
@@ -54,7 +53,7 @@ public abstract class AccessibleContextDelegate extends AbstractAccessibleContex
     return super.getAccessibleParent();
   }
 
-  @Nonnull
+  
   @Override
   protected AccessibleContext getDelegate() {
     return myContext;

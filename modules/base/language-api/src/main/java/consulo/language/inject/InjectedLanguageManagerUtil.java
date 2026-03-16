@@ -28,8 +28,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class InjectedLanguageManagerUtil {
@@ -42,7 +41,7 @@ public class InjectedLanguageManagerUtil {
   public static final Key<Boolean> VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT = Key.create("IS_VALUE_REGEXP");
 
   @RequiredReadAction
-  public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull PsiElement element) {
+  public static boolean isInInjectedLanguagePrefixSuffix(PsiElement element) {
     PsiFile injectedFile = element.getContainingFile();
     if (injectedFile == null) return false;
     Project project = injectedFile.getProject();
@@ -55,7 +54,7 @@ public class InjectedLanguageManagerUtil {
     return combinedEdiblesLength != elementRange.getLength();
   }
 
-  public static int getInjectedStart(@Nonnull List<? extends PsiLanguageInjectionHost.Shred> places) {
+  public static int getInjectedStart(List<? extends PsiLanguageInjectionHost.Shred> places) {
     PsiLanguageInjectionHost.Shred shred = places.get(0);
     PsiLanguageInjectionHost host = shred.getHost();
     assert host != null;
@@ -63,7 +62,7 @@ public class InjectedLanguageManagerUtil {
   }
 
   @Nullable
-  public static PsiElement findElementInInjected(@Nonnull PsiLanguageInjectionHost injectionHost, int offset) {
+  public static PsiElement findElementInInjected(PsiLanguageInjectionHost injectionHost, int offset) {
     SimpleReference<PsiElement> ref = SimpleReference.create();
     InjectedLanguageManager.getInstance(injectionHost.getProject()).enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
     return ref.get();

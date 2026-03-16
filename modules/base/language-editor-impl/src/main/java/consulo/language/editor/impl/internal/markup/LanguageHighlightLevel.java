@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -27,12 +26,12 @@ public final class LanguageHighlightLevel {
   private final String myLangID;
   private final InspectionsLevel myLevel;
 
-  public LanguageHighlightLevel(@Nonnull String langID, @Nonnull  InspectionsLevel level) {
+  public LanguageHighlightLevel(String langID, InspectionsLevel level) {
     myLangID = langID;
     myLevel = level;
   }
 
-  public LanguageHighlightLevel copy(@Nonnull String langID, @Nonnull InspectionsLevel level) {
+  public LanguageHighlightLevel copy(String langID, InspectionsLevel level) {
     return new LanguageHighlightLevel(langID, level);
   }
 

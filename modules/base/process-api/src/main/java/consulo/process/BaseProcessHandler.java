@@ -23,8 +23,7 @@ import consulo.process.event.ProcessListener;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.OutputStream;
 import java.lang.reflect.InvocationHandler;
@@ -239,7 +238,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
     return false;
   }
 
-  protected <F extends ProcessHandlerFeature> void registerFeature(@Nonnull Class<F> featureClass, F feature) {
+  protected <F extends ProcessHandlerFeature> void registerFeature(Class<F> featureClass, F feature) {
     Map<Class, ProcessHandlerFeature> features = myFeatures;
     if (features == null) {
       features = myFeatures = new HashMap<>();
@@ -251,7 +250,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
   @Override
   @Nullable
   @SuppressWarnings("unchecked")
-  public <F extends ProcessHandlerFeature> F getFeature(@Nonnull Class<F> featureClass) {
+  public <F extends ProcessHandlerFeature> F getFeature(Class<F> featureClass) {
     Map<Class, ProcessHandlerFeature> features = myFeatures;
     if (features == null) {
       return null;
@@ -297,7 +296,7 @@ public abstract class BaseProcessHandler extends UserDataHolderBase implements P
       runPendingTasks();
     }
 
-    public void execute(@Nonnull Runnable task) {
+    public void execute(Runnable task) {
       if (isStartNotified()) {
         task.run();
       }

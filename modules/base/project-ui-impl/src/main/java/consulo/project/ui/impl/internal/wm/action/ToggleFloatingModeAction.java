@@ -27,7 +27,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ToggleFloatingMode")
 public class ToggleFloatingModeAction extends ToggleAction implements DumbAware {
@@ -37,7 +36,7 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
 
     @Override
     @RequiredUIAccess
-    public boolean isSelected(@Nonnull AnActionEvent event) {
+    public boolean isSelected(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
             return false;
@@ -49,7 +48,7 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+    public void setSelected(AnActionEvent event, boolean flag) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
             return;
@@ -70,7 +69,7 @@ public class ToggleFloatingModeAction extends ToggleAction implements DumbAware 
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         Presentation presentation = event.getPresentation();
         Project project = event.getData(Project.KEY);

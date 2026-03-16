@@ -9,11 +9,8 @@ import consulo.http.impl.internal.ssl.*;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.Tree;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -33,7 +30,7 @@ import static consulo.http.impl.internal.ssl.HttpConfirmingTrustManagerImplHttp.
 @ExtensionImpl
 public class CertificateConfigurable implements SearchableConfigurable, Configurable.NoScroll, CertificateListener, ApplicationConfigurable {
   private static final FileTypeDescriptor CERTIFICATE_DESCRIPTOR = new FileTypeDescriptor("Choose Certificate", ".crt", ".cer", ".pem");
-  @NonNls
+  
   public static final String EMPTY_PANEL = "empty.panel";
 
   private JPanel myRootPanel;
@@ -119,11 +116,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     myCertificatesListPanel.add(decorator.createPanel(), BorderLayout.CENTER);
   }
 
-  private void showCard(@Nonnull String cardName) {
+  private void showCard(String cardName) {
     ((CardLayout)myDetailsPanel.getLayout()).show(myDetailsPanel, cardName);
   }
 
-  private void addCertificatePanel(@Nonnull X509Certificate certificate) {
+  private void addCertificatePanel(X509Certificate certificate) {
     String uniqueName = getCardName(certificate);
     JPanel infoPanel = new CertificateInfoPanel(certificate);
     UIUtil.addInsets(infoPanel, UIUtil.PANEL_REGULAR_INSETS);
@@ -132,11 +129,11 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     myDetailsPanel.add(scrollPane, uniqueName);
   }
 
-  private static String getCardName(@Nonnull X509Certificate certificate) {
+  private static String getCardName(X509Certificate certificate) {
     return certificate.getSubjectX500Principal().getName();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "http.certificates";
@@ -148,8 +145,8 @@ public class CertificateConfigurable implements SearchableConfigurable, Configur
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
-  @Nonnull
-  @Nls
+  
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Server Certificates");

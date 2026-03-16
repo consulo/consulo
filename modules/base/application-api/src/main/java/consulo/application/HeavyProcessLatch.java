@@ -6,9 +6,7 @@ import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -52,8 +50,8 @@ public final class HeavyProcessLatch {
    * @deprecated use {@link #performOperation} instead
    */
   @Deprecated
-  @Nonnull
-  public AccessToken processStarted(@Nonnull @Nls String displayName) {
+  
+  public AccessToken processStarted(String displayName) {
     Op op = new Op(Type.Processing, displayName);
     myHeavyProcesses.add(op);
     myEventDispatcher.getMulticaster().processStarted(op);
@@ -70,7 +68,7 @@ public final class HeavyProcessLatch {
   /**
    * Executes {@code runnable} as a heavy operation. E.g., during this method execution, {@link #isRunning()} returns true.
    */
-  public void performOperation(@Nonnull Type type, @Nonnull @Nls String displayName, @Nonnull Runnable runnable) {
+  public void performOperation(Type type, String displayName, Runnable runnable) {
     Op op = new Op(type, displayName);
     myHeavyProcesses.add(op);
     myEventDispatcher.getMulticaster().processStarted(op);
@@ -108,7 +106,7 @@ public final class HeavyProcessLatch {
   /**
    * @return {@code true} if any heavy operation of type {@code type} is currently running in some thread
    */
-  public boolean isRunning(@Nonnull Type type) {
+  public boolean isRunning(Type type) {
     return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() == type);
   }
 
@@ -116,7 +114,7 @@ public final class HeavyProcessLatch {
    * @return {@code true} if there is a heavy operation currently running in some thread,
    * which has its {@link Operation#getType()} != {@code type}
    */
-  public boolean isRunningAnythingBut(@Nonnull Type type) {
+  public boolean isRunningAnythingBut(Type type) {
     return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() != type);
   }
 
@@ -131,36 +129,36 @@ public final class HeavyProcessLatch {
   /**
    * @return all heavy operations currently running, in undefined order, or an empty collection
    */
-  @Nonnull
+  
   public Collection<Operation> getRunningOperations() {
     return new ArrayList<>(myHeavyProcesses);
   }
 
   @SuppressWarnings("InterfaceMayBeAnnotatedFunctional")
   public interface HeavyProcessListener extends EventListener {
-    default void processStarted(@Nonnull Operation op) {
+    default void processStarted(Operation op) {
     }
 
-    void processFinished(@Nonnull Operation op);
+    void processFinished(Operation op);
   }
 
   public interface Operation {
-    @Nonnull
+    
     Type getType();
 
-    @Nonnull
-    @Nls
+    
+    
     String getDisplayName();
   }
 
-  public void addListener(@Nonnull Disposable parentDisposable, @Nonnull HeavyProcessListener listener) {
+  public void addListener(Disposable parentDisposable, HeavyProcessListener listener) {
     myEventDispatcher.addListener(listener, parentDisposable);
   }
 
   /**
    * schedules {@code runnable} to be executed when all heavy operations are finished (i.e., when {@link #isRunning()} returned false)
    */
-  public void queueExecuteOutOfHeavyProcess(@Nonnull Runnable runnable) {
+  public void queueExecuteOutOfHeavyProcess(Runnable runnable) {
     if (isRunning()) {
       myExecuteOutOfHeavyActivity.add(runnable);
     }
@@ -172,26 +170,26 @@ public final class HeavyProcessLatch {
   private static final class Op implements Operation {
     private final Type myType;
     private final
-    @Nonnull
-    @Nls
+    
+    
     String myDisplayName;
 
-    Op(@Nonnull Type type, @Nonnull @Nls String displayName) {
+    Op(Type type, String displayName) {
       myType = type;
       myDisplayName = displayName;
     }
 
     @Override
     public
-    @Nonnull
+    
     Type getType() {
       return myType;
     }
 
     @Override
     public
-    @Nls
-    @Nonnull
+    
+    
     String getDisplayName() {
       return myDisplayName;
     }

@@ -17,22 +17,22 @@ package consulo.compiler.artifact.ui;
 
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactProblemsHolder {
-  @Nonnull
+  
   PackagingElementResolvingContext getContext();
 
-  void registerError(@Nonnull String message, @Nonnull String problemTypeId);
+  void registerError(String message, String problemTypeId);
 
-  void registerError(@Nonnull String message, @Nonnull String problemTypeId, @jakarta.annotation.Nullable List<PackagingElement<?>> pathToPlace,
-                     @Nonnull ArtifactProblemQuickFix... quickFixes);
+  void registerError(String message, String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
+                     ArtifactProblemQuickFix... quickFixes);
 
-  void registerWarning(@Nonnull String message, @Nonnull String problemTypeId, @jakarta.annotation.Nullable List<PackagingElement<?>> pathToPlace,
-                       @Nonnull ArtifactProblemQuickFix... quickFixes);
+  void registerWarning(String message, String problemTypeId, @Nullable List<PackagingElement<?>> pathToPlace,
+                       ArtifactProblemQuickFix... quickFixes);
 }

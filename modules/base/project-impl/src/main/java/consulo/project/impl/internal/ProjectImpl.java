@@ -48,8 +48,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -63,7 +62,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     public static final String NAME_FILE = ".name";
 
     private final ProjectManagerEx myManager;
-    @Nonnull
     private final String myDirPath;
 
     private final AtomicBoolean mySavingInProgress = new AtomicBoolean(false);
@@ -83,9 +81,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     private boolean myFullyInitialized;
 
-    public ProjectImpl(@Nonnull Application application,
-                       @Nonnull ProjectManager manager,
-                       @Nonnull VirtualFile projectDir,
+    public ProjectImpl(Application application,
+                       ProjectManager manager,
+                       VirtualFile projectDir,
                        String projectName,
                        ComponentBinding componentBinding) {
         super(application, "Project " + (projectName == null ? projectDir.getPath() : projectName), ComponentScope.PROJECT, componentBinding);
@@ -107,9 +105,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Deprecated
-    public ProjectImpl(@Nonnull Application application,
-                       @Nonnull ProjectManager manager,
-                       @Nonnull String dirPath,
+    public ProjectImpl(Application application,
+                       ProjectManager manager,
+                       String dirPath,
                        String projectName,
                        boolean noUIThread,
                        ComponentBinding componentBinding) {
@@ -136,14 +134,13 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         myName = projectName;
     }
 
-    @Nonnull
     @Override
     public CoroutineContext coroutineContext() {
         return myCoroutineContext.get();
     }
 
     @Override
-    public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    public void executeNonCancelableSection(Runnable runnable) {
         PlatformComponentManagerImpl application = (BaseApplication) getApplication();
         application.executeNonCancelableSection(runnable);
     }
@@ -159,13 +156,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    @Nonnull
     public Application getApplication() {
         return (Application) myParent;
     }
 
     @Override
-    public void setProjectName(@Nonnull String projectName) {
+    public void setProjectName(String projectName) {
         String name = getName();
 
         if (!projectName.equals(name)) {
@@ -188,7 +184,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
 
         builder.bind(Project.class).to(this);
@@ -201,7 +197,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return (IProjectStore) super.getStateStore();
     }
 
-    @Nonnull
     @Override
     public IComponentStore getStateStoreImpl() {
         return getInstance(IProjectStore.class);
@@ -226,7 +221,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    @Nonnull
     public String getProjectFilePath() {
         return getStateStore().getProjectFilePath();
     }
@@ -246,7 +240,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return getStateStore().getProjectBasePath();
     }
 
-    @Nonnull
     @Override
     public String getName() {
         if (myName == null) {
@@ -260,7 +253,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         return getStateStore().getPresentableUrl();
     }
 
-    @Nonnull
     @Override
     public String getLocationHash() {
         String str = getPresentableUrl();
@@ -289,7 +281,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
 
     @Override
-    public void save(@Nonnull UIAccess uiAccess) {
+    public void save(UIAccess uiAccess) {
         ApplicationEx application = (ApplicationEx) getApplication();
         if (application.isDoNotSave()) {
             // no need to save

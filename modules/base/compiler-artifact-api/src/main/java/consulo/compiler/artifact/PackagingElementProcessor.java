@@ -17,7 +17,6 @@ package consulo.compiler.artifact;
 
 import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,5 +30,5 @@ public abstract class PackagingElementProcessor<E extends PackagingElement<?>> {
     return true;
   }
 
-  public abstract boolean process(@Nonnull E element, @Nonnull PackagingElementPath path);
+  public abstract boolean process(E element, PackagingElementPath path);
 }

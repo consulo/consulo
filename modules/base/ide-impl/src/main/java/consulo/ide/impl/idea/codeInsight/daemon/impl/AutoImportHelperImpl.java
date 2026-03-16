@@ -28,7 +28,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,17 +46,17 @@ public class AutoImportHelperImpl implements AutoImportHelper {
     }
 
     @Override
-    public boolean canChangeFileSilently(@Nonnull PsiFile file) {
+    public boolean canChangeFileSilently(PsiFile file) {
         return myDaemonListeners.canChangeFileSilently(file);
     }
 
     @Override
-    public boolean mayAutoImportNow(@Nonnull PsiFile psiFile, boolean isInContent) {
+    public boolean mayAutoImportNow(PsiFile psiFile, boolean isInContent) {
         return canChangeFileSilently(psiFile);
     }
 
     @Override
-    public void runOptimizeImports(@Nonnull Project project, @Nonnull PsiFile file, boolean withProgress) {
+    public void runOptimizeImports(Project project, PsiFile file, boolean withProgress) {
         OptimizeImportsProcessor processor = new OptimizeImportsProcessor(project, file);
         if (withProgress) {
             processor.run();
@@ -67,9 +66,8 @@ public class AutoImportHelperImpl implements AutoImportHelper {
         }
     }
 
-    @Nonnull
     @Override
-    public LocalizeValue getImportMessage(@Nonnull LocalizeValue actioName, @Nonnull LocalizeValue kind, boolean multiple, @Nonnull String name) {
+    public LocalizeValue getImportMessage(LocalizeValue actioName, LocalizeValue kind, boolean multiple, String name) {
         String firstKeyboardShortcutText =
             KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(IdeActions.ACTION_SHOW_INTENTION_ACTIONS));
 

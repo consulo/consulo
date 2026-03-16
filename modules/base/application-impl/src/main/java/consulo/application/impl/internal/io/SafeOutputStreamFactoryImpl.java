@@ -19,7 +19,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.io.SafeOutputStream;
 import consulo.application.io.SafeOutputStreamFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,15 +39,15 @@ public class SafeOutputStreamFactoryImpl implements SafeOutputStreamFactory {
         myApplicationConcurrency = applicationConcurrency;
     }
 
-    @Nonnull
+    
     @Override
-    public SafeOutputStream create(@Nonnull Path target) {
+    public SafeOutputStream create(Path target) {
         return new SafeFileOutputStreamImpl(myApplicationConcurrency, target);
     }
 
-    @Nonnull
+    
     @Override
-    public SafeOutputStream create(@Nonnull Path target, @Nonnull String backupExt) {
+    public SafeOutputStream create(Path target, String backupExt) {
         return new SafeFileOutputStreamImpl(myApplicationConcurrency, target, backupExt);
     }
 }

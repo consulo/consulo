@@ -36,8 +36,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -182,12 +181,12 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
                 }
 
                 @Override
-                public Set<String> getProcessedWordsWithoutStemming(@Nonnull String text) {
+                public Set<String> getProcessedWordsWithoutStemming(String text) {
                     return SearchableOptionsRegistrarImpl.this.getProcessedWordsWithoutStemming(text);
                 }
 
                 @Override
-                public Set<String> getProcessedWords(@Nonnull String text) {
+                public Set<String> getProcessedWords(String text) {
                     return SearchableOptionsRegistrarImpl.this.getProcessedWords(text);
                 }
             });
@@ -227,7 +226,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    @Nonnull
+    
     public ConfigurableHit getConfigurables(
         Configurable[] allConfigurables,
         boolean changed,
@@ -393,13 +392,13 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    public Set<String> getSynonym(String option, @Nonnull SearchableConfigurable configurable) {
+    public Set<String> getSynonym(String option, SearchableConfigurable configurable) {
         loadHugeFilesIfNecessary();
         return myHighlightOption2Synonym.get(Couple.of(option, configurable.getId()));
     }
 
     @Override
-    public Map<String, Set<String>> findPossibleExtension(@Nonnull String prefix, Project project) {
+    public Map<String, Set<String>> findPossibleExtension(String prefix, Project project) {
         loadHugeFilesIfNecessary();
         boolean perProject = CodeStyle.usesOwnSettings(project);
         Map<String, Set<String>> result = new HashMap<>();
@@ -443,7 +442,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    public Set<String> getProcessedWordsWithoutStemming(@Nonnull String text) {
+    public Set<String> getProcessedWordsWithoutStemming(String text) {
         Set<String> result = new HashSet<>();
         String toLowerCase = text.toLowerCase();
         String[] options = REG_EXP.split(toLowerCase);
@@ -461,7 +460,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     }
 
     @Override
-    public Set<String> getProcessedWords(@Nonnull String text) {
+    public Set<String> getProcessedWords(String text) {
         Set<String> result = new HashSet<>();
         String toLowerCase = text.toLowerCase();
         String[] options = REG_EXP.split(toLowerCase);

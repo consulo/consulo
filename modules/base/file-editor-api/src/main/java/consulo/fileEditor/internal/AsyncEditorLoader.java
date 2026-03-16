@@ -18,7 +18,6 @@ package consulo.fileEditor.internal;
 import consulo.codeEditor.Editor;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public interface AsyncEditorLoader {
     Key<AsyncEditorLoader> ASYNC_LOADER = Key.create("ASYNC_LOADER");
 
-    public static void performWhenLoaded(@Nonnull Editor editor, @Nonnull Runnable runnable) {
+    public static void performWhenLoaded(Editor editor, Runnable runnable) {
         UIAccess.assertIsUIThread();
         AsyncEditorLoader loader = editor.getUserData(ASYNC_LOADER);
         if (loader == null) {
@@ -38,7 +37,7 @@ public interface AsyncEditorLoader {
         }
     }
 
-    public static boolean isEditorLoaded(@Nonnull Editor editor) {
+    public static boolean isEditorLoaded(Editor editor) {
         return editor.getUserData(ASYNC_LOADER) == null;
     }
 

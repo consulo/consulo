@@ -17,7 +17,6 @@ package consulo.language.editor.impl.internal.markup;
 
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,11 +29,11 @@ public enum InspectionsLevel {
 
     private final LocalizeValue myTextValue;
 
-    InspectionsLevel(@Nonnull LocalizeValue textValue) {
+    InspectionsLevel(LocalizeValue textValue) {
         myTextValue = textValue;
     }
 
-    @Nonnull
+    
     public LocalizeValue getTextValue() {
         return myTextValue;
     }

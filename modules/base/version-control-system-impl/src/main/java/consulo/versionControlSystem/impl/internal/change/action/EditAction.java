@@ -31,7 +31,6 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class EditAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         List<VirtualFile> files = e.getRequiredData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
         editFilesAndShowErrors(project, files);
@@ -85,7 +84,7 @@ public class EditAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         List<VirtualFile> files = e.getData(VcsDataKeys.MODIFIED_WITHOUT_EDITING_DATA_KEY);
         e.getPresentation().setEnabledAndVisible(files != null && !files.isEmpty());
     }

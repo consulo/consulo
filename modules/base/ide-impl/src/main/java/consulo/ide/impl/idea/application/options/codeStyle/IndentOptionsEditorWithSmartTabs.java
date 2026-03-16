@@ -19,7 +19,6 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.IndentOptionsEditor;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +33,7 @@ class IndentOptionsEditorWithSmartTabs extends IndentOptionsEditor {
     }
 
     @Override
-    public void reset(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
+    public void reset(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
         super.reset(settings, options);
         myCbSmartTabs.setSelected(options.SMART_TABS);
     }

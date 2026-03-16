@@ -26,7 +26,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,16 +42,16 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
     super("file-copy", LocalizeValue.localizeTODO("File"));
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.FileTypes.Text;
   }
 
   @Override
-  @Nonnull
-  public List<? extends FileCopyPackagingElement> chooseAndCreate(@Nonnull ArtifactEditorContext context, @Nonnull Artifact artifact,
-                                                                  @Nonnull CompositePackagingElement<?> parent) {
+  
+  public List<? extends FileCopyPackagingElement> chooseAndCreate(ArtifactEditorContext context, Artifact artifact,
+                                                                  CompositePackagingElement<?> parent) {
     FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, true, true, false, true);
     VirtualFile[] files = IdeaFileChooser.chooseFiles(descriptor, context.getProject(), null);
     List<FileCopyPackagingElement> list = new ArrayList<>();
@@ -63,8 +62,8 @@ public class FileCopyElementType extends PackagingElementType<FileCopyPackagingE
   }
 
   @Override
-  @Nonnull
-  public FileCopyPackagingElement createEmpty(@Nonnull Project project) {
+  
+  public FileCopyPackagingElement createEmpty(Project project) {
     return new FileCopyPackagingElement();
   }
 }

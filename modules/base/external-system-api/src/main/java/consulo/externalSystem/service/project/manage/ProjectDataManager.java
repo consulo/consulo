@@ -29,7 +29,6 @@ import consulo.util.collection.Stack;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -69,13 +68,13 @@ public class ProjectDataManager {
     myApplication = application;
   }
 
-  @Nonnull
+  
   private Map<Key<?>, List<ProjectDataService<?, ?>>> getServices() {
     return myApplication.getExtensionPoint(ProjectDataService.class).getOrBuildCache(CACHE_KEY);
   }
 
   @SuppressWarnings("unchecked")
-  public <T> void importData(@Nonnull Collection<DataNode<?>> nodes, @Nonnull Project project, boolean synchronous) {
+  public <T> void importData(Collection<DataNode<?>> nodes, Project project, boolean synchronous) {
     Map<Key<?>, List<DataNode<?>>> grouped = ExternalSystemApiUtil.group(nodes);
     for (Map.Entry<Key<?>, List<DataNode<?>>> entry : grouped.entrySet()) {
       // Simple class cast makes ide happy but compiler fails.
@@ -88,7 +87,7 @@ public class ProjectDataManager {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> void importData(@Nonnull Key<T> key, @Nonnull Collection<DataNode<T>> nodes, @Nonnull Project project, boolean synchronous) {
+  public <T> void importData(Key<T> key, Collection<DataNode<T>> nodes, Project project, boolean synchronous) {
     ensureTheDataIsReadyToUse(nodes);
     List<ProjectDataService<?, ?>> services = getServices().get(key);
     if (services == null) {
@@ -110,7 +109,7 @@ public class ProjectDataManager {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> void ensureTheDataIsReadyToUse(@Nonnull Collection<DataNode<T>> nodes) {
+  private <T> void ensureTheDataIsReadyToUse(Collection<DataNode<T>> nodes) {
     Map<Key<?>, List<ProjectDataService<?, ?>>> servicesByKey = getServices();
     Stack<DataNode<T>> toProcess = new Stack<>(nodes);
     while (!toProcess.isEmpty()) {
@@ -129,7 +128,7 @@ public class ProjectDataManager {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> void removeData(@Nonnull Key<?> key, @Nonnull Collection<T> toRemove, @Nonnull Project project, boolean synchronous) {
+  public <T> void removeData(Key<?> key, Collection<T> toRemove, Project project, boolean synchronous) {
     List<ProjectDataService<?, ?>> services = getServices().get(key);
     for (ProjectDataService<?, ?> service : services) {
       ((ProjectDataService<?, T>)service).removeData(toRemove, project, synchronous);

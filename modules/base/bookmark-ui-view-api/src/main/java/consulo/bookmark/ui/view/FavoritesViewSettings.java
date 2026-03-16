@@ -18,7 +18,6 @@ package consulo.bookmark.ui.view;
 import consulo.project.ui.view.tree.ProjectViewSettings;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL

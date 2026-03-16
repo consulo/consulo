@@ -28,7 +28,6 @@ import consulo.language.psi.PsiRecursiveElementVisitor;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -39,7 +38,7 @@ import java.util.List;
 public class SandFoldingBuilder extends CustomFoldingBuilder {
   @RequiredReadAction
   @Override
-  protected void buildLanguageFoldRegions(@Nonnull List<FoldingDescriptor> descriptors, @Nonnull PsiElement root, @Nonnull Document document, boolean quick) {
+  protected void buildLanguageFoldRegions(List<FoldingDescriptor> descriptors, PsiElement root, Document document, boolean quick) {
     root.accept(new PsiRecursiveElementVisitor() {
       @Override
       public void visitElement(PsiElement element) {
@@ -57,16 +56,16 @@ public class SandFoldingBuilder extends CustomFoldingBuilder {
   }
 
   @Override
-  protected String getLanguagePlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range) {
+  protected String getLanguagePlaceholderText(ASTNode node, TextRange range) {
     return "test";
   }
 
   @Override
-  protected boolean isRegionCollapsedByDefault(@Nonnull ASTNode node) {
+  protected boolean isRegionCollapsedByDefault(ASTNode node) {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

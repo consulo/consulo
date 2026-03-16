@@ -16,14 +16,13 @@
 package consulo.desktop.awt.internal.diff.fragment;
 
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 class UnifiedContentPanel extends JPanel {
-    public UnifiedContentPanel(@Nonnull List<JComponent> titles, @Nonnull Editor editor) {
+    public UnifiedContentPanel(List<JComponent> titles, Editor editor) {
         super(new BorderLayout());
 
         add(editor.getComponent(), BorderLayout.CENTER);

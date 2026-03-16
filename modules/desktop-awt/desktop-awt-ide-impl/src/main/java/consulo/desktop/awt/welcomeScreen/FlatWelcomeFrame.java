@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;

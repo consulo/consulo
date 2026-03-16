@@ -11,29 +11,28 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "InvalidateCaches")
 public class InvalidateCachesAction extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public InvalidateCachesAction(@Nonnull Application application) {
+    public InvalidateCachesAction(Application application) {
         super(invalidateCachesTitle(application), ActionLocalize.actionInvalidatecachesDescription());
         myApplication = application;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         new InvalidateCacheDialog(myApplication, project).showAsync();
     }
 
-    @Nonnull
-    private static LocalizeValue invalidateCachesTitle(@Nonnull Application application) {
+    
+    private static LocalizeValue invalidateCachesTitle(Application application) {
         return application.isRestartCapable()
             ? ActionLocalize.actionInvalidatecachesText()
             : ActionLocalize.actionInvalidatecachesNorestartText();

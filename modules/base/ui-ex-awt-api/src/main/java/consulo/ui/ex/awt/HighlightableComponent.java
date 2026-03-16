@@ -11,8 +11,7 @@ import consulo.util.lang.StringUtil;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -367,7 +366,7 @@ public class HighlightableComponent extends JComponent implements Accessible {
     return null;
   }
 
-  @Nonnull
+  
   public Map<String, Rectangle> getHighlightedRegionsBoundsMap() {
 
     Map<String, Rectangle> map = new HashMap<>();

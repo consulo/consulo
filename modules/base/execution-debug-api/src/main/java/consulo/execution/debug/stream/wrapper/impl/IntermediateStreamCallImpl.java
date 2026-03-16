@@ -6,7 +6,6 @@ import consulo.execution.debug.stream.wrapper.CallArgument;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -18,24 +17,24 @@ public class IntermediateStreamCallImpl extends StreamCallImpl implements Interm
   private final GenericType myTypeBefore;
   private final GenericType myTypeAfter;
 
-  public IntermediateStreamCallImpl(@Nonnull String name,
-                                    @Nonnull String genericArgs,
-                                    @Nonnull List<CallArgument> args,
-                                    @Nonnull GenericType typeBefore,
-                                    @Nonnull GenericType typeAfter,
-                                    @Nonnull TextRange range) {
+  public IntermediateStreamCallImpl(String name,
+                                    String genericArgs,
+                                    List<CallArgument> args,
+                                    GenericType typeBefore,
+                                    GenericType typeAfter,
+                                    TextRange range) {
     super(name, genericArgs, args, StreamCallType.INTERMEDIATE, range);
     myTypeBefore = typeBefore;
     myTypeAfter = typeAfter;
   }
 
   @Override
-  public @Nonnull GenericType getTypeBefore() {
+  public GenericType getTypeBefore() {
     return myTypeBefore;
   }
 
   @Override
-  public @Nonnull GenericType getTypeAfter() {
+  public GenericType getTypeAfter() {
     return myTypeAfter;
   }
 }

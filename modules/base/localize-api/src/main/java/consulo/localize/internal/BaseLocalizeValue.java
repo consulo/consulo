@@ -17,10 +17,11 @@ package consulo.localize.internal;
 
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -31,9 +32,10 @@ public abstract class BaseLocalizeValue implements LocalizeValue {
 
     protected final Object[] myArgs;
 
-    private LocalizeManager myLocalizeManager;
+    @Nullable
+    private LocalizeManager myLocalizeManager = null;
 
-    private String myText;
+    private String myText = "";
 
     private byte myModificationCount = -1;
 
@@ -41,7 +43,6 @@ public abstract class BaseLocalizeValue implements LocalizeValue {
         myArgs = args;
     }
 
-    @Nonnull
     private LocalizeManager getLocalizeManager() {
         if (myLocalizeManager == null) {
             myLocalizeManager = LocalizeManager.get();
@@ -55,10 +56,8 @@ public abstract class BaseLocalizeValue implements LocalizeValue {
         return myModificationCount;
     }
 
-    @Nonnull
-    protected abstract Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeManager localizeManager);
+    protected abstract Map.Entry<Locale, String> getUnformattedText(LocalizeManager localizeManager);
 
-    @Nonnull
     protected String calcValue(LocalizeManager manager) {
         Map.Entry<Locale, String> unformattedText = getUnformattedText(manager);
         if (myArgs.length > 0) {
@@ -77,7 +76,6 @@ public abstract class BaseLocalizeValue implements LocalizeValue {
         }
     }
 
-    @Nonnull
     @Override
     public String getValue() {
         LocalizeManager manager = getLocalizeManager();

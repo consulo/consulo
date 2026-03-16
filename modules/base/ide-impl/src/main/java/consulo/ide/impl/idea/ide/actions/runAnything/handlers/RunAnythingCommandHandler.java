@@ -7,15 +7,14 @@ import consulo.application.Application;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.process.ProcessHandlerBuilder;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class customizes 'run anything' command execution settings depending on input command
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RunAnythingCommandHandler {
-    public abstract boolean isMatched(@Nonnull String commandLine);
+    public abstract boolean isMatched(String commandLine);
 
     /**
      * See {@link ProcessHandlerBuilder#shouldKillProcessSoftly(boolean)} for details.
@@ -36,10 +35,10 @@ public abstract class RunAnythingCommandHandler {
     /**
      * Creates console builder for matched command
      */
-    public abstract TextConsoleBuilder getConsoleBuilder(@Nonnull Project project);
+    public abstract TextConsoleBuilder getConsoleBuilder(Project project);
 
     @Nullable
-    public static RunAnythingCommandHandler getMatchedHandler(@Nonnull String commandLine) {
+    public static RunAnythingCommandHandler getMatchedHandler(String commandLine) {
         return Application.get().getExtensionPoint(RunAnythingCommandHandler.class)
             .findFirstSafe(handler -> handler.isMatched(commandLine));
     }

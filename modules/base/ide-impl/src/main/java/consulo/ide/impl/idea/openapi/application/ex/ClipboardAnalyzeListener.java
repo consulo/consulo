@@ -8,8 +8,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.awt.util.Alarm;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivationListener {
   private static final int MAX_SIZE = 100 * 1024;
@@ -17,7 +16,7 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
   private String myCachedClipboardValue;
 
   @Override
-  public void applicationActivated(@Nonnull IdeFrame ideFrame) {
+  public void applicationActivated(IdeFrame ideFrame) {
     Runnable processClipboard = () -> {
       String clipboard = ClipboardUtil.getTextInClipboard();
       if (clipboard != null && clipboard.length() < MAX_SIZE && !clipboard.equals(myCachedClipboardValue)) {
@@ -41,10 +40,10 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
     }
   }
 
-  protected abstract void handle(@Nonnull Project project, @Nonnull String value, @Nonnull T handleValue);
+  protected abstract void handle(Project project, String value, T handleValue);
 
   @Override
-  public void applicationDeactivated(@Nonnull IdeFrame ideFrame) {
+  public void applicationDeactivated(IdeFrame ideFrame) {
     if (!ApplicationManager.getApplication().isDisposed()) {
       myCachedClipboardValue = ClipboardUtil.getTextInClipboard();
     }
@@ -54,5 +53,5 @@ public abstract class ClipboardAnalyzeListener<T> implements ApplicationActivati
    * Return value of handling. If can handle value will not null
    */
   @Nullable
-  public abstract T canHandle(@Nonnull String value);
+  public abstract T canHandle(String value);
 }

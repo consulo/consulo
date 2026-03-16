@@ -22,23 +22,22 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionActionOnPsiElement {
   private final LocalQuickFixAndIntentionActionOnPsiElement fix;
 
-  private PriorityActionWrapper(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+  private PriorityActionWrapper(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
     super(element);
     this.fix = fix;
   }
 
   @Override
-  public void invoke(@Nonnull Project project,
-                     @Nonnull PsiFile file,
+  public void invoke(Project project,
+                     PsiFile file,
                      @Nullable Editor editor,
-                     @Nonnull PsiElement startElement,
-                     @Nonnull PsiElement endElement) {
+                     PsiElement startElement,
+                     PsiElement endElement) {
     fix.invoke(project, file, editor, startElement, endElement);
   }
 
@@ -47,43 +46,43 @@ public abstract class PriorityActionWrapper extends LocalQuickFixAndIntentionAct
     return fix.startInWriteAction();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return fix.getName();
   }
 
   private static class HighPriorityLocalQuickFixWrapper extends PriorityActionWrapper implements HighPriorityAction {
-    protected HighPriorityLocalQuickFixWrapper(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+    protected HighPriorityLocalQuickFixWrapper(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
       super(element, fix);
     }
   }
 
   private static class NormalPriorityLocalQuickFixWrapper extends PriorityActionWrapper {
-    protected NormalPriorityLocalQuickFixWrapper(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+    protected NormalPriorityLocalQuickFixWrapper(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
       super(element, fix);
     }
   }
 
 
   private static class LowPriorityLocalQuickFixWrapper extends PriorityActionWrapper implements LowPriorityAction {
-    protected LowPriorityLocalQuickFixWrapper(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+    protected LowPriorityLocalQuickFixWrapper(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
       super(element, fix);
     }
   }
 
-  @Nonnull
-  public static LocalQuickFixAndIntentionActionOnPsiElement highPriority(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+  
+  public static LocalQuickFixAndIntentionActionOnPsiElement highPriority(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
     return new HighPriorityLocalQuickFixWrapper(element, fix);
   }
 
-  @Nonnull
-  public static LocalQuickFixAndIntentionActionOnPsiElement normalPriority(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+  
+  public static LocalQuickFixAndIntentionActionOnPsiElement normalPriority(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
     return new NormalPriorityLocalQuickFixWrapper(element, fix);
   }
 
-  @Nonnull
-  public static LocalQuickFixAndIntentionActionOnPsiElement lowPriority(PsiElement element, @Nonnull LocalQuickFixAndIntentionActionOnPsiElement fix) {
+  
+  public static LocalQuickFixAndIntentionActionOnPsiElement lowPriority(PsiElement element, LocalQuickFixAndIntentionActionOnPsiElement fix) {
     return new LowPriorityLocalQuickFixWrapper(element, fix);
   }
 }

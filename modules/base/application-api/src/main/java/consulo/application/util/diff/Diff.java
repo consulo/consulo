@@ -7,8 +7,7 @@ import consulo.application.util.LineTokenizer;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,22 +20,22 @@ public final class Diff {
 
     private static final Logger LOG = Logger.getInstance(Diff.class);
 
-    public static @Nullable Change buildChanges(@Nonnull CharSequence before, @Nonnull CharSequence after) throws FilesTooBigForDiffException {
+    public static @Nullable Change buildChanges(CharSequence before, CharSequence after) throws FilesTooBigForDiffException {
         return buildChanges(splitLines(before), splitLines(after));
     }
 
-    @Nonnull
-    public static String[] splitLines(@Nonnull CharSequence s) {
+    
+    public static String[] splitLines(CharSequence s) {
         return s.length() == 0 ? new String[]{""} : LineTokenizer.tokenize(s, false, false);
     }
 
-    public static @Nullable <T> Change buildChanges(@Nonnull T[] objects1, @Nonnull T[] objects2) throws FilesTooBigForDiffException {
+    public static @Nullable <T> Change buildChanges(T[] objects1, T[] objects2) throws FilesTooBigForDiffException {
         return buildChanges(objects1, objects2, HashingStrategy.canonical());
     }
 
-    public static @Nullable <T> Change buildChanges(@Nonnull T[] objects1,
-                                                    @Nonnull T[] objects2,
-                                                    @Nonnull HashingStrategy<? super T> strategy) throws FilesTooBigForDiffException {
+    public static @Nullable <T> Change buildChanges(T[] objects1,
+                                                    T[] objects2,
+                                                    HashingStrategy<? super T> strategy) throws FilesTooBigForDiffException {
         int startShift = getStartShift(objects1, objects2, strategy);
         int endCut = getEndCut(objects1, objects2, startShift, strategy);
 
@@ -52,7 +51,7 @@ public final class Diff {
         return doBuildChanges(ints1, ints2, new ChangeBuilder(startShift));
     }
 
-    public static @Nullable Change buildChanges(@Nonnull int[] array1, @Nonnull int[] array2) throws FilesTooBigForDiffException {
+    public static @Nullable Change buildChanges(int[] array1, int[] array2) throws FilesTooBigForDiffException {
         int startShift = getStartShift(array1, array2);
         int endCut = getEndCut(array1, array2, startShift);
 
@@ -79,7 +78,7 @@ public final class Diff {
         return new Ref<>(change);
     }
 
-    private static Change doBuildChanges(@Nonnull int[] ints1, @Nonnull int[] ints2, @Nonnull ChangeBuilder builder)
+    private static Change doBuildChanges(int[] ints1, int[] ints2, ChangeBuilder builder)
         throws FilesTooBigForDiffException {
         Reindexer reindexer = new Reindexer(); // discard unique elements, that have no chance to be matched
         int[][] discarded = reindexer.discardUnique(ints1, ints2);
@@ -114,7 +113,7 @@ public final class Diff {
         return builder.getFirstChange();
     }
 
-    private static <T> int getStartShift(@Nonnull T[] o1, @Nonnull T[] o2, @Nonnull HashingStrategy<? super T> strategy) {
+    private static <T> int getStartShift(T[] o1, T[] o2, HashingStrategy<? super T> strategy) {
         int size = Math.min(o1.length, o2.length);
         int idx = 0;
         for (int i = 0; i < size; i++) {
@@ -126,7 +125,7 @@ public final class Diff {
         return idx;
     }
 
-    private static <T> int getEndCut(@Nonnull T[] o1, @Nonnull T[] o2, int startShift, @Nonnull HashingStrategy<? super T> strategy) {
+    private static <T> int getEndCut(T[] o1, T[] o2, int startShift, HashingStrategy<? super T> strategy) {
         int size = Math.min(o1.length, o2.length) - startShift;
         int idx = 0;
 
@@ -139,7 +138,7 @@ public final class Diff {
         return idx;
     }
 
-    private static int getStartShift(@Nonnull int[] o1, @Nonnull int[] o2) {
+    private static int getStartShift(int[] o1, int[] o2) {
         int size = Math.min(o1.length, o2.length);
         int idx = 0;
         for (int i = 0; i < size; i++) {
@@ -151,7 +150,7 @@ public final class Diff {
         return idx;
     }
 
-    private static int getEndCut(@Nonnull int[] o1, @Nonnull int[] o2, int startShift) {
+    private static int getEndCut(int[] o1, int[] o2, int startShift) {
         int size = Math.min(o1.length, o2.length) - startShift;
         int idx = 0;
 
@@ -164,7 +163,7 @@ public final class Diff {
         return idx;
     }
 
-    public static int translateLine(@Nonnull CharSequence before, @Nonnull CharSequence after, int line, boolean approximate)
+    public static int translateLine(CharSequence before, CharSequence after, int line, boolean approximate)
         throws FilesTooBigForDiffException {
         String[] strings1 = LineTokenizer.tokenize(before, false);
         String[] strings2 = LineTokenizer.tokenize(after, false);
@@ -176,8 +175,8 @@ public final class Diff {
         return translateLine(change, line, approximate);
     }
 
-    @Nonnull
-    private static String[] trim(@Nonnull String[] lines) {
+    
+    private static String[] trim(String[] lines) {
         String[] result = new String[lines.length];
         for (int i = 0; i < lines.length; i++) {
             result[i] = lines[i].trim();
@@ -313,8 +312,8 @@ public final class Diff {
     }
 
     public static @Nullable CharSequence linesDiff(
-        @Nonnull CharSequence[] lines1,
-        @Nonnull CharSequence[] lines2
+        CharSequence[] lines1,
+        CharSequence[] lines2
     ) throws FilesTooBigForDiffException {
         Change ch = buildChanges(lines1, lines2);
         if (ch == null) {

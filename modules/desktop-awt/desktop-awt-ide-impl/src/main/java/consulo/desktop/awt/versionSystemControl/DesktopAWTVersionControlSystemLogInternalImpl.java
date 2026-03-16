@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.popup.Balloon;
 import consulo.versionControlSystem.log.internal.VersionControlSystemLogInternal;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -37,7 +36,7 @@ import java.awt.event.MouseEvent;
 @Singleton
 public class DesktopAWTVersionControlSystemLogInternalImpl implements VersionControlSystemLogInternal {
     @Override
-    public void showToolTip(@Nonnull JTable table, @Nonnull String text, @Nonnull MouseEvent e) {
+    public void showToolTip(JTable table, String text, MouseEvent e) {
         // standard tooltip does not allow to customize its location, and locating tooltip above can obscure some important info
         Point point = new Point(e.getX() + 5, e.getY());
 
@@ -47,14 +46,14 @@ public class DesktopAWTVersionControlSystemLogInternalImpl implements VersionCon
     }
 
     @Override
-    public void showToolTip(@Nonnull JTable myTable, Point point, JComponent tipComponent, boolean now) {
+    public void showToolTip(JTable myTable, Point point, JComponent tipComponent, boolean now) {
         IdeTooltip tooltip =
             new IdeTooltip(myTable, point, new Wrapper(tipComponent)).setPreferredPosition(Balloon.Position.below);
         IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, now);
     }
 
     @Override
-    public void hideToolTip(@Nonnull MouseEvent e) {
+    public void hideToolTip(MouseEvent e) {
         if (IdeTooltipManagerImpl.getInstanceImpl().hasCurrent()) {
             IdeTooltipManagerImpl.getInstanceImpl().hideCurrent(e);
         }

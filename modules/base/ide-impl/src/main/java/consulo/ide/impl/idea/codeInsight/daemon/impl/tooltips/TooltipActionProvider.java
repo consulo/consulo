@@ -13,8 +13,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 /**
@@ -30,11 +29,11 @@ public interface TooltipActionProvider {
   boolean SHOW_FIXES_DEFAULT_VALUE = true;
 
   @Nullable
-  TooltipAction getTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor, @Nonnull PsiFile psiFile);
+  TooltipAction getTooltipAction(HighlightInfo info, Editor editor, PsiFile psiFile);
 
 
   @Nullable
-  static TooltipAction calcTooltipAction(@Nonnull HighlightInfo info, @Nonnull Editor editor) {
+  static TooltipAction calcTooltipAction(HighlightInfo info, Editor editor) {
     if (!Registry.is("ide.tooltip.show.with.actions")) return null;
 
     Project project = editor.getProject();

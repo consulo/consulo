@@ -17,10 +17,9 @@ package consulo.fileEditor.impl.internal.search;
 
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.ShortcutSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ContextAwareShortcutProvider {
   @Nullable
-  ShortcutSet getShortcut(@Nonnull DataContext context);
+  ShortcutSet getShortcut(DataContext context);
 }

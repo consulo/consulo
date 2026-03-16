@@ -7,8 +7,7 @@ import consulo.logging.Logger;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,11 +41,11 @@ public class SafeFileOutputStreamImpl extends SafeOutputStream {
     private final BufferExposingByteArrayOutputStream myBuffer;
     private boolean myClosed = false;
 
-    public SafeFileOutputStreamImpl(@Nonnull ApplicationConcurrency concurrency, @Nonnull Path target) {
+    public SafeFileOutputStreamImpl(ApplicationConcurrency concurrency, Path target) {
         this(concurrency, target, DEFAULT_BACKUP_EXT);
     }
 
-    public SafeFileOutputStreamImpl(@Nonnull ApplicationConcurrency concurrency, @Nonnull Path target, @Nonnull String backupExt) {
+    public SafeFileOutputStreamImpl(ApplicationConcurrency concurrency, Path target, String backupExt) {
         myTarget = target;
         myBackupName = myTarget.getFileName() + backupExt;
         myBackupFuture = !Files.exists(target) ? null : concurrency.getExecutorService().submit(() -> {

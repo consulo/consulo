@@ -17,7 +17,6 @@ package consulo.project.ui.view.tree;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 /**
  * This interface is intended to provide file nesting rules,
@@ -40,9 +39,9 @@ public interface ProjectViewNestingRulesProvider {
      *
      * @param consumer a consumer which maps extensions of a parent file and its child
      */
-    void addFileNestingRules(@Nonnull Consumer consumer);
+    void addFileNestingRules(Consumer consumer);
 
     interface Consumer {
-        void addNestingRule(@Nonnull String parentFileSuffix, @Nonnull String childFileSuffix);
+        void addNestingRule(String parentFileSuffix, String childFileSuffix);
     }
 }

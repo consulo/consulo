@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public class MarkFileDirtyAction extends AnAction implements DumbAware {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     VirtualFile file = e.getData(VirtualFile.KEY);
     if (file != null) {
       Project project = e.getRequiredData(Project.KEY);

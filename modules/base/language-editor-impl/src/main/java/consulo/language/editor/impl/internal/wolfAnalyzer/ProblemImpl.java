@@ -19,8 +19,6 @@ package consulo.language.editor.impl.internal.wolfAnalyzer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.wolfAnalyzer.Problem;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -30,7 +28,7 @@ public class ProblemImpl implements Problem {
   private final HighlightInfoImpl highlightInfo;
   private final boolean isSyntax;
 
-  public ProblemImpl(@Nonnull VirtualFile virtualFile, @Nonnull HighlightInfoImpl highlightInfo, boolean isSyntax) {
+  public ProblemImpl(VirtualFile virtualFile, HighlightInfoImpl highlightInfo, boolean isSyntax) {
     this.isSyntax = isSyntax;
     this.virtualFile = virtualFile;
     this.highlightInfo = highlightInfo;
@@ -66,7 +64,7 @@ public class ProblemImpl implements Problem {
     return result;
   }
 
-  @NonNls
+  
   public String toString() {
     return "Problem: " + highlightInfo;
   }

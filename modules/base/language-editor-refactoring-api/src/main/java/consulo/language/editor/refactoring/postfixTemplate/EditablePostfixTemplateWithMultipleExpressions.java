@@ -5,7 +5,6 @@ import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.template.Template;
 import consulo.language.editor.template.TemplateBuilderFactory;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -23,56 +22,56 @@ import java.util.function.Predicate;
 public abstract class EditablePostfixTemplateWithMultipleExpressions<ConditionType extends PostfixTemplateExpressionCondition>
   extends EditablePostfixTemplate {
 
-  @Nonnull
+  
   protected final Set<? extends ConditionType> myExpressionConditions;
   protected final boolean myUseTopmostExpression;
 
-  protected EditablePostfixTemplateWithMultipleExpressions(@Nonnull String templateId,
-                                                           @Nonnull String templateName,
-                                                           @Nonnull Template liveTemplate,
-                                                           @Nonnull String example,
-                                                           @Nonnull Set<? extends ConditionType> expressionConditions,
+  protected EditablePostfixTemplateWithMultipleExpressions(String templateId,
+                                                           String templateName,
+                                                           Template liveTemplate,
+                                                           String example,
+                                                           Set<? extends ConditionType> expressionConditions,
                                                            boolean useTopmostExpression,
-                                                           @Nonnull PostfixTemplateProvider provider) {
+                                                           PostfixTemplateProvider provider) {
     super(templateId, templateName, liveTemplate, example, provider);
     myExpressionConditions = expressionConditions;
     myUseTopmostExpression = useTopmostExpression;
   }
 
-  protected EditablePostfixTemplateWithMultipleExpressions(@Nonnull String templateId,
-                                                           @Nonnull String templateName,
-                                                           @Nonnull String templateKey,
-                                                           @Nonnull Template liveTemplate,
-                                                           @Nonnull String example,
-                                                           @Nonnull Set<? extends ConditionType> expressionConditions,
+  protected EditablePostfixTemplateWithMultipleExpressions(String templateId,
+                                                           String templateName,
+                                                           String templateKey,
+                                                           Template liveTemplate,
+                                                           String example,
+                                                           Set<? extends ConditionType> expressionConditions,
                                                            boolean useTopmostExpression,
-                                                           @Nonnull PostfixTemplateProvider provider) {
+                                                           PostfixTemplateProvider provider) {
     super(templateId, templateName, templateKey, liveTemplate, example, provider);
     myExpressionConditions = expressionConditions;
     myUseTopmostExpression = useTopmostExpression;
   }
 
-  @Nonnull
-  protected static Template createTemplate(@Nonnull String templateText) {
+  
+  protected static Template createTemplate(String templateText) {
     Template template = TemplateBuilderFactory.getInstance().createRawTemplate("fakeKey", templateText, "");
     template.setToReformat(true);
     template.parseSegments();
     return template;
   }
 
-  @Nonnull
+  
   @Override
-  protected PsiElement getElementToRemove(@Nonnull PsiElement element) {
+  protected PsiElement getElementToRemove(PsiElement element) {
     if (myUseTopmostExpression) {
       return getTopmostExpression(element);
     }
     return element;
   }
 
-  @Nonnull
-  protected abstract PsiElement getTopmostExpression(@Nonnull PsiElement element);
+  
+  protected abstract PsiElement getTopmostExpression(PsiElement element);
 
-  @Nonnull
+  
   public Set<? extends ConditionType> getExpressionConditions() {
     return Collections.unmodifiableSet(myExpressionConditions);
   }
@@ -91,7 +90,7 @@ public abstract class EditablePostfixTemplateWithMultipleExpressions<ConditionTy
       Objects.equals(myExpressionConditions, that.myExpressionConditions);
   }
 
-  @Nonnull
+  
   protected Predicate<PsiElement> getExpressionCompositeCondition() {
     return e -> {
       for (ConditionType condition : myExpressionConditions) {

@@ -18,7 +18,6 @@ package consulo.ui.layout;
 import consulo.ui.Component;
 import consulo.ui.HasComponentStyle;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -27,8 +26,7 @@ import java.util.function.Consumer;
  * @since 09-Jun-16
  */
 public interface Layout<C extends LayoutConstraint> extends Component, HasComponentStyle<LayoutStyle> {
-    @Nonnull
-    default Layout<C> add(@Nonnull Component component, @Nonnull C constraint) {
+    default Layout<C> add(Component component, C constraint) {
         throw new UnsupportedOperationException("Adding not supported");
     }
 
@@ -37,7 +35,7 @@ public interface Layout<C extends LayoutConstraint> extends Component, HasCompon
         throw new AbstractMethodError(getClass().getName());
     }
 
-    default void remove(@Nonnull Component component) {
+    default void remove(Component component) {
         throw new AbstractMethodError(getClass().getName());
     }
 
@@ -49,7 +47,7 @@ public interface Layout<C extends LayoutConstraint> extends Component, HasCompon
         forEachChild(component -> component.setEnabledRecursive(value));
     }
 
-    default void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+    default void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         throw new AbstractMethodError(getClass().getName());
     }
 }

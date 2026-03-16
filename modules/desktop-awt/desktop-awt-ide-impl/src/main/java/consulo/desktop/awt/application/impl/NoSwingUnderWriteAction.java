@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.event.ApplicationListener;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -40,7 +39,7 @@ class NoSwingUnderWriteAction {
 
     application.addApplicationListener(new ApplicationListener() {
       @Override
-      public void afterWriteActionFinished(@Nonnull Object action) {
+      public void afterWriteActionFinished(Object action) {
         reported.set(false);
       }
     });

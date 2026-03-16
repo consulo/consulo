@@ -22,8 +22,7 @@ import consulo.module.content.layer.Synthetic;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents an entry in the classpath of a module (as shown in the "Order/Export" page
@@ -41,7 +40,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * Return provider of ths order entry
    * @return provider
    */
-  @Nonnull
+  
   OrderEntryType<?> getType();
 
   /**
@@ -56,7 +55,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @return list of virtual files.
    * @see #getUrls(OrderRootType)
    */
-  @Nonnull
+  
   VirtualFile[] getFiles(OrderRootType type);
 
   /**
@@ -68,7 +67,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    * @param rootType the type of roots which should be returned.
    * @return the list of roots of the specified type.
    */
-  @Nonnull
+  
   String[] getUrls(OrderRootType rootType);
 
   /**
@@ -76,7 +75,7 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    *
    * @return name of this OrderEntry to be shown to user.
    */
-  @Nonnull
+  
   String getPresentableName();
 
   /**
@@ -92,13 +91,13 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    *
    * @return the module instance.
    */
-  @Nonnull
+  
   Module getOwnerModule();
 
   /**
    * Return owner module root layer
    */
-  @Nonnull
+  
   ModuleRootLayer getModuleRootLayer();
 
   /**
@@ -110,5 +109,5 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    */
   <R> R accept(RootPolicy<R> policy, @Nullable R initialValue);
 
-  boolean isEquivalentTo(@Nonnull OrderEntry other);
+  boolean isEquivalentTo(OrderEntry other);
 }

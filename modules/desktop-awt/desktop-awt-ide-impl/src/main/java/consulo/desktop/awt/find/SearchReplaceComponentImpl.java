@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -75,9 +74,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private final UiDataProvider myDataProviderDelegate;
 
     private boolean myMultilineMode;
-    @Nonnull
     private String myStatusText = "";
-    @Nonnull
     private Color myStatusColor = UIUtil.getLabelForeground();
 
     private final List<AnAction> mySearchSuffixActions = new ArrayList<>();
@@ -86,14 +83,14 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     @RequiredUIAccess
     SearchReplaceComponentImpl(
         @Nullable Project project,
-        @Nonnull JComponent targetComponent,
-        @Nonnull DefaultActionGroup searchToolbar1Actions,
-        @Nonnull BooleanSupplier searchToolbar1ModifiedFlagGetter,
-        @Nonnull DefaultActionGroup searchToolbar2Actions,
-        @Nonnull DefaultActionGroup searchFieldActions,
-        @Nonnull DefaultActionGroup replaceToolbar1Actions,
-        @Nonnull DefaultActionGroup replaceToolbar2Actions,
-        @Nonnull DefaultActionGroup replaceFieldActions,
+        JComponent targetComponent,
+        DefaultActionGroup searchToolbar1Actions,
+        BooleanSupplier searchToolbar1ModifiedFlagGetter,
+        DefaultActionGroup searchToolbar2Actions,
+        DefaultActionGroup searchFieldActions,
+        DefaultActionGroup replaceToolbar1Actions,
+        DefaultActionGroup replaceToolbar2Actions,
+        DefaultActionGroup replaceFieldActions,
         @Nullable Runnable replaceAction,
         @Nullable Runnable closeAction,
         @Nullable UiDataProvider dataProvider
@@ -195,7 +192,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         new DumbAwareAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Component focusOwner = ProjectIdeFocusManager.getInstance(myProject).getFocusOwner();
                 if (UIUtil.isAncestor(SearchReplaceComponentImpl.this, focusOwner)) {
                     focusOwner.transferFocus();
@@ -205,7 +202,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         new DumbAwareAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Component focusOwner = ProjectIdeFocusManager.getInstance(myProject).getFocusOwner();
                 if (UIUtil.isAncestor(SearchReplaceComponentImpl.this, focusOwner)) {
                     focusOwner.transferFocusBackward();
@@ -247,18 +244,16 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    public void setStatusText(@Nonnull String status) {
+    public void setStatusText(String status) {
         myStatusText = status;
     }
 
     @Override
-    @Nonnull
     public String getStatusText() {
         return myStatusText;
     }
 
     @Override
-    @Nonnull
     public Color getStatusColor() {
         return myStatusColor;
     }
@@ -288,7 +283,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY, mySearchTextComponent.getText());
         if (myDataProviderDelegate != null) {
             sink.uiDataSnapshot(myDataProviderDelegate);
@@ -326,7 +321,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @Override
-    public void addListener(@Nonnull Listener listener) {
+    public void addListener(Listener listener) {
         myEventDispatcher.addListener(listener);
     }
 
@@ -343,19 +338,17 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-    @Nonnull
     @Override
     public JTextComponent getSearchTextComponent() {
         return mySearchTextComponent;
     }
 
-    @Nonnull
     public JTextComponent getReplaceTextComponent() {
         return myReplaceTextComponent;
     }
 
     @RequiredUIAccess
-    private void updateSearchComponent(@Nonnull String textToSet) {
+    private void updateSearchComponent(String textToSet) {
         if (!updateTextComponent(true)) {
             replaceTextInTextComponentEnsuringSelection(textToSet, mySearchTextComponent);
             return;
@@ -363,7 +356,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
         mySearchTextComponent.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(@Nonnull DocumentEvent e) {
+            protected void textChanged(DocumentEvent e) {
                 Application.get().invokeLater(() -> myEventDispatcher.getMulticaster().searchFieldDocumentChanged());
             }
         });
@@ -393,7 +386,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         new VariantsCompletionAction(mySearchTextComponent); // It registers a shortcut set automatically on construction
     }
 
-    private static void replaceTextInTextComponentEnsuringSelection(@Nonnull String textToSet, JTextComponent component) {
+    private static void replaceTextInTextComponentEnsuringSelection(String textToSet, JTextComponent component) {
         String existingText = component.getText();
         if (!existingText.equals(textToSet)) {
             component.setText(textToSet);
@@ -404,7 +397,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-    private void updateReplaceComponent(@Nonnull String textToSet) {
+    private void updateReplaceComponent(String textToSet) {
         if (!updateTextComponent(false)) {
             replaceTextInTextComponentEnsuringSelection(textToSet, myReplaceTextComponent);
             return;
@@ -413,7 +406,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
         myReplaceTextComponent.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
-            protected void textChanged(@Nonnull DocumentEvent e) {
+            protected void textChanged(DocumentEvent e) {
                 Application.get().invokeLater(() -> myEventDispatcher.getMulticaster().replaceFieldDocumentChanged());
             }
         });
@@ -429,7 +422,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull String findText, @Nonnull String replaceText, boolean replaceMode, boolean multiline) {
+    public void update(String findText, String replaceText, boolean replaceMode, boolean multiline) {
         setMultilineInternal(multiline);
         boolean needToResetSearchFocus = mySearchTextComponent != null && mySearchTextComponent.hasFocus();
         boolean needToResetReplaceFocus = myReplaceTextComponent != null && myReplaceTextComponent.hasFocus();
@@ -469,12 +462,12 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         }
     }
 
-    public void addTextToRecent(@Nonnull JTextComponent textField) {
+    public void addTextToRecent(JTextComponent textField) {
         addTextToRecent(textField.getText(), textField == mySearchTextComponent);
     }
 
     @Override
-    public void addTextToRecent(@Nonnull String text, boolean search) {
+    public void addTextToRecent(String text, boolean search) {
         if (text.length() > 0) {
             FindInProjectSettings findInProjectSettings = FindInProjectSettings.getInstance(myProject);
             if (search) {
@@ -505,7 +498,6 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
     @RequiredUIAccess
-    @Nonnull
     @Override
     public CompletableFuture<?> prepareAsync() {
         return CompletableFuture.allOf(
@@ -566,7 +558,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         new CloseAction() {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 close();
             }
         }.registerCustomShortcutSet(KeymapUtil.getActiveKeymapShortcuts(IdeActions.ACTION_EDITOR_ESCAPE), textArea);
@@ -576,7 +568,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     private abstract static class CloseAction extends DumbAwareAction {
     }
 
-    private void installReplaceOnEnterAction(@Nonnull JTextComponent c) {
+    private void installReplaceOnEnterAction(JTextComponent c) {
         ActionListener action = e -> replace();
         c.registerKeyboardAction(action, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
     }
@@ -589,15 +581,15 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         updateBindings(myReplaceActionsToolbar, myReplaceToolbarWrapper);
     }
 
-    private void updateBindings(@Nonnull DefaultActionGroup group, @Nonnull JComponent shortcutHolder) {
+    private void updateBindings(DefaultActionGroup group, JComponent shortcutHolder) {
         updateBindings(List.of(group.getChildActionsOrStubs()), shortcutHolder);
     }
 
-    private void updateBindings(@Nonnull ActionToolbar toolbar, @Nonnull JComponent shortcutHolder) {
+    private void updateBindings(ActionToolbar toolbar, JComponent shortcutHolder) {
         updateBindings(toolbar.getActions(), shortcutHolder);
     }
 
-    private void updateBindings(@Nonnull List<? extends AnAction> actions, @Nonnull JComponent shortcutHolder) {
+    private void updateBindings(List<? extends AnAction> actions, JComponent shortcutHolder) {
         DataContext context = DataManager.getInstance().getDataContext(this);
         for (AnAction action : actions) {
             ShortcutSet shortcut = null;
@@ -614,8 +606,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
     }
 
 
-    @Nonnull
-    private ActionToolbar createSearchToolbar1(@Nonnull DefaultActionGroup group) {
+    private ActionToolbar createSearchToolbar1(DefaultActionGroup group) {
         ActionGroup.Builder toolbarGroup = ActionGroup.newImmutableBuilder();
 
         ContextFilterActionGroup contextGroup = new ContextFilterActionGroup();
@@ -636,14 +627,12 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
         return toolbar;
     }
 
-    @Nonnull
-    private ActionToolbar createReplaceToolbar1(@Nonnull DefaultActionGroup group) {
+    private ActionToolbar createReplaceToolbar1(DefaultActionGroup group) {
         ActionToolbar toolbar = createToolbar(group);
         return toolbar;
     }
 
-    @Nonnull
-    private ActionToolbar createToolbar(@Nonnull ActionGroup group) {
+    private ActionToolbar createToolbar(ActionGroup group) {
         ActionToolbar toolbar = ActionToolbarFactory.getInstance().createActionToolbar(
             ActionPlaces.EDITOR_TOOLBAR,
             group,
@@ -673,8 +662,7 @@ public class SearchReplaceComponentImpl extends EditorHeaderComponent implements
             return CompletableFuture.completedFuture(null);
         }
 
-        @Nonnull
-        protected static JTextComponent unwrapTextComponent(@Nonnull JComponent wrapped) {
+        protected static JTextComponent unwrapTextComponent(JComponent wrapped) {
             if (wrapped instanceof SearchTextField searchTextField) {
                 return searchTextField.getTextEditor();
             }

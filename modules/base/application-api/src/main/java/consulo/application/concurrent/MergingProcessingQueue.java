@@ -18,7 +18,6 @@ package consulo.application.concurrent;
 import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,9 +86,9 @@ public abstract class MergingProcessingQueue<K, V, P extends ComponentManager> {
         myUpdateFuture.cancel(false);
     }
 
-    protected abstract UIAccess getUIAccess(@Nonnull P project);
+    protected abstract UIAccess getUIAccess(P project);
 
-    protected abstract void calculateValue(@Nonnull P project, @Nonnull K key, @Nonnull Consumer<V> consumer);
+    protected abstract void calculateValue(P project, K key, Consumer<V> consumer);
 
-    protected abstract void updateValueInsideUI(@Nonnull P project, @Nonnull K key, @Nonnull V value);
+    protected abstract void updateValueInsideUI(P project, K key, V value);
 }

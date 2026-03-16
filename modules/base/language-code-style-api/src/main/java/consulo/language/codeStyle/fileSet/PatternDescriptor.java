@@ -6,8 +6,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.regex.Pattern;
 
 /**
@@ -47,12 +46,12 @@ public class PatternDescriptor implements FileSetDescriptor {
   Pattern myFileNamePattern;
   private final static String FORBIDDEN_CHARS = "<>:\"\\;";
 
-  public PatternDescriptor(@Nonnull String pattern) {
+  public PatternDescriptor(String pattern) {
     myRawPattern = pattern;
     compileSpec(myRawPattern);
   }
 
-  private void compileSpec(@Nonnull String spec) {
+  private void compileSpec(String spec) {
     String pathSpec = "";
     String fileSpec;
     int lastSlashPos = spec.lastIndexOf('/');
@@ -74,7 +73,7 @@ public class PatternDescriptor implements FileSetDescriptor {
     }
   }
 
-  private static String specToRegexp(@Nonnull String spec, boolean isPathSpec) {
+  private static String specToRegexp(String spec, boolean isPathSpec) {
     StringBuilder sb = new StringBuilder();
     char[] chars = spec.toCharArray();
     int i = 0;
@@ -114,7 +113,7 @@ public class PatternDescriptor implements FileSetDescriptor {
     return "^${}[]().*+-&".indexOf(c) >= 0;
   }
 
-  public boolean matches(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+  public boolean matches(Project project, VirtualFile virtualFile) {
     if (myFileNamePattern == null && myPathPattern == null) return false; // Empty spec matches nothing
     String name = virtualFile.getName();
     VirtualFile parent = virtualFile.getParent();
@@ -123,7 +122,7 @@ public class PatternDescriptor implements FileSetDescriptor {
   }
 
   @Override
-  public boolean matches(@Nonnull PsiFile psiFile) {
+  public boolean matches(PsiFile psiFile) {
     if (psiFile.isValid()) {
       VirtualFile virtualFile = psiFile.getVirtualFile();
       if (virtualFile != null) {
@@ -133,8 +132,8 @@ public class PatternDescriptor implements FileSetDescriptor {
     return false;
   }
 
-  @Nonnull
-  private static String getRelativePath(@Nonnull Project project, @Nullable VirtualFile parent) {
+  
+  private static String getRelativePath(Project project, @Nullable VirtualFile parent) {
     VirtualFile projectDir = project.getBaseDir();
     String projectPath = projectDir.getPath();
     if (parent != null) {
@@ -149,7 +148,7 @@ public class PatternDescriptor implements FileSetDescriptor {
     return "";
   }
 
-  private static boolean patternMatches(@Nullable Pattern pattern, @Nonnull String str) {
+  private static boolean patternMatches(@Nullable Pattern pattern, String str) {
     return pattern == null || pattern.matcher(str).matches();
   }
 
@@ -176,14 +175,14 @@ public class PatternDescriptor implements FileSetDescriptor {
     return obj instanceof PatternDescriptor && Comparing.equal(myRawPattern, ((PatternDescriptor)obj).getPattern());
   }
 
-  public static boolean isValidPattern(@Nonnull String pattern) {
+  public static boolean isValidPattern(String pattern) {
     for (int i = 0; i < pattern.length(); i++) {
       if (FORBIDDEN_CHARS.indexOf(pattern.charAt(i)) >= 0) return false;
     }
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public String getType() {
     return PATTERN_TYPE;

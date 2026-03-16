@@ -24,7 +24,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionEventVisitor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -115,18 +114,18 @@ public class KeyboardGestureProcessor {
   }
 
   private class MyActionProcessor implements ActionProcessor {
-    @Nonnull
-    public AnActionEvent createEvent(InputEvent inputEvent, @Nonnull DataContext context, @Nonnull String place, @Nonnull Presentation presentation,
+    
+    public AnActionEvent createEvent(InputEvent inputEvent, DataContext context, String place, Presentation presentation,
                                      ActionManager manager) {
       myContext.actionPresentation = presentation;
       myContext.actionPlace = place;
       return myState.createActionEvent();
     }
 
-    public void onUpdatePassed(InputEvent inputEvent, @Nonnull AnAction action, @Nonnull AnActionEvent actionEvent) {
+    public void onUpdatePassed(InputEvent inputEvent, AnAction action, AnActionEvent actionEvent) {
     }
 
-    public void performAction(final InputEvent e, @Nonnull final AnAction action, @Nonnull AnActionEvent actionEvent) {
+    public void performAction(final InputEvent e, final AnAction action, AnActionEvent actionEvent) {
       final boolean isGestureAction = action instanceof KeyboardGestureAction;
       actionEvent.accept(new AnActionEventVisitor() {
         @Override

@@ -32,7 +32,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.Set;
@@ -55,7 +54,7 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().putClientProperty(Toggleable.SELECTED_PROPERTY, !myInspectionsFilter.isEmptyFilter());
     }
@@ -100,12 +99,12 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myInspectionsFilter.reset();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(!myInspectionsFilter.isEmptyFilter());
         }
@@ -117,13 +116,13 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myInspectionsFilter.isShowOnlyCleanupInspections();
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myInspectionsFilter.setShowOnlyCleanupInspections(state);
         }
     }
@@ -134,13 +133,13 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myInspectionsFilter.isAvailableOnlyForAnalyze();
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myInspectionsFilter.setAvailableOnlyForAnalyze(state);
         }
     }
@@ -159,13 +158,13 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myInspectionsFilter.containsSeverity(mySeverity);
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             if (state) {
                 myInspectionsFilter.addSeverity(mySeverity);
             }
@@ -185,13 +184,13 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
 
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return Objects.equals(myInspectionsFilter.getSuitableInspectionsStates(), myShowEnabledActions);
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             boolean previousState = isSelected(e);
             myInspectionsFilter.setSuitableInspectionsStates(previousState ? null : myShowEnabledActions);
         }
@@ -206,13 +205,13 @@ public class InspectionFilterAction extends DefaultActionGroup implements Toggle
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myInspectionsFilter.containsLanguage(myLanguage);
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             if (state) {
                 myInspectionsFilter.addLanguage(myLanguage);
             }

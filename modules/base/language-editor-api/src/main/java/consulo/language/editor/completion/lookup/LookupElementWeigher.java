@@ -18,8 +18,7 @@ package consulo.language.editor.completion.lookup;
 import consulo.language.editor.completion.WeighingContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -53,12 +52,12 @@ public abstract class LookupElementWeigher {
   }
 
   @Nullable
-  public Comparable weigh(@Nonnull LookupElement element, @Nonnull WeighingContext context) {
+  public Comparable weigh(LookupElement element, WeighingContext context) {
     return weigh(element);
   }
 
   @Nullable
-  public Comparable weigh(@Nonnull LookupElement element) {
+  public Comparable weigh(LookupElement element) {
     throw new UnsupportedOperationException("weigh not implemented in " + getClass());
   }
 

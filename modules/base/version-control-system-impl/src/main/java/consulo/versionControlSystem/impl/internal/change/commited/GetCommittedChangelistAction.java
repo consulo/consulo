@@ -31,7 +31,6 @@ import consulo.versionControlSystem.impl.internal.update.ScopeInfo;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -48,7 +47,7 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext context) {
+    protected void actionPerformed(VcsContext context) {
         Collection<FilePath> filePaths = getFilePaths(context);
         List<ChangeList> selectedChangeLists = new ArrayList<>();
         ChangeList[] selectionFromContext = context.getSelectedChangeLists();
@@ -90,7 +89,7 @@ public class GetCommittedChangelistAction extends AbstractCommonUpdateAction {
     }
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         super.update(vcsContext, presentation);
         ChangeList[] changeLists = vcsContext.getSelectedChangeLists();
         presentation.setEnabled(presentation.isEnabled() &&

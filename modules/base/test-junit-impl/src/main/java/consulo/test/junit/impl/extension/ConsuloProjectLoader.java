@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.test.light.LightProjectBuilder;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
@@ -29,7 +28,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 public class ConsuloProjectLoader extends ConsuloApplicationLoader {
     @Override
-    protected void subInit(@Nonnull ExtensionContext.Store store) {
+    protected void subInit(ExtensionContext.Store store) {
         Application application = store.get(Application.class, Application.class);
 
         LightProjectBuilder projectBuilder = LightProjectBuilder.create(application);
@@ -40,17 +39,17 @@ public class ConsuloProjectLoader extends ConsuloApplicationLoader {
     }
 
     @Override
-    protected boolean isImpicitInject(@Nonnull Class<?> type) {
+    protected boolean isImpicitInject(Class<?> type) {
         return super.isImpicitInject(type) || type == Project.class;
     }
 
     @Override
-    protected boolean isExplicitInject(@Nonnull ComponentScope scope) {
+    protected boolean isExplicitInject(ComponentScope scope) {
         return super.isExplicitInject(scope) || scope == ComponentScope.PROJECT;
     }
 
     @Override
-    protected <T> Object getExplicitInject(@Nonnull ExtensionContext.Store store, @Nonnull ComponentScope scope, @Nonnull Class<?> type) {
+    protected <T> Object getExplicitInject(ExtensionContext.Store store, ComponentScope scope, Class<?> type) {
         if (scope == ComponentScope.PROJECT) {
             Project project = store.get(Project.class, Project.class);
             return project.getInstance(type);

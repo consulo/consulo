@@ -17,15 +17,14 @@
 package consulo.localHistory.impl.internal;
 
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public abstract class ChangeSetsProcessor {
-  @Nonnull
+  
   protected String myPath;
 
-  public ChangeSetsProcessor(@Nonnull String path) {
+  public ChangeSetsProcessor(String path) {
     myPath = path;
   }
 

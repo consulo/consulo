@@ -7,8 +7,7 @@ import consulo.build.ui.event.MessageEventResult;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -17,25 +16,25 @@ import java.util.Objects;
  */
 public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent {
 
-    @Nonnull
+    
     private final Kind myKind;
-    @Nonnull
+    
     private final NotificationGroup myGroup;
     @Nullable
     private final Navigatable myNavigatable;
 
-    public MessageEventImpl(@Nonnull Object parentId,
-                            @Nonnull Kind kind,
-                            @Nonnull NotificationGroup group,
-                            @Nonnull String message,
+    public MessageEventImpl(Object parentId,
+                            Kind kind,
+                            NotificationGroup group,
+                            String message,
                             @Nullable String detailedMessage) {
         this(parentId, kind, group, message, detailedMessage, null);
     }
 
-    public MessageEventImpl(@Nonnull Object parentId,
-                            @Nonnull Kind kind,
-                            @Nonnull NotificationGroup group,
-                            @Nonnull String message,
+    public MessageEventImpl(Object parentId,
+                            Kind kind,
+                            NotificationGroup group,
+                            String message,
                             @Nullable String detailedMessage,
                             @Nullable Navigatable navigatable) {
         super(new Object(), parentId, System.currentTimeMillis(), message);
@@ -50,13 +49,13 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
         super.setDescription(description);
     }
 
-    @Nonnull
+    
     @Override
     public Kind getKind() {
         return myKind;
     }
 
-    @Nonnull
+    
     @Override
     public NotificationGroup getGroup() {
         return myGroup;
@@ -64,7 +63,7 @@ public class MessageEventImpl extends AbstractBuildEvent implements MessageEvent
 
     @Nullable
     @Override
-    public Navigatable getNavigatable(@Nonnull Project project) {
+    public Navigatable getNavigatable(Project project) {
         return myNavigatable;
     }
 

@@ -23,8 +23,7 @@ import consulo.util.collection.SmartList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -81,7 +80,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     return (Value)myNullValue;
   }
 
-  private void resetFileSetForValue(Value value, @Nonnull Object fileSet) {
+  private void resetFileSetForValue(Value value, Object fileSet) {
     if (value == null) value = nullValue();
     Map<Value, Object> map = asMapping();
     if (map == null) {
@@ -163,7 +162,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     }
   }
 
-  @Nonnull
+  
   @Override
   public InvertedIndexValueIterator<Value> getValueIterator() {
     if (myInputIdMapping == null) {
@@ -175,13 +174,13 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
       return new InvertedIndexValueIterator<Value>() {
         private Value value = asValue();
 
-        @Nonnull
+        
         @Override
         public IntIterator getInputIdsIterator() {
           return getIntIteratorOutOfFileSetObject(getFileSetObject());
         }
 
-        @Nonnull
+        
         @Override
         public IntPredicate getValueAssociationPredicate() {
           return getPredicateOutOfFileSetObject(getFileSetObject());
@@ -227,13 +226,13 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
           return next;
         }
 
-        @Nonnull
+        
         @Override
         public IntIterator getInputIdsIterator() {
           return getIntIteratorOutOfFileSetObject(getFileSetObject());
         }
 
-        @Nonnull
+        
         @Override
         public IntPredicate getValueAssociationPredicate() {
           return getPredicateOutOfFileSetObject(getFileSetObject());
@@ -251,13 +250,13 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
   private static class EmptyValueIterator<Value> implements InvertedIndexValueIterator<Value> {
     private static final EmptyValueIterator<Object> INSTANCE = new EmptyValueIterator<>();
 
-    @Nonnull
+    
     @Override
     public IntIterator getInputIdsIterator() {
       throw new IllegalStateException();
     }
 
-    @Nonnull
+    
     @Override
     public IntPredicate getValueAssociationPredicate() {
       throw new IllegalStateException();
@@ -284,7 +283,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     }
   }
 
-  @Nonnull
+  
   private static IntPredicate getPredicateOutOfFileSetObject(@Nullable Object input) {
     if (input == null) return EMPTY_PREDICATE;
 
@@ -296,7 +295,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
     return ((ChangeBufferingList)input).intPredicate();
   }
 
-  @Nonnull
+  
   private static IntIterator getIntIteratorOutOfFileSetObject(@Nullable Object input) {
     if (input == null) return EMPTY_ITERATOR;
     if (input instanceof Integer) {
@@ -455,7 +454,7 @@ public class ValueContainerImpl<Value> extends CompactableUpdatableValueContaine
 
   public static final int NUMBER_OF_VALUES_THRESHOLD = 20;
 
-  public void readFrom(@Nonnull DataInputStream stream, @Nonnull DataExternalizer<? extends Value> externalizer, @Nonnull IntUnaryOperator inputRemapping) throws IOException {
+  public void readFrom(DataInputStream stream, DataExternalizer<? extends Value> externalizer, IntUnaryOperator inputRemapping) throws IOException {
     FileId2ValueMapping<Value> mapping = null;
 
     while (stream.available() > 0) {

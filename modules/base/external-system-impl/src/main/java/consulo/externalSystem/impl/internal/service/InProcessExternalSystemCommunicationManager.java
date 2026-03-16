@@ -24,8 +24,7 @@ import consulo.externalSystem.impl.internal.service.remote.wrapper.ExternalSyste
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -37,18 +36,18 @@ import jakarta.inject.Singleton;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InProcessExternalSystemCommunicationManager implements ExternalSystemCommunicationManager {
-  @Nonnull
+  
   private final ExternalSystemProgressNotificationManagerImpl myProgressManager;
 
   @Inject
-  public InProcessExternalSystemCommunicationManager(@Nonnull ExternalSystemProgressNotificationManager notificationManager) {
+  public InProcessExternalSystemCommunicationManager(ExternalSystemProgressNotificationManager notificationManager) {
     myProgressManager = (ExternalSystemProgressNotificationManagerImpl)notificationManager;
   }
 
   @SuppressWarnings("unchecked")
   @Nullable
   @Override
-  public RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
+  public RemoteExternalSystemFacade acquire(String id, ProjectSystemId externalSystemId) throws Exception {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
     assert manager != null;
     InProcessExternalSystemFacadeImpl result = new InProcessExternalSystemFacadeImpl(manager.getProjectResolverFactory(),
@@ -58,11 +57,11 @@ public class InProcessExternalSystemCommunicationManager implements ExternalSyst
   }
 
   @Override
-  public void release(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception {
+  public void release(String id, ProjectSystemId externalSystemId) throws Exception {
   }
 
   @Override
-  public boolean isAlive(@Nonnull RemoteExternalSystemFacade facade) {
+  public boolean isAlive(RemoteExternalSystemFacade facade) {
     RemoteExternalSystemFacade toCheck = facade;
     if (facade instanceof ExternalSystemFacadeWrapper) {
       toCheck = ((ExternalSystemFacadeWrapper)facade).getDelegate();

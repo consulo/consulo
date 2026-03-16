@@ -59,8 +59,7 @@ import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -87,9 +86,9 @@ public class BraceHighlightingHandler {
      */
     private static final Set<Editor> PROCESSED_EDITORS = Collections.newSetFromMap(Maps.newWeakHashMap());
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final Editor myEditor;
     private final Alarm myAlarm;
 
@@ -97,7 +96,7 @@ public class BraceHighlightingHandler {
     private final PsiFile myPsiFile;
     private final CodeInsightSettings myCodeInsightSettings;
 
-    private BraceHighlightingHandler(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Alarm alarm, PsiFile psiFile) {
+    private BraceHighlightingHandler(Project project, Editor editor, Alarm alarm, PsiFile psiFile) {
         myProject = project;
 
         myEditor = editor;
@@ -110,9 +109,9 @@ public class BraceHighlightingHandler {
 
     @RequiredUIAccess
     static void lookForInjectedAndMatchBracesInOtherThread(
-        @Nonnull Editor editor,
-        @Nonnull Alarm alarm,
-        @Nonnull Consumer<BraceHighlightingHandler> processor
+        Editor editor,
+        Alarm alarm,
+        Consumer<BraceHighlightingHandler> processor
     ) {
         UIAccess.assertIsUIThread();
         if (!isValidEditor(editor)) {
@@ -179,18 +178,18 @@ public class BraceHighlightingHandler {
         return file != null && file.isValid() && !file.getProject().isDisposed();
     }
 
-    public static boolean isValidEditor(@Nonnull Editor editor) {
+    public static boolean isValidEditor(Editor editor) {
         Project editorProject = editor.getProject();
         return editorProject != null && !editorProject.isDisposed() && !editor.isDisposed() && editor.isShowing() && !editor.isViewer();
     }
 
-    @Nonnull
+    
     private static PsiFile getInjectedFileIfAny(
-        @Nonnull Editor editor,
-        @Nonnull Project project,
+        Editor editor,
+        Project project,
         int offset,
-        @Nonnull PsiFile psiFile,
-        @Nonnull Alarm alarm
+        PsiFile psiFile,
+        Alarm alarm
     ) {
         Document document = editor.getDocument();
         // when document is committed, try to highlight braces in injected lang - it's fast
@@ -214,7 +213,7 @@ public class BraceHighlightingHandler {
         return psiFile;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     static EditorHighlighter getLazyParsableHighlighterIfAny(Project project, Editor editor, PsiFile psiFile) {
         if (!PsiDocumentManager.getInstance(project).isCommitted(editor.getDocument())) {
@@ -234,7 +233,7 @@ public class BraceHighlightingHandler {
             SyntaxHighlighter syntaxHighlighter =
                 SyntaxHighlighterFactory.getSyntaxHighlighter(language, project, psiFile.getVirtualFile());
             LexerEditorHighlighter highlighter = new LexerEditorHighlighter(syntaxHighlighter, editor.getColorsScheme()) {
-                @Nonnull
+                
                 @Override
                 public HighlighterIterator createIterator(int startOffset) {
                     return new HighlighterIteratorWrapper(super.createIterator(Math.max(startOffset - offset, 0))) {
@@ -382,24 +381,24 @@ public class BraceHighlightingHandler {
         );
     }
 
-    @Nonnull
-    private FileType getFileTypeByIterator(@Nonnull HighlighterIterator iterator) {
+    
+    private FileType getFileTypeByIterator(HighlighterIterator iterator) {
         return PsiUtilBase.getPsiFileAtOffset(myPsiFile, iterator.getStart()).getFileType();
     }
 
-    @Nonnull
+    
     private FileType getFileTypeByOffset(int offset) {
         return PsiUtilBase.getPsiFileAtOffset(myPsiFile, offset).getFileType();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private EditorHighlighter getEditorHighlighter() {
         return getLazyParsableHighlighterIfAny(myProject, myEditor, myPsiFile);
     }
 
     @RequiredUIAccess
-    private void highlightScope(int offset, @Nonnull FileType fileType) {
+    private void highlightScope(int offset, FileType fileType) {
         if (myEditor.getFoldingModel().isOffsetCollapsed(offset)) {
             return;
         }
@@ -429,7 +428,7 @@ public class BraceHighlightingHandler {
     }
 
     @RequiredUIAccess
-    private void doHighlight(int offset, int originalOffset, @Nonnull FileType fileType) {
+    private void doHighlight(int offset, int originalOffset, FileType fileType) {
         if (myEditor.getFoldingModel().isOffsetCollapsed(offset)) {
             return;
         }
@@ -464,7 +463,7 @@ public class BraceHighlightingHandler {
     }
 
     @RequiredUIAccess
-    private void highlightRightBrace(@Nonnull HighlighterIterator iterator, @Nonnull FileType fileType) {
+    private void highlightRightBrace(HighlighterIterator iterator, FileType fileType) {
         TextRange brace1 = TextRange.create(iterator.getStart(), iterator.getEnd());
 
         boolean matched = BraceMatchingUtil.matchBrace(myDocument.getCharsSequence(), fileType, iterator, false);
@@ -475,7 +474,7 @@ public class BraceHighlightingHandler {
     }
 
     @RequiredUIAccess
-    private void highlightLeftBrace(@Nonnull HighlighterIterator iterator, boolean scopeHighlighting, @Nonnull FileType fileType) {
+    private void highlightLeftBrace(HighlighterIterator iterator, boolean scopeHighlighting, FileType fileType) {
         TextRange brace1Start = TextRange.create(iterator.getStart(), iterator.getEnd());
         boolean matched = BraceMatchingUtil.matchBrace(myDocument.getCharsSequence(), fileType, iterator, true);
 
@@ -490,7 +489,7 @@ public class BraceHighlightingHandler {
         @Nullable TextRange rBrace,
         boolean matched,
         boolean scopeHighlighting,
-        @Nonnull FileType fileType
+        FileType fileType
     ) {
         if (!matched && fileType == PlainTextFileType.INSTANCE) {
             return;
@@ -553,7 +552,7 @@ public class BraceHighlightingHandler {
         }
     }
 
-    private void highlightBrace(@Nonnull TextRange braceRange, boolean matched) {
+    private void highlightBrace(TextRange braceRange, boolean matched) {
         EditorColorsScheme scheme = myEditor.getColorsScheme();
         TextAttributes attributes = matched
             ? scheme.getAttributes(CodeInsightColors.MATCHED_BRACE_ATTRIBUTES)
@@ -571,11 +570,11 @@ public class BraceHighlightingHandler {
         registerHighlighter(rbraceHighlighter);
     }
 
-    private void registerHighlighter(@Nonnull RangeHighlighter highlighter) {
+    private void registerHighlighter(RangeHighlighter highlighter) {
         getHighlightersList().add(highlighter);
     }
 
-    @Nonnull
+    
     private List<RangeHighlighter> getHighlightersList() {
         // braces are highlighted across the whole editor, not in each injected editor separately
         Editor editor = myEditor instanceof EditorWindow editorWindow ? editorWindow.getDelegate() : myEditor;
@@ -639,7 +638,7 @@ public class BraceHighlightingHandler {
     }
 
     @RequiredUIAccess
-    private void lineMarkFragment(int startLine, int endLine, @Nonnull ColorValue color) {
+    private void lineMarkFragment(int startLine, int endLine, ColorValue color) {
         removeLineMarkers();
 
         if (startLine >= endLine || endLine >= myDocument.getLineCount()) {

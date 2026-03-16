@@ -29,8 +29,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -38,22 +37,22 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 public class VcsContextWrapper implements VcsContext {
-  @Nonnull
+  
   protected final DataContext myContext;
   protected final int myModifiers;
-  @Nonnull
+  
   private final String myPlace;
   @Nullable
   private final String myActionName;
 
-  public VcsContextWrapper(@Nonnull DataContext context, int modifiers, @Nonnull String place, @Nullable String actionName) {
+  public VcsContextWrapper(DataContext context, int modifiers, String place, @Nullable String actionName) {
     myContext = context;
     myModifiers = modifiers;
     myPlace = place;
     myActionName = actionName;
   }
 
-  @Nonnull
+  
   @Override
   public String getPlace() {
     return myPlace;
@@ -65,13 +64,13 @@ public class VcsContextWrapper implements VcsContext {
     return myActionName;
   }
 
-  @Nonnull
-  public static VcsContext createCachedInstanceOn(@Nonnull AnActionEvent event) {
+  
+  public static VcsContext createCachedInstanceOn(AnActionEvent event) {
     return new CachedVcsContext(createInstanceOn(event));
   }
 
-  @Nonnull
-  public static VcsContextWrapper createInstanceOn(@Nonnull AnActionEvent event) {
+  
+  public static VcsContextWrapper createInstanceOn(AnActionEvent event) {
     return new VcsContextWrapper(event.getDataContext(), event.getModifiers(), event.getPlace(), event.getPresentation().getText());
   }
 
@@ -87,7 +86,7 @@ public class VcsContextWrapper implements VcsContext {
     return getSelectedFilesStream().findFirst().orElse(null);
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile[] getSelectedFiles() {
     VirtualFile[] fileArray = myContext.getData(VirtualFile.KEY_OF_ARRAY);
@@ -99,7 +98,7 @@ public class VcsContextWrapper implements VcsContext {
     return file != null && file.isInLocalFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
   public Stream<VirtualFile> getSelectedFilesStream() {
     Stream<VirtualFile> result = myContext.getData(VcsDataKeys.VIRTUAL_FILE_STREAM);
@@ -145,13 +144,13 @@ public class VcsContextWrapper implements VcsContext {
     return myContext.getData(Refreshable.PANEL_KEY);
   }
 
-  @Nonnull
+  
   @Override
   public FilePath[] getSelectedFilePaths() {
     return getSelectedFilePathsStream().toArray(FilePath[]::new);
   }
 
-  @Nonnull
+  
   @Override
   public Stream<FilePath> getSelectedFilePathsStream() {
     FilePath path = myContext.getData(VcsDataKeys.FILE_PATH);

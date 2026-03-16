@@ -22,7 +22,6 @@ import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -33,12 +32,12 @@ import jakarta.annotation.Nonnull;
 @ServiceImpl
 public class TextConsoleBuilderFactoryImpl extends TextConsoleBuilderFactory {
   @Override
-  public TextConsoleBuilder createBuilder(@Nonnull Project project) {
+  public TextConsoleBuilder createBuilder(Project project) {
     return new TextConsoleBuilderImpl(project);
   }
 
   @Override
-  public TextConsoleBuilder createBuilder(@Nonnull Project project, @Nonnull SearchScope scope) {
+  public TextConsoleBuilder createBuilder(Project project, SearchScope scope) {
     return new TextConsoleBuilderImpl(project, scope);
   }
 }

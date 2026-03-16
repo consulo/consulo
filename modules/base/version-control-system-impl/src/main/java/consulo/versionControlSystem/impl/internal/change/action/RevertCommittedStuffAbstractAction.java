@@ -41,7 +41,6 @@ import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
 import consulo.versionControlSystem.internal.BackgroundFromStartOption;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,7 +61,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         final VirtualFile baseDir = project.getBaseDir();
         assert baseDir != null;
@@ -100,7 +99,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
             BackgroundFromStartOption.getInstance()
         ) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     List<Change> preprocessed = ChangesPreprocess.preprocessChangesRemoveDeletedForDuplicateMoved(changesList);
                     patches.addAll(IdeaTextPatchBuilder.buildPatch(project, preprocessed, baseDir.getPresentableUrl(), true));
@@ -128,7 +127,7 @@ abstract class RevertCommittedStuffAbstractAction extends AnAction implements Du
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Change[] changes = myForUpdateConvertor.apply(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && changes != null && changes.length > 0);
     }

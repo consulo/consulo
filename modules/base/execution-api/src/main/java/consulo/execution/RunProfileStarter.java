@@ -21,7 +21,6 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.GenericProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -37,6 +36,6 @@ public interface RunProfileStarter {
      * You should NOT throw exceptions in this method.
      * Instead return {@link CompletableFuture#complete(Object)}} (Throwable)} or call {@link CompletableFuture#failedFuture(Throwable)}
      */
-    CompletableFuture<RunContentDescriptor> executeAsync(@Nonnull RunProfileState state,
-                                                         @Nonnull ExecutionEnvironment environment) throws ExecutionException;
+    CompletableFuture<RunContentDescriptor> executeAsync(RunProfileState state,
+                                                         ExecutionEnvironment environment) throws ExecutionException;
 }

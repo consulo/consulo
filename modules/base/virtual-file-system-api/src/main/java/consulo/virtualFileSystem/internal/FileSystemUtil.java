@@ -19,8 +19,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.FileAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -38,7 +37,7 @@ public final class FileSystemUtil {
 
   private static final Logger LOG = Logger.getInstance(FileSystemUtil.class);
 
-  @Nonnull
+  
   private static FileSystemMediator ourMediator = Nio2MediatorImpl.ourInstance;
 
   private static boolean ourLocked;
@@ -57,7 +56,7 @@ public final class FileSystemUtil {
   }
 
   @Nullable
-  public static FileAttributes getAttributes(@Nonnull String path) {
+  public static FileAttributes getAttributes(String path) {
     try {
       return ourMediator.getAttributes(path);
     }
@@ -68,11 +67,11 @@ public final class FileSystemUtil {
   }
 
   @Nullable
-  public static FileAttributes getAttributes(@Nonnull File file) {
+  public static FileAttributes getAttributes(File file) {
     return getAttributes(file.getPath());
   }
 
-  public static long lastModified(@Nonnull File file) {
+  public static long lastModified(File file) {
     FileAttributes attributes = getAttributes(file);
     return attributes != null ? attributes.lastModified : 0;
   }
@@ -80,7 +79,7 @@ public final class FileSystemUtil {
   /**
    * Checks if a last element in the path is a symlink.
    */
-  public static boolean isSymLink(@Nonnull String path) {
+  public static boolean isSymLink(String path) {
     if (Platform.current().fs().areSymLinksSupported()) {
       FileAttributes attributes = getAttributes(path);
       return attributes != null && attributes.isSymLink();
@@ -91,12 +90,12 @@ public final class FileSystemUtil {
   /**
    * Checks if a last element in the path is a symlink.
    */
-  public static boolean isSymLink(@Nonnull File file) {
+  public static boolean isSymLink(File file) {
     return isSymLink(file.getAbsolutePath());
   }
 
   @Nullable
-  public static String resolveSymLink(@Nonnull String path) {
+  public static String resolveSymLink(String path) {
     try {
       String realPath = ourMediator.resolveSymLink(path);
       if (realPath != null && new File(realPath).exists()) {
@@ -110,7 +109,7 @@ public final class FileSystemUtil {
   }
 
   @Nullable
-  public static String resolveSymLink(@Nonnull File file) {
+  public static String resolveSymLink(File file) {
     return resolveSymLink(file.getAbsolutePath());
   }
 
@@ -118,7 +117,7 @@ public final class FileSystemUtil {
    * Gives the second file permissions of the first one if possible; returns true if succeed.
    * Will do nothing on Windows.
    */
-  public static boolean clonePermissions(@Nonnull String source, @Nonnull String target) {
+  public static boolean clonePermissions(String source, String target) {
     try {
       return ourMediator.clonePermissions(source, target, false);
     }
@@ -132,7 +131,7 @@ public final class FileSystemUtil {
    * Gives the second file permissions to execute of the first one if possible; returns true if succeed.
    * Will do nothing on Windows.
    */
-  public static boolean clonePermissionsToExecute(@Nonnull String source, @Nonnull String target) {
+  public static boolean clonePermissionsToExecute(String source, String target) {
     try {
       return ourMediator.clonePermissions(source, target, true);
     }
@@ -150,7 +149,7 @@ public final class FileSystemUtil {
     private final PosixFilePermission[] myExecPermissions = {PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.GROUP_EXECUTE, PosixFilePermission.OTHERS_EXECUTE};
 
     @Override
-    public FileAttributes getAttributes(@Nonnull String pathStr) {
+    public FileAttributes getAttributes(String pathStr) {
       try {
         Path path = Paths.get(pathStr);
         boolean isWindows = Platform.current().os().isWindows();
@@ -188,7 +187,7 @@ public final class FileSystemUtil {
     }
 
     @Override
-    public String resolveSymLink(@Nonnull String path) throws IOException {
+    public String resolveSymLink(String path) throws IOException {
       try {
         return Paths.get(path).toRealPath().toString();
       }
@@ -198,7 +197,7 @@ public final class FileSystemUtil {
     }
 
     @Override
-    public boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean execOnly) throws IOException {
+    public boolean clonePermissions(String source, String target, boolean execOnly) throws IOException {
       if (!Platform.current().os().isUnix()) return false;
 
       Path sourcePath = Paths.get(source), targetPath = Paths.get(target);
@@ -230,12 +229,12 @@ public final class FileSystemUtil {
     ourLocked = false;
   }
 
-  @Nonnull
+  
   static String getMediatorName() {
     return getMediatorName(ourMediator);
   }
 
-  @Nonnull
+  
   private static String getMediatorName(FileSystemMediator mediator) {
     return mediator.getClass().getSimpleName().replace("MediatorImpl", "");
   }

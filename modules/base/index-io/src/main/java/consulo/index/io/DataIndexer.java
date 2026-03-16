@@ -15,7 +15,6 @@
  */
 package consulo.index.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -24,6 +23,6 @@ import java.util.Map;
  * @since 2007-12-10
  */
 public interface DataIndexer<Key, Value, Data> {
-  @Nonnull
+  
   Map<Key,Value> map(Data inputData);
 }

@@ -21,12 +21,11 @@ import consulo.language.editor.inspection.SuppressionUtil;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public class DefaultChangeLocalityDetector implements ChangeLocalityDetector {
   @Override
-  public PsiElement getChangeHighlightingDirtyScopeFor(@Nonnull PsiElement changedElement) {
+  public PsiElement getChangeHighlightingDirtyScopeFor(PsiElement changedElement) {
     if (changedElement instanceof PsiWhiteSpace ||
         changedElement instanceof PsiComment
         && !changedElement.getText().contains(SuppressionUtil.SUPPRESS_INSPECTIONS_TAG_NAME)) {

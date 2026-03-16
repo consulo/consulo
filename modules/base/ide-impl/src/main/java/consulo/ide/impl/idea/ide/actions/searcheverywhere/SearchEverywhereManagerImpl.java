@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -61,7 +60,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
 
     @Override
     @RequiredUIAccess
-    public void show(@Nonnull String contributorID, @Nullable String searchText, @Nonnull AnActionEvent initEvent) {
+    public void show(String contributorID, @Nullable String searchText, AnActionEvent initEvent) {
         if (isShown()) {
             throw new IllegalStateException("Method should cannot be called whe popup is shown");
         }
@@ -194,7 +193,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
         return mySearchEverywhereUI != null && myBalloon != null && !myBalloon.isDisposed();
     }
 
-    @Nonnull
+    
     @Override
     public String getSelectedContributorID() {
         checkIsShown();
@@ -202,7 +201,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     @Override
-    public void setSelectedContributor(@Nonnull String contributorID) {
+    public void setSelectedContributor(String contributorID) {
         checkIsShown();
         if (!contributorID.equals(getSelectedContributorID())) {
             mySearchEverywhereUI.switchToContributor(contributorID);
@@ -353,7 +352,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
             return new HistoryIterator(contributorID, list);
         }
 
-        public void saveText(@Nonnull String text, @Nonnull String contributorID) {
+        public void saveText(String text, String contributorID) {
             historyList.stream()
                 .filter(item -> text.equals(item.getSearchText()) && contributorID.equals(item.getContributorID()))
                 .findFirst()
@@ -381,7 +380,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
             }
         }
 
-        @Nonnull
+        
         private List<String> filteredHistory(Predicate<? super HistoryItem> predicate) {
             return historyList.stream().filter(predicate).map(HistoryItem::getSearchText).collect(distinctCollector);
         }

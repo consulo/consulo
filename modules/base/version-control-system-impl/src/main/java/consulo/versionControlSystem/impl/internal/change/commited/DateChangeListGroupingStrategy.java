@@ -14,7 +14,6 @@ package consulo.versionControlSystem.impl.internal.change.commited;
 
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import org.jetbrains.annotations.NonNls;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,7 +22,7 @@ import java.util.*;
 * @author irengrig
 */
 public class DateChangeListGroupingStrategy implements ChangeListGroupingStrategy {
-  @NonNls private final SimpleDateFormat myMonthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+  private final SimpleDateFormat myMonthYearFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
   private long myTimeToRecalculateAfter;
   private Calendar myCurrentCalendar;
   private Calendar myCalendar;
@@ -86,7 +85,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
   }
 
   private static class MonthsCache {
-    @NonNls private final SimpleDateFormat myMonthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+    private final SimpleDateFormat myMonthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     private final Map<Integer, String> myCache;
 
     private MonthsCache(Calendar calendarForInit) {
@@ -103,7 +102,7 @@ public class DateChangeListGroupingStrategy implements ChangeListGroupingStrateg
   }
 
   private static class WeekDayFormatCache {
-    @NonNls private final SimpleDateFormat myWeekdayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+    private final SimpleDateFormat myWeekdayFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
     private final Map<Integer, String> myCache;
 
     private WeekDayFormatCache(Calendar calendarForInit) {

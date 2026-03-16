@@ -38,7 +38,6 @@ import consulo.eawt.wrapper.event.FullScreenListenerWrapper;
 import consulo.logging.Logger;
 import consulo.util.concurrent.ActionCallback;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.EventListener;
@@ -190,7 +189,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
 
   private boolean myInFullScreen;
 
-  public MacMainFrameDecorator(@Nonnull IdeFrameEx frame, boolean navBar) {
+  public MacMainFrameDecorator(IdeFrameEx frame, boolean navBar) {
     super(frame);
 
     if (CURRENT_SETTER == null) {
@@ -314,7 +313,7 @@ public class MacMainFrameDecorator extends IdeFrameDecorator implements UISettin
     return myInFullScreen;
   }
 
-  @Nonnull
+  
   @Override
   public ActionCallback toggleFullScreen(boolean state) {
     JFrame jFrame = getJFrame();

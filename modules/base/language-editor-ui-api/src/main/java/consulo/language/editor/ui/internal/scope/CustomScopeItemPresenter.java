@@ -16,8 +16,7 @@ import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "custom_scope", order = "after other_scope")
 public final class CustomScopeItemPresenter implements ModelScopeItemPresenter {
@@ -27,14 +26,14 @@ public final class CustomScopeItemPresenter implements ModelScopeItemPresenter {
     return AnalysisScope.CUSTOM;
   }
 
-  @Nonnull
+  
   @Override
   public RadioButton getButton(ModelScopeItem model) {
     return RadioButton.create(AnalysisScopeLocalize.scopeOptionCustom());
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public Component getAdditionalComponents(RadioButton button, ModelScopeItem m, Disposable dialogDisposable) {
     CustomScopeItem model = (CustomScopeItem)m;
@@ -56,8 +55,8 @@ public final class CustomScopeItemPresenter implements ModelScopeItemPresenter {
 
   @Override
   @Nullable
-  public ModelScopeItem tryCreate(@Nonnull Project project,
-                                  @Nonnull AnalysisScope scope,
+  public ModelScopeItem tryCreate(Project project,
+                                  AnalysisScope scope,
                                   @Nullable Module module,
                                   @Nullable PsiElement context) {
     return new CustomScopeItem(project, context);

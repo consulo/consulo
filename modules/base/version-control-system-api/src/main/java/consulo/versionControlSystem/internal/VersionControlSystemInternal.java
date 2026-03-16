@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collection;
@@ -37,14 +36,14 @@ public interface VersionControlSystemInternal {
         return Application.get().getInstance(VersionControlSystemInternal.class);
     }
 
-    String getHtmlWithFonts(@Nonnull String input, int style, @Nonnull Font baseFont);
+    String getHtmlWithFonts(String input, int style, Font baseFont);
 
     // TODO remove in future, exists until LineStatusTracker not moved to vcs impl
     void moveToRange(VcsRange range, Editor editor, LineStatusTrackerI tracker);
 
-    void showDiffFor(@Nonnull Project project,
-                     @Nonnull Collection<Change> changes,
-                     @Nonnull String head,
-                     @Nonnull String compare,
-                     @Nonnull VirtualFile file);
+    void showDiffFor(Project project,
+                     Collection<Change> changes,
+                     String head,
+                     String compare,
+                     VirtualFile file);
 }

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.language.Language;
 import consulo.language.scratch.RootType;
 import consulo.language.scratch.ScratchFileService;
@@ -32,8 +31,8 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ import java.io.IOException;
  */
 @ExtensionImpl
 public final class ScratchRootType extends RootType {
-    @Nonnull
+    
     public static ScratchRootType getInstance() {
         return findByClass(ScratchRootType.class);
     }
@@ -54,13 +53,13 @@ public final class ScratchRootType extends RootType {
     }
 
     @Override
-    public Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public Language substituteLanguage(Project project, VirtualFile file) {
         return ScratchFileService.getInstance().getScratchesMapping().getMapping(file);
     }
 
     @Nullable
     @Override
-    public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public Image substituteIcon(Project project, VirtualFile file) {
         Image icon = ObjectUtil.chooseNotNull(super.substituteIcon(project, file), AllIcons.FileTypes.Text);
         return ImageEffects.layered(icon, AllIcons.Actions.Scratch);
     }
@@ -92,7 +91,7 @@ public final class ScratchRootType extends RootType {
                     ScratchFileService fileService = ScratchFileService.getInstance();
                     VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
                     fileService.getScratchesMapping().setMapping(file, language);
-                    VfsUtil.saveText(file, text);
+                    VirtualFileUtil.saveText(file, text);
                     return file;
                 });
         }

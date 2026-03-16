@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -35,13 +34,12 @@ public class DefaultProjectOpenProcessor extends ProjectOpenProcessor {
     }
 
     @Override
-    public boolean canOpenProject(@Nonnull File file) {
+    public boolean canOpenProject(File file) {
         return file.isDirectory() && new File(file, Project.DIRECTORY_STORE_FOLDER + "/modules.xml").exists();
     }
 
     @Override
-    @Nonnull
-    public Image getIcon(@Nonnull VirtualFile file) {
+    public Image getIcon(VirtualFile file) {
         return Application.get().getIcon();
     }
 }

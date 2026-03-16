@@ -27,8 +27,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -39,8 +38,8 @@ import java.util.List;
 public interface CollapseBlockHandler extends LanguageExtension {
   ExtensionPointCacheKey<CollapseBlockHandler, ByLanguageValue<List<CollapseBlockHandler>>> KEY = ExtensionPointCacheKey.create("CollapseBlockHandler", LanguageOneToMany.build(false));
 
-  @Nonnull
-  static List<CollapseBlockHandler> forLanguage(@Nonnull Language language) {
+  
+  static List<CollapseBlockHandler> forLanguage(Language language) {
     return Application.get().getExtensionPoint(CollapseBlockHandler.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -49,14 +48,14 @@ public interface CollapseBlockHandler extends LanguageExtension {
 
   boolean isEndBlockToken(@Nullable PsiElement element);
 
-  @Nonnull
+  
   default String getPlaceholderText() {
     return "{...}";
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  default TextRange getFoldingRange(@Nonnull PsiElement element) {
+  default TextRange getFoldingRange(PsiElement element) {
     return element.getTextRange();
   }
 }

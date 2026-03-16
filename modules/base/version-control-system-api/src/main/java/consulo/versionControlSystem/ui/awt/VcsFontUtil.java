@@ -17,19 +17,18 @@ package consulo.versionControlSystem.ui.awt;
 
 import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class VcsFontUtil {
-    @Nonnull
-    public static String getHtmlWithFonts(@Nonnull String input) {
+    
+    public static String getHtmlWithFonts(String input) {
         Font font = UIUtil.getLabelFont();
         return getHtmlWithFonts(input, font.getStyle(), font);
     }
 
-    @Nonnull
-    public static String getHtmlWithFonts(@Nonnull String input, int style, @Nonnull Font baseFont) {
+    
+    public static String getHtmlWithFonts(String input, int style, Font baseFont) {
         return VersionControlSystemInternal.getInstance().getHtmlWithFonts(input, style, baseFont);
     }
 }

@@ -24,7 +24,6 @@ import consulo.platform.Platform;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -41,11 +40,11 @@ public class DesktopSystemDockImpl extends SystemDock implements Disposable {
     }
   }
 
-  @Nonnull
+  
   private final Delegate myDelegate;
 
   @Inject
-  public DesktopSystemDockImpl(@Nonnull Application application) {
+  public DesktopSystemDockImpl(Application application) {
     if (Taskbar.isTaskbarSupported() && Taskbar.getTaskbar().isSupported(Taskbar.Feature.MENU)) {
       myDelegate = new Java9DockDelegateImpl();
     }

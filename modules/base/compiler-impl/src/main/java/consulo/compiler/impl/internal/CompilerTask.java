@@ -32,8 +32,7 @@ import consulo.project.Project;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.AppIconScheme;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
@@ -60,8 +59,8 @@ public class CompilerTask extends Task.Backgroundable {
     private ExitStatus myExitStatus;
 
     public CompilerTask(
-        @Nonnull Project project,
-        @Nonnull LocalizeValue contentName,
+        Project project,
+        LocalizeValue contentName,
         boolean waitForPreviousSession,
         boolean compilationStartedAutomatically,
         CompileCounters counters
@@ -74,7 +73,7 @@ public class CompilerTask extends Task.Backgroundable {
         myBuildViewService = new BuildViewServiceImpl(project, mySessionId, contentName.get(), counters);
     }
 
-    @Nonnull
+    
     public ProgressIndicator getIndicator() {
         return myIndicator;
     }
@@ -99,7 +98,7 @@ public class CompilerTask extends Task.Backgroundable {
     }
 
     @Override
-    public void run(@Nonnull ProgressIndicator indicator) {
+    public void run(ProgressIndicator indicator) {
         myIndicator = indicator;
 
         long startCompilationStamp = System.currentTimeMillis();

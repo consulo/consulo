@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,9 +35,9 @@ public interface FileWordsScannerProvider {
     return scannerMap;
   });
 
-  @Nonnull
+  
   FileType getFileType();
 
-  @Nonnull
+  
   WordsScanner createWordsScanner();
 }

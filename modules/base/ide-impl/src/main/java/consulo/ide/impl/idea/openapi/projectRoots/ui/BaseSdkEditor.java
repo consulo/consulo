@@ -39,8 +39,7 @@ import consulo.ui.style.StandardColors;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +57,7 @@ import java.util.Set;
 public abstract class BaseSdkEditor implements UnnamedConfigurable {
     private static final Logger LOG = Logger.getInstance(BaseSdkEditor.class);
 
-    @Nonnull
+    
     protected final Sdk mySdk;
     private final Map<OrderRootType, SdkPathEditor> myPathEditors = new HashMap<>();
 
@@ -71,7 +70,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     // GUI components
     private JPanel myMainPanel;
 
-    @Nonnull
+    
     private final SdkModel mySdkModel;
     private JLabel myHomeFieldLabel;
     private String myVersionString;
@@ -80,14 +79,14 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     private String myInitialPath;
 
     @RequiredUIAccess
-    public BaseSdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
+    public BaseSdkEditor(SdkModel sdkModel, SdkImpl sdk) {
         mySdkModel = sdkModel;
         mySdk = sdk;
         initSdk(sdk);
     }
 
     @RequiredUIAccess
-    private void initSdk(@Nonnull Sdk sdk) {
+    private void initSdk(Sdk sdk) {
         myInitialName = mySdk.getName();
         myInitialPath = mySdk.getHomePath();
 
@@ -102,7 +101,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+    public JComponent createComponent(Disposable parentUIDisposable) {
         if (myMainPanel == null) {
             createMainPanel(parentUIDisposable);
         }
@@ -217,15 +216,15 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         );
     }
 
-    @Nonnull
+    
     protected abstract JComponent createCenterComponent(Disposable parentUIDisposable);
 
     protected boolean showTabForType(OrderRootType type) {
         return ((SdkType)mySdk.getSdkType()).isRootTypeApplicable(type);
     }
 
-    @Nonnull
-    public SdkPathEditor getPathEditor(@Nonnull OrderRootType rootType) {
+    
+    public SdkPathEditor getPathEditor(OrderRootType rootType) {
         return myPathEditors.get(rootType);
     }
 
@@ -446,14 +445,14 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
     }
 
     private class EditedSdkModificator implements SdkModificator {
-        @Nonnull
+        
         @Override
         public String getName() {
             return mySdk.getName();
         }
 
         @Override
-        public void setName(@Nonnull String name) {
+        public void setName(String name) {
             ((SdkImpl)mySdk).setName(name);
         }
 
@@ -468,7 +467,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
             doSetHomePath(path, (SdkType)mySdk.getSdkType());
         }
 
-        @Nonnull
+        
         @Override
         public Path getHomeNioPath() {
             return Path.of(getHomeValue());
@@ -476,7 +475,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
         @Override
         @RequiredUIAccess
-        public void setHomeNioPath(@Nonnull Path path) {
+        public void setHomeNioPath(Path path) {
             setHomePath(path.toAbsolutePath().toString());
         }
 
@@ -500,9 +499,9 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
             throw new UnsupportedOperationException(); // not supported for this editor
         }
 
-        @Nonnull
+        
         @Override
-        public VirtualFile[] getRoots(@Nonnull OrderRootType rootType) {
+        public VirtualFile[] getRoots(OrderRootType rootType) {
             PathEditor editor = myPathEditors.get(rootType);
             if (editor == null) {
                 throw new IllegalStateException("no editor for root type " + rootType);
@@ -511,17 +510,17 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
         }
 
         @Override
-        public void addRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
+        public void addRoot(VirtualFile root, OrderRootType rootType) {
             myPathEditors.get(rootType).addPaths(root);
         }
 
         @Override
-        public void removeRoot(@Nonnull VirtualFile root, @Nonnull OrderRootType rootType) {
+        public void removeRoot(VirtualFile root, OrderRootType rootType) {
             myPathEditors.get(rootType).removePaths(root);
         }
 
         @Override
-        public void removeRoots(@Nonnull OrderRootType rootType) {
+        public void removeRoots(OrderRootType rootType) {
             myPathEditors.get(rootType).clearList();
         }
 

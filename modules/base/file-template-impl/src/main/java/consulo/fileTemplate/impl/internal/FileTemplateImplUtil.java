@@ -30,8 +30,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.VelocityException;
@@ -70,11 +69,11 @@ public class FileTemplateImplUtil {
         return mergeTemplate(content, context, useSystemLineSeparators);
     }
 
-    @Nonnull
+    
     public static FileTemplate createTemplate(
-        @Nonnull String prefName,
-        @Nonnull String extension,
-        @Nonnull String content,
+        String prefName,
+        String extension,
+        String content,
         FileTemplate[] templates
     ) {
         Set<String> names = new HashSet<>();

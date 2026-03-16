@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -34,7 +33,7 @@ public final class CustomShortcutSet implements ShortcutSet {
    * Creates <code>CustomShortcutSet</code> which contains only one
    * single stroke keyboard shortcut.
    */
-  public CustomShortcutSet(@Nonnull KeyStroke keyStroke){
+  public CustomShortcutSet(KeyStroke keyStroke){
     this(new KeyboardShortcut(keyStroke, null));
   }
 
@@ -44,7 +43,7 @@ public final class CustomShortcutSet implements ShortcutSet {
    *
    * @param shortcuts keyboard shortcuts
    */
-  public CustomShortcutSet(@Nonnull Shortcut... shortcuts){
+  public CustomShortcutSet(Shortcut... shortcuts){
     myShortcuts = shortcuts.length == 0 ? Shortcut.EMPTY_ARRAY : shortcuts.clone();
   }
 
@@ -53,13 +52,13 @@ public final class CustomShortcutSet implements ShortcutSet {
   }
 
   @Override
-  @Nonnull
+  
   public Shortcut[] getShortcuts(){
     return myShortcuts.length == 0 ? Shortcut.EMPTY_ARRAY : myShortcuts.clone();
   }
 
-  @Nonnull
-  public static CustomShortcutSet fromString(@Nonnull String... keyboardShortcuts) {
+  
+  public static CustomShortcutSet fromString(String... keyboardShortcuts) {
     KeyboardShortcut[] shortcuts = new KeyboardShortcut[keyboardShortcuts.length];
     for (int i = 0; i < keyboardShortcuts.length; i++) {
       shortcuts[i] = KeyboardShortcut.fromString(keyboardShortcuts[i]);

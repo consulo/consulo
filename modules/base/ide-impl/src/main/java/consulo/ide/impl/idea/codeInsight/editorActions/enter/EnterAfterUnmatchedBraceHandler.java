@@ -45,7 +45,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "afterUnmatchedBrace", order = "after inLineComment")
 public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter {
@@ -53,11 +52,11 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
 
     @Override
     public Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffsetRef,
-        @Nonnull SimpleReference<Integer> caretAdvance,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffsetRef,
+        SimpleReference<Integer> caretAdvance,
+        DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
         int caretOffset = caretOffsetRef.get();
@@ -84,7 +83,7 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param caretOffset target caret offset
      * @return true, if handler is in charge
      */
-    public boolean isApplicable(@Nonnull PsiFile file, int caretOffset) {
+    public boolean isApplicable(PsiFile file, int caretOffset) {
         return true;
     }
 
@@ -98,7 +97,7 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param caretOffset target caret offset
      * @return maximum number of '}' that can be inserted by handler, {@code 0} or less to switch to default implementation
      */
-    protected int getMaxRBraceCount(@Nonnull PsiFile file, @Nonnull Editor editor, int caretOffset) {
+    protected int getMaxRBraceCount(PsiFile file, Editor editor, int caretOffset) {
         if (!CodeInsightSettings.getInstance().INSERT_BRACE_ON_ENTER) {
             return 0;
         }
@@ -114,8 +113,8 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param maxRBraceCount the maximum number of '}' for insert at position, it always positive
      * @return the string of '}' that has to be inserted by handler, it must have at least one '}'
      */
-    @Nonnull
-    protected String generateStringToInsert(@Nonnull Editor editor, int caretOffset, int maxRBraceCount) {
+    
+    protected String generateStringToInsert(Editor editor, int caretOffset, int maxRBraceCount) {
         assert maxRBraceCount > 0;
 
         CharSequence text = editor.getDocument().getCharsSequence();
@@ -151,7 +150,7 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param caretOffset target caret offset
      * @return the position between {@code caretOffset} and the end of file
      */
-    protected int getRBraceOffset(@Nonnull PsiFile file, @Nonnull Editor editor, int caretOffset) {
+    protected int getRBraceOffset(PsiFile file, Editor editor, int caretOffset) {
         CharSequence text = editor.getDocument().getCharsSequence();
         int offset = CharArrayUtil.shiftForward(text, caretOffset, " \t");
         int fileLength = text.length();
@@ -172,8 +171,8 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param generatedRBraces    string of '}' to insert
      */
     protected void insertRBraces(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
+        PsiFile file,
+        Editor editor,
         int caretOffset,
         int rBracesInsertOffset,
         String generatedRBraces
@@ -221,8 +220,8 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @param generatedRBraces    string of '}' to insert
      */
     protected void formatCodeFragmentBetweenBraces(
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
+        PsiFile file,
+        Document document,
         int caretOffset,
         int rBracesInsertOffset,
         String generatedRBraces
@@ -299,8 +298,8 @@ public class EnterAfterUnmatchedBraceHandler extends EnterHandlerDelegateAdapter
      * @return pair of (element, offset). The element is the '}' owner, if applicable; the offset is the position for inserting closing brace
      */
     protected Pair<PsiElement, Integer> calculateOffsetToInsertClosingBrace(
-        @Nonnull PsiFile file,
-        @Nonnull CharSequence text,
+        PsiFile file,
+        CharSequence text,
         int offset
     ) {
         PsiElement element = PsiUtilCore.getElementAtOffset(file, offset);

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -42,10 +41,9 @@ public interface ProjectCloseService {
      * @return a future that resolves to true if the project was closed,
      * false if close was vetoed or cancelled
      */
-    @Nonnull
     CompletableFuture<Boolean> closeProjectAsync(
-        @Nonnull Project project,
-        @Nonnull UIAccess uiAccess,
+        Project project,
+        UIAccess uiAccess,
         boolean checkCanClose,
         boolean save,
         boolean dispose

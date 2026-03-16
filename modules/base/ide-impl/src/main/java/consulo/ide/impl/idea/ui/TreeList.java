@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.JBList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -84,7 +83,7 @@ public class TreeList extends JBList implements TreeModelListener {
    *   attribute: visualUpdate true
    * description: The object that contains the data to be drawn by this JList.
    */
-  public void setModel(@Nonnull ListModel model) {
+  public void setModel(ListModel model) {
     throw new UnsupportedOperationException("TreeList accepts only TreeModel as a model");
   }
 

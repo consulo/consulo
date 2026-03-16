@@ -28,14 +28,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandler {
 
   private static final Key<Boolean> DOC_COMMENT_MARK = Key.create("explicit.fold.region.doc.comment.mark");
 
-  public static void setDocCommentMark(@Nonnull FoldRegion region, boolean value) {
+  public static void setDocCommentMark(FoldRegion region, boolean value) {
     region.putUserData(DOC_COMMENT_MARK, value);
   }
 
@@ -46,7 +45,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
   }
 
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     CodeFoldingManager foldingManager = CodeFoldingManager.getInstance(project);
     foldingManager.updateFoldRegions(editor);
     FoldRegion[] allFoldRegions = editor.getFoldingModel().getAllFoldRegions();
@@ -63,7 +62,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
 
   @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(@Nonnull PsiFile currentFile) {
+  public PsiElement getElementToMakeWritable(PsiFile currentFile) {
     return null;
   }
 
@@ -73,7 +72,7 @@ public class CollapseExpandDocCommentsHandler implements CodeInsightActionHandle
    * The check is needed for languages which differentiate comments and documentation
    * and cannot use PsiComment for docs (like Python).
    */
-  private static boolean hasAllowedTokenType(@Nonnull Editor editor, @Nonnull FoldRegion region, @Nullable PsiElement element) {
+  private static boolean hasAllowedTokenType(Editor editor, FoldRegion region, @Nullable PsiElement element) {
     if (element == null) return false;
     Commenter commenter = Commenter.forLanguage(element.getLanguage());
     if (!(commenter instanceof CodeDocumentationAwareCommenter)) return false;

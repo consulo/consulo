@@ -22,7 +22,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 class NonCancelableIndicator implements NonCancelableSection, StandardProgressIndicator {
   static final NonCancelableIndicator INSTANCE = new NonCancelableIndicator() {
@@ -74,11 +73,11 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
   }
 
   @Override
-  public void setTextValue(@Nonnull LocalizeValue text) {
+  public void setTextValue(LocalizeValue text) {
 
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getTextValue() {
     return LocalizeValue.empty();
@@ -89,7 +88,7 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
 
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText2Value() {
     return LocalizeValue.empty();
@@ -130,7 +129,7 @@ class NonCancelableIndicator implements NonCancelableSection, StandardProgressIn
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public ModalityState getModalityState() {
     return ModalityState.nonModal();

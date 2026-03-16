@@ -18,7 +18,6 @@ package consulo.diff.impl.internal.fragment;
 import consulo.diff.fragment.MergeWordFragment;
 import consulo.diff.util.MergeRange;
 import consulo.diff.util.ThreeSide;
-import jakarta.annotation.Nonnull;
 
 public class MergeWordFragmentImpl implements MergeWordFragment {
   private final int myStartOffset1;
@@ -42,17 +41,17 @@ public class MergeWordFragmentImpl implements MergeWordFragment {
     myEndOffset3 = endOffset3;
   }
 
-  public MergeWordFragmentImpl(@Nonnull MergeRange range) {
+  public MergeWordFragmentImpl(MergeRange range) {
     this(range.start1, range.end1, range.start2, range.end2, range.start3, range.end3);
   }
 
   @Override
-  public int getStartOffset(@Nonnull ThreeSide side) {
+  public int getStartOffset(ThreeSide side) {
     return side.select(myStartOffset1, myStartOffset2, myStartOffset3);
   }
 
   @Override
-  public int getEndOffset(@Nonnull ThreeSide side) {
+  public int getEndOffset(ThreeSide side) {
     return side.select(myEndOffset1, myEndOffset2, myEndOffset3);
   }
 }

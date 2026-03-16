@@ -21,18 +21,17 @@ import consulo.component.internal.ComponentBinding;
 import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public class DesktopSwtApplicationImpl extends UnifiedApplication {
-  public DesktopSwtApplicationImpl(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+  public DesktopSwtApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
     super(componentBinding, splashRef);
   }
 
-  @Nonnull
+  
   @Override
   public UIAccess getLastUIAccess() {
     return DesktopSwtUIAccess.INSTANCE;

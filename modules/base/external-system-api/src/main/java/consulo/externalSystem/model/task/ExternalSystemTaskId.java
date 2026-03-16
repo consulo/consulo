@@ -3,8 +3,7 @@ package consulo.externalSystem.model.task;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,32 +16,32 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ExternalSystemTaskId implements Serializable {
 
-  @Nonnull
+  
   private static final AtomicLong COUNTER          = new AtomicLong();
   private static final          long       serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final ExternalSystemTaskType myType;
-  @Nonnull
+  
   private final String                 myProjectId;
-  @Nonnull
+  
   private final ProjectSystemId        myProjectSystemId;
 
   private final long myId;
 
-  private ExternalSystemTaskId(@Nonnull ProjectSystemId projectSystemId, @Nonnull ExternalSystemTaskType type, @Nonnull String projectId, long taskId) {
+  private ExternalSystemTaskId(ProjectSystemId projectSystemId, ExternalSystemTaskType type, String projectId, long taskId) {
     myType = type;
     myProjectId = projectId;
     myProjectSystemId = projectSystemId;
     myId = taskId;
   }
 
-  @Nonnull
+  
   public String getIdeProjectId() {
     return myProjectId;
   }
 
-  @Nonnull
+  
   public ProjectSystemId getProjectSystemId() {
     return myProjectSystemId;
   }
@@ -54,18 +53,18 @@ public class ExternalSystemTaskId implements Serializable {
    * @param project  target ide project
    * @return         distinct task id object of the given type
    */
-  @Nonnull
-  public static ExternalSystemTaskId create(@Nonnull ProjectSystemId projectSystemId, @Nonnull ExternalSystemTaskType type, @Nonnull Project project) {
+  
+  public static ExternalSystemTaskId create(ProjectSystemId projectSystemId, ExternalSystemTaskType type, Project project) {
     return create(projectSystemId, type, getProjectId(project));
   }
 
-  @Nonnull
-  public static ExternalSystemTaskId create(@Nonnull ProjectSystemId projectSystemId, @Nonnull ExternalSystemTaskType type, @Nonnull String ideProjectId) {
+  
+  public static ExternalSystemTaskId create(ProjectSystemId projectSystemId, ExternalSystemTaskType type, String ideProjectId) {
     return new ExternalSystemTaskId(projectSystemId, type, ideProjectId, COUNTER.getAndIncrement());
   }
 
-  @Nonnull
-  public static String getProjectId(@Nonnull Project project) {
+  
+  public static String getProjectId(Project project) {
     return project.isDisposed() ? project.getName() : project.getName() + ":" + project.getLocationHash();
   }
 
@@ -78,7 +77,7 @@ public class ExternalSystemTaskId implements Serializable {
     return null;
   }
 
-  @Nonnull
+  
   public ExternalSystemTaskType getType() {
     return myType;
   }

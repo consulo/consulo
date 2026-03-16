@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.service.project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -23,6 +22,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface Identifiable {
 
-  @Nonnull
+  
   String getId();
 }

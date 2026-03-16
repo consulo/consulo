@@ -11,7 +11,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -30,7 +29,7 @@ public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider 
   }
 
   @Override
-  public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public String getEditorTabTitle(Project project, VirtualFile file) {
     UISettings uiSettings = UISettings.getInstanceOrNull();
     if (uiSettings == null || !uiSettings.getShowDirectoryForNonUniqueFilenames() || DumbService.isDumb(project)) {
       return null;

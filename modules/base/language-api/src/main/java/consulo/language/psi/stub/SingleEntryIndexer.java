@@ -18,8 +18,7 @@ package consulo.language.psi.stub;
 
 import consulo.index.io.DataIndexer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, F
   }
 
   @Override
-  @Nonnull
+  
   public final Map<Integer, V> map(FileContent inputData) {
     if (inputData == null) {
       return Collections.emptyMap();
@@ -50,5 +49,5 @@ public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, F
     return Collections.singletonMap(key, value);
   }
 
-  protected abstract @Nullable V computeValue(@Nonnull FileContent inputData);
+  protected abstract @Nullable V computeValue(FileContent inputData);
 }

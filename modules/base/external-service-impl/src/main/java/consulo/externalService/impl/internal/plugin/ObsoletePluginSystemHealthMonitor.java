@@ -25,7 +25,6 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.ui.action.UninstallPluginAction;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 @ExtensionImpl
 public class ObsoletePluginSystemHealthMonitor implements SystemHealthMonitor {
     @Override
-    public void check(@Nonnull Reporter reporter) {
+    public void check(Reporter reporter) {
         List<PluginDescriptor> plugins = PluginManager.getPlugins().stream()
             .filter(it -> PluginIds.getObsoletePlugins().contains(it.getPluginId()))
             .collect(Collectors.toList());

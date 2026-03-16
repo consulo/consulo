@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.Transferable;
 
 /**
@@ -34,7 +33,7 @@ public abstract class EditorCopyPasteHelper {
    */
   public static final String TRIM_TEXT_ON_PASTE_KEY = "trimTextOnPaste";
 
-  @Nonnull
+  
   public static EditorCopyPasteHelper getInstance() {
     return Application.get().getInstance(EditorCopyPasteHelper.class);
   }
@@ -42,7 +41,7 @@ public abstract class EditorCopyPasteHelper {
   /**
    * Copies text selected in editor to clipboard.
    */
-  public abstract void copySelectionToClipboard(@Nonnull Editor editor);
+  public abstract void copySelectionToClipboard(Editor editor);
 
   /**
    * Pastes from clipboard into editor at caret(s) position.
@@ -50,7 +49,7 @@ public abstract class EditorCopyPasteHelper {
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
   @Nullable
-  public abstract TextRange[] pasteFromClipboard(@Nonnull Editor editor);
+  public abstract TextRange[] pasteFromClipboard(Editor editor);
 
   /**
    * Pastes given Transferable instance into editor at caret(s) position.
@@ -58,5 +57,5 @@ public abstract class EditorCopyPasteHelper {
    * @return ranges of text in the document, corresponding to pasted fragments, if paste succeeds, or <code>null</code> otherwise
    */
   @Nullable
-  public abstract TextRange[] pasteTransferable(@Nonnull Editor editor, @Nonnull Transferable content);
+  public abstract TextRange[] pasteTransferable(Editor editor, Transferable content);
 }

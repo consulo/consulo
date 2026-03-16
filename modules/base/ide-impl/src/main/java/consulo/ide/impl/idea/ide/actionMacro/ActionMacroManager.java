@@ -43,8 +43,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.internal.ActionManagerEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -111,7 +110,7 @@ public class ActionMacroManager implements Disposable {
         return myLastActionInputEvents;
     }
 
-    public void stopRecording(@Nonnull Project project) {
+    public void stopRecording(Project project) {
         LOG.assertTrue(myIsRecording);
 
         myIsRecording = false;
@@ -297,12 +296,12 @@ public class ActionMacroManager implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             IdeEventQueueProxy.getInstance().doWhenReady(() -> getInstance().playMacro(myMacro));
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setEnabled(!getInstance().isPlaying());
         }

@@ -9,8 +9,7 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -26,10 +25,10 @@ public final class FileTextFieldUtil {
   private static final Logger LOG = Logger.getInstance(FileTextFieldUtil.class);
 
   public static void processCompletion(final FileTextFieldImpl.CompletionResult result,
-                                       @Nonnull Finder finder,
-                                       @Nonnull FileLookup.LookupFilter filter,
-                                       @Nonnull String fileSpitRegExp,
-                                       @Nonnull Map<String, String> macroMap) {
+                                       Finder finder,
+                                       FileLookup.LookupFilter filter,
+                                       String fileSpitRegExp,
+                                       Map<String, String> macroMap) {
     result.myToComplete = new ArrayList<>();
     result.mySiblings = new ArrayList<>();
     result.myKidsAfterSeparator = new ArrayList<>();
@@ -148,8 +147,7 @@ public final class FileTextFieldUtil {
     return NameUtil.buildMatcher("*" + prefix, NameUtil.MatchingCaseSensitivity.NONE);
   }
 
-  @Nullable
-  private static FileLookup.LookupFile getClosestParent(String typed, Finder finder, String fileSpitRegExp) {
+  private static FileLookup.@Nullable LookupFile getClosestParent(String typed, Finder finder, String fileSpitRegExp) {
     if (typed == null) return null;
     FileLookup.LookupFile lastFound = finder.find(typed);
     if (lastFound == null) return null;
@@ -175,8 +173,8 @@ public final class FileTextFieldUtil {
     return lastFound;
   }
 
-  @Nonnull
-  public static String getLookupString(@Nonnull FileLookup.LookupFile file, @Nonnull Finder finder, @Nullable FileTextFieldImpl.CompletionResult result) {
+ 
+  public static String getLookupString(FileLookup.LookupFile file, Finder finder, FileTextFieldImpl.@Nullable CompletionResult result) {
     String macro = file.getMacro();
     if (macro != null) return macro;
     String prefix = result != null && result.myKidsAfterSeparator.contains(file) ? finder.getSeparator() : "";
@@ -198,9 +196,9 @@ public final class FileTextFieldUtil {
 
     int getCaretPosition();
 
-    void setText(@Nonnull String text);
+    void setText(String text);
 
-    void setTextToFile(@Nonnull FileLookup.LookupFile file);
+    void setTextToFile(FileLookup.LookupFile file);
   }
 
   public static class TextFieldDocumentOwner implements DocumentOwner {
@@ -208,10 +206,10 @@ public final class FileTextFieldUtil {
     private final JTextField myField;
     private final Document myDocument;
     private final
-    @Nonnull
+   
     Consumer<? super FileLookup.LookupFile> mySetText;
 
-    public TextFieldDocumentOwner(@Nonnull JTextField field, @Nonnull Consumer<? super FileLookup.LookupFile> setText) {
+    public TextFieldDocumentOwner(JTextField field, Consumer<? super FileLookup.LookupFile> setText) {
       myField = field;
       myDocument = field.getDocument();
       mySetText = setText;
@@ -254,12 +252,12 @@ public final class FileTextFieldUtil {
     }
 
     @Override
-    public void setText(@Nonnull String text) {
+    public void setText(String text) {
       myField.setText(text);
     }
 
     @Override
-    public void setTextToFile(@Nonnull FileLookup.LookupFile file) {
+    public void setTextToFile(FileLookup.LookupFile file) {
       mySetText.accept(file);
     }
   }
@@ -273,7 +271,7 @@ public final class FileTextFieldUtil {
    * @param end      the end offset of the path component under the caret.
    * @throws BadLocationException
    */
-  private static void replacePathComponent(@Nonnull FileLookup.LookupFile file, @Nonnull DocumentOwner doc, @Nonnull Finder finder, int caretPos, int start, int end) throws BadLocationException {
+  private static void replacePathComponent(FileLookup.LookupFile file, DocumentOwner doc, Finder finder, int caretPos, int start, int end) throws BadLocationException {
 
     doc.removeSelection();
 
@@ -374,7 +372,7 @@ public final class FileTextFieldUtil {
     }
   }
 
-  public static void setTextToFile(@Nonnull FileLookup.LookupFile file, Finder finder, @Nonnull DocumentOwner doc) {
+  public static void setTextToFile(FileLookup.LookupFile file, Finder finder, DocumentOwner doc) {
     String text = file.getAbsolutePath();
     if (file.isDirectory() && !text.endsWith(finder.getSeparator())) {
       text += finder.getSeparator();

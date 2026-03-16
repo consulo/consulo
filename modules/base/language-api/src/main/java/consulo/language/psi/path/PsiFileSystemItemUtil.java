@@ -18,8 +18,7 @@ package consulo.language.psi.path;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedList;
 
 /**
@@ -63,7 +62,7 @@ public class PsiFileSystemItemUtil {
     return componentsList.toArray(new PsiFileSystemItem[componentsList.size()]);
   }
 
-  @Nonnull
+  
   public static String getNotNullRelativePath(PsiFileSystemItem src, PsiFileSystemItem dst) throws IncorrectOperationException {
     String s = getRelativePath(src, dst);
     if (s == null) throw new IncorrectOperationException("Cannot find path between files; src = " + src.getVirtualFile().getPresentableUrl() + "; dst = " + dst.getVirtualFile().getPresentableUrl());

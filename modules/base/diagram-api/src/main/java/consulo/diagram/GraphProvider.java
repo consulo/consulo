@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,24 +28,24 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface GraphProvider<V> {
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
-    String getName(@Nonnull V element);
+    
+    String getName(V element);
 
-    @Nonnull
+    
     @RequiredReadAction
-    GraphBuilder createBuilder(@Nonnull V element);
+    GraphBuilder createBuilder(V element);
 
-    @Nonnull
+    
     @RequiredReadAction
-    String getURL(@Nonnull V value);
+    String getURL(V value);
 
     @Nullable
     @RequiredReadAction
-    V restoreFromURL(@Nonnull ComponentManager project, @Nonnull String path);
+    V restoreFromURL(ComponentManager project, String path);
 
     @Nullable
-    V findSupportedElement(@Nonnull DataContext dataContext);
+    V findSupportedElement(DataContext dataContext);
 }

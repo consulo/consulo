@@ -17,8 +17,7 @@ package consulo.language.spellcheker.tokenizer.splitter;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
 
 public interface TokenSplitter {
-    void split(@Nonnull SplitContext context, @Nonnull TextRange range);
+    void split(SplitContext context, TextRange range);
 }

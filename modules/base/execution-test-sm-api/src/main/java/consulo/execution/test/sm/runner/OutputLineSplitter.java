@@ -17,7 +17,6 @@ package consulo.execution.test.sm.runner;
 
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,11 +148,11 @@ public abstract class OutputLineSplitter {
         }
     }
 
-    protected boolean isMostLikelyServiceMessagePart(@Nonnull String text) {
+    protected boolean isMostLikelyServiceMessagePart(String text) {
         return text.startsWith(TEAMCITY_SERVICE_MESSAGE_PREFIX);
     }
 
-    protected abstract void onLineAvailable(@Nonnull String text, @Nonnull Key outputType, boolean tcLikeFakeOutput);
+    protected abstract void onLineAvailable(String text, Key outputType, boolean tcLikeFakeOutput);
 
     private static class OutputChunk {
         private final Key myKey;

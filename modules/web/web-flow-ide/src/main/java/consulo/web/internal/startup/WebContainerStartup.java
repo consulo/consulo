@@ -39,7 +39,6 @@ import consulo.web.internal.servlet.UIIconServlet;
 import consulo.web.internal.servlet.UIServlet;
 import consulo.web.internal.servlet.VaadinRootLayout;
 import consulo.web.main.WebApplicationStarter;
-import jakarta.annotation.Nonnull;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.annotation.WebServlet;
@@ -66,14 +65,14 @@ public class WebContainerStartup implements ContainerStartup {
     }
   }
 
-  @Nonnull
+  
   @Override
-  public ContainerPathManager createPathManager(@Nonnull Map<String, Object> args) {
+  public ContainerPathManager createPathManager(Map<String, Object> args) {
     return new WebContainerPathManager();
   }
 
   @Override
-  public void run(@Nonnull Map<String, Object> map) {
+  public void run(Map<String, Object> map) {
     StatCollector stat = (StatCollector)map.get(STAT_COLLECTOR);
     String[] args = (String[])map.get(ARGS);
 
@@ -145,7 +144,7 @@ public class WebContainerStartup implements ContainerStartup {
     }
   }
 
-  private void startApplication(@Nonnull StatCollector stat, @Nonnull String[] args) {
+  private void startApplication(StatCollector stat, String[] args) {
     ApplicationStarter.installExceptionHandler(() -> Logger.getInstance(WebContainerStartup.class));
 
     Runnable appInitializeMark = stat.mark(StatCollector.APP_INITIALIZE);

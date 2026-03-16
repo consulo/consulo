@@ -15,8 +15,7 @@ import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.ui.ex.awt.util.ComponentUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -37,7 +36,7 @@ final class ServiceViewTree extends Tree {
 
   private final TreeModel myTreeModel;
 
-  ServiceViewTree(@Nonnull TreeModel treeModel, @Nonnull Disposable parent) {
+  ServiceViewTree(TreeModel treeModel, Disposable parent) {
     myTreeModel = treeModel;
     AsyncTreeModel asyncTreeModel = new AsyncTreeModel(myTreeModel, parent);
     setModel(asyncTreeModel);
@@ -57,7 +56,7 @@ final class ServiceViewTree extends Tree {
     mouseListener.installOn(this);
     new DoubleClickListener() {
       @Override
-      protected boolean onDoubleClick(@Nonnull MouseEvent e) {
+      protected boolean onDoubleClick(MouseEvent e) {
         TreePath path = getClosestPathForLocation(e.getX(), e.getY());
         if (path == null) return false;
 
@@ -78,7 +77,7 @@ final class ServiceViewTree extends Tree {
 
     @RequiredUIAccess
     @Override
-    public void customizeCellRenderer(@Nonnull JTree tree,
+    public void customizeCellRenderer(JTree tree,
                                       Object value,
                                       boolean selected,
                                       boolean expanded,

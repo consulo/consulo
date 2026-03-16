@@ -8,7 +8,6 @@ import consulo.content.FileIndex;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implementations of this extension point can tell IDE whether some particular file is a test file.
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
 public abstract class TestSourcesFilter {
     private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create(TestSourcesFilter.class);
 
-    public static boolean isTestSources(@Nonnull VirtualFile file, @Nonnull Project project) {
+    public static boolean isTestSources(VirtualFile file, Project project) {
         for (TestSourcesFilter filter : EP_NAME.getExtensionList()) {
             if (filter.isTestSource(file, project)) {
                 return true;
@@ -37,5 +36,5 @@ public abstract class TestSourcesFilter {
         return false;
     }
 
-    public abstract boolean isTestSource(@Nonnull VirtualFile file, @Nonnull Project project);
+    public abstract boolean isTestSource(VirtualFile file, Project project);
 }

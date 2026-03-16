@@ -11,8 +11,7 @@ import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.language.psi.PsiManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -27,20 +26,20 @@ public final class PsiCachedValuesFactory implements CachedValuesFactory {
     private final PsiManager myManager;
 
     @Inject
-    public PsiCachedValuesFactory(@Nonnull PsiManager psiManager) {
+    public PsiCachedValuesFactory(PsiManager psiManager) {
         myManager = psiManager;
     }
 
-    @Nonnull
+    
     @Override
-    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+    public <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider, boolean trackValue) {
         return new PsiCachedValueImpl<>(myManager, provider, trackValue, this);
     }
 
-    @Nonnull
+    
     @Override
     public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue
     ) {
         return new PsiParameterizedCachedValue<>(myManager, provider, trackValue, this);
@@ -48,9 +47,9 @@ public final class PsiCachedValuesFactory implements CachedValuesFactory {
 
     @Override
     public void checkProviderForMemoryLeak(
-        @Nonnull CachedValueProvider<?> provider,
-        @Nonnull Key<?> key,
-        @Nonnull UserDataHolder userDataHolder
+        CachedValueProvider<?> provider,
+        Key<?> key,
+        UserDataHolder userDataHolder
     ) {
         CachedValueLeakChecker.checkProvider(provider, key, userDataHolder);
     }
@@ -69,7 +68,7 @@ public final class PsiCachedValuesFactory implements CachedValuesFactory {
     public <T> void checkEquivalence(
         @Nullable T existing,
         @Nullable T fresh,
-        @Nonnull Class<?> providerClass,
+        Class<?> providerClass,
         @Nullable Supplier<? extends T> recomputeValue
     ) {
         IdempotenceChecker.checkEquivalence(existing, fresh, providerClass, recomputeValue);

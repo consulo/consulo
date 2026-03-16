@@ -4,7 +4,6 @@ package consulo.language.editor.completion.lookup.event;
 
 import consulo.language.editor.completion.lookup.Lookup;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -14,7 +13,7 @@ import java.util.EventListener;
  * @see Lookup#addLookupListener(LookupListener)
  */
 public interface LookupListener extends EventListener {
-  default void lookupShown(@Nonnull LookupEvent event) {
+  default void lookupShown(LookupEvent event) {
   }
 
   /*
@@ -22,20 +21,20 @@ public interface LookupListener extends EventListener {
    * called before the lookup string is inserted into the document. If any listener returns false,
    * the lookup string is not inserted.
    */
-  default boolean beforeItemSelected(@Nonnull LookupEvent event) {
+  default boolean beforeItemSelected(LookupEvent event) {
     return true;
   }
 
   /*
    * Note: this event comes inside the command that performs inserting of text into the editor.
    */
-  default void itemSelected(@Nonnull LookupEvent event) {
+  default void itemSelected(LookupEvent event) {
   }
 
-  default void lookupCanceled(@Nonnull LookupEvent event) {
+  default void lookupCanceled(LookupEvent event) {
   }
 
-  default void currentItemChanged(@Nonnull LookupEvent event) {
+  default void currentItemChanged(LookupEvent event) {
   }
 
   /**

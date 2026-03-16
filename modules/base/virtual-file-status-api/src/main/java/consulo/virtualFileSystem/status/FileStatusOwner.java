@@ -15,13 +15,12 @@
  */
 package consulo.virtualFileSystem.status;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29-Mar-22
  */
 public interface FileStatusOwner {
-  @Nonnull
+  
   FileStatus getFileStatus();
 }

@@ -16,7 +16,6 @@
 package consulo.dataContext;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * A data provider that populates a {@link DataSink} with data.
@@ -43,5 +42,5 @@ public interface UiDataProvider {
      *
      * @param sink the sink to populate with data
      */
-    void uiDataSnapshot(@Nonnull DataSink sink);
+    void uiDataSnapshot(DataSink sink);
 }

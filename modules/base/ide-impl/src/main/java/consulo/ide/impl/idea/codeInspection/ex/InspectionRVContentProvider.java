@@ -27,8 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -43,7 +42,7 @@ public abstract class InspectionRVContentProvider {
   private static final Logger LOG = Logger.getInstance(InspectionRVContentProvider.class);
   private final Project myProject;
 
-  public InspectionRVContentProvider(@Nonnull Project project) {
+  public InspectionRVContentProvider(Project project) {
     myProject = project;
   }
 
@@ -51,10 +50,10 @@ public abstract class InspectionRVContentProvider {
     @Nullable
     UserObjectContainer<T> getOwner();
 
-    @Nonnull
-    RefElementNode createNode(@Nonnull InspectionToolPresentation presentation);
+    
+    RefElementNode createNode(InspectionToolPresentation presentation);
 
-    @Nonnull
+    
     T getUserObject();
 
     @Nullable
@@ -65,15 +64,15 @@ public abstract class InspectionRVContentProvider {
     boolean supportStructure();
   }
 
-  public abstract boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context, @Nonnull InspectionToolWrapper toolWrapper);
+  public abstract boolean checkReportedProblems(GlobalInspectionContextImpl context, InspectionToolWrapper toolWrapper);
 
   @Nullable
-  public abstract QuickFixAction[] getQuickFixes(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull InspectionTree tree);
+  public abstract QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree);
 
 
-  public void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
-                                    @Nonnull InspectionNode toolNode,
-                                    @Nonnull InspectionTreeNode parentNode,
+  public void appendToolNodeContent(GlobalInspectionContextImpl context,
+                                    InspectionNode toolNode,
+                                    InspectionTreeNode parentNode,
                                     boolean showStructure) {
     InspectionToolWrapper wrapper = toolNode.getToolWrapper();
     InspectionToolPresentation presentation = context.getPresentation(wrapper);
@@ -83,29 +82,29 @@ public abstract class InspectionRVContentProvider {
     appendToolNodeContent(context, toolNode, parentNode, showStructure, contents, problems, null);
   }
 
-  public abstract void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
-                                             @Nonnull InspectionNode toolNode,
-                                             @Nonnull InspectionTreeNode parentNode,
+  public abstract void appendToolNodeContent(GlobalInspectionContextImpl context,
+                                             InspectionNode toolNode,
+                                             InspectionTreeNode parentNode,
                                              boolean showStructure,
-                                             @Nonnull Map<String, Set<RefEntity>> contents,
-                                             @Nonnull Map<RefEntity, CommonProblemDescriptor[]> problems,
+                                             Map<String, Set<RefEntity>> contents,
+                                             Map<RefEntity, CommonProblemDescriptor[]> problems,
                                              @Nullable DefaultTreeModel model);
 
-  protected abstract void appendDescriptor(@Nonnull GlobalInspectionContextImpl context,
-                                           @Nonnull InspectionToolWrapper toolWrapper,
-                                           @Nonnull UserObjectContainer container,
-                                           @Nonnull InspectionPackageNode pNode,
+  protected abstract void appendDescriptor(GlobalInspectionContextImpl context,
+                                           InspectionToolWrapper toolWrapper,
+                                           UserObjectContainer container,
+                                           InspectionPackageNode pNode,
                                            boolean canPackageRepeat);
 
   public boolean isContentLoaded() {
     return true;
   }
 
-  protected <T> List<InspectionTreeNode> buildTree(@Nonnull GlobalInspectionContextImpl context,
-                                                   @Nonnull Map<String, Set<T>> packageContents,
+  protected <T> List<InspectionTreeNode> buildTree(GlobalInspectionContextImpl context,
+                                                   Map<String, Set<T>> packageContents,
                                                    boolean canPackageRepeat,
-                                                   @Nonnull InspectionToolWrapper toolWrapper,
-                                                   @Nonnull Function<T, UserObjectContainer<T>> computeContainer,
+                                                   InspectionToolWrapper toolWrapper,
+                                                   Function<T, UserObjectContainer<T>> computeContainer,
                                                    boolean showStructure) {
     List<InspectionTreeNode> content = new ArrayList<InspectionTreeNode>();
     Map<String, Map<String, InspectionPackageNode>> module2PackageMap = new HashMap<String, Map<String, InspectionPackageNode>>();
@@ -218,9 +217,9 @@ public abstract class InspectionRVContentProvider {
     return content;
   }
 
-  @Nonnull
-  protected static RefElementNode addNodeToParent(@Nonnull UserObjectContainer container,
-                                                  @Nonnull InspectionToolPresentation presentation,
+  
+  protected static RefElementNode addNodeToParent(UserObjectContainer container,
+                                                  InspectionToolPresentation presentation,
                                                   InspectionTreeNode parentNode) {
     final RefElementNode nodeToBeAdded = container.createNode(presentation);
     final Ref<Boolean> firstLevel = new Ref<Boolean>(true);

@@ -25,7 +25,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
             super(vertical);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTwoComponentSplitLayoutImpl.this;
@@ -67,18 +66,18 @@ public class DesktopTwoComponentSplitLayoutImpl extends SwingComponentDelegate<S
         toAWTComponent().setProportion(percent / 100f);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
-    public TwoComponentSplitLayout setFirstComponent(@Nonnull Component component) {
+    public TwoComponentSplitLayout setFirstComponent(Component component) {
         toAWTComponent().setFirstComponent((JComponent) TargetAWT.to(component));
         return this;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
-    public TwoComponentSplitLayout setSecondComponent(@Nonnull Component component) {
+    public TwoComponentSplitLayout setSecondComponent(Component component) {
         toAWTComponent().setSecondComponent((JComponent) TargetAWT.to(component));
         return this;
     }

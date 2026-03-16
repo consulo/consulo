@@ -32,7 +32,6 @@ import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -72,9 +71,9 @@ public class Preloader implements Disposable {
     }
 
     @Inject
-    public Preloader(@Nonnull Application application,
-                     @Nonnull ApplicationConcurrency applicationConcurrency,
-                     @Nonnull ProgressManager progressManager) {
+    public Preloader(Application application,
+                     ApplicationConcurrency applicationConcurrency,
+                     ProgressManager progressManager) {
         myExecutor = applicationConcurrency.createSequentialApplicationPoolExecutor("Preloader pool");
 
         // execute in new thread since, creating activity also eat time

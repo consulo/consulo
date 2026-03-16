@@ -8,9 +8,7 @@ import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.MathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,9 +21,9 @@ public class Splitter extends JPanel implements Splittable {
   private static final Icon SplitGlueH = TargetAWT.to(Image.empty(6, 17));
   private static final Icon SplitGlueV = TargetAWT.to(Image.empty(17, 6));
   private static final Logger LOG = Logger.getInstance(Splitter.class);
-  @NonNls
+  
   public static final String PROP_PROPORTION = "proportion";
-  @NonNls
+  
   public static final String PROP_ORIENTATION = "orientation";
 
   private int myDividerWidth;
@@ -65,7 +63,7 @@ public class Splitter extends JPanel implements Splittable {
     HONOR_THE_SECOND_MIN_SIZE
   }
 
-  @Nonnull
+  
   private LackOfSpaceStrategy myLackOfSpaceStrategy = LackOfSpaceStrategy.SIMPLE_RATIO;
 
   public enum DividerPositionStrategy {
@@ -74,7 +72,7 @@ public class Splitter extends JPanel implements Splittable {
     KEEP_SECOND_SIZE
   }
 
-  @Nonnull
+  
   private DividerPositionStrategy myDividerPositionStrategy = DividerPositionStrategy.KEEP_PROPORTION;
 
 
@@ -157,20 +155,20 @@ public class Splitter extends JPanel implements Splittable {
     myHonorMinimumSize = honorMinimumSize;
   }
 
-  public void setLackOfSpaceStrategy(@Nonnull LackOfSpaceStrategy strategy) {
+  public void setLackOfSpaceStrategy(LackOfSpaceStrategy strategy) {
     myLackOfSpaceStrategy = strategy;
   }
 
-  @Nonnull
+  
   public LackOfSpaceStrategy getLackOfSpaceStrategy() {
     return myLackOfSpaceStrategy;
   }
 
-  public void setDividerPositionStrategy(@Nonnull DividerPositionStrategy dividerPositionStrategy) {
+  public void setDividerPositionStrategy(DividerPositionStrategy dividerPositionStrategy) {
     myDividerPositionStrategy = dividerPositionStrategy;
   }
 
-  @Nonnull
+  
   public DividerPositionStrategy getDividerPositionStrategy() {
     return myDividerPositionStrategy;
   }
@@ -541,7 +539,7 @@ public class Splitter extends JPanel implements Splittable {
     replaceSecondComponent(component);
   }
 
-  public JComponent replaceSecondComponent(@jakarta.annotation.Nullable JComponent component) {
+  public JComponent replaceSecondComponent(@Nullable JComponent component) {
     JComponent old = mySecondComponent;
 
     if (old != component) {
@@ -577,7 +575,7 @@ public class Splitter extends JPanel implements Splittable {
     return 0.0f;
   }
 
-  @Nonnull
+  
   @Override
   public Component asComponent() {
     return this;

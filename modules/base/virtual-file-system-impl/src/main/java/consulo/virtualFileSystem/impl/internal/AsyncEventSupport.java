@@ -17,8 +17,7 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.internal.BaseVirtualFileManager;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +37,7 @@ public final class AsyncEventSupport {
                 Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> appliersFromBefore;
 
                 @Override
-                public void before(@Nonnull List<? extends VFileEvent> events) {
+                public void before(List<? extends VFileEvent> events) {
                     if (ourSuppressAppliers) {
                         return;
                     }
@@ -48,7 +47,7 @@ public final class AsyncEventSupport {
                 }
 
                 @Override
-                public void after(@Nonnull List<? extends VFileEvent> events) {
+                public void after(List<? extends VFileEvent> events) {
                     if (ourSuppressAppliers) {
                         return;
                     }
@@ -62,8 +61,8 @@ public final class AsyncEventSupport {
         );
     }
 
-    @Nonnull
-    public static List<AsyncFileListener.ChangeApplier> runAsyncListeners(@Nonnull List<? extends VFileEvent> events) {
+    
+    public static List<AsyncFileListener.ChangeApplier> runAsyncListeners(List<? extends VFileEvent> events) {
         if (events.isEmpty()) {
             return Collections.emptyList();
         }

@@ -30,8 +30,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**
@@ -44,14 +43,14 @@ public class IdeConsoleRootType extends ConsoleRootType implements FileEditorTra
     super("ide", "Consoles");
   }
 
-  @Nonnull
+  
   public static IdeConsoleRootType getInstance() {
     return findByClass(IdeConsoleRootType.class);
   }
 
   @Nullable
   @Override
-  public Image substituteIcon(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public Image substituteIcon(Project project, VirtualFile file) {
     if (file.isDirectory()) return null;
     FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(file.getNameSequence());
     Image icon =
@@ -62,7 +61,7 @@ public class IdeConsoleRootType extends ConsoleRootType implements FileEditorTra
   }
 
   @Override
-  public void fileOpened(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
+  public void fileOpened(VirtualFile file, FileEditorManager source) {
     RunIdeConsoleAction.configureConsole(file, source);
   }
 }

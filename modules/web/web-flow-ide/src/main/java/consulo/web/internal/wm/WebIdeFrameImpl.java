@@ -32,8 +32,7 @@ import consulo.web.application.WebApplication;
 import consulo.web.internal.servlet.VaadinRootLayout;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaddin;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Objects;
@@ -82,7 +81,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
         return myRootView.getRootPanel();
     }
 
-    @Nonnull
+    
     @Override
     public Window getWindow() {
         return (Window) Objects.requireNonNull(myRootLayout).toUIComponent();
@@ -122,7 +121,7 @@ public class WebIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Nullable
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
         return null;
     }
 

@@ -40,8 +40,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -62,8 +61,8 @@ import java.util.regex.PatternSyntaxException;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ResourceCompilerConfiguration implements PersistentStateComponent<Element> {
-    @Nonnull
-    public static ResourceCompilerConfiguration getInstance(@Nonnull Project project) {
+    
+    public static ResourceCompilerConfiguration getInstance(Project project) {
         return project.getInstance(ResourceCompilerConfiguration.class);
     }
 
@@ -75,21 +74,21 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     public static final String NAME = "name";
 
     private static class CompiledPattern {
-        @Nonnull
+        
         final Pattern fileName;
         @Nullable
         final Pattern dir;
         @Nullable
         final Pattern srcRoot;
 
-        private CompiledPattern(@Nonnull Pattern fileName, @Nullable Pattern dir, @Nullable Pattern srcRoot) {
+        private CompiledPattern(Pattern fileName, @Nullable Pattern dir, @Nullable Pattern srcRoot) {
             this.fileName = fileName;
             this.dir = dir;
             this.srcRoot = srcRoot;
         }
     }
 
-    @Nonnull
+    
     private Project myProject;
     // extensions of the files considered as resource files
     private final List<Pattern> myRegexpResourcePatterns = new ArrayList<>();
@@ -101,7 +100,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
     private boolean myWildcardPatternsInitialized = false;
 
     @Inject
-    public ResourceCompilerConfiguration(@Nonnull Project project) {
+    public ResourceCompilerConfiguration(Project project) {
         myProject = project;
     }
 
@@ -320,7 +319,7 @@ public class ResourceCompilerConfiguration implements PersistentStateComponent<E
         return wildcardPattern.length() > 1 && wildcardPattern.charAt(0) == '!';
     }
 
-    @Nonnull
+    
     public static CompiledPattern convertToRegexp(String wildcardPattern) throws PatternSyntaxException {
         if (isPatternNegated(wildcardPattern)) {
             wildcardPattern = wildcardPattern.substring(1);

@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -36,51 +35,51 @@ import java.util.function.Predicate;
 public interface TreeClassChooserFactory {
   @FunctionalInterface
   interface ClassProvider<T extends PsiNamedElement> {
-    @Nonnull
-    Collection<T> getClassesByName(@Nonnull Project project, String name, boolean searchInLibraries, String pattern, ProjectAwareSearchScope searchScope);
+    
+    Collection<T> getClassesByName(Project project, String name, boolean searchInLibraries, String pattern, ProjectAwareSearchScope searchScope);
   }
 
   @FunctionalInterface
   interface InheritorsProviderFactory<T extends PsiNamedElement> {
     @Nullable
-    TreeClassInheritorsProvider<T> create(@Nonnull T baseClass, @Nonnull ProjectAwareSearchScope scope);
+    TreeClassInheritorsProvider<T> create(T baseClass, ProjectAwareSearchScope scope);
   }
 
   interface Builder<T extends PsiNamedElement> {
-    @Nonnull
-    Builder<T> withTitle(@Nonnull LocalizeValue title);
+    
+    Builder<T> withTitle(LocalizeValue title);
 
-    @Nonnull
-    Builder<T> withSearchScope(@Nonnull ProjectAwareSearchScope searchScope);
+    
+    Builder<T> withSearchScope(ProjectAwareSearchScope searchScope);
 
-    @Nonnull
-    Builder<T> withClassFilter(@Nonnull Predicate<T> classFilter);
+    
+    Builder<T> withClassFilter(Predicate<T> classFilter);
 
-    @Nonnull
+    
     Builder<T> withBaseClass(T baseClass);
 
-    @Nonnull
+    
     Builder<T> withInitialClass(T initialClass);
 
-    @Nonnull
+    
     Builder<T> withShowMembers(boolean value);
 
-    @Nonnull
+    
     Builder<T> withShowLibraryContents(boolean value);
 
-    @Nonnull
-    Builder<T> withClassProvider(@Nonnull ClassProvider<T> classProvider);
+    
+    Builder<T> withClassProvider(ClassProvider<T> classProvider);
 
-    @Nonnull
-    Builder<T> withInheritorsProvider(@Nonnull InheritorsProviderFactory<T> inheritorsProvider);
+    
+    Builder<T> withInheritorsProvider(InheritorsProviderFactory<T> inheritorsProvider);
 
     /**
      * return converter, which converter user data from project tree node, to target element
      */
-    @Nonnull
-    Builder<T> withTreeElementConverter(@Nonnull Function<Object, T> userObjectElementConverter);
+    
+    Builder<T> withTreeElementConverter(Function<Object, T> userObjectElementConverter);
 
-    @Nonnull
+    
     TreeChooser<T> build();
   }
 
@@ -88,6 +87,6 @@ public interface TreeClassChooserFactory {
     return project.getInstance(TreeClassChooserFactory.class);
   }
 
-  @Nonnull
-  <T extends PsiNamedElement> Builder<T> newChooser(@Nonnull Class<T> elementClazz);
+  
+  <T extends PsiNamedElement> Builder<T> newChooser(Class<T> elementClazz);
 }

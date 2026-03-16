@@ -20,7 +20,6 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -39,18 +38,18 @@ public final class GroupByScopeTypeAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent event) {
+    public boolean isSelected(AnActionEvent event) {
         return DependencyUISettings.getInstance().UI_GROUP_BY_SCOPE_TYPE;
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+    public void setSelected(AnActionEvent event, boolean flag) {
         DependencyUISettings.getInstance().UI_GROUP_BY_SCOPE_TYPE = flag;
         myUpdate.run();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(DependencyUISettings.getInstance().SCOPE_TYPE != ProjectPatternProvider.FILE);
     }

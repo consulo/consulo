@@ -15,8 +15,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -41,7 +40,7 @@ public class DesktopAWTDimensionServiceImpl extends UnifiedDimensionServiceImpl 
    * scale is the HiDPI-aware factor to transform size metrics.
    */
   @Override
-  @Nonnull
+  
   protected Pair<String, Float> resolveScale(String key, @Nullable Project project) {
     GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
     if (env.isHeadlessInstance()) {

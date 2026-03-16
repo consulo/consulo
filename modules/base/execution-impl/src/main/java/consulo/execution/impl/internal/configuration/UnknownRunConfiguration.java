@@ -32,8 +32,7 @@ import consulo.ui.image.Image;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,7 +49,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   private static final AtomicInteger myUniqueName = new AtomicInteger(1);
   private boolean myDoNotStore;
 
-  public UnknownRunConfiguration(@Nonnull ConfigurationFactory factory, @Nonnull Project project) {
+  public UnknownRunConfiguration(ConfigurationFactory factory, Project project) {
     myFactory = factory;
     myProject = project;
   }
@@ -79,7 +78,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     myName = name;
   }
 
-  @Nonnull
+  
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new UnknownSettingsEditor();
@@ -91,7 +90,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  @Nonnull
+  
   public ConfigurationType getType() {
     return UnknownConfigurationType.INSTANCE;
   }
@@ -123,7 +122,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
   }
 
   @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
     String factoryName = "";
     if (myStoredElement != null) {
       factoryName = myStoredElement.getAttributeValue("type");
@@ -186,7 +185,7 @@ public class UnknownRunConfiguration implements RunConfiguration, WithoutOwnBefo
     }
 
     @Override
-    @Nonnull
+    
     protected JComponent createEditor() {
       return myPanel;
     }

@@ -40,8 +40,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Transient;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -145,7 +144,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         CommonProxy.getInstance().setCustomAuth(name, new IdeaWideAuthenticator(this));
     }
 
-    @Nonnull
+    
     @Override
     public ProxySelector getOnlyBySettingsSelector() {
         return mySelector;
@@ -181,7 +180,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         correctPasswords();
     }
 
-    public boolean isGenericPasswordCanceled(@Nonnull String host, int port) {
+    public boolean isGenericPasswordCanceled(String host, int port) {
         synchronized (myLock) {
             return myGenericCancelled.contains(new CommonProxy.HostInfo(null, host, port));
         }
@@ -194,7 +193,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
-    public PasswordAuthentication getGenericPassword(@Nonnull String host, int port) {
+    public PasswordAuthentication getGenericPassword(String host, int port) {
         ProxyInfo proxyInfo;
         synchronized (myLock) {
             proxyInfo = myGenericPasswords.get(new CommonProxy.HostInfo(null, host, port));
@@ -205,7 +204,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return new PasswordAuthentication(proxyInfo.getUsername(), decode(String.valueOf(proxyInfo.getPasswordCrypt())).toCharArray());
     }
 
-    public void putGenericPassword(String host, int port, @Nonnull PasswordAuthentication authentication, boolean remember) {
+    public void putGenericPassword(String host, int port, PasswordAuthentication authentication, boolean remember) {
         PasswordAuthentication coded =
             new PasswordAuthentication(authentication.getUserName(), encode(String.valueOf(authentication.getPassword())).toCharArray());
         synchronized (myLock) {
@@ -351,7 +350,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return value[0];
     }
 
-    private static void runAboveAll(@Nonnull Runnable runnable) {
+    private static void runAboveAll(Runnable runnable) {
         ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
         if (progressIndicator != null && progressIndicator.isModal()) {
             WaitForProgressToShow.runOrInvokeAndWaitAboveProgress(runnable);
@@ -363,7 +362,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
-    public void prepareURL(@Nonnull String url) throws IOException {
+    public void prepareURL(String url) throws IOException {
         URLConnection connection = openConnection(url);
         try {
             connection.connect();
@@ -382,8 +381,8 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
-    @Nonnull
-    public URLConnection openConnection(@Nonnull String location) throws IOException {
+    
+    public URLConnection openConnection(String location) throws IOException {
         URL url = new URL(location);
         URLConnection urlConnection = null;
         List<Proxy> proxies = CommonProxy.getInstance().select(url);
@@ -446,7 +445,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return uri == null || !mySelector.isProxyException(uri.getHost());
     }
 
-    public static URI toUri(@Nonnull String uri) {
+    public static URI toUri(String uri) {
         int index = uri.indexOf("://");
         if (index < 0) {
             // true URI, like mailto:
@@ -495,7 +494,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
-    @Nonnull
+    
     public List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri) {
         if (!myState.USE_HTTP_PROXY && !myState.USE_PROXY_PAC) {
             return Collections.emptyList();
@@ -550,7 +549,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getProxyExceptions() {
         String proxyExceptions = myState.PROXY_EXCEPTIONS;
@@ -561,7 +560,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
     }
 
     @Override
-    public boolean isRealProxy(@Nonnull Proxy proxy) {
+    public boolean isRealProxy(Proxy proxy) {
         return !Proxy.NO_PROXY.equals(proxy) && !Proxy.Type.DIRECT.equals(proxy.type());
     }
 
@@ -569,8 +568,8 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
      * @deprecated use {@link ParametersList#addProperty(String, String)} (to be removed in IDEA 2018)
      */
     @SuppressWarnings({"deprecation", "unused"})
-    @Nonnull
-    public static List<String> convertArguments(@Nonnull List<Pair<String, String>> list) {
+    
+    public static List<String> convertArguments(List<Pair<String, String>> list) {
         if (list.isEmpty()) {
             return Collections.emptyList();
         }
@@ -588,7 +587,7 @@ public class HttpProxyManagerImpl implements PersistentStateComponent<HttpProxyM
         }
     }
 
-    public void removeGeneric(@Nonnull CommonProxy.HostInfo info) {
+    public void removeGeneric(CommonProxy.HostInfo info) {
         synchronized (myLock) {
             myGenericPasswords.remove(info);
         }

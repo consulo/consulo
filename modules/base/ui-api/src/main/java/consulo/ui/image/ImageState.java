@@ -15,8 +15,6 @@
  */
 package consulo.ui.image;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-08-27
@@ -24,15 +22,13 @@ import jakarta.annotation.Nonnull;
 public final class ImageState<S> {
   private S myState;
 
-  public ImageState(@Nonnull S state) {
+  public ImageState(S state) {
     myState = state;
   }
 
-  public void setState(@Nonnull S state) {
+  public void setState(S state) {
     myState = state;
   }
-
-  @Nonnull
   public S getState() {
     return myState;
   }

@@ -49,8 +49,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.webBrowser.*;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +59,7 @@ import java.util.Collection;
 public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(BaseOpenInBrowserAction.class);
 
-    protected BaseOpenInBrowserAction(@Nonnull WebBrowser browser) {
+    protected BaseOpenInBrowserAction(WebBrowser browser) {
         super(browser.getName(), null, browser.getIcon());
     }
 
@@ -70,11 +69,10 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @Nullable
-    protected abstract WebBrowser getBrowser(@Nonnull AnActionEvent event);
+    protected abstract WebBrowser getBrowser(AnActionEvent event);
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ReadLock.apply(i -> {
             WebBrowser browser = getBrowser(e);
             if (browser == null) {
@@ -110,7 +108,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         WebBrowser browser = getBrowser(e);
         if (browser != null) {
             open(e, browser);
@@ -119,7 +117,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
 
     @Nullable
     @RequiredReadAction
-    public static OpenInBrowserRequest createRequest(@Nonnull DataContext context) {
+    public static OpenInBrowserRequest createRequest(DataContext context) {
         final Editor editor = context.getData(Editor.KEY);
         if (editor != null) {
             Project project = editor.getProject();
@@ -132,7 +130,6 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
                     return new OpenInBrowserRequest(psiFile) {
                         private PsiElement element;
 
-                        @Nonnull
                         @Override
                         @RequiredReadAction
                         public PsiElement getElement() {
@@ -162,7 +159,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
 
     @Nullable
     @RequiredReadAction
-    public static Pair<OpenInBrowserRequest, WebBrowserUrlProvider> doUpdate(@Nonnull AnActionEvent event) {
+    public static Pair<OpenInBrowserRequest, WebBrowserUrlProvider> doUpdate(AnActionEvent event) {
         OpenInBrowserRequest request = createRequest(event.getDataContext());
         boolean applicable = false;
         WebBrowserUrlProvider provider = null;
@@ -179,7 +176,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    public static void open(@Nonnull AnActionEvent event, @Nullable WebBrowser browser) {
+    public static void open(AnActionEvent event, @Nullable WebBrowser browser) {
         open(createRequest(event.getDataContext()), (event.getModifiers() & Event.SHIFT_MASK) != 0, browser);
     }
 
@@ -207,8 +204,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
         }
     }
 
-    @Nonnull
-    private static AsyncResult<Url> chooseUrl(@Nonnull Collection<Url> urls) {
+    private static AsyncResult<Url> chooseUrl(Collection<Url> urls) {
         if (urls.size() == 1) {
             return AsyncResult.resolved(ContainerUtil.getFirstItem(urls));
         }
@@ -217,7 +213,7 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction {
             .setTitle("Choose Url")
             .setRenderer(new ColoredListCellRenderer() {
                 @Override
-                protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                     setIcon(PlatformIconGroup.nodesPpweb());
                     append(((Url)value).toDecodedForm());
                 }

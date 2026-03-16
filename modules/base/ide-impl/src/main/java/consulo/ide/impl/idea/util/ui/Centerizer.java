@@ -4,8 +4,7 @@ package consulo.ide.impl.idea.util.ui;
 import consulo.util.lang.Couple;
 import consulo.ui.ex.awt.JBUI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,11 +17,11 @@ public class Centerizer extends JPanel {
 
   private TYPE type;
 
-  public Centerizer(@Nonnull JComponent comp) {
+  public Centerizer(JComponent comp) {
     this(comp, TYPE.BOTH);
   }
 
-  public Centerizer(@Nonnull JComponent comp, @Nonnull TYPE type) {
+  public Centerizer(JComponent comp, TYPE type) {
     super(false);
     this.type = type;
 

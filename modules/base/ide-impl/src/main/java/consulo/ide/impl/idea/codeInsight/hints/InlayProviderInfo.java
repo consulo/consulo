@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.hints;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProvider;
 import consulo.language.editor.inlay.DeclarativeInlayOptionInfo;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.Set;
@@ -61,7 +60,7 @@ public final class InlayProviderInfo {
         return isEnabledByDefault;
     }
 
-    @Nonnull
+    
     public LocalizeValue getProviderName() {
         return providerName;
     }

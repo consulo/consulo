@@ -32,8 +32,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -45,13 +44,13 @@ import java.util.Map;
  * @since 2021-03-20
  */
 public class InvalidateCacheDialog extends DialogWrapper {
-    @Nonnull
+    
     private final Application myApplication;
     private Map<CachesInvalidator, Boolean> myStates = new LinkedHashMap<>();
 
     private Action myJustRestartAction;
 
-    public InvalidateCacheDialog(@Nonnull Application application, @Nullable Project project) {
+    public InvalidateCacheDialog(Application application, @Nullable Project project) {
         super(project);
         myApplication = application;
 
@@ -114,7 +113,7 @@ public class InvalidateCacheDialog extends DialogWrapper {
         myApplication.restart(true);
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         Action[] actions = super.createActions();

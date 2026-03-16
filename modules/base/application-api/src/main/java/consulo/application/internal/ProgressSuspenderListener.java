@@ -17,19 +17,18 @@ package consulo.application.internal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
-import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.APPLICATION)
 public interface ProgressSuspenderListener {
   /**
    * Called (on any thread) when a new progress is created with suspension capability
    */
-  default void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {
+  default void suspendableProgressAppeared(ProgressSuspender suspender) {
   }
 
   /**
    * Called (on any thread) when a progress is suspended or resumed
    */
-  default void suspendedStatusChanged(@Nonnull ProgressSuspender suspender) {
+  default void suspendedStatusChanged(ProgressSuspender suspender) {
   }
 }

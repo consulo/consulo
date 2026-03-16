@@ -29,9 +29,7 @@ import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -41,13 +39,13 @@ public class FilePathImpl implements FilePath {
   private VirtualFile myVirtualFile;
   private VirtualFile myVirtualParent;
   private final String myName;
-  @Nonnull
+  
   private final File myFile;
   private boolean myIsDirectory;
   private final boolean myLocal;
 
   private FilePathImpl(VirtualFile virtualParent,
-                       @Nonnull String name,
+                       String name,
                        boolean isDirectory,
                        VirtualFile child,
                        boolean forDeleted) {
@@ -72,26 +70,26 @@ public class FilePathImpl implements FilePath {
     return new File(child.getPath());
   }
 
-  public FilePathImpl(@Nonnull VirtualFile virtualParent, String name, boolean isDirectory) {
+  public FilePathImpl(VirtualFile virtualParent, String name, boolean isDirectory) {
     this(virtualParent, name, isDirectory, null, false);
   }
 
-  private FilePathImpl(@Nonnull VirtualFile virtualParent, String name, boolean isDirectory, boolean forDeleted) {
+  private FilePathImpl(VirtualFile virtualParent, String name, boolean isDirectory, boolean forDeleted) {
     this(virtualParent, name, isDirectory, null, forDeleted);
   }
 
-  public FilePathImpl(@Nonnull File file, boolean isDirectory) {
+  public FilePathImpl(File file, boolean isDirectory) {
     this(file, isDirectory, true);
   }
 
-  private FilePathImpl(@Nonnull File file, boolean isDirectory, boolean local) {
+  private FilePathImpl(File file, boolean isDirectory, boolean local) {
     myFile = file;
     myName = file.getName();
     myIsDirectory = isDirectory;
     myLocal = local;
   }
 
-  public FilePathImpl(@Nonnull VirtualFile virtualFile) {
+  public FilePathImpl(VirtualFile virtualFile) {
     this(virtualFile.getParent(), virtualFile.getName(), virtualFile.isDirectory(), virtualFile, false);
   }
 
@@ -198,7 +196,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public VirtualFile getVirtualFile() {
     if (myVirtualFile != null && !myVirtualFile.isValid()) {
       myVirtualFile = null;
@@ -216,7 +214,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @Nonnull
+  
   public File getIOFile() {
     return myFile;
   }
@@ -342,7 +340,7 @@ public class FilePathImpl implements FilePath {
   private static Constructor<File> ourFileStringConstructor;
   private static boolean ourFileStringConstructorInitialized;
 
-  @Nonnull
+  
   public static FilePath createNonLocal(String path, boolean directory) {
     path = path.replace('/', File.separatorChar);
     // avoid filename normalization (IDEADEV-10548)
@@ -372,7 +370,7 @@ public class FilePathImpl implements FilePath {
   }
 
   @Override
-  @NonNls
+  
   public String toString() {
     return "DocumentFilePath[" + myFile.getName() + "] (" + myFile.getParent() + ")";
   }

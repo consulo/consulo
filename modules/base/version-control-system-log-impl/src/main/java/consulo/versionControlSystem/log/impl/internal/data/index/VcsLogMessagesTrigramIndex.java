@@ -23,8 +23,7 @@ import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.lang.text.TrigramBuilder;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.impl.internal.FatalErrorHandler;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,15 +32,15 @@ import java.util.Map;
 public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
   public static final String TRIGRAMS = "trigrams";
 
-  public VcsLogMessagesTrigramIndex(@Nonnull String logId,
-                                    @Nonnull FatalErrorHandler fatalErrorHandler,
-                                    @Nonnull Disposable disposableParent) throws IOException {
+  public VcsLogMessagesTrigramIndex(String logId,
+                                    FatalErrorHandler fatalErrorHandler,
+                                    Disposable disposableParent) throws IOException {
     super(logId, TRIGRAMS, VcsLogPersistentIndex.getVersion(), new TrigramMessageIndexer(), VoidDataExternalizer.INSTANCE,
           fatalErrorHandler, disposableParent);
   }
 
   @Nullable
-  public IntSet getCommitsForSubstring(@Nonnull String string) throws StorageException {
+  public IntSet getCommitsForSubstring(String string) throws StorageException {
     MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
     TrigramBuilder.processTrigrams(string, trigramProcessor);
 
@@ -51,9 +50,9 @@ public class VcsLogMessagesTrigramIndex extends VcsLogFullDetailsIndex<Void> {
   }
 
   public static class TrigramMessageIndexer implements DataIndexer<Integer, Void, VcsFullCommitDetails> {
-    @Nonnull
+    
     @Override
-    public Map<Integer, Void> map(@Nonnull VcsFullCommitDetails inputData) {
+    public Map<Integer, Void> map(VcsFullCommitDetails inputData) {
       MyTrigramProcessor trigramProcessor = new MyTrigramProcessor();
       TrigramBuilder.processTrigrams(inputData.getFullMessage(), trigramProcessor);
 

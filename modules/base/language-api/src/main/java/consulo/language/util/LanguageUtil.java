@@ -36,8 +36,7 @@ import consulo.util.collection.JBIterable;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -47,18 +46,18 @@ public final class LanguageUtil {
     private LanguageUtil() {
     }
 
-    @Nonnull
-    public static JBIterable<Language> getBaseLanguages(@Nonnull Language language) {
+    
+    public static JBIterable<Language> getBaseLanguages(Language language) {
         return JBIterable.generate(language, Language::getBaseLanguage);
     }
 
     @Nullable
-    public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file) {
+    public static Language getLanguageForPsi(Project project, @Nullable VirtualFile file) {
         return getLanguageForPsi(project, file, null);
     }
 
     @Nullable
-    public static Language getLanguageForPsi(@Nonnull Project project, @Nullable VirtualFile file, @Nullable FileType fileType) {
+    public static Language getLanguageForPsi(Project project, @Nullable VirtualFile file, @Nullable FileType fileType) {
         if (file == null) {
             return null;
         }
@@ -99,7 +98,7 @@ public final class LanguageUtil {
         return language == null ? null : language.getAssociatedFileType();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static ParserDefinition.SpaceRequirements canStickTokensTogetherByLexer(ASTNode left, ASTNode right, Lexer lexer) {
         String textStr = left.getText() + right.getText();
@@ -121,8 +120,8 @@ public final class LanguageUtil {
         return ParserDefinition.SpaceRequirements.MAY;
     }
 
-    @Nonnull
-    public static Language[] getLanguageDialects(@Nonnull Language base) {
+    
+    public static Language[] getLanguageDialects(Language base) {
         List<Language> list = ContainerUtil.findAll(
             Language.getRegisteredLanguages(),
             language -> language.getBaseLanguage() == base
@@ -144,7 +143,7 @@ public final class LanguageUtil {
         return language instanceof TemplateLanguage;
     }
 
-    public static boolean isInjectableLanguage(@Nonnull Language language) {
+    public static boolean isInjectableLanguage(Language language) {
         if (language == Language.ANY) {
             return false;
         }
@@ -161,7 +160,7 @@ public final class LanguageUtil {
     }
 
     // FIXME [VISTALL] we really need this?
-    public static boolean isFileLanguage(@Nonnull Language language) {
+    public static boolean isFileLanguage(Language language) {
         if (language instanceof InjectableLanguage) {
             return false;
         }
@@ -179,7 +178,7 @@ public final class LanguageUtil {
         return StringUtil.isNotEmpty(type.getDefaultExtension());
     }
 
-    @Nonnull
+    
     public static List<Language> getFileLanguages() {
         List<Language> result = new ArrayList<>();
         for (Language language : Language.getRegisteredLanguages()) {
@@ -192,9 +191,9 @@ public final class LanguageUtil {
         return result;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static Language getRootLanguage(@Nonnull PsiElement element) {
+    public static Language getRootLanguage(PsiElement element) {
         FileViewProvider provider = element.getContainingFile().getViewProvider();
         Set<Language> languages = provider.getLanguages();
         if (languages.size() > 1) {
@@ -210,8 +209,8 @@ public final class LanguageUtil {
         return provider.getBaseLanguage();
     }
 
-    @Nonnull
-    public static JBIterable<Language> hierarchy(@Nonnull Language language) {
+    
+    public static JBIterable<Language> hierarchy(Language language) {
         return JBIterable.generate(language, Language::getBaseLanguage);
     }
 }

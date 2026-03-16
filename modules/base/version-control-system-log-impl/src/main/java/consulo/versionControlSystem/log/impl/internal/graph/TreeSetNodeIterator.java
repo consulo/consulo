@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +27,7 @@ class TreeSetNodeIterator {
   TreeSetNodeIterator(int startNode, final boolean isUp) {
     myWalkNodes = new TreeSet<>(new Comparator<Integer>() {
       @Override
-      public int compare(@Nonnull Integer o1, @Nonnull Integer o2) {
+      public int compare(Integer o1, Integer o2) {
         if (isUp) return o2 - o1;
         return o1 - o2;
       }

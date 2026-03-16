@@ -5,7 +5,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.util.graph.Graph;
 import consulo.language.psi.PsiElement;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,22 +17,22 @@ public final class ControlFlowUtil {
     private ControlFlowUtil() {
     }
 
-    public static @Nonnull Graph<Instruction> createGraph(@Nonnull Instruction[] flow) {
+    public static Graph<Instruction> createGraph(Instruction[] flow) {
         return new Graph<Instruction>() {
-            private final @Nonnull List<Instruction> myList = Arrays.asList(flow);
+            private final List<Instruction> myList = Arrays.asList(flow);
 
             @Override
-            public @Nonnull Collection<Instruction> getNodes() {
+            public Collection<Instruction> getNodes() {
                 return myList;
             }
 
             @Override
-            public @Nonnull Iterator<Instruction> getIn(Instruction n) {
+            public Iterator<Instruction> getIn(Instruction n) {
                 return n.allPred().iterator();
             }
 
             @Override
-            public @Nonnull Iterator<Instruction> getOut(Instruction n) {
+            public Iterator<Instruction> getOut(Instruction n) {
                 return n.allSucc().iterator();
             }
         };
@@ -82,8 +81,8 @@ public final class ControlFlowUtil {
     }
 
     public static void iteratePrev(int startInstruction,
-                                   @Nonnull Instruction[] instructions,
-                                   @Nonnull Function<? super Instruction, Operation> closure) {
+                                   Instruction[] instructions,
+                                   Function<? super Instruction, Operation> closure) {
         iterate(startInstruction, instructions, closure, true);
     }
 
@@ -91,8 +90,8 @@ public final class ControlFlowUtil {
      * Iterates over write instructions in CFG with reversed order
      */
     public static void iterate(int startInstruction,
-                               @Nonnull Instruction[] instructions,
-                               @Nonnull Function<? super Instruction, Operation> closure,
+                               Instruction[] instructions,
+                               Function<? super Instruction, Operation> closure,
                                boolean prev) {
         //noinspection SSBasedInspection
         IntArrayList stack = new IntArrayList(instructions.length);

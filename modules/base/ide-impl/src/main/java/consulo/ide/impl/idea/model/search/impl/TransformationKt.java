@@ -2,7 +2,6 @@ package consulo.ide.impl.idea.model.search.impl;
 
 import consulo.application.util.query.Query;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,26 +10,26 @@ import java.util.function.Function;
 
 // from kotlin
 public final class TransformationKt {
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public static <R> XTransformation<? super R, ? extends R> idTransform() {
         return (XTransformation<R, R>) IdTransformation.INSTANCE;
     }
 
-    @Nonnull
-    public static <B, R> XTransformation<? super B, ? extends R> xValueTransform(@Nonnull Function<? super B, ? extends Collection<? extends R>> transformation) {
+    
+    public static <B, R> XTransformation<? super B, ? extends R> xValueTransform(Function<? super B, ? extends Collection<? extends R>> transformation) {
         return (baseValue) -> ContainerUtil.map(transformation.apply(baseValue), ValueResult::new);
     }
 
-    @Nonnull
-    public static <B, R> XTransformation<? super B, ? extends R> xQueryTransform(@Nonnull Function<? super B, ? extends Collection<Query<? extends R>>> subQueries) {
+    
+    public static <B, R> XTransformation<? super B, ? extends R> xQueryTransform(Function<? super B, ? extends Collection<Query<? extends R>>> subQueries) {
         return (baseValue) -> ContainerUtil.map(subQueries.apply(baseValue), QueryResult::new);
     }
 
     /**
      * (>=>) :: (b -> x i) -> (i -> x r) -> (b -> x r)
      */
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public static <B, I, R> XTransformation<? super B, ? extends R> karasique(
         XTransformation<? super B, ? extends I> thisTrans,

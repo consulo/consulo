@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.*;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -30,31 +29,31 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 @Singleton
 public class LightCachedValuesManager extends CachedValuesManager {
-    @Nonnull
+    
     @Override
-    public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
+    public <T> CachedValue<T> createCachedValue(CachedValueProvider<T> provider, boolean trackValue) {
         return new LightCachedValue<>(provider);
     }
 
-    @Nonnull
+    
     @Override
     public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue
     ) {
         return new LightParameterizedCachedValue<>(provider);
     }
 
     @Override
-    protected void trackKeyHolder(@Nonnull UserDataHolder dataHolder, @Nonnull Key<?> key) {
+    protected void trackKeyHolder(UserDataHolder dataHolder, Key<?> key) {
 
     }
 
     @Override
     public <T> T getCachedValue(
-        @Nonnull UserDataHolder dataHolder,
-        @Nonnull Key<CachedValue<T>> key,
-        @Nonnull CachedValueProvider<T> provider,
+        UserDataHolder dataHolder,
+        Key<CachedValue<T>> key,
+        CachedValueProvider<T> provider,
         boolean trackValue
     ) {
         CachedValue<T> value = dataHolder.getUserData(key);

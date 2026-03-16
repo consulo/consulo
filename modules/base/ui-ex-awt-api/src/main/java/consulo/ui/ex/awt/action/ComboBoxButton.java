@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.action;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -25,13 +24,13 @@ import javax.swing.*;
 public interface ComboBoxButton {
   String LIKE_BUTTON = "ComboBoxButton.likeButton";
 
-  @Nonnull
+  
   default JComponent getComponent() {
     return (JComponent)this;
   }
 
   void showPopup();
 
-  @Nonnull
+  
   ComboBoxAction getComboBoxAction();
 }

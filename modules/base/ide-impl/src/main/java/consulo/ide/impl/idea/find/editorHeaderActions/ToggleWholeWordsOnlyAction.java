@@ -5,7 +5,6 @@ import consulo.find.localize.FindLocalize;
 import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction implements Embeddable {
     public ToggleWholeWordsOnlyAction() {
@@ -23,7 +22,7 @@ public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction impleme
     }
     
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         SearchSession session = e.getData(SearchSession.KEY);
         e.getPresentation().setEnabled(session != null && !session.getFindModel().isRegularExpressions());
         e.getPresentation().setVisible(session != null && !session.getFindModel().isMultiline());
@@ -32,12 +31,12 @@ public class ToggleWholeWordsOnlyAction extends EditorSearchToggleAction impleme
     }
 
     @Override
-    protected boolean isSelected(@Nonnull SearchSession session) {
+    protected boolean isSelected(SearchSession session) {
         return session.getFindModel().isWholeWordsOnly();
     }
 
     @Override
-    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+    protected void setSelected(SearchSession session, boolean selected) {
         FindSettings.getInstance().setLocalWholeWordsOnly(selected);
         session.getFindModel().setWholeWordsOnly(selected);
     }

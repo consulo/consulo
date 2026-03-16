@@ -25,8 +25,7 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.ShortcutSet;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -62,7 +61,7 @@ class AccessibleGutterLine extends JPanel {
         );
     }
 
-    public static AccessibleGutterLine createAndActivate(@Nonnull EditorGutterComponentImpl gutter) {
+    public static AccessibleGutterLine createAndActivate(EditorGutterComponentImpl gutter) {
         return new AccessibleGutterLine(gutter);
     }
 
@@ -80,13 +79,13 @@ class AccessibleGutterLine extends JPanel {
         mySelectedElement.paint(g);
     }
 
-    public static void installListeners(@Nonnull EditorGutterComponentImpl gutter) {
+    public static void installListeners(EditorGutterComponentImpl gutter) {
         if (!actionHandlerInstalled) {
             // [tav] todo: when the API is stable and open move it to ShowGutterIconTooltipAction
             actionHandlerInstalled = true;
             EditorActionManager.getInstance().setActionHandler("EditorShowGutterIconTooltip", new EditorActionHandler() {
                 @Override
-                protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
                     AccessibleGutterLine line = ((EditorGutterComponentImpl)editor.getGutter()).getCurrentAccessibleLine();
                     if (line != null) {
                         line.showTooltipIfPresent();
@@ -108,7 +107,7 @@ class AccessibleGutterLine extends JPanel {
         });
         gutter.getEditor().getCaretModel().addCaretListener(new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent event) {
+            public void caretPositionChanged(CaretEvent event) {
                 AccessibleGutterLine line = gutter.getCurrentAccessibleLine();
                 if (line != null) {
                     line.maybeLineChanged();
@@ -129,7 +128,7 @@ class AccessibleGutterLine extends JPanel {
         mySelectedElement.showTooltip();
     }
 
-    private AccessibleGutterLine(@Nonnull EditorGutterComponentImpl gutter) {
+    private AccessibleGutterLine(EditorGutterComponentImpl gutter) {
         super(null);
 
         DesktopEditorImpl editor = gutter.getEditor();
@@ -143,13 +142,13 @@ class AccessibleGutterLine extends JPanel {
         if (myGutter.isLineNumbersShown()) {
             addNewElement(
                 new SimpleAccessible() {
-                    @Nonnull
+                    
                     @Override
                     public LocalizeValue getAccessibleNameValue() {
                         return LocalizeValue.localizeTODO("line " + (myLogicalLineNum + 1));
                     }
 
-                    @Nonnull
+                    
                     @Override
                     public LocalizeValue getAccessibleTooltipValue() {
                         return LocalizeValue.empty();
@@ -181,13 +180,13 @@ class AccessibleGutterLine extends JPanel {
                 final LocalizeValue tt = tooltipText;
                 addNewElement(
                     new SimpleAccessible() {
-                        @Nonnull
+                        
                         @Override
                         public LocalizeValue getAccessibleNameValue() {
                             return LocalizeValue.localizeTODO(buf.toString());
                         }
 
-                        @Nonnull
+                        
                         @Override
                         public LocalizeValue getAccessibleTooltipValue() {
                             return tt;
@@ -208,7 +207,7 @@ class AccessibleGutterLine extends JPanel {
                 Icon icon = myGutter.scaleIcon(renderer.getIcon());
                 addNewElement(
                     new SimpleAccessible() {
-                        @Nonnull
+                        
                         @Override
                         public LocalizeValue getAccessibleNameValue() {
                             if (renderer instanceof SimpleAccessible accessible) {
@@ -217,7 +216,7 @@ class AccessibleGutterLine extends JPanel {
                             return LocalizeValue.localizeTODO("icon: " + renderer.getClass().getSimpleName());
                         }
 
-                        @Nonnull
+                        
                         @Override
                         public LocalizeValue getAccessibleTooltipValue() {
                             return renderer.getTooltipValue();
@@ -262,13 +261,13 @@ class AccessibleGutterLine extends JPanel {
             Rectangle b = getBounds(); // set above
             mySelectedElement = addNewElement(
                 new SimpleAccessible() {
-                    @Nonnull
+                    
                     @Override
                     public LocalizeValue getAccessibleNameValue() {
                         return LocalizeValue.localizeTODO("empty");
                     }
 
-                    @Nonnull
+                    
                     @Override
                     public LocalizeValue getAccessibleTooltipValue() {
                         return LocalizeValue.empty();
@@ -295,8 +294,8 @@ class AccessibleGutterLine extends JPanel {
     }
 
     @SuppressWarnings("SameParameterValue")
-    @Nonnull
-    private AccessibleGutterElement addNewElement(@Nonnull SimpleAccessible accessible, int x, int y, int width, int height) {
+    
+    private AccessibleGutterElement addNewElement(SimpleAccessible accessible, int x, int y, int width, int height) {
         AccessibleGutterElement obj = new AccessibleGutterElement(accessible, new Rectangle(x, y, width, height));
         add(obj);
         return obj;
@@ -344,10 +343,10 @@ class AccessibleGutterLine extends JPanel {
      */
     private class AccessibleGutterElement extends JLabel {
         private
-        @Nonnull
+        
         final SimpleAccessible myAccessible;
 
-        AccessibleGutterElement(@Nonnull SimpleAccessible accessible, @Nonnull Rectangle bounds) {
+        AccessibleGutterElement(SimpleAccessible accessible, Rectangle bounds) {
             myAccessible = accessible;
 
             setFocusable(true);

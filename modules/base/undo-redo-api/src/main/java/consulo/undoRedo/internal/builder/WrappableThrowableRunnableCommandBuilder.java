@@ -16,7 +16,6 @@
 package consulo.undoRedo.internal.builder;
 
 import consulo.undoRedo.builder.ThrowableRunnableCommandBuilder;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -29,7 +28,7 @@ public interface WrappableThrowableRunnableCommandBuilder<R, E extends Throwable
 
     @Override
     @SuppressWarnings("unchecked")
-    default THIS outerWrap(@Nonnull Consumer<Runnable> runner) {
+    default THIS outerWrap(Consumer<Runnable> runner) {
         return (THIS)new OuterWrapper<R, E, THIS, THIS>(
             (THIS)this,
             runner,
@@ -39,7 +38,7 @@ public interface WrappableThrowableRunnableCommandBuilder<R, E extends Throwable
 
     @Override
     @SuppressWarnings("unchecked")
-    default THIS innerWrap(@Nonnull Consumer<Runnable> runner) {
+    default THIS innerWrap(Consumer<Runnable> runner) {
         return (THIS)new InnerWrapper<R, E, THIS, THIS>(
             (THIS)this,
             runner,
@@ -58,7 +57,7 @@ public interface WrappableThrowableRunnableCommandBuilder<R, E extends Throwable
 
         private final Class<E> myExceptionClass;
 
-        public OuterWrapper(THAT subBuilder, @Nonnull Consumer<Runnable> runner, Class<E> exceptionClass) {
+        public OuterWrapper(THAT subBuilder, Consumer<Runnable> runner, Class<E> exceptionClass) {
             super(subBuilder, runner);
             myExceptionClass = exceptionClass;
         }
@@ -80,7 +79,7 @@ public interface WrappableThrowableRunnableCommandBuilder<R, E extends Throwable
 
         private final Class<E> myExceptionClass;
 
-        public InnerWrapper(THAT subBuilder, @Nonnull Consumer<Runnable> runner, Class<E> exceptionClass) {
+        public InnerWrapper(THAT subBuilder, Consumer<Runnable> runner, Class<E> exceptionClass) {
             super(subBuilder, runner);
             myExceptionClass = exceptionClass;
         }

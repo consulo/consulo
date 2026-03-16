@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -29,13 +28,13 @@ public interface VcsLogBranchFilter extends VcsLogFilter {
    * @param name branch name.
    * @return true if a branch matches the filter, false otherwise.
    */
-  boolean matches(@Nonnull String name);
+  boolean matches(String name);
 
   /**
    * Text presentation for the filter (to display in filter popup).
    *
    * @return text presentation for the filter.
    */
-  @Nonnull
+  
   Collection<String> getTextPresentation();
 }

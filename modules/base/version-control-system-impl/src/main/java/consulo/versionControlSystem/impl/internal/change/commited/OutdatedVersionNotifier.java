@@ -40,12 +40,10 @@ import consulo.versionControlSystem.change.commited.CommittedChangesListener;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.util.List;
@@ -109,7 +107,7 @@ public class OutdatedVersionNotifier {
         }
     }
 
-    private static void debug(@NonNls String message) {
+    private static void debug(String message) {
         LOG.debug(message);
     }
 
@@ -163,7 +161,7 @@ public class OutdatedVersionNotifier {
 
     private class MyFileEditorManagerListener implements FileEditorManagerListener {
         @Override
-        public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+        public void fileOpened(FileEditorManager source, VirtualFile file) {
             if (myCache.getCachedIncomingChanges() == null) {
                 requestLoadIncomingChanges();
             }
@@ -215,7 +213,7 @@ public class OutdatedVersionNotifier {
         return func.fun(committedChangeList.getCommitterName(), formattedDate, comment);
     }
 
-    private static boolean isIncomingChangesSupported(@Nonnull CommittedChangeList list) {
+    private static boolean isIncomingChangesSupported(CommittedChangeList list) {
         CachingCommittedChangesProvider provider = list.getVcs().getCachingCommittedChangesProvider();
         return provider != null && provider.supportsIncomingChanges();
     }

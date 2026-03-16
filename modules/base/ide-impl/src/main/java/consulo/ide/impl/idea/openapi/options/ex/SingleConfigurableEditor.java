@@ -31,8 +31,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -66,7 +65,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     public SingleConfigurableEditor(
         @Nullable Project project,
         Configurable configurable,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         String dimensionKey,
         boolean showApplyButton,
         IdeModalityType ideModalityType
@@ -98,7 +97,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     public SingleConfigurableEditor(
         Component parent,
         Configurable configurable,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         String dimensionServiceKey,
         boolean showApplyButton,
         IdeModalityType ideModalityType
@@ -212,7 +211,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
         actions.add(getOKAction());

@@ -29,8 +29,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -174,12 +173,12 @@ public abstract class TreeInplaceEditor implements AWTEventListener {
 
     getProject().getMessageBus().connect(myDisposable).subscribe(RunContentWithExecutorListener.class, new RunContentWithExecutorListener() {
       @Override
-      public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
+      public void contentSelected(@Nullable RunContentDescriptor descriptor, Executor executor) {
         cancelEditing();
       }
 
       @Override
-      public void contentRemoved(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
+      public void contentRemoved(@Nullable RunContentDescriptor descriptor, Executor executor) {
         cancelEditing();
       }
     });

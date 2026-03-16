@@ -26,7 +26,6 @@ import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -37,14 +36,14 @@ import java.util.function.Supplier;
 public class ApplicationUtil {
   // throws exception if can't grab read action right now
   @Deprecated
-  public static <T> T tryRunReadAction(@Nonnull Supplier<T> computable) throws CannotRunReadActionException {
+  public static <T> T tryRunReadAction(Supplier<T> computable) throws CannotRunReadActionException {
     SimpleReference<T> result = new SimpleReference<>();
     tryRunReadAction(() -> result.set(computable.get()));
     return result.get();
   }
 
   @Deprecated
-  public static void tryRunReadAction(@Nonnull Runnable computable) throws CannotRunReadActionException {
+  public static void tryRunReadAction(Runnable computable) throws CannotRunReadActionException {
     if (!ApplicationManager.getApplication().tryRunReadAction(computable)) {
       throw CannotRunReadActionException.create();
     }
@@ -54,8 +53,8 @@ public class ApplicationUtil {
    * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
    * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
    */
-  public static <T> T runWithCheckCanceled(@Nonnull Callable<T> callable,
-                                           @Nonnull ProgressIndicator indicator) throws Exception {
+  public static <T> T runWithCheckCanceled(Callable<T> callable,
+                                           ProgressIndicator indicator) throws Exception {
     Ref<T> result = Ref.create();
     Ref<Throwable> error = Ref.create();
 
@@ -87,13 +86,13 @@ public class ApplicationUtil {
     }
   }
 
-  public static void invokeLaterSomewhere(@Nonnull Application application,
-                                          @Nonnull Runnable r) {
+  public static void invokeLaterSomewhere(Application application,
+                                          Runnable r) {
     application.getLastUIAccess().give(r);
   }
 
-  public static void invokeAndWaitSomewhere(@Nonnull Application application,
-                                            @Nonnull Runnable r) {
+  public static void invokeAndWaitSomewhere(Application application,
+                                            Runnable r) {
     if (!UIAccess.isUIThread() && application.isWriteThread()) {
       Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
     }

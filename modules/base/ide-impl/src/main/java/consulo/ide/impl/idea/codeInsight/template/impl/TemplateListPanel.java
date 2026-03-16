@@ -49,8 +49,7 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -86,7 +85,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
             return myTitle;
         }
 
-        @Nonnull
+        
         public static ExpandByKey valueOfShortcutChar(char shortcutChar) {
             for (ExpandByKey value : values()) {
                 if (value.getShortcutChar() == shortcutChar) {
@@ -678,12 +677,12 @@ public class TemplateListPanel extends JPanel implements Disposable {
             .addExtraAction(new AnAction(CodeInsightLocalize.actionAnactionbuttonTemplateListTextDuplicate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     copyRow();
                 }
 
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     e.getPresentation().setEnabled(getTemplate(getSingleSelectedIndex()) != null);
                 }
             });
@@ -699,7 +698,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
     private void installPopup() {
         final DumbAwareAction rename = new DumbAwareAction(IdeLocalize.actionAnonymousTextRename()) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 int selected = getSingleSelectedIndex();
                 TemplateGroup templateGroup = getGroup(selected);
                 e.getPresentation().setEnabledAndVisible(templateGroup != null);
@@ -708,7 +707,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 renameGroup();
             }
         };
@@ -716,7 +715,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
 
         final DefaultActionGroup move = new DefaultActionGroup(CodeInsightLocalize.actionTextMove(), true) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 final Map<TemplateImpl, DefaultMutableTreeNode> templates = getSelectedTemplates();
                 boolean enabled = !templates.isEmpty();
                 e.getPresentation().setEnabledAndVisible(enabled);
@@ -732,7 +731,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
                             add(new DumbAwareAction(LocalizeValue.of(newGroupName)) {
                                 @RequiredUIAccess
                                 @Override
-                                public void actionPerformed(@Nonnull AnActionEvent e) {
+                                public void actionPerformed(AnActionEvent e) {
                                     moveTemplates(templates, newGroupName);
                                 }
                             });
@@ -742,7 +741,7 @@ public class TemplateListPanel extends JPanel implements Disposable {
                     add(new DumbAwareAction(IdeLocalize.actionAnonymousTextNewGroup()) {
                         @RequiredUIAccess
                         @Override
-                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                        public void actionPerformed(AnActionEvent e) {
                             String newName = Messages.showInputDialog(
                                 myTree,
                                 CodeInsightLocalize.labelEnterTheNewGroupName().get(),

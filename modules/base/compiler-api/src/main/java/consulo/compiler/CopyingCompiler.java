@@ -23,8 +23,7 @@ import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -51,7 +50,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     }
 
     @Override
-    @Nonnull
+    
     public final ProcessingItem[] getProcessingItems(CompileContext context) {
         return Application.get().runReadAction((Supplier<ProcessingItem[]>) () -> {
             VirtualFile[] filesToCopy = getFilesToCopy(context);
@@ -98,7 +97,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     }
 
     @Override
-    @Nonnull
+    
     public String getDescription() {
         return CompilerLocalize.fileCopyingCompilerDescription().get();
     }
@@ -117,13 +116,13 @@ public abstract class CopyingCompiler implements PackagingCompiler {
         private final File myFile;
         private final DestinationFileInfo myInfo;
 
-        public CopyItem(@Nonnull VirtualFile file, @Nonnull String destinationPath) {
+        public CopyItem(VirtualFile file, String destinationPath) {
             myFile = VirtualFileUtil.virtualToIoFile(file);
             myInfo = new DestinationFileInfo(destinationPath, new File(destinationPath).exists());
         }
 
         @Override
-        @Nonnull
+        
         public File getFile() {
             return myFile;
         }

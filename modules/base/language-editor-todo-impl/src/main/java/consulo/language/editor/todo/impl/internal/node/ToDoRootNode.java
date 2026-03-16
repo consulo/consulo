@@ -22,7 +22,6 @@ import consulo.language.editor.todo.impl.internal.TodoTreeBuilder;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.PresentationData;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,24 +30,24 @@ import java.util.Collections;
 public class ToDoRootNode extends BaseToDoNode {
   private final SummaryNode mySummaryNode;
 
-  public ToDoRootNode(Project project, Object value, TodoTreeBuilder builder, @Nonnull ToDoSummary summary) {
+  public ToDoRootNode(Project project, Object value, TodoTreeBuilder builder, ToDoSummary summary) {
     super(project, value, builder);
     mySummaryNode = createSummaryNode(summary);
   }
 
-  protected SummaryNode createSummaryNode(@Nonnull ToDoSummary summary) {
+  protected SummaryNode createSummaryNode(ToDoSummary summary) {
     return new SummaryNode(getProject(), summary, myBuilder);
   }
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     return new ArrayList<>(Collections.singleton(mySummaryNode));
   }
 
   @Override
-  public void update(@Nonnull PresentationData presentation) {
+  public void update(PresentationData presentation) {
   }
 
   public Object getSummaryNode() {

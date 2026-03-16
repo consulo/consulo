@@ -13,8 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SyntaxTraverser;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +31,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
         ExtensionPointCacheKey.create("InlayParameterHintsProvider", LanguageOneToOne.build());
 
     @Nullable
-    static InlayParameterHintsProvider forLanguage(@Nonnull Language language) {
+    static InlayParameterHintsProvider forLanguage(Language language) {
         return Application.get().getExtensionPoint(InlayParameterHintsProvider.class).getOrBuildCache(KEY).get(language);
     }
 
@@ -41,7 +40,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      * @param element element for which hints should be shown.
      * @return list of hints to be shown, hints offsets should be located within element's text range.
      */
-    default @Nonnull List<InlayInfo> getParameterHints(@Nonnull PsiElement element) {
+    default List<InlayInfo> getParameterHints(PsiElement element) {
         return Collections.emptyList();
     }
 
@@ -50,8 +49,8 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      * @param element element for which hints should be shown.
      * @return list of hints to be shown, hints offsets should be located within element's text range.
      */
-    @Nonnull
-    default List<InlayInfo> getParameterHints(@Nonnull PsiElement element, @Nonnull PsiFile file) {
+    
+    default List<InlayInfo> getParameterHints(PsiElement element, PsiFile file) {
         return getParameterHints(element);
     }
 
@@ -63,7 +62,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      *
      * @param element the element under the caret
      */
-    default @Nullable HintInfo getHintInfo(@Nonnull PsiElement element) {
+    default @Nullable HintInfo getHintInfo(PsiElement element) {
         return null;
     }
 
@@ -75,14 +74,14 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
      *
      * @param element the element under the caret
      */
-    default @Nullable HintInfo getHintInfo(@Nonnull PsiElement element, @Nonnull PsiFile file) {
+    default @Nullable HintInfo getHintInfo(PsiElement element, PsiFile file) {
         return getHintInfo(element);
     }
 
     /**
      * Exclude list - default list of patterns for which hints should not be shown.
      */
-    @Nonnull
+    
     Set<String> getDefaultBlackList();
 
     /**
@@ -97,7 +96,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * List of supported options, shown in settings dialog.
      */
-    @Nonnull
+    
     default List<Option> getSupportedOptions() {
         return List.of();
     }
@@ -112,7 +111,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * Text explaining exclude list patterns.
      */
-    @Nonnull
+    
     default LocalizeValue getBlacklistExplanationHTML() {
         return LocalizeValue.empty();
     }
@@ -120,7 +119,7 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * Customise hints presentation.
      */
-    default @Nonnull String getInlayPresentation(@Nonnull String inlayText) {
+    default String getInlayPresentation(String inlayText) {
         return inlayText + ":";
     }
 
@@ -141,15 +140,15 @@ public interface InlayParameterHintsProvider extends LanguageExtension {
     /**
      * @return Traverser for `root` element subtree.
      */
-    @Nonnull
-    default SyntaxTraverser<PsiElement> createTraversal(@Nonnull PsiElement root) {
+    
+    default SyntaxTraverser<PsiElement> createTraversal(PsiElement root) {
         return SyntaxTraverser.psiTraverser(root);
     }
 
-    @Nonnull
+    
     LocalizeValue getPreviewFileText();
 
-    @Nonnull
+    
     default LocalizeValue getDescription() {
         return LocalizeValue.empty();
     }

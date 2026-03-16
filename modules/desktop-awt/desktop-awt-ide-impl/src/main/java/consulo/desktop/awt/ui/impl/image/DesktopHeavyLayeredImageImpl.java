@@ -19,7 +19,6 @@ import consulo.desktop.awt.uiOld.LayeredIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -29,7 +28,7 @@ import java.util.Arrays;
  * @since 2017-09-11
  */
 public class DesktopHeavyLayeredImageImpl extends LayeredIcon implements Image {
-    @Nonnull
+    
     public static Icon[] remap(Image[] icons) {
         return Arrays.stream(icons).map(TargetAWT::to).toArray(Icon[]::new);
     }
@@ -38,7 +37,7 @@ public class DesktopHeavyLayeredImageImpl extends LayeredIcon implements Image {
         super(layerCount);
     }
 
-    public DesktopHeavyLayeredImageImpl(@Nonnull Image... images) {
+    public DesktopHeavyLayeredImageImpl(Image... images) {
         super(remap(images));
     }
 

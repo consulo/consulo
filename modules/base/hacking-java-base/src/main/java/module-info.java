@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.hacking.java.base {
   requires consulo.logging.api;
 

@@ -21,7 +21,6 @@ import consulo.disposer.Disposable;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.execution.ui.layout.RunnerLayoutUiFactory;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -35,9 +34,9 @@ public class RunnerLayoutUiFactoryImpl implements RunnerLayoutUiFactory {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
-  public RunnerLayoutUi create(@Nonnull String runnerId, @Nonnull String runnerTitle, @Nonnull String sessionName, @Nonnull Disposable parent) {
+  public RunnerLayoutUi create(String runnerId, String runnerTitle, String sessionName, Disposable parent) {
     return new DesktopAWTRunnerLayoutUiImpl(myProject, parent, runnerId, runnerTitle, sessionName);
   }
 }

@@ -3,8 +3,7 @@ package consulo.virtualFileSystem.encoding;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -17,14 +16,14 @@ public interface EncodingManager extends EncodingRegistry {
   public static final String PROP_NATIVE2ASCII_SWITCH = "native2ascii";
   public static final String PROP_PROPERTIES_FILES_ENCODING = "propertiesFilesEncoding";
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use ApplicationEncodingManager class")
   public static EncodingManager getInstance() {
     return ApplicationEncodingManager.getInstance();
   }
 
-  @Nonnull
+  
   Collection<Charset> getFavorites();
 
   @Override
@@ -35,10 +34,10 @@ public interface EncodingManager extends EncodingRegistry {
   /**
    * @return returns empty for system default
    */
-  @Nonnull
+  
   String getDefaultCharsetName();
 
-  void setDefaultCharsetName(@Nonnull String name);
+  void setDefaultCharsetName(String name);
 
   /**
    * @return null for system-default
@@ -53,7 +52,7 @@ public interface EncodingManager extends EncodingRegistry {
    * @return encoding used by default in {@link GeneralCommandLine}
    */
   @Override
-  @Nonnull
+  
   Charset getDefaultConsoleEncoding();
 
   default boolean shouldAddBOMForNewUtf8File() {

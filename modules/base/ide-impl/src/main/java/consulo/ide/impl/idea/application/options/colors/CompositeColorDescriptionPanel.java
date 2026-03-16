@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.application.options.colors;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.ui.ColorDescriptionPanel;
 import consulo.colorScheme.ui.EditorSchemeAttributeDescriptor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,19 +27,19 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class CompositeColorDescriptionPanel extends JPanel implements ColorDescriptionPanel {
-    @Nonnull
+    
     protected final List<ColorDescriptionPanel> myDescriptionPanels = new ArrayList<>();
-    @Nonnull
+    
     protected final List<Predicate<? super EditorSchemeAttributeDescriptor>> myConditions = new ArrayList<>();
 
-    @Nonnull
+    
     private final List<Listener> myListeners = new ArrayList<>();
 
     private ColorDescriptionPanel myActive;
 
     public void addDescriptionPanel(
-        @Nonnull ColorDescriptionPanel descriptionPanel,
-        @Nonnull Predicate<? super EditorSchemeAttributeDescriptor> condition
+        ColorDescriptionPanel descriptionPanel,
+        Predicate<? super EditorSchemeAttributeDescriptor> condition
     ) {
         myDescriptionPanels.add(descriptionPanel);
         myConditions.add(condition);
@@ -64,7 +63,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
         setPreferredSize(preferredSize);
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getPanel() {
         return this;
@@ -86,7 +85,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
     }
 
     @Override
-    public void reset(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
+    public void reset(EditorSchemeAttributeDescriptor descriptor) {
         JComponent oldPanel = myActive == null ? null : myActive.getPanel();
         myActive = getPanelForDescriptor(descriptor);
         JComponent newPanel = myActive == null ? null : myActive.getPanel();
@@ -112,7 +111,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
     }
 
     @Nullable
-    private ColorDescriptionPanel getPanelForDescriptor(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
+    private ColorDescriptionPanel getPanelForDescriptor(EditorSchemeAttributeDescriptor descriptor) {
         for (int i = myConditions.size() - 1; i >= 0; i--) {
             Predicate<? super EditorSchemeAttributeDescriptor> condition = myConditions.get(i);
             ColorDescriptionPanel panel = myDescriptionPanels.get(i);
@@ -125,14 +124,14 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
 
 
     @Override
-    public void apply(@Nonnull EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme) {
+    public void apply(EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme) {
         if (myActive != null) {
             myActive.apply(descriptor, scheme);
         }
     }
 
     @Override
-    public void addListener(@Nonnull Listener listener) {
+    public void addListener(Listener listener) {
         for (ColorDescriptionPanel panel : myDescriptionPanels) {
             panel.addListener(listener);
         }
@@ -143,7 +142,7 @@ public class CompositeColorDescriptionPanel extends JPanel implements ColorDescr
         private final Container myPaintHolder;
         private final boolean myPaintState;
 
-        PaintLocker(@Nonnull JComponent component) {
+        PaintLocker(JComponent component) {
             myPaintHolder = component.getParent();
             myPaintState = myPaintHolder.getIgnoreRepaint();
             myPaintHolder.setIgnoreRepaint(true);

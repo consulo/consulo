@@ -21,8 +21,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.update.Activatable;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,19 +36,19 @@ public interface DockContainer extends Disposable, Activatable {
     }
   }
 
-  @Nonnull
-  ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point);
+  
+  ContentResponse getContentResponse(DockableContent content, RelativePoint point);
 
   default JComponent getContainerComponent() {
     throw new AbstractMethodError();
   }
 
-  @Nonnull
+  
   default Component getUIContainerComponent() {
     throw new AbstractMethodError();
   }
 
-  void add(@Nonnull DockableContent content, RelativePoint dropTarget);
+  void add(DockableContent content, RelativePoint dropTarget);
 
   void closeAll();
 
@@ -58,12 +57,12 @@ public interface DockContainer extends Disposable, Activatable {
   boolean isEmpty();
 
   @Nullable
-  Image startDropOver(@Nonnull DockableContent content, RelativePoint point);
+  Image startDropOver(DockableContent content, RelativePoint point);
 
   @Nullable
-  Image processDropOver(@Nonnull DockableContent content, RelativePoint point);
+  Image processDropOver(DockableContent content, RelativePoint point);
 
-  void resetDropOver(@Nonnull DockableContent content);
+  void resetDropOver(DockableContent content);
 
 
   boolean isDisposeWhenEmpty();

@@ -30,8 +30,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -52,7 +51,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
@@ -86,7 +85,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     }
 
     @Override
-    protected boolean isAvailable(@Nonnull AnActionEvent e) {
+    protected boolean isAvailable(AnActionEvent e) {
         DiffRequest request = e.getData(DIFF_REQUEST);
         if (request != null) {
             return true;
@@ -117,7 +116,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
 
     @Nullable
     @Override
-    protected DiffRequest getDiffRequest(@Nonnull AnActionEvent e) {
+    protected DiffRequest getDiffRequest(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         DiffRequest diffRequest = e.getData(DIFF_REQUEST);
         if (diffRequest != null) {
@@ -141,7 +140,7 @@ public class CompareFilesAction extends BaseShowDiffAction {
     }
 
     @Nullable
-    private static VirtualFile getOtherFile(@Nullable Project project, @Nonnull VirtualFile file) {
+    private static VirtualFile getOtherFile(@Nullable Project project, VirtualFile file) {
         FileChooserDescriptor descriptor;
         String key;
 
@@ -162,8 +161,8 @@ public class CompareFilesAction extends BaseShowDiffAction {
         return otherFile;
     }
 
-    @Nonnull
-    private static VirtualFile getDefaultSelection(@Nullable Project project, @Nonnull String key, @Nonnull VirtualFile file) {
+    
+    private static VirtualFile getDefaultSelection(@Nullable Project project, String key, VirtualFile file) {
         if (project == null) {
             return file;
         }
@@ -175,14 +174,14 @@ public class CompareFilesAction extends BaseShowDiffAction {
         return lastSelection != null ? lastSelection : file;
     }
 
-    private static void updateDefaultSelection(@Nullable Project project, @Nonnull String key, @Nonnull VirtualFile file) {
+    private static void updateDefaultSelection(@Nullable Project project, String key, VirtualFile file) {
         if (project == null) {
             return;
         }
         ProjectPropertiesComponent.getInstance(project).setValue(key, file.getPath());
     }
 
-    @Nonnull
+    
     private static Type getType(@Nullable VirtualFile file) {
         if (file == null) {
             return Type.FILE;

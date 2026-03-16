@@ -19,7 +19,6 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * The pass which should be applied to every editor, even if there are many for this document.
@@ -30,13 +29,13 @@ import jakarta.annotation.Nonnull;
  * This pass however is for editor-specific markup, e.g. code folding.
  */
 public abstract class EditorBoundHighlightingPass extends TextEditorHighlightingPass {
-  @Nonnull
+  
   protected final Editor myEditor;
-  @Nonnull
+  
   protected final PsiFile myFile;
 
-  protected EditorBoundHighlightingPass(@Nonnull Editor editor,
-                                        @Nonnull PsiFile psiFile,
+  protected EditorBoundHighlightingPass(Editor editor,
+                                        PsiFile psiFile,
                                         boolean runIntentionPassAfter) {
     super(psiFile.getProject(), editor.getDocument(), runIntentionPassAfter);
     myEditor = editor;

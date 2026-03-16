@@ -17,19 +17,18 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestFinished;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TestFinishedEvent extends TreeNodeEvent {
     @Nullable
     private final Long myDuration;
     private final String myOutputFile;
 
-    public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long duration) {
+    public TestFinishedEvent(TestFinished testFinished, @Nullable Long duration) {
         this(testFinished, duration, null);
     }
 
-    public TestFinishedEvent(@Nonnull TestFinished testFinished, @Nullable Long duration, String outputFile) {
+    public TestFinishedEvent(TestFinished testFinished, @Nullable Long duration, String outputFile) {
         this(testFinished.getTestName(), TreeNodeEvent.getNodeId(testFinished), duration, outputFile);
     }
 
@@ -43,13 +42,13 @@ public class TestFinishedEvent extends TreeNodeEvent {
         myOutputFile = outputFile;
     }
 
-    public TestFinishedEvent(@Nonnull String name, @Nullable Long duration) {
+    public TestFinishedEvent(String name, @Nullable Long duration) {
         this(name, null, duration);
     }
 
     /** @deprecated use {@link #TestFinishedEvent(String, long)} (to be removed in IDEA 16) */
     @SuppressWarnings("unused")
-    public TestFinishedEvent(@Nonnull String name, int duration) {
+    public TestFinishedEvent(String name, int duration) {
         this(name, null, Long.valueOf(duration));
     }
 
@@ -62,7 +61,7 @@ public class TestFinishedEvent extends TreeNodeEvent {
     }
 
     @Override
-    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    protected void appendToStringInfo(StringBuilder buf) {
         append(buf, "duration", myDuration);
     }
 

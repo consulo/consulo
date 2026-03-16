@@ -20,7 +20,6 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewRunningState;
 import consulo.process.ProcessHandler;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,9 +32,9 @@ public class TestConsoleState extends ConsoleState.NotStartedStated {
     myViewer = viewer;
   }
 
-  @Nonnull
+  
   @Override
-  public ConsoleState attachTo(@Nonnull ConsoleView console, ProcessHandler processHandler) {
+  public ConsoleState attachTo(ConsoleView console, ProcessHandler processHandler) {
     return new ConsoleViewRunningState(console, processHandler, this, false, !myViewer);
   }
 }

@@ -27,15 +27,14 @@ import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public class LayoutCodeDialog extends DialogWrapper {
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final PsiFile myFile;
 
   private final boolean myTextSelected;
@@ -58,8 +57,8 @@ public class LayoutCodeDialog extends DialogWrapper {
 
   private LayoutCodeOptions myRunOptions;
 
-  public LayoutCodeDialog(@Nonnull Project project,
-                          @Nonnull PsiFile file,
+  public LayoutCodeDialog(Project project,
+                          PsiFile file,
                           boolean textSelected,
                           String helpId) {
     super(project, true);
@@ -159,7 +158,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     }
   }
 
-  @Nonnull
+  
   private LayoutCodeOptions createOptionsBundledOnDialog() {
     return new LayoutCodeOptions() {
       @Override
@@ -191,7 +190,7 @@ public class LayoutCodeDialog extends DialogWrapper {
     return myButtonsPanel;
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};

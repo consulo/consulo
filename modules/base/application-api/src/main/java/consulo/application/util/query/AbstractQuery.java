@@ -9,8 +9,7 @@ import consulo.util.collection.UnmodifiableIterator;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -28,7 +27,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
         (o1, o2) -> -Integer.compare(System.identityHashCode(o1), System.identityHashCode(o2));
 
     @Override
-    @Nonnull
+    
     public Collection<Result> findAll() {
         assertNotProcessing();
         List<Result> result = new ArrayList<>();
@@ -40,7 +39,7 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public Iterator<Result> iterator() {
         assertNotProcessing();
@@ -60,28 +59,28 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
         assert myIsProcessing.get() == null : "Operation is not allowed while query is being processed";
     }
 
-    @Nonnull
+    
     @Override
-    public Result[] toArray(@Nonnull Result[] a) {
+    public Result[] toArray(Result[] a) {
         assertNotProcessing();
 
         Collection<Result> all = findAll();
         return all.toArray(a);
     }
 
-    @Nonnull
+    
     @Override
     public Query<Result> allowParallelProcessing() {
         return new AbstractQuery<>() {
             @Override
-            protected boolean processResults(@Nonnull Predicate<? super Result> consumer) {
+            protected boolean processResults(Predicate<? super Result> consumer) {
                 return AbstractQuery.this.doProcessResults(consumer);
             }
         };
     }
 
-    @Nonnull
-    private Predicate<Result> threadSafeProcessor(@Nonnull Predicate<? super Result> consumer) {
+    
+    private Predicate<Result> threadSafeProcessor(Predicate<? super Result> consumer) {
         Object lock = ObjectUtil.sentinel("AbstractQuery lock");
         return e -> {
             synchronized (lock) {
@@ -91,11 +90,11 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
     }
 
     @Override
-    public boolean forEach(@Nonnull Predicate<? super Result> consumer) {
+    public boolean forEach(Predicate<? super Result> consumer) {
         return doProcessResults(threadSafeProcessor(consumer));
     }
 
-    private boolean doProcessResults(@Nonnull Predicate<? super Result> consumer) {
+    private boolean doProcessResults(Predicate<? super Result> consumer) {
         assertNotProcessing();
 
         myIsProcessing.set(true);
@@ -107,32 +106,32 @@ public abstract class AbstractQuery<Result> implements Query<Result> {
         }
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super Result> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super Result> consumer) {
         return AsyncUtil.wrapBoolean(forEach(consumer));
     }
 
     /**
      * Assumes consumer being capable of processing results in parallel
      */
-    protected abstract boolean processResults(@Nonnull Predicate<? super Result> consumer);
+    protected abstract boolean processResults(Predicate<? super Result> consumer);
 
     /**
      * Should be called only from {@link #processResults} implementations to delegate to another query
      */
-    protected static <T> boolean delegateProcessResults(@Nonnull Query<T> query, @Nonnull Predicate<? super T> consumer) {
+    protected static <T> boolean delegateProcessResults(Query<T> query, Predicate<? super T> consumer) {
         if (query instanceof AbstractQuery) {
             return ((AbstractQuery<T>)query).doProcessResults(consumer);
         }
         return query.forEach(consumer);
     }
 
-    @Nonnull
-    public static <T> Query<T> wrapInReadAction(@Nonnull Query<? extends T> query) {
+    
+    public static <T> Query<T> wrapInReadAction(Query<? extends T> query) {
         return new AbstractQuery<>() {
             @Override
-            protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
+            protected boolean processResults(Predicate<? super T> consumer) {
                 return AbstractQuery.delegateProcessResults(query, ReadActionProcessor.wrapInReadAction(consumer));
             }
         };

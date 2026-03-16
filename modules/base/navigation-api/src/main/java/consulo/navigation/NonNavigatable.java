@@ -17,7 +17,6 @@ package consulo.navigation;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -32,15 +31,13 @@ public final class NonNavigatable implements Navigatable {
   }
 
   @RequiredReadAction
-  @Nonnull
   @Override
   public NavigateOptions getNavigateOptions() {
     return NavigateOptions.CANT_NAVIGATE;
   }
 
-    @Nonnull
     @Override
-    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+    public CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus) {
         return CompletableFuture.completedFuture(null);
     }
 }

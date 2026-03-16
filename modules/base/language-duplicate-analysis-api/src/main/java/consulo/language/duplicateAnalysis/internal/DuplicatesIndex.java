@@ -39,8 +39,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.DataInput;
@@ -78,7 +77,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
 
     private final DataExternalizer<IntList> myValueExternalizer = new DataExternalizer<>() {
         @Override
-        public void save(@Nonnull DataOutput out, IntList list) throws IOException {
+        public void save(DataOutput out, IntList list) throws IOException {
             if (list.size() == 2) {
                 DataInputOutputUtil.writeINT(out, list.get(0));
                 DataInputOutputUtil.writeINT(out, list.get(1));
@@ -96,7 +95,7 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
         }
 
         @Override
-        public IntList read(@Nonnull DataInput in) throws IOException {
+        public IntList read(DataInput in) throws IOException {
             int capacityOrValue = DataInputOutputUtil.readINT(in);
             if (capacityOrValue >= 0) {
                 IntList list = IntLists.newArrayList(2);
@@ -120,8 +119,8 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
 
     private final DataIndexer<Integer, IntList, FileContent> myIndexer = new DataIndexer<Integer, IntList, FileContent>() {
         @Override
-        @Nonnull
-        public Map<Integer, IntList> map(@Nonnull FileContent inputData) {
+        
+        public Map<Integer, IntList> map(FileContent inputData) {
             FileType type = inputData.getFileType();
 
             DuplicatesProfile profile = findDuplicatesProfile(type);
@@ -180,31 +179,31 @@ public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ID<Integer, IntList> getName() {
         return NAME;
     }
 
-    @Nonnull
+    
     @Override
     public DataIndexer<Integer, IntList, FileContent> getIndexer() {
         return myIndexer;
     }
 
-    @Nonnull
+    
     @Override
     public DataExternalizer<IntList> getValueExternalizer() {
         return myValueExternalizer;
     }
 
-    @Nonnull
+    
     @Override
     public KeyDescriptor<Integer> getKeyDescriptor() {
         return EnumeratorIntegerDescriptor.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
         return myInputFilter;

@@ -24,8 +24,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,41 +32,41 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class PsiPackageManager {
-  @Nonnull
-  public static PsiPackageManager getInstance(@Nonnull Project project) {
+  
+  public static PsiPackageManager getInstance(Project project) {
     return project.getInstance(PsiPackageManager.class);
   }
 
-  public abstract void dropCache(@Nonnull Class<? extends ModuleExtension> extensionClass);
+  public abstract void dropCache(Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findPackage(@Nonnull String qualifiedName, @Nonnull Class<? extends ModuleExtension> extensionClass);
+  public abstract PsiPackage findPackage(String qualifiedName, Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findPackage(@Nonnull PsiDirectory directory, @Nonnull Class<? extends ModuleExtension> extensionClass);
+  public abstract PsiPackage findPackage(PsiDirectory directory, Class<? extends ModuleExtension> extensionClass);
 
   @Nullable
   @RequiredReadAction
-  public PsiPackage findAnyPackage(@Nonnull PsiDirectory directory) {
+  public PsiPackage findAnyPackage(PsiDirectory directory) {
     return findAnyPackage(directory.getVirtualFile());
   }
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(@Nonnull VirtualFile directory);
+  public abstract PsiPackage findAnyPackage(VirtualFile directory);
 
   @Nullable
   @RequiredReadAction
-  public abstract PsiPackage findAnyPackage(@Nonnull String packageName);
+  public abstract PsiPackage findAnyPackage(String packageName);
 
   @RequiredReadAction
-  public boolean isValidPackageName(@Nonnull PsiDirectory directory, @Nonnull String packageName) {
+  public boolean isValidPackageName(PsiDirectory directory, String packageName) {
     Module moduleForPsiElement = ModuleUtilCore.findModuleForPsiElement(directory);
     return moduleForPsiElement == null || isValidPackageName(moduleForPsiElement, packageName);
   }
 
   @RequiredReadAction
-  public abstract boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName);
+  public abstract boolean isValidPackageName(Module module, String packageName);
 }

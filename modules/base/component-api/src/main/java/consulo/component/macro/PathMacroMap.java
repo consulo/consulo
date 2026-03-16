@@ -19,8 +19,7 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import org.jdom.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -31,11 +30,11 @@ public abstract class PathMacroMap {
 
   public abstract String substitute(String text, boolean caseSensitive);
 
-  public final void substitute(@Nonnull Element e, boolean caseSensitive) {
+  public final void substitute(Element e, boolean caseSensitive) {
     substitute(e, caseSensitive, false);
   }
 
-  public final void substitute(@Nonnull Element e, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
+  public final void substitute(Element e, boolean caseSensitive, boolean recursively, @Nullable PathMacroFilter filter) {
     for (Content child : e.getContent()) {
       if (child instanceof Element) {
         substitute((Element)child, caseSensitive, recursively, filter);
@@ -70,7 +69,7 @@ public abstract class PathMacroMap {
     }
   }
 
-  public final void substitute(@Nonnull Element e, boolean caseSensitive, boolean recursively) {
+  public final void substitute(Element e, boolean caseSensitive, boolean recursively) {
     substitute(e, caseSensitive, recursively, null);
   }
 

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +28,7 @@ public class CompositeShortcutSet implements ShortcutSet {
   }
 
   @Override
-  @Nonnull
+  
   public Shortcut[] getShortcuts() {
     List<Shortcut> result = new ArrayList<>();
     for (ShortcutSet each : mySets) {

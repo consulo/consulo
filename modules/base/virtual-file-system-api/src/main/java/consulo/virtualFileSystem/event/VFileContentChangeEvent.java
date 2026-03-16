@@ -19,7 +19,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.util.lang.LocalTimeCounter;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -35,13 +34,13 @@ public class VFileContentChangeEvent extends VFileEvent {
 
   private static final int UNDEFINED_TIMESTAMP_OR_LENGTH = -1;
 
-  public VFileContentChangeEvent(Object requestor, @Nonnull VirtualFile file, long oldModificationStamp, long newModificationStamp, boolean isFromRefresh) {
+  public VFileContentChangeEvent(Object requestor, VirtualFile file, long oldModificationStamp, long newModificationStamp, boolean isFromRefresh) {
     this(requestor, file, oldModificationStamp, newModificationStamp, UNDEFINED_TIMESTAMP_OR_LENGTH, UNDEFINED_TIMESTAMP_OR_LENGTH, UNDEFINED_TIMESTAMP_OR_LENGTH, UNDEFINED_TIMESTAMP_OR_LENGTH,
          isFromRefresh);
   }
 
   public VFileContentChangeEvent(Object requestor,
-                                 @Nonnull VirtualFile file,
+                                 VirtualFile file,
                                  long oldModificationStamp,
                                  long newModificationStamp,
                                  long oldTimestamp,
@@ -59,7 +58,7 @@ public class VFileContentChangeEvent extends VFileEvent {
     myNewLength = newLength;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;
@@ -102,13 +101,13 @@ public class VFileContentChangeEvent extends VFileEvent {
            "]";
   }
 
-  @Nonnull
+  
   @Override
   protected String computePath() {
     return myFile.getPath();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFile.getFileSystem();

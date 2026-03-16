@@ -21,7 +21,6 @@ import consulo.language.editor.generation.MemberChooserBuilder;
 import consulo.language.editor.internal.MemberChooserBuilderFactory;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class DesktopAWTMemberChooserBuilderFactory implements MemberChooserBuilderFactory {
-  @Nonnull
+  
   @Override
   public <T extends ClassMember> MemberChooserBuilder<T> newBuilder(T[] elements) {
     return new DesktopAWTMemberChooserBuilder<>(elements);

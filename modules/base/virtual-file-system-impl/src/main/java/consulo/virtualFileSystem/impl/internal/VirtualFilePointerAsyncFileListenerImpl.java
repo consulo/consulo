@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -31,7 +30,7 @@ final class VirtualFilePointerAsyncFileListenerImpl implements AsyncFileListener
   }
 
   @Override
-  public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
+  public ChangeApplier prepareChange(List<? extends VFileEvent> events) {
     return ((VirtualFilePointerManagerImpl)VirtualFilePointerManager.getInstance()).prepareChange(events);
   }
 }

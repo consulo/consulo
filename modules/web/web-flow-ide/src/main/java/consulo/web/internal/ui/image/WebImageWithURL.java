@@ -16,13 +16,12 @@
 package consulo.web.internal.ui.image;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/05/2023
  */
 public interface WebImageWithURL extends Image {
-  @Nonnull
+  
   String getImageURL();
 }

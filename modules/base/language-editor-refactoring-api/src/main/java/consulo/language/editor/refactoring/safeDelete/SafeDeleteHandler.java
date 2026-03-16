@@ -33,8 +33,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -46,7 +45,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         PsiElement element = dataContext.getData(PsiElement.KEY);
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         if (element == null || !SafeDeleteProcessor.validElement(element)) {
@@ -61,7 +60,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         invoke(project, elements, dataContext.getData(Module.KEY), true, null);
     }
 
@@ -82,7 +81,7 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
 
     @RequiredUIAccess
     public static void invoke(
-        @Nonnull Project project,
+        Project project,
         PsiElement[] elements,
         @Nullable Module module,
         boolean checkDelegates,

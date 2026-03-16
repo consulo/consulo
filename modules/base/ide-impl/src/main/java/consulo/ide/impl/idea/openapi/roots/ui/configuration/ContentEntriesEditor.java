@@ -20,9 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
-import consulo.ui.ex.awt.ScrollablePanel;
 import consulo.ide.impl.idea.openapi.roots.ui.componentsList.layout.VerticalStackLayout;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.roots.ToolbarPanel;
 import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
@@ -42,8 +40,8 @@ import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,9 +118,9 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public JPanel createComponentImpl(@Nonnull Disposable parentUIDisposable) {
+    public JPanel createComponentImpl(Disposable parentUIDisposable) {
         Module module = getModule();
         Project project = module.getProject();
 
@@ -306,12 +304,12 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
     private final class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
         @Override
-        public void editingStarted(@Nonnull ContentEntryEditor editor) {
+        public void editingStarted(ContentEntryEditor editor) {
             selectContentEntry(editor.getContentEntry());
         }
 
         @Override
-        public void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
+        public void beforeEntryDeleted(ContentEntryEditor editor) {
             ContentEntry entryUrl = editor.getContentEntry();
             if (mySelectedEntry != null && mySelectedEntry.equals(entryUrl)) {
                 myRootTreeEditor.setContentEntryEditor(null);
@@ -323,7 +321,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
         }
 
         @Override
-        public void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
+        public void navigationRequested(ContentEntryEditor editor, VirtualFile file) {
             if (mySelectedEntry != null && mySelectedEntry.equals(editor.getContentEntry())) {
                 myRootTreeEditor.requestFocus();
                 myRootTreeEditor.select(file);
@@ -365,7 +363,7 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             FileChooser.chooseFiles(myDescriptor, myProject, myLastSelectedDir).doWhenDone(virtualFiles -> {
                 myLastSelectedDir = virtualFiles[0];
                 addContentEntries(virtualFiles);
@@ -383,12 +381,12 @@ public class ContentEntriesEditor extends ModuleElementsEditor {
                     if (contentEntryFile.equals(file)) {
                         throw new Exception(ProjectLocalize.modulePathsAddContentAlreadyExistsError(file.getPresentableUrl()).get());
                     }
-                    if (VfsUtilCore.isAncestor(contentEntryFile, file, true)) {
+                    if (VirtualFileUtil.isAncestor(contentEntryFile, file, true)) {
                         // intersection not allowed
                         throw new Exception(
                             ProjectLocalize.modulePathsAddContentIntersectError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get());
                     }
-                    if (VfsUtilCore.isAncestor(file, contentEntryFile, true)) {
+                    if (VirtualFileUtil.isAncestor(file, contentEntryFile, true)) {
                         // intersection not allowed
                         throw new Exception(
                             ProjectLocalize.modulePathsAddContentDominateError(file.getPresentableUrl(), contentEntryFile.getPresentableUrl()).get());

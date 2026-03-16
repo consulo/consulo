@@ -21,7 +21,6 @@ import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,10 +39,10 @@ public class ToolbarNotifier implements Activatable {
     private final KeymapManagerListener myKeymapManagerListener = new MyKeymapManagerListener();
     private final WeakTimerListener myWeakTimerListener;
 
-    @Nonnull
+    
     private final Application myApplication;
 
-    @Nonnull
+    
     private final ActionUpdateProxy myUpdateActionsNotifier;
 
     @SuppressWarnings("FieldCanBeLocal") // do not inline creating - it will removed from memory due WeakTimerListener
@@ -51,11 +50,11 @@ public class ToolbarNotifier implements Activatable {
 
     private boolean myListenersArmed;
 
-    public ToolbarNotifier(@Nonnull Application application,
-                           @Nonnull KeymapManager keymapManager,
-                           @Nonnull ActionManager actionManager,
-                           @Nonnull JComponent component,
-                           @Nonnull ActionUpdateProxy updateActionsNotifier) {
+    public ToolbarNotifier(Application application,
+                           KeymapManager keymapManager,
+                           ActionManager actionManager,
+                           JComponent component,
+                           ActionUpdateProxy updateActionsNotifier) {
         myApplication = application;
         myUpdateActionsNotifier = updateActionsNotifier;
         myActionManager = (ActionManagerEx) actionManager;
@@ -89,7 +88,7 @@ public class ToolbarNotifier implements Activatable {
         myKeymapManager.removeKeymapManagerListener(myKeymapManagerListener);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
         if (!myComponent.isVisible()) {
@@ -172,11 +171,11 @@ public class ToolbarNotifier implements Activatable {
     }
 
     private static class MyUpdateRunnable implements Runnable {
-        @Nonnull
+        
         private final WeakReference<ToolbarNotifier> myUpdaterRef;
         private final int myHash;
 
-        MyUpdateRunnable(@Nonnull ToolbarNotifier updater) {
+        MyUpdateRunnable(ToolbarNotifier updater) {
             myHash = updater.hashCode();
             myUpdaterRef = new WeakReference<>(updater);
         }

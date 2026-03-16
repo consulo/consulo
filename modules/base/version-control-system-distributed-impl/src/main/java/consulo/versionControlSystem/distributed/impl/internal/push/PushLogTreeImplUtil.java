@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.distributed.impl.internal.push;
 
 import consulo.ui.ex.awt.tree.CheckboxTree;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -31,8 +31,7 @@ import java.awt.event.MouseEvent;
 public class PushLogTreeImplUtil {
     public static final String EDIT_MODE_PROP = "tree.edit.mode";
 
-    @Nullable
-    public static Object getTagAtForRenderer(CheckboxTree.CheckboxTreeCellRenderer renderer, MouseEvent e) {
+    public static Object getTagAtForRenderer(CheckboxTree.@Nullable CheckboxTreeCellRenderer renderer, MouseEvent e) {
         JTree tree = (JTree) e.getSource();
         Object tag = null;
         TreePath path = tree.getPathForLocation(e.getX(), e.getY());

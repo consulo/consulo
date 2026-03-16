@@ -28,7 +28,6 @@ import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.element.LibraryPackagingElement;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -38,12 +37,12 @@ import java.util.List;
 public class LibrarySourceItem extends PackagingSourceItem {
   private final Library myLibrary;
 
-  public LibrarySourceItem(@Nonnull Library library) {
+  public LibrarySourceItem(Library library) {
     myLibrary = library;
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
     return new LibrarySourceItemPresentation(myLibrary, context);
   }
 
@@ -57,20 +56,20 @@ public class LibrarySourceItem extends PackagingSourceItem {
     return myLibrary.hashCode();
   }
 
-  @Nonnull
+  
   public Library getLibrary() {
     return myLibrary;
   }
 
-  @Nonnull
+  
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return LibraryPackagingElement.getKindForLibrary(myLibrary);
   }
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
+  
+  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
     return PackagingElementFactory.getInstance(context.getProject()).createLibraryElements(myLibrary);
   }
 
@@ -104,7 +103,7 @@ public class LibrarySourceItem extends PackagingSourceItem {
     }
 
     @Override
-    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
       String name = myLibrary.getName();
       if (name != null) {

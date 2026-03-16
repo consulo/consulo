@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -48,7 +47,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
     private final SelectionListener mySelectionListener = new SelectionListener() {
         @Override
-        public void selectionChanged(@Nonnull SelectionEvent e) {
+        public void selectionChanged(SelectionEvent e) {
             smartUpdate();
         }
     };
@@ -71,7 +70,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
     private final DocumentListener myDocumentListener = new BulkAwareDocumentListener.Simple() {
         @Override
-        public void afterDocumentChange(@Nonnull Document document) {
+        public void afterDocumentChange(Document document) {
             if (!myTrackingDocument) {
                 myChanged = true;
                 return;
@@ -111,7 +110,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
     public LivePreviewController(
         SearchResults searchResults,
         @Nullable EditorSearchSession component,
-        @Nonnull Disposable parentDisposable
+        Disposable parentDisposable
     ) {
         mySearchResults = searchResults;
         myComponent = component;
@@ -123,7 +122,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
         myUserActivityDelay = userActivityDelay;
     }
 
-    public void updateInBackground(@Nonnull FindModel findModel, boolean allowedToChangedEditorSelection) {
+    public void updateInBackground(FindModel findModel, boolean allowedToChangedEditorSelection) {
         int stamp = mySearchResults.getStamp();
         myLivePreviewAlarm.cancelAllRequests();
         FindModel copy = new FindModel();
@@ -146,7 +145,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
     @Override
     public String getStringToReplace(
-        @Nonnull Editor editor,
+        Editor editor,
         @Nullable FindResult findResult
     ) throws FindManager.MalformedReplacementStringException {
         if (findResult == null) {

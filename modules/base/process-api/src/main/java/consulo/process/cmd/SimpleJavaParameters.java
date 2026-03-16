@@ -22,8 +22,7 @@ import consulo.process.local.ProcessHandlerFactory;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.util.PathsList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 
 /**
@@ -81,7 +80,7 @@ public final class SimpleJavaParameters extends SimpleProgramParameters {
     myCharset = charset;
   }
 
-  @Nonnull
+  
   public ProcessHandler createProcessHandler() throws ExecutionException {
     String sdk = getJdkHome();
     assert sdk != null : "SDK should be defined";

@@ -9,8 +9,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +21,7 @@ import java.security.cert.X509Certificate;
 public class CertificateWarningDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(CertificateWarningDialog.class);
 
-    public static CertificateWarningDialog createUntrustedCertificateWarning(@Nonnull X509Certificate certificate) {
+    public static CertificateWarningDialog createUntrustedCertificateWarning(X509Certificate certificate) {
         return new CertificateWarningDialog(
             certificate,
             "Untrusted Server's Certificate",
@@ -30,13 +29,13 @@ public class CertificateWarningDialog extends DialogWrapper {
         );
     }
 
-    public static CertificateWarningDialog createExpiredCertificateWarning(@Nonnull X509Certificate certificate) {
+    public static CertificateWarningDialog createExpiredCertificateWarning(X509Certificate certificate) {
         throw new UnsupportedOperationException("Not supported");
     }
 
     public static CertificateWarningDialog createHostnameMismatchWarning(
-        @Nonnull X509Certificate certificate,
-        @Nonnull String hostname
+        X509Certificate certificate,
+        String hostname
     ) {
         String message = String.format(
             "Server's certificate common name doesn't match hostname in URL: '%s' != '%s'",
@@ -53,7 +52,7 @@ public class CertificateWarningDialog extends DialogWrapper {
     private JTextPane myMessagePane;
     private final X509Certificate myCertificate;
 
-    public CertificateWarningDialog(@Nonnull X509Certificate certificate, @Nonnull String title, @Nonnull String message) {
+    public CertificateWarningDialog(X509Certificate certificate, String title, String message) {
         super((Project)null, false);
 
         myCertificate = certificate;

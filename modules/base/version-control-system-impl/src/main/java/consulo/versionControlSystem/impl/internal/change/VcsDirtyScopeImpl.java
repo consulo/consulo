@@ -18,9 +18,7 @@ import consulo.versionControlSystem.util.VcsFileUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -30,17 +28,17 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
   private final Map<VirtualFile, RecursiveFilePathSet> myDirtyDirectoriesRecursively = new HashMap<>();
   private final Set<FilePath> myAllVcsRoots = new HashSet<>();
   private final Set<VirtualFile> myAffectedVcsRoots = new HashSet<>();
-  @Nonnull
+  
   private final Project myProject;
   private final ProjectLevelVcsManager myVcsManager;
-  @Nonnull
+  
   private final AbstractVcs myVcs;
   private boolean myWasEverythingDirty;
 
   private final @Nullable HashingStrategy<FilePath> myHashingStrategy;
   private final boolean myCaseSensitive;
 
-  public VcsDirtyScopeImpl(@Nonnull AbstractVcs vcs) {
+  public VcsDirtyScopeImpl(AbstractVcs vcs) {
     myVcs = vcs;
     myProject = vcs.getProject();
     myVcsManager = ProjectLevelVcsManager.getInstance(myProject);
@@ -54,13 +52,13 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
     return myAffectedVcsRoots;
   }
 
-  @Nonnull
+  
   @Override
   public Project getProject() {
     return myProject;
   }
 
-  @Nonnull
+  
   @Override
   public AbstractVcs getVcs() {
     return myVcs;
@@ -110,7 +108,7 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
    * Use {@link #addDirtyFile} / {@link #addDirtyDirRecursively} to add file path and remove duplicates.
    */
   @Override
-  public void addDirtyPathFast(@Nonnull VirtualFile vcsRoot, @Nonnull FilePath filePath, boolean recursively) {
+  public void addDirtyPathFast(VirtualFile vcsRoot, FilePath filePath, boolean recursively) {
     myAffectedVcsRoots.add(vcsRoot);
 
     RecursiveFilePathSet dirsByRoot = myDirtyDirectoriesRecursively.get(vcsRoot);
@@ -142,7 +140,7 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
    * @return VcsDirtyScope with trimmed duplicated paths from the sets.
    */
   @Override
-  @Nonnull
+  
   public VcsDirtyScopeImpl pack() {
     VcsDirtyScopeImpl copy = new VcsDirtyScopeImpl(myVcs);
     copy.myWasEverythingDirty = myWasEverythingDirty;
@@ -160,7 +158,7 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
     return copy;
   }
 
-  @Nonnull
+  
   private RecursiveFilePathSet removeAncestorsRecursive(@Nullable RecursiveFilePathSet dirs) {
     RecursiveFilePathSet result = newRecursiveFilePathSet();
     if (dirs == null) return result;
@@ -173,8 +171,8 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
     return result;
   }
 
-  private @Nonnull Set<FilePath> removeAncestorsNonRecursive(@Nonnull RecursiveFilePathSet dirs,
-                                                             @Nonnull Set<? extends FilePath> files) {
+  private Set<FilePath> removeAncestorsNonRecursive(RecursiveFilePathSet dirs,
+                                                             Set<? extends FilePath> files) {
     Set<FilePath> result = newFilePathsSet();
     for (FilePath file : files) {
       if (dirs.hasAncestor(file)) continue;
@@ -185,12 +183,12 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
     return result;
   }
 
-  @Nonnull
+  
   private Set<FilePath> newFilePathsSet() {
     return myHashingStrategy == null ? new HashSet<>() : Sets.newHashSet(myHashingStrategy);
   }
 
-  @Nonnull
+  
   private RecursiveFilePathSet newRecursiveFilePathSet() {
     return new RecursiveFilePathSet(myCaseSensitive);
   }
@@ -342,21 +340,21 @@ public final class VcsDirtyScopeImpl extends VcsModifiableDirtyScope implements 
     return false;
   }
 
-  private boolean isInDirtyFiles(@Nonnull FilePath path) {
+  private boolean isInDirtyFiles(FilePath path) {
     VcsRoot rootObject = myVcsManager.getVcsRootObjectFor(path);
     if (rootObject == null || !myVcs.equals(rootObject.getVcs())) return false;
     return isInDirtyFiles(path, rootObject.getPath());
   }
 
-  private boolean isInDirtyFiles(@Nonnull FilePath path, @Nonnull VirtualFile vcsRoot) {
+  private boolean isInDirtyFiles(FilePath path, VirtualFile vcsRoot) {
     Set<FilePath> files = myDirtyFiles.get(vcsRoot);
     return files != null && files.contains(path);
   }
 
   @Override
-  @NonNls
+  
   public String toString() {
-    @NonNls StringBuilder result = new StringBuilder("VcsDirtyScope[");
+    StringBuilder result = new StringBuilder("VcsDirtyScope[");
     if (!myDirtyFiles.isEmpty()) {
       result.append(" files: ");
       for (Set<FilePath> paths : myDirtyFiles.values()) {

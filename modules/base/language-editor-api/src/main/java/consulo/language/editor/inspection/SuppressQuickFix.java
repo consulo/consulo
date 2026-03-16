@@ -18,10 +18,9 @@ package consulo.language.editor.inspection;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public interface SuppressQuickFix extends LocalQuickFix {
   SuppressQuickFix[] EMPTY_ARRAY = new SuppressQuickFix[0];
 
-  boolean isAvailable(@Nonnull Project project, @Nonnull PsiElement context);
+  boolean isAvailable(Project project, PsiElement context);
 }

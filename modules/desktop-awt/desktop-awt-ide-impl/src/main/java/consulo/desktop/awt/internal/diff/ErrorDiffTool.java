@@ -33,8 +33,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -44,41 +43,41 @@ public class ErrorDiffTool implements FrameDiffTool {
     public static final ErrorDiffTool INSTANCE = new ErrorDiffTool();
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public DiffViewer createComponent(DiffContext context, DiffRequest request) {
         return new MyViewer(context, request);
     }
 
     @Override
-    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public boolean canShow(DiffContext context, DiffRequest request) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return DiffLocalize.errorViewer().get();
     }
 
     private static class MyViewer implements DiffViewer {
-        @Nonnull
+        
         private final DiffContext myContext;
-        @Nonnull
+        
         private final DiffRequest myRequest;
 
-        @Nonnull
+        
         private final JPanel myPanel;
 
-        public MyViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+        public MyViewer(DiffContext context, DiffRequest request) {
             myContext = context;
             myRequest = request;
 
             myPanel = JBUI.Panels.simplePanel(createComponent(request));
         }
 
-        @Nonnull
-        private JComponent createComponent(@Nonnull DiffRequest request) {
+        
+        private JComponent createComponent(DiffRequest request) {
             if (request instanceof MessageDiffRequest messageDiffRequest) {
                 // TODO: explain some of ErrorDiffRequest exceptions ?
                 String message = messageDiffRequest.getMessage();
@@ -102,7 +101,7 @@ public class ErrorDiffTool implements FrameDiffTool {
             return AWTDiffUtil.createMessagePanel(DiffLocalize.errorMessageCannotShowDiff().get());
         }
 
-        @Nonnull
+        
         @Override
         public JComponent getComponent() {
             return myPanel;
@@ -115,7 +114,7 @@ public class ErrorDiffTool implements FrameDiffTool {
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
         public ToolbarComponents init() {
             if (myRequest instanceof UnknownFileTypeDiffRequest unknownFileTypeDiffRequest) {

@@ -26,8 +26,7 @@ import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -40,9 +39,9 @@ import java.util.List;
 @Singleton
 public class ExternalSystemInternalHelperImpl implements ExternalSystemInternalHelper {
     @Override
-    public ExternalSystemTask createExecuteSystemTask(@Nonnull ProjectSystemId externalSystemId,
-                                                      @Nonnull Project project,
-                                                      @Nonnull List<ExternalTaskPojo> tasksToExecute,
+    public ExternalSystemTask createExecuteSystemTask(ProjectSystemId externalSystemId,
+                                                      Project project,
+                                                      List<ExternalTaskPojo> tasksToExecute,
                                                       @Nullable String vmOptions,
                                                       @Nullable String scriptParameters,
                                                       @Nullable String debuggerSetup) {
@@ -51,7 +50,7 @@ public class ExternalSystemInternalHelperImpl implements ExternalSystemInternalH
 
     @RequiredUIAccess
     @Override
-    public void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+    public void ensureToolWindowInitialized(Project project, ProjectSystemId externalSystemId) {
         ExternalSystemUtil.ensureToolWindowInitialized(project, externalSystemId);
     }
 }

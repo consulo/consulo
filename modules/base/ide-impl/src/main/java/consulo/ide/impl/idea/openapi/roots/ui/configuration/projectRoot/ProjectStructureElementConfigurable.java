@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.P
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

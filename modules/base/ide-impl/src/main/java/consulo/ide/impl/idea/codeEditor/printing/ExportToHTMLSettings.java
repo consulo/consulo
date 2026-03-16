@@ -26,7 +26,6 @@ import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
-import org.jetbrains.annotations.NonNls;
 
 import jakarta.inject.Singleton;
 
@@ -37,7 +36,7 @@ import jakarta.inject.Singleton;
 public class ExportToHTMLSettings implements PersistentStateComponent<ExportToHTMLSettings> {
   public boolean PRINT_LINE_NUMBERS;
   public boolean OPEN_IN_BROWSER;
-  @NonNls
+  
   public String OUTPUT_DIRECTORY;
 
   private int myPrintScope;

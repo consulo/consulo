@@ -22,8 +22,7 @@ import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -36,9 +35,9 @@ import java.util.List;
  */
 public class ArrangementGroupingComponent extends JPanel implements ArrangementRepresentationAware, ArrangementEditorAware {
 
-  @Nonnull
+  
   private final ArrangementUiComponent myGroupingTypeToken;
-  @Nonnull
+  
   private final ArrangementRuleIndexControl myRowIndexControl;
 
   @Nullable
@@ -55,9 +54,9 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
    *                                    
    * @throws IllegalArgumentException   if invariant described above is not satisfied
    */
-  public ArrangementGroupingComponent(@Nonnull CompositeArrangementSettingsToken token,
-                                      @Nonnull ArrangementColorsProvider colorsProvider,
-                                      @Nonnull ArrangementStandardSettingsManager settingsManager)
+  public ArrangementGroupingComponent(CompositeArrangementSettingsToken token,
+                                      ArrangementColorsProvider colorsProvider,
+                                      ArrangementStandardSettingsManager settingsManager)
     throws IllegalArgumentException
   {
     List<ArrangementSettingsToken> children = new ArrayList<>();
@@ -137,7 +136,7 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
     super.paintComponent(g);
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return this;
@@ -159,14 +158,14 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
     }
   }
 
-  @Nonnull
+  
   public ArrangementSettingsToken getGroupingType() {
     ArrangementSettingsToken token = myGroupingTypeToken.getToken();
     assert token != null;
     return token;
   }
 
-  public void setOrderType(@Nonnull ArrangementSettingsToken type) {
+  public void setOrderType(ArrangementSettingsToken type) {
     if (myOrderTypeToken != null) {
       myOrderTypeToken.chooseToken(type);
     }

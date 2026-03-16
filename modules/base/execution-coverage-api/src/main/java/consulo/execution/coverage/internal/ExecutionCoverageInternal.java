@@ -23,7 +23,6 @@ import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,9 +39,9 @@ public interface ExecutionCoverageInternal {
         return Application.get().getInstance(ExecutionCoverageInternal.class);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    CompletableFuture<?> showExportDialog(@Nonnull Project project, @Nonnull String presentableName);
+    CompletableFuture<?> showExportDialog(Project project, String presentableName);
 
     @RequiredUIAccess
     void showCoverageHit(JPanel panel,
@@ -51,7 +50,7 @@ public interface ExecutionCoverageInternal {
                          LineData lineData,
                          String reportText);
     @RequiredUIAccess
-    void showColorsSettings(@Nonnull Project project,
-                            @Nonnull LineData lineData,
+    void showColorsSettings(Project project,
+                            LineData lineData,
                             Function<LineData, TextAttributesKey> attributesKeyFunc);
 }

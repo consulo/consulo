@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log.impl.internal.ui.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Log.CollapseAll")
 public class CollapseGraphAction extends CollapseOrExpandGraphAction {
@@ -32,7 +31,7 @@ public class CollapseGraphAction extends CollapseOrExpandGraphAction {
     }
 
     @Override
-    protected void executeAction(@Nonnull VcsLogUiImpl vcsLogUi) {
+    protected void executeAction(VcsLogUiImpl vcsLogUi) {
         vcsLogUi.collapseAll();
     }
 }

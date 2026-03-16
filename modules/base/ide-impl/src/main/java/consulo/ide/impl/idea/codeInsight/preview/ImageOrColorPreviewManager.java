@@ -43,8 +43,7 @@ import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -82,7 +81,7 @@ public class ImageOrColorPreviewManager implements Disposable {
     private final EditorMouseMotionListener myEditorMouseMotionListener = new EditorMouseMotionListener() {
         @Override
         @RequiredUIAccess
-        public void mouseMoved(@Nonnull EditorMouseEvent event) {
+        public void mouseMoved(EditorMouseEvent event) {
             Editor editor = event.getEditor();
             if (editor.isOneLineMode()) {
                 return;
@@ -220,7 +219,7 @@ public class ImageOrColorPreviewManager implements Disposable {
         return false;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private static Collection<PsiElement> getPsiElementsAt(Point point, Editor editor) {
         if (editor.isDisposed()) {

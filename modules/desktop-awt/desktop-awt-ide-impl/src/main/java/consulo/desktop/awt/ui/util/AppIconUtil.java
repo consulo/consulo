@@ -20,8 +20,7 @@ import consulo.desktop.awt.ui.impl.image.DesktopAWTScalableImage;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,11 +33,11 @@ import java.io.File;
 public class AppIconUtil {
   private static final int MIN_ICON_SIZE = 32;
 
-  public static void updateWindowIcon(@Nonnull Window window) {
+  public static void updateWindowIcon(Window window) {
     window.setIconImage(loadWindowIcon());
   }
 
-  @Nonnull
+  
   public static Image loadWindowIcon() {
     boolean sandbox = ApplicationProperties.isInSandbox();
     ImageKey x16Key = sandbox ? PlatformIconGroup.icon16_sandbox() : PlatformIconGroup.icon16();

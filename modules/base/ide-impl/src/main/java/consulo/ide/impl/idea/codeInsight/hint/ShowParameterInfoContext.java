@@ -12,8 +12,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -68,7 +67,7 @@ public class ShowParameterInfoContext implements CreateParameterInfoContext {
   }
 
   @Override
-  @Nonnull
+  
   public Editor getEditor() {
     return myEditor;
   }

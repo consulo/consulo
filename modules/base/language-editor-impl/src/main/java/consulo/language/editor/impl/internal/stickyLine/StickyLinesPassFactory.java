@@ -8,13 +8,12 @@ import consulo.codeEditor.impl.StickyLinesCollector;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class StickyLinesPassFactory implements TextEditorHighlightingPassFactory, DumbAware {
 
     @Override
-    public void register(@Nonnull Registrar registrar) {
+    public void register(Registrar registrar) {
         registrar.registerTextEditorHighlightingPass(this, null, null, false, -1);
     }
 

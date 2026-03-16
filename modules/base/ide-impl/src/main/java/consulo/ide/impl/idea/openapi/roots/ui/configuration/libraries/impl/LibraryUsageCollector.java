@@ -26,7 +26,6 @@ import consulo.content.library.Library;
 import consulo.content.library.LibraryKind;
 import consulo.application.util.function.Processor;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,9 +34,9 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
-  @Nonnull
+  
   @Override
-  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) {
+  public Set<UsageDescriptor> getProjectUsages(Project project) {
     final Set<LibraryKind> usedKinds = new HashSet<LibraryKind>();
     Processor<Library> processor = new Processor<Library>() {
       @Override
@@ -57,7 +56,7 @@ public class LibraryUsageCollector extends AbstractApplicationUsagesCollector {
     return usageDescriptors;
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return "consulo.platform.base:libraries";

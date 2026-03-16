@@ -24,7 +24,7 @@ import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

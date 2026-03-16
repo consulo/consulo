@@ -13,15 +13,14 @@ import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class BackspaceHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private EditorActionHandler myOriginalHandler;
 
   @Override
-  public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
+  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null) {
       myOriginalHandler.execute(editor, caret, dataContext);
@@ -52,7 +51,7 @@ public class BackspaceHandler extends EditorActionHandler implements ExtensionEd
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_BACKSPACE;

@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.SimpleTextAttributes;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,7 +27,7 @@ public class SimpleColoredRenderer extends SimpleColoredComponent {
     myCellState.collectState(table, isSelected, hasFocus, row, column);
   }
 
-  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
+  public void append(String fragment, SimpleTextAttributes attributes, boolean isMainText) {
     super.append(fragment, modifyAttributes(attributes), isMainText);
   }
 

@@ -1,6 +1,6 @@
 package consulo.credentialStorage;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 /**

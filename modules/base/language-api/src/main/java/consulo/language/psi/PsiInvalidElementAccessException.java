@@ -29,8 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.SoftReference;
 
 /**
@@ -83,17 +82,17 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     }
   }
 
-  private PsiInvalidElementAccessException(@Nonnull ASTNode node, @Nullable String message) {
+  private PsiInvalidElementAccessException(ASTNode node, @Nullable String message) {
     myElementReference = new SoftReference<PsiElement>(null);
     myMessage = "Element " + node.getClass() + " of type " + node.getElementType() + (message == null ? "" : "; " + message);
     myDiagnostic = createAttachments(findInvalidationTrace(node));
   }
 
-  public static PsiInvalidElementAccessException createByNode(@Nonnull ASTNode node, @Nullable String message) {
+  public static PsiInvalidElementAccessException createByNode(ASTNode node, @Nullable String message) {
     return new PsiInvalidElementAccessException(node, message);
   }
 
-  @Nonnull
+  
   private static Attachment[] createAttachments(@Nullable Object trace) {
     return trace == null
            ? Attachment.EMPTY_ARRAY
@@ -102,12 +101,12 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
   }
 
   @Nullable
-  private static Object getPsiInvalidationTrace(@Nonnull PsiElement element) {
+  private static Object getPsiInvalidationTrace(PsiElement element) {
     Object trace = getInvalidationTrace(element);
     return trace != null || element instanceof PsiFile ? trace : findInvalidationTrace(element.getNode());
   }
 
-  private static String getMessageWithReason(@Nonnull PsiElement element,
+  private static String getMessageWithReason(PsiElement element,
                                              @Nullable String message,
                                              boolean recursiveInvocation,
                                              @Nullable Object trace) {
@@ -131,7 +130,7 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return myMessage;
   }
 
-  @Nonnull
+  
   @Override
   public Attachment[] getAttachments() {
     return myDiagnostic;
@@ -156,8 +155,8 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return null;
   }
 
-  @Nonnull
-  private static String reason(@Nonnull PsiElement root) {
+  
+  private static String reason(PsiElement root) {
     if (root == PsiUtilCore.NULL_PSI_ELEMENT) return "NULL_PSI_ELEMENT";
 
     PsiElement element = root instanceof PsiFile ? root : root.getParent();
@@ -208,11 +207,11 @@ public class PsiInvalidElementAccessException extends RuntimeException implement
     return Integer.toHexString(System.identityHashCode(provider));
   }
 
-  public static void setInvalidationTrace(@Nonnull UserDataHolder element, Object trace) {
+  public static void setInvalidationTrace(UserDataHolder element, Object trace) {
     element.putUserData(INVALIDATION_TRACE, trace);
   }
 
-  public static Object getInvalidationTrace(@Nonnull UserDataHolder element) {
+  public static Object getInvalidationTrace(UserDataHolder element) {
     return element.getUserData(INVALIDATION_TRACE);
   }
 

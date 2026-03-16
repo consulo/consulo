@@ -17,7 +17,6 @@ package consulo.ui.web.internal;
 
 import consulo.ui.model.TableModel;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -34,7 +33,7 @@ public class WebTableModel<T> implements TableModel<T> {
     return 0;
   }
 
-  @Nonnull
+  
   @Override
   public T get(int index) {
     return null;

@@ -4,7 +4,6 @@ package consulo.application.internal;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -31,11 +30,10 @@ public final class NonUrgentExecutor implements Executor {
     }
 
     @Override
-    public void execute(@Nonnull Runnable command) {
+    public void execute(Runnable command) {
         Application.get().getInstance(ApplicationConcurrency.class).executor().execute(command);
     }
 
-    @Nonnull
     public static NonUrgentExecutor getInstance() {
         return INSTANCE;
     }

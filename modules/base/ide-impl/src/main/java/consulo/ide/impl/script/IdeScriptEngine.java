@@ -15,37 +15,36 @@
  */
 package consulo.ide.impl.script;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 
 public interface IdeScriptEngine {
-  Object getBinding(@Nonnull String name);
+  Object getBinding(String name);
 
-  void setBinding(@Nonnull String name, Object value);
+  void setBinding(String name, Object value);
 
-  @Nonnull
+  
   Writer getStdOut();
 
-  void setStdOut(@Nonnull Writer writer);
+  void setStdOut(Writer writer);
 
-  @Nonnull
+  
   Writer getStdErr();
 
-  void setStdErr(@Nonnull Writer writer);
+  void setStdErr(Writer writer);
 
-  @Nonnull
+  
   Reader getStdIn();
 
-  void setStdIn(@Nonnull Reader reader);
+  void setStdIn(Reader reader);
 
-  @Nonnull
+  
   String getLanguage();
 
-  @Nonnull
+  
   List<String> getFileExtensions();
 
-  Object eval(@Nonnull String script) throws IdeScriptException;
+  Object eval(String script) throws IdeScriptException;
 }

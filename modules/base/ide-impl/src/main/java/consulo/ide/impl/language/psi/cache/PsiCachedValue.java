@@ -27,7 +27,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.internal.VirtualFileRestrictedUserData;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -36,14 +35,14 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements Vi
     private static final Key<?> PSI_MOD_COUNT_OPTIMIZATION = Key.create("PSI_MOD_COUNT_OPTIMIZATION");
     private final PsiManager myManager;
 
-    PsiCachedValue(@Nonnull PsiManager manager, boolean trackValue, CachedValuesFactory factory) {
+    PsiCachedValue(PsiManager manager, boolean trackValue, CachedValuesFactory factory) {
         super(trackValue, factory);
         myManager = manager;
     }
 
-    @Nonnull
+    
     @Override
-    protected Object[] normalizeDependencies(@Nonnull CachedValueProvider.Result<T> result) {
+    protected Object[] normalizeDependencies(CachedValueProvider.Result<T> result) {
         Object[] dependencies = super.normalizeDependencies(result);
         if (dependencies.length > 0 && ContainerUtil.and(dependencies, this::anyChangeImpliesPsiCounterChange)) {
             return ArrayUtil.prepend(PSI_MOD_COUNT_OPTIMIZATION, dependencies);
@@ -52,14 +51,14 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements Vi
     }
 
     @SuppressWarnings("deprecation")
-    private boolean anyChangeImpliesPsiCounterChange(@Nonnull Object dependency) {
+    private boolean anyChangeImpliesPsiCounterChange(Object dependency) {
         return dependency instanceof PsiElement element && isVeryPhysical(element)
             || dependency instanceof ProjectRootModificationTracker
             || dependency instanceof PsiModificationTracker
             || dependency == PsiModificationTracker.MODIFICATION_COUNT;
     }
 
-    private boolean isVeryPhysical(@Nonnull PsiElement dependency) {
+    private boolean isVeryPhysical(PsiElement dependency) {
         if (!dependency.isValid()) {
             return false;
         }
@@ -74,7 +73,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements Vi
     }
 
     @Override
-    protected boolean isUpToDate(@Nonnull Data<T> data) {
+    protected boolean isUpToDate(Data<T> data) {
         if (myManager.isDisposed()) {
             return false;
         }
@@ -91,7 +90,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements Vi
     }
 
     @Override
-    protected boolean isDependencyOutOfDate(@Nonnull Object dependency, long oldTimeStamp) {
+    protected boolean isDependencyOutOfDate(Object dependency, long oldTimeStamp) {
         //noinspection SimplifiableIfStatement
         if (dependency == PSI_MOD_COUNT_OPTIMIZATION) {
             return false;
@@ -100,7 +99,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements Vi
     }
 
     @Override
-    protected long getTimeStamp(@Nonnull Object dependency) {
+    protected long getTimeStamp(Object dependency) {
         if (dependency instanceof PsiDirectory) {
             return myManager.getModificationTracker().getModificationCount();
         }
@@ -122,7 +121,7 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> implements Vi
     }
 
     @Override
-    public boolean isFromMyProject(@Nonnull Project project) {
+    public boolean isFromMyProject(Project project) {
         return myManager.getProject() == project;
     }
 }

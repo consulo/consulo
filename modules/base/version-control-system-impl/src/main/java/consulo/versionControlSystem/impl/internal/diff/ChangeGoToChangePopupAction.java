@@ -20,8 +20,7 @@ import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -31,13 +30,13 @@ import java.util.function.Consumer;
 
 public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain>
     extends GoToChangePopupBuilder.BaseGoToChangePopupAction<Chain> {
-    public ChangeGoToChangePopupAction(@Nonnull Chain chain, @Nonnull Consumer<Integer> onSelected) {
+    public ChangeGoToChangePopupAction(Chain chain, Consumer<Integer> onSelected) {
         super(chain, onSelected);
     }
 
-    @Nonnull
+    
     @Override
-    protected JBPopup createPopup(@Nonnull AnActionEvent e) {
+    protected JBPopup createPopup(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             project = ProjectManager.getInstance().getDefaultProject();
@@ -71,7 +70,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
 
     protected abstract int findSelectedStep(@Nullable Change change);
 
-    @Nonnull
+    
     protected abstract List<Change> getChanges();
 
     @Nullable
@@ -82,14 +81,14 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     //
 
     private class MyChangesBrowser extends InternalChangesBrowser implements Runnable {
-        @Nonnull
+        
         private final SimpleReference<JBPopup> myPopup;
 
         public MyChangesBrowser(
-            @Nonnull Project project,
-            @Nonnull List<Change> changes,
+            Project project,
+            List<Change> changes,
             @Nullable Change currentChange,
-            @Nonnull SimpleReference<JBPopup> popup
+            SimpleReference<JBPopup> popup
         ) {
             super(project, null, changes, null, false, false, null, ChangesBrowser.MyUseCase.LOCAL_CHANGES, null);
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -112,7 +111,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
             // remove diff action
         }
 
-        @Nonnull
+        
         @Override
         protected Runnable getDoubleClickHandler() {
             return this;
@@ -131,12 +130,12 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
     }
 
     public abstract static class Fake<Chain extends DiffRequestChain> extends ChangeGoToChangePopupAction<Chain> {
-        @Nonnull
+        
         private final List<Change> myChanges;
         private final int mySelection;
 
         @SuppressWarnings("AbstractMethodCallInConstructor")
-        public Fake(@Nonnull Chain chain, int selection, @Nonnull Consumer<Integer> onSelected) {
+        public Fake(Chain chain, int selection, Consumer<Integer> onSelected) {
             super(chain, onSelected);
 
             mySelection = selection;
@@ -153,10 +152,10 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
             }
         }
 
-        @Nonnull
+        
         protected abstract FilePath getFilePath(int index);
 
-        @Nonnull
+        
         protected abstract FileStatus getFileStatus(int index);
 
         @Override
@@ -164,7 +163,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
             return myChanges.indexOf(change);
         }
 
-        @Nonnull
+        
         @Override
         protected List<Change> getChanges() {
             return myChanges;
@@ -180,10 +179,10 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
         }
 
         private static class FakeContentRevision implements ContentRevision {
-            @Nonnull
+            
             private final FilePath myFilePath;
 
-            public FakeContentRevision(@Nonnull FilePath filePath) {
+            public FakeContentRevision(FilePath filePath) {
                 myFilePath = filePath;
             }
 
@@ -193,13 +192,13 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
                 return null;
             }
 
-            @Nonnull
+            
             @Override
             public FilePath getFile() {
                 return myFilePath;
             }
 
-            @Nonnull
+            
             @Override
             public VcsRevisionNumber getRevisionNumber() {
                 return VcsRevisionNumber.NULL;

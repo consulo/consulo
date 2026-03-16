@@ -21,9 +21,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.execution.debug.impl.internal.frame.XWatchesView;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -34,20 +33,20 @@ import java.util.List;
  * @author nik
  */
 public abstract class XWatchesTreeActionBase extends AnAction {
-    protected XWatchesTreeActionBase(@Nonnull LocalizeValue text) {
+    protected XWatchesTreeActionBase(LocalizeValue text) {
         super(text);
     }
 
     protected XWatchesTreeActionBase(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
-    @Nonnull
-    public static <T extends TreeNode> List<? extends T> getSelectedNodes(@Nonnull XDebuggerTree tree, Class<T> nodeClass) {
+    
+    public static <T extends TreeNode> List<? extends T> getSelectedNodes(XDebuggerTree tree, Class<T> nodeClass) {
         List<T> list = new ArrayList<>();
         TreePath[] selectionPaths = tree.getSelectionPaths();
         if (selectionPaths != null) {
@@ -62,7 +61,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         XDebuggerTree tree = XDebuggerTree.getTree(e);
         XWatchesView watchesView = e.getData(XWatchesView.DATA_KEY);
         boolean enabled = tree != null && watchesView != null && isEnabled(e, tree);
@@ -71,7 +70,7 @@ public abstract class XWatchesTreeActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         XDebuggerTree tree = XDebuggerTree.getTree(e);
         XWatchesView watchesView = e.getRequiredData(XWatchesView.DATA_KEY);
         if (tree != null) {
@@ -79,9 +78,9 @@ public abstract class XWatchesTreeActionBase extends AnAction {
         }
     }
 
-    protected abstract void perform(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree, @Nonnull XWatchesView watchesView);
+    protected abstract void perform(AnActionEvent e, XDebuggerTree tree, XWatchesView watchesView);
 
-    protected boolean isEnabled(@Nonnull AnActionEvent e, @Nonnull XDebuggerTree tree) {
+    protected boolean isEnabled(AnActionEvent e, XDebuggerTree tree) {
         return true;
     }
 }

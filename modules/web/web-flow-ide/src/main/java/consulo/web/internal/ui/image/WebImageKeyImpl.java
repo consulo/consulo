@@ -20,8 +20,7 @@ import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.ImageKey;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -43,13 +42,13 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithURL {
     myHeight = height;
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return myGroupId;
   }
 
-  @Nonnull
+  
   @Override
   public String getImageURL() {
     return "/image?groupId=" + myGroupId + "&imageId=" + myImageId;
@@ -60,7 +59,7 @@ public class WebImageKeyImpl implements ImageKey, WebImageWithURL {
     return ourLibraryManager.resolveImage(null, this);
   }
 
-  @Nonnull
+  
   @Override
   public String getImageId() {
     return myImageId;

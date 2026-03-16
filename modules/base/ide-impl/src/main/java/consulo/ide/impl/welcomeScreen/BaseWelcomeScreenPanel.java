@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +33,7 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
     protected final JComponent myLeftComponent;
 
     @RequiredUIAccess
-    public BaseWelcomeScreenPanel(@Nonnull Disposable parentDisposable, @Nonnull TitlelessDecorator titlelessDecorator) {
+    public BaseWelcomeScreenPanel(Disposable parentDisposable, TitlelessDecorator titlelessDecorator) {
         super(new BorderLayout());
         myLeftComponent = createLeftComponent(parentDisposable);
         titlelessDecorator.makeLeftComponentLower(myLeftComponent);
@@ -54,15 +53,15 @@ public abstract class BaseWelcomeScreenPanel extends JPanel {
         return 400;
     }
 
-    @Nonnull
+    
     public JComponent getLeftComponent() {
         return myLeftComponent;
     }
 
-    @Nonnull
-    protected abstract JComponent createLeftComponent(@Nonnull Disposable parentDisposable);
+    
+    protected abstract JComponent createLeftComponent(Disposable parentDisposable);
 
-    @Nonnull
+    
     @RequiredUIAccess
     protected abstract JComponent createRightComponent();
 }

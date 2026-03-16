@@ -19,11 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.execution.debug.XDebugProcess;
 
-import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.PROJECT)
 public interface XDebuggerManagerListener {
-  void processStarted(@Nonnull XDebugProcess debugProcess);
+  void processStarted(XDebugProcess debugProcess);
 
-  void processStopped(@Nonnull XDebugProcess debugProcess);
+  void processStopped(XDebugProcess debugProcess);
 }

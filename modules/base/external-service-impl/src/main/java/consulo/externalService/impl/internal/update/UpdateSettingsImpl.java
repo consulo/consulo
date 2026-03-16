@@ -25,7 +25,6 @@ import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateChannel;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -46,7 +45,7 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
     private State myState = new State();
 
     @Override
-    @Nonnull
+    
     public UpdateChannel getChannel() {
         UpdateChannel channel = myState.channel;
         if (channel == null) {
@@ -60,14 +59,14 @@ public class UpdateSettingsImpl implements PersistentStateComponent<UpdateSettin
         myState.lastCheckResult = type;
     }
 
-    @Nonnull
+    
     @Override
     public PlatformOrPluginUpdateResultType getLastCheckResult() {
         return ObjectUtil.notNull(myState.lastCheckResult, PlatformOrPluginUpdateResultType.NO_UPDATE);
     }
 
     @Override
-    public void setChannel(@Nonnull UpdateChannel channel) {
+    public void setChannel(UpdateChannel channel) {
         myState.channel = channel;
     }
 

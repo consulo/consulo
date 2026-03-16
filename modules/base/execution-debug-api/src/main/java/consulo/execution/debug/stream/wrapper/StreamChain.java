@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.wrapper;
 
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -11,24 +10,24 @@ import java.util.List;
  */
 public interface StreamChain {
 
-  @NotNull
+  
   QualifierExpression getQualifierExpression();
 
-  @NotNull
+  
   List<IntermediateStreamCall> getIntermediateCalls();
 
-  @NotNull
+  
   StreamCall getCall(int index);
 
-  @NotNull
+  
   TerminatorStreamCall getTerminationCall();
 
-  @NotNull String getText();
+  String getText();
 
-  @NotNull String getCompactText();
+  String getCompactText();
 
   int length();
 
-  @NotNull
+  
   PsiElement getContext();
 }

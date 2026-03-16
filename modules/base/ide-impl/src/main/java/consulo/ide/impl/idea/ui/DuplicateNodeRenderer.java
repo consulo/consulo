@@ -18,9 +18,8 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.Gray;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -78,7 +77,7 @@ public class DuplicateNodeRenderer {
     g.setColor(old);
   }
 
-  @Nonnull
+  
   private static Rectangle union(Rectangle r1, Rectangle r2) {
     if (r1 == null) return r2;
     if (r2 == null) return r1;

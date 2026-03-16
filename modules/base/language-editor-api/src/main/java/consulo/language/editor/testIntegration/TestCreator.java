@@ -29,7 +29,7 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface TestCreator extends LanguageExtension {

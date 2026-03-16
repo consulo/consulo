@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.dnd;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;

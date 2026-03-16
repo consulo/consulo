@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log.impl.internal.util;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nonnull;
 import java.util.AbstractList;
 import java.util.Collection;
 
@@ -73,11 +72,11 @@ public class IntIntMultiMap {
     myKeyToArrayMap.put(key, newValues);
   }
 
-  @Nonnull
+  
   public Collection<Integer> get(int key) {
     final int[] asArray = getAsArray(key);
     return new AbstractList<Integer>() {
-      @Nonnull
+      
       @Override
       public Integer get(int index) {
         return asArray[index];
@@ -90,7 +89,7 @@ public class IntIntMultiMap {
     };
   }
 
-  @Nonnull
+  
   public int[] getAsArray(int key) {
     int[] result = myKeyToArrayMap.get(key);
     if (result == null) {
@@ -109,7 +108,7 @@ public class IntIntMultiMap {
     return myKeyToArrayMap.containsKey(key);
   }
 
-  @Nonnull
+  
   public int[] keys() {
     return myKeyToArrayMap.keys();
   }

@@ -22,8 +22,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author spleaner
@@ -32,9 +31,9 @@ import jakarta.annotation.Nullable;
 public abstract class FileLookupInfoProvider {
     public static ExtensionPointName<FileLookupInfoProvider> EP_NAME = ExtensionPointName.create(FileLookupInfoProvider.class);
 
-    @Nonnull
+    
     public abstract FileType[] getFileTypes();
 
     @Nullable
-    public abstract Pair<String, String> getLookupInfo(@Nonnull VirtualFile file, Project project);
+    public abstract Pair<String, String> getLookupInfo(VirtualFile file, Project project);
 }

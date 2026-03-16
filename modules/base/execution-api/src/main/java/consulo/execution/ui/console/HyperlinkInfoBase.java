@@ -19,14 +19,13 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public abstract class HyperlinkInfoBase implements HyperlinkInfo {
-  public abstract void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint);
+  public abstract void navigate(Project project, @Nullable RelativePoint hyperlinkLocationPoint);
 
   @RequiredUIAccess
   @Override

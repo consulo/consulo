@@ -36,8 +36,7 @@ import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -67,10 +66,10 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
 
     @RequiredUIAccess
     public NewProjectPanel(
-        @Nonnull Disposable parentDisposable,
+        Disposable parentDisposable,
         @Nullable Project project,
         @Nullable VirtualFile moduleHome,
-        @Nonnull TitlelessDecorator titlelessDecorator
+        TitlelessDecorator titlelessDecorator
     ) {
         super(parentDisposable, titlelessDecorator);
         myModuleHome = moduleHome;
@@ -97,23 +96,23 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
         return myModuleHome != null;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     protected abstract JComponent createSouthPanel();
 
     public abstract void setOKActionEnabled(boolean enabled);
 
-    public abstract void setOKActionText(@Nonnull LocalizeValue text);
+    public abstract void setOKActionText(LocalizeValue text);
 
     public abstract void setOKAction(@Nullable Runnable action);
 
-    public abstract void setCancelText(@Nonnull LocalizeValue text);
+    public abstract void setCancelText(LocalizeValue text);
 
     public abstract void setCancelAction(@Nullable Runnable action);
 
-    @Nonnull
+    
     @Override
-    protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
+    protected JComponent createLeftComponent(Disposable parentDisposable) {
         NewModuleContext context = new NewModuleContext();
 
         Application.get().getExtensionPoint(NewModuleBuilder.class).forEach(it -> it.setupContext(context));
@@ -134,7 +133,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     @SuppressWarnings({"unchecked", "RequiredXAction"})
     protected JComponent createRightComponent() {

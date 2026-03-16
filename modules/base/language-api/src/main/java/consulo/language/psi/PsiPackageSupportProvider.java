@@ -25,7 +25,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.extension.ModuleExtension;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,22 +32,22 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PsiPackageSupportProvider {
-    boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension);
+    boolean isSupported(ModuleExtension<?> moduleExtension);
 
-    default boolean isValidPackageName(@Nonnull Module module, @Nonnull String packageName) {
+    default boolean isValidPackageName(Module module, String packageName) {
         return true;
     }
 
-    default boolean acceptVirtualFile(@Nonnull Module module, @Nonnull VirtualFile virtualFile) {
+    default boolean acceptVirtualFile(Module module, VirtualFile virtualFile) {
         ContentFolderTypeProvider type = ProjectFileIndex.getInstance(module.getProject()).getContentFolderTypeForFile(virtualFile);
         return ProductionContentFolderTypeProvider.getInstance().equals(type) || TestContentFolderTypeProvider.getInstance().equals(type);
     }
 
-    @Nonnull
+    
     PsiPackage createPackage(
-        @Nonnull PsiManager psiManager,
-        @Nonnull PsiPackageManager packageManager,
-        @Nonnull Class<? extends ModuleExtension> extensionClass,
-        @Nonnull String packageName
+        PsiManager psiManager,
+        PsiPackageManager packageManager,
+        Class<? extends ModuleExtension> extensionClass,
+        String packageName
     );
 }

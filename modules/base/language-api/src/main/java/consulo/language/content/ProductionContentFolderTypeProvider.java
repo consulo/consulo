@@ -29,7 +29,6 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -42,7 +41,7 @@ public class ProductionContentFolderTypeProvider extends PackageBasedContentFold
     private static final ColorValue SOURCES_COLOR = new LightDarkColorValue(new RGBColor(10, 80, 161), StandardColors.BLUE);
     private static final Supplier<ProductionContentFolderTypeProvider> INSTANCE = ExtensionInstance.from(ContentFolderTypeProvider.class);
 
-    @Nonnull
+    
     public static ProductionContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -56,13 +55,13 @@ public class ProductionContentFolderTypeProvider extends PackageBasedContentFold
         return 50;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.modulesSourceroot();
     }
 
-    @Nonnull
+    
     @Override
     public Image getGeneratedIcon() {
         return PlatformIconGroup.modulesGeneratedsourceroot();
@@ -73,13 +72,13 @@ public class ProductionContentFolderTypeProvider extends PackageBasedContentFold
         return AllIcons.Nodes.Package;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleSourcesAction();
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getGroupColor() {
         return SOURCES_COLOR;

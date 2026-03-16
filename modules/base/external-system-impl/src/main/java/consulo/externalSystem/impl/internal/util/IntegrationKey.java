@@ -17,7 +17,6 @@ package consulo.externalSystem.impl.internal.util;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Unique key which encapsulates information about target ide and external projects.
@@ -29,23 +28,23 @@ import jakarta.annotation.Nonnull;
  */
 public class IntegrationKey {
 
-  @Nonnull
+  
   private final String          myIdeProjectName;
-  @Nonnull
+  
   private final String          myIdeProjectLocationHash;
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private final String          myExternalProjectConfigPath;
 
-  public IntegrationKey(@Nonnull Project ideProject, @Nonnull ProjectSystemId externalSystemId, @Nonnull String externalProjectConfigPath) {
+  public IntegrationKey(Project ideProject, ProjectSystemId externalSystemId, String externalProjectConfigPath) {
     this(ideProject.getName(), ideProject.getLocationHash(), externalSystemId, externalProjectConfigPath);
   }
 
-  public IntegrationKey(@Nonnull String ideProjectName,
-                        @Nonnull String ideProjectLocationHash,
-                        @Nonnull ProjectSystemId externalSystemId,
-                        @Nonnull String externalProjectConfigPath)
+  public IntegrationKey(String ideProjectName,
+                        String ideProjectLocationHash,
+                        ProjectSystemId externalSystemId,
+                        String externalProjectConfigPath)
   {
     myIdeProjectName = ideProjectName;
     myIdeProjectLocationHash = ideProjectLocationHash;
@@ -53,22 +52,22 @@ public class IntegrationKey {
     myExternalProjectConfigPath = externalProjectConfigPath;
   }
 
-  @Nonnull
+  
   public String getIdeProjectName() {
     return myIdeProjectName;
   }
 
-  @Nonnull
+  
   public String getIdeProjectLocationHash() {
     return myIdeProjectLocationHash;
   }
 
-  @Nonnull
+  
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  @Nonnull
+  
   public String getExternalProjectConfigPath() {
     return myExternalProjectConfigPath;
   }

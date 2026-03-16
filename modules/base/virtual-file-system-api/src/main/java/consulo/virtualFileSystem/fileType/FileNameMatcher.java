@@ -16,7 +16,6 @@
 
 package consulo.virtualFileSystem.fileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -26,7 +25,7 @@ public interface FileNameMatcher {
    * @deprecated use {@link #acceptsCharSequence(CharSequence)}
    */
   @Deprecated
-  default boolean accept(@Nonnull String fileName) {
+  default boolean accept(String fileName) {
     return acceptsCharSequence(fileName);
   }
 
@@ -35,10 +34,10 @@ public interface FileNameMatcher {
    *
    * @return whether the given file name is accepted by this matcher.
    */
-  default boolean acceptsCharSequence( @Nonnull CharSequence fileName) {
+  default boolean acceptsCharSequence( CharSequence fileName) {
     return accept(fileName.toString());
   }
 
-  @Nonnull
+  
   String getPresentableString();
 }

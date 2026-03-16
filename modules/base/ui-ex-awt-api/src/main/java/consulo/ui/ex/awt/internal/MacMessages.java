@@ -22,8 +22,7 @@ import consulo.ui.Window;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author pegov
@@ -31,13 +30,13 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class MacMessages {
   @Messages.YesNoCancelResult
-  public abstract int showYesNoCancelDialog(@Nonnull String title,
+  public abstract int showYesNoCancelDialog(String title,
                                             String message,
-                                            @Nonnull String defaultButton,
+                                            String defaultButton,
                                             String alternateButton,
                                             String otherButton,
                                             @Nullable Window window,
-                                            @Nullable DialogWrapper.DoNotAskOption doNotAskOption);
+                                            DialogWrapper.@Nullable DoNotAskOption doNotAskOption);
 
   public static MacMessages getInstance() {
     return  Application.get().getInstance(MacMessages.class);
@@ -59,35 +58,35 @@ public abstract class MacMessages {
    *
    * @return number of button pressed: from 0 up to buttons.length-1 inclusive, or -1 for Cancel
    */
-  public abstract int showMessageDialog(@Nonnull String title,
+  public abstract int showMessageDialog(String title,
                                         String message,
-                                        @Nonnull String[] buttons,
+                                        String[] buttons,
                                         boolean errorStyle,
                                         @Nullable Window window,
                                         int defaultOptionIndex,
                                         int focusedOptionIndex,
-                                        @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption);
+                                        DialogWrapper.@Nullable DoNotAskOption doNotAskDialogOption);
 
-  public abstract void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText, @Nullable Window window);
+  public abstract void showOkMessageDialog(String title, String message, String okText, @Nullable Window window);
 
-  public abstract void showOkMessageDialog(@Nonnull String title, String message, @Nonnull String okText);
-
-  /**
-   * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
-   */
-  @Messages.YesNoResult
-  public abstract int showYesNoDialog(@Nonnull String title, String message, @Nonnull String yesButton, @Nonnull String noButton, @Nullable Window window);
+  public abstract void showOkMessageDialog(String title, String message, String okText);
 
   /**
    * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
    */
   @Messages.YesNoResult
-  public abstract int showYesNoDialog(@Nonnull String title,
+  public abstract int showYesNoDialog(String title, String message, String yesButton, String noButton, @Nullable Window window);
+
+  /**
+   * @return {@link Messages#YES} if user pressed "Yes" or {@link Messages#NO} if user pressed "No" button.
+   */
+  @Messages.YesNoResult
+  public abstract int showYesNoDialog(String title,
                                       String message,
-                                      @Nonnull String yesButton,
-                                      @Nonnull String noButton,
+                                      String yesButton,
+                                      String noButton,
                                       @Nullable Window window,
-                                      @Nullable DialogWrapper.DoNotAskOption doNotAskDialogOption);
+                                      DialogWrapper.@Nullable DoNotAskOption doNotAskDialogOption);
 
-  public abstract void showErrorDialog(@Nonnull String title, String message, @Nonnull String okButton, @Nullable Window window);
+  public abstract void showErrorDialog(String title, String message, String okButton, @Nullable Window window);
 }

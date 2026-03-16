@@ -17,8 +17,7 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -41,14 +40,10 @@ public final class EmptyLocalizedValue implements LocalizedValue {
     public boolean isNotEmpty() {
         return false;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return "empty";
     }
-
-    @Nonnull
     @Override
     public String getValue() {
         return EMPTY_STRING;
@@ -59,8 +54,6 @@ public final class EmptyLocalizedValue implements LocalizedValue {
     public String getNullIfEmpty() {
         return null;
     }
-
-    @Nonnull
     @Override
     public LocalizedValue orIfEmpty(LocalizedValue defaultValue) {
         return defaultValue;
@@ -70,16 +63,12 @@ public final class EmptyLocalizedValue implements LocalizedValue {
     public byte getModificationCount() {
         return 0;
     }
-
-    @Nonnull
     @Override
-    public LocalizedValue map(@Nonnull Function<String, String> mapper) {
+    public LocalizedValue map(Function<String, String> mapper) {
         return this;
     }
-
-    @Nonnull
     @Override
-    public LocalizedValue map(@Nonnull BiFunction<LocalizationManager, String, String> mapper) {
+    public LocalizedValue map(BiFunction<LocalizationManager, String, String> mapper) {
         return this;
     }
 

@@ -18,8 +18,7 @@ package consulo.application.util;
 import consulo.logging.Logger;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,7 +147,7 @@ public class RequestsMerger {
   private enum MyState {
     empty() {
       @Override
-      @Nonnull
+      
       public MyState transition(MyAction action) {
         if (MyAction.request.equals(action)) {
           return MyState.requestSubmitted;
@@ -159,7 +158,7 @@ public class RequestsMerger {
     },
     inProgress() {
       @Override
-      @Nonnull
+      
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
           return empty;
@@ -173,7 +172,7 @@ public class RequestsMerger {
     },
     inProgressRequestSubmitted() {
       @Override
-      @Nonnull
+      
       public MyState transition(MyAction action) {
         if (MyAction.finish.equals(action)) {
           return MyState.requestSubmitted;
@@ -186,7 +185,7 @@ public class RequestsMerger {
     },
     requestSubmitted() {
       @Override
-      @Nonnull
+      
       public MyState transition(MyAction action) {
         if (MyAction.start.equals(action)) {
           return inProgress;
@@ -201,7 +200,7 @@ public class RequestsMerger {
     };
 
     // under lock
-    @Nonnull
+    
     public abstract MyState transition(MyAction action);
 
     private static void logWrongAction(MyState state, MyAction action) {

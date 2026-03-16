@@ -19,7 +19,6 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,6 +35,6 @@ import java.util.List;
  */
 public interface VcsFullCommitDetails extends VcsCommitMetadata {
 
-  @Nonnull
+  
   Collection<Change> getChanges();
 }

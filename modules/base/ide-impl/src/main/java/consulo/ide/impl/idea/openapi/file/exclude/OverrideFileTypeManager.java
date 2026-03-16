@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Storage for file types user selected in "Override File Type" action
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public final class OverrideFileTypeManager extends PersistentFileSetManager {
-  public boolean isMarkedPlainText(@Nonnull VirtualFile file) {
+  public boolean isMarkedPlainText(VirtualFile file) {
     return PlainTextFileType.INSTANCE.getId().equals(getFileValue(file));
   }
 
@@ -39,7 +38,7 @@ public final class OverrideFileTypeManager extends PersistentFileSetManager {
   }
 
   @Override
-  boolean addFile(@Nonnull VirtualFile file, @Nonnull FileType type) {
+  boolean addFile(VirtualFile file, FileType type) {
     if (!isOverridable(file.getFileType()) || !isOverridable(type)) {
       throw new IllegalArgumentException(
               "Cannot override filetype for file " + file + " from " + file.getFileType() + " to " + type + " because the " + (isOverridable(type) ? "former" : "latter") + " is not overridable");
@@ -49,7 +48,7 @@ public final class OverrideFileTypeManager extends PersistentFileSetManager {
 
   @TestOnly
   @RequiredUIAccess
-  public static void performTestWithMarkedAsPlainText(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
+  public static void performTestWithMarkedAsPlainText(VirtualFile file, Runnable runnable) {
     UIAccess.assertIsUIThread();
     getInstance().addFile(file, PlainTextFileType.INSTANCE);
     UIUtil.dispatchAllInvocationEvents();
@@ -62,7 +61,7 @@ public final class OverrideFileTypeManager extends PersistentFileSetManager {
     }
   }
 
-  static boolean isOverridable(@Nonnull FileType type) {
+  static boolean isOverridable(FileType type) {
     if (type instanceof DirectoryFileType) return false;
     if (type instanceof UnknownFileType) return false;
     if (type instanceof FakeFileType) return false;

@@ -27,9 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageViewUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -38,14 +36,14 @@ public class RefactoringUIUtil {
   private RefactoringUIUtil() {
   }
 
-  public static String getDescription(@Nonnull PsiElement element, boolean includeParent) {
+  public static String getDescription(PsiElement element, boolean includeParent) {
     return ElementDescriptionUtil.getElementDescription(element, includeParent
                                                                  ? RefactoringDescriptionLocation.WITH_PARENT
                                                                  : RefactoringDescriptionLocation.WITHOUT_PARENT);
   }
 
   public static void processIncorrectOperation(Project project, IncorrectOperationException e) {
-    @NonNls String message = e.getMessage();
+    String message = e.getMessage();
     int index = message != null ? message.indexOf("java.io.IOException") : -1;
     if (index > 0) {
       message = message.substring(index + "java.io.IOException".length());

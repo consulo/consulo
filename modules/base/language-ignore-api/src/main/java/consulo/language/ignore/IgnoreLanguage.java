@@ -28,8 +28,7 @@ import consulo.language.Language;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Gitignore {@link Language} definition.
@@ -51,7 +50,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     /**
      * The Ignore file extension suffix.
      */
-    @Nonnull
+    
     private final String myExtension;
 
     /**
@@ -63,7 +62,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
     /**
      * The GitignoreLanguage icon.
      */
-    @Nonnull
+    
     private final Image icon;
 
     /**
@@ -77,10 +76,10 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      * {@link IgnoreLanguage} is a non-instantiable static class.
      */
     protected IgnoreLanguage(
-        @Nonnull String name,
-        @Nonnull String extension,
+        String name,
+        String extension,
         @Nullable String vcsDirectory,
-        @Nonnull Image icon
+        Image icon
     ) {
         super(name);
         this.myExtension = extension;
@@ -93,7 +92,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return extension
      */
-    @Nonnull
+    
     public String getExtension() {
         return myExtension;
     }
@@ -113,12 +112,12 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return filename.
      */
-    @Nonnull
+    
     public String getFilename() {
         return DOT + getExtension();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.of(getFilename() + " (" + getID() + ")");
@@ -129,7 +128,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return icon
      */
-    @Nonnull
+    
     public Image getIcon() {
         return icon;
     }
@@ -148,7 +147,7 @@ public class IgnoreLanguage extends Language implements InjectableLanguage {
      *
      * @return default syntax
      */
-    @Nonnull
+    
     public Syntax getDefaultSyntax() {
         return Syntax.GLOB;
     }

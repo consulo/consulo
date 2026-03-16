@@ -17,14 +17,13 @@ package consulo.ui.ex.awt;
 
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.JBColor;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.Supplier;
 
 public final class ProgressBarColors {
     public static final Color GREEN = new JBColor(new Supplier<>() {
-        @Nonnull
+        
         @Override
         public Color get() {
             UISettings settings = UISettings.getInstanceOrNull();
@@ -38,7 +37,7 @@ public final class ProgressBarColors {
     });
 
     public static final Color RED = new JBColor(new Supplier<>() {
-        @Nonnull
+        
         @Override
         public Color get() {
             UISettings settings = UISettings.getInstanceOrNull();

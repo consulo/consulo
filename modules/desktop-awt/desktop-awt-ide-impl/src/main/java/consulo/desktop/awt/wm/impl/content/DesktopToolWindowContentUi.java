@@ -51,8 +51,7 @@ import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -86,7 +85,6 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
             return calcSize(target, Component::getPreferredSize);
         }
 
-        @Nonnull
         private Dimension calcSize(Container target, Function<Component, Dimension> dimensionSupplier) {
             synchronized (target.getTreeLock()) {
                 Dimension dim = new Dimension(0, 0);
@@ -161,12 +159,11 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         myShowContent = new ShowContentAction(myWindow, myContent);
     }
 
-    @Nonnull
     public ContentManager getContentManager() {
         return myManager;
     }
 
-    public void setType(@Nonnull ToolWindowContentUiType type) {
+    public void setType(ToolWindowContentUiType type) {
         if (myType != type) {
 
             if (myType != null) {
@@ -208,11 +205,11 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         return false;
     }
 
-    public void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+    public void setTabDoubleClickActions(AnAction... actions) {
         myTabsLayout.setTabDoubleClickActions(actions);
     }
 
-    private boolean isResizeable(@Nonnull Point point) {
+    private boolean isResizeable(Point point) {
         return isResizableArea.test(point);
     }
 
@@ -231,7 +228,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    public void setManager(@Nonnull ContentManager manager) {
+    public void setManager(ContentManager manager) {
         if (myManager != null) {
             getCurrentLayout().reset();
         }
@@ -368,29 +365,25 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
+    public boolean canChangeSelectionTo(Content content, boolean implicit) {
         return true;
     }
 
-    @Nonnull
     @Override
     public String getCloseActionName() {
         return getCurrentLayout().getCloseActionName();
     }
 
-    @Nonnull
     @Override
     public String getCloseAllButThisActionName() {
         return getCurrentLayout().getCloseAllButThisActionName();
     }
 
-    @Nonnull
     @Override
     public String getPreviousContentActionName() {
         return getCurrentLayout().getPreviousContentActionName();
     }
 
-    @Nonnull
     @Override
     public String getNextContentActionName() {
         return getCurrentLayout().getNextContentActionName();
@@ -604,7 +597,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         return new DumbAwareAction("Split '" + content.getTitlePrefix() + "' group") {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 content.split();
             }
         };
@@ -614,7 +607,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         return new DumbAwareAction("Merge tabs to '" + tabPrefix + "' group") {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Content selectedContent = manager.getSelectedContent();
                 List<Pair<String, JComponent>> tabs = new ArrayList<>();
                 int selectedTab = -1;
@@ -674,7 +667,7 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(ToolWindow.KEY, myWindow);
         sink.set(CloseAction.CloseTarget.KEY, computeCloseTarget((ToolWindowBase) myWindow));
     }
@@ -726,13 +719,13 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
         return getCurrentLayout() == layout;
     }
 
-    public static void toggleContentPopup(@Nonnull DesktopToolWindowContentUi content, @Nonnull ContentManager contentManager) {
+    public static void toggleContentPopup(DesktopToolWindowContentUi content, ContentManager contentManager) {
         toggleContentPopup(content, contentManager, null);
     }
 
     static void toggleContentPopup(
-        @Nonnull DesktopToolWindowContentUi content,
-        @Nonnull ContentManager contentManager,
+        DesktopToolWindowContentUi content,
+        ContentManager contentManager,
         @Nullable PopupState<JBPopup> popupState
     ) {
         SelectContentStep step = new SelectContentStep(contentManager.getContents());

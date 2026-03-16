@@ -31,8 +31,7 @@ import consulo.process.local.EnvironmentUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -59,11 +58,11 @@ public class StartupUtil {
   private StartupUtil() {
   }
 
-  public synchronized static void addExternalInstanceListener(@Nonnull Consumer<CommandLineArgs> consumer) {
+  public synchronized static void addExternalInstanceListener(Consumer<CommandLineArgs> consumer) {
     ourFolderLocker.setExternalInstanceListener(consumer);
   }
 
-  @Nonnull
+  
   public static synchronized ImportantFolderLocker getLocker() {
     if (ourFolderLocker == null) {
       throw new IllegalArgumentException("Called #getLocker() before app start");
@@ -116,7 +115,7 @@ public class StartupUtil {
     FAILED
   }
 
-  @Nonnull
+  
   private synchronized static ActivationResult lockSystemFolders(BiFunction<String, String, ImportantFolderLocker> lockFactory, String[] args) {
     if (ourFolderLocker != null) {
       throw new AssertionError();
@@ -203,7 +202,7 @@ public class StartupUtil {
     }
   }
 
-  public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable Object config) {
+  public static void handleComponentError(Throwable t, @Nullable Class componentClass, @Nullable Object config) {
     if (t instanceof StartupAbortedException) {
       throw (StartupAbortedException)t;
     }

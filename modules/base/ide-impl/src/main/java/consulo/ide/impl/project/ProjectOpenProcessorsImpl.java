@@ -22,8 +22,7 @@ import consulo.project.impl.internal.FolderProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessor;
 import consulo.project.internal.ProjectOpenProcessors;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -44,7 +43,7 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
         return processors;
     });
 
-    @Nonnull
+    
     @Override
     public List<ProjectOpenProcessor> getProcessors() {
         return myDefaultProcessors.get();
@@ -52,7 +51,7 @@ public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
 
     @Nullable
     @Override
-    public ProjectOpenProcessor findProcessor(@Nonnull File file) {
+    public ProjectOpenProcessor findProcessor(File file) {
         for (ProjectOpenProcessor processor : getProcessors()) {
             if (processor.canOpenProject(file)) {
                 return processor;

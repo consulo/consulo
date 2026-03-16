@@ -6,16 +6,15 @@ import consulo.codeEditor.EditorSettings;
 import consulo.document.Document;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public final class EditorCoreUtil {
-  public static void indentLine(Project project, @Nonnull Editor editor, int lineNumber, int indent, boolean shouldUseSmartTabs) {
+  public static void indentLine(Project project, Editor editor, int lineNumber, int indent, boolean shouldUseSmartTabs) {
     int caretOffset = editor.getCaretModel().getOffset();
     int newCaretOffset = indentLine(project, editor, lineNumber, indent, caretOffset, shouldUseSmartTabs);
     editor.getCaretModel().moveToOffset(newCaretOffset);
   }
 
-  public static int indentLine(Project project, @Nonnull Editor editor, int lineNumber, int indent, int caretOffset, boolean shouldUseSmartTabs) {
+  public static int indentLine(Project project, Editor editor, int lineNumber, int indent, int caretOffset, boolean shouldUseSmartTabs) {
     EditorSettings editorSettings = editor.getSettings();
     int tabSize = editorSettings.getTabSize(project);
     Document document = editor.getDocument();

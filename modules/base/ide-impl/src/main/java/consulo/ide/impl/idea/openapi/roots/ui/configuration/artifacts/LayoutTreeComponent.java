@@ -38,8 +38,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -161,7 +160,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     }
 
     @RequiredUIAccess
-    public void addNewPackagingElement(@Nonnull PackagingElementType<?> type) {
+    public void addNewPackagingElement(PackagingElementType<?> type) {
         PackagingElementNode<?> parentNode = getParentNode(myTree.getSelection());
         PackagingElement<?> element = parentNode.getFirstElement();
         CompositePackagingElement<?> parent;
@@ -217,15 +216,15 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     }
 
     @RequiredUIAccess
-    public boolean checkCanModify(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementNode<?> node) {
+    public boolean checkCanModify(PackagingElement<?> element, PackagingElementNode<?> node) {
         return checkCanModify(node.getNodeSource(element));
     }
 
     @RequiredUIAccess
     public boolean checkCanModifyChildren(
-        @Nonnull PackagingElement<?> parentElement,
-        @Nonnull PackagingElementNode<?> parentNode,
-        @Nonnull Collection<? extends PackagingElementNode<?>> children
+        PackagingElement<?> parentElement,
+        PackagingElementNode<?> parentNode,
+        Collection<? extends PackagingElementNode<?>> children
     ) {
         List<PackagingNodeSource> sources = new ArrayList<>(parentNode.getNodeSource(parentElement));
         for (PackagingElementNode<?> child : children) {
@@ -315,7 +314,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         );
     }
 
-    public void selectNode(@Nonnull String parentPath, @Nonnull PackagingElement<?> element) {
+    public void selectNode(String parentPath, PackagingElement<?> element) {
         PackagingElementNode<?> parent = myTree.findCompositeNodeByPath(parentPath);
         if (parent == null) {
             return;
@@ -335,7 +334,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     }
 
     @TestOnly
-    public void selectNode(@Nonnull String parentPath, @Nonnull String nodeName) {
+    public void selectNode(String parentPath, String nodeName) {
         PackagingElementNode<?> parent = myTree.findCompositeNodeByPath(parentPath);
         if (parent == null) {
             return;
@@ -547,7 +546,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         mySelectedElementInfo.showPropertiesPanel();
     }
 
-    public void putIntoDefaultLocations(@Nonnull List<? extends PackagingSourceItem> items) {
+    public void putIntoDefaultLocations(List<? extends PackagingSourceItem> items) {
         List<PackagingElement<?>> toSelect = new ArrayList<>();
         editLayout(() -> {
             CompositePackagingElement<?> rootElement = getArtifact().getRootElement();
@@ -567,7 +566,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         updateAndSelect(myTree.getRootPackagingNode(), toSelect);
     }
 
-    public void putElements(@Nonnull String path, @Nonnull List<? extends PackagingElement<?>> elements) {
+    public void putElements(String path, List<? extends PackagingElement<?>> elements) {
         List<PackagingElement<?>> toSelect = new ArrayList<>();
         editLayout(() -> {
             CompositePackagingElement<?> directory =
@@ -578,7 +577,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
         updateAndSelect(myTree.getRootPackagingNode(), toSelect);
     }
 
-    public void packInto(@Nonnull List<? extends PackagingSourceItem> items, String pathToJar) {
+    public void packInto(List<? extends PackagingSourceItem> items, String pathToJar) {
         List<PackagingElement<?>> toSelect = new ArrayList<>();
         CompositePackagingElement<?> rootElement = getArtifact().getRootElement();
         editLayout(() -> {
@@ -654,7 +653,7 @@ public class LayoutTreeComponent implements DnDTarget, Disposable {
     private class LayoutTreeStructure extends SimpleTreeStructure {
         private ArtifactRootNode myRootNode;
 
-        @Nonnull
+        
         @Override
         public Object getRootElement() {
             if (myRootNode == null) {

@@ -24,13 +24,12 @@ import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.util.MergeConflictType;
 import consulo.diff.util.ThreeSide;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
-    @Nonnull
+    
     private final List<? extends EditorEx> myEditors;
     @Nullable
     private final MergeInnerDifferences myInnerFragments;
@@ -40,10 +39,10 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
 
     @RequiredUIAccess
     public SimpleThreesideDiffChange(
-        @Nonnull MergeLineFragment fragment,
-        @Nonnull MergeConflictType conflictType,
+        MergeLineFragment fragment,
+        MergeConflictType conflictType,
         @Nullable MergeInnerDifferences innerFragments,
-        @Nonnull SimpleThreesideDiffViewer viewer
+        SimpleThreesideDiffViewer viewer
     ) {
         super(conflictType);
         myEditors = viewer.getEditors();
@@ -77,23 +76,23 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
     //
 
     @Override
-    public int getStartLine(@Nonnull ThreeSide side) {
+    public int getStartLine(ThreeSide side) {
         return side.select(myLineStarts);
     }
 
     @Override
-    public int getEndLine(@Nonnull ThreeSide side) {
+    public int getEndLine(ThreeSide side) {
         return side.select(myLineEnds);
     }
 
     @Override
-    public boolean isResolved(@Nonnull ThreeSide side) {
+    public boolean isResolved(ThreeSide side) {
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    protected Editor getEditor(@Nonnull ThreeSide side) {
+    protected Editor getEditor(ThreeSide side) {
         return side.select(myEditors);
     }
 
@@ -107,7 +106,7 @@ public class SimpleThreesideDiffChange extends ThreesideDiffChangeBase {
     // Shift
     //
 
-    public boolean processChange(int oldLine1, int oldLine2, int shift, @Nonnull ThreeSide side) {
+    public boolean processChange(int oldLine1, int oldLine2, int shift, ThreeSide side) {
         int line1 = getStartLine(side);
         int line2 = getEndLine(side);
         int sideIndex = side.getIndex();

@@ -22,8 +22,7 @@ import consulo.language.Language;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -35,15 +34,15 @@ public abstract class ScratchFileService {
     return Application.get().getInstance(ScratchFileService.class);
   }
 
-  @Nonnull
-  public abstract String getRootPath(@Nonnull RootType rootId);
+  
+  public abstract String getRootPath(RootType rootId);
 
   @Nullable
   public abstract RootType getRootType(@Nullable VirtualFile file);
 
-  public abstract VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException;
+  public abstract VirtualFile findFile(RootType rootType, String pathName, Option option) throws IOException;
 
-  @Nonnull
+  
   public abstract PerFileMappings<Language> getScratchesMapping();
 
   @Nullable

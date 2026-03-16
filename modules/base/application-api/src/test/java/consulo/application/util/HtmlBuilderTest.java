@@ -3,7 +3,6 @@ package consulo.application.util;
 
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -115,7 +114,7 @@ public class HtmlBuilderTest {
         assertThat(fragment2).hasToString("<a href=\"1\">1</a><a href=\"2\">2</a>");
     }
 
-    static LocalizeValue loc(@Nonnull String value) {
+    static LocalizeValue loc(String value) {
         return new TestLocalizedValue(value);
     }
 }

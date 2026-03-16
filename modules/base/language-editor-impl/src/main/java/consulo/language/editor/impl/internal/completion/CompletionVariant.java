@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.filter.ElementFilter;
 import consulo.util.lang.reflect.ReflectionUtil;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -113,11 +112,11 @@ public class CompletionVariant {
     addCompletionFilter(filter, TailType.NONE);
   }
 
-  public void addCompletion(@NonNls String keyword) {
+  public void addCompletion(String keyword) {
     addCompletion(keyword, DEFAULT_TAIL_TYPE);
   }
 
-  public void addCompletion(@NonNls String keyword, TailType tailType) {
+  public void addCompletion(String keyword, TailType tailType) {
     addCompletion((Object)keyword, tailType);
   }
 

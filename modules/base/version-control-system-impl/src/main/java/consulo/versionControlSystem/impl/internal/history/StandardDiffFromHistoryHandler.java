@@ -22,21 +22,20 @@ import consulo.versionControlSystem.history.DiffFromHistoryHandler;
 import consulo.versionControlSystem.history.VcsFileRevision;
 
 import consulo.versionControlSystem.history.VcsHistoryUtil;
-import jakarta.annotation.Nonnull;
 
 public class StandardDiffFromHistoryHandler implements DiffFromHistoryHandler {
 
   @Override
-  public void showDiffForOne(@Nonnull AnActionEvent e, @Nonnull Project project, @Nonnull FilePath filePath,
-                             @Nonnull VcsFileRevision previousRevision, @Nonnull VcsFileRevision revision) {
+  public void showDiffForOne(AnActionEvent e, Project project, FilePath filePath,
+                             VcsFileRevision previousRevision, VcsFileRevision revision) {
     VcsHistoryUtil.showDifferencesInBackground(project, filePath, previousRevision, revision);
   }
 
   @Override
-  public void showDiffForTwo(@Nonnull Project project,
-                             @Nonnull FilePath filePath,
-                             @Nonnull VcsFileRevision revision1,
-                             @Nonnull VcsFileRevision revision2) {
+  public void showDiffForTwo(Project project,
+                             FilePath filePath,
+                             VcsFileRevision revision1,
+                             VcsFileRevision revision2) {
     VcsHistoryUtil.showDifferencesInBackground(project, filePath, revision1, revision2);
   }
 }

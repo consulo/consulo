@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.internal.matcher;
 
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.matcher.ExtensionFileNameMatcher;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,23 +26,23 @@ public class ExtensionFileNameMatcherImpl implements ExtensionFileNameMatcher {
   private final String myExtension;
   private final String myDotExtension;
 
-  public ExtensionFileNameMatcherImpl(@Nonnull String extension) {
+  public ExtensionFileNameMatcherImpl(String extension) {
     myExtension = StringUtil.toLowerCase(extension);
     myDotExtension = "." + myExtension;
   }
 
   @Override
-  public boolean acceptsCharSequence(@Nonnull CharSequence fileName) {
+  public boolean acceptsCharSequence(CharSequence fileName) {
     return StringUtil.endsWithIgnoreCase(fileName, myDotExtension);
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableString() {
     return "*." + myExtension;
   }
 
-  @Nonnull
+  
   @Override
   public String getExtension() {
     return myExtension;

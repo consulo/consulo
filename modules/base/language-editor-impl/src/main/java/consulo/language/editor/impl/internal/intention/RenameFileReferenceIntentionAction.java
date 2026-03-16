@@ -28,7 +28,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -43,20 +42,20 @@ public class RenameFileReferenceIntentionAction implements IntentionAction, Loca
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getText() {
         return CodeInsightLocalize.renameFileReferenceText(myExistingElementName);
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getName() {
         return getText();
     }
 
     @Override
     @RequiredUIAccess
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
         if (isAvailable(project, null, null)) {
             CommandProcessor.getInstance().newCommand()
                 .project(project)
@@ -66,12 +65,12 @@ public class RenameFileReferenceIntentionAction implements IntentionAction, Loca
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         return true;
     }
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
             return;
         }

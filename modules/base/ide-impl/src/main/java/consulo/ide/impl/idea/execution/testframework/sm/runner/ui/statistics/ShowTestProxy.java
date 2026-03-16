@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman Chernyatchik
@@ -36,13 +35,13 @@ public class ShowTestProxy extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         StatisticsPanel sender = e.getRequiredData(StatisticsPanel.SM_TEST_RUNNER_STATISTICS);
         sender.showSelectedProxyInTestsTree();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
         // visible only in StatisticsTableView

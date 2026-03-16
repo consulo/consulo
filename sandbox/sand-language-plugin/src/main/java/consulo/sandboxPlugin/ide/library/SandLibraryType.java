@@ -30,8 +30,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -43,7 +42,7 @@ public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperti
   @Inject
   protected SandLibraryType() {
     super(new PersistentLibraryKind<>("sand") {
-      @Nonnull
+      
       @Override
       public DummyLibraryProperties createDefaultProperties() {
         return new DummyLibraryProperties();
@@ -59,7 +58,7 @@ public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperti
 
   @Nullable
   @Override
-  public LibraryPropertiesEditor createPropertiesEditor(@Nonnull LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
+  public LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<DummyLibraryProperties> editorComponent) {
     return null;
   }
 
@@ -70,7 +69,7 @@ public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperti
   }
 
   @Override
-  public boolean isAvailable(@Nonnull ModuleRootLayer model) {
+  public boolean isAvailable(ModuleRootLayer model) {
     return model.getExtension(SandModuleExtension.class) != null;
   }
 }

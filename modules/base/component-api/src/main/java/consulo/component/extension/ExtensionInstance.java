@@ -19,7 +19,6 @@ import consulo.component.internal.ExtensionInstanceRef;
 import consulo.component.internal.LazyExtensionInstance;
 import consulo.component.internal.StableExtensionInstance;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -27,9 +26,9 @@ import java.util.function.Supplier;
  * @since 26/01/2023
  */
 public final class ExtensionInstance {
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  public static <Api, Impl extends Api> Supplier<Impl> from(@Nonnull Class<Api> clazz) {
+  public static <Api, Impl extends Api> Supplier<Impl> from(Class<Api> clazz) {
 
     // called before extension creating
     ExtensionInstanceRef ref = ExtensionInstanceRef.CURRENT_CREATION.get();

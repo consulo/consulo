@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -32,9 +31,9 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ExtensionExtender<T> {
-  void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<T> consumer);
+  void extend(ComponentManager componentManager, Consumer<T> consumer);
 
-  @Nonnull
+  
   Class<T> getExtensionClass();
 
   /**

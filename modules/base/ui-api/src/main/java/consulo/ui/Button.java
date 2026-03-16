@@ -23,45 +23,35 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 13-Sep-17
  */
 public interface Button extends Component, HasComponentStyle<ButtonStyle> {
-    @Nonnull
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue)")
-    static Button create(@Nonnull String text) {
+    static Button create(String text) {
         return create(LocalizeValue.of(text));
     }
-
-    @Nonnull
     @Deprecated
     @DeprecationInfo("Use #create(LocalizeValue, ComponentEventListener<Component, ClickEvent>)")
-    static Button create(@Nonnull String text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+    static Button create(String text, ComponentEventListener<Component, ClickEvent> clickListener) {
         return create(LocalizeValue.of(text), clickListener);
     }
-
-    @Nonnull
-    static Button create(@Nonnull LocalizeValue text) {
+    static Button create(LocalizeValue text) {
         return UIInternal.get()._Components_button(text);
     }
-
-    @Nonnull
-    static Button create(@Nonnull LocalizeValue text, @Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+    static Button create(LocalizeValue text, ComponentEventListener<Component, ClickEvent> clickListener) {
         Button button = create(text);
         button.addClickListener(clickListener);
         return button;
     }
-
-    @Nonnull
     LocalizeValue getText();
 
     @RequiredUIAccess
-    void setText(@Nonnull LocalizeValue text);
+    void setText(LocalizeValue text);
 
     @Nullable
     Image getIcon();
@@ -69,5 +59,5 @@ public interface Button extends Component, HasComponentStyle<ButtonStyle> {
     @RequiredUIAccess
     void setIcon(@Nullable Image image);
 
-    void invoke(@Nonnull InputDetails inputDetails);
+    void invoke(InputDetails inputDetails);
 }

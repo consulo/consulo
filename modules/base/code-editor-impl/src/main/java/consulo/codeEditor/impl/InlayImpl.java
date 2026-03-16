@@ -10,8 +10,7 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,15 +19,15 @@ import java.util.Objects;
 public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends InlayImpl> extends RangeMarkerWithGetterImpl implements Inlay<R> {
     public static final Key<Integer> OFFSET_BEFORE_DISPOSAL = Key.create("inlay.offset.before.disposal");
 
-    @Nonnull
+    
     final CodeEditorBase myEditor;
-    @Nonnull
+    
     public final R myRenderer;
     private final boolean myRelatedToPrecedingText;
 
     int myWidthInPixels;
 
-    InlayImpl(@Nonnull CodeEditorBase editor, int offset, boolean relatesToPrecedingText, @Nonnull R renderer) {
+    InlayImpl(CodeEditorBase editor, int offset, boolean relatesToPrecedingText, R renderer) {
         super(editor.getDocument(), offset, offset, false);
         myEditor = editor;
         myRelatedToPrecedingText = relatesToPrecedingText;
@@ -40,7 +39,7 @@ public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends
 
     abstract RangeMarkerTree<T> getTree();
 
-    @Nonnull
+    
     @Override
     public Editor getEditor() {
         return myEditor;
@@ -124,7 +123,7 @@ public abstract class InlayImpl<R extends EditorCustomElementRenderer, T extends
         return new Rectangle(pos.x, pos.y, getWidthInPixels(), getHeightInPixels());
     }
 
-    @Nonnull
+    
     @Override
     public R getRenderer() {
         return myRenderer;

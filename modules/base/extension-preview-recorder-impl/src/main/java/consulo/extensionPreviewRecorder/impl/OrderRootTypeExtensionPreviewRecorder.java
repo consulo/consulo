@@ -22,7 +22,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.content.OrderRootType;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -39,7 +38,7 @@ public class OrderRootTypeExtensionPreviewRecorder implements ExtensionPreviewRe
   }
 
   @Override
-  public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+  public void analyze(Consumer<ExtensionPreview> recorder) {
     myApplication.getExtensionPoint(OrderRootType.class).forEachExtensionSafe(it -> {
       ExtensionPreview preview = ExtensionPreview.of(OrderRootType.class, it.getId(), it);
       recorder.accept(preview);

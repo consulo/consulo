@@ -59,8 +59,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -79,7 +78,7 @@ import static consulo.execution.impl.internal.dashboard.RunDashboardServiceViewC
 @ServiceImpl
 @Singleton
 public final class RunDashboardManagerImpl implements RunDashboardManager, PersistentStateComponent<RunDashboardManagerImpl.State> {
-    @Nonnull
+    
     private final Project myProject;
     private final ContentManager myContentManager;
     private final ContentManagerListener myServiceContentManagerListener;
@@ -96,7 +95,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     private JComponent myEmptyContent;
 
     @Inject
-    public RunDashboardManagerImpl(@Nonnull Project project, @Nonnull ContentFactory contentFactory) {
+    public RunDashboardManagerImpl(Project project, ContentFactory contentFactory) {
         myProject = project;
         myContentManager = contentFactory.createContentManager(new PanelContentUI(), false, project);
         myServiceContentManagerListener = new ServiceContentManagerListener();
@@ -106,7 +105,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myContentManager.addContentManagerListener(new ContentManagerListener() {
             @Override
             @RequiredUIAccess
-            public void contentAdded(@Nonnull ContentManagerEvent event) {
+            public void contentAdded(ContentManagerEvent event) {
                 initServiceContentListeners();
                 myContentManager.removeContentManagerListener(this);
             }
@@ -117,12 +116,12 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     private void initExtensionPointListeners() {
 //      ExtensionPointListener dashboardUpdater = new ExtensionPointListener() {
 //          @Override
-//          public void extensionAdded(@Nonnull Object extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//          public void extensionAdded(Object extension, PluginDescriptor pluginDescriptor) {
 //              updateDashboard(true);
 //          }
 //
 //          @Override
-//          public void extensionRemoved(@Nonnull Object extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//          public void extensionRemoved(Object extension, PluginDescriptor pluginDescriptor) {
 //              myProject.getMessageBus().syncPublisher(ServiceEventListener.TOPIC)
 //                  .handle(ServiceEventListener.ServiceEvent.createUnloadSyncResetEvent(RunDashboardServiceViewContributor.class));
 //          }
@@ -133,14 +132,14 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 //      DEFAULT_TYPES_PROVIDER_EP_NAME.addExtensionPointListener(
 //          new ExtensionPointListener<>() {
 //              @Override
-//              public void extensionAdded(RunDashboardDefaultTypesProvider extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//              public void extensionAdded(RunDashboardDefaultTypesProvider extension, PluginDescriptor pluginDescriptor) {
 //                  Set<String> types = new HashSet<>(getTypes());
 //                  types.addAll(extension.getDefaultTypeIds(myProject));
 //                  setTypes(types);
 //              }
 //
 //              @Override
-//              public void extensionRemoved(RunDashboardDefaultTypesProvider extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//              public void extensionRemoved(RunDashboardDefaultTypesProvider extension, PluginDescriptor pluginDescriptor) {
 //                  Set<String> types = new HashSet<>(getTypes());
 //                  types.removeAll(extension.getDefaultTypeIds(myProject));
 //                  setTypes(types);
@@ -152,12 +151,12 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 //      ConfigurationType.CONFIGURATION_TYPE_EP.addExtensionPointListener(
 //          new ExtensionPointListener<>() {
 //              @Override
-//              public void extensionAdded(ConfigurationType extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//              public void extensionAdded(ConfigurationType extension, PluginDescriptor pluginDescriptor) {
 //                  setTypes(new HashSet<>(getTypes()));
 //              }
 //
 //              @Override
-//              public void extensionRemoved(ConfigurationType extension, @Nonnull PluginDescriptor pluginDescriptor) {
+//              public void extensionRemoved(ConfigurationType extension, PluginDescriptor pluginDescriptor) {
 //                  Set<String> types = new HashSet<>(getTypes());
 //                  types.remove(extension.getId());
 //                  setTypes(types);
@@ -178,7 +177,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             private volatile boolean myUpdateStarted;
 
             @Override
-            public void runConfigurationAdded(@Nonnull RunnerAndConfigurationSettings settings) {
+            public void runConfigurationAdded(RunnerAndConfigurationSettings settings) {
                 if (!myUpdateStarted) {
                     syncConfigurations();
                     updateDashboardIfNeeded(settings);
@@ -186,7 +185,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             }
 
             @Override
-            public void runConfigurationRemoved(@Nonnull RunnerAndConfigurationSettings settings) {
+            public void runConfigurationRemoved(RunnerAndConfigurationSettings settings) {
                 myHiddenConfigurations.remove(settings.getConfiguration());
                 if (!myUpdateStarted) {
                     syncConfigurations();
@@ -195,7 +194,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
             }
 
             @Override
-            public void runConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
+            public void runConfigurationChanged(RunnerAndConfigurationSettings settings) {
                 if (!myUpdateStarted) {
                     updateDashboardIfNeeded(settings);
                 }
@@ -216,18 +215,18 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         connection.subscribe(ExecutionListener.class, new ExecutionListener() {
             @Override
             public void processStarted(
-                @Nonnull String executorId,
-                @Nonnull ExecutionEnvironment env,
-                @Nonnull ProcessHandler handler
+                String executorId,
+                ExecutionEnvironment env,
+                ProcessHandler handler
             ) {
                 updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
             }
 
             @Override
             public void processTerminated(
-                @Nonnull String executorId,
-                @Nonnull ExecutionEnvironment env,
-                @Nonnull ProcessHandler handler,
+                String executorId,
+                ExecutionEnvironment env,
+                ProcessHandler handler,
                 int exitCode
             ) {
                 updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
@@ -249,7 +248,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
-    public @Nonnull String getToolWindowId() {
+    public String getToolWindowId() {
         if (myToolWindowId == null) {
             String toolWindowId = ServiceViewManager.getInstance(myProject).getToolWindowId(RunDashboardServiceViewContributor.class);
             myToolWindowId = toolWindowId != null ? toolWindowId : ToolWindowId.SERVICES;
@@ -258,7 +257,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
-    public @Nonnull Image getToolWindowIcon() {
+    public Image getToolWindowIcon() {
         return PlatformIconGroup.toolwindowsToolwindowservices();
     }
 
@@ -281,7 +280,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
-    public boolean isShowInDashboard(@Nonnull RunConfiguration runConfiguration) {
+    public boolean isShowInDashboard(RunConfiguration runConfiguration) {
         if (isShown(runConfiguration)) {
             return true;
         }
@@ -290,22 +289,22 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         return baseConfiguration != null && isShown(baseConfiguration);
     }
 
-    private boolean isShown(@Nonnull RunConfiguration runConfiguration) {
+    private boolean isShown(RunConfiguration runConfiguration) {
         return myTypes.contains(runConfiguration.getType().getId()) && !myHiddenConfigurations.contains(runConfiguration);
     }
 
     @Nullable
-    private static RunConfiguration getBaseConfiguration(@Nonnull RunConfiguration runConfiguration) {
+    private static RunConfiguration getBaseConfiguration(RunConfiguration runConfiguration) {
         return ExecutionManagerImpl.getDelegatedRunProfile(runConfiguration) instanceof RunConfiguration runProfile ? runProfile : null;
     }
 
     @Override
-    public @Nonnull Set<String> getTypes() {
+    public Set<String> getTypes() {
         return Collections.unmodifiableSet(myTypes);
     }
 
     @Override
-    public void setTypes(@Nonnull Set<String> types) {
+    public void setTypes(Set<String> types) {
         Set<String> removed = new HashSet<>(Sets.difference(myTypes, types));
         Set<String> added = new HashSet<>(Sets.difference(types, myTypes));
 
@@ -423,8 +422,8 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myState.openRunningConfigInTab = value;
     }
 
-    static @Nonnull List<RunDashboardCustomizer> getCustomizers(
-        @Nonnull RunnerAndConfigurationSettings settings,
+    static List<RunDashboardCustomizer> getCustomizers(
+        RunnerAndConfigurationSettings settings,
         @Nullable RunContentDescriptor descriptor
     ) {
         return Application.get().getExtensionPoint(RunDashboardCustomizer.class)
@@ -437,14 +436,14 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private void updateDashboardIfNeeded(@Nonnull RunConfiguration configuration, boolean withStructure) {
+    private void updateDashboardIfNeeded(RunConfiguration configuration, boolean withStructure) {
         if (isShowInDashboard(configuration)
             || !filterByContent(getConfigurationDescriptors(configuration)).isEmpty()) {
             updateDashboard(withStructure);
         }
     }
 
-    private List<RunContentDescriptor> getConfigurationDescriptors(@Nonnull RunConfiguration configuration) {
+    private List<RunContentDescriptor> getConfigurationDescriptors(RunConfiguration configuration) {
         ExecutionManager instance = ExecutionManager.getInstance(myProject);
         if (!(instance instanceof ExecutionManagerImpl)) {
             return Collections.emptyList();
@@ -456,7 +455,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
-    public @Nonnull Predicate<Content> getReuseCondition() {
+    public Predicate<Content> getReuseCondition() {
         return myReuseCondition;
     }
 
@@ -519,7 +518,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private void addServiceContent(@Nonnull Content content) {
+    private void addServiceContent(Content content) {
         RunnerAndConfigurationSettings settings = findSettings(content);
         if (settings == null) {
             return;
@@ -534,7 +533,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private void removeServiceContent(@Nonnull Content content) {
+    private void removeServiceContent(Content content) {
         myServiceLock.writeLock().lock();
         try {
             RunDashboardServiceImpl service = findService(content);
@@ -550,7 +549,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private void updateServiceContent(@Nonnull Content content) {
+    private void updateServiceContent(Content content) {
         RunnerAndConfigurationSettings settings = findSettings(content);
         if (settings == null) {
             return;
@@ -571,7 +570,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private void doAddServiceContent(@Nonnull RunnerAndConfigurationSettings settings, @Nonnull Content content) {
+    private void doAddServiceContent(RunnerAndConfigurationSettings settings, Content content) {
         List<RunDashboardServiceImpl> settingsServices = getServices(settings);
         if (settingsServices == null) {
             settingsServices = new SmartList<>(new RunDashboardServiceImpl(settings, content));
@@ -590,7 +589,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private void doRemoveServiceContent(@Nonnull RunDashboardServiceImpl service) {
+    private void doRemoveServiceContent(RunDashboardServiceImpl service) {
         RunnerAndConfigurationSettings contentSettings = service.getSettings();
         List<RunDashboardServiceImpl> services = getServices(contentSettings);
         if (services == null) {
@@ -609,7 +608,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    private @Nullable RunDashboardServiceImpl findService(@Nonnull Content content) {
+    private @Nullable RunDashboardServiceImpl findService(Content content) {
         myServiceLock.readLock().lock();
         try {
             for (List<RunDashboardServiceImpl> services : myServices) {
@@ -627,7 +626,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         return null;
     }
 
-    private @Nullable RunnerAndConfigurationSettings findSettings(@Nonnull Content content) {
+    private @Nullable RunnerAndConfigurationSettings findSettings(Content content) {
         RunContentDescriptor descriptor = RunContentManagerImpl.getRunContentDescriptorByContent(content);
         if (descriptor == null) {
             return null;
@@ -649,7 +648,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         return settings;
     }
 
-    private @Nullable RunnerAndConfigurationSettings findSettings(@Nonnull RunContentDescriptor descriptor) {
+    private @Nullable RunnerAndConfigurationSettings findSettings(RunContentDescriptor descriptor) {
         Set<RunnerAndConfigurationSettings> settingsSet = ExecutionManagerImpl.getInstance(myProject).getConfigurations(descriptor);
         RunnerAndConfigurationSettings result = ContainerUtil.getFirstItem(settingsSet);
         if (result != null) {
@@ -660,7 +659,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         return processHandler == null ? null : processHandler.getUserData(RunContentManagerImpl.TEMPORARY_CONFIGURATION_KEY);
     }
 
-    private @Nullable List<RunDashboardServiceImpl> getServices(@Nonnull RunnerAndConfigurationSettings settings) {
+    private @Nullable List<RunDashboardServiceImpl> getServices(RunnerAndConfigurationSettings settings) {
         for (List<RunDashboardServiceImpl> services : myServices) {
             if (services.get(0).getSettings().equals(settings)) {
                 return services;
@@ -710,7 +709,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
     }
 
-    void setSelectedContent(@Nonnull Content content) {
+    void setSelectedContent(Content content) {
         ContentManager contentManager = content.getManager();
         if (contentManager == null || content == contentManager.getSelectedContent()) {
             return;
@@ -727,7 +726,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myContentManager.addContentManagerListener(myServiceContentManagerListener);
     }
 
-    void removeFromSelection(@Nonnull Content content) {
+    void removeFromSelection(Content content) {
         ContentManager contentManager = content.getManager();
         if (contentManager == null || content != contentManager.getSelectedContent()) {
             return;
@@ -743,7 +742,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         myContentManager.addContentManagerListener(myServiceContentManagerListener);
     }
 
-    public @Nonnull RunDashboardStatusFilter getStatusFilter() {
+    public RunDashboardStatusFilter getStatusFilter() {
         return myStatusFilter;
     }
 
@@ -825,7 +824,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
     }
 
     @Override
-    public void loadState(@Nonnull State state) {
+    public void loadState(State state) {
         myState = state;
         myTypes.clear();
         myTypes.addAll(myState.configurationTypes);
@@ -893,7 +892,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         private final Content myContent;
 
         RunDashboardServiceImpl(
-            @Nonnull RunnerAndConfigurationSettings settings,
+            RunnerAndConfigurationSettings settings,
             @Nullable Content content
         ) {
             mySettings = settings;
@@ -901,7 +900,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
         }
 
         @Override
-        public @Nonnull RunnerAndConfigurationSettings getSettings() {
+        public RunnerAndConfigurationSettings getSettings() {
             return mySettings;
         }
 
@@ -942,7 +941,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
         @Override
         @RequiredUIAccess
-        public void selectionChanged(@Nonnull ContentManagerEvent event) {
+        public void selectionChanged(ContentManagerEvent event) {
             boolean onAdd = event.getOperation() == ContentManagerEvent.ContentOperation.add;
             Content content = event.getContent();
             if (onAdd) {
@@ -985,7 +984,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
         @Override
         @RequiredUIAccess
-        public void contentAdded(@Nonnull ContentManagerEvent event) {
+        public void contentAdded(ContentManagerEvent event) {
             Content content = event.getContent();
             addServiceContent(content);
             if (myState.openRunningConfigInTab) {
@@ -998,7 +997,7 @@ public final class RunDashboardManagerImpl implements RunDashboardManager, Persi
 
         @Override
         @RequiredUIAccess
-        public void contentRemoved(@Nonnull ContentManagerEvent event) {
+        public void contentRemoved(ContentManagerEvent event) {
             Content content = event.getContent();
             if (myPreviousSelection == content) {
                 myPreviousSelection = null;

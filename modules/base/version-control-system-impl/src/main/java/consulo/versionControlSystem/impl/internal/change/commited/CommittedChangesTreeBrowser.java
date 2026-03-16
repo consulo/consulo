@@ -26,9 +26,7 @@ import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.change.commited.*;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -64,7 +62,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
 
   private final List<CommittedChangeListDecorator> myDecorators;
 
-  @NonNls public static final String ourHelpId = "reference.changesToolWindow.incoming";
+  public static final String ourHelpId = "reference.changesToolWindow.incoming";
 
   private WiseSplitter myInnerSplitter;
   private final MessageBusConnection myConnection;
@@ -198,7 +196,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
     myDetailsView.dispose();
   }
 
-  public void setItems(@Nonnull List<CommittedChangeList> items, CommittedChangesBrowserUseCase useCase) {
+  public void setItems(List<CommittedChangeList> items, CommittedChangesBrowserUseCase useCase) {
     myDetailsView.setUseCase(useCase);
     myChangeLists = items;
     myFilteringStrategy.setFilterBase(items);
@@ -325,7 +323,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     Collection<Change> changes = collectChanges(getSelectedChangeLists(), false);
     sink.set(VcsDataKeys.CHANGES, changes.toArray(new Change[changes.size()]));
     int count = myChangesTree.getSelectionCount();
@@ -439,7 +437,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements UiDataProvide
 
     @SuppressWarnings("unchecked")
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       sink.set(CopyProvider.KEY, myCopyProvider);
       sink.set(PlatformDataKeys.TREE_EXPANDER, myTreeExpander);
       DataContext dataContext = DataManager.getInstance().getDataContext(myDetailsView.getComponent());

@@ -23,7 +23,6 @@ import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.CommandBuilder;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
@@ -38,7 +37,7 @@ public abstract class BaseCommandBuilderWrapper<THIS extends CommandBuilder<THIS
     }
 
     @Override
-    public THIS name(@Nonnull LocalizeValue name) {
+    public THIS name(LocalizeValue name) {
         mySubBuilder = mySubBuilder.name(name);
         return self();
     }
@@ -62,7 +61,7 @@ public abstract class BaseCommandBuilderWrapper<THIS extends CommandBuilder<THIS
     }
 
     @Override
-    public THIS undoConfirmationPolicy(@Nonnull UndoConfirmationPolicy undoConfirmationPolicy) {
+    public THIS undoConfirmationPolicy(UndoConfirmationPolicy undoConfirmationPolicy) {
         mySubBuilder = mySubBuilder.undoConfirmationPolicy(undoConfirmationPolicy);
         return self();
     }
@@ -74,7 +73,7 @@ public abstract class BaseCommandBuilderWrapper<THIS extends CommandBuilder<THIS
     }
 
     @Override
-    public CommandDescriptor build(@Nonnull Runnable command) {
+    public CommandDescriptor build(Runnable command) {
         return mySubBuilder.build(command);
     }
 

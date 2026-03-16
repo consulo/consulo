@@ -6,21 +6,20 @@ import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.DefaultProgramRunner;
 import consulo.remoteServer.impl.internal.configuration.deployment.DeployToServerRunConfiguration;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @ExtensionImpl
 public class DeployToServerRunner extends DefaultProgramRunner {
-  @Nonnull
+  
   @Override
   public String getRunnerId() {
     return "DeployToServer";
   }
 
   @Override
-  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
+  public boolean canRun(String executorId, RunProfile profile) {
     if (!(profile instanceof DeployToServerRunConfiguration)) {
       return false;
     }

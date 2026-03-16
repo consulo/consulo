@@ -19,7 +19,6 @@ package consulo.execution.test;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 
-import jakarta.annotation.Nonnull;
 
 public class DeferingPrinter implements Printer {
   private CompositePrintable myCompositePrintable;
@@ -39,7 +38,7 @@ public class DeferingPrinter implements Printer {
   }
 
   @Override
-  public void onNewAvailable(@Nonnull Printable printable) {
+  public void onNewAvailable(Printable printable) {
     myCompositePrintable.addLast(printable);
   }
 

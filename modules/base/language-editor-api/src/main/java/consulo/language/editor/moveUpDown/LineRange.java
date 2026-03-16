@@ -19,8 +19,6 @@ package consulo.language.editor.moveUpDown;
 import consulo.document.Document;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 public class LineRange {
   private static final Logger LOG = Logger.getInstance(LineRange.class);
@@ -38,20 +36,20 @@ public class LineRange {
       LOG.error("start > end: start=" + startLine+"; end="+endLine);
     }
   }
-  public LineRange(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement, @Nonnull Document document) {
+  public LineRange(PsiElement startElement, PsiElement endElement, Document document) {
     this(document.getLineNumber(startElement.getTextRange().getStartOffset()),
          document.getLineNumber(endElement.getTextRange().getEndOffset()) + 1);
   }
 
-  public LineRange(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+  public LineRange(PsiElement startElement, PsiElement endElement) {
     this(startElement, endElement, startElement.getContainingFile().getViewProvider().getDocument());
   }
 
-  public LineRange(@Nonnull PsiElement element) {
+  public LineRange(PsiElement element) {
     this(element, element);
   }
 
-  @NonNls
+  
   public String toString() {
     return "line range: ["+startLine+"-"+endLine+"]";
   }

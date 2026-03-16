@@ -30,7 +30,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiFileRange;
 import consulo.usage.UsageInfo;
-import jakarta.annotation.Nonnull;
 
 public class FindResultUsageInfo extends UsageInfo {
     private final FindManager myFindManager;
@@ -117,11 +116,11 @@ public class FindResultUsageInfo extends UsageInfo {
 
     @RequiredReadAction
     public FindResultUsageInfo(
-        @Nonnull FindManager finder,
-        @Nonnull PsiFile file,
+        FindManager finder,
+        PsiFile file,
         int offset,
-        @Nonnull FindModel findModel,
-        @Nonnull FindResult result
+        FindModel findModel,
+        FindResult result
     ) {
         super(file, result.getStartOffset(), result.getEndOffset());
 

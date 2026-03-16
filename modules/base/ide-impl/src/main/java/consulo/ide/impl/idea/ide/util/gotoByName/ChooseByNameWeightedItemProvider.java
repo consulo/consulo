@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.searchEverywhere.FoundItemDescriptor;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -23,10 +22,10 @@ public interface ChooseByNameWeightedItemProvider extends ChooseByNameItemProvid
      * @see FoundItemDescriptor
      */
     boolean filterElementsWithWeights(
-        @Nonnull ChooseByNameBase base,
-        @Nonnull String pattern,
+        ChooseByNameBase base,
+        String pattern,
         boolean everywhere,
-        @Nonnull ProgressIndicator indicator,
-        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
+        ProgressIndicator indicator,
+        Predicate<FoundItemDescriptor<?>> consumer
     );
 }

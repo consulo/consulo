@@ -21,8 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.content.library.LibraryKind;
 import consulo.content.library.LibraryType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public interface LibraryKindRegistry {
     @Nullable
     LibraryType<?> findLibraryTypeByKindId(@Nullable String libraryKindId);
 
-    @Nonnull
+    
     default LibraryType<?> findLibraryTypeByKindIdSafe(@Nullable String libraryKindId) {
         LibraryType<?> type = findLibraryTypeByKindId(libraryKindId);
         if (type == null) {

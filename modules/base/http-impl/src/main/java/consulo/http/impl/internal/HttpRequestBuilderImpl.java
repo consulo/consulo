@@ -17,8 +17,7 @@ package consulo.http.impl.internal;
 
 import consulo.application.Application;
 import consulo.http.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.IOException;
@@ -32,7 +31,7 @@ import java.util.Map;
  * @since 2026-02-18
  */
 class HttpRequestBuilderImpl implements HttpRequestBuilder {
-    @Nonnull
+    
     private final Application myApplication;
 
     final String myUrl;
@@ -49,7 +48,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     byte[] myBody;
     boolean myAllowErrorCodes;
 
-    HttpRequestBuilderImpl(@Nonnull Application application, @Nonnull String url, HttpMethod httpMethod) {
+    HttpRequestBuilderImpl(Application application, String url, HttpMethod httpMethod) {
         myApplication = application;
         myUrl = url;
         myHttpMethod = httpMethod;
@@ -68,7 +67,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     }
 
     @Override
-    public HttpRequestBuilder version(@Nonnull HttpVersion version) {
+    public HttpRequestBuilder version(HttpVersion version) {
         myHttpVersion = version;
         return this;
     }
@@ -121,7 +120,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     }
 
     @Override
-    public HttpRequestBuilder header(@Nonnull String headerName, @Nullable String headerValue) {
+    public HttpRequestBuilder header(String headerName, @Nullable String headerValue) {
         if (headerValue != null) {
             myHeaders.remove(headerName);
         } else {
@@ -140,7 +139,7 @@ class HttpRequestBuilderImpl implements HttpRequestBuilder {
     }
 
     @Override
-    public <T> T connect(@Nonnull HttpRequestProcessor<T> processor) throws IOException {
+    public <T> T connect(HttpRequestProcessor<T> processor) throws IOException {
         return HttpRequestBuilderFactoryImpl.process(this, processor);
     }
 }

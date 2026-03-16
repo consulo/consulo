@@ -24,8 +24,7 @@ import consulo.language.impl.psi.CodeFragmentElement;
 import consulo.language.impl.psi.DummyHolderElement;
 import consulo.language.impl.psi.LazyParseablePsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,9 +32,9 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl(order = "last")
 public class DefaultASTLazyFactory implements ASTLazyFactory {
-  @Nonnull
+  
   @Override
-  public LazyParseableElement createLazy(@Nonnull ILazyParseableElementType type, @Nullable CharSequence text) {
+  public LazyParseableElement createLazy(ILazyParseableElementType type, @Nullable CharSequence text) {
     if (type instanceof IFileElementType) {
       ASTNode node = type.createNode(text);
       return node instanceof  LazyParseableElement ? (LazyParseableElement) node : new FileElement(type, text);

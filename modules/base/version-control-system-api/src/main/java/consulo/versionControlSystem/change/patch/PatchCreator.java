@@ -21,7 +21,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitContext;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -34,7 +33,7 @@ public class PatchCreator {
   }
 
   public static void create(Project p,
-                            @Nonnull String basePath,
+                            String basePath,
                             List<Change> changes,
                             String filePath,
                             boolean isReverse,

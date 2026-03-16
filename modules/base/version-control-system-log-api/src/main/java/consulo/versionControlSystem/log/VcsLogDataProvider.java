@@ -18,8 +18,7 @@ package consulo.versionControlSystem.log;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface VcsLogDataProvider {
   Key<VcsLogDataProvider> KEY = Key.create(VcsLogDataProvider.class);
@@ -27,5 +26,5 @@ public interface VcsLogDataProvider {
   @Nullable
   CommitId getCommitId(int commitIndex);
 
-  int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root);
+  int getCommitIndex(Hash hash, VirtualFile root);
 }

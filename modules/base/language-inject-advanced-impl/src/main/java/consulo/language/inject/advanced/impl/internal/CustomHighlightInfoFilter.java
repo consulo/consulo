@@ -21,8 +21,7 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 public class CustomHighlightInfoFilter implements HighlightInfoFilter {
 
   @Override
-  public boolean accept(@Nonnull HighlightInfo highlightInfo, @Nullable PsiFile file) {
+  public boolean accept(HighlightInfo highlightInfo, @Nullable PsiFile file) {
     if (highlightInfo.getSeverity() != HighlightSeverity.WARNING && highlightInfo.getSeverity() != HighlightSeverity.WEAK_WARNING) return true;
     if (!CustomErrorElementFilter.isFrankenstein(file)) return true;
     int start = highlightInfo.getStartOffset();

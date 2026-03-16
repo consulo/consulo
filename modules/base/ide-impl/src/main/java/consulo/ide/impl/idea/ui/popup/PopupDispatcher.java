@@ -6,7 +6,6 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
     return ourInstance;
   }
 
-  static void setActiveRoot(@Nonnull WizardPopup aRootPopup) {
+  static void setActiveRoot(WizardPopup aRootPopup) {
     disposeActiveWizard();
     ourActiveWizardRoot = aRootPopup;
     ourShowingStep = aRootPopup;
@@ -46,7 +45,7 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
     }
   }
 
-  static void clearRootIfNeeded(@Nonnull WizardPopup aRootPopup) {
+  static void clearRootIfNeeded(WizardPopup aRootPopup) {
     if (ourActiveWizardRoot == aRootPopup) {
       ourActiveWizardRoot = null;
       ourShowingStep = null;
@@ -61,7 +60,7 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
     dispatchMouseEvent(event);
   }
 
-  private static boolean dispatchMouseEvent(@Nonnull AWTEvent event) {
+  private static boolean dispatchMouseEvent(AWTEvent event) {
     if (event.getID() != MouseEvent.MOUSE_PRESSED) {
       return false;
     }
@@ -112,11 +111,11 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
     return ourShowingStep.dispatch(e);
   }
 
-  static void setShowing(@Nonnull WizardPopup aBaseWizardPopup) {
+  static void setShowing(WizardPopup aBaseWizardPopup) {
     ourShowingStep = aBaseWizardPopup;
   }
 
-  static void unsetShowing(@Nonnull WizardPopup aBaseWizardPopup) {
+  static void unsetShowing(WizardPopup aBaseWizardPopup) {
     if (ourActiveWizardRoot != null) {
       for (WizardPopup wp = aBaseWizardPopup; wp != null; wp = wp.getParent()) {
         if (wp == ourActiveWizardRoot) {
@@ -136,7 +135,7 @@ public class PopupDispatcher implements AWTEventListener, KeyEventDispatcher, Id
     return ourShowingStep != null && !ourShowingStep.isDisposed() ? ourShowingStep.getContent() : null;
   }
 
-  @Nonnull
+  
   @Override
   public Stream<JBPopup> getPopupStream() {
     return Stream.of(ourActiveWizardRoot);

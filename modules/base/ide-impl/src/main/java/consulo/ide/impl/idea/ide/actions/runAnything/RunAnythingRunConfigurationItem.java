@@ -5,13 +5,12 @@ import consulo.execution.impl.internal.action.ChooseRunConfigurationPopup;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.ide.runAnything.RunAnythingItemBase;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RunAnythingRunConfigurationItem extends RunAnythingItemBase {
     private final ChooseRunConfigurationPopup.ItemWrapper myWrapper;
 
-    public RunAnythingRunConfigurationItem(@Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper, @Nullable Image icon) {
+    public RunAnythingRunConfigurationItem(ChooseRunConfigurationPopup.ItemWrapper wrapper, @Nullable Image icon) {
         super(wrapper.getText(), icon);
         myWrapper = wrapper;
     }

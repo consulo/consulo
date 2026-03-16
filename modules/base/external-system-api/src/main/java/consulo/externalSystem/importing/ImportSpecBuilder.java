@@ -18,7 +18,6 @@ package consulo.externalSystem.importing;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -26,18 +25,18 @@ import jakarta.annotation.Nonnull;
  */
 public class ImportSpecBuilder {
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private ProgressExecutionMode myProgressExecutionMode;
   private boolean myForceWhenUptodate;
   private boolean myWhenAutoImportEnabled;
   //private boolean isPreviewMode;
   //private boolean isReportRefreshError;
 
-  public ImportSpecBuilder(@Nonnull Project project, @Nonnull ProjectSystemId id) {
+  public ImportSpecBuilder(Project project, ProjectSystemId id) {
     myProject = project;
     myExternalSystemId = id;
     myProgressExecutionMode = ProgressExecutionMode.IN_BACKGROUND_ASYNC;
@@ -48,7 +47,7 @@ public class ImportSpecBuilder {
     return this;
   }
 
-  public ImportSpecBuilder use(@Nonnull ProgressExecutionMode executionMode) {
+  public ImportSpecBuilder use(ProgressExecutionMode executionMode) {
     myProgressExecutionMode = executionMode;
     return this;
   }

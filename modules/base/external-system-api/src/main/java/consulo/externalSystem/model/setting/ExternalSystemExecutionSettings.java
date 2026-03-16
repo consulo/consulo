@@ -3,7 +3,6 @@ package consulo.externalSystem.model.setting;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.util.lang.SystemProperties;
 
-import jakarta.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -30,12 +29,12 @@ public class ExternalSystemExecutionSettings implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final AtomicLong myRemoteProcessIdleTtlInMs = new AtomicLong();
-  @Nonnull
+  
   private final AtomicBoolean myVerboseProcessing = new AtomicBoolean();
 
-  @Nonnull
+  
   private final AtomicReference<ExternalSystemTaskNotificationListener> myNotificationListener = new AtomicReference<ExternalSystemTaskNotificationListener>();
 
   public ExternalSystemExecutionSettings() {

@@ -19,8 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public interface VcsLog {
   /**
    * Returns commits currently selected in the log.
    */
-  @Nonnull
+  
   List<CommitId> getSelectedCommits();
 
   /**
@@ -46,14 +45,14 @@ public interface VcsLog {
    * which means that the short details are already loaded. <br/>
    * This makes this method preferable to {@link #getSelectedDetails()}.
    */
-  @Nonnull
+  
   List<VcsShortCommitDetails> getSelectedShortDetails();
 
   /**
    * Returns details of the selected commits.
    * For commits that are not loaded an instance of LoadingDetails is returned.
    */
-  @Nonnull
+  
   List<VcsFullCommitDetails> getSelectedDetails();
 
   /**
@@ -64,25 +63,25 @@ public interface VcsLog {
    * @param consumer  called in EDT after all details are loaded.
    * @param indicator progress indicator to use in loading process, can be null.
    */
-  void requestSelectedDetails(@Nonnull Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator);
+  void requestSelectedDetails(Consumer<List<VcsFullCommitDetails>> consumer, @Nullable ProgressIndicator indicator);
 
   /**
    * Returns names of branches which contain the given commit, or null if this information is unavailable.
    */
   @Nullable
-  Collection<String> getContainingBranches(@Nonnull Hash commitHash, @Nonnull VirtualFile root);
+  Collection<String> getContainingBranches(Hash commitHash, VirtualFile root);
 
   /**
    * Asynchronously selects the commit node defined by the given reference (commit hash, branch or tag).
    * Returns a {@link Future future} that allows to check if the commit was selected, wait for the selection while log is being loaded,
    * or cancel commit selection.
    */
-  @Nonnull
+  
   Future<Boolean> jumpToReference(String reference);
 
   /**
    * Returns {@link VcsLogProvider VcsLogProviders} which are active in this log, i.e. which VCS roots are shown in the log.
    */
-  @Nonnull
+  
   Map<VirtualFile, VcsLogProvider> getLogProviders();
 }

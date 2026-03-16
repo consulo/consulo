@@ -41,8 +41,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -58,11 +57,11 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
   private final FileType myFileType;
   private final boolean myInheritFontFromLaF;
 
-  protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType, @Nonnull Disposable parent) {
+  protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType, Disposable parent) {
     this(project, fileType, true, parent);
   }
 
-  protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType, boolean inheritFontFromLaF, @Nonnull Disposable parent) {
+  protected EditorTextFieldCellRenderer(@Nullable Project project, @Nullable FileType fileType, boolean inheritFontFromLaF, Disposable parent) {
     myProject = project;
     myFileType = fileType;
     myInheritFontFromLaF = inheritFontFromLaF;
@@ -76,12 +75,12 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     return null;
   }
 
-  @Nonnull
+  
   protected EditorColorsScheme getColorScheme(JTable table) {
     return getEditorPanel(table).getEditor().getColorsScheme();
   }
 
-  protected void customizeEditor(@Nonnull EditorEx editor, JTable table, Object value, boolean selected, int row, int column) {
+  protected void customizeEditor(EditorEx editor, JTable table, Object value, boolean selected, int row, int column) {
     String text = getText(table, value, row, column);
     getEditorPanel(table).setText(text, getTextAttributes(table, value, row, column), selected);
   }
@@ -103,7 +102,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     return panel;
   }
 
-  @Nonnull
+  
   private RendererComponent getEditorPanel(final JTable table) {
     RendererComponent panel = UIUtil.getClientProperty(table, MY_PANEL_PROPERTY);
     if (panel != null) {
@@ -125,7 +124,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     return panel;
   }
 
-  @Nonnull
+  
   protected RendererComponent createRendererComponent(@Nullable Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
     return new AbbreviatingRendererComponent(project, fileType, inheritFontFromLaF);
   }
@@ -151,7 +150,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
       return myEditor;
     }
 
-    @Nonnull
+    
     private static Pair<EditorTextField, EditorEx> createEditor(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
       EditorTextField field = new EditorTextField(new EditorTextFieldRendererDocument(), project, fileType, false, false);
       field.setSupplementary(true);

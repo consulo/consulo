@@ -19,8 +19,7 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -45,7 +44,7 @@ public interface DiffFilePath {
    * @return the {@link File} that corresponds to the path. The path might be non-existent or not local.
    * @see #isNonLocal()
    */
-  @Nonnull
+  
   File getIOFile();
 
   /**

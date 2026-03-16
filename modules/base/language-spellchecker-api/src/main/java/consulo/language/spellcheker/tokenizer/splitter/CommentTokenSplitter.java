@@ -18,8 +18,7 @@ package consulo.language.spellcheker.tokenizer.splitter;
 import consulo.document.util.TextRange;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,7 +34,7 @@ public class CommentTokenSplitter extends BaseTokenSplitter {
     }
 
     @Override
-    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+    public void split(SplitContext context, TextRange range) {
         if (context.isEmpty()) {
             return;
         }

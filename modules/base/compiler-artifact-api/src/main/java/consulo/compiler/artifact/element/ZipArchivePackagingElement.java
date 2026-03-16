@@ -17,7 +17,6 @@ package consulo.compiler.artifact.element;
 
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -30,15 +29,15 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
   public static class ZipArchivePackageWriter implements ArchivePackageWriter<ZipOutputStream> {
     public static final ZipArchivePackageWriter INSTANCE = new ZipArchivePackageWriter();
 
-    @Nonnull
+    
     @Override
-    public ZipOutputStream createArchiveObject(@Nonnull File tempFile) throws IOException {
+    public ZipOutputStream createArchiveObject(File tempFile) throws IOException {
       BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(tempFile));
       return new ZipOutputStream(outputStream);
     }
 
     @Override
-    public void addDirectory(@Nonnull ZipOutputStream zipOutputStream, @Nonnull String relativePath) throws IOException {
+    public void addDirectory(ZipOutputStream zipOutputStream, String relativePath) throws IOException {
       ZipEntry e = new ZipEntry(relativePath);
       e.setMethod(ZipEntry.STORED);
       e.setSize(0);
@@ -49,7 +48,7 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
     }
 
     @Override
-    public void addFile(@Nonnull ZipOutputStream zipOutputStream, @Nonnull InputStream stream, @Nonnull String relativePath, long fileLength, long lastModified) throws IOException {
+    public void addFile(ZipOutputStream zipOutputStream, InputStream stream, String relativePath, long fileLength, long lastModified) throws IOException {
       ZipEntry e = new ZipEntry(relativePath);
       e.setTime(lastModified);
       e.setSize(fileLength);
@@ -60,7 +59,7 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
     }
 
     @Override
-    public void close(@Nonnull ZipOutputStream zipOutputStream) throws IOException {
+    public void close(ZipOutputStream zipOutputStream) throws IOException {
       zipOutputStream.close();
     }
   }
@@ -69,7 +68,7 @@ public class ZipArchivePackagingElement extends ArchivePackagingElement {
     super(ZipArchiveElementType.getInstance());
   }
 
-  public ZipArchivePackagingElement(@Nonnull String archiveFileName) {
+  public ZipArchivePackagingElement(String archiveFileName) {
     super(ZipArchiveElementType.getInstance(), archiveFileName);
   }
 

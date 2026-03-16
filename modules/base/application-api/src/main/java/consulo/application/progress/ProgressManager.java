@@ -23,8 +23,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -34,7 +33,6 @@ import java.util.function.Supplier;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProgressManager extends ProgressIndicatorProvider {
-    @Nonnull
     public static ProgressManager getInstance() {
         return (ProgressManager) Application.get().getProgressManager();
     }
@@ -52,7 +50,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      *
      * @param progress an indicator to use, {@code null} means reuse current progress
      */
-    public abstract void runProcess(@Nonnull Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
+    public abstract void runProcess(Runnable process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
     /**
      * Performs the given computation synchronously in calling thread and returns its result,
@@ -62,16 +60,16 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      *
      * @param progress an indicator to use, {@code null} means reuse current progress
      */
-    public abstract <T> T runProcess(@Nonnull Supplier<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
+    public abstract <T> T runProcess(Supplier<T> process, @Nullable ProgressIndicator progress) throws ProcessCanceledException;
 
     @Override
     public abstract ProgressIndicator getProgressIndicator();
 
-    public static void progress(@Nonnull LocalizeValue text) throws ProcessCanceledException {
+    public static void progress(LocalizeValue text) throws ProcessCanceledException {
         progress(text, LocalizeValue.empty());
     }
 
-    public static void progress2(@Nonnull LocalizeValue text) throws ProcessCanceledException {
+    public static void progress2(LocalizeValue text) throws ProcessCanceledException {
         ProgressIndicator pi = getInstance().getProgressIndicator();
         if (pi != null) {
             pi.checkCanceled();
@@ -79,7 +77,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
         }
     }
 
-    public static void progress(@Nonnull LocalizeValue text, @Nonnull LocalizeValue text2) throws ProcessCanceledException {
+    public static void progress(LocalizeValue text, LocalizeValue text2) throws ProcessCanceledException {
         ProgressIndicator pi = getInstance().getProgressIndicator();
         if (pi != null) {
             pi.checkCanceled();
@@ -90,23 +88,23 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public static void progress(@Nonnull String text) throws ProcessCanceledException {
+    public static void progress(String text) throws ProcessCanceledException {
         progress(LocalizeValue.of(text), LocalizeValue.empty());
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public static void progress2(@Nonnull String text) throws ProcessCanceledException {
+    public static void progress2(String text) throws ProcessCanceledException {
         progress2(LocalizeValue.of(text));
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    public static void progress(@Nonnull String text, @Nullable String text2) throws ProcessCanceledException {
+    public static void progress(String text, @Nullable String text2) throws ProcessCanceledException {
         progress(LocalizeValue.of(text), LocalizeValue.ofNullable(text2));
     }
 
-    public abstract void executeNonCancelableSection(@Nonnull Runnable runnable);
+    public abstract void executeNonCancelableSection(Runnable runnable);
 
     /**
      * Runs the specified operation in a background thread and shows a modal progress dialog in the
@@ -121,8 +119,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @return true if the operation completed successfully, false if it was cancelled.
      */
     public boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull LocalizeValue progressTitle,
+        Runnable process,
+        LocalizeValue progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
     ) {
@@ -143,8 +141,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @throws E exception thrown by process
      */
     public <T, E extends Exception> T runProcessWithProgressSynchronously(
-        @Nonnull ThrowableComputable<T, E> process,
-        @Nonnull LocalizeValue progressTitle,
+        ThrowableComputable<T, E> process,
+        LocalizeValue progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
     ) throws E {
@@ -165,8 +163,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @return true if the operation completed successfully, false if it was cancelled.
      */
     public boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull LocalizeValue progressTitle,
+        Runnable process,
+        LocalizeValue progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent
@@ -189,8 +187,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public abstract boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull String progressTitle,
+        Runnable process,
+        String progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
     );
@@ -211,8 +209,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public abstract <T, E extends Exception> T runProcessWithProgressSynchronously(
-        @Nonnull ThrowableComputable<T, E> process,
-        @Nonnull String progressTitle,
+        ThrowableComputable<T, E> process,
+        String progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project
     ) throws E;
@@ -233,8 +231,8 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     public boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull String progressTitle,
+        Runnable process,
+        String progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent
@@ -257,9 +255,9 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      */
     @Deprecated
     public abstract void runProcessWithProgressAsynchronously(
-        @Nonnull ComponentManager project,
-        @Nonnull String progressTitle,
-        @Nonnull Runnable process,
+        ComponentManager project,
+        String progressTitle,
+        Runnable process,
         @Nullable Runnable successRunnable,
         @Nullable Runnable canceledRunnable
     );
@@ -280,12 +278,12 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      */
     @Deprecated
     public abstract void runProcessWithProgressAsynchronously(
-        @Nonnull ComponentManager project,
-        @Nonnull String progressTitle,
-        @Nonnull Runnable process,
+        ComponentManager project,
+        String progressTitle,
+        Runnable process,
         @Nullable Runnable successRunnable,
         @Nullable Runnable canceledRunnable,
-        @Nonnull PerformInBackgroundOption option
+        PerformInBackgroundOption option
     );
 
     /**
@@ -293,17 +291,17 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      *
      * @param task task to run (either {@link Task.Modal} or {@link Task.Backgroundable}).
      */
-    public abstract void run(@Nonnull Task task);
+    public abstract void run(Task task);
 
     public abstract void runProcessWithProgressAsynchronously(
-        @Nonnull Task.Backgroundable task,
-        @Nonnull ProgressIndicator progressIndicator
+        Task.Backgroundable task,
+        ProgressIndicator progressIndicator
     );
 
-    protected void indicatorCanceled(@Nonnull ProgressIndicator indicator) {
+    protected void indicatorCanceled(ProgressIndicator indicator) {
     }
 
-    public static void canceled(@Nonnull ProgressIndicator indicator) {
+    public static void canceled(ProgressIndicator indicator) {
         getInstance().indicatorCanceled(indicator);
     }
 
@@ -315,11 +313,11 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * @param progress an indicator to use, {@code null} means reuse current progress
      */
     public abstract void executeProcessUnderProgress(
-        @Nonnull Runnable process,
+        Runnable process,
         @Nullable ProgressIndicator progress
     ) throws ProcessCanceledException;
 
-    public static void assertNotCircular(@Nonnull ProgressIndicator original) {
+    public static void assertNotCircular(ProgressIndicator original) {
         Set<ProgressIndicator> wrappedParents = null;
         for (ProgressIndicator i = original; i instanceof WrappedProgressIndicator;
              i = ((WrappedProgressIndicator) i).getOriginalProgressIndicator()) {
@@ -341,7 +339,7 @@ public abstract class ProgressManager extends ProgressIndicatorProvider {
      * This is intended for relatively short (expected to be under 10 seconds) background activities that the user is waiting for
      * (e.g. code navigation), and which shouldn't be slowed down by CPU-intensive background tasks like highlighting or indexing.
      */
-    public abstract <T, E extends Throwable> T computePrioritized(@Nonnull ThrowableComputable<T, E> computable) throws E;
+    public abstract <T, E extends Throwable> T computePrioritized(ThrowableComputable<T, E> computable) throws E;
 
     @Contract(value = "null -> null; !null -> !null", pure = true)
     public abstract WrappedProgressIndicator wrapProgressIndicator(@Nullable ProgressIndicator indicator);

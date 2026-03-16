@@ -2,13 +2,12 @@
 package consulo.language.index.impl.internal;
 
 import consulo.index.io.InputData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 public interface SnapshotInputMappingIndex<Key, Value, Input> extends Closeable {
   @Nullable
-  InputData<Key, Value> readData(@Nonnull Input content) throws IOException;
+  InputData<Key, Value> readData(Input content) throws IOException;
 }

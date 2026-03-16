@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -33,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment> {
   @Override
-  public PsiComment handleContentChange(@Nonnull PsiComment psiComment, @Nonnull TextRange range, String newContent) throws IncorrectOperationException {
+  public PsiComment handleContentChange(PsiComment psiComment, TextRange range, String newContent) throws IncorrectOperationException {
     String oldText = psiComment.getText();
     String newText = oldText.substring(0, range.getStartOffset()) + newContent + oldText.substring(range.getEndOffset());
     FileType type = psiComment.getContainingFile().getFileType();
@@ -43,9 +42,9 @@ public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment
     return (PsiComment)psiComment.replace(newElement);
   }
 
-  @Nonnull
+  
   @Override
-  public TextRange getRangeInElement(@Nonnull PsiComment element) {
+  public TextRange getRangeInElement(PsiComment element) {
     String text = element.getText();
     if (text.startsWith("//")) return new TextRange(2, element.getTextLength());
     int length = text.length();
@@ -57,7 +56,7 @@ public class PsiCommentManipulator extends AbstractElementManipulator<PsiComment
     return super.getRangeInElement(element);
   }
 
-  @Nonnull
+  
   @Override
   public Class<PsiComment> getElementClass() {
     return PsiComment.class;

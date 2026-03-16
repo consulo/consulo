@@ -22,7 +22,6 @@ import consulo.component.store.impl.internal.storage.StateStorageListener;
 import consulo.project.Project;
 import consulo.project.StoreReloadManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -41,7 +40,7 @@ public class StoreReloadManagerStateStorageListenerImpl implements StateStorageL
   }
 
   @Override
-  public void storageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage) {
+  public void storageFileChanged(VirtualFileEvent event, StateStorage storage) {
     myStoreReloadManager.projectStorageFileChanged(event, storage, myProject);
   }
 }

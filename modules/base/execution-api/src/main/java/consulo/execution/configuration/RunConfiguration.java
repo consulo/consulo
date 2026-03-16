@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.JDOMExternalizable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface for run configurations which can be managed by a user and displayed in the UI.
@@ -42,7 +41,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the configuration type.
    */
-  @Nonnull
+  
   ConfigurationType getType();
 
   /**
@@ -67,7 +66,7 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
    *
    * @return the settings editor component.
    */
-  @Nonnull
+  
   SettingsEditor<? extends RunConfiguration> getConfigurationEditor();
 
   /**

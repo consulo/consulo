@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.completion;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.WeakReference;
 
@@ -30,13 +29,13 @@ public class RangeMarkerSpy extends DocumentAdapter {
     private final WeakReference<CompletionAssertions.WatchingInsertionContext> myContextRef;
     private final RangeMarker myMarker;
 
-    public RangeMarkerSpy(@Nonnull CompletionAssertions.WatchingInsertionContext context, @Nonnull RangeMarker marker) {
+    public RangeMarkerSpy(CompletionAssertions.WatchingInsertionContext context, RangeMarker marker) {
         myContextRef = new WeakReference<>(context);
         myMarker = marker;
         assert myMarker.isValid();
     }
 
-    protected void invalidated(@Nonnull DocumentEvent e) {
+    protected void invalidated(DocumentEvent e) {
         CompletionAssertions.WatchingInsertionContext context = myContextRef.get();
         if (context != null && context.invalidateTrace == null) {
             context.invalidateTrace = new Throwable();
@@ -45,7 +44,7 @@ public class RangeMarkerSpy extends DocumentAdapter {
     }
 
     @Override
-    public void documentChanged(@Nonnull DocumentEvent e) {
+    public void documentChanged(DocumentEvent e) {
         if (!myMarker.isValid()) {
             invalidated(e);
         }

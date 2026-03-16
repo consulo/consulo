@@ -29,8 +29,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -57,7 +56,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(ManagePackagesDialog.class);
     private static final RepoPackage MORE = new RepoPackage("more", "more", "more");
 
-    @Nonnull
+   
     private final Project myProject;
     private final PackageManagementService myController;
 
@@ -78,8 +77,7 @@ public class ManagePackagesDialog extends DialogWrapper {
     private PackagesModel myPackagesModel;
     private String mySelectedPackageName;
     private final Set<String> myInstalledPackages;
-    @Nullable
-    private final PackageManagementService.Listener myPackageListener;
+    private final PackageManagementService.@Nullable Listener myPackageListener;
 
     private final Set<String> myCurrentlyInstalling = new HashSet<>();
 
@@ -92,9 +90,9 @@ public class ManagePackagesDialog extends DialogWrapper {
 
     @RequiredUIAccess
     public ManagePackagesDialog(
-        @Nonnull Project project,
+        Project project,
         PackageManagementService packageManagementService,
-        @Nullable PackageManagementService.Listener packageListener
+        PackageManagementService.@Nullable Listener packageListener
     ) {
         super(project, true);
         myProject = project;
@@ -113,7 +111,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             new AnActionButton(IdeLocalize.actionPackagesReloadText(), LocalizeValue.empty(), PlatformIconGroup.actionsRefresh()) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     myPackages.setPaintBusy(true);
                     Application application = myProject.getApplication();
                     application.executeOnPooledThread(() -> {
@@ -201,7 +199,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         GuiUtils.replaceJSplitPaneWithIDEASplitter(myMainPanel);
     }
 
-    public void selectPackage(@Nonnull InstalledPackage pkg) {
+    public void selectPackage(InstalledPackage pkg) {
         mySelectedPackageName = pkg.getName();
         doSelectPackage(mySelectedPackageName);
     }
@@ -249,7 +247,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                 @Override
                 public void operationFinished(
                     String packageName,
-                    @Nullable PackageManagementService.ErrorDescription errorDescription
+                    PackageManagementService.@Nullable ErrorDescription errorDescription
                 ) {
                     if (!UIAccess.isUIThread()) {
                         myProject.getApplication().invokeLater(
@@ -306,7 +304,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         });
     }
 
-    public void initModel(@Nonnull String filter) {
+    public void initModel(String filter) {
         myGetPackagesFuture.cancel(true);
 
         setDownloadStatus(true);
@@ -389,7 +387,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         myDescriptionTextArea = SwingHelper.createHtmlViewer(true, null, null, null);
     }
 
-    public void setOptionsText(@Nonnull String optionsText) {
+    public void setOptionsText(String optionsText) {
         myOptionsField.setText(optionsText);
     }
 
@@ -545,7 +543,7 @@ public class ManagePackagesDialog extends DialogWrapper {
         }
     }
 
-    @Nonnull
+   
     @Override
     protected Action[] createActions() {
         return new Action[0];

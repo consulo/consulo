@@ -16,7 +16,7 @@
 package consulo.language.inject.advanced.pattern;
 
 import consulo.language.pattern.ElementPattern;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Gregory.Shrago

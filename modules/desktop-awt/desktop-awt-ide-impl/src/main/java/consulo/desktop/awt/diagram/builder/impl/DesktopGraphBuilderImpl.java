@@ -26,8 +26,7 @@ import consulo.diagram.internal.GraphNodeImpl;
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
   }
 
   @Override
-  @Nonnull
+  
   public Component getComponent() {
     mxGraph graph = new mxGraph();
     graph.setCellsResizable(false);
@@ -101,9 +100,9 @@ public class DesktopGraphBuilderImpl implements GraphBuilder {
     }
   }
 
-  @Nonnull
+  
   @Override
-  public <E> GraphNode<E> createNode(@Nonnull String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
+  public <E> GraphNode<E> createNode(String name, @Nullable Image icon, @Nullable E value, GraphPositionStrategy strategy) {
     GraphNodeImpl<E> graphNode = new GraphNodeImpl<>(name, icon, value, strategy);
     myGraphNodes.add(graphNode);
     return graphNode;

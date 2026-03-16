@@ -21,19 +21,18 @@ import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @see ProjectImpl#getStateStore()
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface IProjectStore extends IComponentStore {
-    void setProjectDir(@Nonnull VirtualFile projectDir);
+    void setProjectDir(VirtualFile projectDir);
 
-    void setProjectFilePathNoUI(@Nonnull String filePath);
+    void setProjectFilePathNoUI(String filePath);
 
-    void setProjectFilePath(@Nonnull String filePath);
+    void setProjectFilePath(String filePath);
 
     @Nullable
     VirtualFile getProjectBaseDir();
@@ -41,7 +40,6 @@ public interface IProjectStore extends IComponentStore {
     @Nullable
     String getProjectBasePath();
 
-    @Nonnull
     String getProjectName();
 
     TrackingPathMacroSubstitutor[] getSubstitutors();
@@ -55,8 +53,7 @@ public interface IProjectStore extends IComponentStore {
     @Nullable
     VirtualFile getWorkspaceFile();
 
-    void loadProjectFromTemplate(@Nonnull ProjectImpl project);
+    void loadProjectFromTemplate(ProjectImpl project);
 
-    @Nonnull
     String getProjectFilePath();
 }

@@ -24,7 +24,6 @@ import consulo.platform.Platform;
 import consulo.platform.PlatformOperatingSystem;
 import consulo.util.io.FileAttributes;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,7 +97,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   @Override
-  public FileAttributes getAttributes(@Nonnull String path) {
+  public FileAttributes getAttributes(String path) {
     Memory buffer = new Memory(256);
     int res = Platform.current().os().isLinux() ? myLibC.__lxstat64(STAT_VER, path, buffer) : myLibC.lstat(path, buffer);
     if (res != 0) return null;
@@ -124,12 +123,12 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
     return new FileAttributes(isDirectory, isSpecial, isSymlink, false, size, mTime, writable);
   }
 
-  private boolean loadFileStatus(@Nonnull String path, Memory buffer) {
+  private boolean loadFileStatus(String path, Memory buffer) {
     return (Platform.current().os().isLinux() ? myLibC.__xstat64(STAT_VER, path, buffer) : myLibC.stat(path, buffer)) == 0;
   }
 
   @Override
-  public String resolveSymLink(@Nonnull String path) throws IOException {
+  public String resolveSymLink(String path) throws IOException {
     try {
       return new File(path).getCanonicalPath();
     }
@@ -144,7 +143,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   }
 
   @Override
-  public boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean onlyPermissionsToExecute) {
+  public boolean clonePermissions(String source, String target, boolean onlyPermissionsToExecute) {
     Memory buffer = new Memory(256);
     if (!loadFileStatus(source, buffer)) return false;
 

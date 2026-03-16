@@ -15,9 +15,8 @@
  */
 package consulo.application.util;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ParameterizedCachedValueProvider<T, P> {
-    @Nullable
-    CachedValueProvider.Result<T> compute(P param);
+    CachedValueProvider.@Nullable Result<T> compute(P param);
 }

@@ -25,21 +25,20 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 
 public abstract class Location<E extends PsiElement> {
   public static final Key<Location<?>> DATA_KEY = Key.create("Location");
   public static final Key<Location<?>[]> DATA_KEYS = Key.create("LocationArray");
 
-  @Nonnull
+  
   public abstract E getPsiElement();
 
-  @Nonnull
+  
   public abstract Project getProject();
 
-  @Nonnull
+  
   public abstract <T extends PsiElement> Iterator<Location<T>> getAncestors(Class<T> ancestorClass, boolean strict);
 
   @Nullable
@@ -98,7 +97,7 @@ public abstract class Location<E extends PsiElement> {
     return null;
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public PsiLocation<E> toPsiLocation() {
     return new PsiLocation<>(getProject(), getPsiElement());

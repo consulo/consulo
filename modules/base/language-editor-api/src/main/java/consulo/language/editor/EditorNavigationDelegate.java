@@ -5,7 +5,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines contract for extending editor navigation functionality. 
@@ -27,6 +26,6 @@ public interface EditorNavigationDelegate {
     CONTINUE
   }
 
-  @Nonnull
-  Result navigateToLineEnd(@Nonnull Editor editor, @Nonnull DataContext dataContext);
+  
+  Result navigateToLineEnd(Editor editor, DataContext dataContext);
 }

@@ -16,7 +16,6 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.diff.util.Range;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -40,11 +39,11 @@ public abstract class ChangeDiffIterableBase extends DiffIterableBase {
     return myLength2;
   }
 
-  @Nonnull
+  
   @Override
   public Iterator<Range> changes() {
     return new MyIterator<Range>() {
-      @Nonnull
+      
       private final ChangeIterable myIterable = createChangeIterable();
 
       @Override
@@ -61,11 +60,11 @@ public abstract class ChangeDiffIterableBase extends DiffIterableBase {
     };
   }
 
-  @Nonnull
+  
   @Override
   public Iterator<Range> unchanged() {
     return new MyIterator<Range>() {
-      @Nonnull
+      
       private final ChangeIterable myIterable = createChangeIterable();
 
       int lastIndex1 = 0;
@@ -112,7 +111,7 @@ public abstract class ChangeDiffIterableBase extends DiffIterableBase {
     };
   }
 
-  @Nonnull
+  
   protected abstract ChangeIterable createChangeIterable();
 
   protected interface ChangeIterable {

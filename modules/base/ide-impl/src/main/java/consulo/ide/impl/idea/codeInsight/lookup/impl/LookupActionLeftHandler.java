@@ -20,7 +20,6 @@ import consulo.codeEditor.Caret;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class LookupActionLeftHandler extends LookupActionHandler {
@@ -38,7 +37,7 @@ public class LookupActionLeftHandler extends LookupActionHandler {
     BackspaceHandler.truncatePrefix(context, lookup, myOriginalHandler, lookup.getLookupStart() - 1, caret);
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_CARET_LEFT;

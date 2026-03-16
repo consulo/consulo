@@ -19,8 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.internal.BackgroundTaskUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 public class DiffTaskQueue {
@@ -34,14 +33,14 @@ public class DiffTaskQueue {
   }
 
   @RequiredUIAccess
-  public void executeAndTryWait(@Nonnull Function<ProgressIndicator, Runnable> backgroundTask,
+  public void executeAndTryWait(Function<ProgressIndicator, Runnable> backgroundTask,
                                 @Nullable Runnable onSlowAction,
                                 int waitMillis) {
     executeAndTryWait(backgroundTask, onSlowAction, waitMillis, false);
   }
 
   @RequiredUIAccess
-  public void executeAndTryWait(@Nonnull Function<ProgressIndicator, Runnable> backgroundTask,
+  public void executeAndTryWait(Function<ProgressIndicator, Runnable> backgroundTask,
                                 @Nullable Runnable onSlowAction,
                                 int waitMillis,
                                 boolean forceEDT) {

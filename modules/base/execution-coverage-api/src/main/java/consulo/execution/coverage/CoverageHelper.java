@@ -7,7 +7,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
@@ -17,8 +16,8 @@ public class CoverageHelper {
     }
 
     public static void attachToProcess(
-        @Nonnull RunConfigurationBase configuration,
-        @Nonnull ProcessHandler handler,
+        RunConfigurationBase configuration,
+        ProcessHandler handler,
         RunnerSettings runnerSettings
     ) {
         resetCoverageSuit(configuration);

@@ -18,7 +18,6 @@ package consulo.language;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -35,7 +34,7 @@ class LanguagePointerImpl implements NamedPointer<Language> {
     myValue = LazyValue.nullable(() -> Language.findLanguageByID(myId));
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myId;

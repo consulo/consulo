@@ -4,18 +4,17 @@ package consulo.codeEditor.impl;
 import consulo.document.Document;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.impl.RangeMarkerTree;
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link RangeMarkerTree} with intervals which are not collected when no one holds a reference to them.
  */
 public class HardReferencingRangeMarkerTree<T extends RangeMarkerImpl> extends RangeMarkerTree<T> {
-    HardReferencingRangeMarkerTree(@Nonnull Document document) {
+    HardReferencingRangeMarkerTree(Document document) {
         super(document);
     }
 
     @Override
-    protected boolean keepIntervalOnWeakReference(@Nonnull T interval) {
+    protected boolean keepIntervalOnWeakReference(T interval) {
         return false;
     }
 }

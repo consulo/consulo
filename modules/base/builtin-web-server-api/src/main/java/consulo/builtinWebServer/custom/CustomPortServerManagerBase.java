@@ -15,7 +15,7 @@
  */
 package consulo.builtinWebServer.custom;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class CustomPortServerManagerBase extends CustomPortServerManager {
   @Nullable

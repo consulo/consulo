@@ -18,8 +18,7 @@ package consulo.language.editor.annotation;
 import consulo.language.editor.intention.SuppressIntentionAction;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This interface needs to be implemented by implementers of {@link ProblemGroup}
@@ -33,6 +32,6 @@ public interface SuppressableProblemGroup extends ProblemGroup {
    *                Inspections tool window
    * @return the list of suppression actions.
    */
-  @Nonnull
+  
   SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element);
 }

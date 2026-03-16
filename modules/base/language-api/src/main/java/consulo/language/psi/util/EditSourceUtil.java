@@ -23,7 +23,7 @@ import consulo.language.psi.PsiNavigationSupport;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.navigation.NavigationUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EditSourceUtil {
     private EditSourceUtil() {

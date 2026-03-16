@@ -17,7 +17,7 @@ package consulo.externalService.impl.internal.errorReport;
 
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.logging.internal.SubmittedReportInfo;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

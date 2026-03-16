@@ -7,11 +7,10 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiUtilCore;
 
-import jakarta.annotation.Nonnull;
 
 public class CompletionStyleUtil {
-  @Nonnull
-  public static CommonCodeStyleSettings getCodeStyleSettings(@Nonnull InsertionContext context) {
+  
+  public static CommonCodeStyleSettings getCodeStyleSettings(InsertionContext context) {
     Language lang = PsiUtilCore.getLanguageAtOffset(context.getFile(), context.getTailOffset());
     return CodeStyle.getLanguageSettings(context.getFile(), lang);
   }

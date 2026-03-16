@@ -24,20 +24,19 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.log.VcsLogUi;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
 public class VcsLogGearActionGroup extends DumbAwareAction {
-    @Nonnull
+    
     private final String myActionGroup;
 
     public VcsLogGearActionGroup(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon,
-        @Nonnull String actionGroup
+        String actionGroup
     ) {
         super(text, description, icon);
         myActionGroup = actionGroup;
@@ -45,7 +44,7 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DefaultActionGroup group = new DefaultActionGroup(ActionManager.getInstance().getAction(myActionGroup));
 
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
@@ -66,7 +65,7 @@ public class VcsLogGearActionGroup extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(VcsLogUi.KEY));
     }
 }

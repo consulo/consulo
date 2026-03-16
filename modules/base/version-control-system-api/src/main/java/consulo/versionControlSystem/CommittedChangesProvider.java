@@ -29,18 +29,17 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.ui.awt.SimpleStandardVersionFilterComponent;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
  * @author yole
  */
 public interface CommittedChangesProvider<T extends CommittedChangeList, U extends ChangeBrowserSettings> extends VcsProviderMarker {
-  @Nonnull
+  
   U createDefaultSettings();
 
-  @Nonnull
+  
   @RequiredUIAccess
   @SuppressWarnings("unchecked")
   default ChangesBrowserSettingsEditor<U> createFilterUI(boolean showDateFilter) {

@@ -4,14 +4,13 @@ package consulo.ide.impl.idea.util;
 import consulo.application.AccessToken;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
-import jakarta.annotation.Nonnull;
 
 public final class SlowOperations {
-    public static <T, E extends Throwable> T allowSlowOperations(@Nonnull ThrowableComputable<T, E> computable) throws E {
+    public static <T, E extends Throwable> T allowSlowOperations(ThrowableComputable<T, E> computable) throws E {
         return computable.compute();
     }
 
-    public static <E extends Throwable> void allowSlowOperations(@Nonnull ThrowableRunnable<E> runnable) throws E {
+    public static <E extends Throwable> void allowSlowOperations(ThrowableRunnable<E> runnable) throws E {
         runnable.run();
     }
 

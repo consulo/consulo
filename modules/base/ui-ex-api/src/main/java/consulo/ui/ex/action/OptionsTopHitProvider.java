@@ -20,8 +20,7 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +33,7 @@ import java.util.function.Function;
 public abstract class OptionsTopHitProvider implements SearchTopHitProvider {
   protected static final Function<String, String> HTML_STRIP = text -> StringUtil.stripHtml(text, false);
 
-  @Nonnull
+  
   public abstract Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project);
 
   @Override

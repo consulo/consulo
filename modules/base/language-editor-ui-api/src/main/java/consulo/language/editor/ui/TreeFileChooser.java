@@ -18,8 +18,7 @@ package consulo.language.editor.ui;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -37,7 +36,7 @@ public interface TreeFileChooser {
   /**
    * @param file to be selected in tree view tab of this dialog
    */
-  void selectFile(@Nonnull PsiFile file);
+  void selectFile(PsiFile file);
 
   void showDialog();
 }

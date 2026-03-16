@@ -25,8 +25,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -41,7 +40,7 @@ public class ReopenClosedTabAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FileEditorWindow window = getEditorWindow(e);
         if (window != null) {
             window.restoreClosedTab();
@@ -62,7 +61,7 @@ public class ReopenClosedTabAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         FileEditorWindow window = getEditorWindow(e);
         e.getPresentation().setEnabled(window != null && window.hasClosedTabs());
     }

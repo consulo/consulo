@@ -22,7 +22,6 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
 
 import consulo.virtualFileSystem.impl.internal.ArchiveFileSystemByProvider;
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -32,13 +31,13 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class ArchiveFileSystemExtender implements ExtensionExtender<VirtualFileSystem> {
   @Override
-  public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<VirtualFileSystem> consumer) {
+  public void extend(ComponentManager componentManager, Consumer<VirtualFileSystem> consumer) {
     for (ArchiveFileSystemProvider provider : componentManager.getExtensionList(ArchiveFileSystemProvider.class)) {
       consumer.accept(new ArchiveFileSystemByProvider(provider));
     }
   }
 
-  @Nonnull
+  
   @Override
   public Class<VirtualFileSystem> getExtensionClass() {
     return VirtualFileSystem.class;

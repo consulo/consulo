@@ -22,15 +22,14 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class DirectoryContentImpl extends DiffContentBase implements DirectoryContent {
-  @Nonnull
+  
   private final VirtualFile myFile;
   @Nullable private final Project myProject;
 
-  public DirectoryContentImpl(@Nullable Project project, @Nonnull VirtualFile file) {
+  public DirectoryContentImpl(@Nullable Project project, VirtualFile file) {
     assert file.isValid() && file.isDirectory();
     myProject = project;
     myFile = file;
@@ -43,7 +42,7 @@ public class DirectoryContentImpl extends DiffContentBase implements DirectoryCo
     return OpenFileDescriptorFactory.getInstance(myProject).newBuilder(myFile).build();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;

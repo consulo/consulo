@@ -25,8 +25,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -42,6 +41,6 @@ public interface StructureViewExtension {
   @Nullable
   Object getCurrentEditorElement(Editor editor, PsiElement parent);
 
-  default void filterChildren(@Nonnull Collection<StructureViewTreeElement> baseChildren, @Nonnull List<StructureViewTreeElement> extensionChildren) {
+  default void filterChildren(Collection<StructureViewTreeElement> baseChildren, List<StructureViewTreeElement> extensionChildren) {
   }
 }

@@ -16,7 +16,6 @@
 package consulo.language.codeStyle.arrangement.model;
 
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates a single atom match condition, e.g. 'entry type is field' or 'entry has 'static' modifier' etc.
@@ -28,34 +27,34 @@ import jakarta.annotation.Nonnull;
  */
 public class ArrangementAtomMatchCondition implements ArrangementMatchCondition {
 
-  @Nonnull
+  
   private final ArrangementSettingsToken myType;
-  @Nonnull
+  
   private final Object                   myValue;
 
   private boolean myInverted;
 
-  public ArrangementAtomMatchCondition(@Nonnull ArrangementSettingsToken type) {
+  public ArrangementAtomMatchCondition(ArrangementSettingsToken type) {
     this(type, type);
   }
   
-  public ArrangementAtomMatchCondition(@Nonnull ArrangementSettingsToken type, @Nonnull Object value) {
+  public ArrangementAtomMatchCondition(ArrangementSettingsToken type, Object value) {
     myType = type;
     myValue = value;
   }
 
-  @Nonnull
+  
   public ArrangementSettingsToken getType() {
     return myType;
   }
 
-  @Nonnull
+  
   public Object getValue() {
     return myValue;
   }
 
   @Override
-  public void invite(@Nonnull ArrangementMatchConditionVisitor visitor) {
+  public void invite(ArrangementMatchConditionVisitor visitor) {
     visitor.visit(this);
   }
 
@@ -95,7 +94,7 @@ public class ArrangementAtomMatchCondition implements ArrangementMatchCondition 
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementAtomMatchCondition clone() {
     ArrangementAtomMatchCondition result = new ArrangementAtomMatchCondition(myType, myValue);

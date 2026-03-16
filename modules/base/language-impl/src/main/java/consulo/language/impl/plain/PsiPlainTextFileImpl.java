@@ -26,7 +26,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFile {
   private final FileType myFileType;
@@ -37,7 +36,7 @@ public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFil
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor){
+  public void accept(PsiElementVisitor visitor){
     visitor.visitPlainTextFile(this);
   }
 
@@ -47,13 +46,13 @@ public class PsiPlainTextFileImpl extends PsiFileImpl implements PsiPlainTextFil
   }
 
   @Override
-  @Nonnull
+  
   public FileType getFileType() {
     return myFileType;
   }
 
   @Override
-  @Nonnull
+  
   public PsiReference[] getReferences() {
     return ReferenceProvidersRegistry.getReferencesFromProviders(this);
   }

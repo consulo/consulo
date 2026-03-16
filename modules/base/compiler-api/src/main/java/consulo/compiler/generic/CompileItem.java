@@ -15,24 +15,23 @@
  */
 package consulo.compiler.generic;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class CompileItem<Key, SourceState, OutputState> {
-    @Nonnull
+    
     public abstract Key getKey();
 
-    public abstract boolean isSourceUpToDate(@Nonnull SourceState state);
+    public abstract boolean isSourceUpToDate(SourceState state);
 
-    @Nonnull
+    
     public abstract SourceState computeSourceState();
 
 
-    public abstract boolean isOutputUpToDate(@Nonnull OutputState state);
+    public abstract boolean isOutputUpToDate(OutputState state);
 
-    @Nonnull
+    
     public abstract OutputState computeOutputState();
 
     public boolean isExcluded() {

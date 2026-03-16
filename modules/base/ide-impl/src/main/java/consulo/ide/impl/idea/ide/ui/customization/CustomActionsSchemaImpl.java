@@ -22,7 +22,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -36,7 +35,8 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -329,7 +329,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, PersistentS
                 String iconPath = myIconCustomizations.get(actionId);
                 if (iconPath != null && new File(FileUtil.toSystemDependentName(iconPath)).exists()) {
                     try {
-                        icon = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(iconPath)));
+                        icon = Image.fromUrl(VirtualFileUtil.convertToURL(VirtualFileUtil.pathToUrl(iconPath)));
                     }
                     catch (IOException e) {
                         icon = PlatformIconGroup.actionsHelp();

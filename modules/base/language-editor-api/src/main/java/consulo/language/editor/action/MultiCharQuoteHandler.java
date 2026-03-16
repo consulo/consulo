@@ -6,8 +6,7 @@ import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Max Medvedev
@@ -17,13 +16,13 @@ public interface MultiCharQuoteHandler extends QuoteHandler {
    * Returns a closing quote for an opening quote placed immediately before offset, or {@code null} when there is no matching quote.
    */
   @Nullable
-  CharSequence getClosingQuote(@Nonnull HighlighterIterator iterator, int offset);
+  CharSequence getClosingQuote(HighlighterIterator iterator, int offset);
 
   /**
    * Should insert the {@code closingQuote} returned from {@link #getClosingQuote(HighlighterIterator, int)} into the document.
    * Override this method for languages with multi-root PSI.
    */
-  default void insertClosingQuote(@Nonnull Editor editor, int offset, @Nonnull PsiFile file, @Nonnull CharSequence closingQuote) {
+  default void insertClosingQuote(Editor editor, int offset, PsiFile file, CharSequence closingQuote) {
     insertClosingQuote(editor, offset, closingQuote);
   }
 
@@ -31,7 +30,7 @@ public interface MultiCharQuoteHandler extends QuoteHandler {
    * Should insert the {@code closingQuote} returned from {@link #getClosingQuote(HighlighterIterator, int)} into the document.
    * Override this method for languages with single-root PSI.
    */
-  default void insertClosingQuote(@Nonnull Editor editor, int offset, @Nonnull CharSequence closingQuote) {
+  default void insertClosingQuote(Editor editor, int offset, CharSequence closingQuote) {
     editor.getDocument().insertString(offset, closingQuote);
     if (closingQuote.length() == 1) {
       TabOutScopesTracker.getInstance().registerEmptyScope(editor, offset);

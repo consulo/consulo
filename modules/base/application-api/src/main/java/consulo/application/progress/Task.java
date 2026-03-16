@@ -22,9 +22,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -61,7 +59,7 @@ public abstract class Task implements TaskInfo, Progressive {
     public Task(
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         boolean canBeCancelled
     ) {
         myProject = project;
@@ -75,7 +73,7 @@ public abstract class Task implements TaskInfo, Progressive {
     public Task(
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+         String title,
         boolean canBeCancelled
     ) {
         this(project, parentComponent, LocalizeValue.of(title), canBeCancelled);
@@ -105,7 +103,7 @@ public abstract class Task implements TaskInfo, Progressive {
      * @deprecated use {@link #onThrowable(Throwable)} instead
      */
     @Deprecated
-    public void onError(@Nonnull Exception error) {
+    public void onError(Exception error) {
         LOG.error(error);
     }
 
@@ -114,7 +112,7 @@ public abstract class Task implements TaskInfo, Progressive {
      * <p>
      * Callback executed when run() throws an exception (except PCE).
      */
-    public void onThrowable(@Nonnull Throwable throwable) {
+    public void onThrowable(Throwable throwable) {
         if (throwable instanceof Exception exception) {
             onError(exception);
         }
@@ -144,38 +142,38 @@ public abstract class Task implements TaskInfo, Progressive {
     }
 
     @Override
-    @Nonnull
+    
     public final String getTitle() {
         return myTitle.get();
     }
 
-    @Nonnull
-    public final Task setTitle(@Nonnull LocalizeValue title) {
+    
+    public final Task setTitle(LocalizeValue title) {
         myTitle = title;
         return this;
     }
 
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
-    @Nonnull
-    public final Task setTitle(@Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title) {
+    
+    public final Task setTitle( String title) {
         myTitle = LocalizeValue.of(title);
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getCancelTextValue() {
         return myCancelText;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getCancelTooltipTextValue() {
         return myCancelTooltipText;
     }
 
-    @Nonnull
+    
     public final Task setCancelText(LocalizeValue cancelText) {
         myCancelText = cancelText;
         return this;
@@ -196,8 +194,8 @@ public abstract class Task implements TaskInfo, Progressive {
         return false;
     }
 
-    @Nonnull
-    public final Task setCancelTooltipText(@Nonnull LocalizeValue cancelTooltipText) {
+    
+    public final Task setCancelTooltipText(LocalizeValue cancelTooltipText) {
         myCancelTooltipText = cancelTooltipText;
         return this;
     }
@@ -209,7 +207,7 @@ public abstract class Task implements TaskInfo, Progressive {
 
     public abstract boolean isModal();
 
-    @Nonnull
+    
     public final Modal asModal() {
         if (isModal()) {
             return (Modal)this;
@@ -217,7 +215,7 @@ public abstract class Task implements TaskInfo, Progressive {
         throw new IllegalStateException("Not a modal task");
     }
 
-    @Nonnull
+    
     public final Backgroundable asBackgroundable() {
         if (!isModal()) {
             return (Backgroundable)this;
@@ -228,8 +226,8 @@ public abstract class Task implements TaskInfo, Progressive {
     public abstract static class Backgroundable extends Task implements PerformInBackgroundOption {
         public static void queue(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            LocalizeValue title,
+            Consumer<ProgressIndicator> consumer
         ) {
             queue(project, title, true, consumer);
         }
@@ -238,17 +236,17 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public static void queue(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
-            @Nonnull Consumer<ProgressIndicator> consumer
+             String title,
+            Consumer<ProgressIndicator> consumer
         ) {
             queue(project, title, true, consumer);
         }
 
         public static void queue(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            Consumer<ProgressIndicator> consumer
         ) {
             queue(project, title, canBeCancelled, null, consumer);
         }
@@ -257,23 +255,23 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public static void queue(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            Consumer<ProgressIndicator> consumer
         ) {
             queue(project, title, canBeCancelled, null, consumer);
         }
 
         public static void queue(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
             @Nullable PerformInBackgroundOption backgroundOption,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            Consumer<ProgressIndicator> consumer
         ) {
             new Backgroundable(project, title, canBeCancelled, backgroundOption) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     try {
                         consumer.accept(indicator);
                     }
@@ -291,25 +289,25 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public static void queue(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
             @Nullable PerformInBackgroundOption backgroundOption,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            Consumer<ProgressIndicator> consumer
         ) {
             queue(project, LocalizeValue.of(title), canBeCancelled, backgroundOption, consumer);
         }
 
         public static void queue(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
             @Nullable PerformInBackgroundOption backgroundOption,
-            @Nonnull Consumer<ProgressIndicator> consumer,
-            @Nonnull Runnable onSuccess
+            Consumer<ProgressIndicator> consumer,
+            Runnable onSuccess
         ) {
             new Backgroundable(project, title, canBeCancelled, backgroundOption) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     try {
                         consumer.accept(indicator);
                     }
@@ -333,30 +331,30 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public static void queue(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
             @Nullable PerformInBackgroundOption backgroundOption,
-            @Nonnull Consumer<ProgressIndicator> consumer,
-            @Nonnull Runnable onSuccess
+            Consumer<ProgressIndicator> consumer,
+            Runnable onSuccess
         ) {
             queue(project, LocalizeValue.of(title), canBeCancelled, backgroundOption, consumer, onSuccess);
         }
 
         protected final PerformInBackgroundOption myBackgroundOption;
 
-        public Backgroundable(@Nullable ComponentManager project, @Nonnull LocalizeValue title) {
+        public Backgroundable(@Nullable ComponentManager project, LocalizeValue title) {
             this(project, title, true);
         }
 
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
-        public Backgroundable(@Nullable ComponentManager project, @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title) {
+        public Backgroundable(@Nullable ComponentManager project,  String title) {
             this(project, title, true);
         }
 
         public Backgroundable(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled
         ) {
             this(project, title, canBeCancelled, null);
@@ -366,7 +364,7 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public Backgroundable(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled
         ) {
             this(project, title, canBeCancelled, null);
@@ -374,7 +372,7 @@ public abstract class Task implements TaskInfo, Progressive {
 
         public Backgroundable(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
             @Nullable PerformInBackgroundOption backgroundOption
         ) {
@@ -389,7 +387,7 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public Backgroundable(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
             @Nullable PerformInBackgroundOption backgroundOption
         ) {
@@ -430,13 +428,13 @@ public abstract class Task implements TaskInfo, Progressive {
     public abstract static class Modal extends Task {
         public static void queue(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            Consumer<ProgressIndicator> consumer
         ) {
             new Modal(project, title, canBeCancelled) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     consumer.accept(indicator);
                 }
             }.queue();
@@ -446,23 +444,23 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public static void queue(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
-            @Nonnull Consumer<ProgressIndicator> consumer
+            Consumer<ProgressIndicator> consumer
         ) {
             queue(project, LocalizeValue.of(title), canBeCancelled, consumer);
         }
 
         public static void queue(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
-            @Nonnull Consumer<ProgressIndicator> consumer,
-            @Nonnull Runnable onSuccess
+            Consumer<ProgressIndicator> consumer,
+            Runnable onSuccess
         ) {
             new Modal(project, title, canBeCancelled) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     try {
                         consumer.accept(indicator);
                     }
@@ -486,15 +484,15 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public static void queue(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
-            @Nonnull Consumer<ProgressIndicator> consumer,
-            @Nonnull Runnable onSuccess
+            Consumer<ProgressIndicator> consumer,
+            Runnable onSuccess
         ) {
             queue(project, LocalizeValue.of(title), canBeCancelled, consumer, onSuccess);
         }
 
-        public Modal(@Nullable ComponentManager project, @Nonnull LocalizeValue title, boolean canBeCancelled) {
+        public Modal(@Nullable ComponentManager project, LocalizeValue title, boolean canBeCancelled) {
             super(project, null, title, canBeCancelled);
         }
 
@@ -502,7 +500,7 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public Modal(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled
         ) {
             super(project, null, title, canBeCancelled);
@@ -510,7 +508,7 @@ public abstract class Task implements TaskInfo, Progressive {
 
         public Modal(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             @Nullable JComponent parentComponent,
             boolean canBeCancelled
         ) {
@@ -521,7 +519,7 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public Modal(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             @Nullable JComponent parentComponent,
             boolean canBeCancelled
         ) {
@@ -537,9 +535,9 @@ public abstract class Task implements TaskInfo, Progressive {
     public abstract static class ConditionalModal extends Backgroundable {
         public ConditionalModal(
             @Nullable ComponentManager project,
-            @Nonnull LocalizeValue title,
+            LocalizeValue title,
             boolean canBeCancelled,
-            @Nonnull PerformInBackgroundOption backgroundOption
+            PerformInBackgroundOption backgroundOption
         ) {
             super(project, title, canBeCancelled, backgroundOption);
         }
@@ -548,9 +546,9 @@ public abstract class Task implements TaskInfo, Progressive {
         @DeprecationInfo("Use variant with LocalizeValue")
         public ConditionalModal(
             @Nullable ComponentManager project,
-            @Nls(capitalization = Nls.Capitalization.Title) @Nonnull String title,
+             String title,
             boolean canBeCancelled,
-            @Nonnull PerformInBackgroundOption backgroundOption
+            PerformInBackgroundOption backgroundOption
         ) {
             super(project, title, canBeCancelled, backgroundOption);
         }
@@ -568,9 +566,9 @@ public abstract class Task implements TaskInfo, Progressive {
         private final boolean myShowWhenFocused;
 
         public NotificationInfo(
-            @Nonnull LocalizeValue notificationName,
-            @Nonnull LocalizeValue notificationTitle,
-            @Nonnull LocalizeValue notificationText
+            LocalizeValue notificationName,
+            LocalizeValue notificationTitle,
+            LocalizeValue notificationText
         ) {
             this(notificationName, notificationTitle, notificationText, false);
         }
@@ -578,17 +576,17 @@ public abstract class Task implements TaskInfo, Progressive {
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         public NotificationInfo(
-            @Nonnull String notificationName,
-            @Nonnull String notificationTitle,
-            @Nonnull String notificationText
+            String notificationName,
+            String notificationTitle,
+            String notificationText
         ) {
             this(notificationName, notificationTitle, notificationText, false);
         }
 
         public NotificationInfo(
-            @Nonnull LocalizeValue notificationName,
-            @Nonnull LocalizeValue notificationTitle,
-            @Nonnull LocalizeValue notificationText,
+            LocalizeValue notificationName,
+            LocalizeValue notificationTitle,
+            LocalizeValue notificationText,
             boolean showWhenFocused
         ) {
             myNotificationName = notificationName;
@@ -600,9 +598,9 @@ public abstract class Task implements TaskInfo, Progressive {
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         public NotificationInfo(
-            @Nonnull String notificationName,
-            @Nonnull String notificationTitle,
-            @Nonnull String notificationText,
+            String notificationName,
+            String notificationTitle,
+            String notificationText,
             boolean showWhenFocused
         ) {
             this(
@@ -613,17 +611,17 @@ public abstract class Task implements TaskInfo, Progressive {
             );
         }
 
-        @Nonnull
+        
         public String getNotificationName() {
             return myNotificationName.get();
         }
 
-        @Nonnull
+        
         public String getNotificationTitle() {
             return myNotificationTitle.get();
         }
 
-        @Nonnull
+        
         public String getNotificationText() {
             return myNotificationText.get();
         }

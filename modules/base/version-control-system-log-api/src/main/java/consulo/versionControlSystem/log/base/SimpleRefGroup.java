@@ -22,7 +22,6 @@ import consulo.versionControlSystem.log.RefGroup;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.VcsRefType;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -30,12 +29,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class SimpleRefGroup implements RefGroup {
-    @Nonnull
+    
     private final String myName;
-    @Nonnull
+    
     private final List<VcsRef> myRefs;
 
-    public SimpleRefGroup(@Nonnull String name, @Nonnull Collection<VcsRef> refs) {
+    public SimpleRefGroup(String name, Collection<VcsRef> refs) {
         myName = name;
         myRefs = new ArrayList<>(refs);
     }
@@ -45,26 +44,26 @@ public class SimpleRefGroup implements RefGroup {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
     }
 
-    @Nonnull
+    
     @Override
     public List<VcsRef> getRefs() {
         return myRefs;
     }
 
-    @Nonnull
+    
     @Override
     public List<Color> getColors() {
         return getColors(myRefs);
     }
 
-    @Nonnull
-    public static List<Color> getColors(@Nonnull Collection<VcsRef> refs) {
+    
+    public static List<Color> getColors(Collection<VcsRef> refs) {
         MultiMap<VcsRefType, VcsRef> referencesByType = ContainerUtil.groupBy(refs, VcsRef::getType);
         if (referencesByType.size() == 1) {
             Map.Entry<VcsRefType, Collection<VcsRef>> firstItem =
@@ -86,8 +85,8 @@ public class SimpleRefGroup implements RefGroup {
     }
 
     public static List<RefGroup> buildGroups(
-        @Nonnull List<RefGroup> refGroups,
-        @Nonnull MultiMap<VcsRefType, VcsRef> groupedRefs,
+        List<RefGroup> refGroups,
+        MultiMap<VcsRefType, VcsRef> groupedRefs,
         boolean compact,
         boolean showTagNames
     ) {

@@ -16,7 +16,6 @@
 package consulo.application.util;
 
 import consulo.application.ApplicationManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,11 +80,11 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
         }
     }
 
-    protected void invokeConsumer(@Nonnull Runnable consumerRunnable) {
+    protected void invokeConsumer(Runnable consumerRunnable) {
         ApplicationManager.getApplication().executeOnPooledThread(consumerRunnable);
     }
 
-    @Nonnull
+    
     private Runnable createConsumerRunnable(long ts) {
         return () -> {
             myTs = ts;

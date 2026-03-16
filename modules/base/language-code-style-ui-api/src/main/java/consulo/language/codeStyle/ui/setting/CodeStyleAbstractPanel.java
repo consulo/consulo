@@ -52,8 +52,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.LocalTimeCounter;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +94,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     private Document myDocumentBeforeChanges;
 
     @RequiredUIAccess
-    protected CodeStyleAbstractPanel(@Nonnull CodeStyleSettings settings) {
+    protected CodeStyleAbstractPanel(CodeStyleSettings settings) {
         this(null, null, settings);
     }
 
@@ -103,7 +102,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     protected CodeStyleAbstractPanel(
         @Nullable Language defaultLanguage,
         @Nullable CodeStyleSettings currentSettings,
-        @Nonnull CodeStyleSettings settings
+        CodeStyleSettings settings
     ) {
         myCurrentSettings = currentSettings;
         mySettings = settings;
@@ -130,7 +129,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return mySomethingChanged;
     }
 
-    public void setModel(@Nonnull CodeStyleSchemesModel model) {
+    public void setModel(CodeStyleSchemesModel model) {
         myModel = model;
     }
 
@@ -271,7 +270,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     }
 
     @RequiredReadAction
-    private Document getDocumentBeforeChanges(@Nonnull Project project, @Nonnull PsiFile file) {
+    private Document getDocumentBeforeChanges(Project project, PsiFile file) {
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
         if (documentManager != null) {
             Document document = documentManager.getDocument(file);
@@ -391,7 +390,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     @Nullable
     protected abstract EditorHighlighter createHighlighter(EditorColorsScheme scheme);
 
-    @Nonnull
+    
     protected abstract FileType getFileType();
 
     @Nullable
@@ -442,7 +441,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         wrapCombo.addItem(CodeStyleLocalize.wrappingWrapAlways().get());
     }
 
-    @Nonnull
+    
     public static String readFromFile(Class resourceContainerClass, String fileName) {
         try {
             InputStream stream = resourceContainerClass.getClassLoader().getResourceAsStream("codeStyle/preview/" + fileName);
@@ -573,7 +572,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return myEditor;
     }
 
-    @Nonnull
+    
     protected CodeStyleSettings getSettings() {
         return mySettings;
     }
@@ -583,7 +582,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
     }
 
     @RequiredUIAccess
-    public final void applyPredefinedSettings(@Nonnull PredefinedCodeStyle codeStyle) {
+    public final void applyPredefinedSettings(PredefinedCodeStyle codeStyle) {
         CodeStyleSettings settings = CodeStyleSettingsManager.getSettings(ProjectUIUtil.guessCurrentProject(getPanel())).clone();
         codeStyle.apply(settings);
         reset(settings);
@@ -600,7 +599,7 @@ public abstract class CodeStyleAbstractPanel implements Disposable {
         return myDefaultLanguage;
     }
 
-    @Nonnull
+    
     protected LocalizeValue getTabTitle() {
         return LocalizeValue.localizeTODO("Other");
     }

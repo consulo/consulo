@@ -32,7 +32,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -49,7 +48,7 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         VirtualFile vFile = event.getRequiredData(VirtualFile.KEY);
         Project project = event.getRequiredData(Project.KEY);
         FileEditorWindow window = event.getRequiredData(FileEditorWindow.DATA_KEY);
@@ -64,7 +63,7 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         VirtualFile vFile = e.getData(VirtualFile.KEY);
         FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);

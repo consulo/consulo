@@ -23,15 +23,13 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
 public class TestDiffRequestProcessor {
-  @Nonnull
-  public static DiffRequestChain createRequestChain(@Nullable Project project, @Nonnull ListSelection<? extends DiffHyperlink> requests) {
+  
+  public static DiffRequestChain createRequestChain(@Nullable Project project, ListSelection<? extends DiffHyperlink> requests) {
     ListSelection<DiffRequestProducer> producers = requests.map(hyperlink -> new DiffHyperlinkRequestProducer(project, hyperlink));
 
     SimpleDiffRequestChain chain = SimpleDiffRequestChain.fromProducers(producers.getList(), producers.getSelectedIndex());
@@ -45,15 +43,15 @@ public class TestDiffRequestProcessor {
     private final Project myProject;
     private final DiffHyperlink myHyperlink;
 
-    private DiffHyperlinkRequestProducer(@Nullable Project project, @Nonnull DiffHyperlink hyperlink) {
+    private DiffHyperlinkRequestProducer(@Nullable Project project, DiffHyperlink hyperlink) {
       myProject = project;
       myHyperlink = hyperlink;
     }
 
     @Override
     public
-    @Nls
-    @Nonnull
+    
+    
     String getName() {
       String testName = myHyperlink.getTestName();
       if (testName != null) return testName;
@@ -61,8 +59,8 @@ public class TestDiffRequestProcessor {
     }
 
     @Override
-    @Nonnull
-    public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator) throws DiffRequestProducerException {
+    
+    public DiffRequest process(UserDataHolder context, ProgressIndicator indicator) throws DiffRequestProducerException {
       String windowTitle = myHyperlink.getDiffTitle();
 
       String text1 = myHyperlink.getLeft();
@@ -104,8 +102,8 @@ public class TestDiffRequestProcessor {
     return fs.refreshAndFindFileByPath(path);
   }
 
-  @Nonnull
-  private static DiffContent createContentWithTitle(@Nullable Project project, @Nonnull String content, @Nullable VirtualFile contentFile, @Nullable VirtualFile highlightFile) {
+  
+  private static DiffContent createContentWithTitle(@Nullable Project project, String content, @Nullable VirtualFile contentFile, @Nullable VirtualFile highlightFile) {
     if (contentFile != null) {
       return DiffContentFactory.getInstance().create(project, contentFile);
     }

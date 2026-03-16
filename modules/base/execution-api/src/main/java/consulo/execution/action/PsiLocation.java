@@ -21,7 +21,6 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -38,26 +37,26 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   }
 
   @RequiredReadAction
-  public PsiLocation(@Nonnull Project project, @Nonnull E psiElement) {
+  public PsiLocation(Project project, E psiElement) {
     myPsiElement = psiElement;
     myProject = project;
     myModule = psiElement.getModule();
   }
 
-  public PsiLocation(@Nonnull Project project, Module module, @Nonnull E psiElement) {
+  public PsiLocation(Project project, Module module, E psiElement) {
     myPsiElement = psiElement;
     myProject = project;
     myModule = module;
   }
 
   @Override
-  @Nonnull
+  
   public E getPsiElement() {
     return myPsiElement;
   }
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
@@ -68,8 +67,8 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   }
 
   @Override
-  @Nonnull
-  public <T extends PsiElement> Iterator<Location<T>> getAncestors(@Nonnull final Class<T> ancestorClass, boolean strict) {
+  
+  public <T extends PsiElement> Iterator<Location<T>> getAncestors(final Class<T> ancestorClass, boolean strict) {
     final T first = strict || !ancestorClass.isInstance(myPsiElement) ? findNext(myPsiElement, ancestorClass) : (T)myPsiElement;
     return new Iterator<>() {
       private T myCurrent = first;
@@ -95,7 +94,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public PsiLocation<E> toPsiLocation() {
     return this;
   }
@@ -110,7 +109,7 @@ public class PsiLocation<E extends PsiElement> extends Location<E> {
   }
 
   @RequiredReadAction
-  public static <T extends PsiElement> Location<T> fromPsiElement(@Nonnull Project project, T element) {
+  public static <T extends PsiElement> Location<T> fromPsiElement(Project project, T element) {
     if (element == null) return null;
     return new PsiLocation<>(project, element);
   }

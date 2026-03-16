@@ -18,7 +18,7 @@ package consulo.versionControlSystem.change.commited;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface CommittedChangeListDecorator {
   @Nullable

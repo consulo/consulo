@@ -18,7 +18,7 @@ package consulo.language.codeStyle.impl.internal.formatting;
 import consulo.language.codeStyle.CoreFormatterUtil;
 import consulo.language.codeStyle.internal.*;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 

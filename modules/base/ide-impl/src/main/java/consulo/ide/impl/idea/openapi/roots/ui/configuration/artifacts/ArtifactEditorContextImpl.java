@@ -39,7 +39,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.ui.awt.ChooseModulesDialog;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +56,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     }
 
     @Override
-    @Nonnull
+    
     public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
         return myParent.getOrCreateModifiableArtifactModel();
     }
@@ -68,24 +67,24 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     }
 
     @Override
-    @Nonnull
-    public ModifiableRootModel getOrCreateModifiableRootModel(@Nonnull Module module) {
+    
+    public ModifiableRootModel getOrCreateModifiableRootModel(Module module) {
         return myParent.getOrCreateModifiableRootModel(module);
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return myParent.getProject();
     }
 
     @Override
-    public CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact) {
+    public CompositePackagingElement<?> getRootElement(Artifact artifact) {
         return myParent.getRootElement(artifact);
     }
 
     @Override
-    public void editLayout(@Nonnull Artifact artifact, Runnable runnable) {
+    public void editLayout(Artifact artifact, Runnable runnable) {
         myParent.editLayout(artifact, runnable);
     }
 
@@ -101,7 +100,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
     @Override
     @RequiredUIAccess
-    public void selectArtifact(@Nonnull Artifact artifact) {
+    public void selectArtifact(Artifact artifact) {
         ShowSettingsUtil.getInstance().showProjectStructureDialog(
             myParent.getProject(),
             projectStructureSelector -> projectStructureSelector.select(artifact, true)
@@ -110,7 +109,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
     @Override
     @RequiredUIAccess
-    public void selectModule(@Nonnull Module module) {
+    public void selectModule(Module module) {
         ShowSettingsUtil.getInstance().showProjectStructureDialog(
             myParent.getProject(),
             projectStructureSelector -> projectStructureSelector.select(module.getName(), null, true)
@@ -119,7 +118,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
     @Override
     @RequiredUIAccess
-    public void selectLibrary(@Nonnull Library library) {
+    public void selectLibrary(Library library) {
         LibraryTable table = library.getTable();
         if (table != null) {
             ShowSettingsUtil.getInstance().showProjectStructureDialog(
@@ -150,7 +149,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
     @Override
     @RequiredUIAccess
-    public List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, @Nonnull LocalizeValue title) {
+    public List<Artifact> chooseArtifacts(List<? extends Artifact> artifacts, LocalizeValue title) {
         ChooseArtifactsDialog dialog = new ChooseArtifactsDialog(getProject(), artifacts, title, LocalizeValue.empty());
         dialog.show();
         return dialog.isOK() ? dialog.getChosenElements() : Collections.<Artifact>emptyList();
@@ -158,19 +157,19 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
 
 
     @Override
-    @Nonnull
+    
     public ArtifactModel getArtifactModel() {
         return myParent.getArtifactModel();
     }
 
     @Override
-    @Nonnull
+    
     public ModulesProvider getModulesProvider() {
         return myParent.getModulesProvider();
     }
 
     @Override
-    public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
+    public Library findLibrary(String level, String libraryName) {
         return myParent.findLibrary(level, libraryName);
     }
 
@@ -180,20 +179,20 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
     }
 
     @Override
-    @Nonnull
+    
     public ArtifactType getArtifactType() {
         return myEditor.getArtifact().getArtifactType();
     }
 
     @Override
     @RequiredUIAccess
-    public List<Module> chooseModules(List<Module> modules, @Nonnull LocalizeValue title) {
+    public List<Module> chooseModules(List<Module> modules, LocalizeValue title) {
         return new ChooseModulesDialog(getProject(), modules, title, LocalizeValue.empty()).showAndGetResult();
     }
 
     @Override
     @RequiredUIAccess
-    public List<Library> chooseLibraries(@Nonnull LocalizeValue title) {
+    public List<Library> chooseLibraries(LocalizeValue title) {
         ChooseLibrariesFromTablesDialog dialog = ChooseLibrariesFromTablesDialog.createDialog(title, getProject());
         dialog.show();
         return dialog.isOK() ? dialog.getSelectedLibraries() : Collections.<Library>emptyList();

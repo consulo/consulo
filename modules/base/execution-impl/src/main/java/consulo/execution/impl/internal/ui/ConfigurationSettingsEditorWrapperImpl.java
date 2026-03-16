@@ -32,7 +32,6 @@ import consulo.ui.ex.awt.HideableDecorator;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,7 +87,6 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
     }
 
     @Override
-    @Nonnull
     protected JComponent createEditor() {
         JPanel wholePanel = new JPanel(new VerticalLayout(JBUI.scale(5)));
 
@@ -157,7 +155,7 @@ public class ConfigurationSettingsEditorWrapperImpl extends ConfigurationSetting
 
     private class MyDataProvider implements UiDataProvider {
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(CONFIGURATION_EDITOR_KEY, ConfigurationSettingsEditorWrapperImpl.this);
         }
     }

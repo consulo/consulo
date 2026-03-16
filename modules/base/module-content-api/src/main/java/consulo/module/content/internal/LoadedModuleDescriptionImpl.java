@@ -18,7 +18,6 @@ package consulo.module.content.internal;
 import consulo.module.LoadedModuleDescription;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,23 +28,23 @@ import java.util.List;
 public class LoadedModuleDescriptionImpl implements LoadedModuleDescription {
   private final Module myModule;
 
-  public LoadedModuleDescriptionImpl(@Nonnull Module module) {
+  public LoadedModuleDescriptionImpl(Module module) {
     myModule = module;
   }
 
-  @Nonnull
+  
   @Override
   public Module getModule() {
     return myModule;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myModule.getName();
   }
 
-  @Nonnull
+  
   @Override
   public List<String> getDependencyModuleNames() {
     return Arrays.asList(ModuleRootManager.getInstance(myModule).getDependencyModuleNames());

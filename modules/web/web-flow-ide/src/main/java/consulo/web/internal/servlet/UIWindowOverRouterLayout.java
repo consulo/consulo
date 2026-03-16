@@ -34,8 +34,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.web.internal.ui.WebRootPaneImpl;
 import consulo.web.internal.ui.base.TargetVaddin;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 /**
@@ -61,13 +60,13 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     @RequiredUIAccess
     @Override
-    public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
+    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
         throw new UnsupportedOperationException();
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    public void removeBorder(BorderPosition borderPosition) {
         throw new UnsupportedOperationException();
     }
 
@@ -99,42 +98,39 @@ class UIWindowOverRouterLayout extends UserDataHolderBase implements Window {
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size2D size) {
+    public void setSize(Size2D size) {
 
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
     public Font getFont() {
         return myFont;
     }
 
     @Override
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
         myFont = font;
     }
 
     @RequiredUIAccess
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(String title) {
         UI.getCurrent().getPage().setTitle(title);
     }
 
     @RequiredUIAccess
     @Override
-    public void setContent(@Nonnull Component content) {
+    public void setContent(Component content) {
         if (myDisposed) {
             throw new IllegalArgumentException("Already disposed");
         }

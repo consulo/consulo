@@ -19,8 +19,7 @@ package consulo.localHistory.impl.internal;
 import consulo.localHistory.impl.internal.change.*;
 import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -86,7 +85,7 @@ public class ChangeSet {
     isLocked = true;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public String getLabel() {
     return accessChanges(() -> {
       for (Change each : myChanges) {
@@ -225,7 +224,7 @@ public class ChangeSet {
     v.end(this);
   }
 
-  private <T> T accessChanges(@Nonnull Supplier<T> func) {
+  private <T> T accessChanges(Supplier<T> func) {
     if (isLocked) {
       //noinspection ConstantConditions
       return func.get();
@@ -237,7 +236,7 @@ public class ChangeSet {
     }
   }
 
-  private void accessChanges(@Nonnull Runnable func) {
+  private void accessChanges(Runnable func) {
     accessChanges(() -> {
       func.run();
       return null;

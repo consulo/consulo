@@ -39,8 +39,7 @@ import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.net.InetSocketAddress;
 
 /**
@@ -48,16 +47,16 @@ import java.net.InetSocketAddress;
  * @since 18.05.14
  */
 public class ThriftTestExecutionUtil {
-  public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(@Nonnull String testFrameworkName,
-                                                                          @Nonnull TestConsoleProperties consoleProperties,
-                                                                          @Nonnull ExecutionEnvironment environment,
-                                                                          @Nonnull ThriftTestHandlerFactory factory,
+  public static BaseTestsOutputConsoleView createConsoleWithCustomLocator(String testFrameworkName,
+                                                                          TestConsoleProperties consoleProperties,
+                                                                          ExecutionEnvironment environment,
+                                                                          ThriftTestHandlerFactory factory,
                                                                           @Nullable TestLocationProvider locator) {
     return createConsoleWithCustomLocator(testFrameworkName, consoleProperties, environment, locator, factory, null);
   }
 
-  public static SMTRunnerConsoleView createConsoleWithCustomLocator(@Nonnull String testFrameworkName,
-                                                                    @Nonnull TestConsoleProperties consoleProperties,
+  public static SMTRunnerConsoleView createConsoleWithCustomLocator(String testFrameworkName,
+                                                                    TestConsoleProperties consoleProperties,
                                                                     ExecutionEnvironment environment,
                                                                     @Nullable TestLocationProvider locator,
                                                                     ThriftTestHandlerFactory factory,
@@ -68,14 +67,14 @@ public class ThriftTestExecutionUtil {
     return consoleView;
   }
 
-  public static void initConsoleView(@Nonnull final SMTRunnerConsoleView consoleView,
-                                     @Nonnull final String testFrameworkName,
+  public static void initConsoleView(final SMTRunnerConsoleView consoleView,
+                                     final String testFrameworkName,
                                      @Nullable final TestLocationProvider locator,
                                      final ThriftTestHandlerFactory factory,
                                      @Nullable final TestProxyFilterProvider filterProvider) {
     consoleView.addAttachToProcessListener(new AttachToProcessListener() {
       @Override
-      public void onAttachToProcess(@Nonnull ProcessHandler processHandler) {
+      public void onAttachToProcess(ProcessHandler processHandler) {
         TestProxyPrinterProvider printerProvider = null;
         if (filterProvider != null) {
           printerProvider = new TestProxyPrinterProvider(consoleView, filterProvider);
@@ -89,11 +88,11 @@ public class ThriftTestExecutionUtil {
     consoleView.initUI();
   }
 
-  private static void attachEventsProcessors(@Nonnull TestConsoleProperties consoleProperties,
+  private static void attachEventsProcessors(TestConsoleProperties consoleProperties,
                                              SMTestRunnerResultsForm resultsViewer,
                                              StatisticsPanel statisticsPane,
                                              ProcessHandler processHandler,
-                                             @Nonnull String testFrameworkName,
+                                             String testFrameworkName,
                                              @Nullable TestLocationProvider locator,
                                              ThriftTestHandlerFactory factory,
                                              @Nullable TestProxyPrinterProvider printerProvider) {

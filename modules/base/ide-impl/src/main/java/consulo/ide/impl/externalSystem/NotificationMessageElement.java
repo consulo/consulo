@@ -30,8 +30,7 @@ import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.Style;
@@ -48,12 +47,12 @@ public class NotificationMessageElement extends NavigatableMessageElement {
   public static final String MSG_STYLE = "messageStyle";
   public static final String LINK_STYLE = "linkStyle";
 
-  @Nonnull
+  
   private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
-  @Nonnull
+  
   private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
 
-  public NotificationMessageElement(@Nonnull final ErrorTreeElementKind kind,
+  public NotificationMessageElement(final ErrorTreeElementKind kind,
                                     @Nullable GroupingElement parent,
                                     String[] message,
                                     Navigatable navigatable,
@@ -75,8 +74,8 @@ public class NotificationMessageElement extends NavigatableMessageElement {
         renderer.append(NewErrorTreeRenderer.calcPrefix(NotificationMessageElement.this));
       }
 
-      @Nonnull
-      private Image getIcon(@Nonnull ErrorTreeElementKind kind) {
+      
+      private Image getIcon(ErrorTreeElementKind kind) {
         Image icon = Image.empty(Image.DEFAULT_ICON_SIZE);
         switch (kind) {
           case INFO:
@@ -113,7 +112,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     return myLeftTreeCellRenderer;
   }
 
-  protected JEditorPane installJep(@Nonnull JEditorPane myEditorPane) {
+  protected JEditorPane installJep(JEditorPane myEditorPane) {
     String message = StringUtil.join(this.getText(), "<br>");
     myEditorPane.setEditable(false);
     myEditorPane.setOpaque(false);
@@ -128,7 +127,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
     return myEditorPane;
   }
 
-  protected void updateStyle(@Nonnull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+  protected void updateStyle(JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
     Style style = htmlDocument.getStyleSheet().getStyle(MSG_STYLE);
     if (value instanceof LoadingNode) {
@@ -149,7 +148,7 @@ public class NotificationMessageElement extends NavigatableMessageElement {
   }
 
   private class MyCustomizeColoredTreeCellRendererReplacement extends CustomizeColoredTreeCellRendererReplacement {
-    @Nonnull
+    
     private final JEditorPane myEditorPane;
 
     private MyCustomizeColoredTreeCellRendererReplacement() {

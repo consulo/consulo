@@ -25,7 +25,6 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -33,7 +32,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class LookupDocumentSavingVetoer extends FileDocumentSynchronizationVetoer {
   @Override
-  public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
+  public boolean maySaveDocument(Document document, boolean isSaveExplicit) {
     if (ApplicationManager.getApplication().isDisposed() || isSaveExplicit) {
       return true;
     }

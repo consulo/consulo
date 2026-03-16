@@ -18,7 +18,6 @@ package consulo.module.impl.internal.layer;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -27,20 +26,20 @@ import java.util.Iterator;
  * @since 2020-08-31
  */
 public interface ContentEntryEx extends ContentEntry, Comparable<ContentEntryEx>, ClonableContentEntry {
-  @Nonnull
+  
   Collection<ContentFolder> getContentFolders();
 
   @Override
   ContentEntryEx cloneEntry(ModuleRootLayerImpl layer);
 
   @Override
-  default int compareTo(@Nonnull ContentEntryEx other) {
+  default int compareTo(ContentEntryEx other) {
     int i = getUrl().compareTo(other.getUrl());
     if (i != 0) return i;
     return lexicographicCompare(getContentFolders(), other.getContentFolders());
   }
 
-  public static <T> int lexicographicCompare(@Nonnull Collection<T> obj1, @Nonnull Collection<T> obj2) {
+  public static <T> int lexicographicCompare(Collection<T> obj1, Collection<T> obj2) {
     Iterator<T> it1 = obj1.iterator();
     Iterator<T> it2 = obj2.iterator();
 

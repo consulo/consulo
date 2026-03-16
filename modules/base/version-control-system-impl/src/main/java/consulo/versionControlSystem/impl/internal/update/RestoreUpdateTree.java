@@ -22,8 +22,7 @@ import consulo.component.persist.*;
 import consulo.project.Project;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -33,7 +32,7 @@ import org.jdom.Element;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class RestoreUpdateTree implements PersistentStateComponent<Element> {
-  @Nonnull
+  
   public static RestoreUpdateTree getInstance(Project project) {
     return project.getInstance(RestoreUpdateTree.class);
   }

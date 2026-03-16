@@ -38,8 +38,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -74,7 +73,7 @@ public class XFramesView extends XDebugView {
     private boolean myThreadsCalculated = false;
     private boolean myRefresh = false;
 
-    public XFramesView(@Nonnull Project project, XDebugSessionImpl session) {
+    public XFramesView(Project project, XDebugSessionImpl session) {
         mySession = session;
         myMainPanel = new JPanel(new BorderLayout());
 
@@ -115,7 +114,7 @@ public class XFramesView extends XDebugView {
         ComboBoxStyle.makeBorderInline(myThreadComboBox);
         myThreadComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, XExecutionStack value, int index, boolean selected, boolean hasFocus) {
                 setBorder(JBUI.Borders.empty(4));
                 setFont(AWTLanguageEditorUtil.getEditorFont());
                 if (value != null) {
@@ -161,7 +160,7 @@ public class XFramesView extends XDebugView {
                     myThreadComboBox.addItem(null); // rendered as "Loading..."
                     context.computeExecutionStacks(new XSuspendContext.XExecutionStackContainer() {
                         @Override
-                        public void addExecutionStack(@Nonnull List<? extends XExecutionStack> executionStacks, boolean last) {
+                        public void addExecutionStack(List<? extends XExecutionStack> executionStacks, boolean last) {
                             ApplicationManager.getApplication().invokeLater(() -> {
                                 addExecutionStacks(executionStacks);
                                 if (last) {
@@ -176,7 +175,7 @@ public class XFramesView extends XDebugView {
                         }
 
                         @Override
-                        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+                        public void errorOccurred(LocalizeValue errorMessage) {
                         }
                     });
                 }
@@ -210,7 +209,7 @@ public class XFramesView extends XDebugView {
     }
 
     @Override
-    public void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session) {
+    public void processSessionEvent(SessionEvent event, XDebugSession session) {
         myRefresh = event == SessionEvent.SETTINGS_CHANGED;
 
         if (event == SessionEvent.BEFORE_RESUME) {
@@ -290,7 +289,7 @@ public class XFramesView extends XDebugView {
         }
     }
 
-    private void updateFrames(XExecutionStack executionStack, @Nonnull XDebugSession session, @Nullable XStackFrame frameToSelect) {
+    private void updateFrames(XExecutionStack executionStack, XDebugSession session, @Nullable XStackFrame frameToSelect) {
         if (mySelectedStack != null) {
             getOrCreateBuilder(mySelectedStack, session).stop();
         }
@@ -349,12 +348,12 @@ public class XFramesView extends XDebugView {
         }
 
         @Override
-        public void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, boolean last) {
+        public void addStackFrames(List<? extends XStackFrame> stackFrames, boolean last) {
             addStackFrames(stackFrames, null, last);
         }
 
         @Override
-        public void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last) {
+        public void addStackFrames(List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last) {
             if (isObsolete()) {
                 return;
             }
@@ -385,7 +384,7 @@ public class XFramesView extends XDebugView {
         }
 
         @Override
-        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
             if (isObsolete()) {
                 return;
             }

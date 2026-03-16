@@ -6,7 +6,6 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.project.Project;
 import consulo.application.ui.wm.IdeFocusManager;
-import jakarta.annotation.Nonnull;
 
 public class EditorGotoLineNumberDialog extends GotoLineNumberDialog {
   private final Editor myEditor;
@@ -52,12 +51,12 @@ public class EditorGotoLineNumberDialog extends GotoLineNumberDialog {
   }
 
   @Override
-  protected int coordinatesToOffset(@Nonnull Coordinates coordinates) {
+  protected int coordinatesToOffset(Coordinates coordinates) {
     LogicalPosition position = new LogicalPosition(coordinates.row, coordinates.column);
     return myEditor.logicalPositionToOffset(position);
   }
 
-  @Nonnull
+  
   @Override
   protected Coordinates offsetToCoordinates(int offset) {
     LogicalPosition position = myEditor.offsetToLogicalPosition(offset);

@@ -17,6 +17,7 @@ package consulo.util.nodep.xml;
 
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -91,7 +92,7 @@ public class SimpleXmlReader {
     Element documentElement = doc.getDocumentElement();
     documentElement.normalize();
 
-    List<SimpleXmlElement> children = new ArrayList<SimpleXmlElement>();
+    List<SimpleXmlElement> children = new ArrayList<>();
 
     fillElements(documentElement, children);
 
@@ -103,7 +104,7 @@ public class SimpleXmlReader {
       if (node instanceof Element) {
         String tagName = ((Element)node).getTagName();
 
-        List<SimpleXmlElement> children2 = new ArrayList<SimpleXmlElement>();
+        List<SimpleXmlElement> children2 = new ArrayList<>();
 
         fillElements((Element)node, children2);
 
@@ -113,6 +114,7 @@ public class SimpleXmlReader {
     }
   }
 
+  @Nullable
   private static String mapText(Element element) {
     Node firstChild = element.getFirstChild();
     Node lastChild = element.getLastChild();
@@ -131,7 +133,7 @@ public class SimpleXmlReader {
       return Collections.emptyMap();
     }
 
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
 
     for (int i = 0; i < length; i++) {
       Node namedItem = attributes.item(i);

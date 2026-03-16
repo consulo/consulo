@@ -5,7 +5,6 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,16 +15,16 @@ public class RunAnythingGeneralGroup extends RunAnythingGroupBase {
     private RunAnythingGeneralGroup() {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.runAnythingGeneralGroupTitle();
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<RunAnythingItem> getGroupItems(DataContext dataContext, String pattern) {
         Collection<RunAnythingItem> collector = new ArrayList<>();
 
         Application.get().getExtensionPoint(RunAnythingProvider.class).forEachExtensionSafe(provider -> {

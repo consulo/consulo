@@ -23,7 +23,6 @@ import consulo.ui.ex.awt.speedSearch.ListSpeedSearch;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -58,7 +57,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
 
   private class MyListCellRenderer extends ColoredListCellRenderer<FileTemplate> {
     @Override
-    protected void customizeCellRenderer(@Nonnull JList<? extends FileTemplate> list, FileTemplate value, int index, boolean selected, boolean hasFocus) {
+    protected void customizeCellRenderer(JList<? extends FileTemplate> list, FileTemplate value, int index, boolean selected, boolean hasFocus) {
       Image icon;
       icon = FileTemplateUtil.getIcon(value);
       boolean internalTemplate = AllFileTemplatesConfigurable.isInternalTemplate(value.getName(), getTitle());
@@ -125,7 +124,7 @@ abstract class FileTemplateTabAsList extends FileTemplateTab {
   }
 
   @Override
-  @Nonnull
+  
   public FileTemplate[] getTemplates() {
     int size = myModel.getSize();
     List<FileTemplate> templates = new ArrayList<>(size);

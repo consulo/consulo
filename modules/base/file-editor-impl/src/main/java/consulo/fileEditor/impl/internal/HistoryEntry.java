@@ -28,8 +28,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -48,20 +47,20 @@ public final class HistoryEntry {
   private static final String SELECTED_ATTR_VALUE = "selected";
   private static final String STATE_ELEMENT = "state";
 
-  @Nonnull
+  
   private final VirtualFilePointer myFilePointer;
   /**
    * can be null when read from XML
    */
   @Nullable
   private FileEditorProvider mySelectedProvider;
-  @Nonnull
+  
   private final Map<FileEditorProvider, FileEditorState> myProvider2State;
 
   @Nullable
   private final Disposable myDisposable;
 
-  private HistoryEntry(@Nonnull VirtualFilePointer filePointer,
+  private HistoryEntry(VirtualFilePointer filePointer,
                        @Nullable FileEditorProvider selectedProvider,
                        @Nullable Disposable disposable) {
     myFilePointer = filePointer;
@@ -70,11 +69,11 @@ public final class HistoryEntry {
     myProvider2State = new HashMap<>();
   }
 
-  @Nonnull
-  public static HistoryEntry createLight(@Nonnull VirtualFile file,
-                                         @Nonnull FileEditorProvider[] providers,
-                                         @Nonnull FileEditorState[] states,
-                                         @Nonnull FileEditorProvider selectedProvider) {
+  
+  public static HistoryEntry createLight(VirtualFile file,
+                                         FileEditorProvider[] providers,
+                                         FileEditorState[] states,
+                                         FileEditorProvider selectedProvider) {
     VirtualFilePointer pointer = new LightFilePointer(file);
     HistoryEntry entry = new HistoryEntry(pointer, selectedProvider, null);
     for (int i = 0; i < providers.length; i++) {
@@ -83,8 +82,8 @@ public final class HistoryEntry {
     return entry;
   }
 
-  @Nonnull
-  public static HistoryEntry createLight(@Nonnull Project project, @Nonnull Element e) throws InvalidDataException {
+  
+  public static HistoryEntry createLight(Project project, Element e) throws InvalidDataException {
     EntryData entryData = parseEntry(project, e);
 
     VirtualFilePointer pointer = new LightFilePointer(entryData.url);
@@ -95,12 +94,12 @@ public final class HistoryEntry {
     return entry;
   }
 
-  @Nonnull
-  public static HistoryEntry createHeavy(@Nonnull Project project,
-                                         @Nonnull VirtualFile file,
-                                         @Nonnull FileEditorProvider[] providers,
-                                         @Nonnull FileEditorState[] states,
-                                         @Nonnull FileEditorProvider selectedProvider) {
+  
+  public static HistoryEntry createHeavy(Project project,
+                                         VirtualFile file,
+                                         FileEditorProvider[] providers,
+                                         FileEditorState[] states,
+                                         FileEditorProvider selectedProvider) {
     if (project.isDisposed()) return createLight(file, providers, states, selectedProvider);
 
     Disposable disposable = Disposable.newDisposable();
@@ -117,8 +116,8 @@ public final class HistoryEntry {
     return entry;
   }
 
-  @Nonnull
-  public static HistoryEntry createHeavy(@Nonnull Project project, @Nonnull Element e) throws InvalidDataException {
+  
+  public static HistoryEntry createHeavy(Project project, Element e) throws InvalidDataException {
     if (project.isDisposed()) return createLight(project, e);
 
     EntryData entryData = parseEntry(project, e);
@@ -134,7 +133,7 @@ public final class HistoryEntry {
   }
 
 
-  @Nonnull
+  
   public VirtualFilePointer getFilePointer() {
     return myFilePointer;
   }
@@ -144,11 +143,11 @@ public final class HistoryEntry {
     return myFilePointer.getFile();
   }
 
-  public FileEditorState getState(@Nonnull FileEditorProvider provider) {
+  public FileEditorState getState(FileEditorProvider provider) {
     return myProvider2State.get(provider);
   }
 
-  public void putState(@Nonnull FileEditorProvider provider, @Nonnull FileEditorState state) {
+  public void putState(FileEditorProvider provider, FileEditorState state) {
     myProvider2State.put(provider, state);
   }
 
@@ -192,8 +191,8 @@ public final class HistoryEntry {
     return e;
   }
 
-  @Nonnull
-  private static EntryData parseEntry(@Nonnull Project project, @Nonnull Element e) throws InvalidDataException {
+  
+  private static EntryData parseEntry(Project project, Element e) throws InvalidDataException {
     if (!e.getName().equals(TAG)) {
       throw new IllegalArgumentException("unexpected tag: " + e);
     }
@@ -229,15 +228,15 @@ public final class HistoryEntry {
   }
 
   private static class EntryData {
-    @Nonnull
+    
     public final String url;
-    @Nonnull
+    
     public final List<Pair<FileEditorProvider, FileEditorState>> providerStates;
     @Nullable
     public final FileEditorProvider selectedProvider;
 
-    public EntryData(@Nonnull String url,
-                     @Nonnull List<Pair<FileEditorProvider, FileEditorState>> providerStates,
+    public EntryData(String url,
+                     List<Pair<FileEditorProvider, FileEditorState>> providerStates,
                      @Nullable FileEditorProvider selectedProvider) {
       this.url = url;
       this.providerStates = providerStates;

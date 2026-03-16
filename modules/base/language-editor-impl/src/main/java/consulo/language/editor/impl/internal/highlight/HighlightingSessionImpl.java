@@ -34,31 +34,26 @@ import consulo.project.Project;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class HighlightingSessionImpl implements HighlightingSession {
-  @Nonnull
   private final PsiFile myPsiFile;
-  @Nonnull
   private final ProgressIndicator myProgressIndicator;
   private final EditorColorsScheme myEditorColorsScheme;
-  @Nonnull
   private final Project myProject;
   private final Document myDocument;
-  @Nonnull
   private final ProperTextRange myVisibleRange;
   private final Map<TextRange, RangeMarker> myRanges2markersCache = new HashMap<>();
 
   private HighlightingSessionImpl(
-      @Nonnull PsiFile psiFile,
-      @Nonnull DaemonProgressIndicator progressIndicator,
+      PsiFile psiFile,
+      DaemonProgressIndicator progressIndicator,
       EditorColorsScheme editorColorsScheme,
-      @Nonnull ProperTextRange visibleRange
+      ProperTextRange visibleRange
   ) {
     myPsiFile = psiFile;
     myProgressIndicator = progressIndicator;
@@ -70,17 +65,16 @@ public class HighlightingSessionImpl implements HighlightingSession {
 
   private static final Key<ConcurrentMap<PsiFile, HighlightingSession>> HIGHLIGHTING_SESSION = Key.create("HIGHLIGHTING_SESSION");
 
-  public static HighlightingSession getHighlightingSession(@Nonnull PsiFile psiFile, @Nonnull ProgressIndicator progressIndicator) {
+  public static HighlightingSession getHighlightingSession(PsiFile psiFile, ProgressIndicator progressIndicator) {
     Map<PsiFile, HighlightingSession> map = ((DaemonProgressIndicator)progressIndicator).getUserData(HIGHLIGHTING_SESSION);
     return map == null ? null : map.get(psiFile);
   }
 
-  @Nonnull
   public static HighlightingSession getOrCreateHighlightingSession(
-      @Nonnull PsiFile psiFile,
-      @Nonnull DaemonProgressIndicator progressIndicator,
+      PsiFile psiFile,
+      DaemonProgressIndicator progressIndicator,
       @Nullable EditorColorsScheme editorColorsScheme,
-      @Nonnull ProperTextRange visibleRange
+      ProperTextRange visibleRange
   ) {
     HighlightingSession session = getHighlightingSession(psiFile, progressIndicator);
     if (session == null) {
@@ -103,8 +97,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
    * is created on EDT and stored on the DaemonProgressIndicator, then factories
    * retrieve it on the background thread.</p>
    */
-  @Nonnull
-  public static HighlightingSession getFromCurrentIndicator(@Nonnull PsiFile psiFile) {
+  public static HighlightingSession getFromCurrentIndicator(PsiFile psiFile) {
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (!(indicator instanceof DaemonProgressIndicator dpi)) {
       throw new IllegalStateException("Must be run under DaemonProgressIndicator, but got: " + indicator);
@@ -116,7 +109,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
     return session;
   }
 
-  public static void waitForAllSessionsHighlightInfosApplied(@Nonnull DaemonProgressIndicator progressIndicator) {
+  public static void waitForAllSessionsHighlightInfosApplied(DaemonProgressIndicator progressIndicator) {
     ConcurrentMap<PsiFile, HighlightingSession> map = progressIndicator.getUserData(HIGHLIGHTING_SESSION);
     if (map != null) {
       for (HighlightingSession session : map.values()) {
@@ -126,25 +119,21 @@ public class HighlightingSessionImpl implements HighlightingSession {
   }
 
 
-  @Nonnull
   @Override
   public PsiFile getPsiFile() {
     return myPsiFile;
   }
 
-  @Nonnull
   @Override
   public Document getDocument() {
     return myDocument;
   }
 
-  @Nonnull
   @Override
   public ProgressIndicator getProgressIndicator() {
     return myProgressIndicator;
   }
 
-  @Nonnull
   @Override
   public Project getProject() {
     return myProject;
@@ -155,14 +144,13 @@ public class HighlightingSessionImpl implements HighlightingSession {
     return myEditorColorsScheme;
   }
 
-  @Nonnull
   @Override
   public ProperTextRange getVisibleRange() {
     return myVisibleRange;
   }
 
   @RequiredReadAction
-  public void applyHighlightInfo(@Nonnull HighlightInfo info, @Nonnull TextRange restrictedRange, int groupId) {
+  public void applyHighlightInfo(HighlightInfo info, TextRange restrictedRange, int groupId) {
     EditorColorsScheme colorsScheme = getColorsScheme();
     UpdateHighlightersUtilImpl.addHighlighterToEditorIncrementally(
         myProject, getDocument(), getPsiFile(),
@@ -171,7 +159,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
   }
 
   @RequiredReadAction
-  public void disposeHighlighterFor(@Nonnull HighlightInfo info) {
+  public void disposeHighlighterFor(HighlightInfo info) {
     RangeHighlighterEx highlighter = ((HighlightInfoImpl)info).getHighlighter();
     if (highlighter == null) return;
     // that highlighter may have been reused for another info
@@ -188,7 +176,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
   public void waitForHighlightInfosApplied() {
   }
 
-  public static void clearProgressIndicator(@Nonnull DaemonProgressIndicator indicator) {
+  public static void clearProgressIndicator(DaemonProgressIndicator indicator) {
     indicator.putUserData(HIGHLIGHTING_SESSION, null);
   }
 }

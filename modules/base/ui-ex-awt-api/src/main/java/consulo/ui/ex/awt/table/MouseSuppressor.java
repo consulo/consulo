@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.table;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -28,7 +27,7 @@ class MouseSuppressor implements MouseListener, MouseWheelListener, MouseMotionL
     e.consume();
   }
 
-  public static void install(@Nonnull JComponent component) {
+  public static void install(JComponent component) {
     component.addMouseListener(new MouseSuppressor());
   }
 

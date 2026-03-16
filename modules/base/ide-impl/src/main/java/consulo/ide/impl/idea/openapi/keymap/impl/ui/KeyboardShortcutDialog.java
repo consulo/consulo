@@ -28,7 +28,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -64,7 +63,7 @@ public class KeyboardShortcutDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }

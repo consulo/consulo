@@ -22,17 +22,16 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 
 public class EncodingPanel extends EditorBasedStatusBarPopup {
-    public EncodingPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public EncodingPanel(Project project, StatusBarWidgetFactory factory) {
         super(project, factory, true);
     }
 
-    @Nonnull
+    
     @Override
     protected WidgetState getWidgetState(@Nullable VirtualFile file) {
         if (file == null) {
@@ -75,7 +74,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
 
         connection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
             @Override
-            public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+            public void propertyChanged(VirtualFilePropertyEvent event) {
                 if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {
                     updateForFile(event.getFile());
                 }
@@ -83,9 +82,9 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
         }));
     }
 
-    @Nonnull
+    
     @Override
-    protected StatusBarWidget createInstance(@Nonnull Project project) {
+    protected StatusBarWidget createInstance(Project project) {
         return new EncodingPanel(project, myFactory);
     }
 }

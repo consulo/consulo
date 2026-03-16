@@ -27,8 +27,7 @@ import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.ManagingFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.io.DataInputStream;
@@ -215,7 +214,7 @@ public class ChangeListStorageImpl implements ChangeListStorage {
         }
     }
 
-    @Nonnull
+    
     private ChangeSetHolder doReadBlock(int id) throws IOException {
         try (DataInputStream in = myStorage.readStream(id)) {
             return new ChangeSetHolder(id, new ChangeSet(in));

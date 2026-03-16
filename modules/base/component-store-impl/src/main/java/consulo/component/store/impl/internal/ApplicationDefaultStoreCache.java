@@ -27,8 +27,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class ApplicationDefaultStoreCache implements Disposable {
   private final Map<Pair<ClassLoader, String>, Object> myUrlCache = new ConcurrentHashMap<>();
 
   @Nullable
-  public Element findDefaultStoreElement(@Nonnull Class<?> clazz, @Nonnull String path) {
+  public Element findDefaultStoreElement(Class<?> clazz, String path) {
     Object result = myUrlCache.computeIfAbsent(Pair.create(clazz.getClassLoader(), path), pair -> {
       URL resource = pair.getFirst().getResource(pair.getSecond());
 

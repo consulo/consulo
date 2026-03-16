@@ -17,8 +17,7 @@ package consulo.versionControlSystem.internal;
 
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nullable;
  */
 public interface VcsMapping {
     @Nullable
-    String getVcsFor(@Nonnull VirtualFile file);
+    String getVcsFor(VirtualFile file);
 
     @Nullable
     VcsDirectoryMapping getMappingFor(@Nullable VirtualFile file);

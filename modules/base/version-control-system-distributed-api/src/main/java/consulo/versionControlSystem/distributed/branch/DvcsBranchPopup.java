@@ -35,37 +35,36 @@ import consulo.versionControlSystem.distributed.localize.DistributedVcsLocalize;
 import consulo.versionControlSystem.distributed.repository.AbstractRepositoryManager;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class DvcsBranchPopup<Repo extends Repository> {
-    @Nonnull
+    
     protected final Project myProject;
-    @Nonnull
+    
     protected final AbstractRepositoryManager<Repo> myRepositoryManager;
-    @Nonnull
+    
     protected final DvcsSyncSettings myVcsSettings;
-    @Nonnull
+    
     protected final AbstractVcs myVcs;
-    @Nonnull
+    
     protected final DvcsMultiRootBranchConfig<Repo> myMultiRootBranchConfig;
 
-    @Nonnull
+    
     protected final Repo myCurrentRepository;
-    @Nonnull
+    
     protected final BranchListPopup myPopup;
     protected final boolean myIsInSpecificRepository;
 
     protected DvcsBranchPopup(
-        @Nonnull Repo currentRepository,
-        @Nonnull AbstractRepositoryManager<Repo> repositoryManager,
-        @Nonnull DvcsMultiRootBranchConfig<Repo> multiRootBranchConfig,
-        @Nonnull DvcsSyncSettings vcsSettings,
-        @Nonnull Predicate<AnAction> preselectActionCondition,
+        Repo currentRepository,
+        AbstractRepositoryManager<Repo> repositoryManager,
+        DvcsMultiRootBranchConfig<Repo> multiRootBranchConfig,
+        DvcsSyncSettings vcsSettings,
+        Predicate<AnAction> preselectActionCondition,
         @Nullable String dimensionKey
     ) {
         myProject = currentRepository.getProject();
@@ -94,7 +93,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         warnThatBranchesDivergedIfNeeded();
     }
 
-    @Nonnull
+    
     public ListPopup asListPopup() {
         return myPopup;
     }
@@ -119,7 +118,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
             .hyperlinkListener(new NotificationListener() {
                 @Override
                 @RequiredUIAccess
-                public void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                public void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
                     if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                         Application.get().getInstance(ShowConfigurableService.class).showAndSelect(myProject, "vcs." + myVcs.getId());
 
@@ -132,7 +131,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
             .notify(myProject);
     }
 
-    @Nonnull
+    
     private ActionGroup createActions() {
         ActionGroup.Builder popupGroupBuilder = ActionGroup.newImmutableBuilder();
         AbstractRepositoryManager<Repo> repositoryManager = myRepositoryManager;
@@ -156,12 +155,12 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
 
     protected abstract void fillWithCommonRepositoryActions(
-        @Nonnull ActionGroup.Builder popupGroup,
-        @Nonnull AbstractRepositoryManager<Repo> repositoryManager
+        ActionGroup.Builder popupGroup,
+        AbstractRepositoryManager<Repo> repositoryManager
     );
 
-    @Nonnull
-    protected List<Repo> filterRepositoriesNotOnThisBranch(@Nonnull String branch, @Nonnull List<Repo> allRepositories) {
+    
+    protected List<Repo> filterRepositoriesNotOnThisBranch(String branch, List<Repo> allRepositories) {
         return ContainerUtil.filter(allRepositories, repository -> !branch.equals(repository.getCurrentBranchName()));
     }
 
@@ -171,7 +170,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
         }
     }
 
-    @Nonnull
+    
     protected abstract ActionGroup createRepositoriesActions();
 
     protected boolean highlightCurrentRepo() {
@@ -179,7 +178,7 @@ public abstract class DvcsBranchPopup<Repo extends Repository> {
     }
 
     protected abstract void fillPopupWithCurrentRepositoryActions(
-        @Nonnull ActionGroup.Builder popupGroup,
+        ActionGroup.Builder popupGroup,
         @Nullable ActionGroup actions
     );
 

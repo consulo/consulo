@@ -22,7 +22,7 @@ import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.StreamUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.color.ColorSpace;

@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,14 +33,14 @@ import java.util.List;
 @TopicImpl(ComponentScope.APPLICATION)
 public class GlobalPsiVFSBulkFileListener implements BulkFileListener {
     @Override
-    public void before(@Nonnull List<? extends VFileEvent> events) {
+    public void before(List<? extends VFileEvent> events) {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
             project.getInstance(PsiVFSListener.class).before(events);
         }
     }
 
     @Override
-    public void after(@Nonnull List<? extends VFileEvent> events) {
+    public void after(List<? extends VFileEvent> events) {
         Project[] projects = ProjectManager.getInstance().getOpenProjects();
         // let PushedFilePropertiesUpdater process all pending vfs events and update file properties before we issue PSI events
         for (Project project : projects) {

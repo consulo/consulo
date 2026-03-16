@@ -23,7 +23,6 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 public abstract class LightElement extends PsiElementBase implements LightweightPsiElement {
     protected final PsiManager myManager;
@@ -35,14 +34,14 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
         myLanguage = language;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
         return myLanguage;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
@@ -56,7 +55,7 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public PsiElement[] getChildren() {
         return PsiElement.EMPTY_ARRAY;
     }
@@ -66,7 +65,7 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -88,20 +87,20 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public char[] textToCharArray() {
         return getText().toCharArray();
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull CharSequence text) {
+    public boolean textMatches(CharSequence text) {
         return getText().equals(text.toString());
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return getText().equals(element.getText());
     }
 
@@ -137,24 +136,24 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
     public abstract String toString();
 
     @Override
-    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void checkAdd(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException(getClass().getName());
     }
 
     @Override
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
-        throw new IncorrectOperationException(getClass().getName());
-    }
-
-    @Override
-    @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException(getClass().getName());
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        throw new IncorrectOperationException(getClass().getName());
+    }
+
+    @Override
+    @RequiredWriteAction
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException(getClass().getName());
     }
 
@@ -171,7 +170,7 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
 
     @Override
     @RequiredWriteAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         throw new IncorrectOperationException(getClass().getName());
     }
 
@@ -187,7 +186,7 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
     }
 
     @Override
@@ -195,13 +194,13 @@ public abstract class LightElement extends PsiElementBase implements Lightweight
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public PsiElement getNavigationElement() {
         return myNavigationElement;
     }
 
-    public void setNavigationElement(@Nonnull PsiElement navigationElement) {
+    public void setNavigationElement(PsiElement navigationElement) {
         PsiElement nnElement = navigationElement.getNavigationElement();
         if (nnElement != navigationElement && nnElement != null) {
             navigationElement = nnElement;

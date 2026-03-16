@@ -27,22 +27,21 @@ import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.CurrentRevisionProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 public class VcsCurrentRevisionProxy implements ContentRevision {
-  @Nonnull
+  
   private final DiffProvider myDiffProvider;
-  @Nonnull
+  
   private final VirtualFile myFile;
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final VcsKey myVcsKey;
 
   @Nullable
-  public static VcsCurrentRevisionProxy create(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public static VcsCurrentRevisionProxy create(VirtualFile file, Project project) {
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(project).getVcsFor(file);
     if (vcs != null) {
       DiffProvider diffProvider = vcs.getDiffProvider();
@@ -53,7 +52,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     return null;
   }
 
-  private VcsCurrentRevisionProxy(@Nonnull DiffProvider diffProvider, @Nonnull VirtualFile file, @Nonnull Project project, @Nonnull VcsKey vcsKey) {
+  private VcsCurrentRevisionProxy(DiffProvider diffProvider, VirtualFile file, Project project, VcsKey vcsKey) {
     myDiffProvider = diffProvider;
     myFile = file;
     myProject = project;
@@ -65,12 +64,12 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     return getVcsRevision().getContent();
   }
 
-  @Nonnull
+  
   public FilePath getFile() {
     return VcsUtil.getFilePath(myFile);
   }
 
-  @Nonnull
+  
   public VcsRevisionNumber getRevisionNumber() {
     try {
       return getVcsRevision().getRevisionNumber();
@@ -80,7 +79,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     }
   }
 
-  @Nonnull
+  
   private ContentRevision getVcsRevision() throws VcsException {
     final FilePath file = getFile();
     final Pair<VcsRevisionNumber, byte[]> pair;
@@ -113,13 +112,13 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
         return pair.getSecond();
       }
 
-      @Nonnull
+      
       @Override
       public FilePath getFile() {
         return file;
       }
 
-      @Nonnull
+      
       @Override
       public VcsRevisionNumber getRevisionNumber() {
         return pair.getFirst();
@@ -127,7 +126,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     };
   }
 
-  @Nonnull
+  
   private VcsRevisionNumber getCurrentRevisionNumber() throws VcsException {
     VcsRevisionNumber currentRevision = myDiffProvider.getCurrentRevision(myFile);
 
@@ -138,7 +137,7 @@ public class VcsCurrentRevisionProxy implements ContentRevision {
     return currentRevision;
   }
 
-  @Nonnull
+  
   private Pair<VcsRevisionNumber, byte[]> loadContent() throws VcsException {
     VcsRevisionNumber currentRevision = getCurrentRevisionNumber();
     ContentRevision contentRevision = myDiffProvider.createFileContent(currentRevision, myFile);

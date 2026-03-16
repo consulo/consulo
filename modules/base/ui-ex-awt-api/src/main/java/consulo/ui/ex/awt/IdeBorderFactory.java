@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.JBColor;
 import org.intellij.lang.annotations.MagicConstant;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -51,17 +50,17 @@ public class IdeBorderFactory {
     return new SideBorder(color, borders);
   }
 
-  @Nonnull
+  
   public static RoundedLineBorder createRoundedBorder() {
     return createRoundedBorder(BORDER_ROUNDNESS);
   }
 
-  @Nonnull
+  
   public static RoundedLineBorder createRoundedBorder(int arcSize) {
     return new RoundedLineBorder(getBorderColor(), arcSize);
   }
 
-  @Nonnull
+  
   public static RoundedLineBorder createRoundedBorder(int arcSize, int thickness) {
     return new RoundedLineBorder(getBorderColor(), arcSize, thickness);
   }

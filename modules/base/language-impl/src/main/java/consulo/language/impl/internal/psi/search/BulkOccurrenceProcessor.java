@@ -17,9 +17,8 @@ package consulo.language.impl.internal.psi.search;
 
 import consulo.language.psi.PsiElement;
 import consulo.application.util.StringSearcher;
-import jakarta.annotation.Nonnull;
 
 @FunctionalInterface
 interface BulkOccurrenceProcessor {
-  boolean execute(@Nonnull PsiElement scope, @Nonnull int[] offsetsInScope, @Nonnull StringSearcher searcher);
+  boolean execute(PsiElement scope, int[] offsetsInScope, StringSearcher searcher);
 }

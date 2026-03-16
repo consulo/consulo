@@ -17,15 +17,14 @@ package consulo.ide.setting.module.event;
 
 import consulo.content.library.Library;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @author nik
  */
 public interface LibraryEditorListener extends EventListener {
-  default void libraryCreated(@Nonnull Library library) {
+  default void libraryCreated(Library library) {
   }
 
-  void libraryRenamed(@Nonnull Library library, String oldName, String newName);
+  void libraryRenamed(Library library, String oldName, String newName);
 }

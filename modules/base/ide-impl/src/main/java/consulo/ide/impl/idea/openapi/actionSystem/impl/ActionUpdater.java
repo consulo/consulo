@@ -26,8 +26,7 @@ import consulo.util.concurrent.coroutine.CoroutineContextOwner;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.CoroutineException;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -51,7 +50,6 @@ public class ActionUpdater {
     private final Map<ActionGroup, Boolean> myCanBePerformedCache = new ConcurrentHashMap<>();
     private final UpdateStrategy myRealUpdateStrategy;
     private final ActionManager myActionManager;
-    @Nonnull
     private final UIAccess myUiAccess;
 
     public ActionUpdater(
@@ -61,7 +59,7 @@ public class ActionUpdater {
         String place,
         boolean isContextMenuAction,
         boolean isToolbarAction,
-        @Nonnull UIAccess uiAccess
+        UIAccess uiAccess
     ) {
         myUiAccess = uiAccess;
         myProject = dataContext.getData(Project.KEY);
@@ -102,7 +100,7 @@ public class ActionUpdater {
         }
     }
 
-    private DataContext getDataContext(@Nonnull AnAction action) {
+    private DataContext getDataContext(AnAction action) {
         return myDataContext;
     }
 
@@ -111,7 +109,6 @@ public class ActionUpdater {
         return removeUnnecessarySeparators(doExpandActionGroup(group, hideDisabled, strategy));
     }
 
-    @Nonnull
     public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
         ActionGroup group,
         boolean hideDisabled
@@ -119,11 +116,10 @@ public class ActionUpdater {
         return expandActionGroupAsync(group, hideDisabled, new EmptyProgressIndicator());
     }
 
-    @Nonnull
     public CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(
         ActionGroup group,
         boolean hideDisabled,
-        @Nonnull ProgressIndicator indicator
+        ProgressIndicator indicator
     ) {
         CompletableFuture<List<? extends AnAction>> future = new CompletableFuture<>();
 
@@ -259,8 +255,7 @@ public class ActionUpdater {
     }
 
 
-    @Nonnull
-    private JBIterable<AnAction> iterateGroupChildren(@Nonnull ActionGroup group, @Nonnull UpdateStrategy strategy) {
+    private JBIterable<AnAction> iterateGroupChildren(ActionGroup group, UpdateStrategy strategy) {
         return JBTreeTraverser.<AnAction>from(o -> {
                 if (o == group) {
                     return null;
@@ -411,7 +406,7 @@ public class ActionUpdater {
      *
      * @return true if update succeeded, false if exception was thrown and handled
      */
-    private boolean updateAction(@Nonnull AnAction action, @Nonnull AnActionEvent e) {
+    private boolean updateAction(AnAction action, AnActionEvent e) {
         if (Application.get().isDisposed()) {
             return false;
         }
@@ -440,7 +435,7 @@ public class ActionUpdater {
      *
      * @return true if IndexNotReadyException was thrown and handled (dumb mode), false otherwise
      */
-    private boolean performDumbAwareUpdateViaCoroutine(@Nonnull AnAction action, @Nonnull AnActionEvent e) {
+    private boolean performDumbAwareUpdateViaCoroutine(AnAction action, AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Boolean wasEnabledBefore = (Boolean) presentation.getClientProperty(ActionImplUtil.WAS_ENABLED_BEFORE_DUMB);
         if (wasEnabledBefore != null && !myDumbMode) {
@@ -482,7 +477,7 @@ public class ActionUpdater {
      * which blocks until completion. A {@link ProgressIndicatorListener} is registered on the current
      * {@link ProgressIndicator} to cancel the coroutine scope when the indicator is cancelled.
      */
-    private void executeActionUpdate(@Nonnull AnAction action, @Nonnull AnActionEvent e) {
+    private void executeActionUpdate(AnAction action, AnActionEvent e) {
         LOG.assertTrue(!UIAccess.isUIThread(), "executeActionUpdate must not be called from EDT — CoroutineScope would deadlock");
 
         Coroutine<?, ?> coroutine = action.updateAsync(e);

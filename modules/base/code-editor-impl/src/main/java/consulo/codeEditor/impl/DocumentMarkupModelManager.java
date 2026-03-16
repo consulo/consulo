@@ -26,7 +26,6 @@ import consulo.util.collection.WeakList;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -47,7 +46,7 @@ public class DocumentMarkupModelManager implements Disposable {
   private Project myProject;
 
   @Inject
-  public DocumentMarkupModelManager(@Nonnull Project project) {
+  public DocumentMarkupModelManager(Project project) {
     myProject = project;
   }
 

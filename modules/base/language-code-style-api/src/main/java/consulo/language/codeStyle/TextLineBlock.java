@@ -17,8 +17,7 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,13 +48,13 @@ public class TextLineBlock implements Block {
     return myText;
   }
 
-  @Nonnull
+  
   @Override
   public TextRange getTextRange() {
     return myTextRange;
   }
 
-  @Nonnull
+  
   @Override
   public List<Block> getSubBlocks() {
     return Collections.emptyList();
@@ -81,11 +80,11 @@ public class TextLineBlock implements Block {
 
   @Nullable
   @Override
-  public Spacing getSpacing(@Nullable Block block, @Nonnull Block block1) {
+  public Spacing getSpacing(@Nullable Block block, Block block1) {
     return mySpacing;
   }
 
-  @Nonnull
+  
   @Override
   public ChildAttributes getChildAttributes(int i) {
     throw new UnsupportedOperationException("Should not be called");

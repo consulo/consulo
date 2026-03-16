@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 

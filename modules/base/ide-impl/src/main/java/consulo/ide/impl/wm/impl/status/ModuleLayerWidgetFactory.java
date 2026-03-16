@@ -20,9 +20,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,26 +28,26 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "moduleLayerWidget", order = "after encodingWidget")
 public class ModuleLayerWidgetFactory implements StatusBarWidgetFactory {
-  @Nls
-  @Nonnull
+  
+  
   @Override
   public String getDisplayName() {
     return "Module Layer";
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project) {
+  public boolean isAvailable(Project project) {
     return true;
   }
 
-  @Nonnull
+  
   @Override
-  public StatusBarWidget createWidget(@Nonnull Project project) {
+  public StatusBarWidget createWidget(Project project) {
     return new ModuleLayerWidget(project, this);
   }
 
   @Override
-  public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+  public boolean canBeEnabledOn(StatusBar statusBar) {
     return true;
   }
 }

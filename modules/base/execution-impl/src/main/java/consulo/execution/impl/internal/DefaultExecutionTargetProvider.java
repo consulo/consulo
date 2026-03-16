@@ -22,14 +22,13 @@ import consulo.execution.ExecutionTargetProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionImpl
 public class DefaultExecutionTargetProvider extends ExecutionTargetProvider {
-  @Nonnull
+  
   @Override
-  public List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunConfiguration configuration) {
+  public List<ExecutionTarget> getTargets(Project project, RunConfiguration configuration) {
     return List.of(DefaultExecutionTarget.INSTANCE);
   }
 }

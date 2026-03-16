@@ -38,8 +38,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,17 +84,17 @@ public class LightToolWindow extends JPanel {
         }
     };
 
-    public LightToolWindow(@Nonnull LightToolWindowContent content,
-                           @Nonnull String title,
-                           @Nonnull Icon icon,
-                           @Nonnull JComponent component,
-                           @Nonnull JComponent focusedComponent,
-                           @Nonnull ThreeComponentsSplitter contentSplitter,
+    public LightToolWindow(LightToolWindowContent content,
+                           String title,
+                           Icon icon,
+                           JComponent component,
+                           JComponent focusedComponent,
+                           ThreeComponentsSplitter contentSplitter,
                            @Nullable ToolWindowAnchor anchor,
-                           @Nonnull LightToolWindowManager manager,
-                           @Nonnull Project project,
-                           @Nonnull PropertiesComponent propertiesComponent,
-                           @Nonnull String key,
+                           LightToolWindowManager manager,
+                           Project project,
+                           PropertiesComponent propertiesComponent,
+                           String key,
                            int defaultWidth,
                            @Nullable AnAction[] actions) {
         super(new BorderLayout());

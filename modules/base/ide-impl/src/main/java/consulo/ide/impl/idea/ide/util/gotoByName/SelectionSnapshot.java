@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class SelectionSnapshot {
     this.chosenElements = chosenElements;
   }
 
-  @Nonnull
+  
   public Set<Object> getChosenElements() {
     return chosenElements;
   }

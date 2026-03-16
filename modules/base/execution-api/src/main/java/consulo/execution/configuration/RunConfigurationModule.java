@@ -17,10 +17,8 @@ import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.List;
 
@@ -28,9 +26,9 @@ import java.util.List;
 public class RunConfigurationModule implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance(RunConfigurationModule.class);
 
-  @NonNls
+  
   private static final String ELEMENT = "module";
-  @NonNls
+  
   private static final String ATTRIBUTE = "name";
 
   @Nullable
@@ -38,12 +36,12 @@ public class RunConfigurationModule implements JDOMExternalizable {
 
   private final Project myProject;
 
-  public RunConfigurationModule(@Nonnull Project project) {
+  public RunConfigurationModule(Project project) {
     myProject = project;
   }
 
   @Override
-  public void readExternal(@Nonnull Element element) {
+  public void readExternal(Element element) {
     List<Element> modules = element.getChildren(ELEMENT);
     if (!modules.isEmpty()) {
       if (modules.size() > 1) {
@@ -58,7 +56,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   @Override
-  public void writeExternal(@Nonnull Element parent) {
+  public void writeExternal(Element parent) {
     Element prev = parent.getChild(ELEMENT);
     if (prev == null) {
       prev = new Element(ELEMENT);
@@ -76,7 +74,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
     }
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
@@ -88,7 +86,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   @Nullable
-  public Module findModule(@Nonnull String moduleName) {
+  public Module findModule(String moduleName) {
     if (myProject.isDisposed()) {
       return null;
     }
@@ -106,7 +104,7 @@ public class RunConfigurationModule implements JDOMExternalizable {
   }
 
   @Attribute("name")
-  @Nonnull
+  
   public String getModuleName() {
     return myModulePointer != null ? myModulePointer.getName() : "";
   }

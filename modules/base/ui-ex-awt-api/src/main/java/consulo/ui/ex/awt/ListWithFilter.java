@@ -12,8 +12,7 @@ import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -33,21 +32,19 @@ public class ListWithFilter<T> extends JPanel implements UiDataProvider {
   private boolean myAutoPackHeight = true;
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(SpeedSearchSupply.SPEED_SEARCH_CURRENT_QUERY, mySearchField.getText());
   }
 
-  @Nonnull
-  public static <T> JComponent wrap(@Nonnull JList<? extends T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer) {
+  public static <T> JComponent wrap(JList<? extends T> list, JScrollPane scrollPane, @Nullable Function<? super T, String> namer) {
     return wrap(list, scrollPane, namer, false);
   }
 
-  @Nonnull
-  public static <T> JComponent wrap(@Nonnull JList<? extends T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
+  public static <T> JComponent wrap(JList<? extends T> list, JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
     return new ListWithFilter<>(list, scrollPane, namer, highlightAllOccurrences);
   }
 
-  private ListWithFilter(@Nonnull JList<T> list, @Nonnull JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
+  private ListWithFilter(JList<T> list, JScrollPane scrollPane, @Nullable Function<? super T, String> namer, boolean highlightAllOccurrences) {
     super(new BorderLayout());
 
     if (list instanceof ComponentWithEmptyText componentWithEmptyText) {
@@ -108,7 +105,7 @@ public class ListWithFilter<T> extends JPanel implements UiDataProvider {
       // native mac "clear button" is not captured by SearchTextField.onFieldCleared
       mySearchField.addDocumentListener(new DocumentAdapter() {
         @Override
-        protected void textChanged(@Nonnull DocumentEvent e) {
+        protected void textChanged(DocumentEvent e) {
           if (myInUpdate) return;
           if (mySearchField.getText().isEmpty()) {
             mySpeedSearch.reset();
@@ -170,12 +167,10 @@ public class ListWithFilter<T> extends JPanel implements UiDataProvider {
     }
   }
 
-  @Nonnull
   public JList<T> getList() {
     return myList;
   }
 
-  @Nonnull
   public JScrollPane getScrollPane() {
     return myScrollPane;
   }

@@ -16,8 +16,7 @@
  */
 package consulo.disposer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class marks classes, which require some work done for cleaning up.
@@ -28,12 +27,9 @@ import jakarta.annotation.Nullable;
  * there might be any object registered in chain.
  */
 public interface Disposable {
-    @Nonnull
     static Disposable newDisposable() {
         return newDisposable(null);
     }
-
-    @Nonnull
     static Disposable newDisposable(@Nullable String debugName) {
         return new Disposable() {
             @Override

@@ -19,7 +19,6 @@ package consulo.language.codeStyle;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Rustam Vishnyakov
@@ -30,7 +29,7 @@ public abstract class PredefinedCodeStyle {
     private final String myName;
     private final Language myLanguage;
 
-    public PredefinedCodeStyle(@Nonnull String name, @Nonnull Language language) {
+    public PredefinedCodeStyle(String name, Language language) {
         myName = name;
         myLanguage = language;
     }
@@ -68,7 +67,7 @@ public abstract class PredefinedCodeStyle {
         return myName;
     }
 
-    @Nonnull
+    
     public Language getLanguage() {
         return myLanguage;
     }

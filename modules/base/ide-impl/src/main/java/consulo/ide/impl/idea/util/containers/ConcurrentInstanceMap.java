@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.util.containers;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.ConcurrentFactoryMap;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -32,13 +31,13 @@ public class ConcurrentInstanceMap {
   private ConcurrentInstanceMap() {
   }
 
-  @Nonnull
+  
   public static <T> Map<Class<? extends T>, T> create() {
     return ConcurrentFactoryMap.createMap(ConcurrentInstanceMap::calculate);
   }
 
-  @Nonnull
-  public static <T> T calculate(@Nonnull Class<? extends T> key) {
+  
+  public static <T> T calculate(Class<? extends T> key) {
     try {
       return key.newInstance();
     }

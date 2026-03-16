@@ -15,7 +15,6 @@
  */
 package consulo.document.util;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Text range which asserts its non-negative startOffset and length
@@ -26,15 +25,15 @@ public class ProperTextRange extends TextRange {
     assertProperRange(this);
   }
 
-  public ProperTextRange(@Nonnull TextRange range) {
+  public ProperTextRange(TextRange range) {
     this(range.getStartOffset(), range.getEndOffset());
   }
 
-  public static void assertProperRange(@Nonnull Segment range) throws AssertionError {
+  public static void assertProperRange(Segment range) throws AssertionError {
     assertProperRange(range, "");
   }
 
-  public static void assertProperRange(@Nonnull Segment range, Object message) throws AssertionError {
+  public static void assertProperRange(Segment range, Object message) throws AssertionError {
     assertProperRange(range.getStartOffset(), range.getEndOffset(), message);
   }
 
@@ -43,22 +42,22 @@ public class ProperTextRange extends TextRange {
     assert startOffset >= 0 : "Negative start offset: (" + startOffset + "," + endOffset + "); " + message;
   }
 
-  @Nonnull
+  
   @Override
-  public ProperTextRange cutOut(@Nonnull TextRange subRange) {
+  public ProperTextRange cutOut(TextRange subRange) {
     assert subRange.getStartOffset() <= getLength() : subRange + "; this="+this;
     assert subRange.getEndOffset() <= getLength() : subRange + "; this="+this;
     return new ProperTextRange(getStartOffset() + subRange.getStartOffset(), Math.min(getEndOffset(), getStartOffset() + subRange.getEndOffset()));
   }
 
-  @Nonnull
+  
   @Override
   public ProperTextRange shiftRight(int delta) {
     if (delta == 0) return this;
     return new ProperTextRange(getStartOffset() + delta, getEndOffset() + delta);
   }
 
-  @Nonnull
+  
   @Override
   public ProperTextRange grown(int lengthDelta) {
     if (lengthDelta == 0) return this;
@@ -66,32 +65,32 @@ public class ProperTextRange extends TextRange {
   }
 
   @Override
-  public ProperTextRange intersection(@Nonnull TextRange textRange) {
+  public ProperTextRange intersection(TextRange textRange) {
     assertProperRange(textRange);
     TextRange range = super.intersection(textRange);
     if (range == null) return null;
     return new ProperTextRange(range);
   }
 
-  @Nonnull
+  
   @Override
-  public ProperTextRange union(@Nonnull TextRange textRange) {
+  public ProperTextRange union(TextRange textRange) {
     assertProperRange(textRange);
     TextRange range = super.union(textRange);
     return new ProperTextRange(range);
   }
 
-  @Nonnull
-  public static ProperTextRange create(@Nonnull Segment segment) {
+  
+  public static ProperTextRange create(Segment segment) {
     return new ProperTextRange(segment.getStartOffset(), segment.getEndOffset());
   }
 
-  @Nonnull
+  
   public static ProperTextRange create(int startOffset, int endOffset) {
     return new ProperTextRange(startOffset, endOffset);
   }
 
-  @Nonnull
+  
   public static ProperTextRange from(int offset, int length) {
     return new ProperTextRange(offset, offset + length);
   }

@@ -35,7 +35,6 @@ import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.language.editor.template.TemplateColors;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -321,13 +320,13 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return ConfigurableLocalize.optionsGeneralDisplayName();
     }
 
     @Override
-    @Nonnull
+    
     public AttributesDescriptor[] getAttributeDescriptors() {
         List<AttributesDescriptor> descriptors = new ArrayList<>(ATT_DESCRIPTORS);
 
@@ -375,25 +374,25 @@ public class GeneralColorsPage implements ColorSettingsPage, ConfigurableWeight 
         return descriptors.toArray(AttributesDescriptor[]::new);
     }
 
-    @Nonnull
-    private static String toDisplayName(@Nonnull TextAttributesKey attributesKey) {
+    
+    private static String toDisplayName(TextAttributesKey attributesKey) {
         return StringUtil.capitalize(attributesKey.getExternalName().toLowerCase().replaceAll("_", " "));
     }
 
     @Override
-    @Nonnull
+    
     public ColorDescriptor[] getColorDescriptors() {
         return COLOR_DESCRIPTORS;
     }
 
     @Override
-    @Nonnull
+    
     public SyntaxHighlighter getHighlighter() {
         return new DefaultSyntaxHighlighter();
     }
 
     @Override
-    @Nonnull
+    
     public String getDemoText() {
         return IdeLocalize.colorGeneral().get() + getCustomSeveritiesDemoText();
     }

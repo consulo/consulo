@@ -17,12 +17,11 @@ package consulo.execution.debug.frame.presentation;
 
 import consulo.execution.debug.frame.XValueNode;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface XValueCompactPresentation {
-  void renderValue(@Nonnull XValuePresentation.XValueTextRenderer renderer, @Nullable XValueNode node);
+  void renderValue(XValuePresentation.XValueTextRenderer renderer, @Nullable XValueNode node);
 }

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.fileEditor.FileEditor;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 @TopicAPI(ComponentScope.PROJECT)
@@ -29,7 +28,7 @@ public interface DaemonListener {
    *
    * @param fileEditors The list of files that will be analyzed during the current execution of the daemon.
    */
-  default void daemonStarting(@Nonnull Collection<FileEditor> fileEditors) {
+  default void daemonStarting(Collection<FileEditor> fileEditors) {
   }
 
   /**
@@ -43,10 +42,10 @@ public interface DaemonListener {
    *
    * @param fileEditors The list of files analyzed during the current execution of the daemon.
    */
-  default void daemonFinished(@Nonnull Collection<FileEditor> fileEditors) {
+  default void daemonFinished(Collection<FileEditor> fileEditors) {
     daemonFinished();
   }
 
-  default void daemonCancelEventOccurred(@Nonnull String reason) {
+  default void daemonCancelEventOccurred(String reason) {
   }
 }

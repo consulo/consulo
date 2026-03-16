@@ -25,7 +25,6 @@ import consulo.versionControlSystem.log.VcsRef;
 import consulo.versionControlSystem.log.impl.internal.util.TroveUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntObjectHashMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -33,17 +32,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CompressedRefs {
-  @Nonnull
+  
   private final VcsLogStorage myHashMap;
 
   // maps each commit id to the list of tag ids on this commit
-  @Nonnull
+  
   private final TIntObjectHashMap<IntList> myTags = new TIntObjectHashMap<>();
   // maps each commit id to the list of branches on this commit
-  @Nonnull
+  
   private final TIntObjectHashMap<List<VcsRef>> myBranches = new TIntObjectHashMap<>();
 
-  public CompressedRefs(@Nonnull Set<VcsRef> refs, @Nonnull VcsLogStorage hashMap) {
+  public CompressedRefs(Set<VcsRef> refs, VcsLogStorage hashMap) {
     myHashMap = hashMap;
 
     Ref<VirtualFile> root = new Ref<>();
@@ -66,7 +65,7 @@ public class CompressedRefs {
     myHashMap.flush();
   }
 
-  @Nonnull
+  
   SmartList<VcsRef> refsToCommit(int index) {
     SmartList<VcsRef> result = new SmartList<>();
     if (myBranches.containsKey(index)) result.addAll(myBranches.get(index));
@@ -77,28 +76,28 @@ public class CompressedRefs {
     return result;
   }
 
-  @Nonnull
+  
   Stream<VcsRef> streamBranches() {
     return TroveUtil.streamValues(myBranches).flatMap(Collection::stream);
   }
 
-  @Nonnull
+  
   private Stream<VcsRef> streamTags() {
     return TroveUtil.streamValues(myTags).flatMapToInt(TroveUtil::stream).mapToObj(myHashMap::getVcsRef);
   }
 
-  @Nonnull
+  
   public Stream<VcsRef> stream() {
     return Stream.concat(streamBranches(), streamTags());
   }
 
-  @Nonnull
+  
   public Collection<VcsRef> getRefs() {
     return new AbstractCollection<>() {
       private final Supplier<Collection<VcsRef>> myLoadedRefs =
         LazyValue.notNull(() -> CompressedRefs.this.stream().collect(Collectors.toList()));
 
-      @Nonnull
+      
       @Override
       public Iterator<VcsRef> iterator() {
         return myLoadedRefs.get().iterator();
@@ -111,7 +110,7 @@ public class CompressedRefs {
     };
   }
 
-  @Nonnull
+  
   public Collection<Integer> getCommits() {
     Set<Integer> result = new HashSet<>();
     TroveUtil.streamKeys(myBranches).forEach(result::add);
@@ -119,14 +118,14 @@ public class CompressedRefs {
     return result;
   }
 
-  private static void putRef(@Nonnull TIntObjectHashMap<List<VcsRef>> map, @Nonnull VcsRef ref, @Nonnull VcsLogStorage hashMap) {
+  private static void putRef(TIntObjectHashMap<List<VcsRef>> map, VcsRef ref, VcsLogStorage hashMap) {
     int index = hashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());
     List<VcsRef> list = map.get(index);
     if (list == null) map.put(index, list = new SmartList<>());
     list.add(ref);
   }
 
-  private static void putRefIndex(@Nonnull TIntObjectHashMap<IntList> map, @Nonnull VcsRef ref, @Nonnull VcsLogStorage hashMap) {
+  private static void putRefIndex(TIntObjectHashMap<IntList> map, VcsRef ref, VcsLogStorage hashMap) {
     int index = hashMap.getCommitIndex(ref.getCommitHash(), ref.getRoot());
     IntList list = map.get(index);
     if (list == null) map.put(index, list = IntLists.newArrayList());

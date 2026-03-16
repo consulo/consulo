@@ -17,14 +17,13 @@ package consulo.web.internal.platform;
 
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15-Sep-17
  */
 public class WebPlatformInternalImpl extends PlatformInternal {
-  @Nonnull
+  
   @Override
   public Platform createCurrent() {
     return new WebPlatformImpl();

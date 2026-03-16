@@ -23,8 +23,7 @@ import consulo.index.io.InvertedIndex;
 import consulo.index.io.StorageException;
 import consulo.language.psi.stub.IdFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Collection;
@@ -38,36 +37,36 @@ import java.util.function.Predicate;
  */
 public interface UpdatableIndex<Key, Value, Input> extends InvertedIndex<Key, Value, Input> {
 
-  boolean processAllKeys(@Nonnull Predicate<? super Key> processor, @Nonnull SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
+  boolean processAllKeys(Predicate<? super Key> processor, SearchScope scope, @Nullable IdFilter idFilter) throws StorageException;
 
-  @Nonnull
+  
   Lock getReadLock();
 
-  @Nonnull
+  
   Lock getWriteLock();
 
-  @Nonnull
+  
   ReadWriteLock getLock();
 
-  @Nonnull
+  
   Map<Key, Value> getIndexedFileData(int fileId) throws StorageException;
 
-  void setIndexedStateForFile(int fileId, @Nonnull VirtualFile file);
+  void setIndexedStateForFile(int fileId, VirtualFile file);
 
   void resetIndexedStateForFile(int fileId);
 
-  boolean isIndexedStateForFile(int fileId, @Nonnull VirtualFile file);
+  boolean isIndexedStateForFile(int fileId, VirtualFile file);
 
   long getModificationStamp();
 
   void removeTransientDataForFile(int inputId);
 
-  void removeTransientDataForKeys(int inputId, @Nonnull Collection<? extends Key> keys);
+  void removeTransientDataForKeys(int inputId, Collection<? extends Key> keys);
 
-  @Nonnull
+  
   IndexExtension<Key, Value, Input> getExtension();
 
-  void updateWithMap(@Nonnull AbstractUpdateData<Key, Value> updateData) throws StorageException;
+  void updateWithMap(AbstractUpdateData<Key, Value> updateData) throws StorageException;
 
   void setBufferingEnabled(boolean enabled);
 

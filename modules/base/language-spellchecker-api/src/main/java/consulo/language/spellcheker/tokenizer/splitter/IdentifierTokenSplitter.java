@@ -18,8 +18,7 @@ package consulo.language.spellcheker.tokenizer.splitter;
 import consulo.document.util.TextRange;
 import consulo.language.spellcheker.internal.SpellcheckerStringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
     private static final Pattern WORD_IN_QUOTES = Pattern.compile("'([^']*)'");
 
     @Override
-    public void split(@Nonnull SplitContext context, @Nonnull TextRange range) {
+    public void split(SplitContext context, TextRange range) {
         if (context.isEmpty() || range.isEmpty() || range.getStartOffset() < 0) {
             return;
         }
@@ -99,8 +98,8 @@ public class IdentifierTokenSplitter extends BaseTokenSplitter {
         }
     }
 
-    @Nonnull
-    private static List<TextRange> splitByCase(@Nonnull String text, @Nonnull TextRange range) {
+    
+    private static List<TextRange> splitByCase(String text, TextRange range) {
         //System.out.println("text = " + text + " range = " + range);
         List<TextRange> result = new ArrayList<>();
         int i = range.getStartOffset();

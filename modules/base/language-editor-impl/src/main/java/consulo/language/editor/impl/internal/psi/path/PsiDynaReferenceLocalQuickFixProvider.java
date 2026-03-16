@@ -23,7 +23,6 @@ import consulo.language.psi.path.PsiDynaReference;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -40,7 +39,7 @@ public class PsiDynaReferenceLocalQuickFixProvider implements PsiReferenceLocalQ
   }
 
   @Override
-  public void addQuickFixes(@Nonnull PsiReference reference, @Nonnull Consumer<LocalQuickFix> consumer) {
+  public void addQuickFixes(PsiReference reference, Consumer<LocalQuickFix> consumer) {
     if (reference instanceof PsiDynaReference<?> dynaReference) {
       for (PsiReference ref : dynaReference.getReferences()) {
         PsiReferenceLocalQuickFixProvider.EP.forEachExtensionSafe(myProject, it -> it.addQuickFixes(ref, consumer));

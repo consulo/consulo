@@ -16,7 +16,6 @@
 package consulo.virtualFileSystem.impl.internal.local;
 
 import consulo.virtualFileSystem.ManagingFS;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -26,7 +25,7 @@ import java.util.List;
  * @author dslomov
  */
 public abstract class PluggableFileWatcher {
-  public abstract void initialize(@Nonnull ManagingFS managingFS, @Nonnull FileWatcherNotificationSink notificationSink);
+  public abstract void initialize(ManagingFS managingFS, FileWatcherNotificationSink notificationSink);
 
   public abstract void dispose();
 
@@ -37,7 +36,7 @@ public abstract class PluggableFileWatcher {
   /**
    * The inputs to this method must be absolute and free of symbolic links.
    */
-  public abstract void setWatchRoots(@Nonnull List<String> recursive, @Nonnull List<String> flat);
+  public abstract void setWatchRoots(List<String> recursive, List<String> flat);
 
   public void resetChangedPaths() {
   }

@@ -15,18 +15,17 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public interface LinearGraph {
   int nodesCount();
 
-  @Nonnull
-  List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter);
+  
+  List<GraphEdge> getAdjacentEdges(int nodeIndex, EdgeFilter filter);
 
-  @Nonnull
+  
   GraphNode getGraphNode(int nodeIndex);
 
   int getNodeId(int nodeIndex);

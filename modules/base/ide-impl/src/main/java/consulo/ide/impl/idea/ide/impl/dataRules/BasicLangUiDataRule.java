@@ -25,12 +25,11 @@ import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.usage.UsageView;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BasicLangUiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         sink.lazyValue(PsiElement.KEY, PsiElementFromSelectionRule::getData);
         sink.lazyValue(PsiElement.KEY_OF_ARRAY, PsiElementFromSelectionsRule::getData);
         sink.lazyValue(LangDataKeys.PASTE_TARGET_PSI_ELEMENT, PasteTargetRule::getData);

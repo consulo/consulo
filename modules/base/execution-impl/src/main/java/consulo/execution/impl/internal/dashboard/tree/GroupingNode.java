@@ -7,7 +7,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +27,7 @@ public final class GroupingNode extends AbstractTreeNode<Pair<Object, RunDashboa
     return getValue().getSecond();
   }
 
-  @Nonnull
+  
   @Override
   public Collection<? extends AbstractTreeNode<?>> getChildren() {
     return myChildren;
@@ -39,7 +38,7 @@ public final class GroupingNode extends AbstractTreeNode<Pair<Object, RunDashboa
   }
 
   @Override
-  protected void update(@Nonnull PresentationData presentation) {
+  protected void update(PresentationData presentation) {
     presentation.setPresentableText(getGroup().getName());
     presentation.setIcon(getGroup().getIcon());
   }

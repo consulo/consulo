@@ -47,8 +47,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.merge.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -84,9 +83,9 @@ public class MultipleFileMergeDialog extends DialogWrapper {
 
     public MultipleFileMergeDialog(
         @Nullable Project project,
-        @Nonnull List<VirtualFile> files,
-        @Nonnull MergeProvider provider,
-        @Nonnull MergeDialogCustomizer mergeDialogCustomizer
+        List<VirtualFile> files,
+        MergeProvider provider,
+        MergeDialogCustomizer mergeDialogCustomizer
     ) {
         super(project);
 
@@ -180,13 +179,13 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         return myRootPanel;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getCancelAction()};
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeAction getCancelAction() {
         LocalizeAction action = super.getCancelAction();
@@ -257,7 +256,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         updateModelFromFiles();
     }
 
-    private void markFileProcessed(@Nonnull VirtualFile file, @Nonnull MergeSession.Resolution resolution) {
+    private void markFileProcessed(VirtualFile file, MergeSession.Resolution resolution) {
         myFiles.remove(file);
         if (myProvider instanceof MergeProvider2) {
             myMergeSession.conflictResolvedForFile(file, resolution);
@@ -348,8 +347,8 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         updateModelFromFiles();
     }
 
-    @Nonnull
-    private static MergeSession.Resolution getSessionResolution(@Nonnull MergeResult result) {
+    
+    private static MergeSession.Resolution getSessionResolution(MergeResult result) {
         return switch (result) {
             case LEFT -> MergeSession.Resolution.AcceptedYours;
             case RIGHT -> MergeSession.Resolution.AcceptedTheirs;
@@ -358,14 +357,14 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         };
     }
 
-    private void checkMarkModifiedProject(@Nonnull VirtualFile file) {
+    private void checkMarkModifiedProject(VirtualFile file) {
     }
 
     private void createUIComponents() {
         Action mergeAction = new AbstractAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 showMergeDialog();
             }
         };
@@ -379,7 +378,7 @@ public class MultipleFileMergeDialog extends DialogWrapper {
         return myTable;
     }
 
-    @Nonnull
+    
     public List<VirtualFile> getProcessedFiles() {
         return myProcessedFiles;
     }

@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -33,7 +32,7 @@ public class HorizontalScrollBarEditorCustomization extends SimpleEditorCustomiz
   }
 
   @Override
-  public void customize(@Nonnull EditorEx editor) {
+  public void customize(EditorEx editor) {
     editor.setHorizontalScrollbarVisible(isEnabled());
   }
 }

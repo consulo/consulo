@@ -35,7 +35,6 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -59,13 +58,13 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         true
     );
 
-    @Nonnull
+    
     private final ApplicationConcurrency myApplicationConcurrency;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final PluginAdvertiserRequester myPluginAdvertiserRequester;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     private UUID myTaskUUID;
@@ -73,10 +72,10 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
 
     @Inject
     public PluginAdvertiserImpl(
-        @Nonnull ApplicationConcurrency applicationConcurrency,
-        @Nonnull Project project,
-        @Nonnull PluginAdvertiserRequester pluginAdvertiserRequester,
-        @Nonnull NotificationService notificationService
+        ApplicationConcurrency applicationConcurrency,
+        Project project,
+        PluginAdvertiserRequester pluginAdvertiserRequester,
+        NotificationService notificationService
     ) {
         myApplicationConcurrency = applicationConcurrency;
         myProject = project;
@@ -152,7 +151,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
     }
 
 
-    @Nonnull
+    
     public static Set<PluginDescriptor> findImpl(List<PluginDescriptor> descriptors, ExtensionPreview feature) {
         ExtensionPreviewAcceptor<?> acceptor = findAcceptor(feature);
 
@@ -181,7 +180,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
         return filter;
     }
 
-    @Nonnull
+    
     private static ExtensionPreviewAcceptor<?> findAcceptor(ExtensionPreview feature) {
         ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
 

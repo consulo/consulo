@@ -20,8 +20,7 @@ import consulo.index.io.data.IOUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +62,7 @@ class ContentHashesSupport {
         }
     }
 
-    static byte[] calcContentHash(@Nonnull byte[] bytes, @Nonnull FileType fileType) {
+    static byte[] calcContentHash(byte[] bytes, FileType fileType) {
         MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
         Charset defaultCharset = Charset.defaultCharset();
@@ -75,19 +74,19 @@ class ContentHashesSupport {
         return messageDigest.digest();
     }
 
-    static int calcContentHashIdWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) throws IOException {
+    static int calcContentHashIdWithFileType(byte[] bytes, @Nullable Charset charset, FileType fileType) throws IOException {
         return enumerateHash(calcContentHashWithFileType(bytes, charset, fileType));
     }
 
-    static int calcContentHashId(@Nonnull byte[] bytes, @Nonnull FileType fileType) throws IOException {
+    static int calcContentHashId(byte[] bytes, FileType fileType) throws IOException {
         return enumerateHash(calcContentHash(bytes, fileType));
     }
 
-    static int enumerateHash(@Nonnull byte[] digest) throws IOException {
+    static int enumerateHash(byte[] digest) throws IOException {
         return ourHashesWithFileType.enumerate(digest);
     }
 
-    static byte[] calcContentHashWithFileType(@Nonnull byte[] bytes, @Nullable Charset charset, @Nonnull FileType fileType) {
+    static byte[] calcContentHashWithFileType(byte[] bytes, @Nullable Charset charset, FileType fileType) {
         MessageDigest messageDigest = ContentHashesUtil.HASHER_CACHE.getValue();
 
         Charset defaultCharset = Charset.defaultCharset();

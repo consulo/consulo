@@ -24,7 +24,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +73,7 @@ public class BreakpointEditor {
 
         AnAction doneAction = new AnAction() {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 boolean lookup = LookupManager.getInstance(e.getRequiredData(Project.KEY)).getActiveLookup() != null;
                 Editor editor = e.getData(Editor.KEY);
@@ -84,7 +83,7 @@ public class BreakpointEditor {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 done();
             }
         };

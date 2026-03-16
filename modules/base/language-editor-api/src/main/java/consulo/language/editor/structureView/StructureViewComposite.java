@@ -27,8 +27,7 @@ import consulo.navigation.NavigateOptions;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -44,14 +43,14 @@ public class StructureViewComposite implements StructureView {
     public final StructureView structureView;
     public final Image icon;
 
-    public StructureViewDescriptor(String title, @Nonnull StructureView structureView, Image icon) {
+    public StructureViewDescriptor(String title, StructureView structureView, Image icon) {
       this.title = title;
       this.structureModel = structureView.getTreeModel();
       this.structureView = structureView;
       this.icon = icon;
     }
 
-    public StructureViewDescriptor(String title, @Nonnull StructureViewModel structureModel, Image icon) {
+    public StructureViewDescriptor(String title, StructureViewModel structureModel, Image icon) {
       this.title = title;
       this.structureModel = structureModel;
       this.structureView = null;
@@ -59,7 +58,7 @@ public class StructureViewComposite implements StructureView {
     }
   }
 
-  public StructureViewComposite(@Nonnull StructureViewDescriptor... views) {
+  public StructureViewComposite(StructureViewDescriptor... views) {
     myStructureViews = views;
     for (StructureViewDescriptor descriptor : views) {
       Disposer.register(this, descriptor.structureView);
@@ -118,13 +117,13 @@ public class StructureViewComposite implements StructureView {
     }
   }
 
-  @Nonnull
+  
   public StructureViewDescriptor[] getStructureViews() {
     return myStructureViews;
   }
 
   @Override
-  @Nonnull
+  
   public StructureViewModel getTreeModel() {
     StructureView view = getSelectedStructureView();
     if (view != null) return view.getTreeModel();
@@ -133,7 +132,7 @@ public class StructureViewComposite implements StructureView {
         super(null, null);
       }
 
-      @Nonnull
+      
       @Override
       public StructureViewTreeElement getRoot() {
         return this;
@@ -144,13 +143,13 @@ public class StructureViewComposite implements StructureView {
         return null;
       }
 
-      @Nonnull
+      
       @Override
       public ItemPresentation getPresentation() {
         return this;
       }
 
-      @Nonnull
+      
       @Override
       public TreeElement[] getChildren() {
         return EMPTY_ARRAY;

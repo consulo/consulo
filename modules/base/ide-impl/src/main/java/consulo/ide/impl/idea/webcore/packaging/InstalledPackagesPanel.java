@@ -29,8 +29,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -60,7 +59,7 @@ public class InstalledPackagesPanel extends JPanel {
     private final Set<String> myCurrentlyInstalling = new HashSet<>();
     private final Map<InstalledPackage, String> myWaitingToUpgrade = new HashMap<>();
 
-    public InstalledPackagesPanel(@Nonnull Project project, @Nonnull PackagesNotificationPanel area) {
+    public InstalledPackagesPanel(Project project, PackagesNotificationPanel area) {
         super(new BorderLayout());
         myProject = project;
         myNotificationArea = area;
@@ -94,7 +93,7 @@ public class InstalledPackagesPanel extends JPanel {
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 //PackageManagementUsageCollector.triggerUpgradePerformed(myProject, myPackageManagementService);
                 upgradeAction();
             }
@@ -106,7 +105,7 @@ public class InstalledPackagesPanel extends JPanel {
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 //PackageManagementUsageCollector.triggerBrowseAvailablePackagesPerformed(myProject, myPackageManagementService);
                 if (myPackageManagementService != null) {
                     ManagePackagesDialog dialog = createManagePackagesDialog();
@@ -122,7 +121,7 @@ public class InstalledPackagesPanel extends JPanel {
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 //PackageManagementUsageCollector.triggerUninstallPerformed(myProject, myPackageManagementService);
                 uninstallAction();
             }
@@ -147,7 +146,7 @@ public class InstalledPackagesPanel extends JPanel {
         new DoubleClickListener() {
             @Override
             @RequiredUIAccess
-            protected boolean onDoubleClick(@Nonnull MouseEvent e) {
+            protected boolean onDoubleClick(MouseEvent e) {
                 if (myPackageManagementService != null && myInstallButton.isEnabled()) {
                     ManagePackagesDialog dialog = createManagePackagesDialog();
                     Point p = e.getPoint();
@@ -168,7 +167,7 @@ public class InstalledPackagesPanel extends JPanel {
         return new AnAction[0];
     }
 
-    @Nonnull
+   
     protected ManagePackagesDialog createManagePackagesDialog() {
         return new ManagePackagesDialog(myProject, myPackageManagementService, new PackageManagementService.Listener() {
             @Override
@@ -178,7 +177,7 @@ public class InstalledPackagesPanel extends JPanel {
             }
 
             @Override
-            public void operationFinished(String packageName, @Nullable PackageManagementService.ErrorDescription errorDescription) {
+            public void operationFinished(String packageName, PackageManagementService.@Nullable ErrorDescription errorDescription) {
                 myNotificationArea.showResult(packageName, errorDescription);
                 myPackagesTable.clearSelection();
                 doUpdatePackages(myPackageManagementService);
@@ -226,7 +225,7 @@ public class InstalledPackagesPanel extends JPanel {
         return Collections.emptySet();
     }
 
-    private void upgradePackage(@Nonnull InstalledPackage pkg, @Nullable String toVersion) {
+    private void upgradePackage(InstalledPackage pkg, @Nullable String toVersion) {
         PackageManagementService selPackageManagementService = myPackageManagementService;
 
         AsyncResult<List<String>> result = myPackageManagementService.fetchPackageVersions(pkg.getName());
@@ -254,7 +253,7 @@ public class InstalledPackagesPanel extends JPanel {
                         @Override
                         public void operationFinished(
                             String packageName,
-                            @Nullable PackageManagementService.ErrorDescription errorDescription
+                            PackageManagementService.@Nullable ErrorDescription errorDescription
                         ) {
                             application.invokeLater(
                                 () -> {
@@ -356,7 +355,7 @@ public class InstalledPackagesPanel extends JPanel {
         return true;
     }
 
-    protected boolean canInstallPackage(@Nonnull InstalledPackage pyPackage) {
+    protected boolean canInstallPackage(InstalledPackage pyPackage) {
         return true;
     }
 
@@ -383,7 +382,7 @@ public class InstalledPackagesPanel extends JPanel {
                 @Override
                 public void operationFinished(
                     String packageName,
-                    @Nullable PackageManagementService.ErrorDescription errorDescription
+                    PackageManagementService.@Nullable ErrorDescription errorDescription
                 ) {
                     application.invokeLater(
                         () -> {
@@ -413,7 +412,7 @@ public class InstalledPackagesPanel extends JPanel {
         }
     }
 
-    @Nonnull
+   
     private List<InstalledPackage> getSelectedPackages() {
         List<InstalledPackage> results = new ArrayList<>();
         int[] rows = myPackagesTable.getSelectedRows();
@@ -450,7 +449,7 @@ public class InstalledPackagesPanel extends JPanel {
         ActivityTracker.getInstance().inc();
     }
 
-    public void doUpdatePackages(@Nonnull final PackageManagementService packageManagementService) {
+    public void doUpdatePackages(final PackageManagementService packageManagementService) {
         onUpdateStarted();
         ProgressManager.getInstance().run(new Task.Backgroundable(
             myProject,
@@ -459,7 +458,7 @@ public class InstalledPackagesPanel extends JPanel {
             PerformInBackgroundOption.ALWAYS_BACKGROUND
         ) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 List<? extends InstalledPackage> packages = List.of();
                 try {
                     packages = packageManagementService.getInstalledPackagesList();
@@ -568,7 +567,7 @@ public class InstalledPackagesPanel extends JPanel {
         return PackageVersionComparator.VERSION_COMPARATOR.compare(currentVersion, availableVersion) < 0;
     }
 
-    private void refreshLatestVersions(@Nonnull PackageManagementService packageManagementService) {
+    private void refreshLatestVersions(PackageManagementService packageManagementService) {
         Application application = Application.get();
         application.executeOnPooledThread(() -> {
             if (packageManagementService == myPackageManagementService) {
@@ -614,7 +613,7 @@ public class InstalledPackagesPanel extends JPanel {
         return packageMap;
     }
 
-    @Nonnull
+   
     private static String getVersionString(@Nullable RepoPackage repoPackage) {
         String version = repoPackage != null ? repoPackage.getLatestVersion() : null;
         return version != null ? version : "";

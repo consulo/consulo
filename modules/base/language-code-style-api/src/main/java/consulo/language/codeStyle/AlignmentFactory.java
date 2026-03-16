@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Internal interface for creating alignment object instances.
@@ -29,7 +28,7 @@ public interface AlignmentFactory {
      * @param anchor             alignment anchor
      * @return alignment object with the given settings
      */
-    Alignment createAlignment(boolean allowBackwardShift, @Nonnull Alignment.Anchor anchor);
+    Alignment createAlignment(boolean allowBackwardShift, Alignment.Anchor anchor);
 
     /**
      * Provides

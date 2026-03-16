@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -39,6 +38,6 @@ public interface UnknownFeaturesCollector {
 
     void ignoreFeature(ExtensionPreview feature);
 
-    @Nonnull
+    
     Set<ExtensionPreview> getUnknownExtensions();
 }

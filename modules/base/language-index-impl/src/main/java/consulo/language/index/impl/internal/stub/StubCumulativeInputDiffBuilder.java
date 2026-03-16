@@ -8,8 +8,7 @@ import consulo.index.io.forward.RemovedKeyProcessor;
 import consulo.index.io.forward.InputDataDiffBuilder;
 import consulo.language.psi.stub.StubIndex;
 import consulo.language.psi.stub.StubIndexKey;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -25,10 +24,10 @@ class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, Seria
   }
 
   @Override
-  public boolean differentiate(@Nonnull Map<Integer, SerializedStubTree> newData,
-                               @Nonnull KeyValueUpdateProcessor<? super Integer, ? super SerializedStubTree> addProcessor,
-                               @Nonnull KeyValueUpdateProcessor<? super Integer, ? super SerializedStubTree> updateProcessor,
-                               @Nonnull RemovedKeyProcessor<? super Integer> removeProcessor) throws StorageException {
+  public boolean differentiate(Map<Integer, SerializedStubTree> newData,
+                               KeyValueUpdateProcessor<? super Integer, ? super SerializedStubTree> addProcessor,
+                               KeyValueUpdateProcessor<? super Integer, ? super SerializedStubTree> updateProcessor,
+                               RemovedKeyProcessor<? super Integer> removeProcessor) throws StorageException {
     if (!newData.isEmpty()) {
       SerializedStubTree newSerializedStubTree = newData.values().iterator().next();
       if (myCurrentTree != null) {
@@ -45,11 +44,11 @@ class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, Seria
     return true;
   }
 
-  private static boolean treesAreEqual(@Nonnull SerializedStubTree newSerializedStubTree, @Nonnull SerializedStubTree currentTree) {
+  private static boolean treesAreEqual(SerializedStubTree newSerializedStubTree, SerializedStubTree currentTree) {
     return Arrays.equals(currentTree.getTreeHash(), newSerializedStubTree.getTreeHash()) && treesAreReallyEqual(newSerializedStubTree, currentTree);
   }
 
-  private static boolean treesAreReallyEqual(@Nonnull SerializedStubTree newSerializedStubTree, @Nonnull SerializedStubTree currentTree) {
+  private static boolean treesAreReallyEqual(SerializedStubTree newSerializedStubTree, SerializedStubTree currentTree) {
     if (newSerializedStubTree.equals(currentTree)) {
       return true;
     }
@@ -65,10 +64,10 @@ class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, Seria
     updateStubIndices(getAffectedIndices(previousStubIndicesValueMap, newStubIndicesValueMap), myInputId, previousStubIndicesValueMap, newStubIndicesValueMap);
   }
 
-  private static void updateStubIndices(@Nonnull Collection<StubIndexKey> indexKeys,
+  private static void updateStubIndices(Collection<StubIndexKey> indexKeys,
                                         int inputId,
-                                        @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
-                                        @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
+                                        Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
+                                        Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
     StubIndexImpl stubIndex = (StubIndexImpl)StubIndex.getInstance();
     for (StubIndexKey key : indexKeys) {
       Map<Object, StubIdList> oldMap = oldStubTree.get(key);
@@ -81,9 +80,9 @@ class StubCumulativeInputDiffBuilder extends InputDataDiffBuilder<Integer, Seria
     }
   }
 
-  @Nonnull
-  private static Collection<StubIndexKey> getAffectedIndices(@Nonnull Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
-                                                             @Nonnull Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
+  
+  private static Collection<StubIndexKey> getAffectedIndices(Map<StubIndexKey, Map<Object, StubIdList>> oldStubTree,
+                                                             Map<StubIndexKey, Map<Object, StubIdList>> newStubTree) {
     Set<StubIndexKey> allIndices = new HashSet<>();
     allIndices.addAll(oldStubTree.keySet());
     allIndices.addAll(newStubTree.keySet());

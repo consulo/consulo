@@ -28,8 +28,7 @@ import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.ModalityState;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ import jakarta.annotation.Nullable;
 public class DesktopSwtApplicationStarter extends ApplicationStarter {
   private static final Logger LOG = Logger.getInstance(DesktopSwtApplicationStarter.class);
 
-  public DesktopSwtApplicationStarter(CommandLineArgs commandLineArgs, @Nonnull StatCollector stat) {
+  public DesktopSwtApplicationStarter(CommandLineArgs commandLineArgs, StatCollector stat) {
     super(commandLineArgs, stat);
   }
 
@@ -48,7 +47,7 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   protected Application createApplication(ComponentBinding componentBinding, boolean isHeadlessMode, SimpleReference<StartupProgress> splashRef, CommandLineArgs args) {
     return new DesktopSwtApplicationImpl(componentBinding, splashRef);
@@ -66,7 +65,7 @@ public class DesktopSwtApplicationStarter extends ApplicationStarter {
                       Runnable appInitializeMark,
                       ApplicationEx app,
                       boolean newConfigFolder,
-                      @Nonnull CommandLineArgs args) {
+                      CommandLineArgs args) {
     appInitializeMark.run();
 
     stat.dump("Startup statistics", LOG::info);

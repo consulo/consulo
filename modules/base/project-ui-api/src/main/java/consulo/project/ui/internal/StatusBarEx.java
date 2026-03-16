@@ -22,7 +22,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -37,7 +36,7 @@ public interface StatusBarEx extends StatusBar, Disposable {
 
   void stopRefreshIndication();
 
-  void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info);
+  void addProgress(ProgressIndicator indicator, TaskInfo info);
 
   List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses();
 
@@ -51,7 +50,7 @@ public interface StatusBarEx extends StatusBar, Disposable {
 
   boolean isVisible();
 
-  void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order, @Nonnull Disposable parentDisposable);
+  void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable);
 
-  void removeWidget(@Nonnull String id);
+  void removeWidget(String id);
 }

@@ -29,8 +29,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,13 +38,13 @@ import java.util.List;
 public class EditorUtil {
     private static final Logger LOG = Logger.getInstance(EditorUtil.class);
 
-    public static int calcRelativeCaretPosition(@Nonnull Editor editor) {
+    public static int calcRelativeCaretPosition(Editor editor) {
         int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
         int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
         return caretY - viewAreaPosition;
     }
 
-    public static boolean isAtLineEnd(@Nonnull Editor editor, int offset) {
+    public static boolean isAtLineEnd(Editor editor, int offset) {
         Document document = editor.getDocument();
         if (offset < 0 || offset > document.getTextLength()) {
             return false;
@@ -60,7 +59,7 @@ public class EditorUtil {
      *
      * @see LogicalPosition#softWrapLinesOnCurrentLogicalLine
      */
-    public static int getSoftWrapCountAfterLineStart(@Nonnull Editor editor, @Nonnull LogicalPosition position) {
+    public static int getSoftWrapCountAfterLineStart(Editor editor, LogicalPosition position) {
         if (position.visualPositionAware) {
             return position.softWrapLinesOnCurrentLogicalLine;
         }
@@ -79,8 +78,7 @@ public class EditorUtil {
      *
      * @see Inlay#isRelatedToPrecedingText()
      */
-    @Nonnull
-    public static VisualPosition inlayAwareOffsetToVisualPosition(@Nonnull Editor editor, int offset) {
+    public static VisualPosition inlayAwareOffsetToVisualPosition(Editor editor, int offset) {
         Editor e = editor;
         LogicalPosition logicalPosition = e.offsetToLogicalPosition(offset);
         if (e instanceof InjectedEditor) {
@@ -111,19 +109,19 @@ public class EditorUtil {
         return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
     }
 
-    public static int getTabSize(@Nonnull Editor editor) {
+    public static int getTabSize(Editor editor) {
         return editor.getSettings().getTabSize(editor.getProject());
     }
 
-    public static int getInlaysHeight(@Nonnull Editor editor, int visualLine, boolean above) {
+    public static int getInlaysHeight(Editor editor, int visualLine, boolean above) {
         return getInlaysHeight(editor.getInlayModel(), visualLine, above);
     }
 
-    public static int getInlaysHeight(@Nonnull InlayModel inlayModel, int visualLine, boolean above) {
+    public static int getInlaysHeight(InlayModel inlayModel, int visualLine, boolean above) {
         return getTotalInlaysHeight(inlayModel.getBlockElementsForVisualLine(visualLine, above));
     }
 
-    public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
+    public static int getTotalInlaysHeight(List<? extends Inlay> inlays) {
         int sum = 0;
         for (Inlay inlay : inlays) {
             sum += inlay.getHeightInPixels();
@@ -131,7 +129,7 @@ public class EditorUtil {
         return sum;
     }
 
-    public static boolean inVirtualSpace(@Nonnull Editor editor, @Nonnull LogicalPosition logicalPosition) {
+    public static boolean inVirtualSpace(Editor editor, LogicalPosition logicalPosition) {
         return !editor.offsetToLogicalPosition(editor.logicalPositionToOffset(logicalPosition)).equals(logicalPosition);
     }
 
@@ -143,11 +141,11 @@ public class EditorUtil {
      * @return surrounding logical positions
      * @see #calcSurroundingRange(Editor, VisualPosition, VisualPosition)
      */
-    public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(@Nonnull Editor editor) {
+    public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(Editor editor) {
         return calcSurroundingRange(editor, editor.getCaretModel().getVisualPosition(), editor.getCaretModel().getVisualPosition());
     }
 
-    public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(@Nonnull Caret caret) {
+    public static Pair<LogicalPosition, LogicalPosition> calcCaretLineRange(Caret caret) {
         return calcSurroundingRange(caret.getEditor(), caret.getVisualPosition(), caret.getVisualPosition());
     }
 
@@ -175,9 +173,9 @@ public class EditorUtil {
      * @see #getNotFoldedLineEndOffset(Editor, int)
      */
     @SuppressWarnings("AssignmentToForLoopParameter")
-    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(@Nonnull Editor editor,
-                                                                              @Nonnull VisualPosition start,
-                                                                              @Nonnull VisualPosition end) {
+    public static Pair<LogicalPosition, LogicalPosition> calcSurroundingRange(Editor editor,
+                                                                              VisualPosition start,
+                                                                              VisualPosition end) {
         Document document = editor.getDocument();
         FoldingModel foldingModel = editor.getFoldingModel();
 
@@ -223,7 +221,7 @@ public class EditorUtil {
     /**
      * Finds the end offset of visual line at which given offset is located, not taking soft wraps into account.
      */
-    public static int getNotFoldedLineEndOffset(@Nonnull Editor editor, int offset) {
+    public static int getNotFoldedLineEndOffset(Editor editor, int offset) {
         while (true) {
             offset = getLineEndOffset(offset, editor.getDocument());
             FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(offset);
@@ -235,7 +233,7 @@ public class EditorUtil {
         return offset;
     }
 
-    public static int getNotFoldedLineEndOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+    public static int getNotFoldedLineEndOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
         while (true) {
             offset = getLineEndOffset(offset, document);
@@ -258,7 +256,7 @@ public class EditorUtil {
         return document.getLineEndOffset(lineNumber);
     }
 
-    public static int getNotFoldedLineStartOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+    public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
         while (true) {
             offset = DocumentUtil.getLineStartOffset(offset, document);
@@ -276,7 +274,7 @@ public class EditorUtil {
     /**
      * Finds the start offset of visual line at which given offset is located, not taking soft wraps into account.
      */
-    public static int getNotFoldedLineStartOffset(@Nonnull Editor editor, int offset) {
+    public static int getNotFoldedLineStartOffset(Editor editor, int offset) {
         while (true) {
             offset = DocumentUtil.getLineStartOffset(offset, editor.getDocument());
             FoldRegion foldRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1);
@@ -292,7 +290,7 @@ public class EditorUtil {
      * Maps {@code y} to a logical line in editor (in the same way as {@link #yPositionToLogicalLine(Editor, int)} does), except that for
      * coordinates, corresponding to block inlay or custom fold region locations, {@code -1} is returned.
      */
-    public static int yToLogicalLineNoCustomRenderers(@Nonnull Editor editor, int y) {
+    public static int yToLogicalLineNoCustomRenderers(Editor editor, int y) {
         int visualLine = editor.yToVisualLine(y);
         int visualLineStartY = editor.visualLineToY(visualLine);
         if (y < visualLineStartY || y >= visualLineStartY + editor.getLineHeight()) {
@@ -310,15 +308,15 @@ public class EditorUtil {
         return line;
     }
 
-    public static int calcColumnNumber(@Nonnull Editor editor,
-                                       @Nonnull CharSequence text,
+    public static int calcColumnNumber(Editor editor,
+                                       CharSequence text,
                                        int start,
                                        int offset) {
         return calcColumnNumber(editor, text, start, offset, getTabSize(editor));
     }
 
     public static int calcColumnNumber(@Nullable Editor editor,
-                                       @Nonnull CharSequence text,
+                                       CharSequence text,
                                        int start,
                                        int offset,
                                        int tabSize) {
@@ -379,12 +377,12 @@ public class EditorUtil {
         return tabSize - colNumber % tabSize;
     }
 
-    public static int yPositionToLogicalLine(@Nonnull Editor editor, int y) {
+    public static int yPositionToLogicalLine(Editor editor, int y) {
         int line = editor instanceof RealEditor ? editor.yToVisualLine(y) : y / editor.getLineHeight();
         return line > 0 ? editor.visualToLogicalPosition(new VisualPosition(line, 0)).line : 0;
     }
 
-    public static boolean isBlockLikeCaret(@Nonnull Caret caret) {
+    public static boolean isBlockLikeCaret(Caret caret) {
         return switch (caret.getVisualAttributes().getShape()) {
             case DEFAULT -> caret.getEditor().isInsertMode() == caret.getEditor().getSettings().isBlockCursor();
             case BLOCK, BOX, UNDERSCORE -> true;
@@ -396,7 +394,7 @@ public class EditorUtil {
      * Tells whether maximum allowed number of carets is reached in editor. If it's the case, notification is shown
      */
     @RequiredUIAccess
-    public static boolean checkMaxCarets(@Nonnull Editor editor) {
+    public static boolean checkMaxCarets(Editor editor) {
         UIAccess.assertIsUIThread();
         CaretModel caretModel = editor.getCaretModel();
         if (caretModel.getCaretCount() >= caretModel.getMaxCaretCount()) {
@@ -409,7 +407,7 @@ public class EditorUtil {
     /**
      * Shows notification about maximum number of carets reached in editor.
      */
-    public static void notifyMaxCarets(@Nonnull Editor editor) {
+    public static void notifyMaxCarets(Editor editor) {
 //        Long lastTimeStamp = editor.getUserData(EditorNotification.LAST_MAX_CARETS_NOTIFY_TIMESTAMP);
 //        long currentTimeStamp = System.currentTimeMillis();
 //        if (lastTimeStamp != null && (currentTimeStamp - lastTimeStamp) < EditorNotification.MAX_CARETS_NOTIFY_INTERVAL_MS) return;
@@ -422,8 +420,7 @@ public class EditorUtil {
     }
 
 
-    @Nonnull
-    public static DataContext getEditorDataContext(@Nonnull Editor editor) {
+    public static DataContext getEditorDataContext(Editor editor) {
         DataContext context = DataManager.getInstance().getDataContext(editor.getContentComponent());
         if (context.getData(Project.KEY) == editor.getProject()) {
             return context;
@@ -431,7 +428,7 @@ public class EditorUtil {
         return new DataContext() {
             @Nullable
             @Override
-            public <T> T getData(@Nonnull Key<T> dataId) {
+            public <T> T getData(Key<T> dataId) {
                 if (Project.KEY == dataId) {
                     return (T) editor.getProject();
                 }
@@ -440,11 +437,11 @@ public class EditorUtil {
         };
     }
 
-    public static void scrollToTheEnd(@Nonnull Editor editor) {
+    public static void scrollToTheEnd(Editor editor) {
         scrollToTheEnd(editor, false);
     }
 
-    public static void scrollToTheEnd(@Nonnull Editor editor, boolean preferVerticalScroll) {
+    public static void scrollToTheEnd(Editor editor, boolean preferVerticalScroll) {
         editor.getSelectionModel().removeSelection();
         Document document = editor.getDocument();
         int lastLine = Math.max(0, document.getLineCount() - 1);
@@ -473,7 +470,7 @@ public class EditorUtil {
         }
     }
 
-    public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {
+    public static boolean isCurrentCaretPrimary(Editor editor) {
         return editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret();
     }
 }

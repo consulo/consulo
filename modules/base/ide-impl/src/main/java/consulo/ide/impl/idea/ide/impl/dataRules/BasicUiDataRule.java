@@ -27,12 +27,11 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class BasicUiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         // FileEditor from Editor
         Editor editor = snapshot.get(Editor.KEY);
         if (editor != null) {

@@ -20,7 +20,6 @@ import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +39,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
       myComponent = component;
     }
 
-    @Nonnull
+    
     @Override
     public Component get() {
       return myComponent;
@@ -78,11 +77,11 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
   public static class PropertyBuilder {
     private List<Property<?>> myProperties = new ArrayList<>();
 
-    public <T> void add(@Nonnull ValueComponent<T> valueComponent, @Nonnull Supplier<T> getter, @Nonnull Consumer<T> setter) {
+    public <T> void add(ValueComponent<T> valueComponent, Supplier<T> getter, Consumer<T> setter) {
       add(valueComponent::getValue, valueComponent::setValue, getter, setter);
     }
 
-    public <T> void add(@Nonnull Supplier<T> uiGetter, @RequiredUIAccess @Nonnull Consumer<T> uiSetter, @Nonnull Supplier<T> getter, @Nonnull Consumer<T> setter) {
+    public <T> void add(Supplier<T> uiGetter, @RequiredUIAccess Consumer<T> uiSetter, Supplier<T> getter, Consumer<T> setter) {
       myProperties.add(new Property<>(uiGetter, uiSetter, getter, setter));
     }
   }
@@ -90,13 +89,13 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
   private List<Property<?>> myProperties = Collections.emptyList();
 
   @RequiredUIAccess
-  @Nonnull
-  protected abstract Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable);
+  
+  protected abstract Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable);
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected final SimpleConfigurableByProperties.LayoutWrapper createPanel(@Nonnull Disposable uiDisposable) {
+  protected final SimpleConfigurableByProperties.LayoutWrapper createPanel(Disposable uiDisposable) {
     PropertyBuilder builder;
     Component panel = createLayout(builder = new PropertyBuilder(), uiDisposable);
     myProperties = builder.myProperties;
@@ -105,7 +104,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected boolean isModified(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
+  protected boolean isModified(SimpleConfigurableByProperties.LayoutWrapper component) {
     for (Property<?> property : myProperties) {
       if (property.isModified()) {
         return true;
@@ -116,7 +115,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected void apply(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) throws ConfigurationException {
+  protected void apply(SimpleConfigurableByProperties.LayoutWrapper component) throws ConfigurationException {
     for (Property<?> property : myProperties) {
       property.apply();
     }
@@ -124,7 +123,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected void reset(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
+  protected void reset(SimpleConfigurableByProperties.LayoutWrapper component) {
     for (Property<?> property : myProperties) {
       property.reset();
     }
@@ -132,7 +131,7 @@ public abstract class SimpleConfigurableByProperties extends SimpleConfigurable<
 
   @RequiredUIAccess
   @Override
-  protected void disposeUIResources(@Nonnull SimpleConfigurableByProperties.LayoutWrapper component) {
+  protected void disposeUIResources(SimpleConfigurableByProperties.LayoutWrapper component) {
     super.disposeUIResources(component);
     myProperties = Collections.emptyList();
   }

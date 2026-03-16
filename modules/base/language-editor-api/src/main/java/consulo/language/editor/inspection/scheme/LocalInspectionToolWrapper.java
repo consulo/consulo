@@ -21,30 +21,29 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspectionTool> {
-  public LocalInspectionToolWrapper(@Nonnull LocalInspectionTool tool, HighlightDisplayKey key) {
+  public LocalInspectionToolWrapper(LocalInspectionTool tool, HighlightDisplayKey key) {
     super(tool, key);
   }
 
-  private LocalInspectionToolWrapper(@Nonnull LocalInspectionToolWrapper other) {
+  private LocalInspectionToolWrapper(LocalInspectionToolWrapper other) {
     super(other);
   }
 
-  @Nonnull
+  
   @Override
   public LocalInspectionToolWrapper createCopy() {
     return new LocalInspectionToolWrapper(this);
   }
 
   @Override
-  @Nonnull
-  public JobDescriptor[] getJobDescriptors(@Nonnull GlobalInspectionContext context) {
+  
+  public JobDescriptor[] getJobDescriptors(GlobalInspectionContext context) {
     return context.getStdJobDescriptors().LOCAL_ANALYSIS_ARRAY;
   }
 
@@ -65,7 +64,7 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
     return getTool().runForWholeFile();
   }
 
-  public static InspectionToolWrapper findTool2RunInBatch(@Nonnull Project project, @Nullable PsiElement element, @Nonnull String name) {
+  public static InspectionToolWrapper findTool2RunInBatch(Project project, @Nullable PsiElement element, String name) {
     InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
     InspectionToolWrapper toolWrapper = element == null ? inspectionProfile.getInspectionTool(name, project) : inspectionProfile.getInspectionTool(name, element);
     if (toolWrapper instanceof LocalInspectionToolWrapper && ((LocalInspectionToolWrapper)toolWrapper).isUnfair()) {

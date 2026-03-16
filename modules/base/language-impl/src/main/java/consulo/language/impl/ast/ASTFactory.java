@@ -23,7 +23,6 @@ import consulo.language.util.CharTable;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -32,27 +31,27 @@ public final class ASTFactory {
   private static final CharTable WHITESPACES = new CharTableImpl();
 
   // factory methods
-  @Nonnull
-  public static LazyParseableElement lazy(@Nonnull ILazyParseableElementType type, CharSequence text) {
+  
+  public static LazyParseableElement lazy(ILazyParseableElementType type, CharSequence text) {
     return ASTLazyFactory.EP.getValue(type).createLazy(type, text);
   }
 
-  @Nonnull
-  public static CompositeElement composite(@Nonnull IElementType type) {
+  
+  public static CompositeElement composite(IElementType type) {
     return ASTCompositeFactory.EP.getValue(type).createComposite(type);
   }
 
-  @Nonnull
-  public static LeafElement leaf(@Nonnull IElementType type, CharSequence text) {
+  
+  public static LeafElement leaf(IElementType type, CharSequence text) {
     return leaf(type, LanguageVersionUtil.findDefaultVersion(type.getLanguage()), text);
   }
 
-  @Nonnull
-  public static LeafElement leaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, CharSequence text) {
+  
+  public static LeafElement leaf(IElementType type, LanguageVersion languageVersion, CharSequence text) {
     return ASTLeafFactory.EP.getValue(type).createLeaf(type, languageVersion, text);
   }
 
-  @Nonnull
+  
   public static LeafElement whitespace(CharSequence text) {
     PsiWhiteSpaceImpl w = new PsiWhiteSpaceImpl(WHITESPACES.intern(text));
     CodeEditUtil.setNodeGenerated(w, true);

@@ -22,7 +22,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -34,13 +33,13 @@ public class ViewStatusBarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return UISettings.getInstance().SHOW_STATUS_BAR;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.SHOW_STATUS_BAR = state;
         uiSettings.fireUISettingsChanged();

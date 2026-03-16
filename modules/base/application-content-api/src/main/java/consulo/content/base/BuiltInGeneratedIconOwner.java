@@ -16,13 +16,12 @@
 package consulo.content.base;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-12-20
  */
 public interface BuiltInGeneratedIconOwner {
-    @Nonnull
+    
     Image getGeneratedIcon();
 }

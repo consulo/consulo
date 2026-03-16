@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionInstance;
 import consulo.content.OrderRootType;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -30,7 +29,7 @@ import java.util.function.Supplier;
 public class BinariesOrderRootType extends OrderRootType {
   private static final Supplier<BinariesOrderRootType> INSTANCE = ExtensionInstance.from(OrderRootType.class);
 
-  @Nonnull
+  
   public static BinariesOrderRootType getInstance() {
     return INSTANCE.get();
   }

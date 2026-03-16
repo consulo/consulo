@@ -10,8 +10,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -19,9 +18,9 @@ import java.util.Set;
 public class NavBarModelBuilderImpl extends NavBarModelBuilder {
     @Override
     public void traverseToRoot(
-        @Nonnull PsiElement psiElement,
-        @Nonnull Set<VirtualFile> roots,
-        @Nonnull List<Object> model,
+        PsiElement psiElement,
+        Set<VirtualFile> roots,
+        List<Object> model,
         @Nullable NavBarModelExtension ownerExtension
     ) {
         ExtensionPoint<NavBarModelExtension> extensionPoint = psiElement.getApplication().getExtensionPoint(NavBarModelExtension.class);

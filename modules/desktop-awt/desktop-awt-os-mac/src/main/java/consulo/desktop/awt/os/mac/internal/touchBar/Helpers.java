@@ -18,9 +18,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +29,7 @@ import java.util.concurrent.Future;
 public final class Helpers {
     private static final Logger LOG = Logger.getInstance(Helpers.class);
     private static final String MODEL_ID_PREFIX = "Model Identifier:";
-    private static final @NonNls String TB_SERVER_PROCESS = "TouchBarServer";
+    private static final String TB_SERVER_PROCESS = "TouchBarServer";
     private static final boolean FORCE_PHYSICAL_ESC = Boolean.getBoolean("touchbar.physical.esc");
     private static Boolean ourIsPhysicalEsc = null;
     private static Future<?> ourIsPhysicalEscFuture = null;
@@ -150,7 +148,7 @@ public final class Helpers {
 
         ourIsPhysicalEsc = false;
 
-        @Nonnull Application app = ApplicationManager.getApplication();
+        Application app = ApplicationManager.getApplication();
         ourIsPhysicalEscFuture = app.executeOnPooledThread(() -> {
             GeneralCommandLine cmdLine = new GeneralCommandLine("system_profiler", TB_SERVER_PROCESS);
             cmdLine.addParameter("SPHardwareDataType");
@@ -194,12 +192,12 @@ public final class Helpers {
         return focusOwner;
     }
 
-    static @Nonnull String getActionId(@Nonnull AnAction action) {
+    static String getActionId(AnAction action) {
         String actionId = ActionManager.getInstance().getId(action instanceof CustomisedActionGroup o ? o.getDelegate() : action);
         return actionId == null ? action.toString() : actionId;
     }
 
-    static void collectLeafActions(@Nonnull ActionGroup actionGroup, @Nonnull Collection<? super AnAction> out) {
+    static void collectLeafActions(ActionGroup actionGroup, Collection<? super AnAction> out) {
         AnAction[] actions = actionGroup.getChildren(null);
         for (AnAction childAction : actions) {
             if (childAction == null) {

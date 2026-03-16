@@ -22,7 +22,6 @@ import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -31,8 +30,8 @@ import java.util.Comparator;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ArtifactManager implements ArtifactModel {
-  @Nonnull
-  public static ArtifactManager getInstance(@Nonnull Project project) {
+  
+  public static ArtifactManager getInstance(Project project) {
     return project.getInstance(ArtifactManager.class);
   }
 
@@ -44,11 +43,11 @@ public abstract class ArtifactManager implements ArtifactModel {
 
   public abstract PackagingElementResolvingContext getResolvingContext();
 
-  public abstract void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath,
-                                              @Nonnull Collection<? extends PackagingElement<?>> elements);
+  public abstract void addElementsToDirectory(Artifact artifact, String relativePath,
+                                              Collection<? extends PackagingElement<?>> elements);
 
-  public abstract void addElementsToDirectory(@Nonnull Artifact artifact, @Nonnull String relativePath,
-                                              @Nonnull PackagingElement<?> element);
+  public abstract void addElementsToDirectory(Artifact artifact, String relativePath,
+                                              PackagingElement<?> element);
 
   public abstract ModificationTracker getModificationTracker();
 }

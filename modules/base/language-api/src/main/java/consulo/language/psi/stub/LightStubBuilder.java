@@ -27,7 +27,6 @@ import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class LightStubBuilder implements StubBuilder {
@@ -36,7 +35,7 @@ public class LightStubBuilder implements StubBuilder {
 
   @RequiredReadAction
   @Override
-  public StubElement buildStubTree(@Nonnull PsiFile file) {
+  public StubElement buildStubTree(PsiFile file) {
     LighterAST tree = FORCED_AST.get();
     if (tree == null) {
       FileType fileType = file.getFileType();
@@ -65,13 +64,13 @@ public class LightStubBuilder implements StubBuilder {
     return rootStub;
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  protected StubElement createStubForFile(@Nonnull PsiFile file, @Nonnull LighterAST tree) {
+  protected StubElement createStubForFile(PsiFile file, LighterAST tree) {
     return new PsiFileStubImpl(file);
   }
 
-  protected void buildStubTree(@Nonnull LighterAST tree, @Nonnull LighterASTNode root, @Nonnull StubElement rootStub) {
+  protected void buildStubTree(LighterAST tree, LighterASTNode root, StubElement rootStub) {
     Stack<LighterASTNode> parents = new Stack<>();
     IntStack childNumbers = new IntStack();
     BooleanStack parentsStubbed = new BooleanStack();
@@ -134,7 +133,7 @@ public class LightStubBuilder implements StubBuilder {
     }
   }
 
-  @Nonnull
+  
   private static StubElement createStub(LighterAST tree, LighterASTNode element, StubElement parentStub) {
     IElementType elementType = element.getTokenType();
     if (elementType instanceof IStubElementType) {
@@ -152,7 +151,7 @@ public class LightStubBuilder implements StubBuilder {
     return parentStub;
   }
 
-  private boolean skipNode(@Nonnull LighterAST tree, @Nonnull LighterASTNode parent, @Nonnull LighterASTNode node) {
+  private boolean skipNode(LighterAST tree, LighterASTNode parent, LighterASTNode node) {
     if (tree instanceof TreeBackedLighterAST) {
       return skipChildProcessingWhenBuildingStubs(((TreeBackedLighterAST)tree).unwrap(parent), ((TreeBackedLighterAST)tree).unwrap(node));
     }
@@ -165,14 +164,14 @@ public class LightStubBuilder implements StubBuilder {
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(LighterAST, LighterASTNode, LighterASTNode)}.
    */
   @Override
-  public boolean skipChildProcessingWhenBuildingStubs(@Nonnull ASTNode parent, @Nonnull ASTNode node) {
+  public boolean skipChildProcessingWhenBuildingStubs(ASTNode parent, ASTNode node) {
     return false;
   }
 
   /**
    * Note to implementers: always keep in sync with {@linkplain #skipChildProcessingWhenBuildingStubs(ASTNode, ASTNode)}.
    */
-  protected boolean skipChildProcessingWhenBuildingStubs(@Nonnull LighterAST tree, @Nonnull LighterASTNode parent, @Nonnull LighterASTNode node) {
+  protected boolean skipChildProcessingWhenBuildingStubs(LighterAST tree, LighterASTNode parent, LighterASTNode node) {
     return false;
   }
 }

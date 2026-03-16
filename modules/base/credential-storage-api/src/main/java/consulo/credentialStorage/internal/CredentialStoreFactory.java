@@ -6,13 +6,12 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.credentialStorage.CredentialStore;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CredentialStoreFactory {
     ExtensionPointName<CredentialStoreFactory> CREDENTIAL_STORE_FACTORY = ExtensionPointName.create(CredentialStoreFactory.class);
 
     @Nullable
-    CredentialStore create(@Nonnull Platform platform);
+    CredentialStore create(Platform platform);
 }

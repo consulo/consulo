@@ -22,7 +22,6 @@ import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "grouping", order = "last")
 public class GroupingWeigher extends CompletionWeigher {
   @Override
-  public Integer weigh(@Nonnull LookupElement element, @Nonnull CompletionLocation location) {
+  public Integer weigh(LookupElement element, CompletionLocation location) {
     PrioritizedLookupElement prioritized = element.as(PrioritizedLookupElement.CLASS_CONDITION_KEY);
     if (prioritized != null) {
       return prioritized.getGrouping();

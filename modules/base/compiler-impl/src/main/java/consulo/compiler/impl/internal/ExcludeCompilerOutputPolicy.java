@@ -28,7 +28,6 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getExcludeRootsForProject() {
         VirtualFile outputPath = CompilerConfiguration.getInstance(myProject).getCompilerOutput();
@@ -55,9 +54,9 @@ public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy 
         return VirtualFile.EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     @Override
-    public VirtualFilePointer[] getExcludeRootsForModule(@Nonnull ModuleRootLayer moduleRootLayer) {
+    public VirtualFilePointer[] getExcludeRootsForModule(ModuleRootLayer moduleRootLayer) {
         ModuleCompilerPathsManager manager = ModuleCompilerPathsManager.getInstance(moduleRootLayer.getModule());
         List<VirtualFilePointer> result = new ArrayList<>(3);
 

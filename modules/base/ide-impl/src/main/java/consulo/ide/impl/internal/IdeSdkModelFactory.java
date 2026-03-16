@@ -22,7 +22,6 @@ import consulo.ide.setting.ShowSettingsUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ public class IdeSdkModelFactory implements SdkModelFactory {
     myShowSettingsUtil = showSettingsUtil;
   }
 
-  @Nonnull
+  
   @Override
   public SdkModel getOrCreateModel() {
     return myShowSettingsUtil.getSdksModel();

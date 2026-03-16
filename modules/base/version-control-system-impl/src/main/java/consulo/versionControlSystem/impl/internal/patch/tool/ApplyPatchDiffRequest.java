@@ -18,35 +18,34 @@ package consulo.versionControlSystem.impl.internal.patch.tool;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.request.DiffRequest;
 import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequest {
-  @Nonnull
+  
   private final DocumentContent myResultContent;
-  @Nonnull
+  
   private final AppliedTextPatch myAppliedPatch;
 
-  @Nonnull
+  
   private final String myLocalContent;
 
   @Nullable
   private final String myWindowTitle;
-  @Nonnull
+  
   private final String myLocalTitle;
-  @Nonnull
+  
   private final String myResultTitle;
-  @Nonnull
+  
   private final String myPatchTitle;
 
   public ApplyPatchDiffRequest(
-    @Nonnull DocumentContent resultContent,
-    @Nonnull AppliedTextPatch appliedPatch,
-    @Nonnull String localContent,
+    DocumentContent resultContent,
+    AppliedTextPatch appliedPatch,
+    String localContent,
     @Nullable String windowTitle,
-    @Nonnull String localTitle,
-    @Nonnull String resultTitle,
-    @Nonnull String patchTitle
+    String localTitle,
+    String resultTitle,
+    String patchTitle
   ) {
     myResultContent = resultContent;
     myAppliedPatch = appliedPatch;
@@ -58,19 +57,19 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
   }
 
   @Override
-  @Nonnull
+  
   public DocumentContent getResultContent() {
     return myResultContent;
   }
 
   @Override
-  @Nonnull
+  
   public String getLocalContent() {
     return myLocalContent;
   }
 
   @Override
-  @Nonnull
+  
   public AppliedTextPatch getPatch() {
     return myAppliedPatch;
   }
@@ -82,19 +81,19 @@ public class ApplyPatchDiffRequest extends DiffRequest implements ApplyPatchRequ
   }
 
   @Override
-  @Nonnull
+  
   public String getLocalTitle() {
     return myLocalTitle;
   }
 
   @Override
-  @Nonnull
+  
   public String getResultTitle() {
     return myResultTitle;
   }
 
   @Override
-  @Nonnull
+  
   public String getPatchTitle() {
     return myPatchTitle;
   }

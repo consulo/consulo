@@ -20,7 +20,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,11 +37,11 @@ public class ActiveIcon implements Icon {
     this(icon, icon);
   }
 
-  public ActiveIcon(@Nullable consulo.ui.image.Image regular, @Nullable consulo.ui.image.Image inactive) {
+  public ActiveIcon(consulo.ui.image.@Nullable Image regular, consulo.ui.image.@Nullable Image inactive) {
     setIcons(regular, inactive);
   }
 
-  protected void setIcons(@Nullable consulo.ui.image.Image regular, @Nullable consulo.ui.image.Image inactive) {
+  protected void setIcons(consulo.ui.image.@Nullable Image regular, consulo.ui.image.@Nullable Image inactive) {
     myRegular = regular != null ? regular : Image.empty(0);
     myInactive = inactive != null ? inactive : myRegular;
   }

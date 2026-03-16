@@ -30,8 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.FormBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -49,9 +48,9 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     VerticalLayout rootLayout = VerticalLayout.create();
 
     ExternalDiffSettings externalDiffSettings = myExternalDiffSettings.get();
@@ -113,7 +112,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     return rootLayout;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "diff.external";
@@ -125,7 +124,7 @@ public class ExternalDiffSettingsConfigurable extends SimpleConfigurableByProper
     return "diff.base";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("External Diff Tools");

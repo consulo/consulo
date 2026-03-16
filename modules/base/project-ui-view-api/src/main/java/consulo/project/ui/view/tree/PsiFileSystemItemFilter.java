@@ -18,7 +18,6 @@ package consulo.project.ui.view.tree;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import jakarta.annotation.Nonnull;
 
 public interface PsiFileSystemItemFilter {
 
@@ -27,5 +26,5 @@ public interface PsiFileSystemItemFilter {
    * @return {@code true} if item should be showed in project view, otherwise {@code false}.
    * @see ProjectViewDirectoryHelper#getDirectoryChildren(PsiDirectory, ViewSettings, boolean, PsiFileSystemItemFilter)
    */
-  boolean shouldShow(@Nonnull PsiFileSystemItem item);
+  boolean shouldShow(PsiFileSystemItem item);
 }

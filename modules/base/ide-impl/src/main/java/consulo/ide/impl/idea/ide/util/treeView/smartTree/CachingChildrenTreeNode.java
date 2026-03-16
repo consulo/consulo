@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<Value> {
@@ -40,7 +39,7 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     ensureChildrenAreInitialized();
     return new ArrayList<AbstractTreeNode>(myChildren);

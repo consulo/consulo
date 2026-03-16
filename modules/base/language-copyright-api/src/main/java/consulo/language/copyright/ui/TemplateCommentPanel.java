@@ -45,8 +45,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -92,14 +91,14 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   private Editor myEditor;
   private Project myProject;
 
-  public TemplateCommentPanel(@Nonnull FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
+  public TemplateCommentPanel(FileType fileType, @Nullable TemplateCommentPanel parentPanel, Project project) {
     this(fileType.getId(), fileType, parentPanel, project);
     myAllowBlock = FileTypeUtil.hasBlockComment(fileType);
     myCommenter = FileTypeUtil.getCommenter(fileType);
     myAllowSeparator = UpdateCopyrightsProvider.forFileType(fileType).isAllowSeparator();
   }
 
-  public TemplateCommentPanel(@Nonnull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
+  public TemplateCommentPanel(String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, Project project) {
     this.parentPanel = parentPanel;
     myProject = project;
     myManager = CopyrightManager.getInstance(project);
@@ -201,11 +200,11 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     txtFiller.setEnabled(either);
   }
 
-  public void addAdditionalComponents(@Nonnull JPanel additionalPanel) {
+  public void addAdditionalComponents(JPanel additionalPanel) {
 
   }
 
-  public void addLocationInFile(@Nonnull String[] locations) {
+  public void addLocationInFile(String[] locations) {
     fileLocationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Location in File"));
     fileLocations = new JRadioButton[locations.length];
     ButtonGroup group = new ButtonGroup();
@@ -349,7 +348,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     WriteAction.run(() -> myDocument.setText(defaultCopyrightText));
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     if (myFileType instanceof LanguageFileType) {
@@ -470,7 +469,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return getHelpTopic() + "." + myFileType.getId();
   }

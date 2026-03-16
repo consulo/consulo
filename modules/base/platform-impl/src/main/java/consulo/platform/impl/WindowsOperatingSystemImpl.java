@@ -16,7 +16,6 @@
 package consulo.platform.impl;
 
 import consulo.platform.os.WindowsOperatingSystem;
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -66,9 +65,9 @@ public class WindowsOperatingSystemImpl extends PlatformOperatingSystemImpl impl
         return myWindows11OrLater;
     }
 
-    @Nonnull
+    
     @Override
-    public String getWindowsFileVersion(@Nonnull Path path, int parts) {
+    public String getWindowsFileVersion(Path path, int parts) {
         if (!isWindows()) {
             throw new IllegalArgumentException("Windows OS required");
         }

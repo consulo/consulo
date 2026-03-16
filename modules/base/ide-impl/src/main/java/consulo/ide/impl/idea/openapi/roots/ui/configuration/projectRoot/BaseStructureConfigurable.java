@@ -41,8 +41,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import javax.swing.*;
@@ -192,7 +191,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
         super.reset();
     }
 
-    @Nonnull
+    
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
         return Collections.emptyList();
     }
@@ -200,7 +199,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     protected abstract void loadTree();
 
     @Override
-    @Nonnull
+    
     protected List<AnAction> createActions(boolean fromPopup) {
         List<AnAction> result = new ArrayList<>();
         AbstractAddGroup addAction = createAddAction();
@@ -218,7 +217,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
         return result;
     }
 
-    @Nonnull
+    
     protected List<? extends AnAction> createCopyActions(boolean fromPopup) {
         return Collections.emptyList();
     }
@@ -254,7 +253,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreePath[] paths = myTree.getSelectionPaths();
             if (paths == null) {
                 return;
@@ -343,7 +342,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
     }
 
     protected abstract static class AbstractAddGroup extends ActionGroup implements ActionGroupWithPreselection {
-        protected AbstractAddGroup(@Nonnull LocalizeValue text, Image icon) {
+        protected AbstractAddGroup(LocalizeValue text, Image icon) {
             super(text, true);
 
             Presentation presentation = getTemplatePresentation();
@@ -356,7 +355,7 @@ public abstract class BaseStructureConfigurable extends MasterDetailsComponent i
             }
         }
 
-        public AbstractAddGroup(@Nonnull LocalizeValue text) {
+        public AbstractAddGroup(LocalizeValue text) {
             this(text, PlatformIconGroup.generalAdd());
         }
 

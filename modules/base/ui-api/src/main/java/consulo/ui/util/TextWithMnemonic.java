@@ -2,8 +2,7 @@
 package consulo.ui.util;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.function.IntPredicate;
@@ -15,12 +14,10 @@ public final class TextWithMnemonic {
     private static final char MNEMONIC = 0x1B;
 
     private static final TextWithMnemonic ourNull = new TextWithMnemonic("", -1);
-
-    @Nonnull
     private final String myText;
     private final int myMnemonicIndex;
 
-    private TextWithMnemonic(@Nonnull String text, int mnemonicIndex) {
+    private TextWithMnemonic(String text, int mnemonicIndex) {
         myText = StringUtil.internEmptyString(text);
         myMnemonicIndex = mnemonicIndex;
     }
@@ -28,7 +25,6 @@ public final class TextWithMnemonic {
     /**
      * @return plain text without mnemonic
      */
-    @Nonnull
     public String getText() {
         return myText;
     }
@@ -82,7 +78,7 @@ public final class TextWithMnemonic {
      * @param textToAppend text to append. Appended text is treated as a plain text, without mnemonic, so mnemonic position is unchanged.
      * @return TextWithMnemonic object which text is the concatenation of this object text and supplied text.
      */
-    public TextWithMnemonic append(@Nonnull String textToAppend) {
+    public TextWithMnemonic append(String textToAppend) {
         return new TextWithMnemonic(myText + textToAppend, myMnemonicIndex);
     }
 
@@ -94,7 +90,7 @@ public final class TextWithMnemonic {
      * @return TextWithMnemonic object. The resulting mnemonic position could be adjusted if the mnemonic was located after the replacement.
      * If the mnemonic was inside the target text then it's dropped. Returns this object if the target text was not found.
      */
-    public TextWithMnemonic replaceFirst(@Nonnull String target, @Nonnull String replacement) {
+    public TextWithMnemonic replaceFirst(String target, String replacement) {
         int index = myText.indexOf(target);
         if (index == -1) {
             return this;
@@ -104,7 +100,7 @@ public final class TextWithMnemonic {
         return new TextWithMnemonic(resultText, resultIndex);
     }
 
-    public TextWithMnemonic replaceText(@Nonnull String target) {
+    public TextWithMnemonic replaceText(String target) {
         if (!hasMnemonic()) {
             return fromPlainText(target);
         }
@@ -117,9 +113,8 @@ public final class TextWithMnemonic {
      * @param text a plain text to create a TextWithMnemonic object from
      * @return new TextWithMnemonic object which has no mnemonic
      */
-    @Nonnull
     @Contract(pure = true)
-    public static TextWithMnemonic fromPlainText(@Nonnull String text) {
+    public static TextWithMnemonic fromPlainText(String text) {
         return new TextWithMnemonic(text, -1);
     }
 
@@ -133,15 +128,12 @@ public final class TextWithMnemonic {
      * @param text text to parse
      * @return TextWithMnemonic object which corresponds to the parsed text.
      */
-    @Nonnull
     @Contract(pure = true)
     public static TextWithMnemonic parse(@Nullable String text) {
         return parse(text, value -> true);
     }
-
-    @Nonnull
     @Contract(pure = true)
-    public static TextWithMnemonic parse(@Nullable String text, @Nonnull IntPredicate indexAllower) {
+    public static TextWithMnemonic parse(@Nullable String text, IntPredicate indexAllower) {
         if (StringUtil.isEmpty(text)) {
             return ourNull;
         }

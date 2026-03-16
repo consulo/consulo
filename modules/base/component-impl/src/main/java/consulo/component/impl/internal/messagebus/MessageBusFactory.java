@@ -19,8 +19,7 @@ import consulo.component.internal.inject.TopicBindingLoader;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.internal.inject.InjectingContainerOwner;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -28,12 +27,12 @@ import jakarta.annotation.Nullable;
 public class MessageBusFactory {
   private MessageBusFactory() {}
 
-  public static MessageBusImpl newMessageBus(@Nonnull TopicBindingLoader topicBindingLoader, @Nonnull InjectingContainerOwner owner) {
+  public static MessageBusImpl newMessageBus(TopicBindingLoader topicBindingLoader, InjectingContainerOwner owner) {
     return new MessageBusImpl.RootBus(topicBindingLoader, owner);
   }
 
-  public static MessageBusImpl newMessageBus(@Nonnull TopicBindingLoader topicBindingLoader,
-                                             @Nonnull InjectingContainerOwner owner,
+  public static MessageBusImpl newMessageBus(TopicBindingLoader topicBindingLoader,
+                                             InjectingContainerOwner owner,
                                              @Nullable MessageBus parentBus) {
     return parentBus == null ? newMessageBus(topicBindingLoader, owner) : new MessageBusImpl(topicBindingLoader,
                                                                                              owner,

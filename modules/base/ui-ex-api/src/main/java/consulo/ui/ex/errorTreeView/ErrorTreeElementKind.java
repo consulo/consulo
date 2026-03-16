@@ -18,7 +18,6 @@ package consulo.ui.ex.errorTreeView;
 import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.UIBundle;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -47,7 +46,7 @@ public enum ErrorTreeElementKind {
     return myPresentableText;
   }
 
-  @Nonnull
+  
   public static ErrorTreeElementKind convertMessageFromCompilerErrorType(int type) {
     switch (type) {
       case MessageCategory.ERROR:

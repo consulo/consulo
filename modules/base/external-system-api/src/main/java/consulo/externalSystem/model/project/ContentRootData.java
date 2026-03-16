@@ -7,8 +7,7 @@ import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
@@ -21,10 +20,10 @@ public class ContentRootData extends AbstractExternalEntityData {
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final Map<ExternalSystemSourceType, Collection<SourceRoot>> myData = new HashMap<>();
 
-  @Nonnull
+  
   private final String myRootPath;
 
   /**
@@ -32,7 +31,7 @@ public class ContentRootData extends AbstractExternalEntityData {
    *
    * @param rootPath  path to the root directory
    */
-  public ContentRootData(@Nonnull ProjectSystemId owner, @Nonnull String rootPath) {
+  public ContentRootData(ProjectSystemId owner, String rootPath) {
     super(owner);
     myRootPath = ExternalSystemApiUtil.toCanonicalPath(rootPath);
   }
@@ -41,13 +40,13 @@ public class ContentRootData extends AbstractExternalEntityData {
    * @param type      target dir type
    * @return          directories of the target type configured for the current content root
    */
-  @Nonnull
-  public Collection<SourceRoot> getPaths(@Nonnull ExternalSystemSourceType type) {
+  
+  public Collection<SourceRoot> getPaths(ExternalSystemSourceType type) {
     Collection<SourceRoot> result = myData.get(type);
     return result == null ? Collections.<SourceRoot>emptyList() : result;
   }
 
-  public void storePath(@Nonnull ExternalSystemSourceType type, @Nonnull String path) throws IllegalArgumentException {
+  public void storePath(ExternalSystemSourceType type, String path) throws IllegalArgumentException {
     storePath(type, path, null);
   }
 
@@ -60,7 +59,7 @@ public class ContentRootData extends AbstractExternalEntityData {
    * @throws IllegalArgumentException   if given path points to the directory that is not located
    *                                    under the {@link #getRootPath() content root}
    */
-  public void storePath(@Nonnull ExternalSystemSourceType type, @Nonnull String path, @Nullable String packagePrefix) throws IllegalArgumentException {
+  public void storePath(ExternalSystemSourceType type, String path, @Nullable String packagePrefix) throws IllegalArgumentException {
     if (FileUtil.isAncestor(new File(getRootPath()), new File(path), false)) {
       Collection<SourceRoot> paths = myData.get(type);
       if (paths == null) {
@@ -81,7 +80,7 @@ public class ContentRootData extends AbstractExternalEntityData {
     }
   }
 
-  @Nonnull
+  
   public String getRootPath() {
     return myRootPath;
   }
@@ -99,18 +98,18 @@ public class ContentRootData extends AbstractExternalEntityData {
   }
 
   public static class SourceRoot implements Serializable {
-    @Nonnull
+    
     private final String myPath;
 
     @Nullable
     private final String myPackagePrefix;
 
-    public SourceRoot(@Nonnull String path, @Nullable String prefix) {
+    public SourceRoot(String path, @Nullable String prefix) {
       myPath = path;
       myPackagePrefix = prefix;
     }
 
-    @Nonnull
+    
     public String getPath() {
       return myPath;
     }
@@ -153,7 +152,7 @@ public class ContentRootData extends AbstractExternalEntityData {
     private static final SourceRootComparator INSTANCE = new SourceRootComparator();
 
     @Override
-    public int compare(@Nonnull SourceRoot o1, @Nonnull SourceRoot o2) {
+    public int compare(SourceRoot o1, SourceRoot o2) {
       return StringUtil.naturalCompare(o1.myPath, o2.myPath);
     }
   }

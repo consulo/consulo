@@ -19,7 +19,6 @@ package consulo.content;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 
-import jakarta.annotation.Nonnull;
 
 /**
  *  @author dsl
@@ -28,17 +27,17 @@ public abstract class RootProviderBase implements RootProvider {
   protected final EventDispatcher<RootSetChangedListener> myDispatcher = EventDispatcher.create(RootSetChangedListener.class);
 
   @Override
-  public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
+  public void addRootSetChangedListener(RootSetChangedListener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Override
-  public void removeRootSetChangedListener(@Nonnull RootSetChangedListener listener) {
+  public void removeRootSetChangedListener(RootSetChangedListener listener) {
     myDispatcher.removeListener(listener);
   }
 
   @Override
-  public void addRootSetChangedListener(@Nonnull RootSetChangedListener listener, @Nonnull Disposable parentDisposable) {
+  public void addRootSetChangedListener(RootSetChangedListener listener, Disposable parentDisposable) {
     myDispatcher.addListener(listener, parentDisposable);
   }
 

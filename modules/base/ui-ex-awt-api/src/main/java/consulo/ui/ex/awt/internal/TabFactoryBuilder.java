@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.TabbedPane;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -46,5 +45,5 @@ public interface TabFactoryBuilder {
 
   TabFactory createJTabbedPanel(TabbedPaneWrapper wrapper);
 
-  TabFactory createEditorTabPanel(TabbedPaneWrapper wrapper, Project project, @Nonnull Disposable parent);
+  TabFactory createEditorTabPanel(TabbedPaneWrapper wrapper, Project project, Disposable parent);
 }

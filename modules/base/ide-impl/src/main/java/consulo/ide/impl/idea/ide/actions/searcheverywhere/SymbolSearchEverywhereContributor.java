@@ -9,8 +9,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,13 +24,13 @@ public class SymbolSearchEverywhereContributor extends AbstractGotoSEContributor
         myFilter = project == null ? null : ClassSearchEverywhereContributor.createLanguageFilter(project);
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupName() {
         return "Symbols";
     }
 
-    @Nonnull
+    
     public LocalizeValue includeNonProjectItemsText() {
         return IdeLocalize.checkboxIncludeNonProjectSymbols();
     }
@@ -41,9 +40,9 @@ public class SymbolSearchEverywhereContributor extends AbstractGotoSEContributor
         return 300;
     }
 
-    @Nonnull
+    
     @Override
-    protected FilteringGotoByModel<Language> createModel(@Nonnull Project project) {
+    protected FilteringGotoByModel<Language> createModel(Project project) {
         GotoSymbolModel2 model = new GotoSymbolModel2(project);
         if (myFilter != null) {
             model.setFilterItems(myFilter.getSelectedElements());
@@ -51,9 +50,9 @@ public class SymbolSearchEverywhereContributor extends AbstractGotoSEContributor
         return model;
     }
 
-    @Nonnull
+    
     @Override
-    public List<AnAction> getActions(@Nonnull Runnable onChanged) {
+    public List<AnAction> getActions(Runnable onChanged) {
         return doGetActions(includeNonProjectItemsText(), myFilter, onChanged);
     }
 }

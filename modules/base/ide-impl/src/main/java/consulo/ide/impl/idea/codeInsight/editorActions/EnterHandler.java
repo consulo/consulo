@@ -53,8 +53,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -73,14 +72,14 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ENTER;
     }
 
     @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
         return myOriginalHandler.isEnabled(editor, caret, dataContext);
     }
 
@@ -199,8 +198,8 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
         }
     }
 
-    @Nonnull
-    private static DataContext getExtendedContext(@Nonnull DataContext originalContext, @Nonnull Project project, @Nonnull Caret caret) {
+    
+    private static DataContext getExtendedContext(DataContext originalContext, Project project, Caret caret) {
         DataContext context = originalContext instanceof UserDataHolder ? originalContext : new DataContextWrapper(originalContext);
         ((UserDataHolder)context).putUserData(EnterHandlerHelper.CONTEXT_LANGUAGE, PsiUtilBase.getLanguageInEditor(caret, project));
         return context;
@@ -306,7 +305,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
      * This method allows to perform such an examination.
      */
     @RequiredReadAction
-    private static boolean isInvalidPsi(@Nonnull PsiElement base) {
+    private static boolean isInvalidPsi(PsiElement base) {
         for (PsiElement current = base.getNextSibling(); current != null; current = current.getNextSibling()) {
             if (current instanceof PsiErrorElement) {
                 return true;
@@ -329,7 +328,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
      * @return new offset in the {@code document} after commit-free indent adjustment or
      * {@code -1} if commit-free indent adjustment is unavailable in position.
      */
-    public static int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
+    public static int adjustLineIndentNoCommit(Language language, Document document, Editor editor, int offset) {
         CharSequence docChars = document.getCharsSequence();
         int indentStart = CharArrayUtil.shiftBackwardUntil(docChars, offset - 1, "\n") + 1;
         int indentEnd = CharArrayUtil.shiftForward(docChars, indentStart, " \t");

@@ -5,8 +5,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 @DeprecationInfo("Use UIAccessScheduler")
@@ -15,23 +14,23 @@ public final class SingleAlarm extends Alarm {
   private final int delay;
   private final ModalityState myModalityState;
 
-  public SingleAlarm(@Nonnull Runnable task, int delay) {
+  public SingleAlarm(Runnable task, int delay) {
     this(task, delay, ThreadToUse.SWING_THREAD, Application.get().getNoneModalityState(), null);
   }
 
-  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull Disposable parentDisposable) {
+  public SingleAlarm(Runnable task, int delay, Disposable parentDisposable) {
     this(task, delay, Alarm.ThreadToUse.SWING_THREAD, parentDisposable);
   }
 
-  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ModalityState modalityState, @Nonnull Disposable parentDisposable) {
+  public SingleAlarm(Runnable task, int delay, ModalityState modalityState, Disposable parentDisposable) {
     this(task, delay, Alarm.ThreadToUse.SWING_THREAD, modalityState, parentDisposable);
   }
 
-  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, @Nonnull Disposable parentDisposable) {
+  public SingleAlarm(Runnable task, int delay, ThreadToUse threadToUse, Disposable parentDisposable) {
     this(task, delay, threadToUse, threadToUse == ThreadToUse.SWING_THREAD ? Application.get().getNoneModalityState() : null, parentDisposable);
   }
 
-  public SingleAlarm(@Nonnull Runnable task, int delay, @Nonnull ThreadToUse threadToUse, ModalityState modalityState, @Nullable Disposable parentDisposable) {
+  public SingleAlarm(Runnable task, int delay, ThreadToUse threadToUse, ModalityState modalityState, @Nullable Disposable parentDisposable) {
     super(threadToUse, parentDisposable);
 
     this.task = task;

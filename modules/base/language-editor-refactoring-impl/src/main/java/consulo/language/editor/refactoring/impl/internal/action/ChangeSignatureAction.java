@@ -34,8 +34,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "ChangeSignature")
 public class ChangeSignatureAction extends BasePlatformRefactoringAction {
@@ -51,17 +50,17 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
 
     @Override
     @RequiredReadAction
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         return elements.length == 1 && findTargetMember(elements[0]) != null;
     }
 
     @Override
     @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext context
+        PsiElement element,
+        Editor editor,
+        PsiFile file,
+        DataContext context
     ) {
         PsiElement targetMember = findTargetMember(element);
         if (targetMember == null) {
@@ -97,17 +96,17 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
 
     @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return provider.getChangeSignatureHandler();
     }
 
     @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider, final PsiElement element) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider, final PsiElement element) {
         return new RefactoringActionHandler() {
             @Override
             @RequiredUIAccess
-            public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+            public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
                 editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
                 PsiElement targetMember = findTargetMember(element);
                 if (targetMember == null) {
@@ -135,7 +134,7 @@ public class ChangeSignatureAction extends BasePlatformRefactoringAction {
 
             @Override
             @RequiredUIAccess
-            public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+            public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
                 if (elements.length != 1) {
                     return;
                 }

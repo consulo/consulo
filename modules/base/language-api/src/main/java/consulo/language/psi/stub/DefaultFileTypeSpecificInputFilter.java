@@ -19,23 +19,22 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class DefaultFileTypeSpecificInputFilter implements FileBasedIndex.FileTypeSpecificInputFilter {
   private FileType[] myFileTypes;
 
-  public DefaultFileTypeSpecificInputFilter(@Nonnull FileType... fileTypes) {
+  public DefaultFileTypeSpecificInputFilter(FileType... fileTypes) {
     myFileTypes = fileTypes;
   }
 
   @Override
-  public void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink) {
+  public void registerFileTypesUsedForIndexing(Consumer<FileType> fileTypeSink) {
     for (FileType ft : myFileTypes) fileTypeSink.accept(ft);
   }
 
   @Override
-  public boolean acceptInput(Project project, @Nonnull VirtualFile file) {
+  public boolean acceptInput(Project project, VirtualFile file) {
     return true;
   }
 }

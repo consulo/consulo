@@ -26,7 +26,6 @@ import consulo.ui.ex.IconDeferrer;
 import consulo.ui.ex.internal.AnyIconKey;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -38,8 +37,8 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class ModuleIconService {
-    @Nonnull
-    public static ModuleIconService getInstance(@Nonnull Project project) {
+    
+    public static ModuleIconService getInstance(Project project) {
         return project.getInstance(ModuleIconService.class);
     }
 
@@ -52,8 +51,8 @@ public class ModuleIconService {
         myProject = project;
     }
 
-    @Nonnull
-    public Image getIcon(@Nonnull Module module) {
+    
+    public Image getIcon(Module module) {
         ImageKey baseIcon = PlatformIconGroup.nodesModule();
         if (module.isDisposed()) {
             return baseIcon;
@@ -65,8 +64,8 @@ public class ModuleIconService {
         );
     }
 
-    @Nonnull
-    private Image requestIcon(@Nonnull Module module) {
+    
+    private Image requestIcon(Module module) {
         Image image = myProject.getExtensionPoint(ModuleIconProvider.class).computeSafeIfAny(it -> it.getIcon(module));
         if (image != null) {
             return image;

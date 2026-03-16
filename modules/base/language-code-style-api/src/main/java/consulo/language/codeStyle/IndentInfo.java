@@ -19,7 +19,6 @@ package consulo.language.codeStyle;
 import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 public final class IndentInfo {
     private final int mySpaces;
@@ -70,8 +69,8 @@ public final class IndentInfo {
     }
 
     private static void generateLineWhitespace(
-        @Nonnull StringBuffer buffer,
-        @Nonnull CommonCodeStyleSettings.IndentOptions options,
+        StringBuffer buffer,
+        CommonCodeStyleSettings.IndentOptions options,
         int indentSpaces,
         int alignmentSpaces,
         boolean tabsAllowed

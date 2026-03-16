@@ -16,8 +16,10 @@
 
 package consulo.localHistory.impl.internal.ui.model;
 
-import consulo.application.util.function.Computable;
-import consulo.localHistory.impl.internal.*;
+import consulo.localHistory.impl.internal.IdeaGateway;
+import consulo.localHistory.impl.internal.LocalHistoryFacade;
+import consulo.localHistory.impl.internal.Reverter;
+import consulo.localHistory.impl.internal.RevisionsCollector;
 import consulo.localHistory.impl.internal.revision.Difference;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.tree.Entry;
@@ -31,14 +33,14 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.patch.PatchCreator;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class HistoryDialogModel {
   protected final Project myProject;
@@ -80,7 +82,7 @@ public abstract class HistoryDialogModel {
   }
 
   protected Pair<Revision, List<RevisionItem>> calcRevisionsCache() {
-    return myProject.getApplication().runReadAction((Computable<Pair<Revision,List<RevisionItem>>>)()-> {
+    return myProject.getApplication().runReadAction((Supplier<Pair<Revision,List<RevisionItem>>>)()-> {
       myGateway.registerUnsavedDocuments(myVcs);
       String path = myFile.getPath();
       RootEntry root = myGateway.createTransientRootEntry();
@@ -187,7 +189,7 @@ public abstract class HistoryDialogModel {
     return new Change(d.getLeftContentRevision(myGateway), d.getRightContentRevision(myGateway));
   }
 
-  public void createPatch(String path, String basePath, boolean isReverse, @Nonnull Charset charset) throws VcsException, IOException {
+  public void createPatch(String path, String basePath, boolean isReverse, Charset charset) throws VcsException, IOException {
     PatchCreator.create(myProject, basePath, getChanges(), path, isReverse, null, charset);
   }
 

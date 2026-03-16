@@ -22,7 +22,6 @@ import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingLoader;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -68,14 +67,14 @@ public class NewExtensionAreaImpl {
         }
     }
 
-    @Nonnull
+    
     public Collection<? extends ExtensionPoint> getExtensionPoints() {
         return myExtensionPoints.values();
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+    public <T> ExtensionPoint<T> getExtensionPoint(Class<T> extensionClass) {
         NewExtensionPointImpl point = myExtensionPoints.computeIfAbsent(extensionClass.getName(), e -> {
             if (!extensionClass.isAnnotationPresent(ExtensionAPI.class)) {
                 throw new IllegalArgumentException(extensionClass.getName() + " is not annotated by @ExtensionAPI");

@@ -23,8 +23,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.ui.Refreshable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.PlaceProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -38,10 +37,10 @@ public interface VcsContext extends PlaceProvider<String> {
   @Nullable
   VirtualFile getSelectedFile();
 
-  @Nonnull
+  
   VirtualFile[] getSelectedFiles();
 
-  @Nonnull
+  
   default Stream<VirtualFile> getSelectedFilesStream() {
     return Arrays.stream(getSelectedFiles());
   }
@@ -58,10 +57,10 @@ public interface VcsContext extends PlaceProvider<String> {
 
   File getSelectedIOFile();
 
-  @Nonnull
+  
   FilePath[] getSelectedFilePaths();
 
-  @Nonnull
+  
   default Stream<FilePath> getSelectedFilePathsStream() {
     return Arrays.stream(getSelectedFilePaths());
   }

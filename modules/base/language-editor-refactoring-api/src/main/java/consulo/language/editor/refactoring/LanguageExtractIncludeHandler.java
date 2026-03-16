@@ -25,8 +25,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public interface LanguageExtractIncludeHandler extends RefactoringActionHandler,
   ExtensionPointCacheKey<LanguageExtractIncludeHandler, ByLanguageValue<LanguageExtractIncludeHandler>> KEY = ExtensionPointCacheKey.create("LanguageExtractIncludeHandler", LanguageOneToOne.build());
 
   @Nullable
-  static LanguageExtractIncludeHandler forLanguage(@Nonnull Language language) {
+  static LanguageExtractIncludeHandler forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageExtractIncludeHandler.class).getOrBuildCache(KEY).get(language);
   }
 }

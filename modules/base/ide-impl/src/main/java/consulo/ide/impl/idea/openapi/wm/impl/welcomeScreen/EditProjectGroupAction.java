@@ -26,8 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ScrollingUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -43,7 +42,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final ProjectGroup group = ((PopupProjectGroupActionGroup) getSelectedElements(e).get(0)).getGroup();
         JList list = getList(e);
         assert list != null;
@@ -104,7 +103,7 @@ public class EditProjectGroupAction extends RecentProjectsWelcomeScreenActionBas
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         List<AnAction> selected = getSelectedElements(e);
         boolean enabled = !selected.isEmpty()
             && selected.get(0) instanceof PopupProjectGroupActionGroup popupGroup

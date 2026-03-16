@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.psi;
 
 import consulo.execution.debug.stream.wrapper.StreamChain;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -11,8 +10,8 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface ChainTransformer<T extends PsiElement> {
-  @Nonnull
-  StreamChain transform(@Nonnull List<T> callChain, @Nonnull PsiElement context);
+  
+  StreamChain transform(List<T> callChain, PsiElement context);
 
 
 }

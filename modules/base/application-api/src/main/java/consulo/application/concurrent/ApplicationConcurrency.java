@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.util.concurrent.coroutine.CoroutineContext;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -32,15 +31,15 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationConcurrency {
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Prefer Application#coroutineContext()")
     CoroutineContext coroutineContext();
 
-    @Nonnull
+    
     Executor executor();
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #executor()")
     ExecutorService getExecutorService();
@@ -56,7 +55,7 @@ public interface ApplicationConcurrency {
      * </ul>
      * </ul>
      */
-    @Nonnull
+    
     ScheduledExecutorService getScheduledExecutorService();
 
     /**
@@ -64,16 +63,16 @@ public interface ApplicationConcurrency {
      * (i.e. all tasks are run in the {@link #getExecutorService()} global thread pool).
      * @see #getExecutorService()
      */
-    @Nonnull
-    ScheduledExecutorService createBoundedScheduledExecutorService(@Nonnull String name, int maxThreads);
+    
+    ScheduledExecutorService createBoundedScheduledExecutorService(String name, int maxThreads);
 
 
     /**
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      */
-    @Nonnull
-    ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
-                                                         @Nonnull Executor backendExecutor,
+    
+    ExecutorService createBoundedApplicationPoolExecutor(String name,
+                                                         Executor backendExecutor,
                                                          int maxThreads);
 
     /**
@@ -81,29 +80,29 @@ public interface ApplicationConcurrency {
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      * which will shutdown itself when {@code parentDisposable} gets disposed.
      */
-    @Nonnull
-    ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
-                                                         @Nonnull Executor backendExecutor,
+    
+    ExecutorService createBoundedApplicationPoolExecutor(String name,
+                                                         Executor backendExecutor,
                                                          int maxThreads,
-                                                         @Nonnull Disposable parentDisposable);
+                                                         Disposable parentDisposable);
 
     /**
      * @param name is used to generate thread name which will be shown in thread dumps, so it should be human readable and use title capitalization
      * @return the bounded executor (executor which runs no more than {@code maxThreads} tasks simultaneously) backed by the {@code backendExecutor}
      * which will shutdown itself when {@code parentDisposable} gets disposed.
      */
-    @Nonnull
-    ExecutorService createBoundedApplicationPoolExecutor(@Nonnull String name,
+    
+    ExecutorService createBoundedApplicationPoolExecutor(String name,
                                                          int maxThreads,
-                                                         @Nonnull Disposable parentDisposable);
+                                                         Disposable parentDisposable);
 
-    @Nonnull
-    default ExecutorService createSequentialApplicationPoolExecutor(@Nonnull String name) {
+    
+    default ExecutorService createSequentialApplicationPoolExecutor(String name) {
         return createBoundedApplicationPoolExecutor(name, executor(), 1);
     }
 
-    @Nonnull
-    default ExecutorService createSequentialApplicationPoolExecutor(@Nonnull String name, @Nonnull Executor executor) {
+    
+    default ExecutorService createSequentialApplicationPoolExecutor(String name, Executor executor) {
         return createBoundedApplicationPoolExecutor(name, executor, 1);
     }
 }

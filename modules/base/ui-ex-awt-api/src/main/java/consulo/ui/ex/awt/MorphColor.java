@@ -17,8 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.UIModificationTracker;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
@@ -33,27 +32,27 @@ import java.util.function.Supplier;
 public class MorphColor extends Color {
   private static final UIModificationTracker ourTracker = UIModificationTracker.getInstance();
 
-  @Nonnull
-  public static Color of(@Nonnull Supplier<Color> func) {
+  
+  public static Color of(Supplier<Color> func) {
     Color color = func.get();
     return new MorphColor(color, ourTracker, func);
   }
 
-  @Nonnull
-  public static Color ofWithoutCache(@Nonnull Supplier<Color> func) {
+  
+  public static Color ofWithoutCache(Supplier<Color> func) {
     Color color = func.get();
     return new MorphColor(color, null, func);
   }
 
   @Nullable
   private UIModificationTracker myModificationTracker;
-  @Nonnull
+  
   private final Supplier<Color> myColorProducer;
   private long myLastModificationCount;
 
   private Color myLastComputedColor;
 
-  private MorphColor(Color color, @Nullable UIModificationTracker modificationTracker, @Nonnull Supplier<Color> function) {
+  private MorphColor(Color color, @Nullable UIModificationTracker modificationTracker, Supplier<Color> function) {
     super(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     myLastComputedColor = color;
     myModificationTracker = modificationTracker;
@@ -61,7 +60,7 @@ public class MorphColor extends Color {
     myLastModificationCount = modificationTracker == null ? -1 : ourTracker.getModificationCount();
   }
 
-  @Nonnull
+  
   private Color getColor() {
     if (myModificationTracker == null) {
       return myColorProducer.get();
@@ -108,7 +107,7 @@ public class MorphColor extends Color {
   @Override
   public Color brighter() {
     return of(new Supplier<Color>() {
-      @Nonnull
+      
       @Override
       public Color get() {
         return myColorProducer.get().brighter();

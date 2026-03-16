@@ -34,8 +34,7 @@ import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -88,14 +87,14 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
     @RequiredUIAccess
     protected abstract void init(boolean canCloseContent, @Nullable Object component);
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
     @Override
-    public void setDisplayName(@Nonnull LocalizeValue displayName) {
+    public void setDisplayName(LocalizeValue displayName) {
         myDisplayName = displayName;
     }
 
@@ -181,7 +180,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
 
     @RequiredUIAccess
     @Override
-    public final void setAnchor(@Nonnull ToolWindowAnchor anchor, @Nullable Runnable runnable) {
+    public final void setAnchor(ToolWindowAnchor anchor, @Nullable Runnable runnable) {
         UIAccess.assertIsUIThread();
         myToolWindowManager.setToolWindowAnchor(myId, anchor);
         if (runnable != null) {
@@ -198,7 +197,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
 
     @RequiredUIAccess
     @Override
-    public void setContentUiType(@Nonnull ToolWindowContentUiType type, @Nullable Runnable runnable) {
+    public void setContentUiType(ToolWindowContentUiType type, @Nullable Runnable runnable) {
         UIAccess.assertIsUIThread();
         myToolWindowManager.setContentUiType(myId, type);
         if (runnable != null) {
@@ -208,11 +207,11 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
 
     @Override
     @RequiredUIAccess
-    public void setDefaultContentUiType(@Nonnull ToolWindowContentUiType type) {
+    public void setDefaultContentUiType(ToolWindowContentUiType type) {
         myToolWindowManager.setDefaultContentUiType(this, type);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public ToolWindowContentUiType getContentUiType() {
@@ -244,7 +243,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         return myToolWindowManager.isToolWindowAutoHide(myId);
     }
 
-    @Nonnull
+    
     @Override
     public final ToolWindowType getType() {
         return myToolWindowManager.getToolWindowType(myId);
@@ -252,7 +251,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
 
     @Override
     @RequiredUIAccess
-    public final void setType(@Nonnull ToolWindowType type, @Nullable Runnable runnable) {
+    public final void setType(ToolWindowType type, @Nullable Runnable runnable) {
         UIAccess.assertIsUIThread();
         myToolWindowManager.setToolWindowType(myId, type);
         if (runnable != null) {
@@ -278,12 +277,12 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
     }
 
     @Override
-    public void setTitleActions(@Nonnull AnAction... actions) {
+    public void setTitleActions(AnAction... actions) {
         getDecorator().setTitleActions(actions);
     }
 
     @Override
-    public void setTabActions(@Nonnull AnAction... actions) {
+    public void setTabActions(AnAction... actions) {
         getDecorator().setTabActions(actions);
     }
 
@@ -301,7 +300,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
 
     @Override
     @RequiredUIAccess
-    public void installWatcher(@Nonnull ContentManager contentManager) {
+    public void installWatcher(ContentManager contentManager) {
         ContentManagerWatcher.watchContentManager(this, contentManager);
     }
 
@@ -315,7 +314,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
         return myAvailable;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public ContentManager getContentManager() {
@@ -330,7 +329,7 @@ public abstract class ToolWindowBase extends UserDataHolderBase implements ToolW
     }
 
     @Override
-    @Nonnull
+    
     public final String getId() {
         return myId;
     }

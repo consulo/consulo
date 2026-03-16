@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.VcsKey;
 import consulo.versionControlSystem.change.CommitContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author irengrig
@@ -35,7 +34,7 @@ public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFact
 
     private VcsKey myKey;
 
-    protected VcsCheckinHandlerFactory(@Nonnull VcsKey key) {
+    protected VcsCheckinHandlerFactory(VcsKey key) {
         myKey = key;
     }
 
@@ -48,7 +47,7 @@ public abstract class VcsCheckinHandlerFactory implements BaseCheckinHandlerFact
         return createVcsHandler(panel);
     }
 
-    @Nonnull
+    
     protected abstract CheckinHandler createVcsHandler(CheckinProjectPanel panel);
 
     public VcsKey getKey() {

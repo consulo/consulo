@@ -17,7 +17,6 @@ package consulo.diff.internal;
 
 import consulo.diff.DiffFilePath;
 import consulo.diff.DiffRequestFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,9 +27,9 @@ public interface DiffRequestFactoryEx extends DiffRequestFactory {
     return (DiffRequestFactoryEx)DiffRequestFactory.getInstance();
   }
 
-  @Nonnull
-  String getContentTitle(@Nonnull DiffFilePath path);
+  
+  String getContentTitle(DiffFilePath path);
 
-  @Nonnull
-  String getTitle(@Nonnull DiffFilePath path1, @Nonnull DiffFilePath path2, @Nonnull String separator);
+  
+  String getTitle(DiffFilePath path1, DiffFilePath path2, String separator);
 }

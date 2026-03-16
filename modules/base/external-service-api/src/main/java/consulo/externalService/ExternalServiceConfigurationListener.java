@@ -18,7 +18,6 @@ package consulo.externalService;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,5 +25,5 @@ import jakarta.annotation.Nonnull;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface ExternalServiceConfigurationListener {
-  void configurationChanged(@Nonnull ExternalServiceConfiguration configuration);
+  void configurationChanged(ExternalServiceConfiguration configuration);
 }

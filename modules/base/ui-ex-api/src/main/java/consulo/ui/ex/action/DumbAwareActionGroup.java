@@ -18,9 +18,7 @@ package consulo.ui.ex.action;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,28 +29,28 @@ public abstract class DumbAwareActionGroup extends ActionGroup implements DumbAw
     }
 
     @Deprecated
-    protected DumbAwareActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String shortName, boolean popup) {
+    protected DumbAwareActionGroup( String shortName, boolean popup) {
         super(shortName, popup);
     }
 
     @Deprecated
-    protected DumbAwareActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String text, @Nls(capitalization = Nls.Capitalization.Sentence) String description, Image icon) {
+    protected DumbAwareActionGroup( String text,  String description, Image icon) {
         super(text, description, icon);
     }
 
-    protected DumbAwareActionGroup(@Nonnull LocalizeValue text) {
+    protected DumbAwareActionGroup(LocalizeValue text) {
         super(text);
     }
 
-    protected DumbAwareActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    protected DumbAwareActionGroup(LocalizeValue text, boolean popup) {
         super(text, popup);
     }
 
-    protected DumbAwareActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected DumbAwareActionGroup(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected DumbAwareActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected DumbAwareActionGroup(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 }

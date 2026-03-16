@@ -7,8 +7,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Mikhail.Sokolov
@@ -24,15 +23,15 @@ public interface SearchEverywhereManager {
     boolean isShown();
 
     void show(
-        @Nonnull String contributorID,
+        String contributorID,
         @Nullable String searchText,
-        @Nonnull AnActionEvent initEvent
+        AnActionEvent initEvent
     );
 
-    @Nonnull
+    
     String getSelectedContributorID();
 
-    void setSelectedContributor(@Nonnull String contributorID);
+    void setSelectedContributor(String contributorID);
 
     void toggleEverywhereFilter();
 

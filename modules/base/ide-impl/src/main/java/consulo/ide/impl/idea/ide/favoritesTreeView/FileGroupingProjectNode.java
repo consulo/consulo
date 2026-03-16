@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.navigation.NavigateOptions;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -45,7 +44,7 @@ public class FileGroupingProjectNode extends ProjectViewNodeWithChildrenList<Fil
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return file.equals(myVirtualFile);
   }
 

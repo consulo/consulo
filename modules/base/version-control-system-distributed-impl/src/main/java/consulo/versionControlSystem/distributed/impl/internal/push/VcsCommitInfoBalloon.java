@@ -26,8 +26,7 @@ import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,18 +38,18 @@ import java.awt.*;
 public class VcsCommitInfoBalloon {
     private static final String EMPTY_COMMIT_INFO = "<i style='color:gray;'>No commit information found</i>";
 
-    @Nonnull
+    
     private final JTree myTree;
-    @Nonnull
+    
     private final Wrapper myWrapper;
     @Nullable
     private JBPopup myBalloon;
-    @Nonnull
+    
     private final JEditorPane myEditorPane;
-    @Nonnull
+    
     private final ComponentPopupBuilder myPopupBuilder;
 
-    public VcsCommitInfoBalloon(@Nonnull JTree tree) {
+    public VcsCommitInfoBalloon(JTree tree) {
         myTree = tree;
         myEditorPane = new JEditorPane(UIUtil.HTML_MIME, "");
         myEditorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
@@ -100,7 +99,7 @@ public class VcsCommitInfoBalloon {
         }
     }
 
-    @Nonnull
+    
     private Point calculateBestPopupLocation() {
         Point defaultLocation = myTree.getLocationOnScreen();
         TreePath selectionPath = myTree.getSelectionPath();

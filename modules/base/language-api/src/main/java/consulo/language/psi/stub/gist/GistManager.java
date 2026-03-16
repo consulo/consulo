@@ -23,7 +23,6 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -35,7 +34,7 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class GistManager {
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use constructor injecting")
     public static GistManager getInstance() {
@@ -52,12 +51,12 @@ public abstract class GistManager {
      * @param <Data>       the type of the data to cache
      * @return the gist object, where {@link VirtualFileGist#getFileData} can later be used to retrieve the cached data
      */
-    @Nonnull
+    
     public abstract <Data> VirtualFileGist<Data> newVirtualFileGist(
-        @Nonnull String id,
+        String id,
         int version,
-        @Nonnull DataExternalizer<Data> externalizer,
-        @Nonnull BiFunction<Project, VirtualFile, Data> calcData
+        DataExternalizer<Data> externalizer,
+        BiFunction<Project, VirtualFile, Data> calcData
     );
 
     /**
@@ -70,12 +69,12 @@ public abstract class GistManager {
      * @param <Data>       the type of the data to cache
      * @return the gist object, where {@link PsiFileGist#getFileData} can later be used to retrieve the cached data
      */
-    @Nonnull
+    
     public abstract <Data> PsiFileGist<Data> newPsiFileGist(
-        @Nonnull String id,
+        String id,
         int version,
-        @Nonnull DataExternalizer<Data> externalizer,
-        @Nonnull Function<PsiFile, Data> calcData
+        DataExternalizer<Data> externalizer,
+        Function<PsiFile, Data> calcData
     );
 
     /**

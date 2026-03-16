@@ -16,8 +16,7 @@
 package consulo.localization;
 
 import consulo.localization.internal.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -31,63 +30,40 @@ import java.util.function.Supplier;
  * @since 2019-04-11
  */
 public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedValue> {
-    @Nonnull
     static LocalizedValue empty() {
         return EmptyLocalizedValue.INSTANCE;
     }
-
-    @Nonnull
     static LocalizedValue space() {
         return ConstantLocalizedValue.SPACE;
     }
-
-    @Nonnull
     static LocalizedValue colon() {
         return ConstantLocalizedValue.COLON;
     }
-
-    @Nonnull
     static LocalizedValue dot() {
         return ConstantLocalizedValue.DOT;
     }
-
-    @Nonnull
     static LocalizedValue questionMark() {
         return ConstantLocalizedValue.QUESTION_MARK;
     }
-
-    @Nonnull
-    static LocalizedValue localizeTODO(@Nonnull String text) {
+    static LocalizedValue localizeTODO(String text) {
         return of(text);
     }
-
-    @Nonnull
-    static LocalizedValue of(@Nonnull String text) {
+    static LocalizedValue of(String text) {
         return text.isEmpty() ? empty() : new ConstantLocalizedValue(text);
     }
-
-    @Nonnull
     static LocalizedValue of(char c) {
         return new ConstantLocalizedValue(String.valueOf(c));
     }
-
-    @Nonnull
     static LocalizedValue ofNullable(@Nullable String text) {
         return text == null ? empty() : of(text);
     }
-
-    @Nonnull
-    static LocalizedValue join(@Nonnull LocalizedValue... values) {
+    static LocalizedValue join(LocalizedValue... values) {
         return values.length == 0 ? empty() : new JoinedLocalizedValue(LocalizationManager.get(), values);
     }
-
-    @Nonnull
-    static LocalizedValue join(@Nonnull String separator, @Nonnull LocalizedValue... values) {
+    static LocalizedValue join(String separator, LocalizedValue... values) {
         return values.length == 0 ? empty() : new SeparatorJoinedLocalizedValue(LocalizationManager.get(), separator, values);
     }
-
-    @Nonnull
-    static LocalizedValue joinWithSeparator(@Nonnull LocalizedValue separator, @Nonnull LocalizedValue... values) {
+    static LocalizedValue joinWithSeparator(LocalizedValue separator, LocalizedValue... values) {
         return values.length == 0 ? empty() : new SeparatorJoinedLocalizedValue2(LocalizationManager.get(), separator, values);
     }
 
@@ -102,14 +78,8 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
     default boolean isNotEmpty() {
         return !isEmpty();
     }
-
-    @Nonnull
     String getId();
-
-    @Nonnull
     String getValue();
-
-    @Nonnull
     @Override
     default String get() {
         return getValue();
@@ -119,46 +89,32 @@ public interface LocalizedValue extends Supplier<String>, Comparable<LocalizedVa
     default String getNullIfEmpty() {
         return getValue();
     }
-
-    @Nonnull
     default LocalizedValue orIfEmpty(LocalizedValue defaultValue) {
         return this;
     }
 
     byte getModificationCount();
-
-    @Nonnull
     default Optional<LocalizationKey> getKey() {
         return Optional.empty();
     }
-
-    @Nonnull
-    default LocalizedValue map(@Nonnull Function<String, String> mapper) {
+    default LocalizedValue map(Function<String, String> mapper) {
         return new MappedLocalizedValue(LocalizationManager.get(), this, mapper);
     }
-
-    @Nonnull
-    default LocalizedValue map(@Nonnull BiFunction<LocalizationManager, String, String> mapper) {
+    default LocalizedValue map(BiFunction<LocalizationManager, String, String> mapper) {
         return new MappedLocalizedValue2(LocalizationManager.get(), this, mapper);
     }
-
-    @Nonnull
     default LocalizedValue toUpperCase() {
         return map(DefaultMapFunctions.TO_UPPER_CASE);
     }
-
-    @Nonnull
     default LocalizedValue toLowerCase() {
         return map(DefaultMapFunctions.TO_LOWER_CASE);
     }
-
-    @Nonnull
     default LocalizedValue capitalize() {
         return map(DefaultMapFunctions.CAPITALIZE);
     }
 
     @Override
-    default int compareTo(@Nonnull LocalizedValue that) {
+    default int compareTo(LocalizedValue that) {
         return comparator().compare(this, that);
     }
 }

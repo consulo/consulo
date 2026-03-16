@@ -30,8 +30,7 @@ import consulo.util.collection.ArrayFactory;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -74,36 +73,34 @@ import java.util.function.Consumer;
  */
 @ActionAPI
 public abstract class AnAction implements PossiblyDumbAware {
-    @Nonnull
     @Deprecated
     @DeprecationInfo("Use constructors with LocalizeValue parameters")
     @SuppressWarnings("deprecation")
     public static AnAction create(
-        @Nonnull String text,
+        String text,
         @Nullable String description,
         @Nullable Image image,
-        @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed
+        @RequiredUIAccess Consumer<AnActionEvent> actionPerformed
     ) {
         return new AnAction(text, description, image) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 actionPerformed.accept(e);
             }
         };
     }
 
-    @Nonnull
     public static AnAction create(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image image,
-        @RequiredUIAccess @Nonnull Consumer<AnActionEvent> actionPerformed
+        @RequiredUIAccess Consumer<AnActionEvent> actionPerformed
     ) {
         return new AnAction(text, description, image) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 actionPerformed.accept(e);
             }
         };
@@ -160,15 +157,15 @@ public abstract class AnAction implements PossiblyDumbAware {
         presentation.setIcon(icon);
     }
 
-    public AnAction(@Nonnull LocalizeValue text) {
+    public AnAction(LocalizeValue text) {
         this(text, LocalizeValue.empty(), null);
     }
 
-    public AnAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    public AnAction(LocalizeValue text, LocalizeValue description) {
         this(text, description, null);
     }
 
-    public AnAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public AnAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         Presentation presentation = getTemplatePresentation();
         presentation.setTextValue(text);
         presentation.setDescriptionValue(description);
@@ -192,7 +189,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      * @param shortcutSet the shortcuts for the action.
      * @param component   the component for which the shortcuts will be active.
      */
-    public final void registerCustomShortcutSet(@Nonnull ShortcutSet shortcutSet, @Nullable JComponent component) {
+    public final void registerCustomShortcutSet(ShortcutSet shortcutSet, @Nullable JComponent component) {
         registerCustomShortcutSet(shortcutSet, component, (Disposable) null);
     }
 
@@ -201,7 +198,7 @@ public abstract class AnAction implements PossiblyDumbAware {
     }
 
     public final void registerCustomShortcutSet(
-        @Nonnull ShortcutSet shortcutSet,
+        ShortcutSet shortcutSet,
         @Nullable JComponent component,
         @Nullable Disposable parentDisposable
     ) {
@@ -238,7 +235,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @param sourceAction cannot be <code>null</code>
      */
-    public final void copyFrom(@Nonnull AnAction sourceAction) {
+    public final void copyFrom(AnAction sourceAction) {
         Presentation sourcePresentation = sourceAction.getTemplatePresentation();
         Presentation presentation = getTemplatePresentation();
         boolean allFlags = this instanceof ActionGroup && sourceAction instanceof ActionGroup;
@@ -246,7 +243,7 @@ public abstract class AnAction implements PossiblyDumbAware {
         copyShortcutFrom(sourceAction);
     }
 
-    public final void copyShortcutFrom(@Nonnull AnAction sourceAction) {
+    public final void copyShortcutFrom(AnAction sourceAction) {
         myShortcutSet = sourceAction.myShortcutSet;
     }
 
@@ -280,11 +277,10 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @param e Carries information on the invocation place and data available
      */
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
     }
 
-    @Nonnull
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return Coroutine.first(CodeExecution.run(() -> {
             try {
                 update(e);
@@ -301,7 +297,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @param e Carries information on the invocation place and data available
      */
-    public void beforeActionPerformedUpdate(@Nonnull AnActionEvent e) {
+    public void beforeActionPerformedUpdate(AnActionEvent e) {
         boolean worksInInjected = isInInjectedContext();
         e.setInjectedContext(worksInInjected);
         update(e);
@@ -317,7 +313,6 @@ public abstract class AnAction implements PossiblyDumbAware {
      *
      * @return template presentation
      */
-    @Nonnull
     public final Presentation getTemplatePresentation() {
         Presentation presentation = myTemplatePresentation;
         if (presentation == null) {
@@ -326,7 +321,6 @@ public abstract class AnAction implements PossiblyDumbAware {
         return presentation;
     }
 
-    @Nonnull
     protected Presentation createTemplatePresentation() {
         Presentation presentation = Presentation.newTemplatePresentation();
         presentation.setIcon(getTemplateIcon());
@@ -349,7 +343,7 @@ public abstract class AnAction implements PossiblyDumbAware {
      * @param e Carries information on the invocation place
      */
     @RequiredUIAccess
-    public abstract void actionPerformed(@Nonnull AnActionEvent e);
+    public abstract void actionPerformed(AnActionEvent e);
 
     public void setShortcutSet(ShortcutSet shortcutSet) {
         myShortcutSet = shortcutSet;

@@ -19,7 +19,6 @@ import consulo.ui.layout.Layout;
 import consulo.ui.layout.SwipeLayout;
 import consulo.ui.web.internal.base.WebUnsupportedComponent;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -27,21 +26,21 @@ import java.util.function.Supplier;
  * @since 01/08/2021
  */
 public class WebSwipeLayoutImpl extends WebUnsupportedComponent implements SwipeLayout {
-  @Nonnull
+  
   @Override
-  public SwipeLayout register(@Nonnull String id, @Nonnull Supplier<Layout> layoutSupplier) {
+  public SwipeLayout register(String id, Supplier<Layout> layoutSupplier) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Layout swipeLeftTo(@Nonnull String id) {
+  public Layout swipeLeftTo(String id) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Layout swipeRightTo(@Nonnull String id) {
+  public Layout swipeRightTo(String id) {
     return this;
   }
 }

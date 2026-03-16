@@ -15,8 +15,7 @@
  */
 package consulo.fileEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +32,16 @@ public final class FileEditorOpenResult {
 
     private final List<FileEditorWithProvider> myEntries;
 
-    public FileEditorOpenResult(@Nonnull List<FileEditorWithProvider> entries) {
+    public FileEditorOpenResult(List<FileEditorWithProvider> entries) {
         myEntries = entries;
     }
 
     /**
      * Creates a result from parallel arrays of editors and providers.
      */
-    @Nonnull
     public static FileEditorOpenResult of(
-        @Nonnull FileEditor[] editors,
-        @Nonnull FileEditorProvider[] providers) {
+        FileEditor[] editors,
+        FileEditorProvider[] providers) {
         if (editors.length == 0) {
             return EMPTY;
         }
@@ -54,7 +52,6 @@ public final class FileEditorOpenResult {
         return new FileEditorOpenResult(List.copyOf(list));
     }
 
-    @Nonnull
     public List<FileEditorWithProvider> getEntries() {
         return myEntries;
     }
@@ -75,7 +72,6 @@ public final class FileEditorOpenResult {
     /**
      * Convenience: returns all editors as an array.
      */
-    @Nonnull
     public FileEditor[] getEditors() {
         return myEntries.stream()
             .map(FileEditorWithProvider::getFileEditor)
@@ -85,7 +81,6 @@ public final class FileEditorOpenResult {
     /**
      * Convenience: returns all providers as an array.
      */
-    @Nonnull
     public FileEditorProvider[] getProviders() {
         return myEntries.stream()
             .map(FileEditorWithProvider::getProvider)

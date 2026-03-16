@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.editor.richcopy.model;
 
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,9 +28,9 @@ import java.io.IOException;
 public class SyntaxInfo {
   private final int myOutputInfoCount;
   private final byte[] myOutputInfosSerialized;
-  @Nonnull
+  
   private final ColorRegistry    myColorRegistry;
-  @Nonnull
+  
   private final FontNameRegistry myFontNameRegistry;
 
   private final int myDefaultForeground;
@@ -43,8 +42,8 @@ public class SyntaxInfo {
                      int defaultForeground,
                      int defaultBackground,
                      float fontSize,
-                     @Nonnull FontNameRegistry fontNameRegistry,
-                     @Nonnull ColorRegistry colorRegistry)
+                     FontNameRegistry fontNameRegistry,
+                     ColorRegistry colorRegistry)
   {
     myOutputInfoCount = outputInfoCount;
     myOutputInfosSerialized = outputInfosSerialized;
@@ -55,12 +54,12 @@ public class SyntaxInfo {
     myColorRegistry = colorRegistry;
   }
 
-  @Nonnull
+  
   public ColorRegistry getColorRegistry() {
     return myColorRegistry;
   }
 
-  @Nonnull
+  
   public FontNameRegistry getFontNameRegistry() {
     return myFontNameRegistry;
   }

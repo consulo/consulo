@@ -28,8 +28,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,12 +46,12 @@ public class SearchResults implements DocumentListener, CaretListener {
     }
 
     @Override
-    public void beforeDocumentChange(@Nonnull DocumentEvent event) {
+    public void beforeDocumentChange(DocumentEvent event) {
         myCursorPositions.clear();
     }
 
     @Override
-    public void caretPositionChanged(@Nonnull CaretEvent event) {
+    public void caretPositionChanged(CaretEvent event) {
         Caret caret = event.getCaret();
         if (caret != null && myEditor.getCaretModel().getAllCarets().size() == 1 && caret.isUpToDate()) {
             int offset = caret.getOffset();
@@ -75,12 +74,12 @@ public class SearchResults implements DocumentListener, CaretListener {
     @Nullable
     private FindResult myCursor;
 
-    @Nonnull
+    
     private List<FindResult> myOccurrences = new ArrayList<>();
 
     private final Set<RangeMarker> myExcluded = new HashSet<>();
 
-    @Nonnull
+    
     private final Editor myEditor;
     private final Project myProject;
     private FindModel myFindModel;
@@ -101,7 +100,7 @@ public class SearchResults implements DocumentListener, CaretListener {
 
     private final SelectionManager mySelectionManager;
 
-    public SearchResults(@Nonnull Editor editor, Project project) {
+    public SearchResults(Editor editor, Project project) {
         myEditor = editor;
         myProject = project;
         myEditor.getDocument().addDocumentListener(this);
@@ -161,7 +160,7 @@ public class SearchResults implements DocumentListener, CaretListener {
 
     public interface SearchResultsListener {
 
-        void searchResultsUpdated(@Nonnull SearchResults sr);
+        void searchResultsUpdated(SearchResults sr);
 
         void cursorMoved();
 
@@ -175,11 +174,11 @@ public class SearchResults implements DocumentListener, CaretListener {
         }
     }
 
-    public void addListener(@Nonnull SearchResultsListener srl) {
+    public void addListener(SearchResultsListener srl) {
         myListeners.add(srl);
     }
 
-    public void removeListener(@Nonnull SearchResultsListener srl) {
+    public void removeListener(SearchResultsListener srl) {
         myListeners.remove(srl);
     }
 
@@ -201,7 +200,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return occurrenceAtCaret != null ? myOccurrences.indexOf(occurrenceAtCaret) + 1 : -1;
     }
 
-    @Nonnull
+    
     public List<FindResult> getOccurrences() {
         return myOccurrences;
     }
@@ -211,7 +210,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return myProject;
     }
 
-    @Nonnull
+    
     public Editor getEditor() {
         return myEditor;
     }
@@ -221,7 +220,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         searchCompleted(new ArrayList<>(), getEditor(), null, false, null, getStamp());
     }
 
-    ActionCallback updateThreadSafe(@Nonnull FindModel findModel, boolean toChangeSelection, @Nullable TextRange next, int stamp) {
+    ActionCallback updateThreadSafe(FindModel findModel, boolean toChangeSelection, @Nullable TextRange next, int stamp) {
         if (myDisposed) {
             return ActionCallback.DONE;
         }
@@ -273,7 +272,7 @@ public class SearchResults implements DocumentListener, CaretListener {
         return result;
     }
 
-    private void updatePreviousFindModel(@Nonnull FindModel model) {
+    private void updatePreviousFindModel(FindModel model) {
         FindModel prev = FindManager.getInstance(getProject()).getPreviousFindModel();
         if (prev == null) {
             prev = new FindModel();
@@ -304,10 +303,10 @@ public class SearchResults implements DocumentListener, CaretListener {
     }
 
     private void findInRange(
-        @Nonnull TextRange range,
-        @Nonnull Editor editor,
-        @Nonnull FindModel findModel,
-        @Nonnull List<? super FindResult> results
+        TextRange range,
+        Editor editor,
+        FindModel findModel,
+        List<? super FindResult> results
     ) {
         VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(editor.getDocument());
 
@@ -362,8 +361,8 @@ public class SearchResults implements DocumentListener, CaretListener {
 
     @RequiredUIAccess
     private void searchCompleted(
-        @Nonnull List<FindResult> occurrences,
-        @Nonnull Editor editor,
+        List<FindResult> occurrences,
+        Editor editor,
         @Nullable FindModel findModel,
         boolean toChangeSelection,
         @Nullable TextRange next,

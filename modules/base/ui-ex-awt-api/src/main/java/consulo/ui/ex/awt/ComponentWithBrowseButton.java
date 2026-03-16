@@ -42,9 +42,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +58,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
     private final Comp myComponent;
 
-    @Nonnull
+    
     private final JButton myBrowseButton;
     private boolean myButtonEnabled = true;
 
@@ -115,8 +113,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
 
     }
 
-    @Nonnull
-    private static JPanel centerComponentVertically(@Nonnull Component component) {
+    
+    private static JPanel centerComponentVertically(Component component) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(component, new GridBagConstraints());
         return panel;
@@ -152,7 +150,7 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         setEnabled(isEnabled());
     }
 
-    public void setButtonIcon(@Nonnull Image icon) {
+    public void setButtonIcon(Image icon) {
         myBrowseButton.setIcon(TargetAWT.to(icon));
         myBrowseButton.setDisabledIcon(TargetAWT.to(ImageEffects.grayed(icon)));
     }
@@ -173,8 +171,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     }
 
     public void addBrowseFolderListener(
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description,
+        LocalizeValue title,
+        LocalizeValue description,
         @Nullable ComponentManager project,
         FileChooserDescriptor fileChooserDescriptor,
         TextComponentAccessor<Comp> accessor
@@ -186,8 +184,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     @DeprecationInfo("Use variant with LocalizeValue")
     @SuppressWarnings("deprecation")
     public void addBrowseFolderListener(
-        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
-        @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+        @Nullable  String title,
+        @Nullable  String description,
         @Nullable ComponentManager project,
         FileChooserDescriptor fileChooserDescriptor,
         TextComponentAccessor<Comp> accessor
@@ -199,8 +197,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
     @DeprecationInfo("Use variant with LocalizeValue")
     @SuppressWarnings("deprecation")
     public void addBrowseFolderListener(
-        @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
-        @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+        @Nullable  String title,
+        @Nullable  String description,
         @Nullable ComponentManager project,
         FileChooserDescriptor fileChooserDescriptor,
         TextComponentAccessor<Comp> accessor,
@@ -255,13 +253,13 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myBrowseButton.isVisible() && myBrowseButton.isEnabled());
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myBrowseButton.doClick();
         }
 
@@ -286,8 +284,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         protected final FileChooserDescriptor myFileChooserDescriptor;
 
         public BrowseFolderActionListener(
-            @Nonnull LocalizeValue title,
-            @Nonnull LocalizeValue description,
+            LocalizeValue title,
+            LocalizeValue description,
             ComponentWithBrowseButton<T> textField,
             @Nullable ComponentManager project,
             FileChooserDescriptor fileChooserDescriptor,
@@ -314,8 +312,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         public BrowseFolderActionListener(
-            @Nullable @Nls(capitalization = Nls.Capitalization.Title) String title,
-            @Nullable @Nls(capitalization = Nls.Capitalization.Sentence) String description,
+            @Nullable  String title,
+            @Nullable  String description,
             ComponentWithBrowseButton<T> textField,
             @Nullable ComponentManager project,
             FileChooserDescriptor fileChooserDescriptor,
@@ -377,8 +375,8 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             return path;
         }
 
-        @Nonnull
-        protected String expandPath(@Nonnull String path) {
+        
+        protected String expandPath(String path) {
             return path;
         }
 
@@ -386,12 +384,12 @@ public class ComponentWithBrowseButton<Comp extends JComponent> extends JPanel i
             return myAccessor.getText(myTextComponent.getChildComponent()).trim();
         }
 
-        @Nonnull
-        protected String chosenFileToResultingText(@Nonnull VirtualFile chosenFile) {
+        
+        protected String chosenFileToResultingText(VirtualFile chosenFile) {
             return chosenFile.getPresentableUrl();
         }
 
-        protected void onFileChosen(@Nonnull VirtualFile chosenFile) {
+        protected void onFileChosen(VirtualFile chosenFile) {
             myAccessor.setText(myTextComponent.getChildComponent(), chosenFileToResultingText(chosenFile));
         }
     }

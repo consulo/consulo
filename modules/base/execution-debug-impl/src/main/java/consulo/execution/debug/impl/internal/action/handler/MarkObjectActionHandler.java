@@ -18,11 +18,10 @@ package consulo.execution.debug.impl.internal.action.handler;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class MarkObjectActionHandler extends DebuggerActionHandler {
-  public abstract boolean isMarked(@Nonnull Project project, @Nonnull AnActionEvent event);
+  public abstract boolean isMarked(Project project, AnActionEvent event);
 }

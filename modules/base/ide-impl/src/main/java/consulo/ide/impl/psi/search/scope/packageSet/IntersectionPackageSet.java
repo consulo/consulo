@@ -21,7 +21,6 @@ import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public class IntersectionPackageSet extends PackageSetBase {
   private final PackageSet myFirstSet;
@@ -43,7 +42,7 @@ public class IntersectionPackageSet extends PackageSetBase {
   }
 
   @Override
-  @Nonnull
+  
   public PackageSet createCopy() {
     return new IntersectionPackageSet(myFirstSet.createCopy(), mySecondSet.createCopy());
   }
@@ -54,7 +53,7 @@ public class IntersectionPackageSet extends PackageSetBase {
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
     StringBuffer buf = new StringBuffer();
     boolean needParen = myFirstSet.getNodePriority() > getNodePriority();

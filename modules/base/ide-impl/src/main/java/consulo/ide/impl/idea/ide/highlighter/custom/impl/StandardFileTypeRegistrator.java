@@ -28,7 +28,6 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class StandardFileTypeRegistrator implements FileTypeRegistrator {
@@ -88,7 +87,7 @@ public class StandardFileTypeRegistrator implements FileTypeRegistrator {
       return null;
     }
 
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
       return PlainTextLanguage.INSTANCE;

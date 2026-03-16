@@ -13,7 +13,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.ex.tree.TreeAnchorizerValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -135,7 +134,6 @@ public class NavBarItem extends SimpleColoredComponent implements UiDataProvider
     return myAttributes;
   }
 
-  @Nonnull
   public String getText() {
     return myText;
   }
@@ -200,7 +198,6 @@ public class NavBarItem extends SimpleColoredComponent implements UiDataProvider
     super.setOpaque(false);
   }
 
-  @Nonnull
   @Override
   public Dimension getPreferredSize() {
     Dimension size = super.getPreferredSize();
@@ -216,7 +213,6 @@ public class NavBarItem extends SimpleColoredComponent implements UiDataProvider
     return myNeedPaintIcon;
   }
 
-  @Nonnull
   @Override
   public Dimension getMinimumSize() {
     return getPreferredSize();
@@ -254,7 +250,7 @@ public class NavBarItem extends SimpleColoredComponent implements UiDataProvider
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     Object obj = getObject();
     sink.set(NavBarPanel.NAV_BAR_ITEMS, obj != null ? List.of(obj) : List.of());
     // Delegate non-selection data to panel (Project, CopyPaste, IdeView, etc.)

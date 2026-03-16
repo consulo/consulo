@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.execution.debug.breakpoint.XBreakpointType;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class XBreakpointTypeGroup extends XBreakpointGroup {
         myBreakpointType = type;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myBreakpointType.getTitle();

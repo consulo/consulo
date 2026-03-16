@@ -32,8 +32,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.dialog.DialogService;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ public class SandConfiguration extends RunConfigurationBase {
     super(project, factory, name);
   }
 
-  @Nonnull
+  
   @Override
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new SettingsEditor<RunConfiguration>() {
@@ -59,7 +58,7 @@ public class SandConfiguration extends RunConfigurationBase {
       }
 
       @RequiredUIAccess
-      @Nonnull
+      
       @Override
       protected Component createUIComponent() {
         DialogService dialogService = Application.get().getInstance(DialogService.class);
@@ -77,7 +76,7 @@ public class SandConfiguration extends RunConfigurationBase {
 
   @Nullable
   @Override
-  public RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+  public RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
     return null;
   }
 }

@@ -37,8 +37,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -158,7 +157,7 @@ public class ShowBalloonTestAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         BalloonTestDialog testDialog = new BalloonTestDialog(e.getData(Project.KEY));
         testDialog.showAsync();
     }

@@ -17,8 +17,7 @@ package consulo.execution.debug.breakpoint.ui;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -29,7 +28,7 @@ public abstract class XBreakpointGroup implements Comparable<XBreakpointGroup> {
     return null;
   }
 
-  @Nonnull
+  
   public abstract String getName();
 
   @Override

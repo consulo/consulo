@@ -48,8 +48,7 @@ import consulo.util.collection.Stack;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.CompoundRuntimeException;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -68,7 +67,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         myProject = project;
     }
 
-    @Nonnull
+    
     public PomAspects getCache() {
         return myProject.getExtensionPoint(PomModelAspect.class).getOrBuildCache(PomAspects.CACHE_KEY);
     }
@@ -83,17 +82,17 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     @Override
-    public <T extends PomModelAspect> T getModelAspect(@Nonnull Class<T> aClass) {
+    public <T extends PomModelAspect> T getModelAspect(Class<T> aClass) {
         return getCache().getModelAspect(aClass);
     }
 
     @Override
-    public void addModelListener(@Nonnull PomModelListener listener, @Nonnull Disposable parentDisposable) {
+    public void addModelListener(PomModelListener listener, Disposable parentDisposable) {
         myListeners.add(listener, parentDisposable);
     }
 
     @Override
-    public void runTransaction(@Nonnull PomTransaction transaction) throws IncorrectOperationException {
+    public void runTransaction(PomTransaction transaction) throws IncorrectOperationException {
         if (!PomAspectGuard.isAllowPsiModification()) {
             throw new IncorrectOperationException("Must not modify PSI inside save listener");
         }
@@ -258,7 +257,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     @Nullable
-    private Runnable reparseFile(@Nonnull final PsiFile file, @Nonnull FileElement treeElement, @Nonnull CharSequence newText) {
+    private Runnable reparseFile(final PsiFile file, FileElement treeElement, CharSequence newText) {
         TextRange changedPsiRange = ChangedPsiRangeUtil.getChangedPsiRange(file, treeElement, newText);
         if (changedPsiRange == null) {
             return null;
@@ -280,7 +279,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
         });
     }
 
-    private void startTransaction(@Nonnull PomTransaction transaction) {
+    private void startTransaction(PomTransaction transaction) {
         PsiDocumentManagerBase manager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject);
         PsiToDocumentSynchronizer synchronizer = manager.getSynchronizer();
         PsiElement changeScope = transaction.getChangeScope();
@@ -333,7 +332,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
     }
 
     @Nullable
-    private static PsiFile getContainingFileByTree(@Nonnull PsiElement changeScope) {
+    private static PsiFile getContainingFileByTree(PsiElement changeScope) {
         // there could be pseudo physical trees (JSPX/JSP/etc.) which must not translate
         // any changes to document and not to fire any PSI events
         PsiFile psiFile;

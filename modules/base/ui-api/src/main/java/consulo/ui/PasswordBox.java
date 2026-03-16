@@ -17,20 +17,15 @@ package consulo.ui;
 
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 22/03/2021
  */
 public interface PasswordBox extends ValueComponent<String>, HasValidator<String>, HasFocus {
-  @Nonnull
   static PasswordBox create() {
     return UIInternal.get()._Components_passwordBox(null);
   }
-
-  @Nonnull
-  static PasswordBox create(@Nonnull String password) {
+  static PasswordBox create(String password) {
     return UIInternal.get()._Components_passwordBox(password);
   }
 }

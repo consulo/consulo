@@ -6,7 +6,6 @@ import consulo.project.Project;
 import consulo.util.dataholder.NotNullLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -17,28 +16,28 @@ public class ScratchesSearchScope extends GlobalSearchScope {
 
   private static final NotNullLazyKey<GlobalSearchScope, Project> SCRATCHES_SCOPE_KEY = NotNullLazyKey.create("SCRATCHES_SCOPE_KEY", project -> new ScratchesSearchScope(project));
 
-  @Nonnull
-  public static GlobalSearchScope getScratchesScope(@Nonnull Project project) {
+  
+  public static GlobalSearchScope getScratchesScope(Project project) {
     return SCRATCHES_SCOPE_KEY.getValue(project);
   }
 
-  private ScratchesSearchScope(@Nonnull Project project) {
+  private ScratchesSearchScope(Project project) {
     super(project);
   }
 
-  @Nonnull
+  
   @Override
   public String getDisplayName() {
     return ScratchesNamedScope.ID;
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return ScratchesNamedScope.contains(Objects.requireNonNull(getProject()), file);
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return false;
   }
 

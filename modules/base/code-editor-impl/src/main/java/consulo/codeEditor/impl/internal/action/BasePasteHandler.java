@@ -23,8 +23,7 @@ import consulo.codeEditor.action.EditorWriteActionHandler;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.Transferable;
 import java.util.function.Supplier;
@@ -33,7 +32,7 @@ public class BasePasteHandler extends EditorWriteActionHandler {
     protected Transferable myTransferable;
 
     @Override
-    public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
         return !editor.isViewer();
     }
 

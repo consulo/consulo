@@ -22,8 +22,7 @@ import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.ui.ex.awt.GridBag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -34,10 +33,9 @@ import java.util.List;
  */
 public class ArrangementGroupingRulesPanel extends JPanel implements UiDataProvider {
 
-  @Nonnull
   private final ArrangementGroupingRulesControl myControl;
 
-  public ArrangementGroupingRulesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager, @Nonnull ArrangementColorsProvider colorsProvider) {
+  public ArrangementGroupingRulesPanel(ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
     super(new GridBagLayout());
 
     myControl = new ArrangementGroupingRulesControl(settingsManager, colorsProvider);
@@ -53,13 +51,12 @@ public class ArrangementGroupingRulesPanel extends JPanel implements UiDataProvi
     myControl.setRules(rules);
   }
 
-  @Nonnull
   public List<ArrangementGroupingRule> getRules() {
     return myControl.getRules();
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(ArrangementGroupingRulesControl.KEY, myControl);
   }
 }

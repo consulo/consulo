@@ -17,15 +17,14 @@ package consulo.versionControlSystem.log.graph.action;
 
 import consulo.versionControlSystem.log.graph.PrintElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface GraphAction {
 
   @Nullable
   PrintElement getAffectedElement();
 
-  @Nonnull
+  
   Type getType();
 
   enum Type {
@@ -37,10 +36,10 @@ public interface GraphAction {
 
   class GraphActionImpl implements GraphAction {
     @Nullable private final PrintElement myPrintElement;
-    @Nonnull
+    
     private final Type myActionType;
 
-    public GraphActionImpl(@Nullable PrintElement printElement, @Nonnull Type actionType) {
+    public GraphActionImpl(@Nullable PrintElement printElement, Type actionType) {
       myPrintElement = printElement;
       myActionType = actionType;
     }
@@ -51,7 +50,7 @@ public interface GraphAction {
       return myPrintElement;
     }
 
-    @Nonnull
+    
     @Override
     public Type getType() {
       return myActionType;

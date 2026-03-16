@@ -22,8 +22,7 @@ import consulo.versionControlSystem.log.graph.VisibleGraph;
 import consulo.versionControlSystem.log.graph.action.ActionController;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.versionControlSystem.log.graph.action.GraphAnswer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -33,7 +32,7 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
   private static final VisibleGraph<Integer> INSTANCE = new EmptyVisibleGraph();
 
-  @Nonnull
+  
   public static VisibleGraph<Integer> getInstance() {
     return INSTANCE;
   }
@@ -43,7 +42,7 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
     return 0;
   }
 
-  @Nonnull
+  
   @Override
   public RowInfo<Integer> getRowInfo(int visibleRow) {
     return EmptyRowInfo.INSTANCE;
@@ -51,11 +50,11 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
   @Override
   @Nullable
-  public Integer getVisibleRowIndex(@Nonnull Integer integer) {
+  public Integer getVisibleRowIndex(Integer integer) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public ActionController<Integer> getActionController() {
     return DumbActionController.INSTANCE;
@@ -70,9 +69,9 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
     private static ActionController<Integer> INSTANCE = new DumbActionController();
 
-    @Nonnull
+    
     @Override
-    public GraphAnswer<Integer> performAction(@Nonnull GraphAction graphAction) {
+    public GraphAnswer<Integer> performAction(GraphAction graphAction) {
       return EmptyGraphAnswer.INSTANCE;
     }
 
@@ -117,25 +116,25 @@ class EmptyVisibleGraph implements VisibleGraph<Integer> {
 
     private static final RowInfo<Integer> INSTANCE = new EmptyRowInfo();
 
-    @Nonnull
+    
     @Override
     public Integer getCommit() {
       return 0;
     }
 
-    @Nonnull
+    
     @Override
     public Integer getOneOfHeads() {
       return 0;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<PrintElement> getPrintElements() {
       return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public RowType getRowType() {
       return RowType.NORMAL;

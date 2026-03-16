@@ -22,7 +22,6 @@ import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     @Override
-    public CompletionSorterImpl weighBefore(@Nonnull String beforeId, LookupElementWeigher... weighers) {
+    public CompletionSorterImpl weighBefore(String beforeId, LookupElementWeigher... weighers) {
         if (weighers.length == 0) {
             return this;
         }
@@ -63,7 +62,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     @Override
-    public CompletionSorterImpl weighAfter(@Nonnull String afterId, LookupElementWeigher... weighers) {
+    public CompletionSorterImpl weighAfter(String afterId, LookupElementWeigher... weighers) {
         if (weighers.length == 0) {
             return this;
         }
@@ -86,7 +85,7 @@ public class CompletionSorterImpl extends CompletionSorter {
     }
 
     public CompletionSorterImpl withClassifier(
-        @Nonnull String anchorId,
+        String anchorId,
         boolean beforeAnchor, ClassifierFactory<LookupElement> classifierFactory
     ) {
         int i = idIndex(anchorId);

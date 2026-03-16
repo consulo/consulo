@@ -24,7 +24,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiReference;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -33,9 +32,9 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class InjectedReferencesInspection extends LocalInspectionTool {
 
-  @Nonnull
+  
   @Override
-  public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, boolean isOnTheFly) {
+  public PsiElementVisitor buildVisitor(final ProblemsHolder holder, boolean isOnTheFly) {
     return new PsiElementVisitor() {
       @Override
       public void visitElement(PsiElement element) {
@@ -54,19 +53,19 @@ public class InjectedReferencesInspection extends LocalInspectionTool {
     };
   }
 
-  @Nonnull
+  
   @Override
   public HighlightDisplayLevel getDefaultLevel() {
     return HighlightDisplayLevel.ERROR;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getGroupDisplayName() {
     return InspectionLocalize.inspectionGeneralToolsGroupName();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Injected References");

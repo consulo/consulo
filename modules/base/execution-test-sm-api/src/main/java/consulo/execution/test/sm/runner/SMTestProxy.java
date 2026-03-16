@@ -38,8 +38,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,7 +108,7 @@ public class SMTestProxy extends AbstractTestProxy {
         return myPreservePresentableName;
     }
 
-    public void setLocator(@Nonnull SMTestLocator testLocator) {
+    public void setLocator(SMTestLocator testLocator) {
         myLocator = testLocator;
     }
 
@@ -117,7 +116,7 @@ public class SMTestProxy extends AbstractTestProxy {
         myConfig = config;
     }
 
-    public void setPreferredPrinter(@Nonnull Printer preferredPrinter) {
+    public void setPreferredPrinter(Printer preferredPrinter) {
         myPreferredPrinter = preferredPrinter;
     }
 
@@ -214,7 +213,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     @RequiredUIAccess
-    public void addChild(@Nonnull SMTestProxy child) {
+    public void addChild(SMTestProxy child) {
         UIAccess.assertIsUIThread();
 
         if (myChildren == null) {
@@ -268,12 +267,12 @@ public class SMTestProxy extends AbstractTestProxy {
 
     @Override
     @Nullable
-    public Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
+    public Location getLocation(Project project, GlobalSearchScope searchScope) {
         //determines location of test proxy
         return getLocation(project, searchScope, myLocationUrl);
     }
 
-    protected Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope, String locationUrl) {
+    protected Location getLocation(Project project, GlobalSearchScope searchScope, String locationUrl) {
         if (locationUrl != null && myLocator != null) {
             String protocolId = VirtualFileManager.extractProtocol(locationUrl);
             if (protocolId != null) {
@@ -292,7 +291,7 @@ public class SMTestProxy extends AbstractTestProxy {
 
     @Override
     @Nullable
-    public Navigatable getDescriptor(@Nullable Location location, @Nonnull TestConsoleProperties properties) {
+    public Navigatable getDescriptor(@Nullable Location location, TestConsoleProperties properties) {
         // by location gets navigatable element.
         // It can be file or place in file (e.g. when OPEN_FAILURE_LINE is enabled)
         if (location == null) {
@@ -449,7 +448,7 @@ public class SMTestProxy extends AbstractTestProxy {
         fireOnNewPrintable(myState);
     }
 
-    public void setTestFailed(@Nonnull String localizedMessage, @Nullable String stackTrace, boolean testError) {
+    public void setTestFailed(String localizedMessage, @Nullable String stackTrace, boolean testError) {
         setStacktraceIfNotSet(stackTrace);
         TestFailedState failedState = new TestFailedState(localizedMessage, stackTrace);
         if (myState instanceof TestComparisionFailedState testComparisionFailedState) {
@@ -473,20 +472,20 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     public void setTestComparisonFailed(
-        @Nonnull String localizedMessage,
+        String localizedMessage,
         @Nullable String stackTrace,
-        @Nonnull String actualText,
-        @Nonnull String expectedText
+        String actualText,
+        String expectedText
     ) {
         setTestComparisonFailed(localizedMessage, stackTrace, actualText, expectedText, null, null);
     }
 
     public void setTestComparisonFailed(
-        @Nonnull String localizedMessage,
+        String localizedMessage,
         @Nullable String stackTrace,
-        @Nonnull String actualText,
-        @Nonnull String expectedText,
-        @Nonnull TestFailedEvent event
+        String actualText,
+        String expectedText,
+        TestFailedEvent event
     ) {
         TestComparisionFailedState comparisionFailedState =
             setTestComparisonFailed(
@@ -502,10 +501,10 @@ public class SMTestProxy extends AbstractTestProxy {
     }
 
     public TestComparisionFailedState setTestComparisonFailed(
-        @Nonnull String localizedMessage,
+        String localizedMessage,
         @Nullable String stackTrace,
-        @Nonnull String actualText,
-        @Nonnull String expectedText,
+        String actualText,
+        String expectedText,
         @Nullable String expectedFilePath,
         @Nullable String actualFilePath
     ) {
@@ -655,7 +654,7 @@ public class SMTestProxy extends AbstractTestProxy {
         addOutput(output, ProcessOutputTypes.STDERR);
     }
 
-    public void addOutput(@Nonnull String output, @Nonnull Key outputType) {
+    public void addOutput(String output, Key outputType) {
         addAfterLastPassed(printer -> printer.print(output, ConsoleViewContentType.getConsoleViewType(outputType)));
     }
 
@@ -687,7 +686,7 @@ public class SMTestProxy extends AbstractTestProxy {
         addOutput(output, ProcessOutputTypes.SYSTEM);
     }
 
-    @Nonnull
+    
     public String getPresentableName() {
         if (myPresentableName == null) {
             if (myPreservePresentableName) {
@@ -725,7 +724,7 @@ public class SMTestProxy extends AbstractTestProxy {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public List<DiffHyperlink> getDiffViewerProviders() {
         if (myState instanceof CompoundTestFailedState compoundTestFailedState) {
@@ -983,7 +982,7 @@ public class SMTestProxy extends AbstractTestProxy {
 
         @Nullable
         @Override
-        public Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
+        public Location getLocation(Project project, GlobalSearchScope searchScope) {
             return myRootLocationUrl != null ? super.getLocation(project, searchScope, myRootLocationUrl)
                 : super.getLocation(project, searchScope);
         }
@@ -1012,7 +1011,7 @@ public class SMTestProxy extends AbstractTestProxy {
         }
 
         @Override
-        public void printOn(@Nonnull Printer printer) {
+        public void printOn(Printer printer) {
             if (myShouldPrintOwnContentOnly) {
                 printOwnPrintablesOn(printer, false);
             }

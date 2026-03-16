@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class EditorMouseHoverPopupManagerMotionListener implements EditorMouseMotionListener {
@@ -36,7 +35,7 @@ final class EditorMouseHoverPopupManagerMotionListener implements EditorMouseMot
 
   @RequiredUIAccess
   @Override
-  public void mouseMoved(@Nonnull EditorMouseEvent e) {
+  public void mouseMoved(EditorMouseEvent e) {
     myEditorMouseHoverPopupManager.get().handleMouseMoved(e);
   }
 }

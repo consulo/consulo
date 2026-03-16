@@ -28,8 +28,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -37,22 +36,22 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl
 public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
-  @Nonnull
+  
   @Override
   public PsiBuilder createBuilder(
-    @Nonnull Project project,
-    @Nonnull ASTNode chameleon,
-    @Nonnull LanguageVersion languageVersion
+    Project project,
+    ASTNode chameleon,
+    LanguageVersion languageVersion
   ) {
     return createBuilder(project, chameleon, null, chameleon.getElementType().getLanguage(), languageVersion, chameleon.getChars());
   }
 
-  @Nonnull
+  
   @Override
   public PsiBuilder createBuilder(
-    @Nonnull Project project,
-    @Nonnull LighterLazyParseableNode chameleon,
-    @Nonnull LanguageVersion languageVersion
+    Project project,
+    LighterLazyParseableNode chameleon,
+    LanguageVersion languageVersion
   ) {
     Language language = chameleon.getTokenType().getLanguage();
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
@@ -60,26 +59,26 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
     return new PsiBuilderImpl(project, parserDefinition, languageVersion, createLexer(languageVersion), chameleon, chameleon.getText());
   }
 
-  @Nonnull
+  
   @Override
-  public PsiBuilder createBuilder(@Nonnull Project project,
-                                  @Nonnull ASTNode chameleon,
+  public PsiBuilder createBuilder(Project project,
+                                  ASTNode chameleon,
                                   @Nullable Lexer lexer,
-                                  @Nonnull Language lang,
-                                  @Nonnull LanguageVersion languageVersion,
-                                  @Nonnull CharSequence seq) {
+                                  Language lang,
+                                  LanguageVersion languageVersion,
+                                  CharSequence seq) {
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
     return new PsiBuilderImpl(project, parserDefinition, languageVersion, lexer != null ? lexer : createLexer(languageVersion), chameleon, seq);
   }
 
-  @Nonnull
+  
   @Override
-  public PsiBuilder createBuilder(@Nonnull Project project,
-                                  @Nonnull LighterLazyParseableNode chameleon,
+  public PsiBuilder createBuilder(Project project,
+                                  LighterLazyParseableNode chameleon,
                                   @Nullable Lexer lexer,
-                                  @Nonnull Language lang,
-                                  @Nonnull LanguageVersion languageVersion,
-                                  @Nonnull CharSequence seq) {
+                                  Language lang,
+                                  LanguageVersion languageVersion,
+                                  CharSequence seq) {
     Language language = chameleon.getTokenType().getLanguage();
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(language);
     return new PsiBuilderImpl(project, parserDefinition, languageVersion, lexer != null ? lexer : createLexer(languageVersion), chameleon, seq);
@@ -92,12 +91,12 @@ public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
     return parserDefinition.createLexer(languageVersion);
   }
 
-  @Nonnull
+  
   @Override
-  public PsiBuilder createBuilder(@Nonnull ParserDefinition parserDefinition,
-                                  @Nonnull Lexer lexer,
-                                  @Nonnull LanguageVersion languageVersion,
-                                  @Nonnull CharSequence seq) {
+  public PsiBuilder createBuilder(ParserDefinition parserDefinition,
+                                  Lexer lexer,
+                                  LanguageVersion languageVersion,
+                                  CharSequence seq) {
     return new PsiBuilderImpl(null, null, parserDefinition, lexer, languageVersion, null, seq, null, null);
   }
 }

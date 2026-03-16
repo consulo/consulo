@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.language.editor.inspection.ProblemDescriptorUtil.APPEND_LINE_NUMBER;
 import static consulo.language.editor.inspection.ProblemDescriptorUtil.TRIM_AT_TREE_END;
@@ -39,32 +38,32 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
     protected RefEntity myElement;
     private final CommonProblemDescriptor myDescriptor;
     protected final InspectionToolWrapper myToolWrapper;
-    @Nonnull
+    
     protected final InspectionToolPresentation myPresentation;
 
     public ProblemDescriptionNode(
-        @Nonnull Object userObject,
-        @Nonnull InspectionToolWrapper toolWrapper,
-        @Nonnull InspectionToolPresentation presentation
+        Object userObject,
+        InspectionToolWrapper toolWrapper,
+        InspectionToolPresentation presentation
     ) {
         this(userObject, null, null, toolWrapper, presentation);
     }
 
     public ProblemDescriptionNode(
-        @Nonnull RefEntity element,
-        @Nonnull CommonProblemDescriptor descriptor,
-        @Nonnull InspectionToolWrapper toolWrapper,
-        @Nonnull InspectionToolPresentation presentation
+        RefEntity element,
+        CommonProblemDescriptor descriptor,
+        InspectionToolWrapper toolWrapper,
+        InspectionToolPresentation presentation
     ) {
         this(descriptor, element, descriptor, toolWrapper, presentation);
     }
 
     private ProblemDescriptionNode(
-        @Nonnull Object userObject,
+        Object userObject,
         RefEntity element,
         CommonProblemDescriptor descriptor,
-        @Nonnull InspectionToolWrapper toolWrapper,
-        @Nonnull InspectionToolPresentation presentation
+        InspectionToolWrapper toolWrapper,
+        InspectionToolPresentation presentation
     ) {
         super(userObject);
         myElement = element;
@@ -132,7 +131,7 @@ public class ProblemDescriptionNode extends InspectionTreeNode {
         presentation.amnesty(getElement());
     }
 
-    @Nonnull
+    
     private InspectionToolPresentation getPresentation() {
         return myPresentation;
     }

@@ -18,14 +18,13 @@ package consulo.module.content.layer.orderEntry;
 import consulo.content.bundle.Sdk;
 import consulo.module.extension.ModuleExtensionWithSdk;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
  */
 public interface ModuleExtensionWithSdkOrderEntry extends OrderEntry, OrderEntryWithTracking {
-  @Nonnull
+  
   String getModuleExtensionId();
 
   @Nullable

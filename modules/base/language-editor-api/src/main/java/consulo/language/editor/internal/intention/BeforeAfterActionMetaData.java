@@ -20,9 +20,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,10 +38,10 @@ public abstract class BeforeAfterActionMetaData {
   protected static final TextDescriptor[] EMPTY_EXAMPLE = new TextDescriptor[0];
   protected static final TextDescriptor EMPTY_DESCRIPTION = new PlainTextDescriptor("", "");
 
-  @NonNls protected static final String DESCRIPTION_FILE_NAME = "description.html";
-  @NonNls static final String EXAMPLE_USAGE_URL_SUFFIX = ".template";
-  @NonNls private static final String BEFORE_TEMPLATE_PREFIX = "before";
-  @NonNls private static final String AFTER_TEMPLATE_PREFIX = "after";
+  protected static final String DESCRIPTION_FILE_NAME = "description.html";
+  static final String EXAMPLE_USAGE_URL_SUFFIX = ".template";
+  private static final String BEFORE_TEMPLATE_PREFIX = "before";
+  private static final String AFTER_TEMPLATE_PREFIX = "after";
   protected final ClassLoader myLoader;
   protected final String myDescriptionDirectoryName;
   protected TextDescriptor[] myExampleUsagesBefore = null;
@@ -67,8 +65,8 @@ public abstract class BeforeAfterActionMetaData {
     myDescription = description;
   }
 
-  @Nonnull
-  private static TextDescriptor[] retrieveURLs(@Nonnull URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix)
+  
+  private static TextDescriptor[] retrieveURLs(URL descriptionDirectory, String prefix, String suffix)
           throws MalformedURLException {
     List<TextDescriptor> urls = new ArrayList<TextDescriptor>();
     FileType[] fileTypes = FileTypeManager.getInstance().getRegisteredFileTypes();
@@ -119,7 +117,7 @@ public abstract class BeforeAfterActionMetaData {
     return urls.toArray(new TextDescriptor[urls.size()]);
   }
 
-  @Nonnull
+  
   public TextDescriptor[] getExampleUsagesBefore() {
     if (myExampleUsagesBefore == null) {
       try {
@@ -133,7 +131,7 @@ public abstract class BeforeAfterActionMetaData {
     return myExampleUsagesBefore;
   }
 
-  @Nonnull
+  
   public TextDescriptor[] getExampleUsagesAfter() {
     if (myExampleUsagesAfter == null) {
       try {
@@ -147,7 +145,7 @@ public abstract class BeforeAfterActionMetaData {
     return myExampleUsagesAfter;
   }
 
-  @Nonnull
+  
   public TextDescriptor getDescription() {
     if (myDescription == null) {
       try {

@@ -23,7 +23,6 @@ import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 
-import jakarta.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -40,19 +39,19 @@ public class EnumMacro extends Macro {
   }
 
   @Override
-  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(Expression[] params, ExpressionContext context) {
     if (params.length == 0) return null;
     return params[0].calculateResult(context);
   }
 
   @Override
-  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
     if (params.length == 0) return null;
     return params[0].calculateQuickResult(context);
   }
 
   @Override
-  public LookupElement[] calculateLookupItems(@Nonnull Expression[] params, ExpressionContext context) {
+  public LookupElement[] calculateLookupItems(Expression[] params, ExpressionContext context) {
     if (params.length ==0) return null;
     Set<LookupElement> set = new LinkedHashSet<LookupElement>();
 

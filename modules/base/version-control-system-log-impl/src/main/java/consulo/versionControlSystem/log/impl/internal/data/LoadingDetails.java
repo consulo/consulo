@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
-import consulo.application.util.function.Computable;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.Hash;
@@ -8,11 +7,11 @@ import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.versionControlSystem.log.base.VcsCommitMetadataImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Fake {@link VcsCommitMetadataImpl} implementation that is used to indicate that details are not ready for the moment,
@@ -24,20 +23,18 @@ public class LoadingDetails implements VcsFullCommitDetails {
   private static final VcsUserImpl STUB_USER = new VcsUserImpl("", "");
   private static final String LOADING = "Loading...";
 
-  @Nonnull
-  private final Computable<CommitId> myCommitIdComputable;
+  private final Supplier<CommitId> myCommitIdSupplier;
   private final long myLoadingTaskIndex;
   @Nullable private volatile CommitId myCommitId;
 
-  public LoadingDetails(@Nonnull Computable<CommitId> commitIdComputable, long loadingTaskIndex) {
-    myCommitIdComputable = commitIdComputable;
+  public LoadingDetails(Supplier<CommitId> commitIdSupplier, long loadingTaskIndex) {
+    myCommitIdSupplier = commitIdSupplier;
     myLoadingTaskIndex = loadingTaskIndex;
   }
 
-
   protected CommitId getCommitId() {
     if (myCommitId == null) {
-      myCommitId = myCommitIdComputable.compute();
+      myCommitId = myCommitIdSupplier.get();
     }
     return myCommitId;
   }
@@ -46,37 +43,31 @@ public class LoadingDetails implements VcsFullCommitDetails {
     return myLoadingTaskIndex;
   }
 
-  @Nonnull
   @Override
   public Collection<Change> getChanges() {
     return List.of();
   }
 
-  @Nonnull
   @Override
   public String getFullMessage() {
     return "";
   }
 
-  @Nonnull
   @Override
   public VirtualFile getRoot() {
     return getCommitId().getRoot();
   }
 
-  @Nonnull
   @Override
   public String getSubject() {
     return LOADING;
   }
 
-  @Nonnull
   @Override
   public VcsUser getAuthor() {
     return STUB_USER;
   }
 
-  @Nonnull
   @Override
   public VcsUser getCommitter() {
     return STUB_USER;
@@ -92,13 +83,11 @@ public class LoadingDetails implements VcsFullCommitDetails {
     return -1;
   }
 
-  @Nonnull
   @Override
   public Hash getId() {
     return getCommitId().getHash();
   }
 
-  @Nonnull
   @Override
   public List<Hash> getParents() {
     return List.of();

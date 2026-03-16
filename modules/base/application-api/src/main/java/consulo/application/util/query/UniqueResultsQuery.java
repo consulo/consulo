@@ -7,7 +7,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.lang.function.Functions;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -18,25 +17,25 @@ import java.util.function.Predicate;
  * @author max
  */
 public class UniqueResultsQuery<T, M> extends AbstractQuery<T> {
-    @Nonnull
+    
     private final Query<? extends T> myOriginal;
-    @Nonnull
+    
     private final HashingStrategy<? super M> myHashingStrategy;
-    @Nonnull
+    
     private final Function<? super T, ? extends M> myMapper;
 
-    public UniqueResultsQuery(@Nonnull Query<? extends T> original) {
+    public UniqueResultsQuery(Query<? extends T> original) {
         this(original, HashingStrategy.canonical(), Functions.identity());
     }
 
-    public UniqueResultsQuery(@Nonnull Query<? extends T> original, @Nonnull HashingStrategy<? super M> hashingStrategy) {
+    public UniqueResultsQuery(Query<? extends T> original, HashingStrategy<? super M> hashingStrategy) {
         this(original, hashingStrategy, Functions.identity());
     }
 
     public UniqueResultsQuery(
-        @Nonnull Query<? extends T> original,
-        @Nonnull HashingStrategy<? super M> hashingStrategy,
-        @Nonnull Function<? super T, ? extends M> mapper
+        Query<? extends T> original,
+        HashingStrategy<? super M> hashingStrategy,
+        Function<? super T, ? extends M> mapper
     ) {
         myOriginal = original;
         myHashingStrategy = hashingStrategy;
@@ -44,16 +43,16 @@ public class UniqueResultsQuery<T, M> extends AbstractQuery<T> {
     }
 
     @Override
-    protected boolean processResults(@Nonnull Predicate<? super T> consumer) {
+    protected boolean processResults(Predicate<? super T> consumer) {
         return AbstractQuery.delegateProcessResults(
             myOriginal,
             new MyProcessor(Collections.synchronizedSet(Sets.newHashSet(myHashingStrategy)), consumer)
         );
     }
 
-    @Nonnull
+    
     @Override
-    public AsyncFuture<Boolean> forEachAsync(@Nonnull Predicate<? super T> consumer) {
+    public AsyncFuture<Boolean> forEachAsync(Predicate<? super T> consumer) {
         return myOriginal.forEachAsync(new MyProcessor(Collections.synchronizedSet(Sets.newHashSet(myHashingStrategy)), consumer));
     }
 
@@ -61,7 +60,7 @@ public class UniqueResultsQuery<T, M> extends AbstractQuery<T> {
         private final Set<? super M> myProcessedElements;
         private final Predicate<? super T> myConsumer;
 
-        MyProcessor(@Nonnull Set<? super M> processedElements, @Nonnull Predicate<? super T> consumer) {
+        MyProcessor(Set<? super M> processedElements, Predicate<? super T> consumer) {
             myProcessedElements = processedElements;
             myConsumer = consumer;
         }

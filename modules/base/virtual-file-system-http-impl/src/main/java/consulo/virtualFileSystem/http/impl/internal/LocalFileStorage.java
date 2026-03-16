@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.http.impl.internal;
 import consulo.container.boot.ContainerPathManager;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class LocalFileStorage {
         myStorageIODirectory.mkdirs();
     }
 
-    public File createLocalFile(@Nonnull String url) throws IOException {
+    public File createLocalFile(String url) throws IOException {
         int ast = url.indexOf('?');
         if (ast != -1) {
             url = url.substring(0, ast);

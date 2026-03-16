@@ -67,8 +67,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Obsolescent;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,15 +101,15 @@ public class DebuggerUIImplUtil {
     }
 
     @Nullable
-    public static RelativePoint getPositionForPopup(@Nonnull Editor editor, int line) {
+    public static RelativePoint getPositionForPopup(Editor editor, int line) {
         return DebuggerUIUtil.getPositionForPopup(editor, line);
     }
 
-    public static void showPopupForEditorLine(@Nonnull JBPopup popup, @Nonnull Editor editor, int line) {
+    public static void showPopupForEditorLine(JBPopup popup, Editor editor, int line) {
         DebuggerUIUtil.showPopupForEditorLine(popup, editor, line);
     }
 
-    public static void showValuePopup(@Nonnull XFullValueEvaluator evaluator, @Nonnull MouseEvent event, @Nonnull Project project, @Nullable Editor editor) {
+    public static void showValuePopup(XFullValueEvaluator evaluator, MouseEvent event, Project project, @Nullable Editor editor) {
         EditorTextField textArea = new TextViewer("Evaluating...", project);
         textArea.setBackground(TargetAWT.to(HintColorUtil.getInformationColor()));
 
@@ -188,7 +187,7 @@ public class DebuggerUIImplUtil {
 
         XTopicBreakpointListener breakpointListener = new XTopicBreakpointListener() {
             @Override
-            public void breakpointRemoved(@Nonnull XBreakpoint<?> removedBreakpoint) {
+            public void breakpointRemoved(XBreakpoint<?> removedBreakpoint) {
                 if (removedBreakpoint.equals(breakpoint)) {
                     balloon.hide();
                 }
@@ -270,12 +269,12 @@ public class DebuggerUIImplUtil {
         return balloon;
     }
 
-    @Nonnull
+    
     public static EditorColorsScheme getColorScheme() {
         return EditorColorsUtil.getGlobalOrDefaultColorScheme();
     }
 
-    @Nonnull
+    
     public static EditorColorsScheme getColorScheme(@Nullable JComponent component) {
         return EditorColorsUtil.getColorSchemeForComponent(component);
     }
@@ -289,12 +288,12 @@ public class DebuggerUIImplUtil {
         }
 
         @Override
-        public void evaluated(@Nonnull String fullValue) {
+        public void evaluated(String fullValue) {
             evaluated(fullValue, null);
         }
 
         @Override
-        public void evaluated(@Nonnull String fullValue, @Nullable Font font) {
+        public void evaluated(String fullValue, @Nullable Font font) {
             AppUIUtil.invokeOnEdt(() -> {
                 myTextArea.setText(fullValue);
                 if (font != null) {
@@ -304,7 +303,7 @@ public class DebuggerUIImplUtil {
         }
 
         @Override
-        public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+        public void errorOccurred(LocalizeValue errorMessage) {
             AppUIUtil.invokeOnEdt(() -> {
                 myTextArea.setForeground(XDebuggerUIConstants.ERROR_MESSAGE_ATTRIBUTES.getFgColor());
                 myTextArea.setText(errorMessage.get());
@@ -322,7 +321,7 @@ public class DebuggerUIImplUtil {
     }
 
     @Nullable
-    public static String getNodeRawValue(@Nonnull XValueNodeImpl valueNode) {
+    public static String getNodeRawValue(XValueNodeImpl valueNode) {
         if (valueNode.getValueContainer() instanceof XValueTextProvider) {
             return ((XValueTextProvider) valueNode.getValueContainer()).getValueText();
         }
@@ -334,7 +333,7 @@ public class DebuggerUIImplUtil {
     /**
      * Checks if value has evaluation expression ready, or calculation is pending
      */
-    public static boolean hasEvaluationExpression(@Nonnull XValue value) {
+    public static boolean hasEvaluationExpression(XValue value) {
         AsyncResult<XExpression> promise = value.calculateEvaluationExpression();
         if (promise.isDone()) {
             return promise.getResult() != null;
@@ -388,7 +387,7 @@ public class DebuggerUIImplUtil {
             }
 
             @Override
-            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 AppUIUtil.invokeOnEdt(() -> {
                     tree.rebuildAndRestore(treeState);
                     errorConsumer.accept(errorMessage);

@@ -21,8 +21,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * See {@link InspectionManager#createProblemDescriptor(PsiElement, String, LocalQuickFix, ProblemHighlightType, boolean) } for method descriptions.
@@ -47,7 +46,7 @@ public interface ProblemDescriptor extends CommonProblemDescriptor {
 
   int getLineNumber();
 
-  @Nonnull
+  
   ProblemHighlightType getHighlightType();
 
   boolean isAfterEndOfLine();

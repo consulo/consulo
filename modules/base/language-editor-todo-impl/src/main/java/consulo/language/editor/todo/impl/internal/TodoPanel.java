@@ -44,8 +44,7 @@ import consulo.usage.UsagePreviewPanel;
 import consulo.usage.UsagePreviewPanelFactory;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -63,7 +62,6 @@ import java.util.Set;
 public abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavigator, UiDataProvider, Disposable {
     protected static final Logger LOG = Logger.getInstance(TodoPanel.class);
 
-    @Nonnull
     protected Project myProject;
     private final TodoPanelSettings mySettings;
     private final boolean myCurrentFileMode;
@@ -84,7 +82,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
      * @param currentFileMode if {@code true} then view doesn't have "KeymapGroupImpl By Packages" and "Flatten Packages" actions.
      */
     @RequiredUIAccess
-    TodoPanel(@Nonnull Project project, TodoPanelSettings settings, boolean currentFileMode, Content content) {
+    TodoPanel(Project project, TodoPanelSettings settings, boolean currentFileMode, Content content) {
         super(false, true);
 
         myProject = project;
@@ -264,7 +262,6 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         setToolbar(toolbar.getComponent());
     }
 
-    @Nonnull
     protected DefaultActionGroup createGroupByActionGroup() {
         ActionManager actionManager = ActionManager.getInstance();
         return (DefaultActionGroup) actionManager.getAction("TodoViewGroupByGroup");
@@ -326,7 +323,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
     }
 
     @RequiredUIAccess
-    void rebuildCache(@Nonnull Set<VirtualFile> files) {
+    void rebuildCache(Set<VirtualFile> files) {
         myTodoTreeBuilder.rebuildCache(files);
     }
 
@@ -405,7 +402,7 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         super.uiDataSnapshot(sink);
         sink.set(HelpManager.HELP_ID, "find.todoList");
         sink.set(TODO_PANEL_DATA_KEY, this);
@@ -452,7 +449,6 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         return myOccurenceNavigator.goPreviousOccurence();
     }
 
-    @Nonnull
     @Override
     public String getNextOccurenceActionName() {
         return myOccurenceNavigator.getNextOccurenceActionName();
@@ -469,7 +465,6 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         return myOccurenceNavigator.hasNextOccurence();
     }
 
-    @Nonnull
     @Override
     public String getPreviousOccurenceActionName() {
         return myOccurenceNavigator.getPreviousOccurenceActionName();
@@ -598,13 +593,11 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
             return goToPointer(getPreviousPointer());
         }
 
-        @Nonnull
         @Override
         public String getNextOccurenceActionName() {
             return LanguageTodoLocalize.actionNextTodo().get();
         }
 
-        @Nonnull
         @Override
         public String getPreviousOccurenceActionName() {
             return LanguageTodoLocalize.actionPreviousTodo().get();
@@ -682,13 +675,13 @@ public abstract class TodoPanel extends SimpleToolWindowPanel implements Occuren
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return mySettings.showPreview;
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             mySettings.showPreview = state;
             myUsagePreviewPanelComponent.setVisible(state);
             if (state) {

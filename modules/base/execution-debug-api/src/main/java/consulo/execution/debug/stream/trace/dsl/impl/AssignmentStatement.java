@@ -4,15 +4,14 @@ package consulo.execution.debug.stream.trace.dsl.impl;
 import consulo.execution.debug.stream.trace.dsl.Expression;
 import consulo.execution.debug.stream.trace.dsl.Statement;
 import consulo.execution.debug.stream.trace.dsl.Variable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface AssignmentStatement extends Statement {
-  @Nonnull
+  
   Variable getVariable();
 
-  @Nonnull
+  
   Expression getExpression();
 }

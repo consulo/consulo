@@ -17,40 +17,39 @@ package consulo.component.store.internal;
 
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface StateStorageManager {
-  void addMacro(@Nonnull String macro, @Nonnull String expansion);
+  void addMacro(String macro, String expansion);
 
-  @Nonnull
-  String buildFileSpec(@Nonnull Storage storage);
+  
+  String buildFileSpec(Storage storage);
 
   @Nullable
   TrackingPathMacroSubstitutor getMacroSubstitutor();
 
   @Nullable
-  StateStorage getStateStorage(@Nonnull Storage storageSpec);
+  StateStorage getStateStorage(Storage storageSpec);
 
   @Nullable
-  StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType);
+  StateStorage getStateStorage(String fileSpec, RoamingType roamingType);
 
-  @Nonnull
+  
   Collection<String> getStorageFileNames();
 
-  void clearStateStorage(@Nonnull String file);
+  void clearStateStorage(String file);
 
   @Nullable
   ExternalizationSession startExternalization();
 
-  @Nonnull
-  String expandMacros(@Nonnull String file);
+  
+  String expandMacros(String file);
 
-  @Nonnull
-  String collapseMacros(@Nonnull String path);
+  
+  String collapseMacros(String path);
 
   void setStreamProvider(@Nullable StreamProvider streamProvider);
 
@@ -58,13 +57,13 @@ public interface StateStorageManager {
   StreamProvider getStreamProvider();
 
   interface ExternalizationSession {
-    void setState(@Nonnull Storage[] storageSpecs, @Nonnull Object component, @Nonnull String componentName, @Nonnull Object state);
+    void setState(Storage[] storageSpecs, Object component, String componentName, Object state);
 
     /**
      * return empty list if nothing to save
      * @param force
      */
-    @Nonnull
+    
     List<StateStorage.SaveSession> createSaveSessions(boolean force);
   }
 }

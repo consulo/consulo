@@ -18,23 +18,23 @@ package consulo.versionControlSystem.log.impl.internal.graph.bek;
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
 import consulo.versionControlSystem.log.graph.LinearGraph;
-import jakarta.annotation.Nonnull;
 
 import static consulo.versionControlSystem.log.graph.LinearGraphUtils.getDownNodes;
 import static consulo.versionControlSystem.log.graph.LinearGraphUtils.getUpNodes;
+import org.jspecify.annotations.Nullable;
 
 public class BekChecker {
   private final static Logger LOG = Logger.getInstance(BekChecker.class);
 
-  public static void checkLinearGraph(@Nonnull LinearGraph linearGraph) {
+  public static void checkLinearGraph(LinearGraph linearGraph) {
     Pair<Integer, Integer> reversedEdge = findReversedEdge(linearGraph);
     if (reversedEdge != null) {
       LOG.error("Illegal edge: up node " + reversedEdge.first + ", downNode " + reversedEdge.second);
     }
   }
 
-  @jakarta.annotation.Nullable
-  public static Pair<Integer, Integer> findReversedEdge(@Nonnull LinearGraph linearGraph) {
+  @Nullable
+  public static Pair<Integer, Integer> findReversedEdge(LinearGraph linearGraph) {
     for (int i = 0; i < linearGraph.nodesCount(); i++) {
       for (int downNode : getDownNodes(linearGraph, i)) {
         if (downNode <= i) {

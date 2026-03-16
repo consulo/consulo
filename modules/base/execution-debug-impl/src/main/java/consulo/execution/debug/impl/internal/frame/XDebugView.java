@@ -21,8 +21,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.ui.ex.awt.util.SingleAlarm;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -49,11 +48,11 @@ public abstract class XDebugView implements Disposable {
 
   protected abstract void clear();
 
-  public abstract void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session);
+  public abstract void processSessionEvent(SessionEvent event, XDebugSession session);
 
   @Nullable
   @Deprecated
-  public static XDebugSession getSession(@Nonnull Component component) {
+  public static XDebugSession getSession(Component component) {
     return DataManager.getInstance().getDataContext(component).getData(XDebugSession.DATA_KEY);
   }
 

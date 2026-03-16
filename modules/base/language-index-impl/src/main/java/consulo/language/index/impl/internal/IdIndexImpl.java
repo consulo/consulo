@@ -13,7 +13,6 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ThreadLocalCachedIntArray;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.DataInput;
@@ -50,12 +49,12 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
     return version;
   }
 
-  @Nonnull
+  
   @Override
   public DataExternalizer<Collection<IdIndexEntry>> createExternalizer() {
     return new DataExternalizer<>() {
       @Override
-      public void save(@Nonnull DataOutput out, @Nonnull Collection<IdIndexEntry> value) throws IOException {
+      public void save(DataOutput out, Collection<IdIndexEntry> value) throws IOException {
         int size = value.size();
         int[] values = spareBufferLocal.getBuffer(size);
         int ptr = 0;
@@ -72,7 +71,7 @@ public class IdIndexImpl extends IdIndex implements CustomInputsIndexFileBasedIn
       }
 
       @Override
-      public Collection<IdIndexEntry> read(@Nonnull DataInput in) throws IOException {
+      public Collection<IdIndexEntry> read(DataInput in) throws IOException {
         int length = DataInputOutputUtil.readINT(in);
         ArrayList<IdIndexEntry> entries = new ArrayList<>(length);
         int prev = 0;

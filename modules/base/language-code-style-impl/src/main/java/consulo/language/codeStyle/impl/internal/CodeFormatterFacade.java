@@ -45,8 +45,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -149,7 +148,7 @@ public class CodeFormatterFacade {
     }
 
     @RequiredUIAccess
-    public void processText(@Nonnull PsiFile file, FormatTextRanges ranges, boolean doPostponedFormatting) {
+    public void processText(PsiFile file, FormatTextRanges ranges, boolean doPostponedFormatting) {
         Project project = file.getProject();
         Document document = file.getViewProvider().getDocument();
         List<FormatTextRange> textRanges = ranges.getRanges();
@@ -211,13 +210,13 @@ public class CodeFormatterFacade {
     }
 
     @RequiredReadAction
-    private void setDisabledRanges(@Nonnull PsiFile file, FormatTextRanges ranges) {
+    private void setDisabledRanges(PsiFile file, FormatTextRanges ranges) {
         Iterable<TextRange> excludedRangesIterable =
             TextRangeUtil.excludeRanges(file.getTextRange(), myTagHandler.getEnabledRanges(file.getNode(), file.getTextRange()));
         ranges.setDisabledRanges((Collection<TextRange>)excludedRangesIterable);
     }
 
-    private static void invokePostponedFormatting(@Nonnull PsiFile file, Document document, List<FormatTextRange> textRanges) {
+    private static void invokePostponedFormatting(PsiFile file, Document document, List<FormatTextRange> textRanges) {
         RangeMarker[] markers = new RangeMarker[textRanges.size()];
         int i = 0;
         for (FormatTextRange range : textRanges) {
@@ -248,7 +247,7 @@ public class CodeFormatterFacade {
 
     @Nullable
     @RequiredReadAction
-    static ASTNode findContainingNode(@Nonnull PsiFile file, @Nullable TextRange range) {
+    static ASTNode findContainingNode(PsiFile file, @Nullable TextRange range) {
         Language language = file.getLanguage();
         if (range == null) {
             return null;
@@ -275,7 +274,7 @@ public class CodeFormatterFacade {
     }
 
     @RequiredReadAction
-    private TextRange preprocess(@Nonnull ASTNode node, @Nonnull TextRange range) {
+    private TextRange preprocess(ASTNode node, TextRange range) {
         TextRange result = range;
         PsiElement psi = node.getPsi();
         if (!psi.isValid()) {
@@ -356,7 +355,7 @@ public class CodeFormatterFacade {
         return result;
     }
 
-    private TextRange preprocessEnabledRanges(@Nonnull ASTNode node, @Nonnull TextRange range) {
+    private TextRange preprocessEnabledRanges(ASTNode node, TextRange range) {
         TextRange result = TextRange.create(range.getStartOffset(), range.getEndOffset());
         List<TextRange> enabledRanges = myTagHandler.getEnabledRanges(node, result);
         int delta = 0;
@@ -373,9 +372,9 @@ public class CodeFormatterFacade {
         return result;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static Collection<PsiLanguageInjectionHost> collectInjectionHosts(@Nonnull PsiFile file, @Nonnull TextRange range) {
+    private static Collection<PsiLanguageInjectionHost> collectInjectionHosts(PsiFile file, TextRange range) {
         Stack<PsiElement> toProcess = new Stack<>();
         for (PsiElement e = file.findElementAt(range.getStartOffset()); e != null; e = e.getNextSibling()) {
             if (e.getTextRange().getStartOffset() >= range.getEndOffset()) {
@@ -435,7 +434,7 @@ public class CodeFormatterFacade {
      * @param endOffset   end offset of the first line to check for wrapping (exclusive)
      */
     @RequiredUIAccess
-    private void wrapLongLinesIfNecessary(@Nonnull PsiFile file, @Nullable Document document, int startOffset, int endOffset) {
+    private void wrapLongLinesIfNecessary(PsiFile file, @Nullable Document document, int startOffset, int endOffset) {
         if (!mySettings.getCommonSettings(file.getLanguage()).WRAP_LONG_LINES ||
             PostprocessReformattingAspect.getInstance(file.getProject()).isViewProviderLocked(file.getViewProvider()) ||
             document == null) {
@@ -493,9 +492,9 @@ public class CodeFormatterFacade {
 
     @RequiredUIAccess
     public void doWrapLongLinesIfNecessary(
-        @Nonnull Editor editor,
-        @Nonnull Project project,
-        @Nonnull Document document,
+        Editor editor,
+        Project project,
+        Document document,
         int startOffset,
         int endOffset,
         List<? extends TextRange> enabledRanges
@@ -578,7 +577,7 @@ public class CodeFormatterFacade {
         }
     }
 
-    private static boolean canWrapLine(int startOffset, int endOffset, int offsetShift, @Nonnull List<? extends TextRange> enabledRanges) {
+    private static boolean canWrapLine(int startOffset, int endOffset, int offsetShift, List<? extends TextRange> enabledRanges) {
         for (TextRange range : enabledRanges) {
             if (range.containsOffset(startOffset - offsetShift) && range.containsOffset(endOffset - offsetShift)) {
                 return true;
@@ -597,7 +596,7 @@ public class CodeFormatterFacade {
      *                2. The second element holds added symbols number;
      */
     @RequiredUIAccess
-    private static void emulateEnter(@Nonnull Editor editor, @Nonnull Project project, int[] shifts) {
+    private static void emulateEnter(Editor editor, Project project, int[] shifts) {
         DataContext dataContext = prepareContext(editor.getComponent(), project);
         int caretOffset = editor.getCaretModel().getOffset();
         Document document = editor.getDocument();
@@ -661,8 +660,8 @@ public class CodeFormatterFacade {
      * preferred wrap position otherwise
      */
     private int calculatePreferredWrapPosition(
-        @Nonnull Editor editor,
-        @Nonnull CharSequence text,
+        Editor editor,
+        CharSequence text,
         int tabSize,
         int spaceSize,
         int startLineOffset,
@@ -731,7 +730,7 @@ public class CodeFormatterFacade {
     }
 
     private int wrapPositionForTabbedTextWithOptimization(
-        @Nonnull CharSequence text,
+        CharSequence text,
         int tabSize,
         int startLineOffset,
         int endLineOffset,
@@ -760,8 +759,8 @@ public class CodeFormatterFacade {
     }
 
     private int wrapPositionForTabbedTextWithoutOptimization(
-        @Nonnull Editor editor,
-        @Nonnull CharSequence text,
+        Editor editor,
+        CharSequence text,
         int spaceSize,
         int startLineOffset,
         int endLineOffset,
@@ -802,14 +801,14 @@ public class CodeFormatterFacade {
         return wrapLine ? result : -1;
     }
 
-    @Nonnull
-    private static DataContext prepareContext(@Nonnull Component component, @Nonnull Project project) {
+    
+    private static DataContext prepareContext(Component component, Project project) {
         // There is a possible case that formatting is performed from project view and editor is not opened yet. The problem is that
         // its data context doesn't contain information about project then. So, we explicitly support that here (see IDEA-72791).
         DataContext baseDataContext = DataManager.getInstance().getDataContext(component);
         return new DelegatingDataContext(baseDataContext) {
             @Override
-            public Object getData(@Nonnull Key dataId) {
+            public Object getData(Key dataId) {
                 Object result = baseDataContext.getData(dataId);
                 if (result == null && Project.KEY == dataId) {
                     result = project;
@@ -829,17 +828,17 @@ public class CodeFormatterFacade {
         }
 
         @Override
-        public Object getData(@Nonnull Key dataId) {
+        public Object getData(Key dataId) {
             return myDataContextDelegate.getData(dataId);
         }
 
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             return myDataHolderDelegate == null ? null : myDataHolderDelegate.getUserData(key);
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             if (myDataHolderDelegate != null) {
                 myDataHolderDelegate.putUserData(key, value);
             }

@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * For virtual files containing meta information in the path. Like,
@@ -27,6 +26,6 @@ import jakarta.annotation.Nonnull;
  * @see VirtualFile#getPath()
  */
 public interface VirtualFilePathWrapper {
-  @Nonnull
+  
   String getPresentablePath();
 }

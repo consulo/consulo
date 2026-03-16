@@ -3,7 +3,7 @@
 package consulo.ui.ex.action;
 
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 

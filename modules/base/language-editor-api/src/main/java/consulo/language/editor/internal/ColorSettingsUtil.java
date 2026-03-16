@@ -20,7 +20,6 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class ColorSettingsUtil {
   private ColorSettingsUtil() {
   }
 
-  @Nonnull
+  
   public static Map<TextAttributesKey, LocalizeValue> keyToDisplayTextMap(ColorSettingsPage page) {
     Map<TextAttributesKey, LocalizeValue> displayText = new HashMap<>();
     for (AttributesDescriptor attributeDescriptor : page.getAttributeDescriptors()) {

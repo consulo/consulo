@@ -10,8 +10,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -28,8 +27,8 @@ public class InsertionContext {
   private boolean myAddCompletionChar;
 
   public InsertionContext(OffsetMap offsetMap, char completionChar, LookupElement[] elements,
-                          @Nonnull PsiFile file,
-                          @Nonnull Editor editor, boolean addCompletionChar) {
+                          PsiFile file,
+                          Editor editor, boolean addCompletionChar) {
     myOffsetMap = offsetMap;
     myCompletionChar = completionChar;
     myElements = elements;
@@ -47,12 +46,12 @@ public class InsertionContext {
     return myOffsetMap.getOffset(TAIL_OFFSET);
   }
 
-  @Nonnull
+  
   public PsiFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public Editor getEditor() {
     return myEditor;
   }
@@ -61,7 +60,7 @@ public class InsertionContext {
     PsiDocumentManager.getInstance(getProject()).commitDocument(getDocument());
   }
 
-  @Nonnull
+  
   public Document getDocument() {
     return getEditor().getDocument();
   }

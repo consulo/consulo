@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This interface specifies a location in its file editor.
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  * not expected to be compared together.
  */
 public interface FileEditorLocation extends Comparable<FileEditorLocation> {
-  @Nonnull
+  
   FileEditor getEditor();
 }

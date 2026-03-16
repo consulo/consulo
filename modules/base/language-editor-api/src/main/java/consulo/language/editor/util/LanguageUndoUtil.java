@@ -21,7 +21,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ public class LanguageUndoUtil {
      *
      * @param file to make editors of to respond to undo action.
      */
-    public static void markPsiFileForUndo(@Nonnull PsiFile file) {
+    public static void markPsiFileForUndo(PsiFile file) {
         Project project = file.getProject();
         Document document = PsiDocumentManager.getInstance(project).getDocument(file);
         if (document == null) {

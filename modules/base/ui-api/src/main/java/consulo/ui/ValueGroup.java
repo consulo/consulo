@@ -18,8 +18,6 @@ package consulo.ui;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 03-May-17
@@ -31,7 +29,5 @@ public interface ValueGroup<V> {
 
   @RequiredUIAccess
   void clearValues();
-
-  @Nonnull
   ValueGroup<V> add(ValueComponent<V> component);
 }

@@ -29,7 +29,6 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +58,7 @@ public class ContentRootPanel extends JPanel {
         myContentEntry = contentEntry;
     }
 
-    @Nonnull
+    
     protected ContentEntry getContentEntry() {
         return myContentEntry;
     }

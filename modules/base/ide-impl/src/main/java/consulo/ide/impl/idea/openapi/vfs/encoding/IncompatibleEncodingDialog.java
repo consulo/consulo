@@ -14,28 +14,27 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.nio.charset.Charset;
 
 public class IncompatibleEncodingDialog extends DialogWrapper {
-    @Nonnull
+    
     private final VirtualFile virtualFile;
-    @Nonnull
+    
     private final Charset charset;
-    @Nonnull
+    
     private final EncodingUtil.Magic8 safeToReload;
-    @Nonnull
+    
     private final EncodingUtil.Magic8 safeToConvert;
 
     IncompatibleEncodingDialog(
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Charset charset,
-        @Nonnull EncodingUtil.Magic8 safeToReload,
-        @Nonnull EncodingUtil.Magic8 safeToConvert
+        VirtualFile virtualFile,
+        Charset charset,
+        EncodingUtil.Magic8 safeToReload,
+        EncodingUtil.Magic8 safeToConvert
     ) {
         super(false);
         this.virtualFile = virtualFile;
@@ -57,7 +56,7 @@ public class IncompatibleEncodingDialog extends DialogWrapper {
         return label;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         DialogWrapperAction reloadAction = new DialogWrapperAction(IdeLocalize.buttonReload()) {

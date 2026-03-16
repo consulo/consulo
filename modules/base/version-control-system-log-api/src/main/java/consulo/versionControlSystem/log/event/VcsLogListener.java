@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.event;
 
 import consulo.versionControlSystem.log.VcsLogDataPack;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Listens to changes in the log, both in Permanent and Visible parts.
@@ -32,5 +31,5 @@ public interface VcsLogListener {
    * @param dataPack        new VcsLogDataPack which was just applied to the UI.
    * @param refreshHappened true if a refresh initiated this log change, i.e. PermanentGraph changed.
    */
-  void onChange(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened);
+  void onChange(VcsLogDataPack dataPack, boolean refreshHappened);
 }

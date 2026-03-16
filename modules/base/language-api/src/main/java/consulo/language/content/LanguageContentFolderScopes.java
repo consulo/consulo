@@ -18,7 +18,6 @@ package consulo.language.content;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -26,47 +25,47 @@ import java.util.function.Predicate;
  * @since 23:12/31.10.13
  */
 public class LanguageContentFolderScopes {
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> all() {
     return all(true);
   }
 
-  @Nonnull
-  public static Predicate<ContentFolderTypeProvider> of(@Nonnull ContentFolderTypeProvider provider) {
+  
+  public static Predicate<ContentFolderTypeProvider> of(ContentFolderTypeProvider provider) {
     return provider::equals;
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> excluded() {
     return of(ExcludedContentFolderTypeProvider.getInstance());
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> production() {
     return onlyProduction().or(it -> it.equals(ProductionResourceContentFolderTypeProvider.getInstance()));
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> test() {
     return onlyTest().or(it -> it.equals(TestResourceContentFolderTypeProvider.getInstance()));
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> productionAndTest() {
     return production().or(test());
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> onlyProduction() {
     return it -> it.equals(ProductionContentFolderTypeProvider.getInstance());
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> onlyTest() {
     return it -> it.equals(TestContentFolderTypeProvider.getInstance());
   }
 
-  @Nonnull
+  
   public static Predicate<ContentFolderTypeProvider> all(boolean withExclude) {
     return withExclude ? it -> true : it -> !ExcludedContentFolderTypeProvider.getInstance().equals(it);
   }

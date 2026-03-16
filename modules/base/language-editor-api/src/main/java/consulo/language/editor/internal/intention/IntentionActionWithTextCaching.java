@@ -20,8 +20,7 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,19 +36,19 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     private final LocalizeValue myDisplayName;
     private final Image myIcon;
 
-    IntentionActionWithTextCaching(@Nonnull IntentionAction action) {
+    IntentionActionWithTextCaching(IntentionAction action) {
         this(action, action.getText(), null, (__1, __2) -> {
         });
     }
 
-    IntentionActionWithTextCaching(@Nonnull IntentionActionDescriptor descriptor, @Nonnull BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
+    IntentionActionWithTextCaching(IntentionActionDescriptor descriptor, BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
         this(descriptor.getAction(), descriptor.getDisplayName(), descriptor.getIcon(), markInvoked);
     }
 
-    private IntentionActionWithTextCaching(@Nonnull IntentionAction action,
+    private IntentionActionWithTextCaching(IntentionAction action,
                                            LocalizeValue displayName,
                                            @Nullable Image icon,
-                                           @Nonnull BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
+                                           BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
         myIcon = icon;
         myText = action.getText();
         // needed for checking errors in user written actions
@@ -59,44 +58,44 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         myDisplayName = displayName;
     }
 
-    @Nonnull
+    
     public LocalizeValue getText() {
         return myText;
     }
 
-    void addIntention(@Nonnull IntentionAction action) {
+    void addIntention(IntentionAction action) {
         myOptionIntentions.add(action);
     }
 
-    void addErrorFix(@Nonnull IntentionAction action) {
+    void addErrorFix(IntentionAction action) {
         myOptionErrorFixes.add(action);
     }
 
-    void addInspectionFix(@Nonnull IntentionAction action) {
+    void addInspectionFix(IntentionAction action) {
         myOptionInspectionFixes.add(action);
     }
 
-    @Nonnull
+    
     public IntentionAction getAction() {
         return myAction;
     }
 
-    @Nonnull
+    
     public List<IntentionAction> getOptionIntentions() {
         return myOptionIntentions;
     }
 
-    @Nonnull
+    
     public List<IntentionAction> getOptionErrorFixes() {
         return myOptionErrorFixes;
     }
 
-    @Nonnull
+    
     public List<IntentionAction> getOptionInspectionFixes() {
         return myOptionInspectionFixes;
     }
 
-    @Nonnull
+    
     public List<IntentionAction> getOptionActions() {
         return ContainerUtil.concat(myOptionIntentions, myOptionErrorFixes, myOptionInspectionFixes);
     }
@@ -106,13 +105,13 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     }
 
     @Override
-    @Nonnull
+    
     public String toString() {
         return getText().get();
     }
 
     @Override
-    public int compareTo(@Nonnull IntentionActionWithTextCaching other) {
+    public int compareTo(IntentionActionWithTextCaching other) {
         if (myAction instanceof Comparable) {
             //noinspection unchecked
             return ((Comparable) myAction).compareTo(other.getAction());
@@ -139,7 +138,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         return myAction instanceof ShortcutProvider ? ((ShortcutProvider) myAction).getShortcut() : null;
     }
 
-    @Nonnull
+    
     @Override
     public IntentionAction getDelegate() {
         return getAction();
@@ -172,10 +171,10 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
     // IntentionAction which wraps the original action and then marks it as executed to hide it from the popup to avoid invoking it twice accidentally
     private class MyIntentionAction implements IntentionAction, CustomizableIntentionActionDelegate, Comparable<MyIntentionAction>, ShortcutProvider, PossiblyDumbAware {
         private final IntentionAction myAction;
-        @Nonnull
+        
         private final BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> myMarkInvoked;
 
-        MyIntentionAction(@Nonnull IntentionAction action, @Nonnull BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
+        MyIntentionAction(IntentionAction action, BiConsumer<? super IntentionActionWithTextCaching, ? super IntentionAction> markInvoked) {
             myAction = action;
             myMarkInvoked = markInvoked;
         }
@@ -185,7 +184,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
             return DumbService.isDumbAware(myAction);
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getText() {
             return myText;
@@ -197,12 +196,12 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         }
 
         @Override
-        public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+        public boolean isAvailable(Project project, Editor editor, PsiFile file) {
             return myAction.isAvailable(project, editor, file);
         }
 
         @Override
-        public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
             myAction.invoke(project, editor, file);
             myMarkInvoked.accept(IntentionActionWithTextCaching.this, myAction);
         }
@@ -212,7 +211,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
             return myAction.startInWriteAction();
         }
 
-        @Nonnull
+        
         @Override
         public IntentionAction getDelegate() {
             return myAction;
@@ -221,13 +220,13 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         @Override
         public
         @Nullable
-        FileModifier getFileModifierForPreview(@Nonnull PsiFile target) {
+        FileModifier getFileModifierForPreview(PsiFile target) {
             return myAction.getFileModifierForPreview(target);
         }
 
         @Nullable
         @Override
-        public PsiElement getElementToMakeWritable(@Nonnull PsiFile currentFile) {
+        public PsiElement getElementToMakeWritable(PsiFile currentFile) {
             return myAction.getElementToMakeWritable(currentFile);
         }
 
@@ -238,7 +237,7 @@ public class IntentionActionWithTextCaching implements Comparable<IntentionActio
         }
 
         @Override
-        public int compareTo(@Nonnull MyIntentionAction other) {
+        public int compareTo(MyIntentionAction other) {
             if (myAction instanceof Comparable) {
                 //noinspection unchecked
                 return ((Comparable) myAction).compareTo(other.getDelegate());

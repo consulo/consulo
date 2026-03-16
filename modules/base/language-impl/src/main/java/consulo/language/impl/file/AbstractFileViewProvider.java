@@ -35,9 +35,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -50,9 +48,9 @@ import java.util.function.Consumer;
 public abstract class AbstractFileViewProvider extends UserDataHolderBase implements FileViewProvider {
   private static final Logger LOG = Logger.getInstance(AbstractFileViewProvider.class);
   private static final Key<Set<AbstractFileViewProvider>> KNOWN_COPIES = Key.create("KNOWN_COPIES");
-  @Nonnull
+  
   private final PsiManagerEx myManager;
-  @Nonnull
+  
   private final VirtualFile myVirtualFile;
   private final boolean myEventSystemEnabled;
   private final boolean myPhysical;
@@ -60,7 +58,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   private volatile Reference<Document> myDocument;
   private final PsiLock myPsiLock = new PsiLock();
 
-  protected AbstractFileViewProvider(@Nonnull PsiManager manager, @Nonnull VirtualFile virtualFile, boolean eventSystemEnabled) {
+  protected AbstractFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled) {
     myManager = (PsiManagerEx)manager;
     myVirtualFile = virtualFile;
     myEventSystemEnabled = eventSystemEnabled;
@@ -91,11 +89,11 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return true;
   }
 
-  public static boolean isFreeThreaded(@Nonnull FileViewProvider provider) {
+  public static boolean isFreeThreaded(FileViewProvider provider) {
     return provider.getVirtualFile() instanceof LightVirtualFile && !provider.isEventSystemEnabled();
   }
 
-  @Nonnull
+  
   public PsiLock getFilePsiLock() {
     return myPsiLock;
   }
@@ -106,12 +104,12 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Nullable
-  protected PsiFile createFile(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull FileType fileType) {
+  protected PsiFile createFile(Project project, VirtualFile file, FileType fileType) {
     return createFile(file, fileType, getBaseLanguage());
   }
 
-  @Nonnull
-  protected PsiFile createFile(@Nonnull VirtualFile file, @Nonnull FileType fileType, @Nonnull Language language) {
+  
+  protected PsiFile createFile(VirtualFile file, FileType fileType, Language language) {
     if (fileType.isBinary() || file.is(VFileProperty.SPECIAL)) {
       return SingleRootFileViewProvider.isTooLargeForContentLoading(file) ? new PsiLargeBinaryFileImpl((PsiManagerImpl)getManager(), this) : new PsiBinaryFileImpl((PsiManagerImpl)getManager(), this);
     }
@@ -128,7 +126,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Nullable
-  protected PsiFile createFile(@Nonnull Language lang) {
+  protected PsiFile createFile(Language lang) {
     if (lang != getBaseLanguage()) return null;
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
     if (parserDefinition != null) {
@@ -138,19 +136,19 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Override
-  @Nonnull
+  
   public final PsiManager getManager() {
     return myManager;
   }
 
   @Override
-  @Nonnull
+  
   public CharSequence getContents() {
     return getContent().getText();
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
@@ -174,7 +172,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
 
   @Override
   @Nullable
-  public final PsiFile getPsi(@Nonnull Language target) {
+  public final PsiFile getPsi(Language target) {
     if (!isPhysical()) {
       FileManager fileManager = ((PsiManagerEx)getManager()).getFileManager();
       VirtualFile virtualFile = getVirtualFile();
@@ -202,14 +200,14 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Override
-  public PsiElement findElementAt(int offset, @Nonnull Language language) {
+  public PsiElement findElementAt(int offset, Language language) {
     PsiFile psiFile = getPsi(language);
     return psiFile != null ? findElementAt(psiFile, offset) : null;
   }
 
   @Override
   @Nullable
-  public PsiReference findReferenceAt(int offset, @Nonnull Language language) {
+  public PsiReference findReferenceAt(int offset, Language language) {
     PsiFile psiFile = getPsi(language);
     return psiFile != null ? findReferenceAt(psiFile, offset) : null;
   }
@@ -296,7 +294,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Override
-  public void rootChanged(@Nonnull PsiFile psiFile) {
+  public void rootChanged(PsiFile psiFile) {
     if (psiFile instanceof PsiFileImpl psiFileImpl && psiFileImpl.isContentsLoaded() && psiFileImpl.isValid()) {
       setContent(new PsiFileContent(psiFileImpl.calcTreeElement(), LocalTimeCounter.currentTime()));
     }
@@ -318,16 +316,16 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   @Override
-  public boolean supportsIncrementalReparse(@Nonnull Language rootLanguage) {
+  public boolean supportsIncrementalReparse(Language rootLanguage) {
     return true;
   }
 
-  @Nonnull
+  
   private Content getContent() {
     return myContent;
   }
 
-  private void setContent(@Nonnull Content content) {
+  private void setContent(Content content) {
     myContent = content;
   }
 
@@ -370,18 +368,18 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
 
-  @NonNls
+  
   @Override
   public String toString() {
     return getClass().getName() + "{myVirtualFile=" + myVirtualFile + ", content=" + getContent() + '}';
   }
 
-  public abstract PsiFile getCachedPsi(@Nonnull Language target);
+  public abstract PsiFile getCachedPsi(Language target);
 
-  @Nonnull
+  
   public abstract List<PsiFile> getCachedPsiFiles();
 
-  @Nonnull
+  
   public abstract List<FileElement> getKnownTreeRoots();
 
   public final void markInvalidated() {
@@ -413,7 +411,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     }
   }
 
-  public final void registerAsCopy(@Nonnull AbstractFileViewProvider copy) {
+  public final void registerAsCopy(AbstractFileViewProvider copy) {
     if (copy instanceof FreeThreadedFileViewProvider) {
       LOG.assertTrue(this instanceof FreeThreadedFileViewProvider, "Injected file can't have non-injected original file");
     }
@@ -428,7 +426,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   private interface Content {
-    @Nonnull
+    
     CharSequence getText();
 
     int getTextLength();
@@ -437,7 +435,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
   }
 
   private class VirtualFileContent implements Content {
-    @Nonnull
+    
     @Override
     public CharSequence getText() {
       VirtualFile virtualFile = getVirtualFile();
@@ -468,19 +466,19 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
       return getLastCommittedStamp(document);
     }
 
-    @NonNls
+    
     @Override
     public String toString() {
       return "VirtualFileContent{size=" + getVirtualFile().getLength() + "}";
     }
   }
 
-  @Nonnull
-  private CharSequence getLastCommittedText(@Nonnull Document document) {
+  
+  private CharSequence getLastCommittedText(Document document) {
     return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedText(document);
   }
 
-  private long getLastCommittedStamp(@Nonnull Document document) {
+  private long getLastCommittedStamp(Document document) {
     return PsiDocumentManager.getInstance(myManager.getProject()).getLastCommittedStamp(document);
   }
 
@@ -488,12 +486,12 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     private final long myModificationStamp;
     private final FileElement myFileElement;
 
-    PsiFileContent(@Nonnull FileElement fileElement, long modificationStamp) {
+    PsiFileContent(FileElement fileElement, long modificationStamp) {
       myModificationStamp = modificationStamp;
       myFileElement = fileElement;
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getText() {
       return myFileElement.getText();
@@ -510,7 +508,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     }
   }
 
-  @Nonnull
+  
   @Override
   public PsiFile getStubBindingRoot() {
     PsiFile psi = getPsi(getBaseLanguage());
@@ -518,7 +516,7 @@ public abstract class AbstractFileViewProvider extends UserDataHolderBase implem
     return psi;
   }
 
-  @Nonnull
+  
   @Override
   public final FileType getFileType() {
     return myVirtualFile.getFileType();

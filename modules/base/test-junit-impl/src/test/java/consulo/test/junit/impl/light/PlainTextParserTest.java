@@ -18,8 +18,7 @@ package consulo.test.junit.impl.light;
 import consulo.language.file.LanguageFileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.test.junit.impl.language.SimpleParsingTest;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,9 +35,9 @@ public class PlainTextParserTest extends SimpleParsingTest<Object> {
         doTest(context, null);
     }
 
-    @Nonnull
+    
     @Override
-    protected LanguageFileType getFileType(@Nonnull Context context, @Nullable Object testContext) {
+    protected LanguageFileType getFileType(Context context, @Nullable Object testContext) {
         return PlainTextFileType.INSTANCE;
     }
 }

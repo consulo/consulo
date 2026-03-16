@@ -19,7 +19,6 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.content.OrderRootType;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -27,14 +26,14 @@ import jakarta.annotation.Nonnull;
 public class OrderRootTypeElement extends LibraryTableTreeContentElement<OrderRootTypeElement> {
   private final OrderRootType myRootType;
 
-  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, @Nonnull OrderRootType rootType, String nodeText, @Nonnull Image icon) {
+  public OrderRootTypeElement(NodeDescriptor rootElementDescriptor, OrderRootType rootType, String nodeText, Image icon) {
     super(rootElementDescriptor);
     myRootType = rootType;
     setIcon(icon);
     myName = nodeText;
   }
 
-  @Nonnull
+  
   public OrderRootType getOrderRootType() {
     return myRootType;
   }

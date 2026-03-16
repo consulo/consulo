@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Array;
 
@@ -28,17 +27,17 @@ public abstract class StripedLockHolder<T> {
   private int ourLockAllocationCounter = 0;
 
   @SuppressWarnings("unchecked")
-  protected StripedLockHolder(@Nonnull Class<T> aClass) {
+  protected StripedLockHolder(Class<T> aClass) {
     ourLocks = (T[])Array.newInstance(aClass, NUM_LOCKS);
     for (int i = 0; i < ourLocks.length; i++) {
       ourLocks[i] = create();
     }
   }
 
-  @Nonnull
+  
   protected abstract T create();
 
-  @Nonnull
+  
   public T allocateLock() {
     return ourLocks[allocateLockIndex()];
   }

@@ -33,8 +33,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -47,8 +46,7 @@ public class CommandLineProcessor {
   private CommandLineProcessor() {
   }
 
-  @Nonnull
-  public static CompletableFuture<Project> processExternalCommandLine(@Nonnull CommandLineArgs commandLineArgs,
+  public static CompletableFuture<Project> processExternalCommandLine(CommandLineArgs commandLineArgs,
                                                                       @Nullable String currentDirectory) {
     String file = commandLineArgs.getFile();
     if (file == null) {
@@ -101,7 +99,7 @@ public class CommandLineProcessor {
     }
   }
 
-  private static void openFile(@Nonnull UIAccess uiAccess, @Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
+  private static void openFile(UIAccess uiAccess, Project project, VirtualFile virtualFile, int line) {
     uiAccess.give(() -> {
       OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(project).newBuilder(virtualFile);
       if (line != -1) {
@@ -112,7 +110,6 @@ public class CommandLineProcessor {
     });
   }
 
-  @Nonnull
   private static Project findBestProject(VirtualFile virtualFile) {
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (Project aProject : projects) {
@@ -126,7 +123,7 @@ public class CommandLineProcessor {
   }
 
   @Nullable
-  private static File findProjectDirectoryOrFile(@Nonnull String path) {
+  private static File findProjectDirectoryOrFile(String path) {
     File target = new File(path);
 
     while (target != null) {

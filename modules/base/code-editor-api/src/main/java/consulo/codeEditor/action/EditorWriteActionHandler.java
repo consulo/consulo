@@ -27,8 +27,7 @@ import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for {@link EditorActionHandler} instances, which need to modify the document.
@@ -113,6 +112,6 @@ public abstract class EditorWriteActionHandler extends EditorActionHandler {
     }
 
     @Override
-    public abstract void executeWriteAction(@Nonnull Editor editor, @SuppressWarnings("NullableProblems") @Nonnull Caret caret, DataContext dataContext);
+    public abstract void executeWriteAction(Editor editor, @SuppressWarnings("NullableProblems") Caret caret, DataContext dataContext);
   }
 }

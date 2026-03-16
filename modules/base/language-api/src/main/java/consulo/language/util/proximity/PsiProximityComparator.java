@@ -16,7 +16,6 @@
 
 package consulo.language.util.proximity;
 
-import consulo.application.util.function.Computable;
 import consulo.language.Weigher;
 import consulo.language.WeighingComparable;
 import consulo.language.WeighingService;
@@ -28,10 +27,11 @@ import consulo.language.util.ProcessingContext;
 import consulo.module.Module;
 import consulo.util.collection.FactoryMap;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class PsiProximityComparator implements Comparator<Object> {
   public static final Key<ProximityStatistician> STATISTICS_KEY = Key.create("proximity");
@@ -87,8 +87,12 @@ public class PsiProximityComparator implements Comparator<Object> {
   }
 
   @Nullable
-  public static WeighingComparable<PsiElement, ProximityLocation> getProximity(Computable<? extends PsiElement> elementComputable, PsiElement context, ProcessingContext processingContext) {
-    PsiElement element = elementComputable.compute();
+  public static WeighingComparable<PsiElement, ProximityLocation> getProximity(
+      Supplier<? extends PsiElement> elementComputable,
+      PsiElement context,
+      ProcessingContext processingContext
+  ) {
+    PsiElement element = elementComputable.get();
     if (element == null || context == null) return null;
     Module contextModule = processingContext.get(MODULE_BY_LOCATION);
     if (contextModule == null) {

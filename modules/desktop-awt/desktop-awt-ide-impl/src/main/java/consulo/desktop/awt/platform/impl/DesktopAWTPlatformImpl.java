@@ -22,7 +22,6 @@ import consulo.platform.PlatformUser;
 import consulo.platform.impl.PlatformBase;
 import consulo.ui.UIAccess;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.net.URL;
@@ -38,18 +37,18 @@ class DesktopAWTPlatformImpl extends PlatformBase {
     }
 
     @Override
-    public void openInBrowser(@Nonnull URL url) {
+    public void openInBrowser(URL url) {
         BrowserUtil.browse(url);
     }
 
-    @Nonnull
+    
     @Override
     public String fileManagerName() {
         return FileManagerProxy.getFileManagerName();
     }
 
     @Override
-    public boolean supportsFeature(@Nonnull PlatformFeature feature) {
+    public boolean supportsFeature(PlatformFeature feature) {
         switch (feature) {
             case OPEN_DIRECTORY_IN_FILE_MANAGER:
             case OPEN_FILE_IN_FILE_MANAGER:
@@ -59,22 +58,22 @@ class DesktopAWTPlatformImpl extends PlatformBase {
     }
 
     @Override
-    public void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+    public void openFileInFileManager(File file, UIAccess uiAccess) {
         FileManagerProxy.openFile(file, uiAccess);
     }
 
     @Override
-    public void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+    public void openDirectoryInFileManager(File file, UIAccess uiAccess) {
         FileManagerProxy.openDirectory(file, uiAccess);
     }
 
-    @Nonnull
+    
     @Override
     protected PlatformUser createUser(Map<String, String> jvmProperties) {
         return new DesktopPlatformUserImpl(this, jvmProperties);
     }
 
-    @Nonnull
+    
     @Override
     protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
         return new DesktopAWTFileSystemImpl(this, jvmProperties);

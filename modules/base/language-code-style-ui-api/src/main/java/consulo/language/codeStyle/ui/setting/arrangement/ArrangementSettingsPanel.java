@@ -32,8 +32,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.GridBag;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,20 +47,20 @@ import java.util.List;
  */
 public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
-  @Nonnull
+  
   private final JPanel myContent = new JPanel(new GridBagLayout());
 
-  @Nonnull
+  
   private final Language                         myLanguage;
-  @Nonnull
+  
   private final ArrangementStandardSettingsAware mySettingsAware;
-  @Nonnull
+  
   private final ArrangementGroupingRulesPanel myGroupingRulesPanel;
-  @Nonnull
+  
   private final ArrangementMatchingRulesPanel    myMatchingRulesPanel;
   @Nullable private final ForceArrangementPanel myForceArrangementPanel;
 
-  public ArrangementSettingsPanel(@Nonnull CodeStyleSettings settings, @Nonnull Language language) {
+  public ArrangementSettingsPanel(CodeStyleSettings settings, Language language) {
     super(settings);
     myLanguage = language;
     Rearranger<?> rearranger = Rearranger.forLanguage(language);
@@ -110,7 +109,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     registerShortcut(ArrangementConstants.GROUPING_RULE_MOVE_DOWN, CommonShortcuts.MOVE_DOWN, myGroupingRulesPanel);
   }
 
-  private void registerShortcut(@Nonnull String actionId, @Nonnull ShortcutSet shortcut, @Nonnull JComponent component) {
+  private void registerShortcut(String actionId, ShortcutSet shortcut, JComponent component) {
     AnAction action = ActionManager.getInstance().getAction(actionId);
     if (action != null) {
       action.registerCustomShortcutSet(shortcut, component, this);
@@ -131,7 +130,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
 
   @SuppressWarnings("unchecked")
   @Nullable
-  private StdArrangementSettings getSettings(@Nonnull CodeStyleSettings settings) {
+  private StdArrangementSettings getSettings(CodeStyleSettings settings) {
     StdArrangementSettings result = (StdArrangementSettings)settings.getCommonSettings(myLanguage).getArrangementSettings();
     if (result == null) {
       result = mySettingsAware.getDefaultSettings();
@@ -177,8 +176,8 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     }
   }
 
-  @Nonnull
-  private static List<ArrangementSectionRule> copy(@Nonnull List<ArrangementSectionRule> rules) {
+  
+  private static List<ArrangementSectionRule> copy(List<ArrangementSectionRule> rules) {
     List<ArrangementSectionRule> result = new ArrayList<>();
     for (ArrangementSectionRule rule : rules) {
       result.add(rule.clone());
@@ -186,7 +185,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
     return result;
   }
 
-  @Nonnull
+  
   @Override
   protected LocalizeValue getTabTitle() {
     return ApplicationLocalize.arrangementTitleSettingsTab();

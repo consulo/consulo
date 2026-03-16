@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -59,10 +58,10 @@ public class PsiVFSListener implements BulkFileListener {
 
     @Inject
     public PsiVFSListener(
-        @Nonnull Project project,
-        @Nonnull FileTypeManager fileTypeManager,
-        @Nonnull PsiManager psiManager,
-        @Nonnull Provider<ProjectFileIndex> fileIndex
+        Project project,
+        FileTypeManager fileTypeManager,
+        PsiManager psiManager,
+        Provider<ProjectFileIndex> fileIndex
     ) {
         myProject = project;
         myFileTypeManager = fileTypeManager;
@@ -77,7 +76,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredUIAccess
-    private void fileCreated(@Nonnull VirtualFile vFile) {
+    private void fileCreated(VirtualFile vFile) {
         runExternalAction(() -> {
             VirtualFile parent = vFile.getParent();
             PsiDirectory parentDir = getCachedDirectory(parent);
@@ -97,7 +96,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredUIAccess
-    private void beforeFileDeletion(@Nonnull VFileDeleteEvent event) {
+    private void beforeFileDeletion(VFileDeleteEvent event) {
         VirtualFile vFile = event.getFile();
 
         VirtualFile parent = vFile.getParent();
@@ -119,7 +118,7 @@ public class PsiVFSListener implements BulkFileListener {
 
     // optimization: call myFileManager.removeInvalidFilesAndDirs() once for group of delete events, instead of once for each event
     @RequiredUIAccess
-    private void filesDeleted(@Nonnull List<? extends VFileEvent> events) {
+    private void filesDeleted(List<? extends VFileEvent> events) {
         boolean needToRemoveInvalidFilesAndDirs = false;
         for (VFileEvent event : events) {
             VFileDeleteEvent de = (VFileDeleteEvent) event;
@@ -161,12 +160,12 @@ public class PsiVFSListener implements BulkFileListener {
         }
     }
 
-    private void clearViewProvider(@Nonnull VirtualFile vFile, @Nonnull String why) {
+    private void clearViewProvider(VirtualFile vFile, String why) {
         DebugUtil.performPsiModification(why, () -> myFileManager.setViewProvider(vFile, null));
     }
 
     @RequiredUIAccess
-    private void beforePropertyChange(@Nonnull VFilePropertyChangeEvent event) {
+    private void beforePropertyChange(VFilePropertyChangeEvent event) {
         VirtualFile vFile = event.getFile();
         String propertyName = event.getPropertyName();
 
@@ -271,7 +270,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredWriteAction
-    private void propertyChanged(@Nonnull VFilePropertyChangeEvent event) {
+    private void propertyChanged(VFilePropertyChangeEvent event) {
         String propertyName = event.getPropertyName();
         VirtualFile vFile = event.getFile();
 
@@ -394,7 +393,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredUIAccess
-    private void beforeFileMovement(@Nonnull VFileMoveEvent event) {
+    private void beforeFileMovement(VFileMoveEvent event) {
         VirtualFile vFile = event.getFile();
 
         PsiDirectory oldParentDir = myFileManager.findDirectory(event.getOldParent());
@@ -433,7 +432,7 @@ public class PsiVFSListener implements BulkFileListener {
 
     // optimization: call myFileManager.removeInvalidFilesAndDirs() once for group of move events, instead of once for each event
     @RequiredUIAccess
-    private void filesMoved(@Nonnull List<? extends VFileEvent> events) {
+    private void filesMoved(List<? extends VFileEvent> events) {
         List<PsiElement> oldElements = new ArrayList<>(events.size());
         List<PsiDirectory> oldParentDirs = new ArrayList<>(events.size());
         List<PsiDirectory> newParentDirs = new ArrayList<>(events.size());
@@ -548,7 +547,7 @@ public class PsiVFSListener implements BulkFileListener {
 
         @Override
         @RequiredUIAccess
-        public void beforeRootsChange(@Nonnull ModuleRootEvent event) {
+        public void beforeRootsChange(ModuleRootEvent event) {
             if (event.isCausedByFileTypesChange()) {
                 return;
             }
@@ -566,7 +565,7 @@ public class PsiVFSListener implements BulkFileListener {
 
         @Override
         @RequiredUIAccess
-        public void rootsChanged(@Nonnull ModuleRootEvent event) {
+        public void rootsChanged(ModuleRootEvent event) {
             myFileManager.dispatchPendingEvents();
 
             if (event.isCausedByFileTypesChange()) {
@@ -591,7 +590,7 @@ public class PsiVFSListener implements BulkFileListener {
     class MyFileDocumentManagerAdapter implements FileDocumentManagerListener {
         @Override
         @RequiredUIAccess
-        public void fileWithNoDocumentChanged(@Nonnull VirtualFile file) {
+        public void fileWithNoDocumentChanged(VirtualFile file) {
             FileViewProvider viewProvider = myFileManager.findCachedViewProvider(file);
             if (viewProvider != null) {
                 runExternalAction(() -> {
@@ -610,7 +609,7 @@ public class PsiVFSListener implements BulkFileListener {
 
         @Override
         @RequiredUIAccess
-        public void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+        public void fileContentReloaded(VirtualFile file, Document document) {
             FileViewProvider psiFile = myFileManager.findCachedViewProvider(file);
             if (!file.isValid()
                 || psiFile == null
@@ -623,14 +622,14 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredWriteAction
-    private void handleVfsChangeWithoutPsi(@Nonnull VirtualFile vFile) {
+    private void handleVfsChangeWithoutPsi(VirtualFile vFile) {
         if (!myReportedUnloadedPsiChange && isInRootModel(vFile)) {
             myFileManager.firePropertyChangedForUnloadedPsi();
             myReportedUnloadedPsiChange = true;
         }
     }
 
-    private boolean isInRootModel(@Nonnull VirtualFile file) {
+    private boolean isInRootModel(VirtualFile file) {
         ProjectFileIndex index = ProjectFileIndex.getInstance(myProject);
         return index.isInContent(file) || index.isInLibrary(file);
     }
@@ -642,7 +641,7 @@ public class PsiVFSListener implements BulkFileListener {
 
     @Override
     @RequiredUIAccess
-    public void before(@Nonnull List<? extends VFileEvent> events) {
+    public void before(List<? extends VFileEvent> events) {
         myReportedUnloadedPsiChange = false;
         for (VFileEvent event : events) {
             if (event instanceof VFileDeleteEvent deleteEvent) {
@@ -658,13 +657,13 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @Override
-    public void after(@Nonnull List<? extends VFileEvent> events) {
+    public void after(List<? extends VFileEvent> events) {
         groupAndFire(events);
         myReportedUnloadedPsiChange = false;
     }
 
     // group same type events together and call fireForGrouped() for the each batch
-    private void groupAndFire(@Nonnull List<? extends VFileEvent> events) {
+    private void groupAndFire(List<? extends VFileEvent> events) {
         // group several VFileDeleteEvents together, several VFileMoveEvents together, place all other events into one-element lists
 
         BiPredicate<VFileEvent, VFileEvent> check =
@@ -675,7 +674,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     @RequiredWriteAction
-    private void fireForGrouped(@Nonnull List<? extends VFileEvent> subList) {
+    private void fireForGrouped(List<? extends VFileEvent> subList) {
         VFileEvent event = subList.get(0);
         if (event instanceof VFileDeleteEvent) {
             filesDeleted(subList);

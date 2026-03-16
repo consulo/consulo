@@ -26,7 +26,6 @@ import consulo.ui.ex.CopyPasteSupport;
 import consulo.ui.ex.DeleteProvider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -40,7 +39,7 @@ public class PsiActionSupportFactoryImpl extends PsiActionSupportFactory {
                                                          final PsiElementSelector dataSelector) {
     return new CopyPasteDelegator(project, keyReceiver) {
       @Override
-      @Nonnull
+      
       protected PsiElement[] getSelectedElements() {
         PsiElement[] elements = dataSelector.getSelectedElements();
         return elements == null ? PsiElement.EMPTY_ARRAY : elements;

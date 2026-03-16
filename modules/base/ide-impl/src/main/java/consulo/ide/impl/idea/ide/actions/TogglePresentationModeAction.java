@@ -39,8 +39,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -64,7 +63,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean selected = UISettings.getInstance().PRESENTATION_MODE;
         e.getPresentation().setTextValue(
             selected
@@ -75,7 +74,7 @@ public class TogglePresentationModeAction extends AnAction implements DumbAware 
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         UISettings settings = UISettings.getInstance();
         Project project = e.getData(Project.KEY);
 

@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Incorrect VCS root definition: either an unregistered, or an incorrectly registered VCS root.
@@ -33,12 +32,12 @@ public interface VcsRootError {
   /**
    * @return type of mapping error
    */
-  @Nonnull
+  
   Type getType();
 
   /**
    * @return affected directory mapping
    */
-  @Nonnull
+  
   VcsDirectoryMapping getMapping();
 }

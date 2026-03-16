@@ -31,8 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -218,7 +217,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
         actions.add(getOKAction());
@@ -271,7 +270,7 @@ public class SingleConfigurableEditor extends DialogWrapper {
         super.doOKAction();
     }
 
-    public static String createDimensionKey(@Nonnull Configurable configurable) {
+    public static String createDimensionKey(Configurable configurable) {
         return "#" + configurable.getDisplayName().getId();
     }
 

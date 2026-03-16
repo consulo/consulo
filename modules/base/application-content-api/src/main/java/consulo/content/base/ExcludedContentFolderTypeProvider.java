@@ -26,7 +26,6 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
@@ -40,7 +39,7 @@ public final class ExcludedContentFolderTypeProvider extends ContentFolderTypePr
 
     private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 
-    @Nonnull
+    
     public static ExcludedContentFolderTypeProvider getInstance() {
         return INSTANCE.get();
     }
@@ -49,31 +48,31 @@ public final class ExcludedContentFolderTypeProvider extends ContentFolderTypePr
         super("EXCLUDED");
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.modulesExcluderoot();
     }
 
-    @Nonnull
+    
     @Override
     public Image getChildDirectoryIcon() {
         return PlatformIconGroup.modulesExcluderoot();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ProjectLocalize.moduleToggleExcludedAction();
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getGroupColor() {
         return EXCLUDED_COLOR;
     }
 
-    @Nonnull
+    
     @Override
     public Image getGeneratedIcon() {
         return PlatformIconGroup.modulesGeneratedexcluderoot();

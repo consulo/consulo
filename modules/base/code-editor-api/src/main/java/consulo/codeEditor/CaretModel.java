@@ -6,8 +6,7 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -50,14 +49,14 @@ public interface CaretModel {
      *
      * @param pos the position to move to.
      */
-    void moveToLogicalPosition(@Nonnull LogicalPosition pos);
+    void moveToLogicalPosition(LogicalPosition pos);
 
     /**
      * Moves the caret to the specified visual position.
      *
      * @param pos the position to move to.
      */
-    void moveToVisualPosition(@Nonnull VisualPosition pos);
+    void moveToVisualPosition(VisualPosition pos);
 
     /**
      * Short hand for calling {@link #moveToOffset(int, boolean)} with {@code 'false'} as a second argument.
@@ -94,7 +93,7 @@ public interface CaretModel {
      *
      * @return the caret position.
      */
-    @Nonnull
+    
     LogicalPosition getLogicalPosition();
 
     /**
@@ -102,7 +101,7 @@ public interface CaretModel {
      *
      * @return the caret position.
      */
-    @Nonnull
+    
     VisualPosition getVisualPosition();
 
     /**
@@ -117,7 +116,7 @@ public interface CaretModel {
      *
      * @param listener the listener instance.
      */
-    void addCaretListener(@Nonnull CaretListener listener);
+    void addCaretListener(CaretListener listener);
 
     /**
      * Adds a listener for receiving notifications about caret movement and caret addition/removal.
@@ -125,7 +124,7 @@ public interface CaretModel {
      *
      * @param listener the listener instance.
      */
-    default void addCaretListener(@Nonnull CaretListener listener, @Nonnull Disposable parentDisposable) {
+    default void addCaretListener(CaretListener listener, Disposable parentDisposable) {
         addCaretListener(listener);
         Disposer.register(parentDisposable, () -> removeCaretListener(listener));
     }
@@ -135,7 +134,7 @@ public interface CaretModel {
      *
      * @param listener the listener instance.
      */
-    void removeCaretListener(@Nonnull CaretListener listener);
+    void removeCaretListener(CaretListener listener);
 
     /**
      * @return document offset for the start of the logical line where caret is located
@@ -172,13 +171,13 @@ public interface CaretModel {
      * {@link CaretAction#perform(Caret)} method instead of this method, as the definition of current caret (as
      * well as caret instance operated on by model methods) can potentially change.
      */
-    @Nonnull
+    
     Caret getCurrentCaret();
 
     /**
      * Returns the 'primary' caret.
      */
-    @Nonnull
+    
     Caret getPrimaryCaret();
 
     /**
@@ -189,20 +188,20 @@ public interface CaretModel {
     /**
      * Returns all carets currently existing in the document, ordered by their visual position in editor.
      */
-    @Nonnull
+    
     List<Caret> getAllCarets();
 
     /**
      * Returns a caret at the given position in the document, or {@code null}, if there's no caret there.
      */
     @Nullable
-    Caret getCaretAt(@Nonnull VisualPosition pos);
+    Caret getCaretAt(VisualPosition pos);
 
     /**
      * Same as {@link #addCaret(VisualPosition, boolean)} with {@code true} as a {@code makePrimary} boolean parameter value.
      */
     @Nullable
-    Caret addCaret(@Nonnull VisualPosition pos);
+    Caret addCaret(VisualPosition pos);
 
     /**
      * Adds a new caret at the given position, and returns corresponding {@link Caret} instance. Locations outside of possible values
@@ -212,13 +211,13 @@ public interface CaretModel {
      * includes the specified location, {@code null} is returned in this case.
      */
     @Nullable
-    Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary);
+    Caret addCaret(VisualPosition pos, boolean makePrimary);
 
     /**
      * Removes a given caret if it's recognized by the model and is not the only existing caret in the document, returning {@code true}.
      * {@code false} is returned if any of the above condition doesn't hold, and the removal cannot happen.
      */
-    boolean removeCaret(@Nonnull Caret caret);
+    boolean removeCaret(Caret caret);
 
     /**
      * Removes all carets except the 'primary' one from the document.
@@ -237,7 +236,7 @@ public interface CaretModel {
      * @see #getCaretsAndSelections()
      * @see #setCaretsAndSelections(List, boolean)
      */
-    void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates);
+    void setCaretsAndSelections(List<? extends CaretState> caretStates);
 
     /**
      * Sets the number of carets, their positions and selection ranges according to the provided data. Null values for caret position or
@@ -251,7 +250,7 @@ public interface CaretModel {
      * @see #supportsMultipleCarets()
      * @see #getCaretsAndSelections()
      */
-    void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection);
+    void setCaretsAndSelections(List<? extends CaretState> caretStates, boolean updateSystemSelection);
 
     /**
      * Returns the current positions of all carets and their selections. The order of entries in the returned list does not necessarily
@@ -262,13 +261,13 @@ public interface CaretModel {
      *
      * @see #setCaretsAndSelections(List)
      */
-    @Nonnull
+    
     List<CaretState> getCaretsAndSelections();
 
     /**
      * Same as {@link #runForEachCaret(CaretAction, boolean)} with {@code reverseOrder} set to {@code false}
      */
-    void runForEachCaret(@Nonnull CaretAction action);
+    void runForEachCaret(CaretAction action);
 
     /**
      * Executes the given task for each existing caret. Set of carets to iterate over is
@@ -279,18 +278,18 @@ public interface CaretModel {
      * Carets are iterated in position order (top-to-bottom) if {@code reverseOrder} is {@code false}, and in reverse order
      * if it's {@code true}.
      */
-    void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder);
+    void runForEachCaret(CaretAction action, boolean reverseOrder);
 
     /**
      * Adds a listener which will be notified before and after all-caret operations are performed by {@link #runForEachCaret(CaretAction)} and
      * {@link #runForEachCaret(CaretAction, boolean)}.
      */
-    void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable);
+    void addCaretActionListener(CaretActionListener listener, Disposable disposable);
 
     /**
      * Executes the given task, performing caret merging afterwards. Caret merging will not happen until the operation is finished.
      */
-    void runBatchCaretOperation(@Nonnull Runnable runnable);
+    void runBatchCaretOperation(Runnable runnable);
 
     default boolean isIteratingOverCarets() {
         return false;

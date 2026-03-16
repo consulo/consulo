@@ -33,8 +33,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,7 +58,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
    *
    * @param psiFile the file for which the structure view model is requested.
    */
-  protected TextEditorBasedStructureViewModel(@Nonnull PsiFile psiFile) {
+  protected TextEditorBasedStructureViewModel(PsiFile psiFile) {
     this(PsiUtilBase.findEditor(psiFile), psiFile);
   }
 
@@ -89,7 +88,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public final void addEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
+  public final void addEditorPositionListener(FileEditorPositionListener listener) {
     if (myEditor != null && myListeners.isEmpty()) {
       myEditorCaretListenerDisposable = Disposable.newDisposable();
       EditorFactory.getInstance().getEventMulticaster().addCaretListener(myEditorCaretListener, myEditorCaretListenerDisposable);
@@ -98,7 +97,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public final void removeEditorPositionListener(@Nonnull FileEditorPositionListener listener) {
+  public final void removeEditorPositionListener(FileEditorPositionListener listener) {
     myListeners.remove(listener);
     if (myEditor != null && myListeners.isEmpty()) {
       Disposer.dispose(myEditorCaretListenerDisposable);
@@ -157,12 +156,12 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  public void addModelListener(@Nonnull ModelListener modelListener) {
+  public void addModelListener(ModelListener modelListener) {
     myModelListeners.add(modelListener);
   }
 
   @Override
-  public void removeModelListener(@Nonnull ModelListener modelListener) {
+  public void removeModelListener(ModelListener modelListener) {
     myModelListeners.remove(modelListener);
   }
 
@@ -173,7 +172,7 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
    *
    * @return the list of classes
    */
-  @Nonnull
+  
   protected Class[] getSuitableClasses() {
     return ArrayUtil.EMPTY_CLASS_ARRAY;
   }
@@ -183,31 +182,31 @@ public abstract class TextEditorBasedStructureViewModel implements StructureView
   }
 
   @Override
-  @Nonnull
+  
   public Grouper[] getGroupers() {
     return Grouper.EMPTY_ARRAY;
   }
 
   @Override
-  @Nonnull
+  
   public Sorter[] getSorters() {
     return Sorter.EMPTY_ARRAY;
   }
 
   @Override
-  @Nonnull
+  
   public Filter[] getFilters() {
     return Filter.EMPTY_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<NodeProvider> getNodeProviders() {
     return Collections.emptyList();
   }
 
   @Override
-  public boolean isEnabled(@Nonnull NodeProvider provider) {
+  public boolean isEnabled(NodeProvider provider) {
     return false;
   }
 }

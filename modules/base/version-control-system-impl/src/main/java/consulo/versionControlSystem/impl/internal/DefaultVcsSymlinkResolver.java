@@ -8,8 +8,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsSymlinkResolver;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 @ExtensionImpl(order = "last")
@@ -25,7 +24,7 @@ public class DefaultVcsSymlinkResolver implements VcsSymlinkResolver {
     private final Mode myMode;
 
     @Inject
-    public DefaultVcsSymlinkResolver(@Nonnull Project project) {
+    public DefaultVcsSymlinkResolver(Project project) {
         myProject = project;
         RegistryValue value = Registry.get("vcs.resolve.symlinks.for.vcs.operations");
         myMode = switch (value.asString()) {
@@ -43,7 +42,7 @@ public class DefaultVcsSymlinkResolver implements VcsSymlinkResolver {
 
     @Override
     @Nullable
-    public VirtualFile resolveSymlink(@Nonnull VirtualFile file) {
+    public VirtualFile resolveSymlink(VirtualFile file) {
         if (myMode == Mode.DISABLED) return file;
 
         VirtualFile canonicalFile = file.getCanonicalFile();

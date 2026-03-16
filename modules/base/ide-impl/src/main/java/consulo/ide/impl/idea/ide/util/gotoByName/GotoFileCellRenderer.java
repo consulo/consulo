@@ -2,26 +2,25 @@
 
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
-import consulo.ui.ex.JBColor;
-import consulo.component.util.Iconable;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.component.util.Iconable;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.content.ProjectFileIndex;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.util.FilePathSplittingPolicy;
+import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -75,7 +74,7 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
   }
 
   @Nullable
-  public static VirtualFile getAnyRoot(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+  public static VirtualFile getAnyRoot(VirtualFile virtualFile, Project project) {
     ProjectFileIndex index = ProjectFileIndex.SERVICE.getInstance(project);
     VirtualFile root = index.getContentRootForFile(virtualFile);
     if (root == null) root = index.getClassRootForFile(virtualFile);
@@ -83,9 +82,9 @@ public class GotoFileCellRenderer extends PsiElementListCellRenderer<PsiFileSyst
     return root;
   }
 
-  @Nonnull
-  static String getRelativePathFromRoot(@Nonnull VirtualFile file, @Nonnull VirtualFile root) {
-    return root.getName() + File.separatorChar + VfsUtilCore.getRelativePath(file, root, File.separatorChar);
+  
+  static String getRelativePathFromRoot(VirtualFile file, VirtualFile root) {
+    return root.getName() + File.separatorChar + VirtualFileUtil.getRelativePath(file, root, File.separatorChar);
   }
 
   @Override

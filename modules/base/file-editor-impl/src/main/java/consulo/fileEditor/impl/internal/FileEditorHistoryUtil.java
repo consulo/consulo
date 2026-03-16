@@ -19,7 +19,6 @@ import consulo.fileEditor.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,8 +27,8 @@ import jakarta.annotation.Nonnull;
 public class FileEditorHistoryUtil {
   private static final Logger LOG = Logger.getInstance(FileEditorHistoryUtil.class);
 
-  @Nonnull
-  public static HistoryEntry currentStateAsHistoryEntry(@Nonnull FileEditorWithProviderComposite composite) {
+  
+  public static HistoryEntry currentStateAsHistoryEntry(FileEditorWithProviderComposite composite) {
     FileEditor[] editors = composite.getEditors();
     FileEditorState[] states = new FileEditorState[editors.length];
     for (int j = 0; j < states.length; j++) {

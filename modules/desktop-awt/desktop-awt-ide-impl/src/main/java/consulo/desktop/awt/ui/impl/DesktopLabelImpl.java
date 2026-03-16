@@ -32,8 +32,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -49,7 +48,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
         private ColorValue myForegroudColor;
 
-        MyJLabel(@Nonnull LocalizeValue text, LabelOptions options) {
+        MyJLabel(LocalizeValue text, LabelOptions options) {
             super("");
 
             setHorizontalAlignment2(options.getHorizontalAlignment());
@@ -66,7 +65,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             updateText();
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopLabelImpl.this;
@@ -78,7 +77,7 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             updateForegroundColor();
         }
 
-        private void setHorizontalAlignment2(@Nonnull HorizontalAlignment horizontalAlignment) {
+        private void setHorizontalAlignment2(HorizontalAlignment horizontalAlignment) {
             myHorizontalAlignment2 = horizontalAlignment;
             switch (horizontalAlignment) {
                 case LEFT:
@@ -97,12 +96,12 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
             return myHorizontalAlignment2;
         }
 
-        @Nonnull
+        
         public LocalizeValue getTextValue() {
             return myTextValue;
         }
 
-        public void setTextValue(@Nonnull LocalizeValue textValue) {
+        public void setTextValue(LocalizeValue textValue) {
             myTextValue = textValue;
 
             updateText();
@@ -172,11 +171,11 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
 
     @RequiredUIAccess
     @Override
-    public void setText(@Nonnull LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         toAWTComponent().setTextValue(text);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return toAWTComponent().getTextValue();
@@ -187,17 +186,17 @@ class DesktopLabelImpl extends SwingComponentDelegate<DesktopLabelImpl.MyJLabel>
         toAWTComponent().setForegroundColor(colorValue);
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addFocusListener(@Nonnull ComponentEventListener<HasFocus, FocusEvent> listener) {
+    public Disposable addFocusListener(ComponentEventListener<HasFocus, FocusEvent> listener) {
         AWTFocusAdapterAsFocusListener adapter = new AWTFocusAdapterAsFocusListener(this, listener);
         toAWTComponent().addFocusListener(adapter);
         return () -> toAWTComponent().removeFocusListener(adapter);
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addBlurListener(@Nonnull ComponentEventListener<HasFocus, BlurEvent> listener) {
+    public Disposable addBlurListener(ComponentEventListener<HasFocus, BlurEvent> listener) {
         AWTFocusAdapterAsBlurListener adapter = new AWTFocusAdapterAsBlurListener(this, listener);
         toAWTComponent().addFocusListener(adapter);
         return () -> toAWTComponent().removeFocusListener(adapter);

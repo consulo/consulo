@@ -22,7 +22,6 @@ import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.update.Activatable;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,11 +30,11 @@ import java.awt.event.HierarchyListener;
 import java.lang.ref.WeakReference;
 
 public class UiNotifyConnector implements Disposable, HierarchyListener {
-    @Nonnull
+    
     private final WeakReference<Component> myComponent;
     private Activatable myTarget;
 
-    public UiNotifyConnector(@Nonnull Component component, @Nonnull Activatable target) {
+    public UiNotifyConnector(Component component, Activatable target) {
         myComponent = new WeakReference<>(component);
         myTarget = target;
         if (component.isShowing()) {
@@ -52,7 +51,7 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
     }
 
     @Override
-    public void hierarchyChanged(@Nonnull HierarchyEvent e) {
+    public void hierarchyChanged(HierarchyEvent e) {
         if (isDisposed()) {
             return;
         }
@@ -148,11 +147,11 @@ public class UiNotifyConnector implements Disposable, HierarchyListener {
         }
     }
 
-    public static void doWhenFirstShown(@Nonnull JComponent c, @RequiredUIAccess @Nonnull Runnable runnable) {
+    public static void doWhenFirstShown(JComponent c, @RequiredUIAccess Runnable runnable) {
         doWhenFirstShown((Component)c, runnable);
     }
 
-    public static void doWhenFirstShown(@Nonnull Component c, @RequiredUIAccess @Nonnull final Runnable runnable) {
+    public static void doWhenFirstShown(Component c, @RequiredUIAccess final Runnable runnable) {
         Activatable activatable = new Activatable() {
             @Override
             public void showNotify() {

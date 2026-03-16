@@ -27,17 +27,16 @@ import consulo.versionControlSystem.log.graph.NormalEdge;
 import consulo.logging.Logger;
 import consulo.util.collection.SLRUMap;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Function;
 
 import static consulo.versionControlSystem.log.graph.LinearGraphUtils.*;
 
 public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
-  @Nonnull
+  
   private static final Logger LOG = Logger.getInstance(PrintElementGeneratorImpl.class);
 
   public static final int LONG_EDGE_SIZE = 30;
@@ -50,11 +49,11 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   private static final int SAMPLE_SIZE = 20000;
 
 
-  @Nonnull
+  
   private final SLRUMap<Integer, List<GraphElement>> myCache = new SLRUMap<>(CACHE_SIZE, CACHE_SIZE * 2);
-  @Nonnull
+  
   private final EdgesInRowGenerator myEdgesInRowGenerator;
-  @Nonnull
+  
   private final Comparator<GraphElement> myGraphElementComparator;
 
   private final int myLongEdgeSize;
@@ -62,7 +61,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   private final int myEdgeWithArrowSize;
   private int myRecommendedWidth = 0;
 
-  public PrintElementGeneratorImpl(@Nonnull LinearGraph graph, @Nonnull PrintElementManager printElementManager, boolean showLongEdges) {
+  public PrintElementGeneratorImpl(LinearGraph graph, PrintElementManager printElementManager, boolean showLongEdges) {
     super(graph, printElementManager);
     myEdgesInRowGenerator = new EdgesInRowGenerator(graph);
     myGraphElementComparator = printElementManager.getGraphElementComparator();
@@ -85,8 +84,8 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
 
   @TestOnly
   public PrintElementGeneratorImpl(
-    @Nonnull LinearGraph graph,
-    @Nonnull PrintElementManager printElementManager,
+    LinearGraph graph,
+    PrintElementManager printElementManager,
     int longEdgeSize,
     int visiblePartSize,
     int edgeWithArrowSize
@@ -164,7 +163,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return myRecommendedWidth;
   }
 
-  @Nonnull
+  
   @Override
   protected List<ShortEdge> getDownShortEdges(int rowIndex) {
     Function<GraphEdge, Integer> endPosition = createEndPositionFunction(rowIndex);
@@ -193,7 +192,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return result;
   }
 
-  @Nonnull
+  
   private Function<GraphEdge, Integer> createEndPositionFunction(int visibleRowIndex) {
     List<GraphElement> visibleElementsInNextRow = getSortedVisibleElementsInRow(visibleRowIndex + 1);
 
@@ -212,7 +211,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     };
   }
 
-  @Nonnull
+  
   @Override
   protected List<SimpleRowElement> getSimpleRowElements(int visibleRowIndex) {
     List<SimpleRowElement> result = new SmartList<>();
@@ -236,7 +235,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   }
 
   @Nullable
-  private RowElementType getArrowType(@Nonnull GraphEdge edge, int rowIndex) {
+  private RowElementType getArrowType(GraphEdge edge, int rowIndex) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge != null) {
       return getArrowType(normalEdge, rowIndex);
@@ -263,7 +262,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
   }
 
   @Nullable
-  private RowElementType getArrowType(@Nonnull NormalEdge normalEdge, int rowIndex) {
+  private RowElementType getArrowType(NormalEdge normalEdge, int rowIndex) {
     int edgeSize = normalEdge.down - normalEdge.up;
     int upOffset = rowIndex - normalEdge.up;
     int downOffset = normalEdge.down - rowIndex;
@@ -286,7 +285,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return null;
   }
 
-  private boolean isEdgeVisibleInRow(@Nonnull GraphEdge edge, int visibleRowIndex) {
+  private boolean isEdgeVisibleInRow(GraphEdge edge, int visibleRowIndex) {
     NormalEdge normalEdge = asNormalEdge(edge);
     if (normalEdge == null) {
       // e.d. edge is special. See addSpecialEdges
@@ -295,11 +294,11 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return isEdgeVisibleInRow(normalEdge, visibleRowIndex);
   }
 
-  private boolean isEdgeVisibleInRow(@Nonnull NormalEdge normalEdge, int visibleRowIndex) {
+  private boolean isEdgeVisibleInRow(NormalEdge normalEdge, int visibleRowIndex) {
     return normalEdge.down - normalEdge.up < myLongEdgeSize || getAttachmentDistance(normalEdge, visibleRowIndex) <= myVisiblePartSize;
   }
 
-  private void addSpecialEdges(@Nonnull List<GraphElement> result, int rowIndex) {
+  private void addSpecialEdges(List<GraphElement> result, int rowIndex) {
     if (rowIndex > 0) {
       for (GraphEdge edge : myLinearGraph.getAdjacentEdges(rowIndex - 1, EdgeFilter.SPECIAL)) {
         assert !edge.getType().isNormalEdge();
@@ -314,7 +313,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     }
   }
 
-  @Nonnull
+  
   private List<GraphElement> getSortedVisibleElementsInRow(int rowIndex) {
     List<GraphElement> graphElements = myCache.get(rowIndex);
     if (graphElements != null) {
@@ -335,7 +334,7 @@ public class PrintElementGeneratorImpl extends AbstractPrintElementGenerator {
     return result;
   }
 
-  private static int getAttachmentDistance(@Nonnull NormalEdge e1, int rowIndex) {
+  private static int getAttachmentDistance(NormalEdge e1, int rowIndex) {
     return Math.min(rowIndex - e1.up, e1.down - rowIndex);
   }
 }

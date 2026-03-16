@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = "CodeCompletionGroup",
@@ -46,7 +45,7 @@ public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         Project project = dataContext.getData(Project.KEY);

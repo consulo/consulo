@@ -15,7 +15,6 @@
  */
 package consulo.application.event;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -31,24 +30,24 @@ public interface ApplicationListener extends EventListener {
   /**
    * Is called before action start.
    */
-  default void beforeWriteActionStart(@Nonnull Object action) {
+  default void beforeWriteActionStart(Object action) {
   }
 
   /**
    * Is called on action start.
    */
-  default void writeActionStarted(@Nonnull Object action) {
+  default void writeActionStarted(Object action) {
   }
 
   /**
    * Is called on before action finish, while while lock is still being hold
    */
-  default void writeActionFinished(@Nonnull Object action) {
+  default void writeActionFinished(Object action) {
   }
 
   /**
    * Is called after action finish and lock is released
    */
-  default void afterWriteActionFinished(@Nonnull Object action) {
+  default void afterWriteActionFinished(Object action) {
   }
 }

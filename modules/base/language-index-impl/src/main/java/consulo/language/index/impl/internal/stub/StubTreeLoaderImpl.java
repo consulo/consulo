@@ -41,8 +41,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -264,7 +263,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  protected boolean hasPsiInManyProjects(@Nonnull VirtualFile virtualFile) {
+  protected boolean hasPsiInManyProjects(VirtualFile virtualFile) {
     int count = 0;
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       if (PsiManagerEx.getInstanceEx(project).getFileManager().findCachedViewProvider(virtualFile) != null) {
@@ -275,7 +274,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   }
 
   @Override
-  protected IndexingStampInfo getIndexingStampInfo(@Nonnull VirtualFile file) {
+  protected IndexingStampInfo getIndexingStampInfo(VirtualFile file) {
     return StubUpdatingIndex.getIndexingStampInfo(file);
   }
 
@@ -296,8 +295,8 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
 
   @Override
   @RequiredReadAction
-  @Nonnull
-  public RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, @Nullable Throwable cause) {
+  
+  public RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, PsiFileWithStubSupport psiFile, @Nullable Throwable cause) {
     VirtualFile file = psiFile.getViewProvider().getVirtualFile();
     StubTree stubTreeFromIndex = (StubTree)readFromVFile(psiFile.getProject(), file);
     boolean compiled = psiFile instanceof PsiCompiledElement;
@@ -373,20 +372,20 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
            : upToDate ? handleUpToDateMismatch(msg, attachments, cause) : new RuntimeExceptionWithAttachments(msg, cause, attachments);
   }
 
-  protected boolean isPrebuilt(@Nonnull VirtualFile virtualFile) {
+  protected boolean isPrebuilt(VirtualFile virtualFile) {
     return false;
   }
 
-  private static RuntimeExceptionWithAttachments handleManyProjectsMismatch(@Nonnull String message, Attachment[] attachments, @Nullable Throwable cause) {
+  private static RuntimeExceptionWithAttachments handleManyProjectsMismatch(String message, Attachment[] attachments, @Nullable Throwable cause) {
     return new ManyProjectsStubIndexMismatch(message, cause, attachments);
   }
 
-  private static RuntimeExceptionWithAttachments handleUpToDateMismatch(@Nonnull String message, Attachment[] attachments, @Nullable Throwable cause) {
+  private static RuntimeExceptionWithAttachments handleUpToDateMismatch(String message, Attachment[] attachments, @Nullable Throwable cause) {
     return new UpToDateStubIndexMismatch(message, cause, attachments);
   }
 
-  @Nonnull
-  private static Attachment[] createAttachments(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, VirtualFile file, @Nullable StubTree stubTreeFromIndex) {
+  
+  private static Attachment[] createAttachments(@Nullable ObjectStubTree stubTree, PsiFileWithStubSupport psiFile, VirtualFile file, @Nullable StubTree stubTreeFromIndex) {
     List<Attachment> attachments = new ArrayList<>();
     attachments.add(AttachmentFactory.get().create(file.getPath() + "_file.txt", psiFile instanceof PsiCompiledElement ? "compiled" : psiFile.getText()));
     if (stubTree != null) {

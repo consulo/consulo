@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,6 +33,6 @@ public interface SdkModelFactory {
   /**
    * @return new sdk model, or return already created if it was created, for example while settings dialog opened
    */
-  @Nonnull
+  
   SdkModel getOrCreateModel();
 }

@@ -17,8 +17,7 @@ package consulo.application.util.registry;
 
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -29,11 +28,11 @@ import java.util.Properties;
  */
 @Deprecated
 public class RegistryValue {
-  @Nonnull
+  
   private final String myKey;
   @Nullable
   private String myValue;
-  @Nonnull
+  
   private final Properties myProperties;
 
   private String myStringCachedValue;
@@ -41,18 +40,18 @@ public class RegistryValue {
   private Double myDoubleCachedValue;
   private Boolean myBooleanCachedValue;
 
-  RegistryValue(@Nonnull String key, @Nullable String value, @Nonnull Properties properties) {
+  RegistryValue(String key, @Nullable String value, Properties properties) {
     myKey = key;
     myValue = value;
     myProperties = properties;
   }
 
-  @Nonnull
+  
   public String getKey() {
     return myKey;
   }
 
-  @Nonnull
+  
   public String asString() {
     if (myStringCachedValue == null) {
       myStringCachedValue = get(myKey, "");
@@ -107,7 +106,7 @@ public class RegistryValue {
     return defaultValue;
   }
 
-  private String get(@Nonnull String key, String defaultValue) throws MissingResourceException {
+  private String get(String key, String defaultValue) throws MissingResourceException {
     String systemProperty = myProperties.getProperty(key);
     if (systemProperty != null) {
       return systemProperty;
@@ -134,7 +133,7 @@ public class RegistryValue {
     resetCache();
   }
 
-  public void addListener(@Nonnull RegistryValueListener listener, @Nonnull Disposable parent) {
+  public void addListener(RegistryValueListener listener, Disposable parent) {
   }
 
   @Override

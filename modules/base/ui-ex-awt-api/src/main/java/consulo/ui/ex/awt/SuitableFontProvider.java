@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -28,10 +27,10 @@ import java.awt.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface SuitableFontProvider {
-  @Nonnull
+  
   static SuitableFontProvider getInstance() {
     return Application.get().getInstance(SuitableFontProvider.class);
   }
 
-  Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily);
+  Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, String defaultFontFamily);
 }

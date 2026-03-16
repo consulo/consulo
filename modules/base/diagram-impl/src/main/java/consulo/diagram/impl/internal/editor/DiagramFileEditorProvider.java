@@ -22,7 +22,6 @@ import consulo.fileEditor.FileEditorProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,18 +30,18 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class DiagramFileEditorProvider implements FileEditorProvider {
     @Override
-    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public boolean accept(Project project, VirtualFile file) {
         return file instanceof DiagramVirtualFile;
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public FileEditor createEditor(Project project, VirtualFile file) {
         return new DiagramFileEditor(project, (DiagramVirtualFile) file);
     }
 
-    @Nonnull
+    
     @Override
     public String getEditorTypeId() {
         return "DiagramEditor";

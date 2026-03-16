@@ -45,15 +45,14 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWithText, PathElementIdProvider {
-    public PsiFileNode(Project project, @Nonnull PsiFile value, ViewSettings viewSettings) {
+    public PsiFileNode(Project project, PsiFile value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
@@ -138,9 +137,8 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         super.navigate(requestFocus);
     }
 
-    @Nonnull
     @Override
-    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+    public CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus) {
         VirtualFile jarRoot = getArchiveRoot();
         Project project = getProject();
         if (requestFocus && jarRoot != null && ProjectRootsUtil.isLibraryRoot(jarRoot, project)) {
@@ -153,7 +151,6 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
         return super.navigateAsync(uiAccess, requestFocus);
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         if (isNavigatableLibraryRoot()) {
@@ -224,12 +221,12 @@ public class PsiFileNode extends BasePsiNode<PsiFile> implements NavigatableWith
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return super.contains(file) || isArchive() && Comparing.equal(VirtualFilePathUtil.getLocalFile(file), getVirtualFile());
     }
 
     @Override
-    public @Nonnull String getPathElementId() {
+    public String getPathElementId() {
         return TreeState.defaultPathElementId(this);
     }
 }

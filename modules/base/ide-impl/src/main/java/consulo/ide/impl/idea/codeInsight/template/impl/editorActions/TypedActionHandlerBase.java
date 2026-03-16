@@ -23,8 +23,7 @@ import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.internal.OverrideTypedActionHandler;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, OverrideTypedActionHandler {
   @Nullable
@@ -36,7 +35,7 @@ public abstract class TypedActionHandlerBase implements TypedActionHandlerEx, Ov
   }
 
   @Override
-  public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
+  public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
     if (myOriginalHandler instanceof TypedActionHandlerEx) {
       ((TypedActionHandlerEx)myOriginalHandler).beforeExecute(editor, c, context, plan);
     }

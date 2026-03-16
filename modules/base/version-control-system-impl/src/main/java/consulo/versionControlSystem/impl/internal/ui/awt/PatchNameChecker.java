@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.impl.internal.ui.awt;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -26,7 +25,7 @@ public class PatchNameChecker {
   private final static int MAX_PATH = 255; // Windows path len restrictions
 
   @Nullable
-  public static String validateName(@Nonnull String name) {
+  public static String validateName(String name) {
     String fileName = new File(name).getName();
     if (StringUtil.isEmptyOrSpaces(fileName)) {
       return "File name cannot be empty";

@@ -28,8 +28,7 @@ import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.internal.WindowManagerEx;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class BackgroundableProcessIndicator extends ProgressWindow {
     protected StatusBarEx myStatusBar;
@@ -40,7 +39,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     private boolean myDisposed;
     private DumbModeAction myDumbModeAction = DumbModeAction.NOTHING;
 
-    public BackgroundableProcessIndicator(@Nonnull Task.Backgroundable task) {
+    public BackgroundableProcessIndicator(Task.Backgroundable task) {
         this((Project) task.getProject(), task, task);
 
         myDumbModeAction = task.getDumbModeAction();
@@ -56,8 +55,8 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     }
 
     public BackgroundableProcessIndicator(@Nullable Project project,
-                                          @Nonnull TaskInfo info,
-                                          @Nonnull PerformInBackgroundOption option) {
+                                          TaskInfo info,
+                                          PerformInBackgroundOption option) {
         super(info.isCancellable(), true, project, info.getCancelTextValue());
         setOwnerTask(info);
         myOption = option;
@@ -77,26 +76,26 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     }
 
     public BackgroundableProcessIndicator(Project project,
-                                          @Nonnull LocalizeValue progressTitle,
-                                          @Nonnull PerformInBackgroundOption option,
-                                          @Nonnull LocalizeValue cancelButtonText,
-                                          @Nonnull LocalizeValue backgroundStopTooltip,
+                                          LocalizeValue progressTitle,
+                                          PerformInBackgroundOption option,
+                                          LocalizeValue cancelButtonText,
+                                          LocalizeValue backgroundStopTooltip,
                                           final boolean cancellable) {
         this(project, new TaskInfo() {
 
             @Override
-            @Nonnull
+            
             public String getTitle() {
                 return progressTitle.get();
             }
 
-            @Nonnull
+            
             @Override
             public LocalizeValue getCancelTextValue() {
                 return cancelButtonText;
             }
 
-            @Nonnull
+            
             @Override
             public LocalizeValue getCancelTooltipTextValue() {
                 return backgroundStopTooltip;

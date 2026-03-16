@@ -9,8 +9,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -23,8 +22,8 @@ import java.util.Map;
 final class CtxPopup {
     private static final boolean DISABLED = Boolean.getBoolean("touchbar.popups.disable");
 
-    static @Nullable Disposable showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent) {
-        if (DISABLED || !(popup instanceof @Nonnull ListPopupImpl listPopup)) {
+    static @Nullable Disposable showPopupItems(JBPopup popup, JComponent popupComponent) {
+        if (DISABLED || !(popup instanceof ListPopupImpl listPopup)) {
             return null;
         }
 
@@ -37,14 +36,14 @@ final class CtxPopup {
     }
 
     // creates releaseOnClose touchbar
-    private static TBPanel createScrubberBarFromPopup(@Nonnull ListPopupImpl listPopup) {
+    private static TBPanel createScrubberBarFromPopup(ListPopupImpl listPopup) {
         TBPanel result = new TBPanel("popup_scrubber_bar_" + listPopup.hashCode(), new TBPanel.CrossEscInfo(true, false), false);
 
         ModalityState ms = ModalityState.nonModal();
 
         final TBItemScrubber scrub = result.addScrubber();
-        @Nonnull ListPopupStep<Object> listPopupStep = listPopup.getListStep();
-        @Nonnull List<Object> stepValues = listPopupStep.getValues();
+        ListPopupStep<Object> listPopupStep = listPopup.getListStep();
+        List<Object> stepValues = listPopupStep.getValues();
         List<Integer> disabledItems = new ArrayList<>();
         int currIndex = 0;
         final Map<Object, Integer> obj2index = new HashMap<>();

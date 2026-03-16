@@ -23,8 +23,7 @@ import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.ui.TextBox;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,11 +33,11 @@ public abstract class FileChooserFactory {
     return Application.get().getInstance(FileChooserFactory.class);
   }
 
-  @Nonnull
-  public abstract FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);
+ 
+  public abstract FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);
 
-  @Nonnull
-  public abstract PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);
+ 
+  public abstract PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent);
 
   /**
    * Creates Save File dialog.
@@ -48,23 +47,23 @@ public abstract class FileChooserFactory {
    * @return Save File dialog
    * @since 9.0
    */
-  @Nonnull
-  public abstract FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project);
+ 
+  public abstract FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project);
 
-  @Nonnull
-  public abstract FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent);
+ 
+  public abstract FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, Component parent);
 
-  @Nonnull
+ 
   @Deprecated
   @DeprecationInfo("See FileChooserTextBoxBuilder")
-  public FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public FileTextField createFileTextField(FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     throw new AbstractMethodError();
   }
 
-  @Nonnull
+ 
   @Deprecated
   @DeprecationInfo("See FileChooserTextBoxBuilder")
-  public FileTextField createFileTextField(@Nonnull FileChooserDescriptor descriptor, @Nullable Disposable parent) {
+  public FileTextField createFileTextField(FileChooserDescriptor descriptor, @Nullable Disposable parent) {
     return createFileTextField(descriptor, true, parent);
   }
 
@@ -76,7 +75,7 @@ public abstract class FileChooserFactory {
    * @param showHidden include hidden files into completion variants
    * @param parent     if null then will be registered with {@link PlatformDataKeys#UI_DISPOSABLE}
    */
-  public void installFileCompletion(@Nonnull JTextField field, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
+  public void installFileCompletion(JTextField field, FileChooserDescriptor descriptor, boolean showHidden, @Nullable Disposable parent) {
     // nothing by default, check platform implementation
   }
 
@@ -88,5 +87,5 @@ public abstract class FileChooserFactory {
    * @param showHidden include hidden files into completion variants
    * @param parent     if null then will be registered with {@link PlatformDataKeys#UI_DISPOSABLE}
    */
-  public abstract void installFileCompletion(@Nonnull TextBox textBox, @Nonnull FileChooserDescriptor descriptor, boolean showHidden, @Nullable consulo.disposer.Disposable parent);
+  public abstract void installFileCompletion(TextBox textBox, FileChooserDescriptor descriptor, boolean showHidden, consulo.disposer.@Nullable Disposable parent);
 }

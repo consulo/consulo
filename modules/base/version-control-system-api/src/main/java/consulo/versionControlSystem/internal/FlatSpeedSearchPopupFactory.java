@@ -25,8 +25,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -43,42 +42,42 @@ public interface FlatSpeedSearchPopupFactory {
     public interface SpeedsearchAction {
     }
 
-    static boolean isSpeedsearchAction(@Nonnull AnAction action) {
+    static boolean isSpeedsearchAction(AnAction action) {
         return action instanceof SpeedsearchAction;
     }
 
     ListPopup createFlatSpeedSearchPopup(String title,
-                                         @Nonnull ActionGroup actionGroup,
-                                         @Nonnull DataContext dataContext,
+                                         ActionGroup actionGroup,
+                                         DataContext dataContext,
                                          @Nullable Predicate<AnAction> preselectActionCondition,
                                          boolean showDisableActions,
-                                         @Nonnull FlatSpeedSearchShouldBeShowingFilter filter);
+                                         FlatSpeedSearchShouldBeShowingFilter filter);
 
-    ListPopup createBranchPopup(@Nonnull String title,
-                                @Nonnull Project project,
-                                @Nonnull Predicate<AnAction> preselectActionCondition,
-                                @Nonnull ActionGroup actions,
+    ListPopup createBranchPopup(String title,
+                                Project project,
+                                Predicate<AnAction> preselectActionCondition,
+                                ActionGroup actions,
                                 @Nullable String dimensionKey);
 
-    @Nonnull
-    static AnAction createSpeedSearchWrapper(@Nonnull AnAction child) {
+    
+    static AnAction createSpeedSearchWrapper(AnAction child) {
         return new MySpeedSearchAction(child);
     }
 
-    @Nonnull
-    static ActionGroup createSpeedSearchActionGroupWrapper(@Nonnull ActionGroup child) {
+    
+    static ActionGroup createSpeedSearchActionGroupWrapper(ActionGroup child) {
         return new MySpeedSearchActionGroup(child);
     }
 
     static class MySpeedSearchAction extends EmptyAction.MyDelegatingAction implements FlatSpeedSearchPopupFactory.SpeedsearchAction, DumbAware {
 
-        MySpeedSearchAction(@Nonnull AnAction action) {
+        MySpeedSearchAction(AnAction action) {
             super(action);
         }
     }
 
     static class MySpeedSearchActionGroup extends EmptyAction.MyDelegatingActionGroup implements FlatSpeedSearchPopupFactory.SpeedsearchAction, DumbAware {
-        MySpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
+        MySpeedSearchActionGroup(ActionGroup actionGroup) {
             super(actionGroup);
         }
     }

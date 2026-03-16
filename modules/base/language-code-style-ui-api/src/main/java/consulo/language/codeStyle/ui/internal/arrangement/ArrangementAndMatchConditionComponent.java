@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -45,21 +44,21 @@ import java.util.*;
  */
 public class ArrangementAndMatchConditionComponent extends JPanel implements ArrangementUiComponent {
 
-  @Nonnull
+  
   private final List<ArrangementUiComponent> myComponents = new ArrayList<>();
-  @Nonnull
+  
   private final Set<ArrangementSettingsToken> myAvailableTokens = new HashSet<>();
 
-  @Nonnull
+  
   private final ArrangementCompositeMatchCondition mySetting;
   @Nullable private      Rectangle                          myScreenBounds;
   @Nullable
   private      ArrangementUiComponent             myComponentUnderMouse;
 
-  public ArrangementAndMatchConditionComponent(@Nonnull StdArrangementMatchRule rule,
-                                               @Nonnull ArrangementCompositeMatchCondition setting,
-                                               @Nonnull ArrangementMatchNodeComponentFactory factory,
-                                               @Nonnull ArrangementStandardSettingsManager manager,
+  public ArrangementAndMatchConditionComponent(StdArrangementMatchRule rule,
+                                               ArrangementCompositeMatchCondition setting,
+                                               ArrangementMatchNodeComponentFactory factory,
+                                               ArrangementStandardSettingsManager manager,
                                                boolean allowModification)
   {
     mySetting = setting;
@@ -68,12 +67,12 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     final Map<ArrangementSettingsToken, ArrangementMatchCondition> operands = new HashMap<>();
     ArrangementMatchConditionVisitor visitor = new ArrangementMatchConditionVisitor() {
       @Override
-      public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+      public void visit(ArrangementAtomMatchCondition condition) {
         operands.put(condition.getType(), condition);
       }
 
       @Override
-      public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+      public void visit(ArrangementCompositeMatchCondition condition) {
         assert false;
       }
     };
@@ -94,18 +93,18 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     }
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     return mySetting;
   }
 
   @Override
-  public void setData(@Nonnull Object data) {
+  public void setData(Object data) {
     // Do nothing
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getUiComponent() {
     return this;
@@ -145,7 +144,7 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   }
 
   @Override
-  public Rectangle onMouseMove(@Nonnull MouseEvent event) {
+  public Rectangle onMouseMove(MouseEvent event) {
     Point location = event.getLocationOnScreen();
     for (ArrangementUiComponent component : myComponents) {
       Rectangle bounds = component.getScreenBounds();
@@ -189,7 +188,7 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   }
 
   @Override
-  public void onMouseRelease(@Nonnull MouseEvent event) {
+  public void onMouseRelease(MouseEvent event) {
     Point location = event.getLocationOnScreen();
     for (ArrangementUiComponent component : myComponents) {
       Rectangle bounds = component.getScreenBounds();
@@ -201,7 +200,7 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   }
 
   @Override
-  public Rectangle onMouseEntered(@Nonnull MouseEvent event) {
+  public Rectangle onMouseEntered(MouseEvent event) {
     Point location = event.getLocationOnScreen();
     for (ArrangementUiComponent component : myComponents) {
       Rectangle bounds = component.getScreenBounds();
@@ -230,14 +229,14 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
     return myComponentUnderMouse == null ? null : myComponentUnderMouse.getToken();
   }
 
-  @Nonnull
+  
   @Override
   public Set<ArrangementSettingsToken> getAvailableTokens() {
     return myAvailableTokens;
   }
 
   @Override
-  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
+  public void chooseToken(ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -259,7 +258,7 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   }
 
   @Override
-  public void setListener(@Nonnull Listener listener) {
+  public void setListener(Listener listener) {
     for (ArrangementUiComponent component : myComponents) {
       component.setListener(listener);
     }

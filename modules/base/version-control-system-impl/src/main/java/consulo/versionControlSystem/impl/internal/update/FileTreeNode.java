@@ -26,7 +26,6 @@ import consulo.content.scope.PackageSetBase;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,9 +37,9 @@ import java.util.Collections;
 public class FileTreeNode extends FileOrDirectoryTreeNode {
   private static final Collection<VirtualFile> EMPTY_VIRTUAL_FILE_ARRAY = new ArrayList<VirtualFile>();
 
-  public FileTreeNode(@Nonnull String path,
-                      @Nonnull SimpleTextAttributes invalidAttributes,
-                      @Nonnull Project project,
+  public FileTreeNode(String path,
+                      SimpleTextAttributes invalidAttributes,
+                      Project project,
                       String parentPath) {
     super(path, invalidAttributes, project, parentPath);
   }
@@ -73,7 +72,7 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> getVirtualFiles() {
     VirtualFile virtualFile = getFilePointer().getFile();
@@ -81,7 +80,7 @@ public class FileTreeNode extends FileOrDirectoryTreeNode {
     return Collections.singleton(virtualFile);
   }
 
-  @Nonnull
+  
   @Override
   public Collection<File> getFiles() {
     if (getFilePointer().getFile() == null) {

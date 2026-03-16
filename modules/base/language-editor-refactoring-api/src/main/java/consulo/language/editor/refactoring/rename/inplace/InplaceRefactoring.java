@@ -86,8 +86,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -235,7 +234,7 @@ public abstract class InplaceRefactoring {
         return buildTemplateAndStart(refs, stringUsages, scope, containingFile);
     }
 
-    protected boolean notSameFile(@Nullable VirtualFile file, @Nonnull PsiFile containingFile) {
+    protected boolean notSameFile(@Nullable VirtualFile file, PsiFile containingFile) {
         return !Comparing.equal(getTopLevelVirtualFile(containingFile.getViewProvider()), file);
     }
 
@@ -272,7 +271,7 @@ public abstract class InplaceRefactoring {
         );
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     protected Expression createTemplateExpression(PsiElement selectedElement) {
         return createLookupExpression(selectedElement);
@@ -553,9 +552,8 @@ public abstract class InplaceRefactoring {
         return previewEditor;
     }
 
-    @Nullable
     @RequiredUIAccess
-    protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
+    protected StartMarkAction startRename() throws StartMarkAction.@Nullable AlreadyStartedException {
         return CommandProcessor.getInstance().<StartMarkAction>newCommand()
             .project(myProject)
             .name(LocalizeValue.ofNullable(getCommandName()))
@@ -629,7 +627,7 @@ public abstract class InplaceRefactoring {
     }
 
     @RequiredReadAction
-    private void addReferenceIfNeeded(@Nonnull Collection<PsiReference> refs, @Nullable PsiReference reference) {
+    private void addReferenceIfNeeded(Collection<PsiReference> refs, @Nullable PsiReference reference) {
         if (reference != null && reference.isReferenceTo(myElementToRename) && !refs.contains(reference)) {
             refs.add(reference);
         }
@@ -708,10 +706,10 @@ public abstract class InplaceRefactoring {
     }
 
     protected void addHighlights(
-        @Nonnull Map<TextRange, TextAttributesKey> ranges,
-        @Nonnull Editor editor,
-        @Nonnull Collection<RangeHighlighter> highlighters,
-        @Nonnull HighlightManager highlightManager
+        Map<TextRange, TextAttributesKey> ranges,
+        Editor editor,
+        Collection<RangeHighlighter> highlighters,
+        HighlightManager highlightManager
     ) {
         for (Map.Entry<TextRange, TextAttributesKey> entry : ranges.entrySet()) {
             TextRange range = entry.getKey();
@@ -781,15 +779,15 @@ public abstract class InplaceRefactoring {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected TextRange getRangeToRename(@Nonnull PsiElement element) {
+    protected TextRange getRangeToRename(PsiElement element) {
         return new TextRange(0, element.getTextLength());
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected TextRange getRangeToRename(@Nonnull PsiReference reference) {
+    protected TextRange getRangeToRename(PsiReference reference) {
         return reference.getRangeInElement();
     }
 

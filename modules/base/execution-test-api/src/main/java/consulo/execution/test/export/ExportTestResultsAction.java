@@ -52,8 +52,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 
 import javax.swing.event.HyperlinkEvent;
@@ -102,7 +101,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled(e.getDataContext()));
     }
 
@@ -112,7 +111,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final Project project = e.getRequiredData(Project.KEY);
         final ExportTestResultsConfiguration config = ExportTestResultsConfiguration.getInstance(project);
 
@@ -152,7 +151,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
         ) {
             @Override
             @RequiredUIAccess
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 indicator.setIndeterminate(true);
 
                 final File outputFile = getOutputFile(config, project, filename_);
@@ -256,11 +255,11 @@ public class ExportTestResultsAction extends DumbAwareAction {
         });
     }
 
-    @Nonnull
+    
     private static File getOutputFile(
-        @Nonnull ExportTestResultsConfiguration config,
-        @Nonnull Project project,
-        @Nonnull String filename
+        ExportTestResultsConfiguration config,
+        Project project,
+        String filename
     ) {
         File outputFolder;
         String outputFolderPath = config.getOutputFolder();

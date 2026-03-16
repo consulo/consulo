@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,14 +39,14 @@ import java.util.List;
  */
 public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     protected ElementsChooser<T> myChooser;
-    @Nonnull
+    
     private LocalizeValue myDescription;
 
     public ChooseElementsDialog(
         Project project,
         Collection<? extends T> items,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description
+        LocalizeValue title,
+        LocalizeValue description
     ) {
         this(project, items, title, description, false);
     }
@@ -55,8 +54,8 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     public ChooseElementsDialog(
         Project project,
         Collection<? extends T> items,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description,
+        LocalizeValue title,
+        LocalizeValue description,
         boolean sort
     ) {
         super(project, true);
@@ -64,15 +63,15 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
         initializeDialog(items, title, sort);
     }
 
-    public ChooseElementsDialog(Component parent, Collection<T> items, @Nonnull LocalizeValue title) {
+    public ChooseElementsDialog(Component parent, Collection<T> items, LocalizeValue title) {
         this(parent, items, title, LocalizeValue.empty(), false);
     }
 
     public ChooseElementsDialog(
         Component parent,
         Collection<T> items,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue description,
+        LocalizeValue title,
+        LocalizeValue description,
         boolean sort
     ) {
         super(parent, true);
@@ -104,11 +103,11 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
         this(parent, items, LocalizeValue.ofNullable(title), LocalizeValue.ofNullable(description), sort);
     }
 
-    private void initializeDialog(Collection<? extends T> items, @Nonnull LocalizeValue title, boolean sort) {
+    private void initializeDialog(Collection<? extends T> items, LocalizeValue title, boolean sort) {
         setTitle(title);
         myChooser = new ElementsChooser<>(false) {
             @Override
-            protected String getItemText(@Nonnull T item) {
+            protected String getItemText(T item) {
                 return ChooseElementsDialog.this.getItemText(item);
             }
         };
@@ -133,7 +132,7 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
         init();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public AsyncResult<List<T>> showAsync2() {
         AsyncResult<List<T>> result = AsyncResult.undefined();
@@ -156,12 +155,12 @@ public abstract class ChooseElementsDialog<T> extends DialogWrapper {
     @Nullable
     protected abstract Image getItemIcon(T item);
 
-    @Nonnull
+    
     public List<T> getChosenElements() {
         return isOK() ? myChooser.getSelectedElements() : Collections.<T>emptyList();
     }
 
-    public void selectElements(@Nonnull List<T> elements) {
+    public void selectElements(List<T> elements) {
         myChooser.selectElements(elements);
     }
 

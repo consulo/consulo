@@ -26,19 +26,18 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vassiliy.Kudryashov
  */
 public final class ExecutionEnvironmentBuilder {
-  @Nonnull
+  
   private RunProfile myRunProfile;
-  @Nonnull
+  
   private ExecutionTarget myTarget = DefaultExecutionTarget.INSTANCE;
 
-  @Nonnull
+  
   private final Project myProject;
 
   @Nullable
@@ -51,18 +50,18 @@ public final class ExecutionEnvironmentBuilder {
   private String myRunnerId;
   private ProgramRunner<?> myRunner;
   private boolean myAssignNewId;
-  @Nonnull
+  
   private Executor myExecutor;
   @Nullable
   private DataContext myDataContext;
 
-  public ExecutionEnvironmentBuilder(@Nonnull Project project, @Nonnull Executor executor) {
+  public ExecutionEnvironmentBuilder(Project project, Executor executor) {
     myProject = project;
     myExecutor = executor;
   }
 
-  @Nonnull
-  public static ExecutionEnvironmentBuilder create(@Nonnull Project project, @Nonnull Executor executor, @Nonnull RunProfile runProfile) throws ExecutionException {
+  
+  public static ExecutionEnvironmentBuilder create(Project project, Executor executor, RunProfile runProfile) throws ExecutionException {
     ExecutionEnvironmentBuilder builder = createOrNull(project, executor, runProfile);
     if (builder == null) {
       throw new ExecutionException("Cannot find runner for " + runProfile.getName());
@@ -71,7 +70,7 @@ public final class ExecutionEnvironmentBuilder {
   }
 
   @Nullable
-  public static ExecutionEnvironmentBuilder createOrNull(@Nonnull Project project, @Nonnull Executor executor, @Nonnull RunProfile runProfile) {
+  public static ExecutionEnvironmentBuilder createOrNull(Project project, Executor executor, RunProfile runProfile) {
     ProgramRunner runner = RunnerRegistry.getInstance().getRunner(executor.getId(), runProfile);
     if (runner == null) {
       return null;
@@ -80,23 +79,23 @@ public final class ExecutionEnvironmentBuilder {
   }
 
   @Nullable
-  public static ExecutionEnvironmentBuilder createOrNull(@Nonnull Executor executor, @Nonnull RunnerAndConfigurationSettings settings) {
+  public static ExecutionEnvironmentBuilder createOrNull(Executor executor, RunnerAndConfigurationSettings settings) {
     ExecutionEnvironmentBuilder builder = createOrNull(settings.getConfiguration().getProject(), executor, settings.getConfiguration());
     return builder == null ? null : builder.runnerAndSettings(builder.myRunner, settings);
   }
 
-  @Nonnull
-  public static ExecutionEnvironmentBuilder create(@Nonnull Executor executor, @Nonnull RunnerAndConfigurationSettings settings) throws ExecutionException {
+  
+  public static ExecutionEnvironmentBuilder create(Executor executor, RunnerAndConfigurationSettings settings) throws ExecutionException {
     ExecutionEnvironmentBuilder builder = create(settings.getConfiguration().getProject(), executor, settings.getConfiguration());
     return builder.runnerAndSettings(builder.myRunner, settings);
   }
 
-  @Nonnull
-  public static ExecutionEnvironmentBuilder create(@Nonnull Executor executor, @Nonnull RunConfiguration configuration) {
+  
+  public static ExecutionEnvironmentBuilder create(Executor executor, RunConfiguration configuration) {
     return new ExecutionEnvironmentBuilder(configuration.getProject(), executor).runProfile(configuration);
   }
 
-  @Nonnull
+  
   Executor getExecutor() {
     return myExecutor;
   }
@@ -106,7 +105,7 @@ public final class ExecutionEnvironmentBuilder {
    *
    * @param copySource the environment to copy from.
    */
-  public ExecutionEnvironmentBuilder(@Nonnull ExecutionEnvironment copySource) {
+  public ExecutionEnvironmentBuilder(ExecutionEnvironment copySource) {
     myTarget = copySource.getExecutionTarget();
     myProject = copySource.getProject();
     myRunnerAndConfigurationSettings = copySource.getRunnerAndConfigurationSettings();
@@ -124,7 +123,7 @@ public final class ExecutionEnvironmentBuilder {
   /**
    * to remove in IDEA 15
    */
-  public ExecutionEnvironmentBuilder setTarget(@Nonnull ExecutionTarget target) {
+  public ExecutionEnvironmentBuilder setTarget(ExecutionTarget target) {
     return target(target);
   }
 
@@ -145,13 +144,13 @@ public final class ExecutionEnvironmentBuilder {
   /**
    * to remove in IDEA 15
    */
-  public ExecutionEnvironmentBuilder setRunnerAndSettings(@Nonnull ProgramRunner programRunner,
-                                                          @Nonnull RunnerAndConfigurationSettings settings) {
+  public ExecutionEnvironmentBuilder setRunnerAndSettings(ProgramRunner programRunner,
+                                                          RunnerAndConfigurationSettings settings) {
     return runnerAndSettings(programRunner, settings);
   }
 
-  public ExecutionEnvironmentBuilder runnerAndSettings(@Nonnull ProgramRunner runner,
-                                                       @Nonnull RunnerAndConfigurationSettings settings) {
+  public ExecutionEnvironmentBuilder runnerAndSettings(ProgramRunner runner,
+                                                       RunnerAndConfigurationSettings settings) {
     myRunnerAndConfigurationSettings = settings;
     myRunProfile = settings.getConfiguration();
     myRunnerSettings = settings.getRunnerSettings(runner);
@@ -160,26 +159,26 @@ public final class ExecutionEnvironmentBuilder {
     return this;
   }
 
-  @Nonnull
+  
   public ExecutionEnvironmentBuilder runnerSettings(@Nullable RunnerSettings runnerSettings) {
     myRunnerSettings = runnerSettings;
     return this;
   }
 
-  @Nonnull
+  
   public ExecutionEnvironmentBuilder contentToReuse(@Nullable RunContentDescriptor contentToReuse) {
     myContentToReuse = contentToReuse;
     return this;
   }
 
-  @Nonnull
-  public ExecutionEnvironmentBuilder runProfile(@Nonnull RunProfile runProfile) {
+  
+  public ExecutionEnvironmentBuilder runProfile(RunProfile runProfile) {
     myRunProfile = runProfile;
     return this;
   }
 
-  @Nonnull
-  public ExecutionEnvironmentBuilder runner(@Nonnull ProgramRunner<?> runner) {
+  
+  public ExecutionEnvironmentBuilder runner(ProgramRunner<?> runner) {
     myRunner = runner;
     return this;
   }
@@ -189,19 +188,19 @@ public final class ExecutionEnvironmentBuilder {
     return this;
   }
 
-  @Nonnull
+  
   public ExecutionEnvironmentBuilder dataContext(@Nullable DataContext dataContext) {
     myDataContext = dataContext;
     return this;
   }
 
-  @Nonnull
-  public ExecutionEnvironmentBuilder executor(@Nonnull Executor executor) {
+  
+  public ExecutionEnvironmentBuilder executor(Executor executor) {
     myExecutor = executor;
     return this;
   }
 
-  @Nonnull
+  
   public ExecutionEnvironment build() {
     if (myRunner == null) {
       if (myRunnerId == null) {

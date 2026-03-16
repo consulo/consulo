@@ -29,8 +29,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -47,9 +46,9 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
   protected final File myFile;
   private final String myName;
 
-  protected FileOrDirectoryTreeNode(@Nonnull String path,
-                                    @Nonnull SimpleTextAttributes invalidAttributes,
-                                    @Nonnull Project project,
+  protected FileOrDirectoryTreeNode(String path,
+                                    SimpleTextAttributes invalidAttributes,
+                                    Project project,
                                     @Nullable String parentPath) {
     String preparedPath = path.replace(File.separatorChar, '/');
     String url = VirtualFileManager.constructUrl(LocalFileSystem.getInstance().getProtocol(), preparedPath);
@@ -60,7 +59,7 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
     myName = parentPath == null ? myFile.getAbsolutePath() : myFile.getName();
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;
@@ -71,11 +70,11 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
   }
 
   @Override
-  public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
+  public void beforeValidityChanged(VirtualFilePointer[] pointers) {
   }
 
   @Override
-  public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
+  public void validityChanged(VirtualFilePointer[] pointers) {
     if (!getFilePointer().isValid()) {
       AbstractTreeNode parent = (AbstractTreeNode)getParent();
       if (parent != null && parent.getSupportsDeletion()) {
@@ -107,7 +106,7 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
     return (VirtualFilePointer)getUserObject();
   }
 
-  @Nonnull
+  
   @Override
   public SimpleTextAttributes getAttributes() {
     if (!getFilePointer().isValid()) {
@@ -120,8 +119,8 @@ public abstract class FileOrDirectoryTreeNode extends AbstractTreeNode implement
     return myFilterAttributes == null ? attributes : SimpleTextAttributes.merge(myFilterAttributes, attributes);
   }
 
-  @Nonnull
-  private static SimpleTextAttributes getAttributesFor(@Nonnull FileStatus status) {
+  
+  private static SimpleTextAttributes getAttributesFor(FileStatus status) {
     Color color = TargetAWT.to(status.getColor());
     if (color == null) color = UIUtil.getListForeground();
 

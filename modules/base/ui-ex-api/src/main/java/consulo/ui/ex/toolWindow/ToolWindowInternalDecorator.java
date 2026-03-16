@@ -18,8 +18,7 @@ package consulo.ui.ex.toolWindow;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,12 +36,12 @@ public interface ToolWindowInternalDecorator extends Disposable {
   String TOGGLE_SIDE_MODE_ACTION_ID = "ToggleSideMode";
   String TOGGLE_CONTENT_UI_TYPE_ACTION_ID = "ToggleContentUiTypeMode";
 
-  @Nonnull
+  
   WindowInfo getWindowInfo();
 
-  void apply(@Nonnull WindowInfo windowInfo);
+  void apply(WindowInfo windowInfo);
 
-  @Nonnull
+  
   ToolWindow getToolWindow();
 
   void addInternalDecoratorListener(InternalDecoratorListener l);
@@ -55,7 +54,7 @@ public interface ToolWindowInternalDecorator extends Disposable {
 
   void fireHiddenSide();
 
-  @Nonnull
+  
   ActionGroup createPopupGroup();
 
   boolean isFocused();

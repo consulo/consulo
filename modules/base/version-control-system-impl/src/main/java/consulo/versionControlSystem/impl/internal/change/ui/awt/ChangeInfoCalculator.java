@@ -17,15 +17,14 @@ package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.application.util.function.Processor;
 import consulo.versionControlSystem.change.Change;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ChangeInfoCalculator implements CommitLegendPanel.InfoCalculator {
-  @Nonnull
+  
   private List<Change> myDisplayedChanges;
-  @Nonnull
+  
   private List<Change> myIncludedChanges;
   private int myUnversionedFilesCount;
   private int myIncludedUnversionedFilesCount;
@@ -37,12 +36,12 @@ public class ChangeInfoCalculator implements CommitLegendPanel.InfoCalculator {
     myIncludedUnversionedFilesCount = 0;
   }
 
-  public void update(@Nonnull List<Change> displayedChanges, @Nonnull List<Change> includedChanges) {
+  public void update(List<Change> displayedChanges, List<Change> includedChanges) {
     update(displayedChanges, includedChanges, 0, 0);
   }
 
-  public void update(@Nonnull List<Change> displayedChanges,
-                     @Nonnull List<Change> includedChanges,
+  public void update(List<Change> displayedChanges,
+                     List<Change> includedChanges,
                      int unversionedFilesCount,
                      int includedUnversionedFilesCount) {
     myDisplayedChanges = displayedChanges;
@@ -86,22 +85,22 @@ public class ChangeInfoCalculator implements CommitLegendPanel.InfoCalculator {
   }
 
   private static final Processor<Change> MODIFIED_FILTER = new Processor<Change>() {
-    public boolean process(@Nonnull Change item) {
+    public boolean process(Change item) {
       return item.getType() == Change.Type.MODIFICATION || item.getType() == Change.Type.MOVED;
     }
   };
   private static final Processor<Change> NEW_FILTER = new Processor<Change>() {
-    public boolean process(@Nonnull Change item) {
+    public boolean process(Change item) {
       return item.getType() == Change.Type.NEW;
     }
   };
   private static final Processor<Change> DELETED_FILTER = new Processor<Change>() {
-    public boolean process(@Nonnull Change item) {
+    public boolean process(Change item) {
       return item.getType() == Change.Type.DELETED;
     }
   };
 
-  private static <T> int countMatchingItems(@Nonnull List<T> items, @Nonnull Processor<T> filter) {
+  private static <T> int countMatchingItems(List<T> items, Processor<T> filter) {
     int count = 0;
 
     for (T item : items) {

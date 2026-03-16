@@ -34,7 +34,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -252,17 +251,17 @@ public class GenericCompilerRunner {
         final List<File> dirsToRefresh = new ArrayList<>();
         instance.processItems(target, toProcess, obsoleteItems, new GenericCompilerInstance.OutputConsumer<>() {
             @Override
-            public void addFileToRefresh(@Nonnull File file) {
+            public void addFileToRefresh(File file) {
                 filesToRefresh.add(file);
             }
 
             @Override
-            public void addDirectoryToRefresh(@Nonnull File dir) {
+            public void addDirectoryToRefresh(File dir) {
                 dirsToRefresh.add(dir);
             }
 
             @Override
-            public void addProcessedItem(@Nonnull Item sourceItem) {
+            public void addProcessedItem(Item sourceItem) {
                 processedItems.add(sourceItem);
             }
         });

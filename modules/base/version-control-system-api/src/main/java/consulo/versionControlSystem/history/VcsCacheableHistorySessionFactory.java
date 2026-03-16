@@ -17,8 +17,7 @@ package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.FilePath;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.Serializable;
 import java.util.List;
 
@@ -36,5 +35,5 @@ public interface VcsCacheableHistorySessionFactory<Cacheable extends Serializabl
   @Nullable
   Cacheable getAddinionallyCachedData(T session);
 
-  T createFromCachedData(@Nullable Cacheable cacheable, @Nonnull List<VcsFileRevision> revisions, @Nonnull FilePath filePath, @Nullable VcsRevisionNumber currentRevision);
+  T createFromCachedData(@Nullable Cacheable cacheable, List<VcsFileRevision> revisions, FilePath filePath, @Nullable VcsRevisionNumber currentRevision);
 }

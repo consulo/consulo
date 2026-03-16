@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Editor customization that can make target editor soft wraps-aware.
@@ -37,7 +36,7 @@ public class SoftWrapsEditorCustomization extends SimpleEditorCustomization {
   }
 
   @Override
-  public void customize(@Nonnull EditorEx editor) {
+  public void customize(EditorEx editor) {
     editor.getSettings().setUseSoftWraps(isEnabled());
   }
 }

@@ -8,7 +8,6 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class RangesAssert {
@@ -46,7 +45,7 @@ public class RangesAssert {
     LOG.error(message.toString(), new Throwable(), AttachmentFactory.get().create("current-context.txt", buffer.toString()));
   }
 
-  public boolean checkChildRange(@Nonnull TextRange parentRange, @Nonnull TextRange childRange, @Nonnull FormattingDocumentModel model) {
+  public boolean checkChildRange(TextRange parentRange, TextRange childRange, FormattingDocumentModel model) {
     if (childRange.getStartOffset() < parentRange.getStartOffset()) {
       assertInvalidRanges(childRange.getStartOffset(), parentRange.getStartOffset(), model, "child block start is less than parent block start");
       return false;

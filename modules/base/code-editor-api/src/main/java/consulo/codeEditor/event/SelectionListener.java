@@ -4,7 +4,6 @@ package consulo.codeEditor.event;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -20,6 +19,6 @@ public interface SelectionListener extends EventListener {
    *
    * @param e the event containing information about the change.
    */
-  default void selectionChanged(@Nonnull SelectionEvent e) {
+  default void selectionChanged(SelectionEvent e) {
   }
 }

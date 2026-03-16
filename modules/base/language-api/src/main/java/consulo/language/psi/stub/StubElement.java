@@ -7,8 +7,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.IntFunction;
 
@@ -26,26 +25,26 @@ public interface StubElement<T extends PsiElement> extends Stub {
   PsiFileStub<?> getContainingFileStub();
 
   @Override
-  @Nonnull
+  
   List<StubElement> getChildrenStubs();
 
   @Nullable
-  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(@Nonnull IStubElementType<S, P> elementType);
+  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(IStubElementType<S, P> elementType);
 
   T getPsi();
 
-  @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, E[] array);
+  
+  <E extends PsiElement> E[] getChildrenByType(IElementType elementType, E[] array);
 
-  @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, E[] array);
+  
+  <E extends PsiElement> E[] getChildrenByType(TokenSet filter, E[] array);
 
-  @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull IElementType elementType, @Nonnull IntFunction<E[]> f);
+  
+  <E extends PsiElement> E[] getChildrenByType(IElementType elementType, IntFunction<E[]> f);
 
-  @Nonnull
-  <E extends PsiElement> E[] getChildrenByType(@Nonnull TokenSet filter, @Nonnull IntFunction<E[]> f);
+  
+  <E extends PsiElement> E[] getChildrenByType(TokenSet filter, IntFunction<E[]> f);
 
   @Nullable
-  <E extends PsiElement> E getParentStubOfType(@Nonnull Class<E> parentClass);
+  <E extends PsiElement> E getParentStubOfType(Class<E> parentClass);
 }

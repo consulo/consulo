@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataSink;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -53,8 +52,8 @@ public interface TreeStructureProvider {
      * @param sink      the data sink to populate
      * @param selection the currently selected nodes
      */
-    default void uiDataSnapshot(@Nonnull DataSink sink,
-                                @Nonnull Collection<? extends AbstractTreeNode> selection) {
+    default void uiDataSnapshot(DataSink sink,
+                                Collection<? extends AbstractTreeNode> selection) {
         // default: delegate to legacy getData for backward compatibility
     }
 

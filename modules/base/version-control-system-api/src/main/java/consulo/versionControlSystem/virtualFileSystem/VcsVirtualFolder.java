@@ -18,7 +18,6 @@ package consulo.versionControlSystem.virtualFileSystem;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -40,7 +39,7 @@ public class VcsVirtualFolder extends AbstractVcsVirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     throw new RuntimeException(VcsLocalize.exceptionTextInternalErrorMethodShouldNotBeCalled().get());
   }

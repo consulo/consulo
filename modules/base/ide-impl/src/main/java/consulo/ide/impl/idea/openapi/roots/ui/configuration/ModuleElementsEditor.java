@@ -28,8 +28,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -91,7 +90,7 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
   // caching
   @RequiredUIAccess
   @Override
-  public final JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+  public final JComponent createComponent(Disposable parentUIDisposable) {
     if (myComponent == null) {
       myComponent = createComponentImpl(parentUIDisposable);
     }
@@ -102,15 +101,15 @@ public abstract class ModuleElementsEditor implements ModuleConfigurationEditor 
     myDisposables.add(disposable);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  protected JComponent createComponentImpl(@Nonnull Disposable parentUIDisposable) {
+  protected JComponent createComponentImpl(Disposable parentUIDisposable) {
     return (JComponent)TargetAWT.to(createUIComponentImpl(parentUIDisposable));
   }
 
   @Nullable
   @RequiredUIAccess
-  protected Component createUIComponentImpl(@Nonnull Disposable parentUIDisposable) {
+  protected Component createUIComponentImpl(Disposable parentUIDisposable) {
     throw new UnsupportedOperationException();
   }
 }

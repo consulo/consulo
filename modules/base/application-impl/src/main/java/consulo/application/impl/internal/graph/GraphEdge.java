@@ -15,7 +15,6 @@
  */
 package consulo.application.impl.internal.graph;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,7 +24,7 @@ class GraphEdge<Node> {
   private final Node myFinish;
   private final int myDelta;
 
-  GraphEdge(@Nonnull Node start, @Nonnull Node finish, int delta) {
+  GraphEdge(Node start, Node finish, int delta) {
     myStart = start;
     myFinish = finish;
     myDelta = delta;

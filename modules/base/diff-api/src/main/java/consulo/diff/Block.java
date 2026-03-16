@@ -26,7 +26,6 @@ import consulo.application.progress.DumbProgressIndicator;
 import consulo.util.lang.Pair;
 import consulo.application.util.LineTokenizer;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,33 +36,33 @@ import java.util.List;
 public class Block {
   private static final Logger LOG = Logger.getInstance(Block.class);
 
-  @Nonnull
+  
   private final String[] mySource;
   private final int myStart;
   private final int myEnd;
 
-  public Block(@Nonnull String source, int start, int end) {
+  public Block(String source, int start, int end) {
     this(tokenize(source), start, end);
   }
 
-  public Block(@Nonnull String[] source, int start, int end) {
+  public Block(String[] source, int start, int end) {
     mySource = source;
     myStart = Math.min(Math.max(0, start), source.length);
     myEnd = Math.min(Math.max(myStart, end), source.length);
   }
 
-  @Nonnull
-  public static String[] tokenize(@Nonnull String text) {
+  
+  public static String[] tokenize(String text) {
     return LineTokenizer.tokenize(text, false, false);
   }
 
-  @Nonnull
-  public Block createPreviousBlock(@Nonnull String prevContent) {
+  
+  public Block createPreviousBlock(String prevContent) {
     return createPreviousBlock(tokenize(prevContent));
   }
 
-  @Nonnull
-  public Block createPreviousBlock(@Nonnull String[] prevContent) {
+  
+  public Block createPreviousBlock(String[] prevContent) {
     int start = -1;
     int end = -1;
     int shift = 0;
@@ -114,12 +113,12 @@ public class Block {
     }
   }
 
-  @Nonnull
+  
   public String getBlockContent() {
     return StringUtil.join(getLines(), "\n");
   }
 
-  @Nonnull
+  
   public List<String> getLines() {
     return Arrays.asList(mySource).subList(myStart, myEnd);
   }
@@ -160,7 +159,7 @@ public class Block {
     return result.toString();
   }
 
-  private void appendLines(@Nonnull StringBuilder result, int from, int to) {
+  private void appendLines(StringBuilder result, int from, int to) {
     for (int i = from; i < to; i++) {
       result.append(mySource[i]);
       result.append("\n");

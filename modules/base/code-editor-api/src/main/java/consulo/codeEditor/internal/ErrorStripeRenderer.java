@@ -17,10 +17,8 @@ package consulo.codeEditor.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 public interface ErrorStripeRenderer {
-    @Nonnull
     @RequiredReadAction
-    EditorAnalyzeStatus getStatus(@Nonnull Editor editor);
+    EditorAnalyzeStatus getStatus(Editor editor);
 }

@@ -25,8 +25,7 @@ import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class SymbolSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
@@ -39,7 +38,7 @@ public class SymbolSearchEverywhereContributorFactory implements SearchEverywher
 
     @Nullable
     @Override
-    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
+    public SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
         if (!myApplication.getExtensionPoint(GotoSymbolContributor.class).hasAnyExtensions()) {
             return null;
 

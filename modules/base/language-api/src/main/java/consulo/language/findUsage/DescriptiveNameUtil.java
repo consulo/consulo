@@ -23,19 +23,18 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 public class DescriptiveNameUtil {
   private static final Logger LOG = Logger.getInstance(DescriptiveNameUtil.class);
 
-  @Nonnull
+  
   public static String getMetaDataName(PsiMetaData metaData) {
     String name = metaData.getName();
     return StringUtil.isEmpty(name) ? "''" : name;
   }
 
   @RequiredReadAction
-  public static String getDescriptiveName(@Nonnull PsiElement psiElement) {
+  public static String getDescriptiveName(PsiElement psiElement) {
     LOG.assertTrue(psiElement.isValid());
 
     if (psiElement instanceof PsiMetaOwner) {

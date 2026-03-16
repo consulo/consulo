@@ -28,7 +28,6 @@ import consulo.project.ui.view.tree.*;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.ui.ex.tree.PathElementIdProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -37,7 +36,7 @@ public class ProjectViewProjectNode extends AbstractProjectNode implements PathE
         super(project, project, viewSettings);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
@@ -101,7 +100,6 @@ public class ProjectViewProjectNode extends AbstractProjectNode implements PathE
     }
 
     @Override
-    @Nonnull
     public  String getPathElementId() {
         return TreeState.defaultPathElementId(this);
     }

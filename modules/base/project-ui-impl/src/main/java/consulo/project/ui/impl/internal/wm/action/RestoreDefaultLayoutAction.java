@@ -25,7 +25,6 @@ import consulo.project.ui.internal.WindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -38,14 +37,14 @@ public final class RestoreDefaultLayoutAction extends AnAction implements DumbAw
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ToolWindowLayout layout = WindowManagerEx.getInstanceEx().getLayout();
         ToolWindowManagerEx.getInstanceEx(project).setLayout(layout);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabled(event.hasData(Project.KEY));
     }
 }

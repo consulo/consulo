@@ -38,8 +38,7 @@ import consulo.ui.ex.dialog.action.DialogOkAction;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.usage.UsageViewContentManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -69,8 +68,8 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
     private final VerticalLayout myOptionsLayout = VerticalLayout.create();
 
     @RequiredUIAccess
-    public AbstractFindUsagesDialogDescriptor(@Nonnull Project project,
-                                              @Nonnull FindUsagesOptions findUsagesOptions,
+    public AbstractFindUsagesDialogDescriptor(Project project,
+                                              FindUsagesOptions findUsagesOptions,
                                               boolean toShowInNewTab,
                                               boolean mustOpenInNewTab,
                                               boolean isSingleFile,
@@ -139,7 +138,7 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
 
     @Nullable
     @RequiredUIAccess
-    private Component createSearchScopePanel(@Nonnull Disposable uiDisposable) {
+    private Component createSearchScopePanel(Disposable uiDisposable) {
         if (isInFileOnly()) {
             return null;
         }
@@ -151,7 +150,7 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
     }
 
     @RequiredUIAccess
-    protected abstract void configureLabelComponent(@Nonnull TextItemPresentation presentation, @Nonnull Disposable uiDisposable);
+    protected abstract void configureLabelComponent(TextItemPresentation presentation, Disposable uiDisposable);
 
     protected static boolean isToChange(StateRestoringCheckBoxWrapper cb) {
         return cb != null && cb.getParentComponent() != null;
@@ -171,7 +170,7 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
 
     @RequiredUIAccess
     @Override
-    public boolean canHandle(@Nonnull AnAction action, @Nullable DialogValue value) {
+    public boolean canHandle(AnAction action, @Nullable DialogValue value) {
         if (value == DialogValue.OK_VALUE) {
             return myScopeCombo == null || myScopeCombo.getSelectedScope() != null;
         }
@@ -187,7 +186,7 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
         return false;
     }
 
-    @Nonnull
+    
     @Override
     protected DialogOkAction createOkAction() {
         return new DialogOkAction(FindLocalize.findDialogFindButton());
@@ -207,16 +206,16 @@ public abstract class AbstractFindUsagesDialogDescriptor extends DialogDescripto
         return getPreferredFocusedControl();
     }
 
-    protected void buildElementComponent(@Nonnull Consumer<Component> consumer, @Nonnull Disposable uiDisposable) {
+    protected void buildElementComponent(Consumer<Component> consumer, Disposable uiDisposable) {
         AdvancedLabel label = AdvancedLabel.create();
         label.updatePresentation(presentation -> configureLabelComponent(presentation, uiDisposable));
         consumer.accept(label);
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
+    public Component createCenterComponent(Disposable uiDisposable) {
         VerticalLayout layout = VerticalLayout.create();
 
         buildElementComponent(layout::add, uiDisposable);

@@ -35,8 +35,6 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -105,15 +103,15 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
                         @Override
                         public CompositeSettingsBuilder<RunnerAndConfigurationSettings> getBuilder() {
                             return new CompositeSettingsBuilder<>() {
-                                @Nonnull
+                                
                                 @Override
                                 public Collection<SettingsEditor<RunnerAndConfigurationSettings>> getEditors() {
                                     return myRunnerEditors;
                                 }
 
-                                @Nonnull
+                                
                                 @Override
-                                public JComponent createCompoundEditor(@Nonnull Disposable disposable) {
+                                public JComponent createCompoundEditor(Disposable disposable) {
                                     return myRunnersComponent.getComponent();
                                 }
                             };
@@ -196,7 +194,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
     }
 
     private static class RunnersEditorComponent {
-        @NonNls
+        
         private static final String NO_RUNNER_COMPONENT = "<NO RUNNER LABEL>";
 
         private JList myRunnersList;
@@ -265,7 +263,7 @@ class ConfigurationSettingsEditor extends CompositeSettingsEditor<RunnerAndConfi
         }
 
         @Override
-        @Nonnull
+        
         public JComponent createEditor() {
             return myConfigEditor.getComponent();
         }

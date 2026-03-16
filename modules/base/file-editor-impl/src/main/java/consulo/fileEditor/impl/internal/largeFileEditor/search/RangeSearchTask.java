@@ -8,7 +8,6 @@ import consulo.fileEditor.internal.largeFileEditor.FileDataProviderForSearch;
 import consulo.fileEditor.internal.largeFileEditor.SearchResult;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -154,7 +153,7 @@ public final class RangeSearchTask extends SearchTaskBase {
 
         void tellSearchIsFinished(RangeSearchTask caller, long lastScannedPageNumber);
 
-        void tellFrameSearchResultsFound(RangeSearchTask caller, long curPageNumber, @Nonnull List<? extends SearchResult> allMatchesAtFrame);
+        void tellFrameSearchResultsFound(RangeSearchTask caller, long curPageNumber, List<? extends SearchResult> allMatchesAtFrame);
 
         void tellSearchIsStopped(long curPageNumber);
 

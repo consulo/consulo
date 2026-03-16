@@ -23,8 +23,7 @@ import consulo.language.editor.inspection.reference.RefManagerExtension;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -48,5 +47,5 @@ public abstract class InspectionExtensionsFactory {
     @Nullable
     public abstract String getSuppressedInspectionIdsIn(PsiElement element);
 
-    public abstract boolean isProjectConfiguredToRunInspections(@Nonnull Project project, boolean online);
+    public abstract boolean isProjectConfiguredToRunInspections(Project project, boolean online);
 }

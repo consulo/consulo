@@ -26,8 +26,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -38,45 +37,45 @@ public abstract class PsiBuilderFactory {
         return Application.get().getInstance(PsiBuilderFactory.class);
     }
 
-    @Nonnull
+    
     public abstract PsiBuilder createBuilder(
-        @Nonnull Project project,
-        @Nonnull ASTNode chameleon,
-        @Nonnull LanguageVersion languageVersion
+        Project project,
+        ASTNode chameleon,
+        LanguageVersion languageVersion
     );
 
-    @Nonnull
+    
     public abstract PsiBuilder createBuilder(
-        @Nonnull Project project,
-        @Nonnull LighterLazyParseableNode chameleon,
-        @Nonnull LanguageVersion languageVersion
+        Project project,
+        LighterLazyParseableNode chameleon,
+        LanguageVersion languageVersion
     );
 
-    @Nonnull
+    
     public abstract PsiBuilder createBuilder(
-        @Nonnull Project project,
-        @Nonnull ASTNode chameleon,
+        Project project,
+        ASTNode chameleon,
         @Nullable Lexer lexer,
-        @Nonnull Language lang,
-        @Nonnull LanguageVersion languageVersion,
-        @Nonnull CharSequence seq
+        Language lang,
+        LanguageVersion languageVersion,
+        CharSequence seq
     );
 
-    @Nonnull
+    
     public abstract PsiBuilder createBuilder(
-        @Nonnull Project project,
-        @Nonnull LighterLazyParseableNode chameleon,
+        Project project,
+        LighterLazyParseableNode chameleon,
         @Nullable Lexer lexer,
-        @Nonnull Language lang,
-        @Nonnull LanguageVersion languageVersion,
-        @Nonnull CharSequence seq
+        Language lang,
+        LanguageVersion languageVersion,
+        CharSequence seq
     );
 
-    @Nonnull
+    
     public abstract PsiBuilder createBuilder(
-        @Nonnull ParserDefinition parserDefinition,
-        @Nonnull Lexer lexer,
-        @Nonnull LanguageVersion languageVersion,
-        @Nonnull CharSequence seq
+        ParserDefinition parserDefinition,
+        Lexer lexer,
+        LanguageVersion languageVersion,
+        CharSequence seq
     );
 }

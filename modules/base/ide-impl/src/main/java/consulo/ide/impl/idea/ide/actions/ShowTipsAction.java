@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShowTips")
 public class ShowTipsAction extends AnAction implements DumbAware {
@@ -38,7 +37,7 @@ public class ShowTipsAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myManager.showAsync();
     }
 }

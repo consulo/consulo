@@ -18,8 +18,7 @@ package consulo.versionControlSystem.log.impl.internal.data;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.impl.internal.data.index.VcsLogIndex;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -35,22 +34,22 @@ public class EmptyIndex implements VcsLogIndex {
   }
 
   @Override
-  public boolean isIndexed(@Nonnull VirtualFile root) {
+  public boolean isIndexed(VirtualFile root) {
     return false;
   }
 
   @Override
-  public void markForIndexing(int commit, @Nonnull VirtualFile root) {
+  public void markForIndexing(int commit, VirtualFile root) {
   }
 
   @Override
-  public boolean canFilter(@Nonnull List<VcsLogDetailsFilter> filters) {
+  public boolean canFilter(List<VcsLogDetailsFilter> filters) {
     return false;
   }
 
-  @Nonnull
+  
   @Override
-  public Set<Integer> filter(@Nonnull List<VcsLogDetailsFilter> detailsFilters) {
+  public Set<Integer> filter(List<VcsLogDetailsFilter> detailsFilters) {
     throw new UnsupportedOperationException();
   }
 

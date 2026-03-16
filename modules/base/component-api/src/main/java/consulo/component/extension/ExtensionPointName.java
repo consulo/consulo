@@ -21,8 +21,7 @@ import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
 import consulo.container.plugin.PluginDescriptor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -39,22 +38,22 @@ public class ExtensionPointName<T> {
   private final Class<? extends T> myIdClass;
 
   @SuppressWarnings("deprecation")
-  public static <T> ExtensionPointName<T> create(@Nonnull Class<? extends T> idClass) {
+  public static <T> ExtensionPointName<T> create(Class<? extends T> idClass) {
     return new ExtensionPointName<>(idClass);
   }
 
   @Deprecated
   @DeprecationInfo("Use #create()")
-  public ExtensionPointName(@Nonnull Class<? extends T> idClass) {
+  public ExtensionPointName(Class<? extends T> idClass) {
     myIdClass = idClass;
   }
 
-  @Nonnull
+  
   public Class<? extends T> getIdClass() {
     return myIdClass;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myIdClass.getName();
   }
@@ -64,15 +63,15 @@ public class ExtensionPointName<T> {
     return myIdClass.toString();
   }
 
-  @Nonnull
+  
   @Deprecated
   public T[] getExtensions() {
     return getExtensions(RootComponentHolder.getRootComponent());
   }
 
-  @Nonnull
+  
   @Deprecated
-  public T[] getExtensions(@Nonnull ComponentManager componentManager) {
+  public T[] getExtensions(ComponentManager componentManager) {
     return getExtensionPoint(componentManager).getExtensions();
   }
 
@@ -80,81 +79,81 @@ public class ExtensionPointName<T> {
     return hasAnyExtensions(RootComponentHolder.getRootComponent());
   }
 
-  public boolean hasAnyExtensions(@Nonnull ComponentManager manager) {
+  public boolean hasAnyExtensions(ComponentManager manager) {
     return getExtensionPoint(manager).hasAnyExtensions();
   }
 
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  private ExtensionPoint<T> getExtensionPoint(@Nonnull ComponentManager componentManager) {
+  private ExtensionPoint<T> getExtensionPoint(ComponentManager componentManager) {
     return componentManager.getExtensionPoint((Class<T>)myIdClass);
   }
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use with component manager")
   public List<T> getExtensionList() {
     return getExtensionList(RootComponentHolder.getRootComponent());
   }
 
-  @Nonnull
-  public List<T> getExtensionList(@Nonnull ComponentManager componentManager) {
+  
+  public List<T> getExtensionList(ComponentManager componentManager) {
     return getExtensionPoint(componentManager).getExtensionList();
   }
 
   @Nullable
-  public <V extends T> V findExtension(@Nonnull Class<V> instanceOf) {
+  public <V extends T> V findExtension(Class<V> instanceOf) {
     return findExtension(RootComponentHolder.getRootComponent(), instanceOf);
   }
 
   @Nullable
-  public <V extends T> V findExtension(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
+  public <V extends T> V findExtension(ComponentManager componentManager, Class<V> instanceOf) {
     return getExtensionPoint(componentManager).findExtension(instanceOf);
   }
 
-  @Nonnull
-  public <V extends T> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
+  
+  public <V extends T> V findExtensionOrFail(Class<V> instanceOf) {
     return findExtensionOrFail(RootComponentHolder.getRootComponent(), instanceOf);
   }
 
-  @Nonnull
-  public <V extends T> V findExtensionOrFail(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
+  
+  public <V extends T> V findExtensionOrFail(ComponentManager componentManager, Class<V> instanceOf) {
     return getExtensionPoint(componentManager).findExtensionOrFail(instanceOf);
   }
 
-  public void forEachExtensionSafe(@Nonnull Consumer<T> consumer) {
+  public void forEachExtensionSafe(Consumer<T> consumer) {
     forEachExtensionSafe(RootComponentHolder.getRootComponent(), consumer);
   }
 
-  public void forEachExtensionSafe(@Nonnull ComponentManager manager, @Nonnull Consumer<T> consumer) {
+  public void forEachExtensionSafe(ComponentManager manager, Consumer<T> consumer) {
     getExtensionPoint(manager).forEachExtensionSafe(consumer);
   }
 
   @Nullable
-  public <R> R computeSafeIfAny(@Nonnull Function<? super T, ? extends R> processor) {
+  public <R> R computeSafeIfAny(Function<? super T, ? extends R> processor) {
     return computeSafeIfAny(RootComponentHolder.getRootComponent(), processor);
   }
 
   @Nullable
-  public <R> R computeSafeIfAny(@Nonnull ComponentManager componentManager, @Nonnull Function<? super T, ? extends R> processor) {
+  public <R> R computeSafeIfAny(ComponentManager componentManager, Function<? super T, ? extends R> processor) {
     return getExtensionPoint(componentManager).computeSafeIfAny(processor);
   }
 
   @Nullable
-  public T findFirstSafe(@Nonnull ComponentManager componentManager, @Nonnull Predicate<T> predicate) {
+  public T findFirstSafe(ComponentManager componentManager, Predicate<T> predicate) {
     return getExtensionPoint(componentManager).findFirstSafe(predicate);
   }
 
   @Nullable
-  public T findFirstSafe(@Nonnull Predicate<T> predicate) {
+  public T findFirstSafe(Predicate<T> predicate) {
     return findFirstSafe(RootComponentHolder.getRootComponent(), predicate);
   }
 
-  public void processWithPluginDescriptor(@Nonnull ComponentManager manager, @Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+  public void processWithPluginDescriptor(ComponentManager manager, BiConsumer<? super T, ? super PluginDescriptor> consumer) {
     getExtensionPoint(manager).processWithPluginDescriptor(consumer);
   }
 
-  public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+  public void processWithPluginDescriptor(BiConsumer<? super T, ? super PluginDescriptor> consumer) {
     processWithPluginDescriptor(RootComponentHolder.getRootComponent(), consumer);
   }
 }

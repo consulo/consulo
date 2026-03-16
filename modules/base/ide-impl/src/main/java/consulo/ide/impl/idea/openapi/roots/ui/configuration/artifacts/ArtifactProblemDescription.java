@@ -19,8 +19,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.C
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemDescription;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
 import consulo.compiler.artifact.element.PackagingElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,8 +29,8 @@ import java.util.List;
 public class ArtifactProblemDescription extends ProjectStructureProblemDescription {
   private final List<PackagingElement<?>> myPathToPlace;
 
-  public ArtifactProblemDescription(@Nonnull String message, @Nonnull ProjectStructureProblemType problemType,
-                                    @Nullable List<PackagingElement<?>> pathToPlace, @Nonnull PlaceInArtifact place,
+  public ArtifactProblemDescription(String message, ProjectStructureProblemType problemType,
+                                    @Nullable List<PackagingElement<?>> pathToPlace, PlaceInArtifact place,
                                     List<ConfigurationErrorQuickFix> quickFixList) {
     super(message, null, place, problemType, quickFixList);
     myPathToPlace = pathToPlace;

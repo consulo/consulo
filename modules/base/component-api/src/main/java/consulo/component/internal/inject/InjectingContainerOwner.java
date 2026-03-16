@@ -15,13 +15,12 @@
  */
 package consulo.component.internal.inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2018-08-23
  */
 public interface InjectingContainerOwner {
-  @Nonnull
+  
   InjectingContainer getInjectingContainer();
 }

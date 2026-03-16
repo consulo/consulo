@@ -35,10 +35,8 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public abstract class GlobalSearchScope extends BaseSearchScope implements ModuleAwareSearchScope {
@@ -67,17 +65,17 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * <li>zero - otherwise or when the files are not comparable</li>
    * </ul>
    */
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     return 0;
   }
 
   // optimization methods:
 
   @Override
-  public abstract boolean isSearchInModuleContent(@Nonnull Module aModule);
+  public abstract boolean isSearchInModuleContent(Module aModule);
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+  public boolean isSearchInModuleContent(Module aModule, boolean testSources) {
     return isSearchInModuleContent(aModule);
   }
 
@@ -99,7 +97,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * unloaded modules isn't performed, so this method is used to determine whether a warning about possible missing results should be shown.
    */
   @Override
-  @Nonnull
+  
   public Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
     return Collections.emptySet();
   }
@@ -109,8 +107,8 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return false;
   }
 
-  @Nonnull
-  public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
+  
+  public GlobalSearchScope intersectWith(GlobalSearchScope scope) {
     if (scope == this) return this;
     if (scope instanceof IntersectionScope) {
       return scope.intersectWith(this);
@@ -118,9 +116,9 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return new IntersectionScope(this, scope, null);
   }
 
-  @Nonnull
+  
   @Override
-  public SearchScope intersectWith(@Nonnull SearchScope scope2) {
+  public SearchScope intersectWith(SearchScope scope2) {
     if (scope2 instanceof LocalSearchScope) {
       LocalSearchScope localScope2 = (LocalSearchScope)scope2;
       return intersectWith(localScope2);
@@ -128,8 +126,8 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return intersectWith((GlobalSearchScope)scope2);
   }
 
-  @Nonnull
-  public SearchScope intersectWith(@Nonnull LocalSearchScope localScope2) {
+  
+  public SearchScope intersectWith(LocalSearchScope localScope2) {
     PsiElement[] elements2 = localScope2.getScope();
     List<PsiElement> result = new ArrayList<PsiElement>(elements2.length);
     for (PsiElement element2 : elements2) {
@@ -141,27 +139,27 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
   }
 
   @Override
-  @Nonnull
-  public GlobalSearchScope union(@Nonnull SearchScope scope) {
+  
+  public GlobalSearchScope union(SearchScope scope) {
     if (scope instanceof GlobalSearchScope) return uniteWith((GlobalSearchScope)scope);
     return union((LocalSearchScope)scope);
   }
 
-  @Nonnull
-  public GlobalSearchScope union(@Nonnull final LocalSearchScope scope) {
+  
+  public GlobalSearchScope union(final LocalSearchScope scope) {
     return new GlobalSearchScope(scope.getScope()[0].getProject()) {
       @Override
-      public boolean contains(@Nonnull VirtualFile file) {
+      public boolean contains(VirtualFile file) {
         return GlobalSearchScope.this.contains(file) || scope.isInScope(file);
       }
 
       @Override
-      public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+      public int compare(VirtualFile file1, VirtualFile file2) {
         return GlobalSearchScope.this.contains(file1) && GlobalSearchScope.this.contains(file2) ? GlobalSearchScope.this.compare(file1, file2) : 0;
       }
 
       @Override
-      public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+      public boolean isSearchInModuleContent(Module aModule) {
         return GlobalSearchScope.this.isSearchInModuleContent(aModule);
       }
 
@@ -175,7 +173,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
         return GlobalSearchScope.this.isSearchInLibraries();
       }
 
-      @NonNls
+      
       @Override
       public String toString() {
         return "UnionToLocal: (" + GlobalSearchScope.this.toString() + ", " + scope + ")";
@@ -183,16 +181,16 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     };
   }
 
-  @Nonnull
-  public GlobalSearchScope uniteWith(@Nonnull GlobalSearchScope scope) {
+  
+  public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
     if (scope == this) return scope;
 
     return new UnionScope(this, scope);
   }
 
-  @Nonnull
+  
   @Contract(pure = true)
-  public static GlobalSearchScope union(@Nonnull GlobalSearchScope[] scopes) {
+  public static GlobalSearchScope union(GlobalSearchScope[] scopes) {
     if (scopes.length == 0) {
       throw new IllegalArgumentException("Empty scope array");
     }
@@ -202,34 +200,34 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     return new UnionScope(scopes);
   }
 
-  @Nonnull
-  public static GlobalSearchScope allScope(@Nonnull Project project) {
+  
+  public static GlobalSearchScope allScope(Project project) {
     return (GlobalSearchScope)ProjectScopes.getAllScope(project);
   }
 
-  @Nonnull
+  
   @Contract(pure = true)
-  public static GlobalSearchScope everythingScope(@Nonnull Project project) {
+  public static GlobalSearchScope everythingScope(Project project) {
     return (GlobalSearchScope)ProjectScopes.getEverythingScope(project);
   }
 
-  @Nonnull
-  public static GlobalSearchScope projectScope(@Nonnull Project project) {
+  
+  public static GlobalSearchScope projectScope(Project project) {
     return (GlobalSearchScope)ProjectScopes.getProjectScope(project);
   }
 
-  @Nonnull
-  public static GlobalSearchScope notScope(@Nonnull GlobalSearchScope scope) {
+  
+  public static GlobalSearchScope notScope(GlobalSearchScope scope) {
     return new NotScope(scope);
   }
 
   private static class NotScope extends DelegatingGlobalSearchScope {
-    private NotScope(@Nonnull GlobalSearchScope scope) {
+    private NotScope(GlobalSearchScope scope) {
       super(scope);
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return !myBaseScope.contains(file);
     }
 
@@ -239,12 +237,12 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+    public boolean isSearchInModuleContent(Module aModule, boolean testSources) {
       return true; // not (some files in module A) is perfectly fine to find classes in another part of module A.
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return true; // not (some files in module A) is perfectly fine to find classes in another part of module A.
     }
 
@@ -265,8 +263,8 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param module the module to get the scope.
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  @Nonnull
-  public static GlobalSearchScope moduleScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope();
   }
 
@@ -277,13 +275,13 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param includeTests include tests or not
    * @return scope including sources and tests(if set includeTests), excluding libraries and dependencies.
    */
-  @Nonnull
-  public static GlobalSearchScope moduleScope(@Nonnull Module module, boolean includeTests) {
+  
+  public static GlobalSearchScope moduleScope(Module module, boolean includeTests) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleContentScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleContentScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleContentScope();
   }
 
@@ -293,8 +291,8 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param module the module to get the scope.
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  @Nonnull
-  public static GlobalSearchScope moduleWithLibrariesScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleWithLibrariesScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
   }
 
@@ -304,55 +302,55 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * @param module the module to get the scope.
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  @Nonnull
-  public static GlobalSearchScope moduleWithDependenciesScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleWithDependenciesScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleRuntimeScope(@Nonnull Module module, boolean includeTests) {
+  
+  public static GlobalSearchScope moduleRuntimeScope(Module module, boolean includeTests) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleRuntimeScope(includeTests);
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleWithDependenciesAndLibrariesScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleWithDependenciesAndLibrariesScope(Module module) {
     return moduleWithDependenciesAndLibrariesScope(module, true);
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleWithDependenciesAndLibrariesScope(@Nonnull Module module, boolean includeTests) {
+  
+  public static GlobalSearchScope moduleWithDependenciesAndLibrariesScope(Module module, boolean includeTests) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependenciesAndLibrariesScope(includeTests);
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleWithDependentsScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleWithDependentsScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleWithDependentsScope();
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleTestsWithDependentsScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleTestsWithDependentsScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleTestsWithDependentsScope();
   }
 
-  @Nonnull
-  public static GlobalSearchScope moduleContentWithDependenciesScope(@Nonnull Module module) {
+  
+  public static GlobalSearchScope moduleContentWithDependenciesScope(Module module) {
     return (GlobalSearchScope)ModuleScopeProvider.getInstance(module).getModuleContentWithDependenciesScope();
   }
 
-  @Nonnull
-  public static GlobalSearchScope fileScope(@Nonnull PsiFile psiFile) {
+  
+  public static GlobalSearchScope fileScope(PsiFile psiFile) {
     return new FileScope(psiFile.getProject(), psiFile.getVirtualFile());
   }
 
-  @Nonnull
-  public static GlobalSearchScope fileScope(@Nonnull Project project, VirtualFile virtualFile) {
+  
+  public static GlobalSearchScope fileScope(Project project, VirtualFile virtualFile) {
     return fileScope(project, virtualFile, null);
   }
 
-  @Nonnull
-  public static GlobalSearchScope fileScope(@Nonnull Project project, final VirtualFile virtualFile, @Nullable final String displayName) {
+  
+  public static GlobalSearchScope fileScope(Project project, final VirtualFile virtualFile, @Nullable final String displayName) {
     return new FileScope(project, virtualFile) {
-      @Nonnull
+      
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
@@ -360,16 +358,16 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     };
   }
 
-  @Nonnull
-  public static GlobalSearchScope filesScope(@Nonnull Project project, @Nonnull Collection<VirtualFile> files) {
+  
+  public static GlobalSearchScope filesScope(Project project, Collection<VirtualFile> files) {
     return filesScope(project, files, null);
   }
 
-  @Nonnull
-  public static GlobalSearchScope filesScope(@Nonnull Project project, @Nonnull Collection<VirtualFile> files, @Nullable final String displayName) {
+  
+  public static GlobalSearchScope filesScope(Project project, Collection<VirtualFile> files, @Nullable final String displayName) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return files.size() == 1 ? fileScope(project, files.iterator().next(), displayName) : new FilesScope(project, files) {
-      @Nonnull
+      
       @Override
       public String getDisplayName() {
         return displayName == null ? super.getDisplayName() : displayName;
@@ -383,14 +381,14 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
    * it should include libraries or not in order to avoid checking each file.
    * Also, if you have a lot of files it might be faster to always search in libraries.
    */
-  @Nonnull
-  public static GlobalSearchScope filesWithoutLibrariesScope(@Nonnull Project project, @Nonnull Collection<VirtualFile> files) {
+  
+  public static GlobalSearchScope filesWithoutLibrariesScope(Project project, Collection<VirtualFile> files) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return new FilesScope(project, files, false);
   }
 
-  @Nonnull
-  public static GlobalSearchScope filesWithLibrariesScope(@Nonnull Project project, @Nonnull Collection<VirtualFile> files) {
+  
+  public static GlobalSearchScope filesWithLibrariesScope(Project project, Collection<VirtualFile> files) {
     if (files.isEmpty()) return EMPTY_SCOPE;
     return new FilesScope(project, files, true);
   }
@@ -400,23 +398,23 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     private final GlobalSearchScope myScope2;
     private final String myDisplayName;
 
-    private IntersectionScope(@Nonnull GlobalSearchScope scope1, @Nonnull GlobalSearchScope scope2, String displayName) {
+    private IntersectionScope(GlobalSearchScope scope1, GlobalSearchScope scope2, String displayName) {
       super(scope1.getProject() == null ? scope2.getProject() : scope1.getProject());
       myScope1 = scope1;
       myScope2 = scope2;
       myDisplayName = displayName;
     }
 
-    @Nonnull
+    
     @Override
-    public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
+    public GlobalSearchScope intersectWith(GlobalSearchScope scope) {
       if (myScope1.equals(scope) || myScope2.equals(scope)) {
         return this;
       }
       return new IntersectionScope(this, scope, null);
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
       if (myDisplayName == null) {
@@ -426,12 +424,12 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return myScope1.contains(file) && myScope2.contains(file);
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       int res1 = myScope1.compare(file1, file2);
       int res2 = myScope2.compare(file1, file2);
 
@@ -446,12 +444,12 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return myScope1.isSearchInModuleContent(aModule) && myScope2.isSearchInModuleContent(aModule);
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule, boolean testSources) {
+    public boolean isSearchInModuleContent(Module aModule, boolean testSources) {
       return myScope1.isSearchInModuleContent(aModule, testSources) && myScope2.isSearchInModuleContent(aModule, testSources);
     }
 
@@ -480,7 +478,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       return 31 * myScope1.hashCode() + myScope2.hashCode();
     }
 
-    @NonNls
+    
     @Override
     public String toString() {
       return "Intersection: (" + myScope1 + ", " + myScope2 + ")";
@@ -491,11 +489,11 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     private final GlobalSearchScope[] myScopes;
     private final int myNestingLevel;
 
-    private UnionScope(@Nonnull GlobalSearchScope scope1, @Nonnull GlobalSearchScope scope2) {
+    private UnionScope(GlobalSearchScope scope1, GlobalSearchScope scope2) {
       this(new GlobalSearchScope[]{scope1, scope2});
     }
 
-    private UnionScope(@Nonnull GlobalSearchScope[] scopes) {
+    private UnionScope(GlobalSearchScope[] scopes) {
       super(ContainerUtil.getFirstItem(ContainerUtil.mapNotNull(scopes, scope -> scope.getProject()), null));
       assert scopes.length > 1 : Arrays.asList(scopes);
       myScopes = scopes;
@@ -509,14 +507,14 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       }
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
       return PsiBundle.message("psi.search.scope.union", myScopes[0].getDisplayName(), myScopes[1].getDisplayName());
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return ContainerUtil.find(myScopes, scope -> scope.contains(file)) != null;
     }
 
@@ -526,7 +524,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       int[] result = {0};
       ContainerUtil.process(myScopes, scope -> {
         int res1 = scope.contains(file1) && scope.contains(file2) ? scope.compare(file1, file2) : 0;
@@ -544,12 +542,12 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module module) {
+    public boolean isSearchInModuleContent(Module module) {
       return ContainerUtil.find(myScopes, scope -> scope.isSearchInModuleContent(module)) != null;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module module, boolean testSources) {
+    public boolean isSearchInModuleContent(Module module, boolean testSources) {
       return ContainerUtil.find(myScopes, scope -> scope.isSearchInModuleContent(module, testSources)) != null;
     }
 
@@ -573,15 +571,15 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       return Arrays.hashCode(myScopes);
     }
 
-    @NonNls
+    
     @Override
     public String toString() {
       return "Union: (" + StringUtil.join(Arrays.asList(myScopes), ",") + ")";
     }
 
-    @Nonnull
+    
     @Override
-    public GlobalSearchScope uniteWith(@Nonnull GlobalSearchScope scope) {
+    public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
       if (scope instanceof UnionScope) {
         GlobalSearchScope[] newScopes = ArrayUtil.mergeArrays(myScopes, ((UnionScope)scope).myScopes);
         return new UnionScope(newScopes);
@@ -590,8 +588,8 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
   }
 
-  @Nonnull
-  public static GlobalSearchScope getScopeRestrictedByFileTypes(@Nonnull GlobalSearchScope scope, @Nonnull FileType... fileTypes) {
+  
+  public static GlobalSearchScope getScopeRestrictedByFileTypes(GlobalSearchScope scope, FileType... fileTypes) {
     if (scope == EMPTY_SCOPE) {
       return EMPTY_SCOPE;
     }
@@ -602,13 +600,13 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
   private static class FileTypeRestrictionScope extends DelegatingGlobalSearchScope {
     private final FileType[] myFileTypes;
 
-    private FileTypeRestrictionScope(@Nonnull GlobalSearchScope scope, @Nonnull FileType[] fileTypes) {
+    private FileTypeRestrictionScope(GlobalSearchScope scope, FileType[] fileTypes) {
       super(scope);
       myFileTypes = fileTypes;
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       if (!super.contains(file)) return false;
 
       FileType fileType = file.getFileType();
@@ -619,9 +617,9 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       return false;
     }
 
-    @Nonnull
+    
     @Override
-    public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
+    public GlobalSearchScope intersectWith(GlobalSearchScope scope) {
       if (scope instanceof FileTypeRestrictionScope) {
         FileTypeRestrictionScope restrict = (FileTypeRestrictionScope)scope;
         if (restrict.myBaseScope == myBaseScope) {
@@ -633,9 +631,9 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       return super.intersectWith(scope);
     }
 
-    @Nonnull
+    
     @Override
-    public GlobalSearchScope uniteWith(@Nonnull GlobalSearchScope scope) {
+    public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
       if (scope instanceof FileTypeRestrictionScope) {
         FileTypeRestrictionScope restrict = (FileTypeRestrictionScope)scope;
         if (restrict.myBaseScope == myBaseScope) {
@@ -671,17 +669,17 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
 
   private static class EmptyScope extends GlobalSearchScope {
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return false;
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return false;
     }
 
@@ -691,14 +689,14 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     }
 
     @Override
-    @Nonnull
-    public GlobalSearchScope intersectWith(@Nonnull GlobalSearchScope scope) {
+    
+    public GlobalSearchScope intersectWith(GlobalSearchScope scope) {
       return this;
     }
 
     @Override
-    @Nonnull
-    public GlobalSearchScope uniteWith(@Nonnull GlobalSearchScope scope) {
+    
+    public GlobalSearchScope uniteWith(GlobalSearchScope scope) {
       return scope;
     }
 
@@ -714,24 +712,24 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     private final VirtualFile myVirtualFile; // files can be out of project roots
     private final Module myModule;
 
-    private FileScope(@Nonnull Project project, VirtualFile virtualFile) {
+    private FileScope(Project project, VirtualFile virtualFile) {
       super(project);
       myVirtualFile = virtualFile;
       myModule = virtualFile == null || project.isDefault() ? null : FileIndexFacade.getInstance(project).getModuleForFile(virtualFile);
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return Comparing.equal(myVirtualFile, file);
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return aModule == myModule;
     }
 
@@ -758,29 +756,29 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
     /**
      * @deprecated use {@link GlobalSearchScope#filesScope(Project, Collection)}
      */
-    public FilesScope(@Nullable Project project, @Nonnull Collection<VirtualFile> files) {
+    public FilesScope(@Nullable Project project, Collection<VirtualFile> files) {
       this(project, files, null);
     }
 
     // Optimization
-    private FilesScope(@Nullable Project project, @Nonnull Collection<VirtualFile> files, @Nullable Boolean hasFilesOutOfProjectRoots) {
+    private FilesScope(@Nullable Project project, Collection<VirtualFile> files, @Nullable Boolean hasFilesOutOfProjectRoots) {
       super(project);
       myFiles = files;
       myHasFilesOutOfProjectRoots = hasFilesOutOfProjectRoots;
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return myFiles.contains(file);
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return true;
     }
 
@@ -814,7 +812,7 @@ public abstract class GlobalSearchScope extends BaseSearchScope implements Modul
       return "Files: (" + files + "); search in libraries: " + (myHasFilesOutOfProjectRoots != null ? myHasFilesOutOfProjectRoots : "unknown");
     }
 
-    @Nonnull
+    
     @Override
     public Iterator<VirtualFile> iterator() {
       return myFiles.iterator();

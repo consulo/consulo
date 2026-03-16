@@ -61,8 +61,7 @@ import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -98,7 +97,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         myEntryTable.setDefaultEditor(DependencyScope.class, new DefaultCellEditor(scopeEditor));
         myEntryTable.setDefaultRenderer(DependencyScope.class, new ComboBoxTableRenderer<>(DependencyScope.values()) {
             @Override
-            protected String getTextFor(@Nonnull DependencyScope value) {
+            protected String getTextFor(DependencyScope value) {
                 return value.getDisplayName();
             }
         });
@@ -116,7 +115,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
                 return myEntryTable.convertRowIndexToModel(viewIndex);
             }
 
-            @Nonnull
+            
             @Override
             public Object[] getAllElements() {
                 int count = myModel.getRowCount();
@@ -183,13 +182,13 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         ) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 doEdit();
             }
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 int[] selectedRows = myEntryTable.getSelectedRows();
                 ClasspathTableItem<?> selectedItem = selectedRows.length == 1 ? myModel.getItemAt(selectedRows[0]) : null;
                 e.getPresentation().setEnabled(selectedItem != null && selectedItem.isEditable());
@@ -221,7 +220,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         AnAction navigateAction = new AnAction(ProjectLocalize.classpathPanelNavigateActionText()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 navigate(e, false);
             }
 
@@ -246,13 +245,13 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         actionGroup.add(new DumbAwareAction(CommonLocalize.buttonRemove(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 removeSelectedItems(TableUtil.removeSelectedItems(myEntryTable));
             }
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(isRemoveActionEnabled());
             }
         });
@@ -326,7 +325,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
-    private void showAddPopup(@Nonnull AnActionEvent event) {
+    private void showAddPopup(AnActionEvent event) {
         SequencedMap<AddModuleDependencyActionProvider, AddModuleDependencyContext> contexts = new LinkedHashMap<>();
 
         AddModuleDependencyActionProvider.EP.forEachExtensionSafe(
@@ -398,8 +397,8 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     }
 
     @Override
-    @Nonnull
-    public LibraryTableModifiableModelProvider getModifiableModelProvider(@Nonnull String tableLevel) {
+    
+    public LibraryTableModifiableModelProvider getModifiableModelProvider(String tableLevel) {
         if (LibraryEx.MODULE_LEVEL.equals(tableLevel)) {
             LibraryTable moduleLibraryTable = getRootModel().getModuleLibraryTable();
             return moduleLibraryTable::getModifiableModel;
@@ -480,7 +479,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         myEntryTable.repaint();
     }
 
-    public void selectOrderEntry(@Nonnull OrderEntry entry) {
+    public void selectOrderEntry(OrderEntry entry) {
         for (int row = 0; row < myModel.getRowCount(); row++) {
             OrderEntry orderEntry = myModel.getItemAt(row).getEntry();
             if (entry.getPresentableName().equals(orderEntry.getPresentableName())) {
@@ -631,7 +630,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             OrderEntry selectedEntry = getSelectedEntry();
             GlobalSearchScope targetScope;
             if (selectedEntry instanceof ModuleOrderEntry moduleOrderEntry) {

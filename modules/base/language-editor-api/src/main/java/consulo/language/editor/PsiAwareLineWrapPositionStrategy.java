@@ -27,8 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base super-class for {@link LineWrapPositionStrategy} implementations that want to restrict wrap positions
@@ -50,7 +49,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWr
    * @param nonVirtualOnly  defines if current PSI-aware logic should be exploited only for 'real wrap' position requests
    * @param enabledTypes    target element/token types where line wrapping is allowed
    */
-  public PsiAwareLineWrapPositionStrategy(boolean nonVirtualOnly, @Nonnull IElementType ... enabledTypes) {
+  public PsiAwareLineWrapPositionStrategy(boolean nonVirtualOnly, IElementType ... enabledTypes) {
     myEnabledTypes = TokenSet.create(enabledTypes);
     myNonVirtualOnly = nonVirtualOnly;
     if (enabledTypes.length <= 0) {
@@ -60,7 +59,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWr
   }
 
   @Override
-  public int calculateWrapPosition(@Nonnull Document document,
+  public int calculateWrapPosition(Document document,
                                    @Nullable Project project,
                                    int startOffset,
                                    int endOffset,
@@ -136,7 +135,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWr
    *                                          target line should be wrapped OR <code>-1</code> if no wrapping should be performed
    */
   protected abstract int doCalculateWrapPosition(
-          @Nonnull Document document, @Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset,
+          Document document, @Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset,
           boolean allowToBeyondMaxPreferredOffset, boolean virtual
   );
 
@@ -147,7 +146,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWr
    * @return            <code>true</code> if wrapping at the text range defined by the given element is allowed;
    *                    <code>false</code> otherwise
    */
-  private boolean allowToWrapInside(@Nonnull PsiElement element) {
+  private boolean allowToWrapInside(PsiElement element) {
     TextRange textRange = element.getTextRange();
     if (textRange == null) {
       return false;
@@ -162,7 +161,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LanguageLineWr
   }
   
   @Nullable
-  private static PsiElement getPrevious(@Nonnull PsiElement element) {
+  private static PsiElement getPrevious(PsiElement element) {
     PsiElement result = element.getPrevSibling();
     if (result != null) {
       return result;

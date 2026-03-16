@@ -18,8 +18,7 @@ package consulo.execution.configuration.log;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.process.ProcessHandler;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -29,11 +28,11 @@ import java.util.function.Predicate;
 public class LogFilesManager {
     private final LogConsoleManager myManager;
 
-    public LogFilesManager(@Nonnull LogConsoleManager manager) {
+    public LogFilesManager(LogConsoleManager manager) {
         myManager = manager;
     }
 
-    public void addLogConsoles(@Nonnull RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
+    public void addLogConsoles(RunConfigurationBase runConfiguration, @Nullable ProcessHandler startedProcess) {
         for (LogFileOptions logFileOptions : runConfiguration.getAllLogFiles()) {
             if (logFileOptions.isEnabled()) {
                 addConfigurationConsoles(logFileOptions, Predicates.<String>alwaysTrue(), logFileOptions.getPaths(), runConfiguration);
@@ -43,10 +42,10 @@ public class LogFilesManager {
     }
 
     private void addConfigurationConsoles(
-        @Nonnull LogFileOptions logFile,
-        @Nonnull Predicate<String> shouldInclude,
-        @Nonnull Set<String> paths,
-        @Nonnull RunConfigurationBase runConfiguration
+        LogFileOptions logFile,
+        Predicate<String> shouldInclude,
+        Set<String> paths,
+        RunConfigurationBase runConfiguration
     ) {
         if (paths.isEmpty()) {
             return;

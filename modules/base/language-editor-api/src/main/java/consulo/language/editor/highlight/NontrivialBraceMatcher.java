@@ -19,14 +19,13 @@ package consulo.language.editor.highlight;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public interface NontrivialBraceMatcher extends BraceMatcher {
-  @Nonnull
-  List<IElementType> getOppositeBraceTokenTypes(@Nonnull IElementType type);
+  
+  List<IElementType> getOppositeBraceTokenTypes(IElementType type);
 
-  default boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator) {
+  default boolean shouldStopMatch(boolean forward, IElementType braceType, HighlighterIterator iterator) {
     return false;
   }
 }

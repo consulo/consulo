@@ -34,7 +34,6 @@ import consulo.versionControlSystem.impl.internal.patch.PatchReader;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
@@ -60,20 +59,20 @@ public class BinaryFilePatchInProgress extends AbstractFilePatchInProgress<Shelv
     return myNewContentRevision;
   }
 
-  @Nonnull
+  
   @Override
   public DiffRequestProducer getDiffRequestProducers(final Project project, PatchReader baseContents) {
     final ShelvedBinaryFileImpl file = getPatch().getShelvedBinaryFile();
     return new DiffRequestProducer() {
-      @Nonnull
+      
       @Override
-      public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
+      public DiffRequest process(UserDataHolder context, ProgressIndicator indicator)
               throws DiffRequestProducerException, ProcessCanceledException {
         Change change = file.createChange(project);
         return PatchDiffRequestFactory.createDiffRequest(project, change, getName(), context, indicator);
       }
 
-      @Nonnull
+      
       @Override
       public String getName() {
         File file1 = new File(VirtualFileUtil.virtualToIoFile(getBase()), file.AFTER_PATH == null ? file.BEFORE_PATH : file.AFTER_PATH);

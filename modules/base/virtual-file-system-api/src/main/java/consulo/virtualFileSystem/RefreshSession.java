@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -29,11 +28,11 @@ public abstract class RefreshSession {
 
   public abstract boolean isAsynchronous();
 
-  public abstract void addFile(@Nonnull VirtualFile file);
+  public abstract void addFile(VirtualFile file);
 
-  public abstract void addAllFiles(@Nonnull Collection<? extends VirtualFile> files);
+  public abstract void addAllFiles(Collection<? extends VirtualFile> files);
 
-  public void addAllFiles(@Nonnull VirtualFile... files) {
+  public void addAllFiles(VirtualFile... files) {
     addAllFiles(Arrays.asList(files));
   }
 

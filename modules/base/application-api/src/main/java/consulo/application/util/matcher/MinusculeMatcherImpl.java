@@ -5,10 +5,8 @@ import consulo.util.collection.FList;
 import consulo.util.lang.CharArrayCharSequence;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 
 /**
@@ -46,7 +44,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * @param hardSeparators A string of characters (empty by default). Lowercase humps don't work for parts separated by any of these characters.
    *                       Need either an explicit uppercase letter or the same separator character in prefix
    */
-  MinusculeMatcherImpl(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, @Nonnull String hardSeparators) {
+  MinusculeMatcherImpl(String pattern, NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
     myOptions = options;
     myPattern = StringUtil.trimEnd(pattern, "* ").toCharArray();
     myHardSeparators = hardSeparators;
@@ -81,7 +79,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return Character.isWhitespace(c) || c == '_' || c == '-' || c == ':' || c == '+' || c == '.';
   }
 
-  private static int nextWord(@Nonnull String name, int start) {
+  private static int nextWord(String name, int start) {
     if (start < name.length() && Character.isDigit(name.charAt(start))) {
       return start + 1; //treat each digit as a separate hump
     }
@@ -106,8 +104,8 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return false;
   }
 
-  @Nonnull
-  private static FList<MatcherTextRange> prependRange(@Nonnull FList<MatcherTextRange> ranges, int from, int length) {
+  
+  private static FList<MatcherTextRange> prependRange(FList<MatcherTextRange> ranges, int from, int length) {
     MatcherTextRange head = ranges.getHead();
     if (head != null && head.getStartOffset() == from + length) {
       return ranges.getTail().prepend(new MatcherTextRange(from, head.getEndOffset()));
@@ -116,7 +114,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   @Override
-  public int matchingDegree(@Nonnull String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
+  public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
     if (fragments == null) return Integer.MIN_VALUE;
     if (fragments.isEmpty()) return 0;
 
@@ -187,14 +185,14 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   @Override
-  @Nonnull
+  
   public String getPattern() {
     return new String(myPattern);
   }
 
   @Override
   @Nullable
-  public FList<MatcherTextRange> matchingFragments(@Nonnull String name) {
+  public FList<MatcherTextRange> matchingFragments(String name) {
     if (name.length() < myMinNameLength) {
       return null;
     }
@@ -223,7 +221,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   @Nullable
-  private FList<MatcherTextRange> matchBySubstring(@Nonnull String name) {
+  private FList<MatcherTextRange> matchBySubstring(String name) {
     boolean infix = isPatternChar(0, '*');
     char[] patternWithoutWildChar = filterWildcard(myPattern);
     if (name.length() < patternWithoutWildChar.length) {
@@ -257,7 +255,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * and try to {@link #matchFragment} for it.
    */
   @Nullable
-  private FList<MatcherTextRange> matchWildcards(@Nonnull String name, int patternIndex, int nameIndex, boolean isAsciiName) {
+  private FList<MatcherTextRange> matchWildcards(String name, int patternIndex, int nameIndex, boolean isAsciiName) {
     if (nameIndex < 0) {
       return null;
     }
@@ -301,7 +299,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * and invokes {@link #matchFragment} at those candidate positions
    */
   @Nullable
-  private FList<MatcherTextRange> matchSkippingWords(@Nonnull String name, int patternIndex, int nameIndex, boolean allowSpecialChars, boolean isAsciiName) {
+  private FList<MatcherTextRange> matchSkippingWords(String name, int patternIndex, int nameIndex, boolean allowSpecialChars, boolean isAsciiName) {
     int maxFoundLength = 0;
     while (nameIndex >= 0) {
       int fragmentLength = seemsLikeFragmentStart(name, patternIndex, nameIndex) ? maxMatchingFragment(name, patternIndex, nameIndex) : 0;
@@ -324,7 +322,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return null;
   }
 
-  private int findNextPatternCharOccurrence(@Nonnull String name, int startAt, int patternIndex, boolean isAsciiName) {
+  private int findNextPatternCharOccurrence(String name, int startAt, int patternIndex, boolean isAsciiName) {
     return !isPatternChar(patternIndex - 1, '*') && !isWordSeparator[patternIndex]
            ? indexOfWordStart(name, patternIndex, startAt)
            : indexOfIgnoreCase(name, startAt, myPattern[patternIndex], patternIndex, isAsciiName);
@@ -345,7 +343,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return end;
   }
 
-  private boolean seemsLikeFragmentStart(@Nonnull String name, int patternIndex, int nextOccurrence) {
+  private boolean seemsLikeFragmentStart(String name, int patternIndex, int nextOccurrence) {
     // uppercase should match either uppercase or a word start
     return !isUpperCase[patternIndex] || Character.isUpperCase(name.charAt(nextOccurrence)) || NameUtilCore.isWordStart(name, nextOccurrence) ||
            // accept uppercase matching lowercase if the whole prefix is uppercase and case sensitivity allows that
@@ -357,12 +355,12 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
   }
 
   @Nullable
-  private FList<MatcherTextRange> matchFragment(@Nonnull String name, int patternIndex, int nameIndex, boolean isAsciiName) {
+  private FList<MatcherTextRange> matchFragment(String name, int patternIndex, int nameIndex, boolean isAsciiName) {
     int fragmentLength = maxMatchingFragment(name, patternIndex, nameIndex);
     return fragmentLength == 0 ? null : matchInsideFragment(name, patternIndex, nameIndex, isAsciiName, fragmentLength);
   }
 
-  private int maxMatchingFragment(@Nonnull String name, int patternIndex, int nameIndex) {
+  private int maxMatchingFragment(String name, int patternIndex, int nameIndex) {
     if (!isFirstCharMatching(name, nameIndex, patternIndex)) {
       return 0;
     }
@@ -388,7 +386,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
 
   // we've found the longest fragment matching pattern and name
   @Nullable
-  private FList<MatcherTextRange> matchInsideFragment(@Nonnull String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength) {
+  private FList<MatcherTextRange> matchInsideFragment(String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength) {
     // exact middle matches have to be at least of length 3, to prevent too many irrelevant matches
     int minFragment = isMiddleMatch(name, patternIndex, nameIndex) ? 3 : 1;
 
@@ -400,12 +398,12 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return findLongestMatchingPrefix(name, patternIndex, nameIndex, isAsciiName, fragmentLength, minFragment);
   }
 
-  private boolean isMiddleMatch(@Nonnull String name, int patternIndex, int nameIndex) {
+  private boolean isMiddleMatch(String name, int patternIndex, int nameIndex) {
     return isPatternChar(patternIndex - 1, '*') && !isWildcard(patternIndex + 1) && Character.isLetterOrDigit(name.charAt(nameIndex)) && !NameUtilCore.isWordStart(name, nameIndex);
   }
 
   @Nullable
-  private FList<MatcherTextRange> findLongestMatchingPrefix(@Nonnull String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength, int minFragment) {
+  private FList<MatcherTextRange> findLongestMatchingPrefix(String name, int patternIndex, int nameIndex, boolean isAsciiName, int fragmentLength, int minFragment) {
     if (patternIndex + fragmentLength >= myPattern.length) {
       return FList.<MatcherTextRange>emptyList().prepend(MatcherTextRange.from(nameIndex, fragmentLength));
     }
@@ -445,7 +443,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
    * When pattern is "CU" and the name is "CurrentUser", we already have a prefix "Cu" that matches,
    * but we try to find uppercase "U" later in name for better matching degree
    */
-  private FList<MatcherTextRange> improveCamelHumps(@Nonnull String name, int patternIndex, int nameIndex, boolean isAsciiName, int maxFragment, int minFragment) {
+  private FList<MatcherTextRange> improveCamelHumps(String name, int patternIndex, int nameIndex, boolean isAsciiName, int maxFragment, int minFragment) {
     for (int i = minFragment; i < maxFragment; i++) {
       if (isUppercasePatternVsLowercaseNameChar(name, patternIndex + i, nameIndex + i)) {
         FList<MatcherTextRange> ranges = findUppercaseMatchFurther(name, patternIndex + i, nameIndex + i, isAsciiName);
@@ -466,7 +464,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return matchWildcards(name, patternIndex, nextWordStart, isAsciiName);
   }
 
-  private boolean isFirstCharMatching(@Nonnull String name, int nameIndex, int patternIndex) {
+  private boolean isFirstCharMatching(String name, int nameIndex, int patternIndex) {
     if (nameIndex >= name.length()) return false;
 
     boolean ignoreCase = myOptions != NameUtil.MatchingCaseSensitivity.ALL;
@@ -498,7 +496,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return patternIndex >= 0 && patternIndex < myPattern.length && myPattern[patternIndex] == c;
   }
 
-  private int indexOfWordStart(@Nonnull String name, int patternIndex, int startFrom) {
+  private int indexOfWordStart(String name, int patternIndex, int startFrom) {
     char p = myPattern[patternIndex];
     if (startFrom >= name.length() || myHasHumps && isLowerCase[patternIndex] && !(patternIndex > 0 && isWordSeparator[patternIndex - 1])) {
       return -1;
@@ -544,7 +542,7 @@ class MinusculeMatcherImpl extends MinusculeMatcher {
     return c;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "MinusculeMatcherImpl{myPattern=" + new String(myPattern) + ", myOptions=" + myOptions + '}';

@@ -15,8 +15,7 @@
  */
 package consulo.execution.debug.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -36,7 +35,7 @@ public class ValueMarkup {
     myToolTipText = toolTipText;
   }
 
-  @Nonnull
+  
   public String getText() {
     return myText;
   }

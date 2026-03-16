@@ -23,8 +23,7 @@ import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.searchEverywhere.SearchEverywhereManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -34,9 +33,8 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class RunConfigurationsSEContributorFactory implements SearchEverywhereContributorFactory<ChooseRunConfigurationPopup.ItemWrapper> {
-    @Nullable
     @Override
-    public SearchEverywhereContributor<ChooseRunConfigurationPopup.ItemWrapper> createContributor(@Nonnull AnActionEvent e) {
+    public SearchEverywhereContributor<ChooseRunConfigurationPopup.@Nullable ItemWrapper> createContributor(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 

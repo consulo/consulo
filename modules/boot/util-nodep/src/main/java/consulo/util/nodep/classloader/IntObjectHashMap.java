@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Specialized memory saving map implementation for UrlClassLoader to avoid extra dependencies.
  */
@@ -8,7 +10,8 @@ final class IntObjectHashMap {
   private int size;
   private int[] keys;
   private Object[] values;
-  private Object specialZeroValue;
+  @Nullable
+  private Object specialZeroValue = null;
   private boolean hasZeroValue;
 
   IntObjectHashMap() {
@@ -20,7 +23,7 @@ final class IntObjectHashMap {
     return size + (hasZeroValue ? 1 : 0);
   }
 
-  public void put(int key, Object value) {
+  public void put(int key, @Nullable Object value) {
     if (key == 0) {
       specialZeroValue = value;
       hasZeroValue = true;
@@ -32,7 +35,8 @@ final class IntObjectHashMap {
     if (previousValue == null) ++size;
   }
 
-  private static Object doPut(int[] keys, Object[] values, int key, Object value) {
+  @Nullable
+  private static Object doPut(int[] keys, Object[] values, int key, @Nullable Object value) {
     int index = hashIndex(keys, key);
     Object obj = values[index];
     values[index] = value;
@@ -69,6 +73,7 @@ final class IntObjectHashMap {
     values = newValues;
   }
 
+  @Nullable
   public Object get(int key) {
     return key == 0 ? specialZeroValue : values[hashIndex(keys, key)];
   }

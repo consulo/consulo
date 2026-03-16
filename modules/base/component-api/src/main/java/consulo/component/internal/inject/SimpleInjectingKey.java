@@ -15,7 +15,6 @@
  */
 package consulo.component.internal.inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,13 +27,13 @@ class SimpleInjectingKey<T> implements InjectingKey<T> {
     myClass = aClass;
   }
 
-  @Nonnull
+  
   @Override
   public String getTargetClassName() {
     return myClass.getName();
   }
 
-  @Nonnull
+  
   @Override
   public Class<T> getTargetClass() {
     return myClass;

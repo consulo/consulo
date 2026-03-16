@@ -18,15 +18,14 @@ package consulo.application.util;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
 public class BiDirectionalEnumerator<T> extends Enumerator<T> {
-  @Nonnull
+  
   private final IntObjectMap<T> myIntToObjectMap;
 
-  public BiDirectionalEnumerator(int expectNumber, @Nonnull HashingStrategy<T> strategy) {
+  public BiDirectionalEnumerator(int expectNumber, HashingStrategy<T> strategy) {
     super(expectNumber, strategy);
 
     myIntToObjectMap = IntMaps.newIntObjectHashMap(expectNumber);
@@ -45,7 +44,7 @@ public class BiDirectionalEnumerator<T> extends Enumerator<T> {
     myIntToObjectMap.clear();
   }
 
-  @Nonnull
+  
   public T getValue(int index) {
     T hash = myIntToObjectMap.get(index);
     if (hash == null) {
@@ -54,7 +53,7 @@ public class BiDirectionalEnumerator<T> extends Enumerator<T> {
     return hash;
   }
 
-  public void forEachValue(@Nonnull Consumer<T> procedure) {
+  public void forEachValue(Consumer<T> procedure) {
     myIntToObjectMap.values().forEach(procedure);
   }
 }

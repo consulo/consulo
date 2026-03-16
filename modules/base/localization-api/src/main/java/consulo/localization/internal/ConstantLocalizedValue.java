@@ -15,8 +15,6 @@
  */
 package consulo.localization.internal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @author UNV
@@ -27,21 +25,15 @@ public final class ConstantLocalizedValue extends AbstractLocalizedValue {
     public static final ConstantLocalizedValue COLON = new ConstantLocalizedValue(":");
     public static final ConstantLocalizedValue DOT = new ConstantLocalizedValue(".");
     public static final ConstantLocalizedValue QUESTION_MARK = new ConstantLocalizedValue("?");
-
-    @Nonnull
     private final String myValue;
 
-    public ConstantLocalizedValue(@Nonnull String value) {
+    public ConstantLocalizedValue(String value) {
         myValue = value;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return '"' + myValue + '"';
     }
-
-    @Nonnull
     @Override
     public String getValue() {
         return myValue;

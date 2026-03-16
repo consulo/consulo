@@ -6,7 +6,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.search.IndexPatternOccurrence;
 import consulo.language.psi.search.IndexPatternSearch;
 import consulo.language.psi.search.LightIndexPatternSearcher;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -18,8 +17,8 @@ public class LightIndexPatternSearcherImpl extends IndexPatternSearcher implemen
     @Override
     @RequiredReadAction
     public void processQuery(
-        @Nonnull IndexPatternSearch.SearchParameters queryParameters,
-        @Nonnull Predicate<? super IndexPatternOccurrence> consumer
+        IndexPatternSearch.SearchParameters queryParameters,
+        Predicate<? super IndexPatternOccurrence> consumer
     ) {
         executeImpl(queryParameters, consumer);
     }

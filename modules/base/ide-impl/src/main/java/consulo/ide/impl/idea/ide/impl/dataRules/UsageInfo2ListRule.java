@@ -20,8 +20,7 @@ import consulo.dataContext.DataSnapshot;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageView;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,7 +29,7 @@ import java.util.List;
  */
 public final class UsageInfo2ListRule {
   @Nullable
-  static List<UsageInfo> getData(@Nonnull DataSnapshot dataProvider) {
+  static List<UsageInfo> getData(DataSnapshot dataProvider) {
     UsageInfo usageInfo = dataProvider.get(UsageView.USAGE_INFO_KEY);
     if (usageInfo != null) return Collections.singletonList(usageInfo);
     return null;

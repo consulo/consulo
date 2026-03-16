@@ -16,7 +16,6 @@
 package consulo.language.pratt;
 
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,5 +23,5 @@ import jakarta.annotation.Nonnull;
 public interface ParseResultVisitor<T> {
   T append();
   T error();
-  T done(@Nonnull IElementType type);
+  T done(IElementType type);
 }

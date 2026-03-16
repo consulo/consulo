@@ -18,7 +18,6 @@ package consulo.content.library.ui;
 import consulo.content.OrderRootType;
 import consulo.content.library.LibraryRootType;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,21 +29,21 @@ public class DetectedLibraryRoot {
   private final VirtualFile myFile;
   private final List<LibraryRootType> myTypes;
 
-  public DetectedLibraryRoot(@Nonnull VirtualFile file, @Nonnull OrderRootType rootType, boolean jarDirectory) {
+  public DetectedLibraryRoot(VirtualFile file, OrderRootType rootType, boolean jarDirectory) {
     this(file, Collections.singletonList(new LibraryRootType(rootType, jarDirectory)));
   }
 
-  public DetectedLibraryRoot(@Nonnull VirtualFile file, @Nonnull List<LibraryRootType> types) {
+  public DetectedLibraryRoot(VirtualFile file, List<LibraryRootType> types) {
     myFile = file;
     myTypes = types;
   }
 
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public List<LibraryRootType> getTypes() {
     return myTypes;
   }

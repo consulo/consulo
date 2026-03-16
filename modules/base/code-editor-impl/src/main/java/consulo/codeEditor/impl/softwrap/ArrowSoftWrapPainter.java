@@ -20,7 +20,6 @@ import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.impl.ArrowPainter;
 import consulo.codeEditor.impl.ColorProvider;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.Supplier;
@@ -48,7 +47,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     myHeightProvider.myHeight = lineHeight / 2;
 
     int start;
@@ -72,7 +71,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int getDrawingHorizontalOffset(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     switch (drawingType) {
       case BEFORE_SOFT_WRAP_LINE_FEED: return myEditor.getScrollingModel().getVisibleArea().width - x;
       case AFTER_SOFT_WRAP: return 0;
@@ -81,7 +80,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidth(SoftWrapDrawingType drawingType) {
     if (myMinWidth < 0) {
       // We need to reserve a minimal space required for representing arrow before soft wrap-introduced line feed.
       myMinWidth = EditorImplUtil.charWidth('a', Font.PLAIN, myEditor);

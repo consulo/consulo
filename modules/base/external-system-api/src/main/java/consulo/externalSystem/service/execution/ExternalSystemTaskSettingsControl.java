@@ -35,8 +35,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -48,9 +47,9 @@ import static consulo.externalSystem.util.ExternalSystemApiUtil.normalizePath;
  */
 public class ExternalSystemTaskSettingsControl implements ExternalSystemSettingsControl<ExternalSystemTaskExecutionSettings> {
 
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private final Project myProject;
 
   @SuppressWarnings("FieldCanBeLocal") // Used via reflection at showUi() and disposeResources()
@@ -69,7 +68,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   @Nullable
   private ExternalSystemTaskExecutionSettings myOriginalSettings;
 
-  public ExternalSystemTaskSettingsControl(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+  public ExternalSystemTaskSettingsControl(Project project, ProjectSystemId externalSystemId) {
     myProject = project;
     myExternalSystemId = externalSystemId;
   }
@@ -79,7 +78,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
-  public void fillUi(@Nonnull Disposable uiDisposable, @Nonnull PaintAwarePanel canvas, int indentLevel) {
+  public void fillUi(Disposable uiDisposable, PaintAwarePanel canvas, int indentLevel) {
     myProjectPathLabel = new JBLabel(ExternalSystemBundle.message(
       "run.configuration.settings.label.project", myExternalSystemId.getDisplayName().get()));
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(myExternalSystemId);
@@ -156,7 +155,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
-  public void apply(@Nonnull ExternalSystemTaskExecutionSettings settings) {
+  public void apply(ExternalSystemTaskExecutionSettings settings) {
     String projectPath = myProjectPathField.getText();
     settings.setExternalProjectPath(projectPath);
     settings.setTaskNames(StringUtil.split(myTasksTextField.getText(), " "));
@@ -165,7 +164,7 @@ public class ExternalSystemTaskSettingsControl implements ExternalSystemSettings
   }
 
   @Override
-  public boolean validate(@Nonnull ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
+  public boolean validate(ExternalSystemTaskExecutionSettings settings) throws ConfigurationException {
     String projectPath = myProjectPathField.getText();
     if (myOriginalSettings == null) {
       throw new ConfigurationException(String.format(

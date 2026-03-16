@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -32,11 +31,11 @@ public abstract class PsiPackageHelper {
     return project.getInstance( PsiPackageHelper.class);
   }
 
-  @Nonnull
-  public abstract String getQualifiedName(@Nonnull PsiDirectory directory, boolean presentable);
+  
+  public abstract String getQualifiedName(PsiDirectory directory, boolean presentable);
 
   @Nullable
-  public abstract PsiDirectoryContainer getDirectoryContainer(@Nonnull PsiDirectory directory);
+  public abstract PsiDirectoryContainer getDirectoryContainer(PsiDirectory directory);
 
   public abstract boolean isPackage(PsiDirectory directory);
 }

@@ -46,8 +46,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.awt.*;
@@ -60,7 +59,6 @@ import java.util.*;
 @ExtensionImpl
 public class XDebuggerEditorLinePainter extends EditorLinePainter {
     private record LightDarkEditorColor(RGBColor light, RGBColor dark) implements ColorValue {
-        @Nonnull
         @Override
         public RGBColor toRGB() {
             return isDarkEditor() ? light() : dark();
@@ -80,7 +78,7 @@ public class XDebuggerEditorLinePainter extends EditorLinePainter {
     }
 
     @Override
-    public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
+    public Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber) {
         if (!XDebuggerSettingsManager.getInstance().getDataViewSettings().isShowValuesInline()) {
             return null;
         }

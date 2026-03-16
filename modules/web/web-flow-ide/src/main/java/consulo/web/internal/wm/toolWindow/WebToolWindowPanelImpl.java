@@ -31,8 +31,7 @@ import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.InitiableComponent;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -82,8 +81,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
         public AddToolStripeButtonCmd(
             ToolWindowStripeButton button,
-            @Nonnull WindowInfoImpl info,
-            @Nonnull Comparator<ToolWindowStripeButton> comparator
+            WindowInfoImpl info,
+            Comparator<ToolWindowStripeButton> comparator
         ) {
             myButton = button;
             myInfo = info;
@@ -115,7 +114,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     private final class UpdateButtonPositionCmd implements Runnable {
         private final String myId;
 
-        private UpdateButtonPositionCmd(@Nonnull String id) {
+        private UpdateButtonPositionCmd(String id) {
             myId = id;
         }
 
@@ -152,7 +151,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public AddDockedComponentCmd(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        public AddDockedComponentCmd(ToolWindowInternalDecorator decorator, WindowInfoImpl info, boolean dirtyMode) {
             myDecorator = decorator;
             myInfo = info;
             myDirtyMode = dirtyMode;
@@ -171,7 +170,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         private final WindowInfoImpl myInfo;
         private final boolean myDirtyMode;
 
-        public RemoveDockedComponentCmd(@Nonnull WindowInfoImpl info, boolean dirtyMode) {
+        public RemoveDockedComponentCmd(WindowInfoImpl info, boolean dirtyMode) {
             myInfo = info;
             myDirtyMode = dirtyMode;
         }
@@ -239,14 +238,14 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         splitter.addClassName("web-tool-window-content");
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @RequiredUIAccess
-    private void setComponent(@Nullable ToolWindowInternalDecorator d, @Nonnull ToolWindowAnchor anchor, float weight) {
+    private void setComponent(@Nullable ToolWindowInternalDecorator d, ToolWindowAnchor anchor, float weight) {
         WebToolWindowInternalDecorator decorator = (WebToolWindowInternalDecorator) d;
 
         consulo.ui.Component component = decorator == null ? null : decorator.getComponent();
@@ -284,7 +283,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @Override
     @RequiredUIAccess
-    public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+    public void addButton(ToolWindowStripeButton button, WindowInfo info, Comparator<ToolWindowStripeButton> comparator) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         myId2Button.put(copiedInfo.getId(), (WebToolWindowStripeButtonImpl) button);
         new AddToolStripeButtonCmd(button, copiedInfo, comparator).run();
@@ -292,13 +291,13 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @Override
     @RequiredUIAccess
-    public void removeButton(@Nonnull String id) {
+    public void removeButton(String id) {
         // todo
     }
 
     @Override
     @RequiredUIAccess
-    public void removeDecorator(@Nonnull String id, boolean dirtyMode) {
+    public void removeDecorator(String id, boolean dirtyMode) {
         ToolWindowInternalDecorator decorator = getDecoratorById(id);
         WindowInfoImpl info = getDecoratorInfoById(id);
 
@@ -333,7 +332,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @Override
     @RequiredUIAccess
-    public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
+    public void addDecorator(ToolWindowInternalDecorator decorator, WindowInfo info, boolean dirtyMode) {
         WindowInfoImpl copiedInfo = ((WindowInfoImpl) info).copy();
         String id = copiedInfo.getId();
 
@@ -357,7 +356,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
         }
     }
 
-    private WindowInfoImpl getDockedInfoAt(@Nonnull ToolWindowAnchor anchor, boolean side) {
+    private WindowInfoImpl getDockedInfoAt(ToolWindowAnchor anchor, boolean side) {
         for (WindowInfoImpl info : myDecorator2Info.values()) {
             if (info.isVisible() && info.isDocked() && info.getAnchor() == anchor && side == info.isSplit()) {
                 return info;
@@ -369,7 +368,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
     @Override
     @RequiredUIAccess
-    public void updateButtonPosition(@Nonnull String id) {
+    public void updateButtonPosition(String id) {
         new UpdateButtonPositionCmd(id).run();
     }
 

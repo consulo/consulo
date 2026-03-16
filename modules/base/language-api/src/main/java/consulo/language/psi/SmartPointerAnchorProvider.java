@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows SmartPointer that points to stubbed psi element to survive stub-to-AST switch
@@ -39,12 +38,12 @@ public interface SmartPointerAnchorProvider {
    * @return anchor to be used when restoring element
    */
   @Nullable
-  PsiElement getAnchor(@Nonnull PsiElement element);
+  PsiElement getAnchor(PsiElement element);
 
   /**
    * @param anchor
    * @return restored original element using anchor
    */
   @Nullable
-  PsiElement restoreElement(@Nonnull PsiElement anchor);
+  PsiElement restoreElement(PsiElement anchor);
 }

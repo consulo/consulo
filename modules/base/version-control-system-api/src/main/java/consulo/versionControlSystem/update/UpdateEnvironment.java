@@ -22,8 +22,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsProviderMarker;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -58,9 +57,9 @@ public interface UpdateEnvironment extends VcsProviderMarker {
    *                                  cancellation can be reported by returning true from
    *                                  {@link UpdateSession#isCanceled}.
    */
-  @Nonnull
-  UpdateSession updateDirectories(@Nonnull FilePath[] contentRoots, UpdatedFiles updatedFiles,
-                                  ProgressIndicator progressIndicator, @Nonnull Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
+  
+  UpdateSession updateDirectories(FilePath[] contentRoots, UpdatedFiles updatedFiles,
+                                  ProgressIndicator progressIndicator, Ref<SequentialUpdatesContext> context) throws ProcessCanceledException;
 
   /**
    * Allows to show a settings dialog for the operation.

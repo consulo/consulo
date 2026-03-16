@@ -12,7 +12,6 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.root.VcsRootDetector;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,12 +23,12 @@ public class VcsRootErrorsFinder {
   private final Project myProject;
   private final ProjectLevelVcsManager myVcsManager;
 
-  public VcsRootErrorsFinder(@Nonnull Project project) {
+  public VcsRootErrorsFinder(Project project) {
     myProject = project;
     myVcsManager = ProjectLevelVcsManager.getInstance(project);
   }
 
-  @Nonnull
+  
   public Collection<VcsRootError> find() {
     List<VcsDirectoryMapping> mappings = myVcsManager.getDirectoryMappings();
     Collection<VcsRoot> vcsRoots = myProject.getInstance(VcsRootDetector.class).detect();
@@ -40,8 +39,8 @@ public class VcsRootErrorsFinder {
     return errors;
   }
 
-  @Nonnull
-  private Collection<VcsRootError> findUnregisteredRoots(@Nonnull List<VcsDirectoryMapping> mappings, @Nonnull Collection<VcsRoot> vcsRoots) {
+  
+  private Collection<VcsRootError> findUnregisteredRoots(List<VcsDirectoryMapping> mappings, Collection<VcsRoot> vcsRoots) {
     Collection<VcsRootError> errors = new ArrayList<>();
     List<String> mappedPaths = mappingsToPathsWithSelectedVcs(mappings);
     for (VcsRoot root : vcsRoots) {
@@ -57,8 +56,8 @@ public class VcsRootErrorsFinder {
     return errors;
   }
 
-  @Nonnull
-  private Collection<VcsRootError> findExtraMappings(@Nonnull List<VcsDirectoryMapping> mappings) {
+  
+  private Collection<VcsRootError> findExtraMappings(List<VcsDirectoryMapping> mappings) {
     Collection<VcsRootError> errors = new ArrayList<>();
     for (VcsDirectoryMapping mapping : mappings) {
       if (!hasVcsChecker(mapping.getVcs())) {
@@ -91,12 +90,12 @@ public class VcsRootErrorsFinder {
     return false;
   }
 
-  @Nonnull
-  public static Collection<VirtualFile> vcsRootsToVirtualFiles(@Nonnull Collection<VcsRoot> vcsRoots) {
+  
+  public static Collection<VirtualFile> vcsRootsToVirtualFiles(Collection<VcsRoot> vcsRoots) {
     return ContainerUtil.map(vcsRoots, VcsRoot::getPath);
   }
 
-  private List<String> mappingsToPathsWithSelectedVcs(@Nonnull List<VcsDirectoryMapping> mappings) {
+  private List<String> mappingsToPathsWithSelectedVcs(List<VcsDirectoryMapping> mappings) {
     List<String> paths = new ArrayList<>();
     for (VcsDirectoryMapping mapping : mappings) {
       if (StringUtil.isEmptyOrSpaces(mapping.getVcs())) {
@@ -119,7 +118,7 @@ public class VcsRootErrorsFinder {
     return new VcsRootErrorsFinder(project);
   }
 
-  private boolean isRoot(@Nonnull VcsDirectoryMapping mapping) {
+  private boolean isRoot(VcsDirectoryMapping mapping) {
     List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
     String pathToCheck = mapping.isDefaultMapping() ? myProject.getBasePath() : mapping.getDirectory();
     return ContainerUtil.find(checkers, checker -> checker.getSupportedVcs().getName().equalsIgnoreCase(mapping.getVcs()) && checker.isRoot(pathToCheck)) != null;

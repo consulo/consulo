@@ -35,7 +35,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,13 +48,13 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
   private static final Logger LOG = Logger.getInstance(UnifiedEditorTrackerImpl.class);
 
   @Inject
-  public UnifiedEditorTrackerImpl(@Nonnull Project project, @Nonnull Provider<WindowManager> windowManagerProvider) {
+  public UnifiedEditorTrackerImpl(Project project, Provider<WindowManager> windowManagerProvider) {
     super(project, windowManagerProvider);
   }
 
   @RequiredUIAccess
   @Override
-  protected void editorCreated(@Nonnull EditorFactoryEvent editorFactoryEvent) {
+  protected void editorCreated(EditorFactoryEvent editorFactoryEvent) {
     Editor editor = editorFactoryEvent.getEditor();
     if ((editor.getProject() != null && editor.getProject() != myProject) || myProject.isDisposedOrDisposeInProgress()) {
       return;
@@ -96,7 +95,7 @@ public class UnifiedEditorTrackerImpl extends EditorTracker {
   }
 
   @RequiredUIAccess
-  private void registerEditor(@Nonnull Editor editor) {
+  private void registerEditor(Editor editor) {
     unregisterEditor(editor);
 
     Window window = windowByEditor(editor);

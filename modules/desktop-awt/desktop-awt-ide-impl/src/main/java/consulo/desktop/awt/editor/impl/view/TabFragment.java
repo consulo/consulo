@@ -3,7 +3,6 @@ package consulo.desktop.awt.editor.impl.view;
 
 import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -44,7 +43,7 @@ final class TabFragment implements LineFragment {
     }
 
     @Override
-    public @Nonnull LineFragment subFragment(int startOffset, int endOffset) {
+    public LineFragment subFragment(int startOffset, int endOffset) {
         return this;
     }
 

@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.diff.internal.DiffInternal;
 import consulo.diff.util.TextDiffType;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.List;
 @Singleton
 public class DiffInternalImpl implements DiffInternal {
     @Override
-    public List<RangeHighlighter> createInlineHighlighter(@Nonnull Editor editor, int start, int end, @Nonnull TextDiffType type) {
+    public List<RangeHighlighter> createInlineHighlighter(Editor editor, int start, int end, TextDiffType type) {
         return DiffDrawUtil.createInlineHighlighter(editor, start, end, type);
     }
 }

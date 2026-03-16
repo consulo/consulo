@@ -22,15 +22,13 @@ import consulo.compiler.artifact.ui.DirectoryElementPresentation;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class DirectoryPackagingElement extends CompositePackagingElement<DirectoryPackagingElement> {
-  @NonNls public static final String NAME_ATTRIBUTE = "name";
+  public static final String NAME_ATTRIBUTE = "name";
   private String myDirectoryName;
 
   public DirectoryPackagingElement() {
@@ -43,14 +41,14 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new DirectoryElementPresentation(this);
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
     computeChildrenInstructions(creator.subFolder(myDirectoryName), resolvingContext, compilerContext, artifactType);
   }
 
@@ -59,7 +57,7 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
     return this;
   }
 
-  @NonNls @Override
+  @Override
   public String toString() {
     return "dir:" + myDirectoryName;
   }
@@ -74,7 +72,7 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public void rename(@Nonnull String newName) {
+  public void rename(String newName) {
     myDirectoryName = newName;
   }
 
@@ -84,7 +82,7 @@ public class DirectoryPackagingElement extends CompositePackagingElement<Directo
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof DirectoryPackagingElement && ((DirectoryPackagingElement)element).getDirectoryName().equals(myDirectoryName);
   }
 

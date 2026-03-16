@@ -24,8 +24,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.function.Supplier;
@@ -43,7 +42,7 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
     myConflictTracker = ((ChangeListManagerImpl)changeListManager).getConflictTracker();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "changelist-conflict";
@@ -52,7 +51,7 @@ public class ChangelistConflictNotificationProvider implements EditorNotificatio
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+  public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
     return myConflictTracker.hasConflict(file) ? ChangelistConflictNotificationPanel.create(myConflictTracker, file, builderFactory) : null;
   }
 }

@@ -28,7 +28,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceProvidersRegistry;
-import jakarta.annotation.Nonnull;
 
 /**
  * Definition of {@link ASTWrapperPsiElement}.
@@ -48,7 +47,7 @@ public class IgnoreElementImpl extends ASTWrapperPsiElement {
      *
      * @return {@link PsiReference} list
      */
-    @Nonnull
+    
     @Override
     public PsiReference[] getReferences() {
         return ReferenceProvidersRegistry.getReferencesFromProviders(this);

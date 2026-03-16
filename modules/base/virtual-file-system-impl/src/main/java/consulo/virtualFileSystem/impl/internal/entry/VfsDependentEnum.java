@@ -21,7 +21,6 @@ import consulo.index.io.data.DataInputOutputUtil;
 import consulo.util.collection.Lists;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.impl.internal.FSRecords;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -48,22 +47,22 @@ public class VfsDependentEnum<T> {
     private final Object myLock = new Object();
     private boolean myTriedToLoadFile;
 
-    public VfsDependentEnum(@Nonnull String fileName, @Nonnull KeyDescriptor<T> descriptor, int version) {
+    public VfsDependentEnum(String fileName, KeyDescriptor<T> descriptor, int version) {
         myFile = new File(FSRecords.basePath(), DEPENDENT_PERSISTENT_LIST_START_PREFIX + fileName + FSRecords.VFS_FILES_EXTENSION);
         myKeyDescriptor = descriptor;
         myVersion = version;
     }
 
-    @Nonnull
+    
     public static File getBaseFile() {
         return new File(FSRecords.basePath(), DEPENDENT_PERSISTENT_LIST_START_PREFIX);
     }
 
-    public int getId(@Nonnull T s) throws IOException {
+    public int getId(T s) throws IOException {
         return getIdRaw(s, true);
     }
 
-    public int getIdRaw(@Nonnull T s, boolean vfsRebuildOnException) throws IOException {
+    public int getIdRaw(T s, boolean vfsRebuildOnException) throws IOException {
         Integer integer = myInstanceToId.get(s);
         if (integer != null) {
             return integer;
@@ -96,7 +95,7 @@ public class VfsDependentEnum<T> {
         }
     }
 
-    private void saveToFile(@Nonnull T instance) throws IOException {
+    private void saveToFile(T instance) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(myFile, true);
 
         try (DataOutputStream output = new DataOutputStream(new BufferedOutputStream(fileOutputStream))) {
@@ -157,7 +156,7 @@ public class VfsDependentEnum<T> {
     }
 
     // GuardedBy("myLock")
-    private void invalidate(@Nonnull Throwable e, boolean vfsRebuildOnException) {
+    private void invalidate(Throwable e, boolean vfsRebuildOnException) {
         if (!myMarkedForInvalidation) {
             myMarkedForInvalidation = true;
             // exception will be rethrown in this call
@@ -168,13 +167,13 @@ public class VfsDependentEnum<T> {
         }
     }
 
-    private void register(@Nonnull T instance, int id) {
+    private void register(T instance, int id) {
         myInstanceToId.put(instance, id);
         assert id == myInstances.size() + 1;
         myInstances.add(instance);
     }
 
-    @Nonnull
+    
     public T getById(int id) throws IOException {
         assert id > 0;
         --id;

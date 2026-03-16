@@ -16,7 +16,6 @@
 package consulo.credentialStorage.impl.internal.kdbx;
 
 import consulo.util.io.DigestUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -58,12 +57,12 @@ final class HashedBlockInputStream extends InputStream {
 
     private final MessageDigest md = DigestUtil.sha256();
 
-    HashedBlockInputStream(@Nonnull InputStream inputStream) {
+    HashedBlockInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 
     @Override
-    public int read(@Nonnull byte[] b, int offset, int length) throws IOException {
+    public int read(byte[] b, int offset, int length) throws IOException {
         return get(b, offset, length);
     }
 

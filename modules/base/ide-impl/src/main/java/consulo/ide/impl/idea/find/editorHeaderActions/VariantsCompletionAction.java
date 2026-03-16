@@ -30,7 +30,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
 import java.awt.event.MouseEvent;
@@ -49,7 +48,7 @@ public class VariantsCompletionAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         if (editor == null) {
             return;

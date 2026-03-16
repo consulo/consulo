@@ -23,19 +23,18 @@ import consulo.project.Project;
 import consulo.project.ui.notification.NotificationService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "ReplaceInPath")
 public class ReplaceInPathAction extends FindReplaceInPathActionBase {
     @Inject
-    public ReplaceInPathAction(@Nonnull NotificationService notificationService) {
+    public ReplaceInPathAction(NotificationService notificationService) {
         super(ActionLocalize.actionReplaceinpathText(), ActionLocalize.actionReplaceinpathDescription(), notificationService);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         ReplaceInProjectManager replaceManager = ReplaceInProjectManager.getInstance(project);
@@ -48,7 +47,7 @@ public class ReplaceInPathAction extends FindReplaceInPathActionBase {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         FindInPathAction.doUpdate(event);
     }
 }

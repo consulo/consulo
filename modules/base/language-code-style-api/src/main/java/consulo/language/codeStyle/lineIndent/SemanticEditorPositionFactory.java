@@ -16,7 +16,6 @@
 package consulo.language.codeStyle.lineIndent;
 
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -25,6 +24,6 @@ import java.util.function.Function;
  * @since 25/06/2023
  */
 public interface SemanticEditorPositionFactory {
-  @Nonnull
+  
   SemanticEditorPosition create(int offset, Function<IElementType, SemanticEditorPosition.SyntaxElement> mapper);
 }

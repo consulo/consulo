@@ -22,8 +22,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.component.util.graph.Graph;
 import consulo.util.collection.Chunk;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -38,25 +37,25 @@ public abstract class GraphAlgorithms {
   }
 
   @Nullable
-  public abstract <Node> List<Node> findShortestPath(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish);
+  public abstract <Node> List<Node> findShortestPath(Graph<Node> graph, Node start, Node finish);
 
-  @Nonnull
-  public abstract <Node> List<List<Node>> findKShortestPaths(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, int k, @Nonnull ProgressIndicator progressIndicator);
+  
+  public abstract <Node> List<List<Node>> findKShortestPaths(Graph<Node> graph, Node start, Node finish, int k, ProgressIndicator progressIndicator);
 
-  @Nonnull
-  public abstract <Node> Set<List<Node>> findCycles(@Nonnull Graph<Node> graph, @Nonnull Node node);
+  
+  public abstract <Node> Set<List<Node>> findCycles(Graph<Node> graph, Node node);
 
-  @Nonnull
-  public abstract <Node> List<List<Node>> removePathsWithCycles(@Nonnull List<List<Node>> paths);
+  
+  public abstract <Node> List<List<Node>> removePathsWithCycles(List<List<Node>> paths);
 
-  @Nonnull
-  public abstract <Node> Graph<Node> invertEdgeDirections(@Nonnull Graph<Node> graph);
+  
+  public abstract <Node> Graph<Node> invertEdgeDirections(Graph<Node> graph);
 
-  @Nonnull
-  public abstract <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(@Nonnull Graph<Node> graph);
+  
+  public abstract <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(Graph<Node> graph);
 
-  @Nonnull
-  public abstract <Node> Graph<Chunk<Node>> computeSCCGraph(@Nonnull Graph<Node> graph);
+  
+  public abstract <Node> Graph<Chunk<Node>> computeSCCGraph(Graph<Node> graph);
 
   /**
    * Adds start node and all its outs to given set recursively.
@@ -65,5 +64,5 @@ public abstract class GraphAlgorithms {
    * @param start node to start from
    * @param set   set to be populated
    */
-  public abstract <Node> void collectOutsRecursively(@Nonnull Graph<Node> graph, Node start, Set<Node> set);
+  public abstract <Node> void collectOutsRecursively(Graph<Node> graph, Node start, Set<Node> set);
 }

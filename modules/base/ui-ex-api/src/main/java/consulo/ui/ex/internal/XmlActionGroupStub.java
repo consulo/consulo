@@ -22,8 +22,7 @@ import consulo.container.plugin.PluginId;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * from kotlin
@@ -74,12 +73,12 @@ public class XmlActionGroupStub extends DefaultActionGroup implements ActionStub
 
   @Nullable
   @Override
-  public AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager) {
+  public AnAction initialize(Application application, ActionManager manager) {
     return convertGroupStub(application, this, manager);
   }
 
   @Nullable
-  static ActionGroup convertGroupStub(@Nonnull Application application, @Nonnull XmlActionGroupStub stub, @Nonnull ActionManager actionManager) {
+  static ActionGroup convertGroupStub(Application application, XmlActionGroupStub stub, ActionManager actionManager) {
     ActionGroup group = XmlActionStub.instantiate(application, stub.getActionClass(), stub.getClassLoader(), stub.getPluginId(), ActionGroup.class);
     if (group == null) return null;
     stub.initGroup(group, actionManager);

@@ -21,7 +21,6 @@ import consulo.content.scope.PackageSet;
 import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class NamedPackageSetReference extends PackageSetBase {
   private final String myName;
@@ -43,13 +42,13 @@ public class NamedPackageSetReference extends PackageSetBase {
   }
 
   @Override
-  @Nonnull
+  
   public PackageSet createCopy() {
     return new NamedPackageSetReference(myName);
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
     return "$" + myName;
   }

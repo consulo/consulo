@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.preview;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -36,12 +35,12 @@ public class ImagePreviewEditorFactoryListener implements EditorFactoryListener 
     }
 
     @Override
-    public void editorCreated(@Nonnull EditorFactoryEvent event) {
+    public void editorCreated(EditorFactoryEvent event) {
         myImageOrColorPreviewManager.get().registerListeners(event.getEditor());
     }
 
     @Override
-    public void editorReleased(@Nonnull EditorFactoryEvent event) {
+    public void editorReleased(EditorFactoryEvent event) {
         myImageOrColorPreviewManager.get().unregisterEditor(event.getEditor());
     }
 }

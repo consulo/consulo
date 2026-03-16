@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.EditorEx;
 import consulo.language.Language;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -40,6 +39,6 @@ public interface EditorTextFieldProvider {
      * @param project  target project
      * @return {@link EditorTextField} with specified customizations applied to its editor.
      */
-    @Nonnull
-    EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<Consumer<EditorEx>> features);
+    
+    EditorTextField getEditorField(Language language, Project project, Iterable<Consumer<EditorEx>> features);
 }

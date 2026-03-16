@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
@@ -43,7 +42,7 @@ public class ScratchResolveScopeEnlarger extends ResolveScopeEnlarger {
 
   @Nullable
   @Override
-  public SearchScope getAdditionalResolveScope(@Nonnull VirtualFile file, Project project) {
+  public SearchScope getAdditionalResolveScope(VirtualFile file, Project project) {
     ScratchFileService scratchFileService = myScratchFileServiceProvider.get();
 
     RootType rootType = scratchFileService.getRootType(file);

@@ -23,7 +23,6 @@ import consulo.platform.Platform;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class SynchronizeDiff extends DirDiffAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
     if (e.getPresentation().isEnabled() &&
         (getModel().getSourceDir() instanceof BackgroundOperatingDiffElement ||

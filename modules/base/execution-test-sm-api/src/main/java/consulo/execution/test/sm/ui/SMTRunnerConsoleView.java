@@ -29,8 +29,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -98,8 +97,8 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
             @RequiredUIAccess
             public void onSelected(
                 @Nullable SMTestProxy selectedTestProxy,
-                @Nonnull TestResultsViewer viewer,
-                @Nonnull TestFrameworkRunningModel model
+                TestResultsViewer viewer,
+                TestFrameworkRunningModel model
             ) {
                 if (selectedTestProxy == null) {
                     return;
@@ -126,7 +125,7 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
      * @param contentType given type
      */
     @Override
-    public void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType) {
+    public void print(String s, ConsoleViewContentType contentType) {
         myResultsViewer.getRoot().addLast(printer -> printer.print(s, contentType));
     }
 
@@ -150,11 +149,11 @@ public class SMTRunnerConsoleView extends BaseTestsOutputConsoleView {
         }
     }
 
-    public void addAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
+    public void addAttachToProcessListener(AttachToProcessListener listener) {
         myAttachToProcessListeners.add(listener);
     }
 
-    public void remoteAttachToProcessListener(@Nonnull AttachToProcessListener listener) {
+    public void remoteAttachToProcessListener(AttachToProcessListener listener) {
         myAttachToProcessListeners.remove(listener);
     }
 

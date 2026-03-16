@@ -18,13 +18,12 @@ package consulo.localHistory;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public interface Label {
   Label NULL_INSTANCE = new Label() {
 
     @Override
-    public void revert(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public void revert(Project project, VirtualFile file) {
     }
 
     @Override
@@ -39,7 +38,7 @@ public interface Label {
    * @param file file or directory that should be reverted
    * @throws LocalHistoryException
    */
-  void revert(@Nonnull Project project, @Nonnull VirtualFile file) throws LocalHistoryException;
+  void revert(Project project, VirtualFile file) throws LocalHistoryException;
 
   ByteContent getByteContent(String path);
 }

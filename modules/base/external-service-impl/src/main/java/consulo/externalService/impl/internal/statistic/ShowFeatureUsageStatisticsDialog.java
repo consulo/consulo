@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,7 +119,7 @@ public class ShowFeatureUsageStatisticsDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{getCancelAction(), getHelpAction()};
     }

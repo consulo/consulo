@@ -23,7 +23,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.execution.terminal.TerminalSession;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BiFunction;
 
@@ -33,14 +32,14 @@ import java.util.function.BiFunction;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface TerminalConsoleFactory {
-    @Nonnull
+    
     JediTerminalConsole create(
         TerminalSession session,
         TerminalConsoleSettings settings,
         Disposable parentDisposable
     );
 
-    @Nonnull
+    
     JediTerminalConsole createCustom(
         Disposable parentDisposable,
         BiFunction<TerminalDataStream, Terminal, JediEmulator> jediEmulatorFactory,

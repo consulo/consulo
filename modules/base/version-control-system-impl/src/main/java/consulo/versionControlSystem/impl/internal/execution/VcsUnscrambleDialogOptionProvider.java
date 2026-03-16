@@ -21,7 +21,7 @@ import consulo.execution.unscramble.UnscrambleDialogOptionProvider;
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.impl.internal.configurable.VcsContentAnnotationConfigurable;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 /**

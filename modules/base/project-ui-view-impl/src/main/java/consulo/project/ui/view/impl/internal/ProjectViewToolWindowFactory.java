@@ -32,14 +32,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @ExtensionImpl
 public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAware {
-    @Nonnull
     @Override
     public String getId() {
         return ToolWindowId.PROJECT_VIEW;
@@ -55,7 +53,7 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAwar
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ((ProjectViewEx) ProjectView.getInstance(project)).setupToolWindow(toolWindow, true);
     }
 
@@ -64,19 +62,16 @@ public class ProjectViewToolWindowFactory implements ToolWindowFactory, DumbAwar
         return true;
     }
 
-    @Nonnull
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.LEFT;
     }
 
-    @Nonnull
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowproject();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectUILocalize.toolwindowProjectDisplayName();

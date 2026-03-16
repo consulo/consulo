@@ -17,7 +17,6 @@ package consulo.externalService.impl.internal;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -36,7 +35,7 @@ public class PermanentInstallationID {
     private static final long INSTALLATION_DATE =
         Long.parseLong(calculateValue(INSTALLATION_DATE_KEY, () -> String.valueOf(System.currentTimeMillis())));
 
-    @Nonnull
+    
     public static String get() {
         return INSTALLATION_ID;
     }

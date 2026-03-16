@@ -29,8 +29,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.PersistentFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -73,11 +72,11 @@ public class WindowsDefenderChecker {
         }
     }
 
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public WindowsDefenderChecker(@Nonnull Application application) {
+    public WindowsDefenderChecker(Application application) {
         myApplication = application;
     }
 
@@ -91,7 +90,7 @@ public class WindowsDefenderChecker {
                 IGNORE_VIRUS_CHECK);
     }
 
-    public CheckResult checkWindowsDefender(@Nonnull Project project) {
+    public CheckResult checkWindowsDefender(Project project) {
         Boolean windowsDefenderActive = isWindowsDefenderActive();
         if (windowsDefenderActive == null || !windowsDefenderActive) {
             LOG.info("Windows Defender status: not used");
@@ -132,7 +131,7 @@ public class WindowsDefenderChecker {
         return new CheckResult(scanningStatus, Collections.emptyMap());
     }
 
-    @Nonnull
+    
     protected List<File> getProcessesToCheck() {
         List<File> result = new ArrayList<>();
         File ideStarter = new File(ContainerPathManager.get().getAppHomeDirectory(), getExecutableOnWindows());
@@ -152,7 +151,7 @@ public class WindowsDefenderChecker {
     /**
      * @return full path to consulo.exe or consulo64.exe
      */
-    @Nonnull
+    
     private static String getExecutableOnWindows() {
         return Platform.current().mapWindowsExecutable(ApplicationInfo.getInstance().getName().toLowerCase(Locale.ROOT), "exe");
     }
@@ -229,7 +228,7 @@ public class WindowsDefenderChecker {
     /**
      * Runs a powershell command to determine whether realtime scanning is enabled or not.
      */
-    @Nonnull
+    
     private static RealtimeScanningStatus getRealtimeScanningEnabled() {
         Collection<String> output = getWindowsDefenderProperty("DisableRealtimeMonitoring");
         if (output == null) {
@@ -268,8 +267,8 @@ public class WindowsDefenderChecker {
     /**
      * Returns a list of paths that might impact build performance if Windows Defender were configured to scan them.
      */
-    @Nonnull
-    protected List<Path> getImportantPaths(@Nonnull Project project) {
+    
+    protected List<Path> getImportantPaths(Project project) {
         String homeDir = System.getProperty("user.home");
         String gradleUserHome = System.getenv("GRADLE_USER_HOME");
         String projectDir = project.getBasePath();
@@ -293,8 +292,8 @@ public class WindowsDefenderChecker {
     /**
      * Expands references to environment variables (strings delimited by '%') in 'path'
      */
-    @Nonnull
-    private static String expandEnvVars(@Nonnull String path) {
+    
+    private static String expandEnvVars(String path) {
         Matcher m = WINDOWS_ENV_VAR_PATTERN.matcher(path);
         StringBuffer result = new StringBuffer();
         while (m.find()) {
@@ -314,8 +313,8 @@ public class WindowsDefenderChecker {
      * https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-antivirus/configure-extension-file-exclusions-windows-defender-antivirus
      * for more details.
      */
-    @Nonnull
-    private static Pattern wildcardsToRegex(@Nonnull String path) {
+    
+    private static Pattern wildcardsToRegex(String path) {
         Matcher m = WINDOWS_DEFENDER_WILDCARD_PATTERN.matcher(path);
         StringBuilder sb = new StringBuilder();
         int previousWildcardEnd = 0;
@@ -339,8 +338,8 @@ public class WindowsDefenderChecker {
      * Checks whether each of the given paths in {@link paths} is matched by some pattern in {@link excludedPatterns},
      * returning a map of the results.
      */
-    @Nonnull
-    private static Map<Path, Boolean> checkPathsExcluded(@Nonnull List<Path> paths, @Nonnull List<Pattern> excludedPatterns) {
+    
+    private static Map<Path, Boolean> checkPathsExcluded(List<Path> paths, List<Pattern> excludedPatterns) {
         Map<Path, Boolean> result = new HashMap<>();
         for (Path path : paths) {
             if (!path.toFile().exists()) {
@@ -374,7 +373,7 @@ public class WindowsDefenderChecker {
         notification.addAction(new NotificationAction(ExternalServiceLocalize.virusScanningDontShowAgain()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+            public void actionPerformed(AnActionEvent e, Notification notification) {
                 notification.expire();
                 ApplicationPropertiesComponent.getInstance().setValue(IGNORE_VIRUS_CHECK, "true");
             }
@@ -382,7 +381,7 @@ public class WindowsDefenderChecker {
         notification.addAction(new NotificationAction(ExternalServiceLocalize.virusScanningDontShowAgainThisProject()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
+            public void actionPerformed(AnActionEvent e, Notification notification) {
                 notification.expire();
                 ProjectPropertiesComponent.getInstance(project).setValue(IGNORE_VIRUS_CHECK, "true");
             }

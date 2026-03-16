@@ -70,8 +70,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -87,7 +86,7 @@ public class FindUtil {
     }
 
     @Nullable
-    private static VirtualFile getVirtualFile(@Nonnull Editor myEditor) {
+    private static VirtualFile getVirtualFile(Editor myEditor) {
         Project project = myEditor.getProject();
         PsiFile file = project != null ? PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument()) : null;
         return file != null ? file.getVirtualFile() : null;
@@ -153,7 +152,7 @@ public class FindUtil {
         model.setPromptOnReplace(false);
     }
 
-    public static void updateFindInFileModel(@Nullable Project project, @Nonnull FindModel with, boolean saveFindString) {
+    public static void updateFindInFileModel(@Nullable Project project, FindModel with, boolean saveFindString) {
         FindModel model = FindManager.getInstance(project).getFindInFileModel();
         model.setCaseSensitive(with.isCaseSensitive());
         model.setWholeWordsOnly(with.isWholeWordsOnly());
@@ -242,7 +241,7 @@ public class FindUtil {
     }
 
     @RequiredUIAccess
-    public static void find(@Nonnull Project project, @Nonnull Editor editor) {
+    public static void find(Project project, Editor editor) {
         UIAccess.assertIsUIThread();
         FindManager findManager = FindManager.getInstance(project);
         String s = editor.getSelectionModel().getSelectedText();
@@ -312,7 +311,7 @@ public class FindUtil {
     }
 
     @Nullable
-    static List<Usage> findAll(@Nonnull Project project, @Nonnull PsiFile psiFile, @Nonnull FindModel findModel) {
+    static List<Usage> findAll(Project project, PsiFile psiFile, FindModel findModel) {
         if (project.isDisposed()) {
             return null;
         }
@@ -354,7 +353,7 @@ public class FindUtil {
     }
 
     @RequiredReadAction
-    static void findAllAndShow(@Nonnull Project project, @Nonnull PsiFile psiFile, @Nonnull FindModel findModel) {
+    static void findAllAndShow(Project project, PsiFile psiFile, FindModel findModel) {
         findModel.setCustomScope(true);
         findModel.setProjectScope(false);
         findModel.setCustomScopeName("File " + psiFile.getName());
@@ -729,11 +728,11 @@ public class FindUtil {
     @Nullable
     @RequiredUIAccess
     private static FindResult doSearch(
-        @Nonnull Project project,
-        @Nonnull Editor editor,
+        Project project,
+        Editor editor,
         int offset,
         boolean toWarn,
-        @Nonnull FindModel model,
+        FindModel model,
         boolean adjustEditor
     ) {
         FindManager findManager = FindManager.getInstance(project);
@@ -823,7 +822,7 @@ public class FindUtil {
         private final Editor myEditor;
         private final RangeHighlighter mySegmentHighlighter;
 
-        private MyListener(@Nonnull Editor editor, @Nonnull RangeHighlighter segmentHighlighter) {
+        private MyListener(Editor editor, RangeHighlighter segmentHighlighter) {
             myEditor = editor;
             mySegmentHighlighter = segmentHighlighter;
         }
@@ -916,7 +915,7 @@ public class FindUtil {
         Document document,
         FindModel model,
         FindResult result,
-        @Nonnull String stringToReplace,
+        String stringToReplace,
         boolean reallyReplace,
         List<Pair<TextRange, String>> rangesToChange
     ) {
@@ -999,9 +998,9 @@ public class FindUtil {
     @RequiredReadAction
     public static UsageView showInUsageView(
         @Nullable PsiElement sourceElement,
-        @Nonnull PsiElement[] targets,
-        @Nonnull String title,
-        @Nonnull final Project project
+        PsiElement[] targets,
+        String title,
+        final Project project
     ) {
         if (targets.length == 0) {
             return null;
@@ -1025,7 +1024,7 @@ public class FindUtil {
 
         ProgressManager.getInstance().run(new Task.Backgroundable(project, FindLocalize.progressTitleUpdatingUsageView()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 for (SmartPsiElementPointer pointer : pointers) {
                     if (view.isDisposed()) {
                         break;
@@ -1050,8 +1049,8 @@ public class FindUtil {
      *                                     if negative, carets will be positioned at selection ends
      */
     public static void selectSearchResultsInEditor(
-        @Nonnull Editor editor,
-        @Nonnull Iterator<FindResult> resultIterator,
+        Editor editor,
+        Iterator<FindResult> resultIterator,
         int caretShiftFromSelectionStart
     ) {
         if (!editor.getCaretModel().supportsMultipleCarets()) {
@@ -1086,7 +1085,7 @@ public class FindUtil {
      * @return <code>true</code> if caret was added successfully, <code>false</code> if it cannot be done, e.g. because a caret already
      * exists at target position
      */
-    public static boolean selectSearchResultInEditor(@Nonnull Editor editor, @Nonnull FindResult result, int caretShiftFromSelectionStart) {
+    public static boolean selectSearchResultInEditor(Editor editor, FindResult result, int caretShiftFromSelectionStart) {
         if (!editor.getCaretModel().supportsMultipleCarets()) {
             return false;
         }

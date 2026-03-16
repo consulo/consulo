@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -38,7 +37,7 @@ public class CreateChangelistAction extends BaseTaskAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         if (event.getPresentation().isEnabled()) {
             TaskManager manager = getTaskManager(event);
@@ -62,7 +61,7 @@ public class CreateChangelistAction extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         TaskManagerImpl manager = (TaskManagerImpl) getTaskManager(e);
         assert manager != null;
         LocalTask activeTask = manager.getActiveTask();

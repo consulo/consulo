@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.keymap.impl;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
-import jakarta.annotation.Nonnull;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -27,7 +26,7 @@ class WeakKeymapManagerListener implements KeymapManagerListener {
   private final KeymapManagerEx myKeymapManager;
   private final Reference<KeymapManagerListener> myRef;
 
-  WeakKeymapManagerListener(@Nonnull KeymapManagerEx keymapManager, @Nonnull KeymapManagerListener delegate) {
+  WeakKeymapManagerListener(KeymapManagerEx keymapManager, KeymapManagerListener delegate) {
     myKeymapManager = keymapManager;
     myRef = new WeakReference<KeymapManagerListener>(delegate);
   }
@@ -36,7 +35,7 @@ class WeakKeymapManagerListener implements KeymapManagerListener {
     return myRef.get() == null;
   }
 
-  public boolean isWrapped(@Nonnull KeymapManagerListener listener) {
+  public boolean isWrapped(KeymapManagerListener listener) {
     return myRef.get() == listener;
   }
 

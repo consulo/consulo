@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,7 +30,7 @@ public class TaskManagerNotificationGroupContributor implements NotificationGrou
   public static final NotificationGroup TASKS_NOTIFICATION_GROUP = NotificationGroup.balloonGroup("Tasks");
 
   @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+  public void contribute(Consumer<NotificationGroup> registrator) {
     registrator.accept(TASKS_NOTIFICATION_GROUP);
   }
 }

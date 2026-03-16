@@ -21,7 +21,6 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 public class TodoIndexPatternProvider implements IndexPatternProvider {
     private final TodoConfiguration myConfiguration;
 
-    @Nonnull
+    
     public static TodoIndexPatternProvider getInstance() {
         return EP_NAME.findExtensionOrFail(TodoIndexPatternProvider.class);
     }
@@ -41,7 +40,7 @@ public class TodoIndexPatternProvider implements IndexPatternProvider {
     }
 
     @Override
-    @Nonnull
+    
     public IndexPattern[] getIndexPatterns() {
         return myConfiguration.getIndexPatterns();
     }

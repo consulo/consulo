@@ -15,19 +15,18 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
 
 public interface PermanentCommitsInfo<CommitId> {
-  @Nonnull
+  
   CommitId getCommitId(int nodeId);
 
   long getTimestamp(int nodeId);
 
-  int getNodeId(@Nonnull CommitId commitId);
+  int getNodeId(CommitId commitId);
 
-  @Nonnull
-  Set<Integer> convertToNodeIds(@Nonnull Collection<CommitId> heads);
+  
+  Set<Integer> convertToNodeIds(Collection<CommitId> heads);
 }

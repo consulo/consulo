@@ -26,8 +26,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -121,7 +120,7 @@ public abstract class ModuleBasedConfiguration<ConfigurationModule extends RunCo
   }
 
   @Override
-  @Nonnull
+  
   public Module[] getModules() {
     ThrowableComputable<Module[],RuntimeException> action = () -> {
       Module module = getConfigurationModule().getModule();

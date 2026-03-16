@@ -9,7 +9,6 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -38,10 +37,10 @@ public abstract class PsiReferenceContributor implements LanguageExtension {
   private static final ExtensionPointCacheKey<PsiReferenceContributor, ByLanguageValue<List<PsiReferenceContributor>>> KEY =
           ExtensionPointCacheKey.create("PsiReferenceContributor", LanguageOneToMany.build(true));
 
-  @Nonnull
-  public static List<PsiReferenceContributor> forLanguage(@Nonnull Language language) {
+  
+  public static List<PsiReferenceContributor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(PsiReferenceContributor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  public abstract void registerReferenceProviders(@Nonnull PsiReferenceRegistrar registrar);
+  public abstract void registerReferenceProviders(PsiReferenceRegistrar registrar);
 }

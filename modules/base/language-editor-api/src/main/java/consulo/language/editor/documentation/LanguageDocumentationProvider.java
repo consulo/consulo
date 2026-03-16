@@ -24,8 +24,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -37,13 +36,13 @@ public interface LanguageDocumentationProvider extends DocumentationProvider, La
   ExtensionPointCacheKey<LanguageDocumentationProvider, ByLanguageValue<List<LanguageDocumentationProvider>>> KEY =
           ExtensionPointCacheKey.create("LanguageDocumentationProvider", LanguageOneToMany.build(false));
 
-  @Nonnull
-  static List<LanguageDocumentationProvider> forLanguage(@Nonnull Language language) {
+  
+  static List<LanguageDocumentationProvider> forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageDocumentationProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   @Nullable
-  static DocumentationProvider forLanguageComposite(@Nonnull Language language) {
+  static DocumentationProvider forLanguageComposite(Language language) {
     List<LanguageDocumentationProvider> providers = forLanguage(language);
     if (providers.isEmpty()) {
       return null;

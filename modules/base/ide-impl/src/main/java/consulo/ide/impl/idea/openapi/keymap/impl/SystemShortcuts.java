@@ -7,7 +7,6 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -27,8 +26,8 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.util.lang.reflect.ReflectionUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,20 +47,20 @@ public final class SystemShortcuts {
 
     private static final Logger LOG = Logger.getInstance(SystemShortcuts.class);
 
-    @Nonnull
+    
     private static final String ourUnknownSysAction = "Unknown action";
 
-    @Nonnull
+    
     private final Map<KeyStroke, AWTKeyStroke> myKeyStroke2SysShortcut = new HashMap<>();
-    @Nonnull
+    
     private final MuteConflictsSettings myMutedConflicts = new MuteConflictsSettings();
-    @Nonnull
+    
     private final Set<String> myNotifiedActions = new HashSet<>();
 
     @Nullable
     private Keymap myKeymap;
 
-    @Nonnull
+    
     private final Map<AWTKeyStroke, ConflictItem> myKeymapConflicts = new HashMap<>();
 
     public SystemShortcuts() {
@@ -69,36 +68,36 @@ public final class SystemShortcuts {
     }
 
     public static final class ConflictItem {
-        @Nonnull
+        
         final String mySysActionDesc;
-        @Nonnull
+        
         final KeyStroke mySysKeyStroke;
-        @Nonnull
+        
         final String[] myActionIds;
 
-        public ConflictItem(@Nonnull KeyStroke sysKeyStroke, @Nonnull String sysActionDesc, @Nonnull String[] actionIds) {
+        public ConflictItem(KeyStroke sysKeyStroke, String sysActionDesc, String[] actionIds) {
             mySysKeyStroke = sysKeyStroke;
             mySysActionDesc = sysActionDesc;
             myActionIds = actionIds;
         }
 
-        @Nonnull
+        
         public String getSysActionDesc() {
             return mySysActionDesc;
         }
 
-        @Nonnull
+        
         public KeyStroke getSysKeyStroke() {
             return mySysKeyStroke;
         }
 
-        @Nonnull
+        
         public String[] getActionIds() {
             return myActionIds;
         }
 
         @Nullable
-        String getUnmutedActionId(@Nonnull MuteConflictsSettings settings) {
+        String getUnmutedActionId(MuteConflictsSettings settings) {
             for (String actId : myActionIds) {
                 if (!settings.isMutedAction(actId)) {
                     return actId;
@@ -117,18 +116,18 @@ public final class SystemShortcuts {
             return;
         }
 
-        for (@Nonnull KeyStroke sysKS : myKeyStroke2SysShortcut.keySet()) {
+        for (KeyStroke sysKS : myKeyStroke2SysShortcut.keySet()) {
             String[] actIds = computeOnEdt(() -> keymap.getActionIds(sysKS));
             if (actIds == null || actIds.length == 0) {
                 continue;
             }
 
-            @Nonnull AWTKeyStroke shk = myKeyStroke2SysShortcut.get(sysKS);
+            AWTKeyStroke shk = myKeyStroke2SysShortcut.get(sysKS);
             myKeymapConflicts.put(shk, new ConflictItem(sysKS, getDescription(shk), actIds));
         }
     }
 
-    @Nonnull
+    
     public Collection<ConflictItem> getUnmutedKeymapConflicts() {
         List<ConflictItem> result = new ArrayList<>();
         myKeymapConflicts.forEach((ks, ci) -> {
@@ -164,7 +163,7 @@ public final class SystemShortcuts {
 
     @Nullable
     @RequiredUIAccess
-    public Map<KeyboardShortcut, String> calculateConflicts(@Nonnull Keymap keymap, @Nonnull String actionId) {
+    public Map<KeyboardShortcut, String> calculateConflicts(Keymap keymap, String actionId) {
         if (myKeyStroke2SysShortcut.isEmpty()) {
             return null;
         }
@@ -175,7 +174,7 @@ public final class SystemShortcuts {
             if (!(sc instanceof KeyboardShortcut ksc)) {
                 continue;
             }
-            for (@Nonnull KeyStroke sks : myKeyStroke2SysShortcut.keySet()) {
+            for (KeyStroke sks : myKeyStroke2SysShortcut.keySet()) {
                 if (ksc.getFirstKeyStroke().equals(sks) || sks.equals(ksc.getSecondKeyStroke())) {
                     if (result == null) {
                         result = new HashMap<>();
@@ -223,7 +222,7 @@ public final class SystemShortcuts {
         return result;
     }
 
-    public void onUserPressedShortcut(@Nonnull Keymap keymap, @Nonnull String[] actionIds, @Nonnull KeyboardShortcut ksc) {
+    public void onUserPressedShortcut(Keymap keymap, String[] actionIds, KeyboardShortcut ksc) {
         if (actionIds.length == 0) {
             return;
         }
@@ -259,11 +258,11 @@ public final class SystemShortcuts {
     }
 
     private void doNotify(
-        @Nonnull Keymap keymap,
-        @Nonnull String actionId,
-        @Nonnull KeyStroke sysKS,
+        Keymap keymap,
+        String actionId,
+        KeyStroke sysKS,
         @Nullable String macOsShortcutAction,
-        @Nonnull KeyboardShortcut conflicted
+        KeyboardShortcut conflicted
     ) {
         AnAction act = ActionManager.getInstance().getAction(actionId);
         String actText = act == null ? actionId : act.getTemplateText();
@@ -340,8 +339,8 @@ public final class SystemShortcuts {
     private static Method ourMethodReadSystemHotkeys;
 
     private static
-    @Nonnull
-    String getDescription(@Nonnull AWTKeyStroke systemHotkey) {
+    
+    String getDescription(AWTKeyStroke systemHotkey) {
         if (ourShkClass == null) {
             ourShkClass = ReflectionUtil.forName("java.awt.desktop.SystemHotkey");
         }
@@ -442,7 +441,7 @@ public final class SystemShortcuts {
     private static class MuteConflictsSettings {
         private static final String MUTED_ACTIONS_KEY = "muted.system.shortcut.conflicts.actions";
         private
-        @Nonnull
+        
         Set<String> myMutedActions;
 
         void init() {
@@ -456,19 +455,19 @@ public final class SystemShortcuts {
             }
         }
 
-        void addMutedAction(@Nonnull String actId) {
+        void addMutedAction(String actId) {
             init();
             myMutedActions.add(actId);
             PropertiesComponent.getInstance().setValues(MUTED_ACTIONS_KEY, ArrayUtil.toStringArray(myMutedActions));
         }
 
-        void removeMutedAction(@Nonnull String actId) {
+        void removeMutedAction(String actId) {
             init();
             myMutedActions.remove(actId);
             PropertiesComponent.getInstance().setValues(MUTED_ACTIONS_KEY, ArrayUtil.toStringArray(myMutedActions));
         }
 
-        public boolean isMutedAction(@Nonnull String actionId) {
+        public boolean isMutedAction(String actionId) {
             init();
             return myMutedActions.contains(actionId);
         }

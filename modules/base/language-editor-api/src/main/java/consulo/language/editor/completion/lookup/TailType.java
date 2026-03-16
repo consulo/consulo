@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -84,7 +83,7 @@ public abstract class TailType {
     return psiFile.getFileType();
   }
 
-  @Nonnull
+  
   public static PsiFile getFile(Editor editor) {
     Project project = editor.getProject();
     assert project != null;
@@ -107,7 +106,7 @@ public abstract class TailType {
   public static final TailType HUMBLE_SPACE_BEFORE_WORD = new CharTailType(' ', false) {
 
     @Override
-    public boolean isApplicable(@Nonnull InsertionContext context) {
+    public boolean isApplicable(InsertionContext context) {
       CharSequence text = context.getDocument().getCharsSequence();
       int tail = context.getTailOffset();
       if (text.length() > tail + 1 && text.charAt(tail) == ' ' && Character.isLetter(text.charAt(tail + 1))) {
@@ -154,7 +153,7 @@ public abstract class TailType {
     return new CharTailType(c);
   }
 
-  public boolean isApplicable(@Nonnull InsertionContext context) {
+  public boolean isApplicable(InsertionContext context) {
     return true;
   }
 }

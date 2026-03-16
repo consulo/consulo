@@ -7,7 +7,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Extension point for adding user-configurable widgets to the status bar.
@@ -20,7 +19,7 @@ public interface StatusBarWidgetFactory {
     /**
      * @return Widget identifier. Used to store visibility settings.
      */
-    @Nonnull
+    
     default String getId() {
         ExtensionImpl extension = getClass().getAnnotation(ExtensionImpl.class);
         if (extension == null) {
@@ -38,7 +37,7 @@ public interface StatusBarWidgetFactory {
      * e.g. for "Enable/disable &lt;display name>" action names
      * or for checkbox texts in settings.
      */
-    @Nonnull
+    
     String getDisplayName();
 
     /**
@@ -57,7 +56,7 @@ public interface StatusBarWidgetFactory {
      * Whenever availability is changed, you need to call {@link StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
      * explicitly to get status bar updated.
      */
-    boolean isAvailable(@Nonnull Project project);
+    boolean isAvailable(Project project);
 
     /**
      * Creates a widget to be added to the status bar.
@@ -74,10 +73,10 @@ public interface StatusBarWidgetFactory {
      * {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
      * to recreate the widget and re-add it to the status bar.
      */
-    @Nonnull
-    StatusBarWidget createWidget(@Nonnull Project project);
+    
+    StatusBarWidget createWidget(Project project);
 
-    default void disposeWidget(@Nonnull StatusBarWidget widget) {
+    default void disposeWidget(StatusBarWidget widget) {
         Disposer.dispose(widget);
     }
 
@@ -95,7 +94,7 @@ public interface StatusBarWidgetFactory {
      * <p>
      * For creating editor based widgets see also {@link StatusBarEditorBasedWidgetFactory}
      */
-    boolean canBeEnabledOn(@Nonnull StatusBar statusBar);
+    boolean canBeEnabledOn(StatusBar statusBar);
 
     /**
      * @return {@code true} if the widget should be created by default.

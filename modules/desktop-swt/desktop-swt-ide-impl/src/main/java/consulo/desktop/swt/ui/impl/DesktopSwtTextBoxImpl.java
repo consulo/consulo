@@ -20,8 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -63,9 +62,9 @@ public class DesktopSwtTextBoxImpl extends SWTComponentDelegate<Text> implements
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValidator(@Nonnull Validator<String> validator) {
+    public Disposable addValidator(Validator<String> validator) {
         return null;
     }
 

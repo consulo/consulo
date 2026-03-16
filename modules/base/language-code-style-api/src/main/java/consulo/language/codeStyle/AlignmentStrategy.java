@@ -16,8 +16,7 @@
 package consulo.language.codeStyle;
 
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -71,7 +70,7 @@ public abstract class AlignmentStrategy {
      * @return alignment strategy for the given arguments
      */
     public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(
-        @Nonnull Collection<IElementType> targetTypes,
+        Collection<IElementType> targetTypes,
         boolean allowBackwardShift
     ) {
         return new AlignmentPerTypeStrategy(targetTypes, null, allowBackwardShift, Alignment.Anchor.LEFT);
@@ -88,7 +87,7 @@ public abstract class AlignmentStrategy {
      * @return alignment retrieval strategy that follows the rules described above
      */
     public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(
-        @Nonnull Collection<IElementType> targetTypes,
+        Collection<IElementType> targetTypes,
         @Nullable IElementType parentType,
         boolean allowBackwardShift
     ) {
@@ -119,10 +118,10 @@ public abstract class AlignmentStrategy {
      * @return alignment retrieval strategy that follows the rules described above
      */
     public static AlignmentPerTypeStrategy createAlignmentPerTypeStrategy(
-        @Nonnull Collection<IElementType> targetTypes,
+        Collection<IElementType> targetTypes,
         @Nullable IElementType parentType,
         boolean allowBackwardShift,
-        @Nonnull Alignment.Anchor anchor
+        Alignment.Anchor anchor
     ) {
         return new AlignmentPerTypeStrategy(targetTypes, parentType, allowBackwardShift, anchor);
     }

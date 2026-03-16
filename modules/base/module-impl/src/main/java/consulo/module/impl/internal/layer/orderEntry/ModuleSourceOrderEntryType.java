@@ -22,7 +22,6 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,27 +31,27 @@ import jakarta.annotation.Nonnull;
 public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOrderEntryImpl> {
     public static final String ID = "sourceFolder";
 
-    @Nonnull
+    
     public static ModuleSourceOrderEntryType getInstance() {
         return EP_NAME.findExtensionOrFail(ModuleSourceOrderEntryType.class);
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public ModuleSourceOrderEntryImpl loadOrderEntry(
-        @Nonnull Element element,
-        @Nonnull ModuleRootLayer moduleRootLayer
+        Element element,
+        ModuleRootLayer moduleRootLayer
     ) throws InvalidDataException {
         return new ModuleSourceOrderEntryImpl((ModuleRootLayerImpl)moduleRootLayer);
     }
 
     @Override
-    public void storeOrderEntry(@Nonnull Element element, @Nonnull ModuleSourceOrderEntryImpl orderEntry) {
+    public void storeOrderEntry(Element element, ModuleSourceOrderEntryImpl orderEntry) {
     }
 }

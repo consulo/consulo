@@ -25,8 +25,7 @@ import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.ui.ex.action.*;
 
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,7 +48,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     myShowDoNotAskOption = showDoNotAskOption;
   }
 
-  @Nonnull
+  
   protected abstract ChangesTreeListImpl getFileList();
 
   @Nullable
@@ -109,7 +108,7 @@ public abstract class AbstractSelectFilesDialog<T> extends DialogWrapper {
     return toolbar.getComponent();
   }
 
-  @Nonnull
+  
   protected DefaultActionGroup createToolbarActions() {
     DefaultActionGroup group = new DefaultActionGroup();
     AnAction[] actions = getFileList().getTreeActions();

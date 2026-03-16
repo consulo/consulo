@@ -17,7 +17,6 @@ package consulo.util.concurrent.coroutine.step;
 
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -41,13 +40,13 @@ public final class CompletableFutureStep<I, O> extends CoroutineStep<I, O> {
      * @param function A function that takes the input and returns a {@link CompletableFuture}
      * @return A new coroutine step
      */
-    public static <I, O> CoroutineStep<I, O> await(@Nonnull Function<@Nullable I, CompletableFuture<O>> function) {
+    public static <I, O> CoroutineStep<I, O> await(Function<@Nullable I, CompletableFuture<O>> function) {
         return new CompletableFutureStep<>(function);
     }
 
     private final Function<@Nullable I, CompletableFuture<O>> myFunction;
 
-    private CompletableFutureStep(@Nonnull Function<@Nullable I, CompletableFuture<O>> function) {
+    private CompletableFutureStep(Function<@Nullable I, CompletableFuture<O>> function) {
         myFunction = function;
     }
 

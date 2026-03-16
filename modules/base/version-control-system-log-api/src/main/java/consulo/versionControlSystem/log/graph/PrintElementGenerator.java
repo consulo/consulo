@@ -16,15 +16,14 @@
 
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public interface PrintElementGenerator {
 
-  @Nonnull
+  
   Collection<PrintElementWithGraphElement> getPrintElements(int visibleRow);
 
-  @Nonnull
-  PrintElementWithGraphElement withGraphElement(@Nonnull PrintElement printElement);
+  
+  PrintElementWithGraphElement withGraphElement(PrintElement printElement);
 }

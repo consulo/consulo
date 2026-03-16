@@ -32,8 +32,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -60,9 +59,9 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
 
     @Inject
     public FileEncodingConfigurable(
-        @Nonnull Project project,
-        @Nonnull ApplicationEncodingManager applicationEncodingManager,
-        @Nonnull EncodingProjectManager encodingProjectManager
+        Project project,
+        ApplicationEncodingManager applicationEncodingManager,
+        EncodingProjectManager encodingProjectManager
     ) {
         super(project, createMappings(project));
         myBOMForUTF8Combo.setModel(new EnumComboBoxModel<>(EncodingProjectManagerImpl.BOMForNewUTF8Files.class));
@@ -111,14 +110,14 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.fileEncodingsConfigurable();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "file.encoding";
     }
@@ -130,7 +129,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     }
 
     @Override
-    protected <S> Object getParameter(@Nonnull Key<S> key) {
+    protected <S> Object getParameter(Key<S> key) {
         if (key == DESCRIPTION) {
             return IdeLocalize.encodingsDialogCaption(Application.get().getName()).get();
         }
@@ -153,7 +152,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
     }
 
     @Override
-    protected void renderValue(@Nullable Object target, @Nonnull Charset t, @Nonnull ColoredTextContainer renderer) {
+    protected void renderValue(@Nullable Object target, Charset t, ColoredTextContainer renderer) {
         VirtualFile file = target instanceof VirtualFile ? (VirtualFile) target : null;
         EncodingUtil.FailReason result = file == null || file.isDirectory() ? null : EncodingUtil.checkCanConvertAndReload(file);
 
@@ -162,9 +161,9 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         renderer.append(encodingText + (result == null ? "" : " (" + EncodingUtil.reasonToString(result, file) + ")"), attributes);
     }
 
-    @Nonnull
+    
     @Override
-    protected ActionGroup createActionListGroup(@Nullable Object target, @Nonnull Consumer<? super Charset> onChosen) {
+    protected ActionGroup createActionListGroup(@Nullable Object target, Consumer<? super Charset> onChosen) {
         VirtualFile file = target instanceof VirtualFile ? (VirtualFile) target : null;
         byte[] b = null;
         try {
@@ -178,7 +177,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         return new ChangeFileEncodingAction(myProject.getApplication(), true) {
             @Override
             @RequiredUIAccess
-            protected boolean chosen(Document document, Editor editor, VirtualFile virtualFile, byte[] bytes, @Nonnull Charset charset) {
+            protected boolean chosen(Document document, Editor editor, VirtualFile virtualFile, byte[] bytes, Charset charset) {
                 onChosen.accept(charset);
                 return true;
             }
@@ -199,13 +198,13 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
             : IdeLocalize.encodingNameSystemDefault(CharsetToolkit.getDefaultSystemCharset().displayName()).get();
     }
 
-    @Nonnull
+    
     @Override
     protected Collection<Charset> getValueVariants(@Nullable Object target) {
         return Arrays.asList(CharsetToolkit.getAvailableCharsets());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public JComponent createComponent() {
@@ -221,7 +220,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
             }
 
             @Override
-            public void set(Charset value) {
+            public void accept(Charset value) {
                 myPropsCharset = value;
             }
         });
@@ -229,7 +228,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         return myPanel;
     }
 
-    @Nonnull
+    
     @Override
     protected List<Trinity<String, Supplier<Charset>, Consumer<Charset>>> getDefaultMappings() {
         return Arrays.asList(myProjectMapping, myGlobalMapping);
@@ -253,7 +252,7 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
         return !same;
     }
 
-    @Nonnull
+    
     private static String getCharsetName(@Nullable Charset c) {
         return c == null ? "" : c.name();
     }
@@ -288,18 +287,18 @@ public class FileEncodingConfigurable extends PerFileConfigurableBase<Charset> i
             && (virtualFile.isDirectory() || EncodingUtil.checkCanConvertAndReload(virtualFile) == null);
     }
 
-    @Nonnull
-    private static PerFileMappingsEx<Charset> createMappings(@Nonnull Project project) {
+    
+    private static PerFileMappingsEx<Charset> createMappings(Project project) {
         EncodingProjectManagerImpl prjManager = (EncodingProjectManagerImpl) EncodingProjectManager.getInstance(project);
         return new PerFileMappingsEx<>() {
-            @Nonnull
+            
             @Override
             public Map<VirtualFile, Charset> getMappings() {
                 return new HashMap<>(prjManager.getAllMappings());
             }
 
             @Override
-            public void setMappings(@Nonnull Map<VirtualFile, Charset> mappings) {
+            public void setMappings(Map<VirtualFile, Charset> mappings) {
                 prjManager.setMapping(mappings);
             }
 

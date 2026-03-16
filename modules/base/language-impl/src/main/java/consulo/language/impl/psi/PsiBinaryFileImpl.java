@@ -24,8 +24,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.lazy.ClearableLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     private volatile boolean myPossiblyInvalidated;
     private final ClearableLazyValue<Module> myModuleRef;
 
-    public PsiBinaryFileImpl(@Nonnull PsiManager manager, @Nonnull FileViewProvider viewProvider) {
+    public PsiBinaryFileImpl(PsiManager manager, FileViewProvider viewProvider) {
         myViewProvider = (AbstractFileViewProvider) viewProvider;
         myManager = (PsiManagerImpl) manager;
         myModuleRef = ClearableLazyValue.nullable(() -> ModuleContentUtil.findModuleForFile(viewProvider.getVirtualFile(), getProject()));
@@ -57,13 +56,13 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile getVirtualFile() {
         return myViewProvider.getVirtualFile();
     }
 
     @Override
-    public boolean processChildren(@Nonnull PsiElementProcessor<PsiFileSystemItem> processor) {
+    public boolean processChildren(PsiElementProcessor<PsiFileSystemItem> processor) {
         return true;
     }
 
@@ -71,7 +70,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
         return myContents;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getName() {
@@ -80,7 +79,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
 
         if (isCopy()) {
@@ -128,18 +127,18 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Language getLanguage() {
         return Language.ANY;
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         return myManager;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -157,7 +156,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
         return this;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     @Override
     public TextRange getTextRange() {
@@ -195,25 +194,25 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public char[] textToCharArray() {
         return ArrayUtil.EMPTY_CHAR_ARRAY; // TODO[max] throw new UnsupportedOperationException()
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull CharSequence text) {
+    public boolean textMatches(CharSequence text) {
         return false;
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return false;
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         visitor.visitBinaryFile(this);
     }
 
@@ -235,24 +234,24 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     }
 
     @Override
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
-    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void checkAdd(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -273,7 +272,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
     @Override
     @RequiredWriteAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         return null;
     }
 
@@ -311,7 +310,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     }
 
     @Override
-    @Nonnull
+    
     public PsiFile getOriginalFile() {
         return this;
     }
@@ -323,19 +322,19 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
     }
 
     @Override
-    @Nonnull
+    
     public FileType getFileType() {
         return myViewProvider.getFileType();
     }
 
     @Override
-    @Nonnull
+    
     public PsiFile[] getPsiRoots() {
         return new PsiFile[]{this};
     }
 
     @Override
-    @Nonnull
+    
     public FileViewProvider getViewProvider() {
         return myViewProvider;
     }
@@ -356,7 +355,7 @@ public class PsiBinaryFileImpl extends PsiElementBase implements PsiBinaryFile, 
 
     @Override
     @RequiredReadAction
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         info.put("fileName", getName());
         info.put("fileType", getFileType().getId());
     }

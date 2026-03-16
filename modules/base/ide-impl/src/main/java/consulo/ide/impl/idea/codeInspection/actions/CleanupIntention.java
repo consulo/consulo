@@ -29,20 +29,19 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class CleanupIntention implements SyntheticIntentionAction, LowPriorityAction {
   protected CleanupIntention() {}
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.cleanupInScope();
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (!FileModificationService.getInstance().preparePsiElementForWrite(file)) return;
     InspectionManager managerEx = InspectionManager.getInstance(project);
     GlobalInspectionContextBase globalContext = (GlobalInspectionContextBase)managerEx.createNewGlobalContext(false);
@@ -57,7 +56,7 @@ public abstract class CleanupIntention implements SyntheticIntentionAction, LowP
   protected abstract AnalysisScope getScope(Project project, PsiFile file);
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return true;
   }
 

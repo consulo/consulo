@@ -19,30 +19,29 @@ import consulo.language.ast.ASTNode;
 import consulo.codeEditor.FoldingGroup;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NamedFoldingDescriptor extends FoldingDescriptor {
   private final String myPlaceholderText;
 
-  public NamedFoldingDescriptor(@Nonnull PsiElement e, int start, int end, @Nullable FoldingGroup group, @Nonnull String placeholderText) {
+  public NamedFoldingDescriptor(PsiElement e, int start, int end, @Nullable FoldingGroup group, String placeholderText) {
     this(e.getNode(), new TextRange(start, end), group, placeholderText);
   }
 
-  public NamedFoldingDescriptor(@Nonnull ASTNode node, int start, int end, @Nullable FoldingGroup group, @Nonnull String placeholderText) {
+  public NamedFoldingDescriptor(ASTNode node, int start, int end, @Nullable FoldingGroup group, String placeholderText) {
     this(node, new TextRange(start, end), group, placeholderText);
   }
 
-  public NamedFoldingDescriptor(@Nonnull ASTNode node,
-                                @Nonnull TextRange range,
+  public NamedFoldingDescriptor(ASTNode node,
+                                TextRange range,
                                 @Nullable FoldingGroup group,
-                                @Nonnull String placeholderText) {
+                                String placeholderText) {
     super(node, range, group);
     myPlaceholderText = placeholderText;
   }
 
   @Override
-  @Nonnull
+  
   public String getPlaceholderText() {
     return myPlaceholderText;
   }

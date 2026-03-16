@@ -25,19 +25,18 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import jakarta.annotation.Nonnull;
 
 @TopicImpl(ComponentScope.APPLICATION)
 public class PsiVFSListenerStartUpActivity implements ProjectManagerListener {
     @Override
-    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void projectOpened(Project project, UIAccess uiAccess) {
         PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
 
         MessageBusConnection connection = project.getMessageBus().connect();
         connection.subscribe(ModuleRootListener.class, psiVFSListener.new MyModuleRootListener());
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
-            public void fileTypesChanged(@Nonnull FileTypeEvent e) {
+            public void fileTypesChanged(FileTypeEvent e) {
                 psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
             }
         });

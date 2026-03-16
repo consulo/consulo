@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.model;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -36,7 +35,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
 
   private static final long serialVersionUID = 1L;
   
-  @Nonnull
+  
   private final String myDataClass;
   
   private final int myProcessingWeight;
@@ -51,13 +50,13 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
    *                          lower value means that key's payload should be processed <b>before</b> payload of the key with a greater
    *                          value
    */
-  public Key(@Nonnull String dataClass, int processingWeight) {
+  public Key(String dataClass, int processingWeight) {
     myDataClass = dataClass;
     myProcessingWeight = processingWeight;
   }
 
-  @Nonnull
-  public static <T> Key<T> create(@Nonnull Class<T> dataClass, int processingWeight) {
+  
+  public static <T> Key<T> create(Class<T> dataClass, int processingWeight) {
     return new Key<T>(dataClass.getName(), processingWeight);
   }
 
@@ -91,7 +90,7 @@ public class Key<T> implements Serializable, Comparable<Key<?>> {
   }
 
   @Override
-  public int compareTo(@Nonnull Key<?> that) {
+  public int compareTo(Key<?> that) {
     return myProcessingWeight - that.myProcessingWeight;
   }
 

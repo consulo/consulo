@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.search.FindSymbolParameters;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -27,20 +26,20 @@ public interface ChooseByNameModelEx extends ChooseByNameModel {
      * @deprecated use {@link #processNames(Predicate, FindSymbolParameters)} instead
      */
     @Deprecated
-    default void processNames(@Nonnull Predicate<? super String> processor, @Nonnull boolean inLibraries) {
+    default void processNames(Predicate<? super String> processor, boolean inLibraries) {
     }
 
-    default void processNames(@Nonnull Predicate<? super String> processor, @Nonnull FindSymbolParameters parameters) {
+    default void processNames(Predicate<? super String> processor, FindSymbolParameters parameters) {
         processNames(processor, parameters.isSearchInLibraries());
     }
 
-    @Nonnull
+    
     default ChooseByNameItemProvider getItemProvider(@Nullable PsiElement context) {
         return new DefaultChooseByNameItemProvider(context);
     }
 
-    @Nonnull
-    static ChooseByNameItemProvider getItemProvider(@Nonnull ChooseByNameModel model, @Nullable PsiElement context) {
+    
+    static ChooseByNameItemProvider getItemProvider(ChooseByNameModel model, @Nullable PsiElement context) {
         return model instanceof ChooseByNameModelEx chooseByNameModelEx
             ? chooseByNameModelEx.getItemProvider(context)
             : new DefaultChooseByNameItemProvider(context);

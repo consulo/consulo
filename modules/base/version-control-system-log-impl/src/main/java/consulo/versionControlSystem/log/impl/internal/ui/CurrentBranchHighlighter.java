@@ -21,8 +21,7 @@ import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -32,23 +31,23 @@ import java.util.function.Predicate;
 public class CurrentBranchHighlighter implements VcsLogHighlighter {
     private static final JBColor CURRENT_BRANCH_BG = new JBColor(new Color(228, 250, 255), new Color(63, 71, 73));
     private static final String HEAD = "HEAD";
-    @Nonnull
+    
     private final VcsLogData myLogData;
-    @Nonnull
+    
     private final VcsLogUi myLogUi;
-    @Nonnull
+    
     private final Map<VirtualFile, Predicate<CommitId>> myConditions = new HashMap<>();
     @Nullable
     private String mySingleFilteredBranch;
 
-    public CurrentBranchHighlighter(@Nonnull VcsLogData logData, @Nonnull VcsLogUi logUi) {
+    public CurrentBranchHighlighter(VcsLogData logData, VcsLogUi logUi) {
         myLogData = logData;
         myLogUi = logUi;
     }
 
-    @Nonnull
+    
     @Override
-    public VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails details, boolean isSelected) {
+    public VcsCommitStyle getStyle(VcsShortCommitDetails details, boolean isSelected) {
         if (isSelected || !myLogUi.isHighlighterEnabled(CurrentBranchHighlighterFactory.ID)) {
             return VcsCommitStyle.DEFAULT;
         }
@@ -72,7 +71,7 @@ public class CurrentBranchHighlighter implements VcsLogHighlighter {
     }
 
     @Override
-    public void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
+    public void update(VcsLogDataPack dataPack, boolean refreshHappened) {
         VcsLogBranchFilter branchFilter = dataPack.getFilters().getBranchFilter();
         mySingleFilteredBranch = branchFilter == null ? null : VcsLogUtil.getSingleFilteredBranch(branchFilter, dataPack.getRefs());
         myConditions.clear();

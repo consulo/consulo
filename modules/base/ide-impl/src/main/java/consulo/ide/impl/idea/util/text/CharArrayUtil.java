@@ -19,8 +19,7 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.util.io.CharSequenceReader;
 import consulo.util.io.UnsyncCharArrayReader;
 import consulo.util.lang.ImmutableCharSequence;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -38,7 +37,7 @@ public class CharArrayUtil {
    * @param dst         output data buffer
    * @param dstOffset   start offset to use within the given output data buffer
    */
-  public static void getChars(@Nonnull CharSequence src, @Nonnull char[] dst, int dstOffset) {
+  public static void getChars(CharSequence src, char[] dst, int dstOffset) {
     consulo.util.lang.CharArrayUtil.getChars(src, dst, dstOffset);
   }
 
@@ -50,7 +49,7 @@ public class CharArrayUtil {
    * @param dstOffset   start offset to use within the given output data buffer
    * @param len         number of source data symbols to copy to the given buffer
    */
-  public static void getChars(@Nonnull CharSequence src, @Nonnull char[] dst, int dstOffset, int len) {
+  public static void getChars(CharSequence src, char[] dst, int dstOffset, int len) {
     consulo.util.lang.CharArrayUtil.getChars(src, dst, dstOffset, len);
   }
 
@@ -63,15 +62,15 @@ public class CharArrayUtil {
    * @param dstOffset   start offset to use within the given output data buffer
    * @param len         number of source data symbols to copy to the given buffer
    */
-  public static void getChars(@Nonnull CharSequence src, @Nonnull char[] dst, int srcOffset, int dstOffset, int len) {
+  public static void getChars(CharSequence src, char[] dst, int srcOffset, int dstOffset, int len) {
     consulo.util.lang.CharArrayUtil.getChars(src, dst, srcOffset, dstOffset, len);
   }
 
   /**
    * @deprecated use {@link #fromSequence(CharSequence)}
    */
-  @Nonnull
-  public static char[] fromSequenceStrict(@Nonnull CharSequence seq) {
+  
+  public static char[] fromSequenceStrict(CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.fromSequenceStrict(seq);
   }
 
@@ -83,20 +82,20 @@ public class CharArrayUtil {
   /**
    * @return the underlying char[] array if any, or the new chara array if not
    */
-  @Nonnull
-  public static char[] fromSequence(@Nonnull CharSequence seq) {
+  
+  public static char[] fromSequence(CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.fromSequence(seq);
   }
 
   /**
    * @return a new char array containing the sub-sequence's chars
    */
-  @Nonnull
-  public static char[] fromSequence(@Nonnull CharSequence seq, int start, int end) {
+  
+  public static char[] fromSequence(CharSequence seq, int start, int end) {
     return consulo.util.lang.CharArrayUtil.fromSequence(seq, start, end);
   }
 
-  public static int shiftForward(@Nonnull CharSequence buffer, int offset, @Nonnull String chars) {
+  public static int shiftForward(CharSequence buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftForward(buffer, offset, chars);
   }
 
@@ -115,31 +114,31 @@ public class CharArrayUtil {
    *                     as that that symbol is not contained at the given 'chars';
    *                     <code>endOffset</code> otherwise
    */
-  public static int shiftForward(@Nonnull CharSequence buffer, int startOffset, int endOffset, @Nonnull String chars) {
+  public static int shiftForward(CharSequence buffer, int startOffset, int endOffset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftForward(buffer, startOffset, endOffset, chars);
   }
 
-  public static int shiftForwardCarefully(@Nonnull CharSequence buffer, int offset, @Nonnull String chars) {
+  public static int shiftForwardCarefully(CharSequence buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftForwardCarefully(buffer, offset, chars);
   }
 
-  public static int shiftForward(@Nonnull char[] buffer, int offset, @Nonnull String chars) {
+  public static int shiftForward(char[] buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftForward(buffer, offset, chars);
   }
 
-  public static int shiftBackward(@Nonnull CharSequence buffer, int offset, @Nonnull String chars) {
+  public static int shiftBackward(CharSequence buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftBackward(buffer, offset, chars);
   }
 
-  public static int shiftBackward(@Nonnull CharSequence buffer, int minOffset, int maxOffset, @Nonnull String chars) {
+  public static int shiftBackward(CharSequence buffer, int minOffset, int maxOffset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftBackward(buffer, minOffset, maxOffset, chars);
   }
 
-  public static int shiftBackward(@Nonnull char[] buffer, int offset, @Nonnull String chars) {
+  public static int shiftBackward(char[] buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftBackward(buffer, offset, chars);
   }
 
-  public static int shiftForwardUntil(@Nonnull CharSequence buffer, int offset, @Nonnull String chars) {
+  public static int shiftForwardUntil(CharSequence buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftForwardUntil(buffer, offset, chars);
   }
 
@@ -174,35 +173,35 @@ public class CharArrayUtil {
    *                    <code>'-1'</code> is returned if all document symbols that precede given offset differ from symbols
    *                    of the given <code>'chars to exclude'</code>
    */
-  public static int shiftBackwardUntil(@Nonnull CharSequence buffer, int offset, @Nonnull String chars) {
+  public static int shiftBackwardUntil(CharSequence buffer, int offset, String chars) {
     return consulo.util.lang.CharArrayUtil.shiftBackwardUntil(buffer, offset, chars);
   }
 
-  public static boolean regionMatches(@Nonnull char[] buffer, int start, int end, @Nonnull CharSequence s) {
+  public static boolean regionMatches(char[] buffer, int start, int end, CharSequence s) {
     return consulo.util.lang.CharArrayUtil.regionMatches(buffer, start, end, s);
   }
 
-  public static boolean regionMatches(@Nonnull CharSequence buffer, int start, int end, @Nonnull CharSequence s) {
+  public static boolean regionMatches(CharSequence buffer, int start, int end, CharSequence s) {
     return consulo.util.lang.CharArrayUtil.regionMatches(buffer, start, end, s);
   }
 
-  public static boolean regionMatches(@Nonnull CharSequence s1, int start1, int end1, @Nonnull CharSequence s2, int start2, int end2) {
+  public static boolean regionMatches(CharSequence s1, int start1, int end1, CharSequence s2, int start2, int end2) {
     return consulo.util.lang.CharArrayUtil.regionMatches(s1, start1, end1, s2, start2, end2);
   }
 
-  public static boolean regionMatches(@Nonnull CharSequence buffer, int offset, @Nonnull CharSequence s) {
+  public static boolean regionMatches(CharSequence buffer, int offset, CharSequence s) {
     return consulo.util.lang.CharArrayUtil.regionMatches(buffer, offset, s);
   }
 
-  public static boolean equals(@Nonnull char[] buffer1, int start1, int end1, @Nonnull char[] buffer2, int start2, int end2) {
+  public static boolean equals(char[] buffer1, int start1, int end1, char[] buffer2, int start2, int end2) {
     return consulo.util.lang.CharArrayUtil.equals(buffer1, start1, end1, buffer2, start2, end2);
   }
 
-  public static int indexOf(@Nonnull char[] buffer, @Nonnull String pattern, int fromIndex) {
+  public static int indexOf(char[] buffer, String pattern, int fromIndex) {
     return consulo.util.lang.CharArrayUtil.indexOf(buffer, pattern, fromIndex);
   }
 
-  public static int indexOf(@Nonnull CharSequence buffer, @Nonnull CharSequence pattern, int fromIndex) {
+  public static int indexOf(CharSequence buffer, CharSequence pattern, int fromIndex) {
     return consulo.util.lang.CharArrayUtil.indexOf(buffer, pattern, fromIndex);
   }
 
@@ -215,7 +214,7 @@ public class CharArrayUtil {
    * @param toIndex      end index (exclusive)
    * @return             index of the given pattern at the given buffer if the match is found; <code>-1</code> otherwise
    */
-  public static int indexOf(@Nonnull CharSequence buffer, @Nonnull CharSequence pattern, int fromIndex, int toIndex) {
+  public static int indexOf(CharSequence buffer, CharSequence pattern, int fromIndex, int toIndex) {
     return consulo.util.lang.CharArrayUtil.indexOf(buffer, pattern, fromIndex, toIndex);
   }
 
@@ -230,7 +229,7 @@ public class CharArrayUtil {
    *                    <code>[from; to)</code> if target symbol is found;
    *                    <code>-1</code> otherwise
    */
-  public static int indexOf(@Nonnull char[] buffer, char symbol, int fromIndex, int toIndex) {
+  public static int indexOf(char[] buffer, char symbol, int fromIndex, int toIndex) {
     return consulo.util.lang.CharArrayUtil.indexOf(buffer, symbol, fromIndex, toIndex);
   }
 
@@ -245,25 +244,25 @@ public class CharArrayUtil {
    *                    <code>[from; to)</code> if target symbol is found;
    *                    <code>-1</code> otherwise
    */
-  public static int lastIndexOf(@Nonnull char[] buffer, char symbol, int fromIndex, int toIndex) {
+  public static int lastIndexOf(char[] buffer, char symbol, int fromIndex, int toIndex) {
     return consulo.util.lang.CharArrayUtil.lastIndexOf(buffer, symbol, fromIndex, toIndex);
   }
 
-  public static int lastIndexOf(@Nonnull CharSequence buffer, @Nonnull String pattern, int maxIndex) {
+  public static int lastIndexOf(CharSequence buffer, String pattern, int maxIndex) {
     return consulo.util.lang.CharArrayUtil.lastIndexOf(buffer, pattern, maxIndex);
   }
 
-  public static int lastIndexOf(@Nonnull char[] buffer, @Nonnull String pattern, int maxIndex) {
+  public static int lastIndexOf(char[] buffer, String pattern, int maxIndex) {
     return consulo.util.lang.CharArrayUtil.lastIndexOf(buffer, pattern, maxIndex);
   }
 
-  @Nonnull
-  public static byte[] toByteArray(@Nonnull char[] chars) throws IOException {
+  
+  public static byte[] toByteArray(char[] chars) throws IOException {
     return consulo.util.lang.CharArrayUtil.toByteArray(chars);
   }
 
-  @Nonnull
-  public static byte[] toByteArray(@Nonnull char[] chars, int size) throws IOException {
+  
+  public static byte[] toByteArray(char[] chars, int size) throws IOException {
     return consulo.util.lang.CharArrayUtil.toByteArray(chars, size);
   }
 
@@ -283,7 +282,7 @@ public class CharArrayUtil {
   //  return true;
   //}
 
-  public static boolean containLineBreaks(@Nonnull CharSequence seq) {
+  public static boolean containLineBreaks(CharSequence seq) {
     return consulo.util.lang.CharArrayUtil.containLineBreaks(seq);
   }
 
@@ -299,19 +298,19 @@ public class CharArrayUtil {
    * @param end       end offset within the given text to check (exclusive)
    * @return          <code>true</code> if target region of the given text contains white space symbols only; <code>false</code> otherwise
    */
-  public static boolean isEmptyOrSpaces(@Nonnull CharSequence text, int start, int end) {
+  public static boolean isEmptyOrSpaces(CharSequence text, int start, int end) {
     return consulo.util.lang.CharArrayUtil.isEmptyOrSpaces(text, start, end);
   }
 
-  @Nonnull
-  public static Reader readerFromCharSequence(@Nonnull CharSequence text) {
+  
+  public static Reader readerFromCharSequence(CharSequence text) {
     char[] chars = fromSequenceWithoutCopying(text);
     //noinspection IOResourceOpenedButNotSafelyClosed
     return chars == null ? new CharSequenceReader(text.toString()) : new UnsyncCharArrayReader(chars, 0, text.length());
   }
 
-  @Nonnull
-  public static ImmutableCharSequence createImmutableCharSequence(@Nonnull CharSequence sequence) {
+  
+  public static ImmutableCharSequence createImmutableCharSequence(CharSequence sequence) {
     return consulo.util.lang.CharArrayUtil.createImmutableCharSequence(sequence);
   }
 }

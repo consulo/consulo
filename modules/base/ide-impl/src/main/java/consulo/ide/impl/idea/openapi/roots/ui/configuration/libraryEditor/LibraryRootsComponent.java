@@ -34,7 +34,6 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -56,8 +55,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -90,11 +89,11 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private Module myContextModule;
     private LibraryRootsComponent.AddExcludedRootActionButton myAddExcludedRootActionButton;
 
-    public LibraryRootsComponent(@Nullable Project project, @Nonnull LibraryEditor libraryEditor) {
+    public LibraryRootsComponent(@Nullable Project project, LibraryEditor libraryEditor) {
         this(project, () -> libraryEditor);
     }
 
-    public LibraryRootsComponent(@Nullable Project project, @Nonnull Supplier<LibraryEditor> libraryEditorComputable) {
+    public LibraryRootsComponent(@Nullable Project project, Supplier<LibraryEditor> libraryEditorComputable) {
         myProject = project;
         myLibraryEditorComputable = libraryEditorComputable;
 
@@ -116,7 +115,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
     private void onRootsChanged() {
     }
 
-    @Nonnull
+    
     @Override
     public LibraryProperties getProperties() {
         return getLibraryEditor().getProperties();
@@ -203,7 +202,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Object[] selectedElements = getSelectedElements();
                 if (selectedElements.length == 0) {
                     return;
@@ -229,7 +228,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 Object[] elements = getSelectedElements();
                 Presentation presentation = e.getPresentation();
                 if (ContainerUtil.and(elements, new FilteringIterator.InstanceOf<>(ExcludedRootElement.class))) {
@@ -495,7 +494,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         return rootsToAttach;
     }
 
-    private List<OrderRoot> filterAlreadyAdded(@Nonnull List<OrderRoot> roots) {
+    private List<OrderRoot> filterAlreadyAdded(List<OrderRoot> roots) {
         List<OrderRoot> result = new ArrayList<>();
         for (OrderRoot root : roots) {
             VirtualFile[] libraryFiles = getLibraryEditor().getFiles(root.getType());
@@ -540,7 +539,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
         for (OrderRootType type : OrderRootType.getAllTypes()) {
             VirtualFile[] files = getLibraryEditor().getFiles(type);
             for (VirtualFile file : files) {
-                if (!VfsUtilCore.isUnder(file, excludedRoots)) {
+                if (!VirtualFileUtil.isUnder(file, excludedRoots)) {
                     roots.add(VirtualFilePathUtil.getLocalFile(file));
                 }
             }
@@ -555,7 +554,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createMultipleJavaPathDescriptor();
             descriptor.setTitle("Exclude from Library");
             descriptor.setDescription(
@@ -588,7 +587,7 @@ public class LibraryRootsComponent implements Disposable, LibraryEditorComponent
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(!getNotExcludedRoots().isEmpty());
         }
     }

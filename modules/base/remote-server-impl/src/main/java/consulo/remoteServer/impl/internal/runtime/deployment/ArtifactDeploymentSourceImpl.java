@@ -10,7 +10,6 @@ import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -20,11 +19,11 @@ import java.io.File;
 public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
     private final ArtifactPointer myPointer;
 
-    public ArtifactDeploymentSourceImpl(@Nonnull ArtifactPointer pointer) {
+    public ArtifactDeploymentSourceImpl(ArtifactPointer pointer) {
         myPointer = pointer;
     }
 
-    @Nonnull
+    
     @Override
     public ArtifactPointer getArtifactPointer() {
         return myPointer;
@@ -57,7 +56,7 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPresentableName() {
         return LocalizeValue.of(myPointer.getName());
@@ -92,7 +91,7 @@ public class ArtifactDeploymentSourceImpl implements ArtifactDeploymentSource {
         return myPointer.hashCode();
     }
 
-    @Nonnull
+    
     @Override
     public DeploymentSourceType<?> getType() {
         return DeploymentSourceType.EP_NAME.findExtensionOrFail(ArtifactDeploymentSourceType.class);

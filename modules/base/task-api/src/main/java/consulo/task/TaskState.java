@@ -15,7 +15,6 @@
  */
 package consulo.task;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Predefined common task states were used before {@link CustomTaskState} was introduced.
@@ -34,12 +33,12 @@ public enum TaskState
 
 	private String myPresentableName;
 
-	TaskState(@Nonnull String presentableName)
+	TaskState(String presentableName)
 	{
 		myPresentableName = presentableName;
 	}
 
-	@Nonnull
+	
 	public String getPresentableName()
 	{
 		return myPresentableName;

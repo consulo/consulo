@@ -20,8 +20,7 @@ import consulo.externalSystem.service.module.extension.ExternalSystemModuleExten
 import consulo.module.Module;
 import consulo.module.content.ModuleIconProvider;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public class ExternalSystemModuleIconProvider implements ModuleIconProvider {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public Image getIcon(@Nonnull Module module) {
+    public Image getIcon(Module module) {
         ExternalSystemModuleExtension<?> extension = module.getExtension(ExternalSystemModuleExtension.class);
         if (extension != null) {
             return extension.getProjectSystemId().getModuleIcon();

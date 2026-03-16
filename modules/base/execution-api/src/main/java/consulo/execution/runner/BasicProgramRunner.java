@@ -21,7 +21,6 @@ import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunA
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.DefaultRunExecutor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author AG
@@ -29,14 +28,14 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(order = "last")
 public class BasicProgramRunner extends DefaultProgramRunner {
 
-  @Nonnull
+  
   @Override
   public String getRunnerId() {
     return "Basic";
   }
 
   @Override
-  public boolean canRun(@Nonnull String executorId, @Nonnull RunProfile profile) {
+  public boolean canRun(String executorId, RunProfile profile) {
     return DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && !(profile instanceof RunConfigurationWithSuppressedDefaultRunAction);
   }
 }

@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -108,28 +107,28 @@ public class StatisticsPanel implements UiDataProvider {
     public SMTRunnerEventsListener createTestEventsListener() {
         return new SMTRunnerEventsAdapter() {
             @Override
-            public void onSuiteStarted(@Nonnull SMTestProxy suite) {
+            public void onSuiteStarted(SMTestProxy suite) {
                 if (myTableModel.shouldUpdateModelBySuite(suite)) {
                     updateAndRestoreSelection();
                 }
             }
 
             @Override
-            public void onSuiteFinished(@Nonnull SMTestProxy suite) {
+            public void onSuiteFinished(SMTestProxy suite) {
                 if (myTableModel.shouldUpdateModelBySuite(suite)) {
                     updateAndRestoreSelection();
                 }
             }
 
             @Override
-            public void onTestStarted(@Nonnull SMTestProxy test) {
+            public void onTestStarted(SMTestProxy test) {
                 if (myTableModel.shouldUpdateModelByTest(test)) {
                     updateAndRestoreSelection();
                 }
             }
 
             @Override
-            public void onTestFinished(@Nonnull SMTestProxy test) {
+            public void onTestFinished(SMTestProxy test) {
                 if (myTableModel.shouldUpdateModelByTest(test)) {
                     updateAndRestoreSelection();
                 }
@@ -157,7 +156,7 @@ public class StatisticsPanel implements UiDataProvider {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(SM_TEST_RUNNER_STATISTICS, this);
 
         TestsUIUtil.uiSnapshot(sink, getSelectedItem(), myFrameworkRunningModel);
@@ -173,7 +172,7 @@ public class StatisticsPanel implements UiDataProvider {
         return this::selectProxy;
     }
 
-    public void selectProxy(@Nullable SMTestProxy selectedTestProxy, @Nonnull Object sender, boolean requestFocus) {
+    public void selectProxy(@Nullable SMTestProxy selectedTestProxy, Object sender, boolean requestFocus) {
         SMRunnerUtil.addToInvokeLater(() -> {
             // Select tab if focus was requested
             if (requestFocus) {

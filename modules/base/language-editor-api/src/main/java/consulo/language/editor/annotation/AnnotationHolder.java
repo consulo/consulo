@@ -8,8 +8,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.Contract;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows a custom language plugin to define annotations for files in that language.
@@ -27,7 +26,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createErrorAnnotation(@Nonnull PsiElement elt, @Nullable String message);
+    Annotation createErrorAnnotation(PsiElement elt, @Nullable String message);
 
     /**
      * Creates an error annotation with the specified message over the specified AST node.
@@ -38,7 +37,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createErrorAnnotation(@Nonnull ASTNode node, @Nullable String message);
+    Annotation createErrorAnnotation(ASTNode node, @Nullable String message);
 
     /**
      * Creates an error annotation with the specified message over the specified text range.
@@ -49,7 +48,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createErrorAnnotation(@Nonnull TextRange range, @Nullable String message);
+    Annotation createErrorAnnotation(TextRange range, @Nullable String message);
 
     /**
      * Creates a warning annotation with the specified message over the specified PSI element.
@@ -61,7 +60,7 @@ public interface AnnotationHolder {
      */
     @Deprecated
     @RequiredReadAction
-    Annotation createWarningAnnotation(@Nonnull PsiElement elt, @Nullable String message);
+    Annotation createWarningAnnotation(PsiElement elt, @Nullable String message);
 
     /**
      * Creates a warning annotation with the specified message over the specified AST node.
@@ -72,7 +71,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createWarningAnnotation(@Nonnull ASTNode node, @Nullable String message);
+    Annotation createWarningAnnotation(ASTNode node, @Nullable String message);
 
     /**
      * Creates a warning annotation with the specified message over the specified text range.
@@ -83,7 +82,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createWarningAnnotation(@Nonnull TextRange range, @Nullable String message);
+    Annotation createWarningAnnotation(TextRange range, @Nullable String message);
 
     /**
      * Creates an annotation with severity {@link HighlightSeverity#WEAK_WARNING} ('weak warning') with the specified
@@ -96,7 +95,7 @@ public interface AnnotationHolder {
      */
     @Deprecated
     @RequiredReadAction
-    Annotation createWeakWarningAnnotation(@Nonnull PsiElement elt, @Nullable String message);
+    Annotation createWeakWarningAnnotation(PsiElement elt, @Nullable String message);
 
     /**
      * Creates an annotation with severity {@link HighlightSeverity#WEAK_WARNING} ('weak warning') with the specified
@@ -108,7 +107,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createWeakWarningAnnotation(@Nonnull ASTNode node, @Nullable String message);
+    Annotation createWeakWarningAnnotation(ASTNode node, @Nullable String message);
 
     /**
      * Creates an annotation with severity {@link HighlightSeverity#WEAK_WARNING} ('weak warning') with the specified
@@ -120,7 +119,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createWeakWarningAnnotation(@Nonnull TextRange range, @Nullable String message);
+    Annotation createWeakWarningAnnotation(TextRange range, @Nullable String message);
 
     /**
      * Creates an information annotation (colored highlighting only, with no gutter mark and not participating in
@@ -133,7 +132,7 @@ public interface AnnotationHolder {
      */
     @Deprecated
     @RequiredReadAction
-    Annotation createInfoAnnotation(@Nonnull PsiElement elt, @Nullable String message);
+    Annotation createInfoAnnotation(PsiElement elt, @Nullable String message);
 
     /**
      * Creates an information annotation (colored highlighting only, with no gutter mark and not participating in
@@ -145,7 +144,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createInfoAnnotation(@Nonnull ASTNode node, @Nullable String message);
+    Annotation createInfoAnnotation(ASTNode node, @Nullable String message);
 
     /**
      * Creates an information annotation (colored highlighting only, with no gutter mark and not participating in
@@ -157,7 +156,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createInfoAnnotation(@Nonnull TextRange range, @Nullable String message);
+    Annotation createInfoAnnotation(TextRange range, @Nullable String message);
 
     /**
      * Creates an annotation with the given severity (colored highlighting only, with no gutter mark and not participating in
@@ -170,7 +169,7 @@ public interface AnnotationHolder {
      * @deprecated Use {@link #newAnnotation(HighlightSeverity, String)} instead
      */
     @Deprecated
-    Annotation createAnnotation(@Nonnull HighlightSeverity severity, @Nonnull TextRange range, @Nullable String message);
+    Annotation createAnnotation(HighlightSeverity severity, TextRange range, @Nullable String message);
 
     /**
      * Creates an annotation with the given severity (colored highlighting only, with no gutter mark and not participating in
@@ -185,13 +184,13 @@ public interface AnnotationHolder {
      */
     @Deprecated
     Annotation createAnnotation(
-        @Nonnull HighlightSeverity severity,
-        @Nonnull TextRange range,
+        HighlightSeverity severity,
+        TextRange range,
         @Nullable String message,
         @Nullable String htmlTooltip
     );
 
-    @Nonnull
+    
     AnnotationSession getCurrentAnnotationSession();
 
     boolean isBatchMode();
@@ -208,8 +207,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
+    
+    default AnnotationBuilder newAnnotation(HighlightSeverity severity, LocalizeValue message) {
         return newOfSeverity(severity, message);
     }
 
@@ -226,8 +225,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newOfSeverity(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
+    
+    default AnnotationBuilder newOfSeverity(HighlightSeverity severity, LocalizeValue message) {
         throw new IllegalStateException("Please do not override AnnotationHolder, use the standard provided one instead");
     }
 
@@ -243,8 +242,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newError(@Nonnull LocalizeValue message) {
+    
+    default AnnotationBuilder newError(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.ERROR, message);
     }
 
@@ -260,8 +259,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newWarn(@Nonnull LocalizeValue message) {
+    
+    default AnnotationBuilder newWarn(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.WARNING, message);
     }
 
@@ -277,8 +276,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newWeakWarn(@Nonnull LocalizeValue message) {
+    
+    default AnnotationBuilder newWeakWarn(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.WEAK_WARNING, message);
     }
 
@@ -294,8 +293,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newInfo(@Nonnull LocalizeValue message) {
+    
+    default AnnotationBuilder newInfo(LocalizeValue message) {
         return newOfSeverity(HighlightSeverity.INFORMATION, message);
     }
 
@@ -311,10 +310,10 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use newOfSeverity(HighlightSeverity, LocalizeValue)")
-    default AnnotationBuilder newAnnotation(@Nonnull HighlightSeverity severity, @Nonnull String message) {
+    default AnnotationBuilder newAnnotation(HighlightSeverity severity, String message) {
         return newOfSeverity(severity, LocalizeValue.of(message));
     }
 
@@ -329,8 +328,8 @@ public interface AnnotationHolder {
      * Please note, that the range in {@link AnnotationBuilder#range(TextRange)} must be inside the range of the current element.
      */
     @Contract(pure = true)
-    @Nonnull
-    default AnnotationBuilder newSilentAnnotation(@Nonnull HighlightSeverity severity) {
+    
+    default AnnotationBuilder newSilentAnnotation(HighlightSeverity severity) {
         throw new IllegalStateException("Please do not override AnnotationHolder, use the standard provided one instead");
     }
 }

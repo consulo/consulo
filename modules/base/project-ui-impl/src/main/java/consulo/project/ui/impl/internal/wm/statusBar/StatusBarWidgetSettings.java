@@ -24,7 +24,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.LinkedHashMap;

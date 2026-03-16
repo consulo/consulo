@@ -21,7 +21,6 @@ import consulo.configurable.internal.ConfigurableSessionHolder;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.function.Function;
 
@@ -38,20 +37,20 @@ public interface ConfigurableSession {
   /**
    * @return default or frame project
    */
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
-  <T extends PersistentStateComponent<?>> T getOrCopy(@Nonnull ComponentManager componentManager, @Nonnull Class<T> clazz);
+  
+  <T extends PersistentStateComponent<?>> T getOrCopy(ComponentManager componentManager, Class<T> clazz);
 
   /**
    * Can be disposable
    */
-  @Nonnull
-  <T> T get(@Nonnull Class<T> key, @Nonnull Function<Project, T> factory);
+  
+  <T> T get(Class<T> key, Function<Project, T> factory);
 
-  <T extends EventListener> void addListener(@Nonnull Class<T> listenerClass, @Nonnull T listener);
+  <T extends EventListener> void addListener(Class<T> listenerClass, T listener);
 
-  @Nonnull
-  <T extends EventListener> T getListenerMulticaster(@Nonnull Class<T> listenerClass);
+  
+  <T extends EventListener> T getListenerMulticaster(Class<T> listenerClass);
 }

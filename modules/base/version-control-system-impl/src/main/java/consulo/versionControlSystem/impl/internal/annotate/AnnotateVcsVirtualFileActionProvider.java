@@ -24,7 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.action.AnnotateToggleActionProvider;
 import consulo.versionControlSystem.annotate.AnnotationProvider;
-import jakarta.annotation.Nonnull;
+
 
 import java.util.Set;
 
@@ -50,14 +50,14 @@ public class AnnotateVcsVirtualFileActionProvider implements AnnotateToggleActio
         AnnotateVcsVirtualFileAction.perform(e, selected);
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getActionName(@Nonnull AnActionEvent e) {
+    public LocalizeValue getActionName(AnActionEvent e) {
         return getActionNameImpl(e);
     }
 
-    @Nonnull
-    public static LocalizeValue getActionNameImpl(@Nonnull AnActionEvent e) {
+    
+    public static LocalizeValue getActionNameImpl(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         LocalizeValue defaultName = ActionLocalize.actionAnnotateText();
         if (project == null) {

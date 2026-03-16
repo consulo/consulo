@@ -32,7 +32,6 @@ import consulo.usage.UsageGroup;
 import consulo.usage.UsagePresentation;
 import consulo.usage.rule.UsageInFile;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -45,14 +44,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 class ShowUsagesTableCellRenderer implements TableCellRenderer {
     private final UsageViewImpl myUsageView;
-    @Nonnull
+    
     private final AtomicInteger myOutOfScopeUsages;
-    @Nonnull
+    
     private final SearchScope mySearchScope;
 
     private final FileColorManager myFileColorManager;
 
-    ShowUsagesTableCellRenderer(@Nonnull UsageViewImpl usageView, @Nonnull AtomicInteger outOfScopeUsages, @Nonnull SearchScope searchScope) {
+    ShowUsagesTableCellRenderer(UsageViewImpl usageView, AtomicInteger outOfScopeUsages, SearchScope searchScope) {
         myUsageView = usageView;
         myOutOfScopeUsages = outOfScopeUsages;
         mySearchScope = searchScope;
@@ -130,12 +129,12 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
         return panel;
     }
 
-    @Nonnull
-    private static Component textComponentSpanningWholeRow(@Nonnull SimpleColoredComponent chunks,
+    
+    private static Component textComponentSpanningWholeRow(SimpleColoredComponent chunks,
                                                            Color panelBackground,
                                                            Color panelForeground,
                                                            final int column,
-                                                           @Nonnull final JTable table, int row) {
+                                                           final JTable table, int row) {
         SimpleColoredComponent component = new SimpleColoredComponent() {
             @Override
             protected void doPaint(Graphics2D g) {
@@ -157,7 +156,7 @@ class ShowUsagesTableCellRenderer implements TableCellRenderer {
                 g.translate(+offset, 0);
             }
 
-            @Nonnull
+            
             @Override
             public Dimension getPreferredSize() {
                 //return super.getPreferredSize();

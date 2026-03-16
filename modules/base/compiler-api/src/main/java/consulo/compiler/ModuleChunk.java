@@ -31,7 +31,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PathsList;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -87,12 +86,12 @@ public class ModuleChunk extends Chunk<Module> {
         return original != null ? original : file;
     }
 
-    @Nonnull
+    
     public List<VirtualFile> getFilesToCompile(Module forModule) {
         return myModuleToFilesMap.get(forModule);
     }
 
-    @Nonnull
+    
     public List<VirtualFile> getFilesToCompile() {
         if (getModuleCount() == 0) {
             return Collections.emptyList();
@@ -125,12 +124,12 @@ public class ModuleChunk extends Chunk<Module> {
         return filesToCompile;
     }
 
-    @Nonnull
+    
     public VirtualFile[] getSourceRoots() {
         return getSourceRoots(mySourcesFilter);
     }
 
-    @Nonnull
+    
     public VirtualFile[] getSourceRoots(int sourcesFilter) {
         if (getModuleCount() == 0) {
             return VirtualFile.EMPTY_ARRAY;
@@ -280,7 +279,7 @@ public class ModuleChunk extends Chunk<Module> {
         return buffer.toString();
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myContext.getProject();
     }

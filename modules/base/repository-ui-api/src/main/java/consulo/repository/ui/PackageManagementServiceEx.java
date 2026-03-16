@@ -5,22 +5,21 @@ package consulo.repository.ui;
 
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 public abstract class PackageManagementServiceEx extends PackageManagementService {
 
-  public abstract void updatePackage(@Nonnull InstalledPackage installedPackage, @Nullable String version, @Nonnull Listener listener);
+  public abstract void updatePackage(InstalledPackage installedPackage, @Nullable String version, Listener listener);
 
   public boolean shouldFetchLatestVersionsForOnlyInstalledPackages() {
     return true;
   }
 
-  public AsyncResult<String> fetchLatestVersion(@Nonnull InstalledPackage pkg) {
+  public AsyncResult<String> fetchLatestVersion(InstalledPackage pkg) {
     return AsyncResult.resolved();
   }
 
-  public void installPackage(RepoPackage repoPackage, @Nullable String version, @Nullable String extraOptions, Listener listener, @Nonnull File workingDir) {
+  public void installPackage(RepoPackage repoPackage, @Nullable String version, @Nullable String extraOptions, Listener listener, File workingDir) {
   }
 }

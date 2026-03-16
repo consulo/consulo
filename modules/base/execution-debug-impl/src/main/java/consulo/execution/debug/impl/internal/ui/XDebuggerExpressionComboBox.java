@@ -35,8 +35,7 @@ import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,8 +50,8 @@ public class XDebuggerExpressionComboBox extends XDebuggerEditorBase {
     private XDebuggerComboBoxEditor myEditor;
     private XExpression myExpression;
 
-    public XDebuggerExpressionComboBox(@Nonnull Project project,
-                                       @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+    public XDebuggerExpressionComboBox(Project project,
+                                       XDebuggerEditorsProvider debuggerEditorsProvider,
                                        @Nullable String historyId,
                                        @Nullable XSourcePosition sourcePosition,
                                        boolean showEditor) {

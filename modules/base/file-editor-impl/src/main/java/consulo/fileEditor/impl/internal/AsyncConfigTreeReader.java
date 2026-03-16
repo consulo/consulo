@@ -17,8 +17,7 @@ package consulo.fileEditor.impl.internal;
 
 import consulo.application.ui.UISettings;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public abstract class AsyncConfigTreeReader<T> {
   public static final String PINNED = "pinned";
   public static final String CURRENT_IN_TAB = "current-in-tab";
 
-  @Nonnull
+  
   public CompletableFuture<T> process(@Nullable Element element, @Nullable T context, UIAccess uiAccess) {
     if (element == null) {
       return CompletableFuture.completedFuture(null);
@@ -68,16 +67,16 @@ public abstract class AsyncConfigTreeReader<T> {
     return processFiles(children, context, leaf, uiAccess);
   }
 
-  @Nonnull
-  protected abstract CompletableFuture<T> processFiles(@Nonnull List<Element> fileElements,
+  
+  protected abstract CompletableFuture<T> processFiles(List<Element> fileElements,
                                                        @Nullable T context,
                                                        Element parent,
                                                        UIAccess uiAccess);
 
-  @Nonnull
-  protected abstract CompletableFuture<T> processSplitter(@Nonnull Element element,
+  
+  protected abstract CompletableFuture<T> processSplitter(Element element,
                                                           @Nullable Element firstChild,
                                                           @Nullable Element secondChild,
                                                           @Nullable T context,
-                                                          @Nonnull UIAccess uiAccess);
+                                                          UIAccess uiAccess);
 }

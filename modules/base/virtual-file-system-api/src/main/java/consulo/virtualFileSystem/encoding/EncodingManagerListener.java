@@ -4,8 +4,7 @@ package consulo.virtualFileSystem.encoding;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 // FIXME [VISTALL] this topic is app&project
 @TopicAPI(ComponentScope.APPLICATION)
@@ -16,5 +15,5 @@ public interface EncodingManagerListener {
    * @param oldValue
    * @param newValue
    */
-  void propertyChanged(@Nullable Object document, @Nonnull String propertyName, Object oldValue, Object newValue);
+  void propertyChanged(@Nullable Object document, String propertyName, Object oldValue, Object newValue);
 }

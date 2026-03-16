@@ -32,8 +32,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class IndentSelectionAction extends EditorAction {
         }
     }
 
-    public IndentSelectionAction(@Nonnull LocalizeValue text) {
+    public IndentSelectionAction(LocalizeValue text) {
         super(text, new Handler());
     }
 

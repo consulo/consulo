@@ -18,7 +18,7 @@ package consulo.externalSystem.service;
 import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.externalSystem.service.project.ProjectData;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

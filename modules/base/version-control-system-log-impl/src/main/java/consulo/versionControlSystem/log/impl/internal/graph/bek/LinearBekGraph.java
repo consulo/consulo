@@ -18,20 +18,19 @@ package consulo.versionControlSystem.log.impl.internal.graph.bek;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.graph.*;
 import consulo.versionControlSystem.log.impl.internal.graph.EdgeStorageWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public class LinearBekGraph implements LinearGraph {
-  @Nonnull
+  
   protected final LinearGraph myGraph;
-  @Nonnull
+  
   protected final EdgeStorageWrapper myHiddenEdges;
-  @Nonnull
+  
   protected final EdgeStorageWrapper myDottedEdges;
 
-  public LinearBekGraph(@Nonnull LinearGraph graph) {
+  public LinearBekGraph(LinearGraph graph) {
     myGraph = graph;
     myHiddenEdges = EdgeStorageWrapper.createSimpleEdgeStorage();
     myDottedEdges = EdgeStorageWrapper.createSimpleEdgeStorage();
@@ -42,9 +41,9 @@ public class LinearBekGraph implements LinearGraph {
     return myGraph.nodesCount();
   }
 
-  @Nonnull
+  
   @Override
-  public List<GraphEdge> getAdjacentEdges(int nodeIndex, @Nonnull EdgeFilter filter) {
+  public List<GraphEdge> getAdjacentEdges(int nodeIndex, EdgeFilter filter) {
     List<GraphEdge> result = new ArrayList<>();
     result.addAll(myDottedEdges.getAdjacentEdges(nodeIndex, filter));
     result.addAll(myGraph.getAdjacentEdges(nodeIndex, filter));
@@ -52,7 +51,7 @@ public class LinearBekGraph implements LinearGraph {
     return result;
   }
 
-  @Nonnull
+  
   @Override
   public GraphNode getGraphNode(int nodeIndex) {
     return myGraph.getGraphNode(nodeIndex);
@@ -69,7 +68,7 @@ public class LinearBekGraph implements LinearGraph {
     return myGraph.getNodeIndex(nodeId);
   }
 
-  public Collection<GraphEdge> expandEdge(@Nonnull GraphEdge edge) {
+  public Collection<GraphEdge> expandEdge(GraphEdge edge) {
     Set<GraphEdge> result = new HashSet<>();
 
     assert edge.getType() == GraphEdgeType.DOTTED;
@@ -98,7 +97,7 @@ public class LinearBekGraph implements LinearGraph {
   public static class WorkingLinearBekGraph extends LinearBekGraph {
     private final LinearBekGraph myLinearGraph;
 
-    public WorkingLinearBekGraph(@Nonnull LinearBekGraph graph) {
+    public WorkingLinearBekGraph(LinearBekGraph graph) {
       super(graph.myGraph);
       myLinearGraph = graph;
     }

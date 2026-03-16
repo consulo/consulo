@@ -41,8 +41,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -67,7 +66,7 @@ public class ConfigurationContext {
 
     private List<ConfigurationFromContext> myConfigurationsFromContext;
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static ConfigurationContext getFromContext(DataContext dataContext) {
         ConfigurationContext context = new ConfigurationContext(dataContext);
@@ -149,7 +148,7 @@ public class ConfigurationContext {
         myInitialized = true;
     }
 
-    public synchronized void setConfiguration(@Nonnull RunnerAndConfigurationSettings configuration) {
+    public synchronized void setConfiguration(RunnerAndConfigurationSettings configuration) {
         myConfiguration = configuration;
         myInitialized = true;
     }
@@ -302,7 +301,7 @@ public class ConfigurationContext {
      * @param type {@link ConfigurationType} instance to match the original run configuration
      * @return true if the original run configuration is of the same type or it's undefined; false otherwise
      */
-    public boolean isCompatibleWithOriginalRunConfiguration(@Nonnull ConfigurationType type) {
+    public boolean isCompatibleWithOriginalRunConfiguration(ConfigurationType type) {
         return myRuntimeConfiguration == null || ConfigurationTypeUtil.equals(myRuntimeConfiguration.getType(), type);
     }
 

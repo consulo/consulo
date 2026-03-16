@@ -41,8 +41,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -467,7 +466,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
             return result;
         }
 
-        public void put(@Nonnull ScopeToolState defaultState, @Nonnull List<ScopeToolState> nonDefault) {
+        public void put(ScopeToolState defaultState, List<ScopeToolState> nonDefault) {
             putOne(defaultState);
             if (myDefaultScopeName == null) {
                 myDefaultScopeName = defaultState.getScopeId();

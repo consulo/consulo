@@ -55,8 +55,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 import javax.swing.*;
@@ -161,7 +160,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
             }.registerCustomShortcutSet(CustomShortcutSet.fromString("SPACE"), myTable);
             new ClickListener() {
                 @Override
-                public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+                public boolean onClick(MouseEvent e, int clickCount) {
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         return false;
                     }
@@ -523,7 +522,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(Project.KEY, myModel.getProject());
         sink.set(DIR_DIFF_MODEL, myModel);
         sink.set(DIR_DIFF_TABLE, myTable);
@@ -580,7 +579,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
 
         @Nullable
         @Override
-        protected String getRequestName(@Nonnull ElementWrapper element) {
+        protected String getRequestName(ElementWrapper element) {
             return null;
         }
 
@@ -590,9 +589,8 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
             return element != null ? new ElementWrapper(element) : null;
         }
 
-        @Nonnull
         @Override
-        protected DiffRequest loadRequest(@Nonnull ElementWrapper element, @Nonnull ProgressIndicator indicator)
+        protected DiffRequest loadRequest(ElementWrapper element, ProgressIndicator indicator)
             throws ProcessCanceledException, DiffRequestProducerException {
             Project project = myModel.getProject();
             DiffElement sourceElement = element.sourceElement;
@@ -644,7 +642,7 @@ public class DirDiffPanel implements Disposable, UiDataProvider {
         @Nullable
         public final DiffElement targetElement;
 
-        public ElementWrapper(@Nonnull DirDiffElementImpl element) {
+        public ElementWrapper(DirDiffElementImpl element) {
             sourceElement = element.getSource();
             targetElement = element.getTarget();
         }

@@ -12,8 +12,7 @@ import consulo.component.ComponentManager;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tracks the correspondence between {@link VirtualFile} instances and corresponding {@link Document} instances.
@@ -21,7 +20,6 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public interface FileDocumentManager extends SavingRequestor {
-    @Nonnull
     public static FileDocumentManager getInstance() {
         return ApplicationManager.getApplication().getComponent(FileDocumentManager.class);
     }
@@ -42,7 +40,7 @@ public interface FileDocumentManager extends SavingRequestor {
      */
     @Nullable
     @RequiredReadAction
-    public abstract Document getDocument(@Nonnull VirtualFile file);
+    public abstract Document getDocument(VirtualFile file);
 
     /**
      * Returns the document for the specified file which has already been loaded into memory.<p/>
@@ -53,7 +51,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @return the document, or null if the specified virtual file hasn't been loaded into memory.
      */
     @Nullable
-    public abstract Document getCachedDocument(@Nonnull VirtualFile file);
+    public abstract Document getCachedDocument(VirtualFile file);
 
     /**
      * Returns the virtual file corresponding to the specified document.
@@ -62,7 +60,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @return the file, or null if the document wasn't created from a virtual file.
      */
     @Nullable
-    public abstract VirtualFile getFile(@Nonnull Document document);
+    public abstract VirtualFile getFile(Document document);
 
     /**
      * Saves all unsaved documents to disk. This operation can modify documents that will be saved
@@ -72,7 +70,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @param uiAccess the UIAccess instance
      */
     @RequiredWriteAction
-    public abstract void saveAllDocuments(@Nonnull UIAccess uiAccess);
+    public abstract void saveAllDocuments(UIAccess uiAccess);
 
     /**
      * Saves the specified document to disk. This operation can modify the document (due to 'Strip
@@ -83,11 +81,11 @@ public interface FileDocumentManager extends SavingRequestor {
      *
      * @param document the document to save.
      */
-    public abstract void saveDocument(@Nonnull Document document);
+    public abstract void saveDocument(Document document);
 
     @Deprecated(forRemoval = true)
     @DeprecationInfo("'isExplicit' obsolete")
-    public abstract void saveDocument(@Nonnull Document document, boolean isExplicit);
+    public abstract void saveDocument(Document document, boolean isExplicit);
 
     /**
      * Saves the document without stripping the trailing spaces or adding a blank line in the end of the file.<p/>
@@ -96,14 +94,13 @@ public interface FileDocumentManager extends SavingRequestor {
      *
      * @param document the document to save.
      */
-    public abstract void saveDocumentAsIs(@Nonnull Document document);
+    public abstract void saveDocumentAsIs(Document document);
 
     /**
      * Returns all documents that have unsaved changes.
      *
      * @return the documents that have unsaved changes.
      */
-    @Nonnull
     public abstract Document[] getUnsavedDocuments();
 
     /**
@@ -112,7 +109,7 @@ public interface FileDocumentManager extends SavingRequestor {
      * @param document the document to check.
      * @return true if the document has unsaved changes, false otherwise.
      */
-    public abstract boolean isDocumentUnsaved(@Nonnull Document document);
+    public abstract boolean isDocumentUnsaved(Document document);
 
     /**
      * Checks if the document corresponding to the specified file has unsaved changes.
@@ -120,23 +117,22 @@ public interface FileDocumentManager extends SavingRequestor {
      * @param file the file to check.
      * @return true if the file has unsaved changes, false otherwise.
      */
-    public abstract boolean isFileModified(@Nonnull VirtualFile file);
+    public abstract boolean isFileModified(VirtualFile file);
 
     /**
      * Check if only beginning of the file was loaded for Document.
      *
      * @see FileUtilRt#isTooLarge
      */
-    public abstract boolean isPartialPreviewOfALargeFile(@Nonnull Document document);
+    public abstract boolean isPartialPreviewOfALargeFile(Document document);
 
     /**
      * Discards unsaved changes for the specified document and reloads it from disk.
      *
      * @param document the document to reload.
      */
-    public abstract void reloadFromDisk(@Nonnull Document document);
+    public abstract void reloadFromDisk(Document document);
 
-    @Nonnull
     public abstract String getLineSeparator(@Nullable VirtualFile file, @Nullable ComponentManager project);
 
     /**
@@ -147,17 +143,16 @@ public interface FileDocumentManager extends SavingRequestor {
      * @return true if writing access allowed
      * @see consulo.ide.impl.idea.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(Project, VirtualFile...)
      */
-    public abstract boolean requestWriting(@Nonnull Document document, @Nullable ComponentManager project);
+    public abstract boolean requestWriting(Document document, @Nullable ComponentManager project);
 
     /**
      * Requests writing access info on the given document. Can involve interaction with user.
      */
-    @Nonnull
-    default WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable ComponentManager project) {
+    default WriteAccessStatus requestWritingStatus(Document document, @Nullable ComponentManager project) {
         return requestWriting(document, project) ? WriteAccessStatus.WRITABLE : WriteAccessStatus.NON_WRITABLE;
     }
 
-    public static boolean fileForDocumentCheckedOutSuccessfully(@Nonnull Document document, @Nonnull ComponentManager project) {
+    public static boolean fileForDocumentCheckedOutSuccessfully(Document document, ComponentManager project) {
         return getInstance().requestWriting(document, project);
     }
 
@@ -166,7 +161,7 @@ public interface FileDocumentManager extends SavingRequestor {
      *
      * @param files the files to discard the changes for.
      */
-    public abstract void reloadFiles(@Nonnull VirtualFile... files);
+    public abstract void reloadFiles(VirtualFile... files);
 
     /**
      * Stores the write access status (true if the document has the write access; false otherwise)
@@ -177,7 +172,6 @@ public interface FileDocumentManager extends SavingRequestor {
         public static final WriteAccessStatus WRITABLE = new WriteAccessStatus(true);
 
         private final boolean myWithWriteAccess;
-        @Nonnull
         private final String myReadOnlyMessage;
 
         private WriteAccessStatus(boolean withWriteAccess) {
@@ -185,7 +179,7 @@ public interface FileDocumentManager extends SavingRequestor {
             myReadOnlyMessage = withWriteAccess ? "" : DocumentBundle.message("editing.read.only.file.hint");
         }
 
-        public WriteAccessStatus(@Nonnull String readOnlyMessage) {
+        public WriteAccessStatus(String readOnlyMessage) {
             myWithWriteAccess = false;
             myReadOnlyMessage = readOnlyMessage;
         }
@@ -194,7 +188,6 @@ public interface FileDocumentManager extends SavingRequestor {
             return myWithWriteAccess;
         }
 
-        @Nonnull
         public String getReadOnlyMessage() {
             return myReadOnlyMessage;
         }

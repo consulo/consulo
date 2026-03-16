@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.ex.update.Activatable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +83,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
     }
 
     @Nullable
@@ -93,7 +92,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myFactory.getId();
@@ -117,7 +116,7 @@ public final class MemoryUsagePanel extends JButton implements CustomStatusBarWi
         myBufferedImage = null;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         return this;

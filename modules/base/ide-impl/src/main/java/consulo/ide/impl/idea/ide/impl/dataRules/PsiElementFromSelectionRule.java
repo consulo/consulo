@@ -19,10 +19,9 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 import consulo.dataContext.DataSnapshot;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public final class PsiElementFromSelectionRule {
-  static PsiElement getData(@Nonnull DataSnapshot dataProvider) {
+  static PsiElement getData(DataSnapshot dataProvider) {
     Object element = dataProvider.get(PlatformDataKeys.SELECTED_ITEM);
     return element instanceof PsiElement psiElement && psiElement.isValid() ? psiElement : null;
   }

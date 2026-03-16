@@ -24,8 +24,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
     }
 
     @Override
-    @Nonnull
+    
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
             return AnAction.EMPTY_ARRAY;
@@ -68,7 +67,7 @@ public class AddAllToFavoritesActionGroup extends ActionGroup {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(AddToFavoritesAction.canCreateNodes(e));
     }

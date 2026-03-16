@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -31,5 +30,5 @@ public abstract class LocalFileFinder {
     public static final ExtensionPointName<LocalFileFinder> EP_NAME = ExtensionPointName.create(LocalFileFinder.class);
 
     @Nullable
-    public abstract VirtualFile findLocalFile(@Nonnull String url, @Nonnull Project project);
+    public abstract VirtualFile findLocalFile(String url, Project project);
 }

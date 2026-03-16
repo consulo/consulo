@@ -24,16 +24,15 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
 public class FlatSpeedSearchPopup extends ActionGroupPopup {
     public FlatSpeedSearchPopup(
         String title,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         @Nullable Predicate<AnAction> preselectActionCondition,
         boolean showDisableActions
     ) {
@@ -56,8 +55,8 @@ public class FlatSpeedSearchPopup extends ActionGroupPopup {
 
     protected FlatSpeedSearchPopup(
         @Nullable WizardPopup parent,
-        @Nonnull ListPopupStep step,
-        @Nonnull DataContext dataContext,
+        ListPopupStep step,
+        DataContext dataContext,
         @Nullable Object value
     ) {
         super(parent, step, null, dataContext, null, -1, true, (o, aBoolean) -> true);
@@ -73,12 +72,12 @@ public class FlatSpeedSearchPopup extends ActionGroupPopup {
         return !(value instanceof ActionPopupItem actionItem && !shouldBeShowing(actionItem.getAction()));
     }
 
-    protected boolean shouldBeShowing(@Nonnull AnAction action) {
+    protected boolean shouldBeShowing(AnAction action) {
         return getSpeedSearch().isHoldingFilter() || !FlatSpeedSearchPopupFactory.isSpeedsearchAction(action);
     }
 
 
-    protected static <T> T getSpecificAction(Object value, @Nonnull Class<T> clazz) {
+    protected static <T> T getSpecificAction(Object value, Class<T> clazz) {
         if (value instanceof ActionPopupItem) {
             AnAction action = ((ActionPopupItem)value).getAction();
             if (clazz.isInstance(action)) {

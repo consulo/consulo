@@ -22,8 +22,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface Iconable {
   int ICON_FLAG_VISIBILITY = 0x0001;
@@ -40,12 +39,12 @@ public interface Iconable {
     private static final Key<ConcurrentIntObjectMap<Image>> LAST_COMPUTED_ICON = Key.create("lastComputedIcon");
 
     @Nullable
-    public static Image get(@Nonnull UserDataHolder holder, int flags) {
+    public static Image get(UserDataHolder holder, int flags) {
       ConcurrentIntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
       return map == null ? null : map.get(flags);
     }
 
-    public static void put(@Nonnull UserDataHolder holder, Image icon, int flags) {
+    public static void put(UserDataHolder holder, Image icon, int flags) {
       ConcurrentIntObjectMap<Image> map = holder.getUserData(LAST_COMPUTED_ICON);
       if (icon == null) {
         if (map != null) {

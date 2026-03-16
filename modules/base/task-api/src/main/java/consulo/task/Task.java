@@ -19,8 +19,7 @@ package consulo.task;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Date;
 
 /**
@@ -43,14 +42,14 @@ public abstract class Task {
    * @see TaskRepository#extractId(String)
    * @see TaskManager#activateTask(Task, boolean)
    */
-  @Nonnull
+  
   public abstract String getId();
 
 
   /**
    * @return ID in the form that is suitable for commit messages, dialogs, completion items, etc.
    */
-  @Nonnull
+  
   public String getPresentableId() {
     return getId();
   }
@@ -60,19 +59,19 @@ public abstract class Task {
    *
    * @return description
    */
-  @Nonnull
+  
   public abstract String getSummary();
 
   @Nullable
   public abstract String getDescription();
 
-  @Nonnull
+  
   public abstract Comment[] getComments();
 
-  @Nonnull
+  
   public abstract Image getIcon();
 
-  @Nonnull
+  
   public abstract TaskType getType();
 
   @Nullable
@@ -145,13 +144,13 @@ public abstract class Task {
    * @see #getId()
    * @see TaskRepository#getCommitMessageFormat()
    */
-  @Nonnull
+  
   public String getNumber() {
     return extractNumberFromId(getId());
   }
 
-  @Nonnull
-  protected static String extractNumberFromId(@Nonnull String id) {
+  
+  protected static String extractNumberFromId(String id) {
     int i = id.lastIndexOf('-');
     return i > 0 ? id.substring(i + 1) : id;
   }
@@ -171,7 +170,7 @@ public abstract class Task {
   }
 
   @Nullable
-  protected static String extractProjectFromId(@Nonnull String id) {
+  protected static String extractProjectFromId(String id) {
     int i = id.lastIndexOf('-');
     return i > 0 ? id.substring(0, i) : null;
   }

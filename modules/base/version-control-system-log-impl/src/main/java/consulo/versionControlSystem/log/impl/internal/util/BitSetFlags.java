@@ -16,7 +16,6 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.BitSet;
 
@@ -24,7 +23,7 @@ public class BitSetFlags implements Flags {
 
   private final int mySize;
 
-  @Nonnull
+  
   private final BitSet myBitSet;
 
   // default value is false

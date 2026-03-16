@@ -43,8 +43,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -57,9 +56,9 @@ public class RootIndexImpl implements RootIndex {
 
     public interface InfoCache {
         @Nullable
-        DirectoryInfo getCachedInfo(@Nonnull VirtualFile dir);
+        DirectoryInfo getCachedInfo(VirtualFile dir);
 
-        void cacheInfo(@Nonnull VirtualFile dir, @Nonnull DirectoryInfo info);
+        void cacheInfo(VirtualFile dir, DirectoryInfo info);
     }
 
     private final Set<VirtualFile> myProjectExcludedRoots = new HashSet<>();
@@ -73,12 +72,12 @@ public class RootIndexImpl implements RootIndex {
     private final Map<String, List<VirtualFile>> myDirectoriesByPackageNameCache = ContainerUtil.newConcurrentMap();
     private final Set<String> myNonExistentPackages = ContainerUtil.newConcurrentSet();
     private final InfoCache myInfoCache;
-    @Nonnull
+    
     private final Project myProject;
     private volatile Map<VirtualFile, OrderEntry[]> myOrderEntries;
 
     @RequiredReadAction
-    public RootIndexImpl(@Nonnull Project project, @Nonnull InfoCache cache) {
+    public RootIndexImpl(Project project, InfoCache cache) {
         myProject = project;
         myInfoCache = cache;
 
@@ -100,9 +99,9 @@ public class RootIndexImpl implements RootIndex {
         myNonExistentPackages.clear();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private RootInfo buildRootInfo(@Nonnull Project project) {
+    private RootInfo buildRootInfo(Project project) {
         RootInfo info = new RootInfo();
         for (Module module : ModuleManager.getInstance(project).getModules()) {
             ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -175,8 +174,8 @@ public class RootIndexImpl implements RootIndex {
 
     @RequiredReadAction
     @Override
-    @Nonnull
-    public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
+    
+    public OrderEntry[] getOrderEntries(DirectoryInfo info) {
         if (!(info instanceof DirectoryInfoImpl infoImpl)) {
             return OrderEntry.EMPTY_ARRAY;
         }
@@ -184,7 +183,7 @@ public class RootIndexImpl implements RootIndex {
         return entries == null ? OrderEntry.EMPTY_ARRAY : entries;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private Map<VirtualFile, OrderEntry[]> getOrderEntries() {
         Map<VirtualFile, OrderEntry[]> result = myOrderEntries;
@@ -239,11 +238,11 @@ public class RootIndexImpl implements RootIndex {
     }
 
     private static OrderEntry[] calcOrderEntries(
-        @Nonnull RootInfo info,
-        @Nonnull MultiMap<VirtualFile, OrderEntry> depEntries,
-        @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
-        @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries,
-        @Nonnull List<VirtualFile> hierarchy
+        RootInfo info,
+        MultiMap<VirtualFile, OrderEntry> depEntries,
+        MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
+        MultiMap<VirtualFile, OrderEntry> libSourceRootEntries,
+        List<VirtualFile> hierarchy
     ) {
         @Nullable VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);
         @Nullable VirtualFile librarySourceRoot = info.findLibraryRootInfo(hierarchy, true);
@@ -283,8 +282,8 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Override
-    @Nonnull
-    public DirectoryInfo getInfoForFile(@Nonnull VirtualFile file) {
+    
+    public DirectoryInfo getInfoForFile(VirtualFile file) {
         if (!file.isValid()) {
             return NonProjectDirectoryInfo.INVALID;
         }
@@ -324,8 +323,8 @@ public class RootIndexImpl implements RootIndex {
         return cacheInfos(dir, null, NonProjectDirectoryInfo.NOT_UNDER_PROJECT_ROOTS);
     }
 
-    @Nonnull
-    private DirectoryInfo cacheInfos(VirtualFile dir, @Nullable VirtualFile stopAt, @Nonnull DirectoryInfo info) {
+    
+    private DirectoryInfo cacheInfos(VirtualFile dir, @Nullable VirtualFile stopAt, DirectoryInfo info) {
         while (dir != null) {
             myInfoCache.cacheInfo(dir, info);
             if (dir.equals(stopAt)) {
@@ -337,8 +336,8 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Override
-    @Nonnull
-    public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
+    
+    public Query<VirtualFile> getDirectoriesByPackageName(String packageName, boolean includeLibrarySources) {
         List<VirtualFile> result = myDirectoriesByPackageNameCache.get(packageName);
         if (result == null) {
             if (myNonExistentPackages.contains(packageName)) {
@@ -391,7 +390,7 @@ public class RootIndexImpl implements RootIndex {
 
     @Override
     @Nullable
-    public String getPackageName(@Nonnull VirtualFile dir) {
+    public String getPackageName(VirtualFile dir) {
         if (dir.isDirectory()) {
             if (isIgnored(dir)) {
                 return null;
@@ -413,7 +412,7 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Nullable
-    protected static String getPackageNameForSubdir(String parentPackageName, @Nonnull String subdirName) {
+    protected static String getPackageNameForSubdir(String parentPackageName, String subdirName) {
         if (parentPackageName == null) {
             return null;
         }
@@ -422,11 +421,11 @@ public class RootIndexImpl implements RootIndex {
 
     @Override
     @Nullable
-    public ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo) {
+    public ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo) {
         return directoryInfo.getSourceRootTypeId();
     }
 
-    boolean resetOnEvents(@Nonnull List<? extends VFileEvent> events) {
+    boolean resetOnEvents(List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {
             VirtualFile file = event.getFile();
             if (file == null || file.isDirectory()) {
@@ -437,7 +436,7 @@ public class RootIndexImpl implements RootIndex {
     }
 
     @Nullable
-    private static List<VirtualFile> getHierarchy(VirtualFile dir, @Nonnull Set<VirtualFile> allRoots, @Nonnull RootInfo info) {
+    private static List<VirtualFile> getHierarchy(VirtualFile dir, Set<VirtualFile> allRoots, RootInfo info) {
         List<VirtualFile> hierarchy = new ArrayList<>();
         boolean hasContentRoots = false;
         while (dir != null) {
@@ -453,39 +452,39 @@ public class RootIndexImpl implements RootIndex {
         return hierarchy;
     }
 
-    private static boolean isIgnored(@Nonnull VirtualFile dir) {
+    private static boolean isIgnored(VirtualFile dir) {
         return FileTypeRegistry.getInstance().isFileIgnored(dir);
     }
 
     private static class RootInfo {
         // getDirectoriesByPackageName used to be in this order, some clients might rely on that
-        @Nonnull
+        
         final LinkedHashSet<VirtualFile> classAndSourceRoots = new LinkedHashSet<>();
 
-        @Nonnull
+        
         final Set<VirtualFile> libraryOrSdkSources = new HashSet<>();
-        @Nonnull
+        
         final Set<VirtualFile> libraryOrSdkClasses = new HashSet<>();
-        @Nonnull
+        
         final Map<VirtualFile, Module> contentRootOf = new HashMap<>();
-        @Nonnull
+        
         final MultiMap<VirtualFile, Module> sourceRootOf = MultiMap.createSet();
-        @Nonnull
+        
         final Map<VirtualFile, ContentFolder> contentFolders = new HashMap<>();
-        @Nonnull
+        
         final MultiMap<VirtualFile, Library> excludedFromLibraries = MultiMap.createSmart();
-        @Nonnull
+        
         final MultiMap<VirtualFile, Library> classOfLibraries = MultiMap.createSmart();
-        @Nonnull
+        
         final MultiMap<VirtualFile, Library> sourceOfLibraries = MultiMap.createSmart();
-        @Nonnull
+        
         final Set<VirtualFile> excludedFromProject = new HashSet<>();
-        @Nonnull
+        
         final Map<VirtualFile, Module> excludedFromModule = new HashMap<>();
-        @Nonnull
+        
         final Map<VirtualFile, String> packagePrefix = new HashMap<>();
 
-        @Nonnull
+        
         Set<VirtualFile> getAllRoots() {
             LinkedHashSet<VirtualFile> result = new LinkedHashSet<>();
             result.addAll(classAndSourceRoots);
@@ -496,14 +495,14 @@ public class RootIndexImpl implements RootIndex {
             return result;
         }
 
-        private boolean shouldMarkAsProjectExcluded(@Nonnull VirtualFile root, @Nullable List<VirtualFile> hierarchy) {
+        private boolean shouldMarkAsProjectExcluded(VirtualFile root, @Nullable List<VirtualFile> hierarchy) {
             return hierarchy != null
                 && (excludedFromProject.contains(root) || excludedFromModule.containsKey(root))
                 && ContainerUtil.find(hierarchy, contentRootOf::containsKey) == null;
         }
 
         @Nullable
-        private VirtualFile findModuleRootInfo(@Nonnull List<VirtualFile> hierarchy) {
+        private VirtualFile findModuleRootInfo(List<VirtualFile> hierarchy) {
             for (VirtualFile root : hierarchy) {
                 ContentFolder contentFolder = contentFolders.get(root);
                 // if we found content folder - try search content root
@@ -526,7 +525,7 @@ public class RootIndexImpl implements RootIndex {
         }
 
         @Nullable
-        private VirtualFile findNearestContentRootForExcluded(@Nonnull List<VirtualFile> hierarchy) {
+        private VirtualFile findNearestContentRootForExcluded(List<VirtualFile> hierarchy) {
             for (VirtualFile root : hierarchy) {
                 if (contentRootOf.containsKey(root)) {
                     return root;
@@ -536,7 +535,7 @@ public class RootIndexImpl implements RootIndex {
         }
 
         @Nullable
-        private VirtualFile findLibraryRootInfo(@Nonnull List<VirtualFile> hierarchy, boolean source) {
+        private VirtualFile findLibraryRootInfo(List<VirtualFile> hierarchy, boolean source) {
             Set<Library> librariesToIgnore = new HashSet<>();
             for (VirtualFile root : hierarchy) {
                 librariesToIgnore.addAll(excludedFromLibraries.get(root));
@@ -553,8 +552,8 @@ public class RootIndexImpl implements RootIndex {
         }
 
         private String calcPackagePrefix(
-            @Nonnull VirtualFile root,
-            @Nonnull List<VirtualFile> hierarchy,
+            VirtualFile root,
+            List<VirtualFile> hierarchy,
             VirtualFile moduleContentRoot,
             VirtualFile libraryClassRoot,
             VirtualFile librarySourceRoot
@@ -571,7 +570,7 @@ public class RootIndexImpl implements RootIndex {
 
         @Nullable
         private VirtualFile findPackageRootInfo(
-            @Nonnull List<VirtualFile> hierarchy,
+            List<VirtualFile> hierarchy,
             VirtualFile moduleContentRoot,
             VirtualFile libraryClassRoot,
             VirtualFile librarySourceRoot
@@ -591,13 +590,13 @@ public class RootIndexImpl implements RootIndex {
             return null;
         }
 
-        @Nonnull
+        
         private LinkedHashSet<OrderEntry> getLibraryOrderEntries(
-            @Nonnull List<VirtualFile> hierarchy,
+            List<VirtualFile> hierarchy,
             @Nullable VirtualFile libraryClassRoot,
             @Nullable VirtualFile librarySourceRoot,
-            @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
-            @Nonnull MultiMap<VirtualFile, OrderEntry> libSourceRootEntries
+            MultiMap<VirtualFile, OrderEntry> libClassRootEntries,
+            MultiMap<VirtualFile, OrderEntry> libSourceRootEntries
         ) {
             LinkedHashSet<OrderEntry> orderEntries = new LinkedHashSet<>();
             for (VirtualFile root : hierarchy) {
@@ -616,9 +615,9 @@ public class RootIndexImpl implements RootIndex {
 
         @Nullable
         private ModuleSourceOrderEntry getModuleSourceEntry(
-            @Nonnull List<VirtualFile> hierarchy,
-            @Nonnull VirtualFile moduleContentRoot,
-            @Nonnull MultiMap<VirtualFile, OrderEntry> libClassRootEntries
+            List<VirtualFile> hierarchy,
+            VirtualFile moduleContentRoot,
+            MultiMap<VirtualFile, OrderEntry> libClassRootEntries
         ) {
             Module module = contentRootOf.get(moduleContentRoot);
             for (VirtualFile root : hierarchy) {
@@ -636,11 +635,11 @@ public class RootIndexImpl implements RootIndex {
         }
     }
 
-    @Nonnull
+    
     private Pair<DirectoryInfo, String> calcDirectoryInfo(
-        @Nonnull VirtualFile root,
-        @Nonnull List<VirtualFile> hierarchy,
-        @Nonnull RootInfo info
+        VirtualFile root,
+        List<VirtualFile> hierarchy,
+        RootInfo info
     ) {
         VirtualFile moduleContentRoot = info.findModuleRootInfo(hierarchy);
         VirtualFile libraryClassRoot = info.findLibraryRootInfo(hierarchy, false);

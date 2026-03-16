@@ -22,13 +22,12 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface PostFormatProcessor {
     ExtensionPointName<PostFormatProcessor> EP_NAME = ExtensionPointName.create(PostFormatProcessor.class);
 
-    PsiElement processElement(@Nonnull PsiElement source, @Nonnull CodeStyleSettings settings);
+    PsiElement processElement(PsiElement source, CodeStyleSettings settings);
 
-    TextRange processText(@Nonnull PsiFile source, @Nonnull TextRange rangeToReformat, @Nonnull CodeStyleSettings settings);
+    TextRange processText(PsiFile source, TextRange rangeToReformat, CodeStyleSettings settings);
 }

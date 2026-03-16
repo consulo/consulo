@@ -33,8 +33,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -49,8 +48,8 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     }
 
     protected CreateTemplateInPackageAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon,
         boolean inSourceOnly
     ) {
@@ -65,7 +64,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
     }
 
     @Nullable
-    protected abstract PsiElement getNavigationElement(@Nonnull T createdElement);
+    protected abstract PsiElement getNavigationElement(T createdElement);
 
     @Override
     @SuppressWarnings("unchecked")

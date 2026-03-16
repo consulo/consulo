@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.internal.AWTHasSuffixComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -77,7 +76,7 @@ public class DesktopTextBoxWithExtensions {
                 }
             }
 
-            @Nonnull
+            
             @Override
             public consulo.ui.Component toUIComponent() {
                 return Supported.this;
@@ -125,7 +124,7 @@ public class DesktopTextBoxWithExtensions {
             return null;
         }
 
-        @Nonnull
+        
         @Override
         public JTextField getTextField() {
             return toAWTComponent();
@@ -149,7 +148,7 @@ public class DesktopTextBoxWithExtensions {
         }
 
         @Override
-        public void setPlaceholder(@Nonnull LocalizeValue text) {
+        public void setPlaceholder(LocalizeValue text) {
             JTextField field = toAWTComponent();
             field.putClientProperty("JTextField.placeholderText", text.getNullIfEmpty());
         }
@@ -180,9 +179,9 @@ public class DesktopTextBoxWithExtensions {
             };
         }
 
-        @Nonnull
+        
         @Override
-        public TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions) {
+        public TextBoxWithExtensions setExtensions(Extension... extensions) {
             List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(extensions.length);
 
             for (Extension extension : extensions) {
@@ -194,9 +193,9 @@ public class DesktopTextBoxWithExtensions {
             return this;
         }
 
-        @Nonnull
+        
         @Override
-        public TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension) {
+        public TextBoxWithExtensions addFirstExtension(Extension extension) {
             List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>(toAWTComponent().getExtensions());
             awtExtensions.add(convert(extension));
 
@@ -205,9 +204,9 @@ public class DesktopTextBoxWithExtensions {
             return this;
         }
 
-        @Nonnull
+        
         @Override
-        public TextBoxWithExtensions addLastExtension(@Nonnull Extension extension) {
+        public TextBoxWithExtensions addLastExtension(Extension extension) {
             List<ExtendableTextComponent.Extension> awtExtensions = new ArrayList<>();
             awtExtensions.add(convert(extension));
             awtExtensions.addAll(toAWTComponent().getExtensions());

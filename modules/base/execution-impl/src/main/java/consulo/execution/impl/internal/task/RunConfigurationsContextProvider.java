@@ -25,7 +25,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -40,12 +39,12 @@ public class RunConfigurationsContextProvider extends WorkingContextProvider {
     myManager = (RunManagerImpl) manager;
   }
 
-  @Nonnull
+  
   public String getId() {
     return "runConfigurations";
   }
 
-  @Nonnull
+  
   public String getDescription() {
     return "Run Configurations";
   }

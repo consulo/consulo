@@ -32,8 +32,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * from kotlin
@@ -50,7 +49,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         Navigatable element = ObjectUtil.tryCast(e.getData(PsiElement.KEY), Navigatable.class);
@@ -69,7 +68,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         String place = e.getPlace();
         if (!e.hasData(Project.KEY) || e.hasData(FileEditor.KEY) || e.hasData(Editor.KEY)
             || ActionPlaces.EDITOR_TAB_POPUP.equals(place)
@@ -85,8 +84,8 @@ public class OpenInRightSplitAction extends DumbAwareAction {
     @Nullable
     @RequiredUIAccess
     public static FileEditorWindow openInRightSplit(
-        @Nonnull Project project,
-        @Nonnull VirtualFile file,
+        Project project,
+        VirtualFile file,
         @Nullable Navigatable element,
         boolean requestFocus
     ) {

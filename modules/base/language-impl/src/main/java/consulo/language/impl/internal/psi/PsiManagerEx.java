@@ -23,7 +23,6 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -37,38 +36,38 @@ public abstract class PsiManagerEx extends PsiManager {
     public abstract boolean isBatchFilesProcessingMode();
 
     @TestOnly
-    public abstract void setAssertOnFileLoadingFilter(@Nonnull VirtualFileFilter filter, @Nonnull Disposable parentDisposable);
+    public abstract void setAssertOnFileLoadingFilter(VirtualFileFilter filter, Disposable parentDisposable);
 
     @TestOnly
-    public abstract boolean isAssertOnFileLoading(@Nonnull VirtualFile file);
+    public abstract boolean isAssertOnFileLoading(VirtualFile file);
 
     /**
      * @param runnable to be run before <b>physical</b> PSI change
      */
-    public abstract void registerRunnableToRunOnChange(@Nonnull Runnable runnable);
+    public abstract void registerRunnableToRunOnChange(Runnable runnable);
 
     /**
      * @param runnable to be run before <b>physical</b> or <b>non-physical</b> PSI change
      */
-    public abstract void registerRunnableToRunOnAnyChange(@Nonnull Runnable runnable);
+    public abstract void registerRunnableToRunOnAnyChange(Runnable runnable);
 
-    public abstract void registerRunnableToRunAfterAnyChange(@Nonnull Runnable runnable);
+    public abstract void registerRunnableToRunAfterAnyChange(Runnable runnable);
 
-    @Nonnull
+    
     public abstract FileManager getFileManager();
 
-    public abstract void beforeChildAddition(@Nonnull PsiTreeChangeEventImpl event);
+    public abstract void beforeChildAddition(PsiTreeChangeEventImpl event);
 
-    public abstract void beforeChildRemoval(@Nonnull PsiTreeChangeEventImpl event);
+    public abstract void beforeChildRemoval(PsiTreeChangeEventImpl event);
 
-    public abstract void beforeChildReplacement(@Nonnull PsiTreeChangeEventImpl event);
+    public abstract void beforeChildReplacement(PsiTreeChangeEventImpl event);
 
     public abstract void beforeChange(boolean isPhysical);
 
     public abstract void afterChange(boolean isPhysical);
 
     @RequiredReadAction
-    public PsiFile getCachedPsiFile(@Nonnull VirtualFile vFile) {
+    public PsiFile getCachedPsiFile(VirtualFile vFile) {
         return getFileManager().getCachedPsiFile(vFile);
     }
 }

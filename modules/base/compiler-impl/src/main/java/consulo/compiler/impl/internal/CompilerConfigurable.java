@@ -28,7 +28,6 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -53,7 +52,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
             myLayout.add(myCbAutoShowFirstError);
         }
 
-        @Nonnull
+        
         @Override
         public Component get() {
             return myLayout;
@@ -68,15 +67,15 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Root createPanel(@Nonnull Disposable uiDisposable) {
+    protected Root createPanel(Disposable uiDisposable) {
         return new Root();
     }
 
     @RequiredUIAccess
     @Override
-    protected boolean isModified(@Nonnull Root component) {
+    protected boolean isModified(Root component) {
         CompilerWorkspaceConfigurationImpl compilerWorkspaceConfiguration = (CompilerWorkspaceConfigurationImpl) myCompilerWorkspaceConfiguration.get();
 
         boolean isModified = component.myCbClearOutputDirectory.getValue() != compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
@@ -86,7 +85,7 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
 
     @RequiredUIAccess
     @Override
-    protected void reset(@Nonnull Root component) {
+    protected void reset(Root component) {
         CompilerWorkspaceConfigurationImpl compilerWorkspaceConfiguration = (CompilerWorkspaceConfigurationImpl) myCompilerWorkspaceConfiguration.get();
 
         component.myCbAutoShowFirstError.setValue(compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
@@ -95,20 +94,20 @@ public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurabl
 
     @RequiredUIAccess
     @Override
-    protected void apply(@Nonnull Root component) throws ConfigurationException {
+    protected void apply(Root component) throws ConfigurationException {
         CompilerWorkspaceConfigurationImpl compilerWorkspaceConfiguration = (CompilerWorkspaceConfigurationImpl) myCompilerWorkspaceConfiguration.get();
 
         compilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
         compilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return CompilerLocalize.compilerConfigurableDisplayName();
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return StandardConfigurableIds.COMPILER_GROUP;

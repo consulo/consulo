@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.execution.test.sm.runner.GeneralTestEventsProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public interface ImportTestOutputExtension {
     @Nullable
     DefaultHandler createHandler(Reader reader, GeneralTestEventsProcessor processor) throws IOException;
 
-    @Nonnull
+    
     static DefaultHandler findHandler(Supplier<Reader> readerSupplier, GeneralTestEventsProcessor processor) {
         DefaultHandler handler = Application.get().getExtensionPoint(ImportTestOutputExtension.class).computeSafeIfAny(extension -> {
             Reader reader = readerSupplier.get();

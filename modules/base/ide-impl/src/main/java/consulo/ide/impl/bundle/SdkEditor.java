@@ -24,7 +24,6 @@ import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -32,11 +31,11 @@ import javax.swing.*;
  * @since 21.03.14
  */
 public class SdkEditor extends BaseSdkEditor {
-  public SdkEditor(@Nonnull SdkModel sdkModel, @Nonnull SdkImpl sdk) {
+  public SdkEditor(SdkModel sdkModel, SdkImpl sdk) {
     super(sdkModel, sdk);
   }
 
-  @Nonnull
+  
   @Override
   protected JComponent createCenterComponent(Disposable parentUIDisposable) {
     TabbedPaneWrapper tabbedPane = new TabbedPaneWrapper(parentUIDisposable);

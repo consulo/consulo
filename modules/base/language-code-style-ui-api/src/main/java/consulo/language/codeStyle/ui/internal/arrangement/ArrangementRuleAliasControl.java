@@ -20,7 +20,6 @@ import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,12 +28,12 @@ import java.util.List;
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementRuleAliasControl extends ArrangementMatchingRulesControl {
-  @Nonnull
+  
   public static final Key<ArrangementRuleAliasControl> KEY = Key.create("Arrangement.Alias.Rule.Control");
 
-  public ArrangementRuleAliasControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
-                                     @Nonnull ArrangementColorsProvider colorsProvider,
-                                     @Nonnull RepresentationCallback callback) {
+  public ArrangementRuleAliasControl(ArrangementStandardSettingsManager settingsManager,
+                                     ArrangementColorsProvider colorsProvider,
+                                     RepresentationCallback callback) {
     super(settingsManager, colorsProvider, callback);
   }
 

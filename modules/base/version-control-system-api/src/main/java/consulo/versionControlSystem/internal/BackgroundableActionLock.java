@@ -17,15 +17,14 @@ package consulo.versionControlSystem.internal;
 
 import consulo.project.Project;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
-import jakarta.annotation.Nonnull;
 
 public class BackgroundableActionLock {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final Object[] myKeys;
 
-    BackgroundableActionLock(@Nonnull Project project, @Nonnull Object[] keys) {
+    BackgroundableActionLock(Project project, Object[] keys) {
         myProject = project;
         myKeys = keys;
     }
@@ -42,25 +41,25 @@ public class BackgroundableActionLock {
         unlock(myProject, myKeys);
     }
 
-    @Nonnull
-    public static BackgroundableActionLock getLock(@Nonnull Project project, @Nonnull Object... keys) {
+    
+    public static BackgroundableActionLock getLock(Project project, Object... keys) {
         return new BackgroundableActionLock(project, keys);
     }
 
-    public static boolean isLocked(@Nonnull Project project, @Nonnull Object... keys) {
+    public static boolean isLocked(Project project, Object... keys) {
         return getManager(project).isBackgroundTaskRunning(keys);
     }
 
-    public static void lock(@Nonnull Project project, @Nonnull Object... keys) {
+    public static void lock(Project project, Object... keys) {
         getManager(project).startBackgroundTask(keys);
     }
 
-    public static void unlock(@Nonnull Project project, @Nonnull Object... keys) {
+    public static void unlock(Project project, Object... keys) {
         getManager(project).stopBackgroundTask(keys);
     }
 
-    @Nonnull
-    private static ProjectLevelVcsManagerEx getManager(@Nonnull Project project) {
+    
+    private static ProjectLevelVcsManagerEx getManager(Project project) {
         return (ProjectLevelVcsManagerEx) ProjectLevelVcsManager.getInstance(project);
     }
 }

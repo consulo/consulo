@@ -29,8 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -45,11 +44,11 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
 
     @Override
     public Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffset,
-        @Nonnull SimpleReference<Integer> caretAdvance,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffset,
+        SimpleReference<Integer> caretAdvance,
+        DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
         if (!CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
@@ -119,8 +118,8 @@ public class EnterAfterJavadocTagHandler extends EnterHandlerDelegateAdapter {
      * @param offset      interested offset
      * @return object that encapsulates information about javadoc tags within the given text and offset
      */
-    @Nonnull
-    static Context parse(@Nonnull CharSequence text, int startOffset, int endOffset, int offset) {
+    
+    static Context parse(CharSequence text, int startOffset, int endOffset, int offset) {
         int asteriskOffset = StringUtil.indexOf(text, '*', startOffset, endOffset);
         if (asteriskOffset < 0) {
             return NOT_MATCHED_CONTEXT;

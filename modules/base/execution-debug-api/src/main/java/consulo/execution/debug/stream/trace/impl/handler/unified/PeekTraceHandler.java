@@ -5,7 +5,6 @@ import consulo.execution.debug.stream.trace.dsl.*;
 import consulo.execution.debug.stream.trace.dsl.impl.TextExpression;
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -32,13 +31,13 @@ public class PeekTraceHandler extends HandlerBase.Intermediate {
         return myAfterMap;
     }
 
-    @Nonnull
+    
     @Override
     public List<VariableDeclaration> additionalVariablesDeclaration() {
         return List.of(myBeforeMap.defaultDeclaration(), myAfterMap.defaultDeclaration());
     }
 
-    @Nonnull
+    
     @Override
     public CodeBlock prepareResult() {
         return dsl.block(block -> {
@@ -47,13 +46,13 @@ public class PeekTraceHandler extends HandlerBase.Intermediate {
         });
     }
 
-    @Nonnull
+    
     @Override
     public Expression getResultExpression() {
         return dsl.newArray(dsl.getTypes().ANY(), new TextExpression("beforeArray"), new TextExpression("afterArray"));
     }
 
-    @Nonnull
+    
     @Override
     public List<IntermediateStreamCall> additionalCallsBefore() {
         Lambda lambda = dsl.lambda("x", context -> {
@@ -63,7 +62,7 @@ public class PeekTraceHandler extends HandlerBase.Intermediate {
         return List.of(dsl.createPeekCall(myTypeBefore, lambda));
     }
 
-    @Nonnull
+    
     @Override
     public List<IntermediateStreamCall> additionalCallsAfter() {
         Lambda lambda = dsl.lambda("x", context -> {

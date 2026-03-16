@@ -27,8 +27,7 @@ import consulo.ui.style.StyleManager;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,20 +65,20 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
     private ErrorBaseIconLibraryImpl myErrorLibrary = new ErrorBaseIconLibraryImpl(this);
 
-    @Nonnull
+    
     @Override
     public Map<String, IconLibrary> getLibraries() {
         return Collections.unmodifiableMap(myLibraries);
     }
 
-    @Nonnull
+    
     @Override
     public String getActiveLibraryId() {
         return getActiveLibraryId(StyleManager.get().getCurrentStyle());
     }
 
-    @Nonnull
-    public String getActiveLibraryId(@Nonnull Style currentStyle) {
+    
+    public String getActiveLibraryId(Style currentStyle) {
         if (myActiveLibraryId == null) {
             return currentStyle.getIconLibraryId();
         }
@@ -124,12 +123,12 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     @Nullable
-    public BaseIconLibraryImpl getLibrary(@Nonnull String id) {
+    public BaseIconLibraryImpl getLibrary(String id) {
         return (BaseIconLibraryImpl) myLibraries.get(id);
     }
 
     @Override
-    @Nonnull
+    
     public BaseIconLibraryImpl getActiveLibrary() {
         if (myActiveLibrary == null) {
             String activeLibraryId = getActiveLibraryId();
@@ -144,8 +143,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         return myActiveLibrary;
     }
 
-    @Nonnull
-    protected abstract BaseIconLibraryImpl createLibrary(@Nonnull String id);
+    
+    protected abstract BaseIconLibraryImpl createLibrary(String id);
 
     public void initialize(@Nullable Set<String> files) {
         if (myInitialized.compareAndSet(false, true)) {
@@ -183,7 +182,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         }
     }
 
-    @Nonnull
+    
     private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
         Map<String, IconLibraryDescriptor> list = new HashMap<>();
 
@@ -200,7 +199,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
         return list;
     }
 
-    private void analyzeLibraryJar(@Nonnull String filePath, @Nonnull Set<String> analyzedGroups) throws IOException {
+    private void analyzeLibraryJar(String filePath, Set<String> analyzedGroups) throws IOException {
         File jarFile = new File(filePath);
 
         Map<Couple<String>, Map<String, JarIcon>> libraries = new HashMap<>();
@@ -265,7 +264,7 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
 
-    private void processImage(@Nonnull String imagePath, @Nonnull File jarFile, @Nonnull ZipFile zipFile, @Nonnull ZipEntry zipEntry, @Nonnull Map<String, JarIcon> iconUrls) throws IOException {
+    private void processImage(String imagePath, File jarFile, ZipFile zipFile, ZipEntry zipEntry, Map<String, JarIcon> iconUrls) throws IOException {
         boolean isSVG = imagePath.endsWith("svg");
         int dotIndex = imagePath.lastIndexOf('.');
 

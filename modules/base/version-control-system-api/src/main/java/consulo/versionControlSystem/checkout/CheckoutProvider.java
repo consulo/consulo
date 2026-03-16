@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.versionControlSystem.VcsKey;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -31,15 +30,15 @@ import java.io.File;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CheckoutProvider {
-    void doCheckout(@Nonnull Project project, @Nullable Listener listener);
+    void doCheckout(Project project, @Nullable Listener listener);
 
-    @Nonnull
+    
     @Deprecated
     default String getVcsName() {
         return getClass().getSimpleName();
     }
 
-    @Nonnull
+    
     default LocalizeValue getName() {
         return LocalizeValue.localizeTODO(TextWithMnemonic.parse(getVcsName()).getText());
     }

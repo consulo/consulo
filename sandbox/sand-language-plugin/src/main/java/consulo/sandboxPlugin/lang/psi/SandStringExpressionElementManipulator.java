@@ -20,7 +20,6 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,11 +28,11 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class SandStringExpressionElementManipulator extends AbstractElementManipulator<SandStringExpression> {
   @Override
-  public SandStringExpression handleContentChange(@Nonnull SandStringExpression element, @Nonnull TextRange range, String newContent) throws IncorrectOperationException {
+  public SandStringExpression handleContentChange(SandStringExpression element, TextRange range, String newContent) throws IncorrectOperationException {
     return element;
   }
 
-  @Nonnull
+  
   @Override
   public Class<SandStringExpression> getElementClass() {
     return SandStringExpression.class;

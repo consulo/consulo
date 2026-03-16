@@ -40,13 +40,11 @@ import consulo.util.xml.serializer.Converter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -110,13 +108,13 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     static final class ShortcutConverter extends Converter<Character> {
         @Nullable
         @Override
-        public Character fromString(@Nonnull String shortcut) {
+        public Character fromString(String shortcut) {
             return TAB.equals(shortcut) ? TAB_CHAR : ENTER.equals(shortcut) ? ENTER_CHAR : CUSTOM.equals(shortcut) ? CUSTOM_CHAR : SPACE_CHAR;
         }
 
-        @Nonnull
+        
         @Override
-        public String toString(@Nonnull Character shortcut) {
+        public String toString(Character shortcut) {
             return shortcut == TAB_CHAR ? TAB : shortcut == ENTER_CHAR ? ENTER : shortcut == CUSTOM_CHAR ? CUSTOM : SPACE;
         }
     }
@@ -195,13 +193,13 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         mySchemeManager = schemeManagerFactory.createSchemeManager(TEMPLATES_DIR_PATH, new BaseSchemeProcessor<TemplateGroup, TemplateGroup>() {
             @Override
             @Nullable
-            public TemplateGroup readScheme(@Nonnull Document schemeContent) throws InvalidDataException {
+            public TemplateGroup readScheme(Document schemeContent) throws InvalidDataException {
                 return readTemplateFile(schemeContent, schemeContent.getRootElement().getAttributeValue("group"), false, false, getClass().getClassLoader());
             }
 
 
             @Override
-            public boolean shouldBeSaved(@Nonnull TemplateGroup template) {
+            public boolean shouldBeSaved(TemplateGroup template) {
                 for (TemplateImpl t : template.getElements()) {
                     if (differsFromDefault(t)) {
                         return true;
@@ -211,7 +209,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             }
 
             @Override
-            public Element writeScheme(@Nonnull TemplateGroup template) {
+            public Element writeScheme(TemplateGroup template) {
                 Element templateSetElement = new Element(TEMPLATE_SET);
                 templateSetElement.setAttribute(GROUP, template.getName());
 
@@ -225,29 +223,29 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
             }
 
             @Override
-            public void initScheme(@Nonnull TemplateGroup scheme) {
+            public void initScheme(TemplateGroup scheme) {
                 for (TemplateImpl template : scheme.getElements()) {
                     addTemplateImpl(template);
                 }
             }
 
             @Override
-            public void onSchemeAdded(@Nonnull TemplateGroup scheme) {
+            public void onSchemeAdded(TemplateGroup scheme) {
                 for (TemplateImpl template : scheme.getElements()) {
                     addTemplateImpl(template);
                 }
             }
 
             @Override
-            public void onSchemeDeleted(@Nonnull TemplateGroup scheme) {
+            public void onSchemeDeleted(TemplateGroup scheme) {
                 for (TemplateImpl template : scheme.getElements()) {
                     removeTemplate(template);
                 }
             }
 
-            @Nonnull
+            
             @Override
-            public String getName(@Nonnull TemplateGroup immutableElement) {
+            public String getName(TemplateGroup immutableElement) {
                 return immutableElement.getName();
             }
         }, RoamingType.DEFAULT);
@@ -317,7 +315,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         myLastSelectedTemplate = group == null ? null : new TemplateKey(group, key);
     }
 
-    @Nonnull
+    
     @Override
     public Collection<? extends Template> getTemplates() {
         return Collections.unmodifiableCollection(myTemplates.values());
@@ -332,7 +330,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         myState.defaultShortcut = defaultShortcutChar;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<TemplateImpl> getTemplates(String key) {
         return myTemplates.get(key);
@@ -351,7 +349,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     @Override
-    public Template getTemplateById(@Nonnull String id) {
+    public Template getTemplateById(String id) {
         return myTemplatesById.get(id);
     }
 
@@ -388,7 +386,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         }
     }
 
-    private void addTemplateImpl(@Nonnull Template template) {
+    private void addTemplateImpl(Template template) {
         TemplateImpl templateImpl = (TemplateImpl) template;
         if (getTemplate(templateImpl.getKey(), templateImpl.getGroupName()) == null) {
             myTemplates.putValue(template.getKey(), templateImpl);
@@ -407,7 +405,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         }
     }
 
-    public void removeTemplate(@Nonnull Template template) {
+    public void removeTemplate(Template template) {
         myTemplates.remove(template.getKey(), (TemplateImpl) template);
 
         TemplateGroup group = mySchemeManager.findSchemeByName(((TemplateImpl) template).getGroupName());
@@ -556,7 +554,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
     }
 
     @Nullable
-    private TemplateGroup readTemplateFile(Document document, @NonNls String path, boolean isDefault, boolean registerTemplate, ClassLoader classLoader) throws InvalidDataException {
+    private TemplateGroup readTemplateFile(Document document, String path, boolean isDefault, boolean registerTemplate, ClassLoader classLoader) throws InvalidDataException {
         if (document == null) {
             throw new InvalidDataException();
         }
@@ -733,7 +731,7 @@ public class TemplateSettingsImpl implements PersistentStateComponent<TemplateSe
         templateSetElement.addContent(element);
     }
 
-    public void setTemplates(@Nonnull List<TemplateGroup> newGroups) {
+    public void setTemplates(List<TemplateGroup> newGroups) {
         myTemplates.clear();
         myState.deletedKeys.clear();
         for (TemplateImpl template : myDefaultTemplates.values()) {

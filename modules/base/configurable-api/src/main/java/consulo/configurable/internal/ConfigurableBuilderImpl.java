@@ -21,7 +21,6 @@ import consulo.configurable.UnnamedConfigurable;
 import consulo.ui.Component;
 import consulo.ui.ValueComponent;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -41,24 +40,24 @@ public class ConfigurableBuilderImpl<Instance extends ConfigurableBuilderState> 
     myInstanceFactory = instanceFactory;
   }
 
-  @Nonnull
+  
   @Override
-  public <V, C extends ValueComponent<V>> ConfigurableBuilder<Instance> valueComponent(@Nonnull Supplier<C> valueComponentFactory,
-                                                             @Nonnull Supplier<V> getter,
-                                                             @Nonnull Consumer<V> setter,
-                                                             @Nonnull BiConsumer<Instance, C> instanceSetter) {
+  public <V, C extends ValueComponent<V>> ConfigurableBuilder<Instance> valueComponent(Supplier<C> valueComponentFactory,
+                                                             Supplier<V> getter,
+                                                             Consumer<V> setter,
+                                                             BiConsumer<Instance, C> instanceSetter) {
     myEntries.add(new ValueComponentProperty(valueComponentFactory, getter, setter, instanceSetter));
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public ConfigurableBuilder<Instance> component(@Nonnull Supplier<Component> component) {
+  public ConfigurableBuilder<Instance> component(Supplier<Component> component) {
     myEntries.add(component);
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public UnnamedConfigurable buildUnnamed() {
     return new BuilderSimpleConfigurableByProperties<>(myInstanceFactory, List.copyOf(myEntries));

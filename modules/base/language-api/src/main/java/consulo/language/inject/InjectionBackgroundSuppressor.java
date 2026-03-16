@@ -16,7 +16,7 @@
 package consulo.language.inject;
 
 import consulo.language.psi.PsiLanguageInjectionHost;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Marker interface that suppresses injection background.

@@ -15,8 +15,7 @@
  */
 package consulo.language.ast;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface to be implemented by {@link IElementType} instances for leaf AST nodes, providing a possibility for quick reparse.
@@ -36,6 +35,6 @@ public interface IReparseableLeafElementType<T extends ASTNode> {
    * @return a replacement leaf with newText text, if it's correct to do such replacement, or null otherwise
    */
   @Nullable
-  T reparseLeaf(@Nonnull T leaf, @Nonnull CharSequence newText);
+  T reparseLeaf(T leaf, CharSequence newText);
 
 }

@@ -21,7 +21,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -62,7 +61,7 @@ public class HTMLExporter {
     myGeneratedPages.add(element);
   }
 
-  private void appendNavBar(@NonNls StringBuffer buf, RefEntity element) {
+  private void appendNavBar(StringBuffer buf, RefEntity element) {
     buf.append("<a href=\"../index.html\" target=\"_top\">");
     buf.append(InspectionLocalize.inspectionExportInspectionsLinkText());
     buf.append("</a>  ");
@@ -72,7 +71,7 @@ public class HTMLExporter {
     buf.append("<hr>");
   }
 
-  public static void writeFileImpl(String folder, @NonNls String fileName, CharSequence buf) throws IOException {
+  public static void writeFileImpl(String folder, String fileName, CharSequence buf) throws IOException {
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     String fullPath = folder + File.separator + fileName;
 
@@ -107,7 +106,7 @@ public class HTMLExporter {
   }
 
   private String fileNameForElement(RefEntity element) {
-    @NonNls String fileName = myElementToFilenameMap.get(element);
+    String fileName = myElementToFilenameMap.get(element);
 
     if (fileName == null) {
       fileName = "e" + Integer.toString(++myFileCounter) + ".html";

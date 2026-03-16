@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -37,7 +36,7 @@ import java.util.function.Predicate;
 public class ListUtil {
     public static final String SELECTED_BY_MOUSE_EVENT = "byMouseEvent";
 
-    public static <T> MouseMotionListener installAutoSelectOnMouseMove(@Nonnull JList<T> list) {
+    public static <T> MouseMotionListener installAutoSelectOnMouseMove(JList<T> list) {
         MouseMotionAdapter listener = new MouseMotionAdapter() {
             boolean myIsEngaged = false;
 
@@ -80,35 +79,35 @@ public class ListUtil {
         protected abstract void update();
     }
 
-    @Nonnull
-    public static <T> List<T> removeSelectedItems(@Nonnull JList<T> list) {
+    
+    public static <T> List<T> removeSelectedItems(JList<T> list) {
         return removeSelectedItems(list, null);
     }
 
-    @Nonnull
-    public static <T> List<T> removeIndices(@Nonnull JList<T> list, int[] indices) {
+    
+    public static <T> List<T> removeIndices(JList<T> list, int[] indices) {
         return removeIndices(list, indices, null);
     }
 
-    @Nonnull
-    public static <T> List<T> removeSelectedItems(@Nonnull JList<T> list, @Nullable Predicate<? super T> condition) {
+    
+    public static <T> List<T> removeSelectedItems(JList<T> list, @Nullable Predicate<? super T> condition) {
         int[] indices = list.getSelectedIndices();
         return removeIndices(list, indices, condition);
     }
 
-    public static <T> void removeItem(@Nonnull ListModel<T> model, int index) {
+    public static <T> void removeItem(ListModel<T> model, int index) {
         getExtension(model).remove(model, index);
     }
 
-    public static <T> void removeAllItems(@Nonnull ListModel<T> model) {
+    public static <T> void removeAllItems(ListModel<T> model) {
         getExtension(model).removeAll(model);
     }
 
-    public static <T> void addAllItems(@Nonnull ListModel<T> model, @Nonnull List<? extends T> items) {
+    public static <T> void addAllItems(ListModel<T> model, List<? extends T> items) {
         getExtension(model).addAll(model, items);
     }
 
-    private static <T> List<T> removeIndices(@Nonnull JList<T> list, @Nonnull int[] indices, @Nullable Predicate<? super T> condition) {
+    private static <T> List<T> removeIndices(JList<T> list, int[] indices, @Nullable Predicate<? super T> condition) {
         if (indices.length == 0) {
             return new ArrayList<>(0);
         }
@@ -144,11 +143,11 @@ public class ListUtil {
         return removedItems;
     }
 
-    public static <T> boolean canRemoveSelectedItems(@Nonnull JList<T> list) {
+    public static <T> boolean canRemoveSelectedItems(JList<T> list) {
         return canRemoveSelectedItems(list, null);
     }
 
-    public static <T> boolean canRemoveSelectedItems(@Nonnull JList<T> list, @Nullable Predicate<? super T> condition) {
+    public static <T> boolean canRemoveSelectedItems(JList<T> list, @Nullable Predicate<? super T> condition) {
         int[] indices = list.getSelectedIndices();
         if (indices.length == 0) {
             return false;
@@ -168,7 +167,7 @@ public class ListUtil {
         return false;
     }
 
-    public static <T> int moveSelectedItemsUp(@Nonnull JList<T> list) {
+    public static <T> int moveSelectedItemsUp(JList<T> list) {
         ListModel<T> model = list.getModel();
         ListModelExtension<T, ListModel<T>> extension = getExtension(model);
         int[] indices = list.getSelectedIndices();
@@ -189,12 +188,12 @@ public class ListUtil {
         return indices.length;
     }
 
-    public static <T> boolean canMoveSelectedItemsUp(@Nonnull JList<T> list) {
+    public static <T> boolean canMoveSelectedItemsUp(JList<T> list) {
         int[] indices = list.getSelectedIndices();
         return indices.length > 0 && indices[0] > 0;
     }
 
-    public static <T> int moveSelectedItemsDown(@Nonnull JList<T> list) {
+    public static <T> int moveSelectedItemsDown(JList<T> list) {
         ListModel<T> model = list.getModel();
         ListModelExtension<T, ListModel<T>> extension = getExtension(model);
         int[] indices = list.getSelectedIndices();
@@ -216,13 +215,13 @@ public class ListUtil {
         return indices.length;
     }
 
-    public static <T> boolean isPointOnSelection(@Nonnull JList<T> list, int x, int y) {
+    public static <T> boolean isPointOnSelection(JList<T> list, int x, int y) {
         int row = list.locationToIndex(new Point(x, y));
         return row >= 0 && list.isSelectedIndex(row);
     }
 
     @Nullable
-    public static <E> Component getDeepestRendererChildComponentAt(@Nonnull JList<E> list, @Nonnull Point point) {
+    public static <E> Component getDeepestRendererChildComponentAt(JList<E> list, Point point) {
         int idx = list.locationToIndex(point);
         if (idx < 0) {
             return null;
@@ -247,13 +246,13 @@ public class ListUtil {
         return UIUtil.getDeepestComponentAt(rendererComponent, rendererRelativeX, rendererRelativeY);
     }
 
-    public static <T> boolean canMoveSelectedItemsDown(@Nonnull JList<T> list) {
+    public static <T> boolean canMoveSelectedItemsDown(JList<T> list) {
         ListModel model = list.getModel();
         int[] indices = list.getSelectedIndices();
         return indices.length > 0 && indices[indices.length - 1] < model.getSize() - 1;
     }
 
-    public static <T> Updatable addMoveUpListener(@Nonnull JButton button, @Nonnull JList<T> list) {
+    public static <T> Updatable addMoveUpListener(JButton button, JList<T> list) {
         button.addActionListener(e -> {
             moveSelectedItemsUp(list);
             list.requestFocusInWindow();
@@ -262,7 +261,7 @@ public class ListUtil {
     }
 
 
-    public static <T> Updatable addMoveDownListener(@Nonnull JButton button, @Nonnull JList<T> list) {
+    public static <T> Updatable addMoveDownListener(JButton button, JList<T> list) {
         button.addActionListener(e -> {
             moveSelectedItemsDown(list);
             list.requestFocusInWindow();
@@ -270,13 +269,13 @@ public class ListUtil {
         return disableWhenNoSelection(button, list);
     }
 
-    public static <T> Updatable addRemoveListener(@Nonnull JButton button, @Nonnull JList<T> list) {
+    public static <T> Updatable addRemoveListener(JButton button, JList<T> list) {
         return addRemoveListener(button, list, null);
     }
 
     public static <T> Updatable addRemoveListener(
-        @Nonnull JButton button,
-        @Nonnull JList<T> list,
+        JButton button,
+        JList<T> list,
         @Nullable RemoveNotification<T> notification
     ) {
         button.addActionListener(e -> {
@@ -307,7 +306,7 @@ public class ListUtil {
         return listener;
     }
 
-    public static <T> Updatable disableWhenNoSelection(@Nonnull JButton button, @Nonnull JList<T> list) {
+    public static <T> Updatable disableWhenNoSelection(JButton button, JList<T> list) {
         class MyListSelectionListener extends Updatable implements ListSelectionListener {
             MyListSelectionListener(JButton button) {
                 super(button);
@@ -336,8 +335,8 @@ public class ListUtil {
     /**
      * @noinspection unchecked
      */
-    @Nonnull
-    private static <T, ModelType extends ListModel<T>> ListModelExtension<T, ModelType> getExtension(@Nonnull ModelType model) {
+    
+    private static <T, ModelType extends ListModel<T>> ListModelExtension<T, ModelType> getExtension(ModelType model) {
         if (model instanceof DefaultListModel) {
             return DEFAULT_MODEL;
         }

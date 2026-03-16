@@ -22,7 +22,7 @@ import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface DiffProvider extends VcsProviderMarker {
 

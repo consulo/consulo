@@ -17,17 +17,16 @@ package consulo.module;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ConfigurationErrorType {
-    @Nonnull
+    
     private final LocalizeValue myElementKind;
     private final boolean myCanIgnore;
 
-    public ConfigurationErrorType(@Nonnull LocalizeValue elementKind, boolean canIgnore) {
+    public ConfigurationErrorType(LocalizeValue elementKind, boolean canIgnore) {
         myElementKind = elementKind;
         myCanIgnore = canIgnore;
     }
@@ -38,7 +37,7 @@ public class ConfigurationErrorType {
         this(LocalizeValue.ofNullable(elementKind), canIgnore);
     }
 
-    @Nonnull
+    
     public LocalizeValue getElementKind() {
         return myElementKind;
     }

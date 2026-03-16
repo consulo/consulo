@@ -6,8 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.internal.BuilderDataContext;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +14,12 @@ import java.util.Map;
 @Deprecated
 @DeprecationInfo("Use DataContext#builder()")
 public final class SimpleDataContext extends BuilderDataContext implements DataContext {
-  private SimpleDataContext(@Nonnull Map<Key, Object> dataId2data, @Nullable DataContext parent) {
+  private SimpleDataContext(Map<Key, Object> dataId2data, @Nullable DataContext parent) {
     super(dataId2data, parent);
   }
 
-  @Nonnull
-  public static <T> DataContext getSimpleContext(@Nonnull Key<? super T> dataKey, @Nonnull T data, @Nullable DataContext parent) {
+  
+  public static <T> DataContext getSimpleContext(Key<? super T> dataKey, T data, @Nullable DataContext parent) {
     return new SimpleDataContext(Map.of(dataKey, data), parent);
   }
 
@@ -29,22 +28,22 @@ public final class SimpleDataContext extends BuilderDataContext implements DataC
    * @deprecated prefer type-safe {@link DataContext#builder()} where possible.
    */
   @Deprecated
-  @Nonnull
-  public static DataContext getSimpleContext(@Nonnull Map<Key, Object> dataId2data, @Nullable DataContext parent) {
+  
+  public static DataContext getSimpleContext(Map<Key, Object> dataId2data, @Nullable DataContext parent) {
     return new SimpleDataContext(dataId2data, parent);
   }
 
-  @Nonnull
-  public static <T> DataContext getSimpleContext(@Nonnull Key<? super T> dataKey, @Nonnull T data) {
+  
+  public static <T> DataContext getSimpleContext(Key<? super T> dataKey, T data) {
     return getSimpleContext(dataKey, data, null);
   }
 
-  @Nonnull
-  public static DataContext getProjectContext(@Nonnull Project project) {
+  
+  public static DataContext getProjectContext(Project project) {
     return getSimpleContext(Project.KEY, project);
   }
 
-  @Nonnull
+  
   public static Builder builder() {
     return new Builder(null);
   }
@@ -62,8 +61,8 @@ public final class SimpleDataContext extends BuilderDataContext implements DataC
       return this;
     }
 
-    @Nonnull
-    public <T> Builder add(@Nonnull Key<? super T> dataKey, @Nullable T value) {
+    
+    public <T> Builder add(Key<? super T> dataKey, @Nullable T value) {
       if (value != null) {
         if (myMap == null) myMap = new HashMap<>();
         myMap.put(dataKey, value);
@@ -71,8 +70,8 @@ public final class SimpleDataContext extends BuilderDataContext implements DataC
       return this;
     }
 
-    @Nonnull
-    public Builder addAll(@Nonnull DataContext dataContext, @Nonnull Key<?>... keys) {
+    
+    public Builder addAll(DataContext dataContext, Key<?>... keys) {
       for (Key<?> key : keys) {
         //noinspection unchecked
         add((Key<Object>)key, dataContext.getData(key));
@@ -80,7 +79,7 @@ public final class SimpleDataContext extends BuilderDataContext implements DataC
       return this;
     }
 
-    @Nonnull
+    
     public DataContext build() {
       if (myMap == null && myParent == null) return EMPTY_CONTEXT;
       return new SimpleDataContext(myMap != null ? myMap : Map.of(), myParent);

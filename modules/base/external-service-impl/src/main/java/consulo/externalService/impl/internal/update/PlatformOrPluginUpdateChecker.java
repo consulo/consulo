@@ -50,8 +50,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -73,7 +72,7 @@ public class PlatformOrPluginUpdateChecker {
     private static final String ourForceJREBuild = "force.jre.build.on.update";
     private static final String ourForceJREBuildVersion = "force.jre.build.on.update.version";
 
-    @Nonnull
+    
     public static PluginId getPlatformPluginId() {
         return PlatformPluginId.find().getPluginId();
     }
@@ -105,7 +104,7 @@ public class PlatformOrPluginUpdateChecker {
         }
     }
 
-    public static boolean isPlatform(@Nonnull PluginId pluginId) {
+    public static boolean isPlatform(PluginId pluginId) {
         return pluginId.toString().startsWith("consulo.dist.");
     }
 
@@ -119,7 +118,7 @@ public class PlatformOrPluginUpdateChecker {
         return Math.abs(timeDelta) >= DateFormatUtil.DAY;
     }
 
-    @Nonnull
+    
     public static AsyncResult<PlatformOrPluginUpdateResultType> updateAndShowResult() {
         AsyncResult<PlatformOrPluginUpdateResultType> result = AsyncResult.undefined();
         Application app = Application.get();
@@ -194,7 +193,7 @@ public class PlatformOrPluginUpdateChecker {
         }
     }
 
-    private static void registerSettingsGroupUpdate(@Nonnull AsyncResult<PlatformOrPluginUpdateResultType> result) {
+    private static void registerSettingsGroupUpdate(AsyncResult<PlatformOrPluginUpdateResultType> result) {
         result.doWhenDone(type -> {
             UpdateSettingsEx updateSettings = (UpdateSettingsEx) UpdateSettings.getInstance();
 
@@ -206,8 +205,8 @@ public class PlatformOrPluginUpdateChecker {
         @Nullable Project project,
         boolean showResults,
         @Nullable ProgressIndicator indicator,
-        @Nonnull UIAccess uiAccess,
-        @Nonnull AsyncResult<PlatformOrPluginUpdateResultType> result
+        UIAccess uiAccess,
+        AsyncResult<PlatformOrPluginUpdateResultType> result
     ) {
         UIAccess.assetIsNotUIThread();
 
@@ -226,11 +225,11 @@ public class PlatformOrPluginUpdateChecker {
         });
     }
 
-    @Nonnull
+    
     private static PlatformOrPluginUpdateResult checkForUpdates(
         boolean showResults,
         @Nullable ProgressIndicator indicator,
-        @Nonnull UIAccess uiAccess,
+        UIAccess uiAccess,
         @Nullable Project project
     ) {
         PluginId platformPluginId = getPlatformPluginId();
@@ -360,7 +359,7 @@ public class PlatformOrPluginUpdateChecker {
     }
 
     private static void processDependencies(
-        @Nonnull PluginDescriptor target,
+        PluginDescriptor target,
         Map<PluginId, PlatformOrPluginNode> targets,
         List<PluginDescriptor> remotePlugins
     ) {

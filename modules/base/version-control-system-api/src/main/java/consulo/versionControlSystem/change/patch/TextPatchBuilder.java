@@ -20,9 +20,7 @@ import consulo.diff.old.*;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.BeforeAfter;
 import consulo.versionControlSystem.VcsException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -36,8 +34,8 @@ import java.util.List;
  */
 public class TextPatchBuilder {
   private static final int CONTEXT_LINES = 3;
-  @NonNls private static final String REVISION_NAME_TEMPLATE = "(revision {0})";
-  @NonNls private static final String DATE_NAME_TEMPLATE = "(date {0})";
+  private static final String REVISION_NAME_TEMPLATE = "(revision {0})";
+  private static final String DATE_NAME_TEMPLATE = "(date {0})";
 
   private final String myBasePath;
   private final boolean myIsReversePath;
@@ -200,8 +198,8 @@ public class TextPatchBuilder {
     }
   }
 
-  @Nonnull
-  private static DiffString[] tokenize(@Nonnull DiffString text) {
+  
+  private static DiffString[] tokenize(DiffString text) {
     return text.length() == 0 ? new DiffString[]{text} : text.tokenize();
   }
 
@@ -217,7 +215,7 @@ public class TextPatchBuilder {
     return patch;
   }
 
-  private static void addLineToHunk(@Nonnull PatchHunk hunk, @Nonnull DiffString line, PatchLine.Type type) {
+  private static void addLineToHunk(PatchHunk hunk, DiffString line, PatchLine.Type type) {
     PatchLine patchLine;
     if (!line.endsWith('\n')) {
       patchLine = new PatchLine(type, line.toString());
@@ -315,8 +313,8 @@ public class TextPatchBuilder {
   }
 
   private void setPatchHeading(FilePatch result, String basePath,
-                               @Nonnull AirContentRevision beforeRevision,
-                               @Nonnull AirContentRevision afterRevision) {
+                               AirContentRevision beforeRevision,
+                               AirContentRevision afterRevision) {
     result.setBeforeName(getRelativePath(basePath, beforeRevision.getPath().getPath()));
     result.setBeforeVersionId(getRevisionName(beforeRevision));
 

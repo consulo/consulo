@@ -23,7 +23,6 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.Language;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ik
@@ -32,9 +31,9 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ReferenceProvidersRegistry {
   public final static PsiReferenceProvider NULL_REFERENCE_PROVIDER = new PsiReferenceProvider() {
-      @Nonnull
+      
       @Override
-      public PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context) {
+      public PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext context) {
         return PsiReference.EMPTY_ARRAY;
       }
     };
@@ -49,7 +48,7 @@ public abstract class ReferenceProvidersRegistry {
    * @see #getReferencesFromProviders(PsiElement)
    */
   @Deprecated
-  public static PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull Class clazz) {
+  public static PsiReference[] getReferencesFromProviders(PsiElement context, Class clazz) {
     return getReferencesFromProviders(context, PsiReferenceService.Hints.NO_HINTS);
   }
 
@@ -57,7 +56,7 @@ public abstract class ReferenceProvidersRegistry {
     return getReferencesFromProviders(context, PsiReferenceService.Hints.NO_HINTS);
   }
 
-  public static PsiReference[] getReferencesFromProviders(PsiElement context, @Nonnull PsiReferenceService.Hints hints) {
+  public static PsiReference[] getReferencesFromProviders(PsiElement context, PsiReferenceService.Hints hints) {
     ProgressIndicatorProvider.checkCanceled();
     assert context.isValid() : "Invalid context: " + context;
 

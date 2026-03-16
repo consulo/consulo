@@ -19,8 +19,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Pack
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class LayoutTreeSelection {
   private final Map<PackagingElement<?>, PackagingElementNode<?>> myElement2Node = new HashMap<PackagingElement<?>, PackagingElementNode<?>>();
   private final Map<PackagingElementNode<?>, TreePath> myNode2Path = new HashMap<PackagingElementNode<?>, TreePath>();
 
-  public LayoutTreeSelection(@Nonnull LayoutTree tree) {
+  public LayoutTreeSelection(LayoutTree tree) {
     TreePath[] paths = tree.getSelectionPaths();
     if (paths == null) {
       return;
@@ -65,11 +64,11 @@ public class LayoutTreeSelection {
     return mySelectedElements;
   }
 
-  public PackagingElementNode<?> getNode(@Nonnull PackagingElement<?> element) {
+  public PackagingElementNode<?> getNode(PackagingElement<?> element) {
     return myElement2Node.get(element);
   }
 
-  public TreePath getPath(@Nonnull PackagingElementNode<?> node) {
+  public TreePath getPath(PackagingElementNode<?> node) {
     return myNode2Path.get(node);
   }
 

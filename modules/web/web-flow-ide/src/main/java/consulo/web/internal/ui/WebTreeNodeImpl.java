@@ -17,8 +17,7 @@ package consulo.web.internal.ui;
 
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -92,7 +91,7 @@ public class WebTreeNodeImpl<N> implements TreeNode<N> {
     }
 
     @Override
-    public void setRenderer(@Nonnull BiConsumer<N, TextItemPresentation> renderer) {
+    public void setRenderer(BiConsumer<N, TextItemPresentation> renderer) {
         myRenderer = renderer;
     }
 

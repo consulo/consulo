@@ -22,21 +22,20 @@ import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
 public class DesktopSwtCodeEditorSoftWrapModelImpl extends CodeEditorSoftWrapModelBase {
-  public DesktopSwtCodeEditorSoftWrapModelImpl(@Nonnull CodeEditorBase editor) {
+  public DesktopSwtCodeEditorSoftWrapModelImpl(CodeEditorBase editor) {
     super(editor);
   }
 
   @Override
-  protected SoftWrapApplianceManager createSoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage,
-                                                                    @Nonnull CodeEditorBase editor,
-                                                                    @Nonnull SoftWrapPainter painter,
+  protected SoftWrapApplianceManager createSoftWrapApplianceManager(SoftWrapsStorage storage,
+                                                                    CodeEditorBase editor,
+                                                                    SoftWrapPainter painter,
                                                                     CachingSoftWrapDataMapper dataMapper) {
     return new SoftWrapApplianceManager(storage, editor, painter, dataMapper) {
     };

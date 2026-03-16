@@ -35,8 +35,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -48,15 +47,13 @@ public final class PopupNavigationUtil {
     private PopupNavigationUtil() {
     }
 
-    @Nonnull
-    public static JBPopup getPsiElementPopup(@Nonnull PsiElement[] elements, String title) {
+    public static JBPopup getPsiElementPopup(PsiElement[] elements, String title) {
         return getPsiElementPopup(elements, new DefaultPsiElementCellRenderer(), title);
     }
 
-    @Nonnull
     public static JBPopup getPsiElementPopup(
-        @Nonnull PsiElement[] elements,
-        @Nonnull PsiElementListCellRenderer<PsiElement> renderer,
+        PsiElement[] elements,
+        PsiElementListCellRenderer<PsiElement> renderer,
         String title
     ) {
         return getPsiElementPopup(elements, renderer, title, element -> {
@@ -68,22 +65,20 @@ public final class PopupNavigationUtil {
         });
     }
 
-    @Nonnull
     public static <T extends PsiElement> JBPopup getPsiElementPopup(
-        @Nonnull T[] elements,
-        @Nonnull PsiElementListCellRenderer<T> renderer,
+        T[] elements,
+        PsiElementListCellRenderer<T> renderer,
         String title,
-        @Nonnull PsiElementProcessor<T> processor
+        PsiElementProcessor<T> processor
     ) {
         return getPsiElementPopup(elements, renderer, title, processor, null);
     }
 
-    @Nonnull
     public static <T extends PsiElement> JBPopup getPsiElementPopup(
-        @Nonnull T[] elements,
-        @Nonnull PsiElementListCellRenderer<T> renderer,
+        T[] elements,
+        PsiElementListCellRenderer<T> renderer,
         @Nullable String title,
-        @Nonnull PsiElementProcessor<T> processor,
+        PsiElementProcessor<T> processor,
         @Nullable T initialSelection
     ) {
         assert elements.length > 0 : "Attempted to show a navigation popup with zero elements";
@@ -113,7 +108,7 @@ public final class PopupNavigationUtil {
         return popup;
     }
 
-    public static void hidePopupIfDumbModeStarts(@Nonnull JBPopup popup, @Nonnull Project project) {
+    public static void hidePopupIfDumbModeStarts(JBPopup popup, Project project) {
         if (!DumbService.isDumb(project)) {
             project.getMessageBus().connect(popup).subscribe(DumbModeListener.class, new DumbModeListener() {
                 @Override
@@ -124,11 +119,11 @@ public final class PopupNavigationUtil {
         }
     }
 
-    public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
+    public static boolean activateFileWithPsiElement(PsiElement elt) {
         return LanguageEditorNavigationUtil.activateFileWithPsiElement(elt);
     }
 
-    public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt, boolean searchForOpen) {
+    public static boolean activateFileWithPsiElement(PsiElement elt, boolean searchForOpen) {
         return LanguageEditorNavigationUtil.activateFileWithPsiElement(elt, searchForOpen);
     }
 
@@ -136,17 +131,15 @@ public final class PopupNavigationUtil {
         return LanguageEditorNavigationUtil.openFileWithPsiElement(element, searchForOpen, requestFocus);
     }
 
-    @Nonnull
     public static CompletableFuture<?> openFileWithPsiElementAsync(
-        @Nonnull UIAccess uiAccess,
-        @Nonnull PsiElement element,
+        UIAccess uiAccess,
+        PsiElement element,
         boolean searchForOpen,
         boolean requestFocus
     ) {
         return LanguageEditorNavigationUtil.openFileWithPsiElementAsync(uiAccess, element, searchForOpen, requestFocus);
     }
 
-    @Nonnull
     public static JBPopup getRelatedItemsPopup(List<? extends GotoRelatedItem> items, String title) {
         return getRelatedItemsPopup(items, title, false);
     }
@@ -161,7 +154,6 @@ public final class PopupNavigationUtil {
      *                              {@code false} by default
      * @return
      */
-    @Nonnull
     public static JBPopup getRelatedItemsPopup(List<? extends GotoRelatedItem> items, String title, boolean showContainingModules) {
         Object[] elements = new Object[items.size()];
         //todo[nik] move presentation logic to GotoRelatedItem class
@@ -183,8 +175,7 @@ public final class PopupNavigationUtil {
         });
     }
 
-    @Nonnull
-    public static List<GotoRelatedItem> collectRelatedItems(@Nonnull PsiElement contextElement, @Nullable DataContext dataContext) {
+    public static List<GotoRelatedItem> collectRelatedItems(PsiElement contextElement, @Nullable DataContext dataContext) {
         Set<GotoRelatedItem> items = new LinkedHashSet<>();
         contextElement.getApplication().getExtensionPoint(GotoRelatedProvider.class).forEachExtensionSafe(provider -> {
             items.addAll(provider.getItems(contextElement));

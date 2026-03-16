@@ -52,8 +52,7 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,13 +72,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(RunIdeConsoleAction.class);
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         List<String> languages = IdeScriptEngineManager.getInstance().getLanguages();
         if (languages.size() == 1) {
             runConsole(e, languages.iterator().next());
@@ -91,7 +90,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
             (Function<String, AnAction>) language -> new DumbAwareAction(language) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e1) {
+                public void actionPerformed(AnActionEvent e1) {
                     runConsole(e1, language);
                 }
             }
@@ -101,7 +100,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
             .showInBestPositionFor(e.getDataContext());
     }
 
-    protected void runConsole(@Nonnull AnActionEvent e, @Nonnull String language) {
+    protected void runConsole(AnActionEvent e, String language) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -121,7 +120,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         }
     }
 
-    public static void configureConsole(@Nonnull VirtualFile file, @Nonnull FileEditorManager source) {
+    public static void configureConsole(VirtualFile file, FileEditorManager source) {
         MyRunAction runAction = new MyRunAction();
         for (FileEditor fileEditor : source.getEditors(file)) {
             if (!(fileEditor instanceof TextEditor)) {
@@ -134,10 +133,10 @@ public class RunIdeConsoleAction extends DumbAwareAction {
 
     @RequiredReadAction
     private static void executeQuery(
-        @Nonnull Project project,
-        @Nonnull VirtualFile file,
-        @Nonnull Editor editor,
-        @Nonnull IdeScriptEngine engine
+        Project project,
+        VirtualFile file,
+        Editor editor,
+        IdeScriptEngine engine
     ) {
         String command = getCommandText(project, editor);
         if (StringUtil.isEmptyOrSpaces(command)) {
@@ -168,13 +167,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         selectContent(descriptor);
     }
 
-    private static void prepareEngine(@Nonnull Project project, @Nonnull IdeScriptEngine engine, @Nonnull RunContentDescriptor descriptor) {
+    private static void prepareEngine(Project project, IdeScriptEngine engine, RunContentDescriptor descriptor) {
         IdeScriptBindings.ensureIdeIsBound(project, engine);
         ensureOutputIsRedirected(engine, descriptor);
     }
 
     @Nullable
-    private static String getProfileText(@Nonnull VirtualFile file) {
+    private static String getProfileText(VirtualFile file) {
         try {
             VirtualFile folder = file.getParent();
             VirtualFile profileChild = folder == null ? null : folder.findChild(".profile." + file.getExtension());
@@ -185,9 +184,9 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         return null;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static String getCommandText(@Nonnull Project project, @Nonnull Editor editor) {
+    private static String getCommandText(Project project, Editor editor) {
         TextRange selectedRange = EditorUtil.getSelectionInAnyMode(editor);
         Document document = editor.getDocument();
         if (selectedRange.isEmpty()) {
@@ -226,9 +225,9 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         ExecutionManager.getInstance(consoleView.getProject()).getContentManager().toFrontRunContent(executor, descriptor);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static RunContentDescriptor getConsoleView(@Nonnull Project project, @Nonnull VirtualFile file) {
+    private static RunContentDescriptor getConsoleView(Project project, VirtualFile file) {
         PsiFile psiFile = ObjectUtil.assertNotNull(PsiManager.getInstance(project).findFile(file));
         WeakReference<RunContentDescriptor> ref = psiFile.getCopyableUserData(DESCRIPTOR_KEY);
         RunContentDescriptor descriptor = ref == null ? null : ref.get();
@@ -239,9 +238,9 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         return descriptor;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static RunContentDescriptor createConsoleView(@Nonnull Project project, @Nonnull PsiFile psiFile) {
+    private static RunContentDescriptor createConsoleView(Project project, PsiFile psiFile) {
         ConsoleView consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole();
 
         DefaultActionGroup toolbarActions = new DefaultActionGroup();
@@ -269,13 +268,13 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         private IdeScriptEngine engine;
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.hasData(Editor.KEY) && e.hasData(VirtualFile.KEY));
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getRequiredData(Project.KEY);
             Editor editor = e.getRequiredData(Editor.KEY);
             VirtualFile virtualFile = e.getRequiredData(VirtualFile.KEY);
@@ -294,7 +293,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         }
     }
 
-    private static void ensureOutputIsRedirected(@Nonnull IdeScriptEngine engine, @Nonnull RunContentDescriptor descriptor) {
+    private static void ensureOutputIsRedirected(IdeScriptEngine engine, RunContentDescriptor descriptor) {
         ConsoleWriter stdOutWriter = ObjectUtil.tryCast(engine.getStdOut(), ConsoleWriter.class);
         ConsoleWriter stdErrWriter = ObjectUtil.tryCast(engine.getStdErr(), ConsoleWriter.class);
         if (stdOutWriter != null && stdOutWriter.getDescriptor() == descriptor &&
@@ -311,7 +310,7 @@ public class RunIdeConsoleAction extends DumbAwareAction {
         private final WeakReference<RunContentDescriptor> myDescriptor;
         private final ConsoleViewContentType myOutputType;
 
-        private ConsoleWriter(@Nonnull WeakReference<RunContentDescriptor> descriptor, @Nonnull ConsoleViewContentType outputType) {
+        private ConsoleWriter(WeakReference<RunContentDescriptor> descriptor, ConsoleViewContentType outputType) {
             myDescriptor = descriptor;
             myOutputType = outputType;
         }

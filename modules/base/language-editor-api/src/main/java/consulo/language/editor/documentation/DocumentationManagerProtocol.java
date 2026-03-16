@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.documentation;
 
-import org.jetbrains.annotations.NonNls;
 
 /**
  * The protocols used for links to elements in quick documentation.

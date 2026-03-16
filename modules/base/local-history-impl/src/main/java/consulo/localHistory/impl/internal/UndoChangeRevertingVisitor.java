@@ -27,13 +27,13 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 public class UndoChangeRevertingVisitor extends ChangeVisitor {
     private final IdeaGateway myGateway;
@@ -44,7 +44,7 @@ public class UndoChangeRevertingVisitor extends ChangeVisitor {
 
     private boolean isReverting;
 
-    public UndoChangeRevertingVisitor(IdeaGateway gw, @Nonnull Long fromChangeId, @jakarta.annotation.Nullable Long toChangeId) {
+    public UndoChangeRevertingVisitor(IdeaGateway gw, Long fromChangeId, @Nullable Long toChangeId) {
         myGateway = gw;
         myFromChangeId = fromChangeId;
         myToChangeId = toChangeId == null ? -1 : toChangeId;

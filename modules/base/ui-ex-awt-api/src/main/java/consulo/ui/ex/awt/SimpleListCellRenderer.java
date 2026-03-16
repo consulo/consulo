@@ -4,7 +4,6 @@ package consulo.ui.ex.awt;
 import consulo.awt.hacking.DefaultLookupHacking;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.*;
@@ -18,21 +17,21 @@ import java.util.function.Function;
  */
 public abstract class SimpleListCellRenderer<T> extends JBLabel implements ListCellRenderer<T> {
 
-  @Nonnull
-  public static <T> SimpleListCellRenderer<T> create(@Nonnull String nullValue, @Nonnull Function<? super T, String> getText) {
+  
+  public static <T> SimpleListCellRenderer<T> create(String nullValue, Function<? super T, String> getText) {
     return new SimpleListCellRenderer<T>() {
       @Override
-      public void customize(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
+      public void customize(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
         setText(value == null ? nullValue : getText.apply(value));
       }
     };
   }
 
-  @Nonnull
-  public static <T> SimpleListCellRenderer<T> create(@Nonnull Customizer<? super T> customizer) {
+  
+  public static <T> SimpleListCellRenderer<T> create(Customizer<? super T> customizer) {
     return new SimpleListCellRenderer<T>() {
       @Override
-      public void customize(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
+      public void customize(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus) {
         customizer.customize(this, value, index);
       }
     };
@@ -63,7 +62,7 @@ public abstract class SimpleListCellRenderer<T> extends JBLabel implements ListC
     return this;
   }
 
-  public abstract void customize(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
+  public abstract void customize(JList<? extends T> list, T value, int index, boolean selected, boolean hasFocus);
 
   @Override
   public Dimension getPreferredSize() {
@@ -78,7 +77,7 @@ public abstract class SimpleListCellRenderer<T> extends JBLabel implements ListC
 
   @FunctionalInterface
   public interface Customizer<T> {
-    void customize(@Nonnull JBLabel label, T value, int index);
+    void customize(JBLabel label, T value, int index);
   }
 
   // @formatter:off

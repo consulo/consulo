@@ -20,8 +20,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 public class XBreakpointFileGroup extends XBreakpointGroup {
   private final VirtualFile myFile;
 
-  public XBreakpointFileGroup(@Nonnull VirtualFile file) {
+  public XBreakpointFileGroup(VirtualFile file) {
     myFile = file;
   }
 
@@ -38,7 +37,7 @@ public class XBreakpointFileGroup extends XBreakpointGroup {
     return VirtualFilePresentation.getIcon(myFile);
   }
 
-  @Nonnull
+  
   public String getName() {
     return myFile.getPresentableUrl();
   }

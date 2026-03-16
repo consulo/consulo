@@ -8,8 +8,7 @@ import consulo.language.index.impl.internal.HashedInputData;
 import consulo.index.io.InputData;
 import consulo.language.index.impl.internal.MapInputDataDiffBuilder;
 import consulo.language.index.impl.internal.UpdatableSnapshotInputMappingIndex;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
@@ -17,7 +16,7 @@ import java.util.Map;
 public class HashIdForwardIndexAccessor<Key, Value, Input> extends AbstractMapForwardIndexAccessor<Key, Value, Integer> implements IntForwardIndexAccessor<Key, Value> {
     private final UpdatableSnapshotInputMappingIndex<Key, Value, Input> mySnapshotInputMappingIndex;
 
-    public HashIdForwardIndexAccessor(@Nonnull UpdatableSnapshotInputMappingIndex<Key, Value, Input> snapshotInputMappingIndex) {
+    public HashIdForwardIndexAccessor(UpdatableSnapshotInputMappingIndex<Key, Value, Input> snapshotInputMappingIndex) {
         super(EnumeratorIntegerDescriptor.INSTANCE);
         mySnapshotInputMappingIndex = snapshotInputMappingIndex;
     }
@@ -28,20 +27,20 @@ public class HashIdForwardIndexAccessor<Key, Value, Input> extends AbstractMapFo
         return hashId == null ? null : mySnapshotInputMappingIndex.readData(hashId);
     }
 
-    @Nonnull
+    
     @Override
     public InputDataDiffBuilder<Key, Value> getDiffBuilderFromInt(int inputId, int hashId) throws IOException {
         return new MapInputDataDiffBuilder<>(inputId, convertToMap(hashId));
     }
 
     @Override
-    public int serializeIndexedDataToInt(@Nonnull InputData<Key, Value> data) {
+    public int serializeIndexedDataToInt(InputData<Key, Value> data) {
         return data == InputData.empty() ? 0 : ((HashedInputData<Key, Value>) data).getHashId();
     }
 
     @Nullable
     @Override
-    public Integer convertToDataType(@Nonnull InputData<Key, Value> data) {
+    public Integer convertToDataType(InputData<Key, Value> data) {
         return serializeIndexedDataToInt(data);
     }
 }

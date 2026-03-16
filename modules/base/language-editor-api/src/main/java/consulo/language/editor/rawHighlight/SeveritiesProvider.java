@@ -23,7 +23,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -38,14 +37,14 @@ public abstract class SeveritiesProvider {
     /**
      * @see TextAttributesKey#createTextAttributesKey(String, TextAttributes)
      */
-    @Nonnull
+    
     public abstract List<HighlightInfoType> getSeveritiesHighlightInfoTypes();
 
     public boolean isGotoBySeverityEnabled(HighlightSeverity minSeverity) {
         return minSeverity != HighlightSeverity.INFORMATION;
     }
 
-    public ColorValue getTrafficRendererColor(@Nonnull TextAttributes textAttributes) {
+    public ColorValue getTrafficRendererColor(TextAttributes textAttributes) {
         return textAttributes.getErrorStripeColor();
     }
 }

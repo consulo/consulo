@@ -24,14 +24,13 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoFilter;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public class HighlightInfoFilterImpl implements HighlightInfoFilter {
   private static final boolean ourTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
   @Override
-  public boolean accept(@Nonnull HighlightInfo info, PsiFile file) {
+  public boolean accept(HighlightInfo info, PsiFile file) {
     if (ourTestMode) return true; // Tests need to verify highlighting is applied no matter what attributes are defined for this kind of highlighting
 
     TextAttributes attributes = info.getTextAttributes(file, null);

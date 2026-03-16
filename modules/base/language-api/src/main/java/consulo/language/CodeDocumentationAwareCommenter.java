@@ -19,7 +19,7 @@ package consulo.language;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiComment;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines support for "Enter within comments" actions in a custom language.

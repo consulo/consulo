@@ -20,7 +20,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +34,7 @@ public class StickyLinesPass extends EditorBoundHighlightingPass implements Dumb
     }
 
     @Override
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    public void doCollectInformation(ProgressIndicator progress) {
         if (myDocument == null) {
             return;
         }
@@ -52,7 +51,7 @@ public class StickyLinesPass extends EditorBoundHighlightingPass implements Dumb
         acceptItems(model.getRoot(), progress);
     }
 
-    private void acceptItems(TreeElement treeElement, @Nonnull ProgressIndicator progress) {
+    private void acceptItems(TreeElement treeElement, ProgressIndicator progress) {
         if (treeElement instanceof StructureViewTreeElement structureViewTreeElement) {
             Object value = structureViewTreeElement.getValue();
 
@@ -72,7 +71,7 @@ public class StickyLinesPass extends EditorBoundHighlightingPass implements Dumb
     }
 
     @RequiredReadAction
-    private StickyLineInfo convertToStickyLine(@Nonnull PsiElement element) {
+    private StickyLineInfo convertToStickyLine(PsiElement element) {
         TextRange elementTextRange = element.getTextRange();
         if (elementTextRange.isEmpty() || TextRange.EMPTY_RANGE.equals(elementTextRange)) {
             return null;

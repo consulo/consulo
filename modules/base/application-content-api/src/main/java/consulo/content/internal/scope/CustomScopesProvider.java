@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.NamedScope;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -34,7 +33,7 @@ import java.util.function.Consumer;
 public interface CustomScopesProvider {
   ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create(CustomScopesProvider.class);
 
-  void acceptScopes(@Nonnull Consumer<NamedScope> consumer);
+  void acceptScopes(Consumer<NamedScope> consumer);
 
   @Nullable
   default NamedScope getCustomScope(String name) {

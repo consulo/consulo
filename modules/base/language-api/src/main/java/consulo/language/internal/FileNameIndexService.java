@@ -24,26 +24,25 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface FileNameIndexService {
-    @Nonnull
+    
     Collection<VirtualFile> getVirtualFilesByName(
         Project project,
-        @Nonnull String name,
-        @Nonnull SearchScope scope,
+        String name,
+        SearchScope scope,
         @Nullable IdFilter idFilter
     );
 
-    void processAllFileNames(@Nonnull Predicate<? super String> processor, @Nonnull SearchScope scope, @Nullable IdFilter filter);
+    void processAllFileNames(Predicate<? super String> processor, SearchScope scope, @Nullable IdFilter filter);
 
-    @Nonnull
-    Collection<VirtualFile> getFilesWithFileType(@Nonnull FileType type, @Nonnull SearchScope scope);
+    
+    Collection<VirtualFile> getFilesWithFileType(FileType type, SearchScope scope);
 
-    boolean processFilesWithFileType(@Nonnull FileType type, @Nonnull Predicate<? super VirtualFile> processor, @Nonnull SearchScope scope);
+    boolean processFilesWithFileType(FileType type, Predicate<? super VirtualFile> processor, SearchScope scope);
 }

@@ -5,6 +5,7 @@ import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.BloomFilterBase;
 import consulo.util.nodep.io.DataInputOutputUtilRt;
 import consulo.util.nodep.text.StringHash;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -26,11 +27,6 @@ public class ClasspathCache {
     private final int[] myResourcePackageHashes;
     private final int[] myClassPackageHashes;
     private final NameFilter myNameFilter;
-
-    @Deprecated
-    LoaderData() {
-      this(new int[0], new int[0], null);
-    }
 
     LoaderData(int[] resourcePackageHashes, int[] classPackageHashes, NameFilter nameFilter) {
       myResourcePackageHashes = resourcePackageHashes;
@@ -91,13 +87,8 @@ public class ClasspathCache {
       if (uniques > 20000) {
         uniques += (int)(uniques * 0.03d); // allow some growth for Idea main loader
       }
-      final NameFilter nameFilter = new NameFilter(uniques, PROBABILITY);
-      myUsedNameFingerprints.forEach(new LongHashSet.LongConsumer() {
-        @Override
-        public void consume(long value) {
-          nameFilter.addNameFingerprint(value);
-        }
-      });
+      NameFilter nameFilter = new NameFilter(uniques, PROBABILITY);
+      myUsedNameFingerprints.forEach(nameFilter::addNameFingerprint);
 
       return new ClasspathCache.LoaderData(myResourcePackageHashes.toArray(), myClassPackageHashes.toArray(), nameFilter);
     }
@@ -124,14 +115,18 @@ public class ClasspathCache {
   }
 
   abstract static class LoaderIterator<ResultType, ParameterType, ParameterType2> {
+    @Nullable
     abstract ResultType process(Loader loader, ParameterType parameter, ParameterType2 parameter2, String shortName);
   }
 
-  <ResultType, ParameterType, ParameterType2> ResultType iterateLoaders(String resourcePath,
-                                                                        LoaderIterator<ResultType, ParameterType, ParameterType2> iterator,
-                                                                        ParameterType parameter,
-                                                                        ParameterType2 parameter2,
-                                                                        String shortName) {
+  @Nullable
+  <ResultType, ParameterType, ParameterType2> ResultType iterateLoaders(
+    String resourcePath,
+    LoaderIterator<ResultType, ParameterType, ParameterType2> iterator,
+    ParameterType parameter,
+    ParameterType2 parameter2,
+    String shortName
+  ) {
     Object o;
 
     myLock.readLock().lock();

@@ -21,8 +21,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -38,7 +37,6 @@ public class ConsoleViewUtil {
 
     private static final Key<Boolean> REPLACE_ACTION_ENABLED = Key.create("REPLACE_ACTION_ENABLED");
 
-    @Nonnull
     public static EditorEx setupConsoleEditor(Project project, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
         EditorFactory editorFactory = EditorFactory.getInstance();
         Document document = ((InternalEditorFactory) editorFactory).createDocument(true);
@@ -48,7 +46,7 @@ public class ConsoleViewUtil {
         return editor;
     }
 
-    public static void setupConsoleEditor(@Nonnull EditorEx editor, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
+    public static void setupConsoleEditor(EditorEx editor, boolean foldingOutlineShown, boolean lineMarkerAreaShown) {
         EditorSettings editorSettings = editor.getSettings();
         editorSettings.setLineMarkerAreaShown(lineMarkerAreaShown);
         editorSettings.setIndentGuidesShown(false);
@@ -77,21 +75,18 @@ public class ConsoleViewUtil {
         }
 
         @Override
-        public void setColorScheme(@Nonnull EditorColorsScheme scheme) {
+        public void setColorScheme(EditorColorsScheme scheme) {
         }
     }
 
-    @Nonnull
-    public static DelegateColorScheme updateConsoleColorScheme(@Nonnull EditorColorsScheme scheme) {
+    public static DelegateColorScheme updateConsoleColorScheme(EditorColorsScheme scheme) {
         return new DelegateColorScheme(scheme) {
-            @Nonnull
             @Override
             public ColorValue getDefaultBackground() {
                 ColorValue color = getColor(ConsoleViewContentType.CONSOLE_BACKGROUND_KEY);
                 return color == null ? super.getDefaultBackground() : color;
             }
 
-            @Nonnull
             @Override
             public FontPreferences getFontPreferences() {
                 return getConsoleFontPreferences();
@@ -112,7 +107,6 @@ public class ConsoleViewUtil {
                 return getConsoleLineSpacing();
             }
 
-            @Nonnull
             @Override
             public Font getFont(EditorFontType key) {
                 return super.getFont(EditorFontType.getConsoleType(key));
@@ -125,15 +119,15 @@ public class ConsoleViewUtil {
         };
     }
 
-    public static boolean isConsoleViewEditor(@Nonnull Editor editor) {
+    public static boolean isConsoleViewEditor(Editor editor) {
         return editor.getEditorKind() == (EditorKind.CONSOLE);
     }
 
-    public static boolean isReplaceActionEnabledForConsoleViewEditor(@Nonnull Editor editor) {
+    public static boolean isReplaceActionEnabledForConsoleViewEditor(Editor editor) {
         return Objects.equals(editor.getUserData(REPLACE_ACTION_ENABLED), Boolean.TRUE);
     }
 
-    public static void enableReplaceActionForConsoleViewEditor(@Nonnull Editor editor) {
+    public static void enableReplaceActionForConsoleViewEditor(Editor editor) {
         editor.putUserData(REPLACE_ACTION_ENABLED, true);
     }
 
@@ -176,11 +170,11 @@ public class ConsoleViewUtil {
         }
     }
 
-    public static void printWithHighlighting(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull SyntaxHighlighter highlighter) {
+    public static void printWithHighlighting(ConsoleView console, String text, SyntaxHighlighter highlighter) {
         printWithHighlighting(console, text, highlighter, null);
     }
 
-    public static void printWithHighlighting(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull SyntaxHighlighter highlighter, Runnable doOnNewLine) {
+    public static void printWithHighlighting(ConsoleView console, String text, SyntaxHighlighter highlighter, Runnable doOnNewLine) {
         Lexer lexer = highlighter.getHighlightingLexer();
         lexer.start(text, 0, text.length(), 0);
 
@@ -200,8 +194,7 @@ public class ConsoleViewUtil {
         }
     }
 
-    @Nonnull
-    public static ConsoleViewContentType getContentTypeForToken(@Nonnull IElementType tokenType, @Nonnull SyntaxHighlighter highlighter) {
+    public static ConsoleViewContentType getContentTypeForToken(IElementType tokenType, SyntaxHighlighter highlighter) {
         TextAttributesKey[] keys = highlighter.getTokenHighlights(tokenType);
         if (keys.length == 0) {
             return ConsoleViewContentType.NORMAL_OUTPUT;
@@ -209,7 +202,7 @@ public class ConsoleViewUtil {
         return ConsoleViewContentType.getConsoleViewType(ColorCache.keys.get(Arrays.asList(keys)));
     }
 
-    public static void printAsFileType(@Nonnull ConsoleView console, @Nonnull String text, @Nonnull FileType fileType) {
+    public static void printAsFileType(ConsoleView console, String text, FileType fileType) {
         SyntaxHighlighter highlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(fileType, null, null);
         if (highlighter != null) {
             printWithHighlighting(console, text, highlighter);
@@ -219,8 +212,7 @@ public class ConsoleViewUtil {
         }
     }
 
-    @Nonnull
-    public static List<Filter> computeConsoleFilters(@Nonnull Project project, @Nullable ConsoleView consoleView, @Nonnull SearchScope searchScope) {
+    public static List<Filter> computeConsoleFilters(Project project, @Nullable ConsoleView consoleView, SearchScope searchScope) {
         List<Filter> result = new ArrayList<>();
         ConsoleFilterProvider.FILTER_PROVIDERS.forEachExtensionSafe(eachProvider -> {
             Filter[] filters;

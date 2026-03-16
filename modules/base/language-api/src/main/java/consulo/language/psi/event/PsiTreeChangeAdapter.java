@@ -15,57 +15,56 @@
  */
 package consulo.language.psi.event;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Default empty implementation of {@link PsiTreeChangeListener}.
  */
 public abstract class PsiTreeChangeAdapter implements PsiTreeChangeListener {
   @Override
-  public void beforeChildAddition(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildAddition(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildRemoval(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildReplacement(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildReplacement(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildMovement(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforeChildrenChange(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildrenChange(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void beforePropertyChange(@Nonnull PsiTreeChangeEvent event) {
+  public void beforePropertyChange(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+  public void childAdded(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+  public void childRemoved(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+  public void childReplaced(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+  public void childMoved(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void childrenChanged(PsiTreeChangeEvent event) {
   }
 
   @Override
-  public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void propertyChanged(PsiTreeChangeEvent event) {
   }
 }

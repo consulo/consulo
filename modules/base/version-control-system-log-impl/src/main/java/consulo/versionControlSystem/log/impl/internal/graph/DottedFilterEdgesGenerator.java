@@ -20,32 +20,31 @@ import consulo.versionControlSystem.log.graph.LiteLinearGraph;
 import consulo.versionControlSystem.log.graph.LiteLinearGraph.NodeFilter;
 import consulo.versionControlSystem.log.graph.GraphEdge;
 import consulo.versionControlSystem.log.graph.LinearGraphUtils;
-import jakarta.annotation.Nonnull;
 
 import static consulo.versionControlSystem.log.graph.GraphEdgeType.*;
 
 public class DottedFilterEdgesGenerator {
-  public static void update(@Nonnull CollapsedGraph collapsedGraph, int upDelegateNodeIndex, int downDelegateNodeIndex) {
+  public static void update(CollapsedGraph collapsedGraph, int upDelegateNodeIndex, int downDelegateNodeIndex) {
     CollapsedGraph.Modification modification = collapsedGraph.startModification();
     new DottedFilterEdgesGenerator(collapsedGraph, modification, upDelegateNodeIndex, downDelegateNodeIndex).update();
     modification.apply();
   }
 
-  @Nonnull
+  
   private final CollapsedGraph myCollapsedGraph;
-  @Nonnull
+  
   private final CollapsedGraph.Modification myModification;
 
-  @Nonnull
+  
   private final LiteLinearGraph myLiteDelegateGraph;
 
   private final int myUpIndex;
   private final int myDownIndex;
-  @Nonnull
+  
   private final ShiftNumber myNumbers;
 
-  private DottedFilterEdgesGenerator(@Nonnull CollapsedGraph collapsedGraph,
-                                     @Nonnull CollapsedGraph.Modification modification,
+  private DottedFilterEdgesGenerator(CollapsedGraph collapsedGraph,
+                                     CollapsedGraph.Modification modification,
                                      int upIndex,
                                      int downIndex) {
     myCollapsedGraph = collapsedGraph;

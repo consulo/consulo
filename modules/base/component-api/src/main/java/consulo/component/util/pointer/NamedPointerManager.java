@@ -15,16 +15,15 @@
  */
 package consulo.component.util.pointer;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17:19/15.06.13
  */
 public interface NamedPointerManager<T extends Named> {
-  @Nonnull
-  NamedPointer<T> create(@Nonnull String name);
+  
+  NamedPointer<T> create(String name);
 
-  @Nonnull
-  NamedPointer<T> create(@Nonnull T value);
+  
+  NamedPointer<T> create(T value);
 }

@@ -21,7 +21,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.project.ui.wm.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max

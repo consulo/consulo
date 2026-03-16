@@ -46,8 +46,7 @@ import consulo.usage.UsageViewManager;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -57,11 +56,11 @@ import java.util.*;
 @ServiceImpl
 public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProvider {
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public List<SearchScope> getPredefinedScopes(
-        @Nonnull final Project project,
+        final Project project,
         @Nullable DataContext dataContext,
         boolean suggestSearchInLibs,
         boolean prevSearchFiles,
@@ -168,14 +167,14 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
                         GlobalSearchScope prev = new GlobalSearchScope(project) {
                             private Set<VirtualFile> myFiles;
 
-                            @Nonnull
+                            
                             @Override
                             public String getDisplayName() {
                                 return IdeLocalize.scopeFilesInPreviousSearchResult().get();
                             }
 
                             @Override
-                            public synchronized boolean contains(@Nonnull VirtualFile file) {
+                            public synchronized boolean contains(VirtualFile file) {
                                 if (myFiles == null) {
                                     myFiles = collectFiles(usages, false);
                                 }
@@ -183,12 +182,12 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
                             }
 
                             @Override
-                            public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+                            public int compare(VirtualFile file1, VirtualFile file2) {
                                 return 0;
                             }
 
                             @Override
-                            public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+                            public boolean isSearchInModuleContent(Module aModule) {
                                 return true;
                             }
 
@@ -226,7 +225,7 @@ public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProv
         return result;
     }
 
-    private static void addHierarchyScope(@Nonnull Project project, Collection<SearchScope> result) {
+    private static void addHierarchyScope(Project project, Collection<SearchScope> result) {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.HIERARCHY);
         if (toolWindow == null) {
             return;

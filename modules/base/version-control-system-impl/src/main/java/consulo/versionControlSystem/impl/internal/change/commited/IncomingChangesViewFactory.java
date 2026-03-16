@@ -24,7 +24,6 @@ import consulo.versionControlSystem.CommittedChangesProvider;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.ChangesViewContentFactory;
 import consulo.versionControlSystem.change.ChangesViewContentProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -40,13 +39,13 @@ public class IncomingChangesViewFactory implements ChangesViewContentFactory {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getTabName() {
     return LocalizeValue.localizeTODO("Incoming");
   }
 
-  @Nonnull
+  
   @Override
   public ChangesViewContentProvider create() {
     return new IncomingChangesViewProvider(myProject);

@@ -29,8 +29,7 @@ import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -61,7 +60,7 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
     }
 
     @Override
-    public boolean hasModuleExtension(@Nonnull Class<? extends ModuleExtension> clazz) {
+    public boolean hasModuleExtension(Class<? extends ModuleExtension> clazz) {
         checkInit();
 
         assert myExtensions != null;
@@ -70,9 +69,9 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
     }
 
     @Override
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz) {
+    public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(Class<T> clazz) {
         checkInit();
 
         assert myExtensions != null;
@@ -91,9 +90,9 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
         return (Collection) moduleExtensions;
     }
 
-    @Nonnull
+    
     @Override
-    public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension) {
+    public String getModuleExtensionName(ModuleExtension<?> moduleExtension) {
         ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(moduleExtension.getId());
         assert provider != null;
         return provider.getName().getValue();
@@ -101,7 +100,7 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper, Disposa
 
     @Nullable
     @Override
-    public Image getModuleExtensionIcon(@Nonnull String extensionId) {
+    public Image getModuleExtensionIcon(String extensionId) {
         ModuleExtensionProvider provider = ModuleExtensionProvider.findProvider(extensionId);
         return provider == null ? null : provider.getIcon();
     }

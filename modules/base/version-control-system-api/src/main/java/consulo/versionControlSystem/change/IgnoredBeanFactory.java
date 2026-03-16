@@ -18,7 +18,6 @@ package consulo.versionControlSystem.change;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.IgnoreSettingsType;
 import consulo.versionControlSystem.change.IgnoredFileBean;
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 
@@ -26,12 +25,12 @@ public class IgnoredBeanFactory {
   private IgnoredBeanFactory() {
   }
 
-  public static IgnoredFileBean ignoreUnderDirectory(@NonNls String path, Project p) {
+  public static IgnoredFileBean ignoreUnderDirectory(String path, Project p) {
     String correctedPath = (path.endsWith("/") || path.endsWith(File.separator)) ? path : path + "/";
     return new IgnoredFileBean(correctedPath, IgnoreSettingsType.UNDER_DIR, p);
   }
 
-  public static IgnoredFileBean ignoreFile(@NonNls String path, Project p) {
+  public static IgnoredFileBean ignoreFile(String path, Project p) {
     // todo check??
     return new IgnoredFileBean(path, IgnoreSettingsType.FILE, p);
   }

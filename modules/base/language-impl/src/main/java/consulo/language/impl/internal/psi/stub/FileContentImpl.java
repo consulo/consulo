@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
@@ -48,19 +47,19 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   private boolean myLighterASTShouldBeThreadSafe;
   private final boolean myPhysicalContent;
 
-  public FileContentImpl(@Nonnull VirtualFile file, @Nonnull CharSequence contentAsText, long documentStamp) {
+  public FileContentImpl(VirtualFile file, CharSequence contentAsText, long documentStamp) {
     this(file, contentAsText, null, documentStamp, false);
   }
 
-  public FileContentImpl(@Nonnull VirtualFile file, @Nonnull byte[] content) {
+  public FileContentImpl(VirtualFile file, byte[] content) {
     this(file, null, content, -1, true);
   }
 
-  public FileContentImpl(@Nonnull VirtualFile file) {
+  public FileContentImpl(VirtualFile file) {
     this(file, null, null, -1, true);
   }
 
-  private FileContentImpl(@Nonnull VirtualFile file, CharSequence contentAsText, byte[] content, long stamp, boolean physicalContent) {
+  private FileContentImpl(VirtualFile file, CharSequence contentAsText, byte[] content, long stamp, boolean physicalContent) {
     super(file, FileTypeRegistry.getInstance().getFileTypeByFile(file, content));
     myContentAsText = contentAsText;
     myContent = content;
@@ -70,13 +69,13 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
 
   private static final Key<PsiFile> CACHED_PSI = Key.create("cached psi from content");
 
-  @Nonnull
+  
   @Override
   public PsiFile getPsiFile() {
     return getPsiFileForPsiDependentIndex();
   }
 
-  @Nonnull
+  
   private PsiFile getFileFromText() {
     PsiFile psi = getUserData(IndexingDataKeys.PSI_FILE);
 
@@ -93,7 +92,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   }
 
   @Override
-  @Nonnull
+  
   public LighterAST getLighterAST() {
     LighterAST lighterAST = getUserData(IndexingDataKeys.LIGHTER_AST_NODE_KEY);
     if (lighterAST == null) {
@@ -113,7 +112,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
   }
 
   @RequiredReadAction
-  public PsiFile createFileFromText(@Nonnull CharSequence text) {
+  public PsiFile createFileFromText(CharSequence text) {
     Project project = getProject();
     if (project == null) {
       project = ProjectManager.getInstance().getDefaultProject();
@@ -128,13 +127,13 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     return createFileFromText(project, text, (LanguageFileType)fileType, myFile, myFileName);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static PsiFile createFileFromText(@Nonnull Project project,
-                                           @Nonnull CharSequence text,
-                                           @Nonnull LanguageFileType fileType,
-                                           @Nonnull VirtualFile file,
-                                           @Nonnull String fileName) {
+  public static PsiFile createFileFromText(Project project,
+                                           CharSequence text,
+                                           LanguageFileType fileType,
+                                           VirtualFile file,
+                                           String fileName) {
     Language language = fileType.getLanguage();
     Language substitutedLanguage = LanguageSubstitutors.substituteLanguage(language, file, project);
     LanguageVersion languageVersion =
@@ -152,13 +151,13 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     }
   }
 
-  @Nonnull
+  
   private FileType getSubstitutedFileType() {
     return SubstitutedFileType.substituteFileType(myFile, myFileType, getProject());
   }
 
   @TestOnly
-  public static FileContent createByFile(@Nonnull VirtualFile file) {
+  public static FileContent createByFile(VirtualFile file) {
     try {
       return new FileContentImpl(file, file.contentsToByteArray());
     }
@@ -167,13 +166,13 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     }
   }
 
-  @Nonnull
-  public static FileContent createByContent(@Nonnull VirtualFile file, @Nonnull byte[] content) {
+  
+  public static FileContent createByContent(VirtualFile file, byte[] content) {
     return new FileContentImpl(file, content);
   }
 
-  @Nonnull
-  public static FileContent createByFile(@Nonnull VirtualFile file, @Nullable Project project) throws IOException {
+  
+  public static FileContent createByFile(VirtualFile file, @Nullable Project project) throws IOException {
     FileContentImpl content = (FileContentImpl)createByContent(file, file.contentsToByteArray(false));
     if (project != null) {
       content.setProject(project);
@@ -185,25 +184,25 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     return myFileType;
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return getSubstitutedFileType();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   @Override
   public String getFileName() {
     return myFileName;
   }
 
-  @Nonnull
+  
   public Charset getCharset() {
     Charset charset = myCharset;
     if (charset == null) {
@@ -216,7 +215,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     return myStamp;
   }
 
-  @Nonnull
+  
   @Override
   public byte[] getContent() {
     byte[] content = myContent;
@@ -226,7 +225,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
     return content;
   }
 
-  @Nonnull
+  
   @Override
   public CharSequence getContentAsText() {
     if (myFileType.isBinary()) {
@@ -263,7 +262,7 @@ public class FileContentImpl extends IndexedFileImpl implements PsiDependentFile
    */
   @SuppressWarnings("DeprecatedIsStillUsed")
   @Deprecated
-  @Nonnull
+  
   public PsiFile getPsiFileForPsiDependentIndex() {
     PsiFile psi = null;
     if (!myPhysicalContent) {

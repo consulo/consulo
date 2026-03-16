@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ExternallyRenamedChange extends Change {
   private String myRenamedTargetName;

@@ -1,17 +1,16 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.build.ui.impl.internal.output;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.Closeable;
 
 abstract class LineProcessor implements Appendable, Closeable {
     private StringBuilder myLineBuilder = new StringBuilder();
 
-    abstract void process(@Nonnull String line);
+    abstract void process(String line);
 
     @Override
-    public LineProcessor append(@Nonnull CharSequence csq) {
+    public LineProcessor append(CharSequence csq) {
         for (int i = 0; i < csq.length(); i++) {
             append(csq.charAt(i));
         }
@@ -19,7 +18,7 @@ abstract class LineProcessor implements Appendable, Closeable {
     }
 
     @Override
-    public LineProcessor append(@Nonnull CharSequence csq, int start, int end) {
+    public LineProcessor append(CharSequence csq, int start, int end) {
         append(csq.subSequence(start, end));
         return this;
     }

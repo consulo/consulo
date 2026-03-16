@@ -21,8 +21,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,15 +54,15 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
     }
   }
 
-  @Nonnull
+ 
   @Override
-  public Dimension to(@Nonnull Size2D size) {
+  public Dimension to(Size2D size) {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+ 
   @Override
-  public Color to(@Nonnull RGBColor color) {
+  public Color to(RGBColor color) {
     return new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   }
 
@@ -78,7 +77,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   }
 
   @Override
-  public Component to(@Nullable consulo.ui.Component component) {
+  public Component to(consulo.ui.@Nullable Component component) {
     return null;
   }
 
@@ -88,7 +87,7 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
   }
 
   @Override
-  public Window to(@Nullable consulo.ui.Window component) {
+  public Window to(consulo.ui.@Nullable Window component) {
     return null;
   }
 
@@ -140,9 +139,9 @@ public class TargetAWTFacadeStub implements TargetAWTFacade {
     return null;
   }
 
-  @Nonnull
+ 
   @Override
-  public Font to(@Nonnull consulo.ui.font.Font font) {
+  public Font to(consulo.ui.font.Font font) {
     throw new UnsupportedOperationException();
   }
 }

@@ -33,7 +33,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.model.MutableListModel;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class SchemesPanel implements SkipSelfSearchComponent {
         return myListLoaded;
     }
 
-    @Nonnull
+    
     public Component getComponent() {
         // todo hack
         if (Application.get().isSwingApplication()) {

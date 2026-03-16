@@ -39,8 +39,7 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.collection.ListWithSelection;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -49,11 +48,11 @@ import java.util.Map;
  * @since 30.07.14
  */
 public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements CustomStatusBarWidget {
-    public ModuleLayerWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public ModuleLayerWidget(Project project, StatusBarWidgetFactory factory) {
         super(project, factory, false);
     }
 
-    @Nonnull
+    
     @Override
     protected WidgetState getWidgetState(@Nullable VirtualFile file) {
         if (file == null) {
@@ -74,14 +73,14 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
         return new WidgetState(file, "Module Layer: " + currentLayerName, currentLayerName, true);
     }
 
-    @Nonnull
+    
     @Override
-    protected StatusBarWidget createInstance(@Nonnull Project project) {
+    protected StatusBarWidget createInstance(Project project) {
         return new ModuleLayerWidget(project, myFactory);
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         super.install(statusBar);
 
         myProject.getMessageBus().connect(this).subscribe(ModuleRootListener.class, new ModuleRootListener() {
@@ -107,7 +106,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
             builder.add(new AnAction(profile) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     Project project = e.getData(Project.KEY);
                     VirtualFile selectedFile = getSelectedFile();
                     if (selectedFile == null || project == null) {

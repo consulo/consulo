@@ -20,14 +20,13 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DiffExtension {
     @RequiredUIAccess
     public abstract void onViewerCreated(
-        @Nonnull FrameDiffTool.DiffViewer viewer,
-        @Nonnull DiffContext context,
-        @Nonnull DiffRequest request
+        FrameDiffTool.DiffViewer viewer,
+        DiffContext context,
+        DiffRequest request
     );
 }

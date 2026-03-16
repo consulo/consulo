@@ -26,7 +26,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,9 +50,9 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
         }
     }
 
-    @Nonnull
+    
     private final Map<PluginId, PluginTemplate> myPredefinedTemplates;
-    @Nonnull
+    
     private Map<PluginId, JCheckBox> mySetBoxes = new HashMap<>();
 
     public CustomizePluginTemplatesStepPanel(Map<PluginId, PluginTemplate> predefinedTemplates) {
@@ -117,7 +116,7 @@ public class CustomizePluginTemplatesStepPanel extends AbstractCustomizeWizardSt
         add(pane, BorderLayout.CENTER);
     }
 
-    @Nonnull
+    
     public Set<PluginId> getEnablePluginSet() {
         Set<PluginId> set = new HashSet<>();
         for (Map.Entry<PluginId, JCheckBox> entry : mySetBoxes.entrySet()) {

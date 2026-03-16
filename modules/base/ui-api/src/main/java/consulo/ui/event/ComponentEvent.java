@@ -17,26 +17,24 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2024-09-10
  */
 public class ComponentEvent<C extends Component> {
-    @Nonnull
     private final C myComponent;
     @Nullable
     private final InputDetails myInputDetails;
 
     private boolean myConsumed;
 
-    public ComponentEvent(@Nonnull C component) {
+    public ComponentEvent(C component) {
         this(component, null);
     }
 
-    public ComponentEvent(@Nonnull C component, @Nullable InputDetails inputDetails) {
+    public ComponentEvent(C component, @Nullable InputDetails inputDetails) {
         myComponent = component;
         myInputDetails = inputDetails;
     }
@@ -45,8 +43,6 @@ public class ComponentEvent<C extends Component> {
     public InputDetails getInputDetails() {
         return myInputDetails;
     }
-
-    @Nonnull
     public C getComponent() {
         return myComponent;
     }

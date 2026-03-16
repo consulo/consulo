@@ -20,23 +20,22 @@ import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class VcsCommitMetadataImpl extends VcsShortCommitDetailsImpl implements VcsCommitMetadata {
 
-  @Nonnull
+  
   private final String myFullMessage;
 
-  public VcsCommitMetadataImpl(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, @Nonnull VirtualFile root,
-                               @Nonnull String subject, @Nonnull VcsUser author, @Nonnull String message,
-                               @Nonnull VcsUser committer, long authorTime) {
+  public VcsCommitMetadataImpl(Hash hash, List<Hash> parents, long commitTime, VirtualFile root,
+                               String subject, VcsUser author, String message,
+                               VcsUser committer, long authorTime) {
     super(hash, parents, commitTime, root, subject, author, committer, authorTime);
     myFullMessage = message.equals(getSubject()) ? getSubject() : message;
   }
 
   @Override
-  @Nonnull
+  
   public String getFullMessage() {
     return myFullMessage;
   }

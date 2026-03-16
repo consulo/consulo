@@ -7,7 +7,6 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +44,7 @@ public class CoverageListRootNode extends CoverageListNode {
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
         if (myStateBean.myFlattenPackages) {

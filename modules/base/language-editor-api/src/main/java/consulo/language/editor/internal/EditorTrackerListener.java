@@ -20,12 +20,11 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.List;
 
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface EditorTrackerListener extends EventListener {
-    void activeEditorsChanged(@Nonnull List<Editor> activeEditors);
+    void activeEditorsChanged(List<Editor> activeEditors);
 }

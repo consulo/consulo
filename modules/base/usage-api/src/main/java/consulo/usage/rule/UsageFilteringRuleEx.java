@@ -18,12 +18,11 @@ package consulo.usage.rule;
 import consulo.usage.Usage;
 import consulo.usage.UsageTarget;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated implement {@link UsageFilteringRule#isVisible(Usage, UsageTarget[])} instead
  */
 public interface UsageFilteringRuleEx extends UsageFilteringRule {
     @Override
-    boolean isVisible(@Nonnull Usage usage, @Nonnull UsageTarget[] targets);
+    boolean isVisible(Usage usage, UsageTarget[] targets);
 }

@@ -5,8 +5,7 @@ import consulo.index.io.data.IOUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.function.Predicate;
@@ -55,15 +54,15 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   private static final int VERSION = 8 + IntToIntBtree.version() + BTREE_PAGE_SIZE + INTERNAL_PAGE_SIZE + MAX_DATA_SEGMENT_LENGTH;
   private static final int KEY_SHIFT = 1;
 
-  public PersistentBTreeEnumerator(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
+  public PersistentBTreeEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize) throws IOException {
     this(file, dataDescriptor, initialSize, null);
   }
 
-  public PersistentBTreeEnumerator(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
+  public PersistentBTreeEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext) throws IOException {
     this(file, dataDescriptor, initialSize, lockContext, 0);
   }
 
-  public PersistentBTreeEnumerator(@Nonnull File file, @Nonnull KeyDescriptor<Data> dataDescriptor, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext, int version)
+  public PersistentBTreeEnumerator(File file, KeyDescriptor<Data> dataDescriptor, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext, int version)
           throws IOException {
     super(file, new ResizeableMappedFile(file, initialSize, lockContext, VALUE_PAGE_SIZE, true, IOUtil.BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER), dataDescriptor, initialSize, new Version(VERSION + version),
           new RecordBufferHandler(), false);
@@ -101,8 +100,8 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     }
   }
 
-  @Nonnull
-  private static File indexFile(@Nonnull File file) {
+ 
+  private static File indexFile(File file) {
     return new File(file.getPath() + "_i");
   }
 
@@ -182,7 +181,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   @Override
-  public boolean processAllDataObject(@Nonnull final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
+  public boolean processAllDataObject(final Predicate<? super Data> processor, @Nullable final DataFilter filter) throws IOException {
     if (myInlineKeysNoMapping) {
       return traverseAllRecords(new RecordsProcessor() {
         @Override
@@ -199,7 +198,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   @Override
-  public boolean traverseAllRecords(@Nonnull final RecordsProcessor p) throws IOException {
+  public boolean traverseAllRecords(final RecordsProcessor p) throws IOException {
     try {
       lockStorage();
       return myBTree.processMappings(new IntToIntBtree.KeyValueProcessor() {
@@ -264,7 +263,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
   }
 
   @Override
-  public void setRecordHandler(@Nonnull PersistentEnumeratorBase.RecordBufferHandler<PersistentEnumeratorBase> recordHandler) {
+  public void setRecordHandler(PersistentEnumeratorBase.RecordBufferHandler<PersistentEnumeratorBase> recordHandler) {
     myExternalKeysNoMapping = false;
     super.setRecordHandler(recordHandler);
   }
@@ -505,7 +504,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     private byte[] myBuffer;
 
     @Override
-    int recordWriteOffset(@Nonnull PersistentBTreeEnumerator enumerator, @Nonnull byte[] buf) {
+    int recordWriteOffset(PersistentBTreeEnumerator enumerator, byte[] buf) {
       if (enumerator.myFirstPageStart == -1) {
         enumerator.myFirstPageStart = enumerator.myDataPageStart = enumerator.allocPage();
         int existingOffset = enumerator.myDataPageStart % INTERNAL_PAGE_SIZE;
@@ -526,9 +525,9 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
       return recordWriteOffset + enumerator.myDataPageStart;
     }
 
-    @Nonnull
+   
     @Override
-    byte[] getRecordBuffer(@Nonnull PersistentBTreeEnumerator enumerator) {
+    byte[] getRecordBuffer(PersistentBTreeEnumerator enumerator) {
       if (myBuffer == null) {
         myBuffer = enumerator.myInlineKeysNoMapping ? ArrayUtil.EMPTY_BYTE_ARRAY : new byte[RECORD_SIZE];
       }
@@ -536,7 +535,7 @@ public class PersistentBTreeEnumerator<Data> extends PersistentEnumeratorBase<Da
     }
 
     @Override
-    void setupRecord(@Nonnull PersistentBTreeEnumerator enumerator, int hashCode, int dataOffset, byte[] buf) {
+    void setupRecord(PersistentBTreeEnumerator enumerator, int hashCode, int dataOffset, byte[] buf) {
       if (!enumerator.myInlineKeysNoMapping) Bits.putInt(buf, 0, dataOffset);
     }
   }

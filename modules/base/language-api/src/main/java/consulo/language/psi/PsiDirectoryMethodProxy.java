@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,9 +28,9 @@ import jakarta.annotation.Nonnull;
 public interface PsiDirectoryMethodProxy {
   ExtensionPointName<PsiDirectoryMethodProxy> EP_NAME = ExtensionPointName.create(PsiDirectoryMethodProxy.class);
 
-  boolean checkAdd(@Nonnull PsiDirectory directory, @Nonnull PsiElement element) throws IncorrectOperationException;
+  boolean checkAdd(PsiDirectory directory, PsiElement element) throws IncorrectOperationException;
 
-  boolean checkCreateFile(@Nonnull PsiDirectory directory, @Nonnull String name) throws IncorrectOperationException;
+  boolean checkCreateFile(PsiDirectory directory, String name) throws IncorrectOperationException;
 
-  PsiElement add(@Nonnull PsiDirectory directory, @Nonnull PsiElement element) throws IncorrectOperationException;
+  PsiElement add(PsiDirectory directory, PsiElement element) throws IncorrectOperationException;
 }

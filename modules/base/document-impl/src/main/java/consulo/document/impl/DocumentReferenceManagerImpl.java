@@ -17,7 +17,6 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -39,15 +38,14 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
     private static final Key<DocumentReference> FILE_TO_STRONG_REF_KEY = Key.create("FILE_TO_STRONG_REF_KEY");
     private final Map<DocumentFilePath, DocumentReference> myDeletedFilePathToRef = Maps.newWeakValueHashMap();
 
-    @Nonnull
     private final Application myApplication;
 
     @Inject
-    DocumentReferenceManagerImpl(@Nonnull Application application) {
+    DocumentReferenceManagerImpl(Application application) {
         myApplication = application;
         application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void before(@Nonnull List<? extends VFileEvent> events) {
+            public void before(List<? extends VFileEvent> events) {
                 for (VFileEvent event : events) {
                     if (event instanceof VFileDeleteEvent) {
                         beforeFileDeletion((VFileDeleteEvent) event);
@@ -56,7 +54,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
             }
 
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 for (VFileEvent event : events) {
                     if (event instanceof VFileCreateEvent) {
                         fileCreated((VFileCreateEvent) event);
@@ -67,12 +65,12 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
                 }
             }
 
-            private void beforeFileDeletion(@Nonnull VFileDeleteEvent event) {
+            private void beforeFileDeletion(VFileDeleteEvent event) {
                 VirtualFile f = event.getFile();
                 f.putUserData(DELETED_FILES, collectDeletedFiles(f, new ArrayList<>()));
             }
 
-            private void fileDeleted(@Nonnull VFileDeleteEvent event) {
+            private void fileDeleted(VFileDeleteEvent event) {
                 VirtualFile f = event.getFile();
                 List<VirtualFile> files = f.getUserData(DELETED_FILES);
                 f.putUserData(DELETED_FILES, null);
@@ -87,7 +85,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
                 }
             }
 
-            private void fileCreated(@Nonnull VFileCreateEvent event) {
+            private void fileCreated(VFileCreateEvent event) {
                 VirtualFile f = event.getFile();
                 DocumentReference ref = f == null ? null : myDeletedFilePathToRef.remove(new DocumentFilePath(f.getUrl()));
                 if (ref != null) {
@@ -98,8 +96,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
         });
     }
 
-    @Nonnull
-    private static List<VirtualFile> collectDeletedFiles(@Nonnull VirtualFile f, @Nonnull List<VirtualFile> files) {
+    private static List<VirtualFile> collectDeletedFiles(VirtualFile f, List<VirtualFile> files) {
         if (!(f instanceof NewVirtualFile)) {
             return files;
         }
@@ -115,15 +112,13 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
         return files;
     }
 
-    @Nonnull
     @Override
-    public DocumentReference create(@Nonnull Document document) {
+    public DocumentReference create(Document document) {
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         return file == null ? createFromDocument(document) : create(file);
     }
 
-    @Nonnull
-    private DocumentReference createFromDocument(@Nonnull Document document) {
+    private DocumentReference createFromDocument(Document document) {
         DocumentReference result = myDocToRef.get(document);
         if (result == null) {
             result = new DocumentReferenceByDocument(document);
@@ -132,9 +127,8 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
         return result;
     }
 
-    @Nonnull
     @Override
-    public DocumentReference create(@Nonnull VirtualFile file) {
+    public DocumentReference create(VirtualFile file) {
         if (!file.isInLocalFileSystem()) { // we treat local files differently from non local because we can undo their deletion
             DocumentReference reference = file.getUserData(FILE_TO_STRONG_REF_KEY);
             if (reference == null) {

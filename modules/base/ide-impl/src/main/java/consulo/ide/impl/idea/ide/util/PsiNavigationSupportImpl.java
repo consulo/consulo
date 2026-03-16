@@ -13,8 +13,7 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -26,7 +25,7 @@ public class PsiNavigationSupportImpl implements PsiNavigationSupport {
     @RequiredReadAction
     @Nullable
     @Override
-    public Navigatable getDescriptor(@Nonnull PsiElement element) {
+    public Navigatable getDescriptor(PsiElement element) {
         if (!canNavigate(element)) {
             return null;
         }
@@ -64,7 +63,7 @@ public class PsiNavigationSupportImpl implements PsiNavigationSupport {
     }
 
     @Override
-    public void navigateToDirectory(@Nonnull PsiDirectory psiDirectory, boolean requestFocus) {
+    public void navigateToDirectory(PsiDirectory psiDirectory, boolean requestFocus) {
         ProjectViewSelectInTarget.select(psiDirectory.getProject(), this, ProjectViewPaneImpl.ID, null, psiDirectory.getVirtualFile(), requestFocus);
     }
 }

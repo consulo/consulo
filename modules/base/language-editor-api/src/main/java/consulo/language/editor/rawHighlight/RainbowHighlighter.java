@@ -33,8 +33,7 @@ import consulo.ui.util.ColorValueUtil;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
@@ -73,9 +72,9 @@ public class RainbowHighlighter {
         TextAttributesKey.createTextAttributesKey("rainbow_demo", new TextAttributes());
     public final static Boolean DEFAULT_RAINBOW_ON = Boolean.FALSE;
 
-    @Nonnull
+    
     private final TextAttributesScheme myColorsScheme;
-    @Nonnull
+    
     private final ColorValue[] myRainbowColors;
 
     public RainbowHighlighter(@Nullable TextAttributesScheme colorsScheme) {
@@ -105,7 +104,7 @@ public class RainbowHighlighter {
     }
 
     public static void setRainbowEnabled(
-        @Nonnull TextAttributesScheme colorsScheme,
+        TextAttributesScheme colorsScheme,
         @Nullable Language language,
         @Nullable Boolean enabled
     ) {
@@ -119,12 +118,12 @@ public class RainbowHighlighter {
         }
     }
 
-    @Nonnull
+    
     private static String getKey(@Nullable Language language) {
         return RAINBOW_TYPE + " " + (language == null ? "Default language" : language.getID());
     }
 
-    @Nonnull
+    
     public static String generatePaletteExample() {
         int stopCount = RAINBOW_COLOR_KEYS.length;
         StringBuilder sb = new StringBuilder();
@@ -140,7 +139,7 @@ public class RainbowHighlighter {
         return sb.toString();
     }
 
-    @Nonnull
+    
     @Contract(pure = true)
     private ColorValue calculateForeground(int colorIndex) {
         return myRainbowColors[colorIndex];
@@ -150,8 +149,8 @@ public class RainbowHighlighter {
         return myRainbowColors.length;
     }
 
-    @Nonnull
-    private static ColorValue[] generateColorSequence(@Nonnull TextAttributesScheme colorsScheme) {
+    
+    private static ColorValue[] generateColorSequence(TextAttributesScheme colorsScheme) {
         String colorDump = Application.get().isUnitTestMode()
             ? UNIT_TEST_COLORS
             : Registry.get("rainbow.highlighter.colors").asString();
@@ -166,7 +165,7 @@ public class RainbowHighlighter {
         return colors.toArray(new ColorValue[colors.size()]);
     }
 
-    @Nonnull
+    
     public TextAttributesKey[] getRainbowTempKeys() {
         TextAttributesKey[] keys = new TextAttributesKey[myRainbowColors.length];
         for (int i = 0; i < myRainbowColors.length; ++i) {
@@ -191,7 +190,7 @@ public class RainbowHighlighter {
         return getInfoBuilder(colorIndex, colorKey).range(start, end).create();
     }
 
-    @Nonnull
+    
     protected HighlightInfo.Builder getInfoBuilder(int colorIndex, @Nullable TextAttributesKey colorKey) {
         if (colorKey == null) {
             colorKey = DefaultLanguageHighlighterColors.LOCAL_VARIABLE;
@@ -206,7 +205,7 @@ public class RainbowHighlighter {
 
     private static final TextAttributesKey[] RAINBOW_TEMP_KEYS = new RainbowHighlighter(null).getRainbowTempKeys();
 
-    @Nonnull
+    
     public static TextAttributes createRainbowAttribute(@Nullable ColorValue color) {
         TextAttributes ret = new TextAttributes();
         ret.setForegroundColor(color);

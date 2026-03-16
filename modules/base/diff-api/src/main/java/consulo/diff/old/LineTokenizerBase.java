@@ -16,8 +16,7 @@
 package consulo.diff.old;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public abstract class LineTokenizerBase<T> {
 
   protected abstract int length();
 
-  @Nonnull
+  
   protected abstract String substring(int start, int end);
 
   public void doExecute(List<T> lines) {

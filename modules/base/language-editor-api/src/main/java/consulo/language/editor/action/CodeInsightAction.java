@@ -20,8 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -30,17 +29,17 @@ public abstract class CodeInsightAction extends AnAction {
     protected CodeInsightAction() {
     }
 
-    protected CodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CodeInsightAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected CodeInsightAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+    protected CodeInsightAction(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor hostEditor = e.getData(EditorKeys.HOST_EDITOR);
         if (hostEditor != null) {
@@ -56,12 +55,12 @@ public abstract class CodeInsightAction extends AnAction {
     }
 
     @Nullable
-    protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
+    protected Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         return dataContext.getData(Editor.KEY);
     }
 
     @RequiredUIAccess
-    public void actionPerformedImpl(@Nonnull Project project, Editor editor) {
+    public void actionPerformedImpl(Project project, Editor editor) {
         if (editor == null) {
             return;
         }
@@ -90,7 +89,7 @@ public abstract class CodeInsightAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
         Project project = e.getData(Project.KEY);
@@ -115,26 +114,25 @@ public abstract class CodeInsightAction extends AnAction {
         update(presentation, project, editor, file, dataContext, e.getPlace());
     }
 
-    protected void update(@Nonnull Presentation presentation, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected void update(Presentation presentation, Project project, Editor editor, PsiFile file) {
         presentation.setEnabled(isValidForFile(project, editor, file));
     }
 
     protected void update(
-        @Nonnull Presentation presentation,
-        @Nonnull Project project,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext dataContext,
+        Presentation presentation,
+        Project project,
+        Editor editor,
+        PsiFile file,
+        DataContext dataContext,
         @Nullable String actionPlace
     ) {
         update(presentation, project, editor, file);
     }
 
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return true;
     }
 
-    @Nonnull
     protected abstract CodeInsightActionHandler getHandler();
 
     protected String getCommandName() {

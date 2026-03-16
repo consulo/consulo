@@ -19,7 +19,6 @@ package consulo.fileChooser;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class FileSaverDescriptor extends FileChooserDescriptor implements Clonea
    * @param description description
    * @param extensions accepted file extensions: "txt", "jpg", etc. Accepts all if empty
    */
-  public FileSaverDescriptor(@Nonnull String title, @Nonnull String description, String... extensions) {
+  public FileSaverDescriptor(String title, String description, String... extensions) {
     super(true, true, true, true, false, false);
     setTitle(title);
     setDescription(description);

@@ -29,7 +29,6 @@ import consulo.language.psi.SyntheticElement;
 
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "RenameElement")
 public class RenameElementAction extends BaseRefactoringAction {
@@ -44,7 +43,7 @@ public class RenameElementAction extends BaseRefactoringAction {
     }
 
     @Override
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         if (elements.length != 1) {
             return false;
         }
@@ -55,13 +54,13 @@ public class RenameElementAction extends BaseRefactoringAction {
 
     @Override
     @RequiredUIAccess
-    public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
+    public RefactoringActionHandler getHandler(DataContext dataContext) {
         return RenameHandlerRegistry.getInstance().getRenameHandler(dataContext);
     }
 
     @Override
     @RequiredReadAction
-    public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
+    public boolean hasAvailableHandler(DataContext dataContext) {
         return isEnabledOnDataContext(dataContext);
     }
 
@@ -79,10 +78,10 @@ public class RenameElementAction extends BaseRefactoringAction {
     @Override
     @RequiredReadAction
     protected boolean isAvailableOnElementInEditorAndFile(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull DataContext context
+        PsiElement element,
+        Editor editor,
+        PsiFile file,
+        DataContext context
     ) {
         return RenameHandlerRegistry.getInstance().hasAvailableHandler(context);
     }

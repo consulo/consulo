@@ -34,8 +34,7 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -60,9 +59,9 @@ public class WorkingContextManager {
     private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
     private static final String TASKS_FOLDER = "tasks";
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
     private static final String TASKS_ZIP_POSTFIX = ".tasks.zip";
     private static final String TASK_XML_POSTFIX = ".task.xml";
@@ -74,7 +73,7 @@ public class WorkingContextManager {
     }
 
     @Inject
-    public WorkingContextManager(@Nonnull Project project, @Nonnull NotificationService notificationService) {
+    public WorkingContextManager(Project project, NotificationService notificationService) {
         myProject = project;
         myNotificationService = notificationService;
     }
@@ -184,7 +183,7 @@ public class WorkingContextManager {
         return new File(tasksFolder, projectName + postfix);
     }
 
-    public void restoreContext(@Nonnull Task task) {
+    public void restoreContext(Task task) {
         loadContext(TASKS_ZIP_POSTFIX, task.getId() + TASK_XML_POSTFIX);
     }
 

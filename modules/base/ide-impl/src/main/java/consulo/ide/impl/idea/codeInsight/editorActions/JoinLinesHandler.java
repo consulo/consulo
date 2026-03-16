@@ -40,8 +40,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +60,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
 
     @Override
     @RequiredUIAccess
-    public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
         assert caret != null;
 
         if (editor.isViewer() || !EditorModificationUtil.requestWriting(editor)) {
@@ -120,27 +119,27 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_JOIN_LINES;
     }
 
     private static class JoinLineProcessor {
-        @Nonnull
+        
         private final DocumentEx myDoc;
-        @Nonnull
+        
         private final PsiFile myFile;
         private int myLine;
-        @Nonnull
+        
         private final PsiDocumentManager myManager;
-        @Nonnull
+        
         private final CodeStyleManager myStyleManager;
-        @Nonnull
+        
         private final ProgressIndicator myIndicator;
         int myCaretRestoreOffset = CANNOT_JOIN;
 
-        JoinLineProcessor(@Nonnull DocumentEx doc, @Nonnull PsiFile file, int line, @Nonnull ProgressIndicator indicator) {
+        JoinLineProcessor(DocumentEx doc, PsiFile file, int line, ProgressIndicator indicator) {
             myDoc = doc;
             myFile = file;
             myLine = line;
@@ -150,7 +149,7 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
             myStyleManager = CodeStyleManager.getInstance(project);
         }
 
-        void process(@Nonnull Editor editor, @Nonnull Caret caret, int lineCount) {
+        void process(Editor editor, Caret caret, int lineCount) {
             myStyleManager.performActionWithFormatterDisabled((Runnable) () -> doProcess(lineCount));
             positionCaret(editor, caret);
         }

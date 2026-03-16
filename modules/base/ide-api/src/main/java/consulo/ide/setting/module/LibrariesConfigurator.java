@@ -23,8 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.setting.module.event.LibraryEditorListener;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -32,29 +31,29 @@ import java.util.Collection;
  * @since 19/04/2021
  */
 public interface LibrariesConfigurator extends LibraryEditorListener, Disposable {
-  @Nonnull
+  
   VirtualFile[] getLibraryFiles(Library library, OrderRootType type);
 
-  @Nonnull
-  LibraryTable.ModifiableModel getModifiableLibraryTable(@Nonnull LibraryTable table);
+  
+  LibraryTable.ModifiableModel getModifiableLibraryTable(LibraryTable table);
 
   @Nullable
   Library getLibrary(String libraryName, String libraryLevel);
 
-  @Nonnull
+  
   LibraryTableModifiableModelProvider createModifiableModelProvider(String level);
 
-  @Nonnull
+  
   LibraryTableModifiableModelProvider getProjectLibrariesProvider();
 
   @Nullable
-  Library getLibraryModel(@Nonnull Library library);
+  Library getLibraryModel(Library library);
 
   Collection<? extends LibraryTable.ModifiableModel> getModels();
 
-  void addLibraryEditorListener(@Nonnull LibraryEditorListener listener);
+  void addLibraryEditorListener(LibraryEditorListener listener);
 
-  void addLibraryEditorListener(@Nonnull LibraryEditorListener listener, @Nonnull Disposable parentDisposable);
+  void addLibraryEditorListener(LibraryEditorListener listener, Disposable parentDisposable);
 
   @RequiredWriteAction
   void commit();

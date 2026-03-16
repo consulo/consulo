@@ -2,17 +2,16 @@
 package consulo.ide.impl.idea.ui.tree.project;
 
 import consulo.component.ComponentManager;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
-import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.application.util.registry.Registry.is;
-import static consulo.ide.impl.idea.openapi.vfs.VfsUtilCore.isAncestor;
 
 public interface ProjectFileNode {
   /**
@@ -23,16 +22,16 @@ public interface ProjectFileNode {
    * <dt>VirtualFile</dt><dd>a topmost directory that contains this file (specifies a tree view without modules).</dd>
    * </dl>
    */
-  @Nonnull
+  
   Object getRootID();
 
-  @Nonnull
+  
   VirtualFile getVirtualFile();
 
-  default boolean contains(@Nonnull VirtualFile file, @Nonnull ComponentManager area, boolean strict) {
+  default boolean contains(VirtualFile file, ComponentManager area, boolean strict) {
     Object id = getRootID();
     if (id instanceof ComponentManager && !id.equals(area)) return false;
-    return isAncestor(getVirtualFile(), file, strict);
+    return VirtualFileUtil.isAncestor(getVirtualFile(), file, strict);
   }
 
   /**
@@ -41,14 +40,14 @@ public interface ProjectFileNode {
    * or {@code null} if the specified {@code file} does not correspond to the given {@code project}
    */
   @Nullable
-  static ComponentManager findArea(@Nonnull VirtualFile file, @Nullable Project project) {
+  static ComponentManager findArea(VirtualFile file, @Nullable Project project) {
     if (project == null || project.isDisposed() || !file.isValid()) return null;
     Module module = ProjectFileIndex.getInstance(project).getModuleForFile(file, false);
     if (module != null) return module.isDisposed() ? null : module;
     if (!is("projectView.show.base.dir")) return null;
     VirtualFile ancestor = findBaseDir(project);
     // file does not belong to any content root, but it is located under the project directory and not ignored
-    return ancestor == null || FileTypeRegistry.getInstance().isFileIgnored(file) || !isAncestor(ancestor, file, false) ? null : project;
+    return ancestor == null || FileTypeRegistry.getInstance().isFileIgnored(file) || !VirtualFileUtil.isAncestor(ancestor, file, false) ? null : project;
   }
 
   /**

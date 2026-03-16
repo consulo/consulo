@@ -20,7 +20,6 @@ import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -35,25 +34,25 @@ public class CoreLocalVirtualFile extends VirtualFile {
   private VirtualFile[] myChildren;
   private final boolean isDirectory;
 
-  public CoreLocalVirtualFile(@Nonnull VirtualFileSystem fileSystem, @Nonnull File ioFile) {
+  public CoreLocalVirtualFile(VirtualFileSystem fileSystem, File ioFile) {
     myFileSystem = fileSystem;
     myIoFile = ioFile;
     isDirectory = ioFile.isDirectory();
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myIoFile.getName();
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return FileUtil.toSystemIndependentName(myIoFile.getAbsolutePath());
@@ -105,13 +104,13 @@ public class CoreLocalVirtualFile extends VirtualFile {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     return new FileOutputStream(myIoFile);
   }
 
-  @Nonnull
+  
   @Override
   public byte[] contentsToByteArray() throws IOException {
     return RawFileLoader.getInstance().loadFileBytes(myIoFile);

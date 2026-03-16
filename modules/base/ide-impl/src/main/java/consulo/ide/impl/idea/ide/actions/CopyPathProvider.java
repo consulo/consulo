@@ -37,8 +37,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
@@ -48,13 +47,13 @@ public class CopyPathProvider extends DumbAwareAction {
     public CopyPathProvider() {
     }
 
-    public CopyPathProvider(@Nonnull LocalizeValue text) {
+    public CopyPathProvider(LocalizeValue text) {
         super(text);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getData(Editor.KEY);
 
@@ -83,9 +82,8 @@ public class CopyPathProvider extends DumbAwareAction {
             .build();
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return OptionalReadLock.apply(i -> {
             Editor editor = e.getData(Editor.KEY);
             Project project = e.getData(Project.KEY);

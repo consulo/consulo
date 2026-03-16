@@ -24,8 +24,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -34,7 +33,7 @@ import java.util.function.Predicate;
  * @since 29.07.14
  */
 public interface ModuleRootLayer {
-  @Nonnull
+  
   Project getProject();
 
   /**
@@ -42,7 +41,7 @@ public interface ModuleRootLayer {
    *
    * @return the module instance.
    */
-  @Nonnull
+  
   Module getModule();
 
   /**
@@ -59,14 +58,14 @@ public interface ModuleRootLayer {
    * @param processor for iterate
    * @return true if iteration finished normally
    */
-  boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor);
+  boolean iterateContentEntries(Predicate<ContentEntry> processor);
 
   /**
    * Use this method to obtain order of roots of a module. Order of entries is important.
    *
    * @return list of order entries for this module
    */
-  @Nonnull
+  
   OrderEntry[] getOrderEntries();
 
   /**
@@ -75,7 +74,7 @@ public interface ModuleRootLayer {
    * @return the array of content roots.
    * @see #getContentEntries()
    */
-  @Nonnull
+  
   VirtualFile[] getContentRoots();
 
   /**
@@ -84,17 +83,17 @@ public interface ModuleRootLayer {
    * @return the array of content root URLs.
    * @see #getContentEntries()
    */
-  @Nonnull
+  
   String[] getContentRootUrls();
 
-  @Nonnull
-  String[] getContentFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
+  
+  String[] getContentFolderUrls(Predicate<ContentFolderTypeProvider> predicate);
 
-  @Nonnull
-  VirtualFile[] getContentFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
+  
+  VirtualFile[] getContentFolderFiles(Predicate<ContentFolderTypeProvider> predicate);
 
-  @Nonnull
-  ContentFolder[] getContentFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate);
+  
+  ContentFolder[] getContentFolders(Predicate<ContentFolderTypeProvider> predicate);
 
   /**
    * Returns an array of exclude roots from all content entries. A helper method.
@@ -102,7 +101,7 @@ public interface ModuleRootLayer {
    * @return the array of excluded roots.
    * @see #getContentEntries()
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.excluded())")
   VirtualFile[] getExcludeRoots();
@@ -114,7 +113,7 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    */
   @Deprecated
-  @Nonnull
+  
   @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.excluded())")
   String[] getExcludeRootUrls();
 
@@ -125,7 +124,7 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    * @see #getSourceRoots(boolean)
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.productionAndTest())")
   VirtualFile[] getSourceRoots();
@@ -138,7 +137,7 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    * @since 10.0
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderFiles(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()")
   VirtualFile[] getSourceRoots(boolean includingTests);
@@ -151,7 +150,7 @@ public interface ModuleRootLayer {
    * @see #getSourceRootUrls(boolean)
    */
   @Deprecated
-  @Nonnull
+  
   @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.productionAndTest())")
   String[] getSourceRootUrls();
 
@@ -163,7 +162,7 @@ public interface ModuleRootLayer {
    * @see #getContentEntries()
    * @since 10.0
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo(value = "Use #getContentFolderUrls(ContentFolderScopes.production()) or #getContentFolderFiles(ContentFolderScopes.productionAndTest()")
   String[] getSourceRootUrls(boolean includingTests);
@@ -185,7 +184,7 @@ public interface ModuleRootLayer {
    * @return {@link consulo.ide.impl.idea.openapi.roots.OrderEnumerator} instance
    * @since 10.0
    */
-  @Nonnull
+  
   OrderEnumerator orderEntries();
 
   /**
@@ -193,27 +192,27 @@ public interface ModuleRootLayer {
    *
    * @return the list of module names this module depends on.
    */
-  @Nonnull
+  
   String[] getDependencyModuleNames();
 
   @Nullable
   <T extends ModuleExtension> T getExtension(Class<T> clazz);
 
   @Nullable
-  <T extends ModuleExtension> T getExtension(@Nonnull String key);
+  <T extends ModuleExtension> T getExtension(String key);
 
   @Nullable
   <T extends ModuleExtension> T getExtensionWithoutCheck(Class<T> clazz);
 
   @Nullable
-  <T extends ModuleExtension> T getExtensionWithoutCheck(@Nonnull String key);
+  <T extends ModuleExtension> T getExtensionWithoutCheck(String key);
 
-  @Nonnull
+  
   List<ModuleExtension> getExtensions();
 
-  @Nonnull
+  
   Module[] getModuleDependencies();
 
-  @Nonnull
+  
   Module[] getModuleDependencies(boolean includeTests);
 }

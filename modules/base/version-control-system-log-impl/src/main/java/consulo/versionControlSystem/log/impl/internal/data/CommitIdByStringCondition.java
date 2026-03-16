@@ -17,15 +17,14 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.CommitId;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 public class CommitIdByStringCondition implements Predicate<CommitId> {
-    @Nonnull
+    
     private final String myHashString;
 
-    public CommitIdByStringCondition(@Nonnull String hashString) {
+    public CommitIdByStringCondition(String hashString) {
         myHashString = hashString;
     }
 

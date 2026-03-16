@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -13,25 +12,25 @@ class DefaultJBDateTimeFormatter extends JBDateTimeFormatter {
     }
 
     @Override
-    @Nonnull
+    
     public String formatTime(long time) {
         return DateFormatUtil.formatTime(time);
     }
 
     @Override
-    @Nonnull
+    
     public String formatTimeWithSeconds(long time) {
         return DateFormatUtil.formatTimeWithSeconds(time);
     }
 
     @Override
-    @Nonnull
+    
     public String formatDate(long time) {
         return DateFormatUtil.formatDate(time);
     }
 
     @Override
-    @Nonnull
+    
     public String formatPrettyDateTime(long time) {
         if (isPrettyFormattingSupported()) {
             return DateFormatUtil.formatPrettyDateTime(time);
@@ -40,7 +39,7 @@ class DefaultJBDateTimeFormatter extends JBDateTimeFormatter {
     }
 
     @Override
-    @Nonnull
+    
     public String formatPrettyDate(long time) {
         if (isPrettyFormattingSupported()) {
             return DateFormatUtil.formatPrettyDate(time);

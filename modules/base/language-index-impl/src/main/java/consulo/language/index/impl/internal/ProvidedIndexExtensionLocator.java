@@ -6,8 +6,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.psi.stub.FileBasedIndexExtension;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -16,10 +15,10 @@ public interface ProvidedIndexExtensionLocator {
     ExtensionPointName<ProvidedIndexExtensionLocator> EP_NAME = ExtensionPointName.create(ProvidedIndexExtensionLocator.class);
 
     @Nullable
-    <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(@Nonnull FileBasedIndexExtension<K, V> originalExtension);
+    <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtension(FileBasedIndexExtension<K, V> originalExtension);
 
     @Nullable
-    static <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(@Nonnull FileBasedIndexExtension<K, V> originalExtension) {
+    static <K, V> ProvidedIndexExtension<K, V> findProvidedIndexExtensionFor(FileBasedIndexExtension<K, V> originalExtension) {
         return EP_NAME.getExtensionList()
             .stream()
             .map(ex -> ex.findProvidedIndexExtension(originalExtension))

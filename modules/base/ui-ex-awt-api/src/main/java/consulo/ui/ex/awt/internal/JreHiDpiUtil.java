@@ -5,8 +5,7 @@ import consulo.awt.hacking.GraphicsEnvironmentHacking;
 import consulo.platform.Platform;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -83,7 +82,7 @@ public final class JreHiDpiUtil {
   }
 
   @TestOnly
-  @Nonnull
+  
   public static AtomicReference<Boolean> test_jreHiDPI() {
     isJreHiDPIEnabled(); // force init
     return jreHiDPI;

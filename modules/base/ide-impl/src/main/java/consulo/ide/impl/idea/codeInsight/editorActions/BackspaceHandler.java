@@ -37,8 +37,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -169,7 +168,7 @@ public class BackspaceHandler extends EditorWriteActionHandler implements Extens
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_BACKSPACE;

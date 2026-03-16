@@ -4,7 +4,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.util.FileImplUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Node which stores explicit 'name' instead of nameId.
@@ -13,21 +12,21 @@ import jakarta.annotation.Nonnull;
  * As soon as the corresponding file got created, this UrlPartNode is replaced with FilePointerPartNode, which contains nameId and is faster and more succinct
  */
 class UrlPartNode extends FilePointerPartNode {
-  @Nonnull
+  
   private final String name;
 
-  UrlPartNode(@Nonnull String name, @Nonnull FilePointerPartNode parent) {
+  UrlPartNode(String name, FilePointerPartNode parent) {
     super(parent);
     this.name = name;
     assert !StringUtil.isEmptyOrSpaces(name) : '\'' + name + '\'';
   }
 
   @Override
-  boolean urlEndsWithName(@Nonnull String urlAfter, VirtualFile fileAfter) {
+  boolean urlEndsWithName(String urlAfter, VirtualFile fileAfter) {
     return StringUtil.endsWith(urlAfter, getName());
   }
 
-  @Nonnull
+  
   @Override
   CharSequence getName() {
     return name;

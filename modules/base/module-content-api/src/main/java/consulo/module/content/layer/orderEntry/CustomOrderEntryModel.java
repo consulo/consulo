@@ -19,8 +19,7 @@ import consulo.content.RootProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.Synthetic;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,17 +33,17 @@ public interface CustomOrderEntryModel extends Synthetic {
    * 
    * @param moduleRootLayer target layer
    */
-  void bind(@Nonnull ModuleRootLayer moduleRootLayer);
+  void bind(ModuleRootLayer moduleRootLayer);
 
-  @Nonnull
+  
   String getPresentableName();
 
   boolean isValid();
 
-  @Nonnull
+  
   RootProvider getRootProvider();
 
-  @Nonnull
+  
   CustomOrderEntryModel clone();
 
   @Nullable
@@ -52,7 +51,7 @@ public interface CustomOrderEntryModel extends Synthetic {
     return null;
   }
 
-  default boolean isEquivalentTo(@Nonnull CustomOrderEntryModel otherModel) {
+  default boolean isEquivalentTo(CustomOrderEntryModel otherModel) {
     return false;
   }
 }

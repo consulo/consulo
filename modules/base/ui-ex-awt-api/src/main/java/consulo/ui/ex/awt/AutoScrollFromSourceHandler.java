@@ -27,8 +27,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.awt.util.Alarm;
 
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -41,11 +40,11 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
     protected final Alarm myAlarm;
     protected JComponent myComponent;
 
-    public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view) {
+    public AutoScrollFromSourceHandler(Project project, JComponent view) {
         this(project, view, null);
     }
 
-    public AutoScrollFromSourceHandler(@Nonnull Project project, @Nonnull JComponent view, @Nullable Disposable parentDisposable) {
+    public AutoScrollFromSourceHandler(Project project, JComponent view, @Nullable Disposable parentDisposable) {
         myProject = project;
 
         if (parentDisposable != null) {
@@ -90,12 +89,12 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return isAutoScrollEnabled();
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             setAutoScrollEnabled(flag);
         }
     }

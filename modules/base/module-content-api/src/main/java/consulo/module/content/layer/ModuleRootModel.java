@@ -15,8 +15,7 @@
  */
 package consulo.module.content.layer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -26,15 +25,15 @@ import java.util.Map;
  * @author dsl
  */
 public interface ModuleRootModel extends ModuleRootLayer {
-  @Nonnull
+  
   Map<String, ModuleRootLayer> getLayers();
 
-  @Nonnull
+  
   String getCurrentLayerName();
 
-  @Nonnull
+  
   ModuleRootLayer getCurrentLayer();
 
   @Nullable
-  ModuleRootLayer findLayerByName(@Nonnull String name);
+  ModuleRootLayer findLayerByName(String name);
 }

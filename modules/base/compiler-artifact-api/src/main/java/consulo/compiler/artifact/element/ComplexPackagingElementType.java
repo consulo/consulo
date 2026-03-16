@@ -20,21 +20,20 @@ import consulo.component.util.ModificationTracker;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public abstract class ComplexPackagingElementType<E extends ComplexPackagingElement<?>> extends PackagingElementType<E> {
-  protected ComplexPackagingElementType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
+  protected ComplexPackagingElementType(String id, LocalizeValue presentableName) {
     super(id, presentableName);
   }
 
   public abstract String getShowContentActionText();
 
   @Nullable
-  public ModificationTracker getAllSubstitutionsModificationTracker(@Nonnull Project project) {
+  public ModificationTracker getAllSubstitutionsModificationTracker(Project project) {
     return null;
   }
 }

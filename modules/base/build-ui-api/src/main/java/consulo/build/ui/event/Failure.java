@@ -18,7 +18,7 @@ package consulo.build.ui.event;
 import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -26,10 +26,13 @@ import java.util.List;
  */
 public interface Failure {
   @Nullable
+
   @BuildEventsNls.Message
   String getMessage();
 
   @Nullable
+
+
   @BuildEventsNls.Description
   String getDescription();
 

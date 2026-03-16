@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.application.options.colors;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -36,7 +35,7 @@ public interface PreviewPanel {
     }
 
     @Override
-    public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
+    public void addListener(ColorAndFontSettingsListener listener) {
 
     }
 
@@ -55,5 +54,5 @@ public interface PreviewPanel {
 
   void updateView();
 
-  void addListener(@Nonnull ColorAndFontSettingsListener listener);
+  void addListener(ColorAndFontSettingsListener listener);
 }

@@ -17,14 +17,13 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.GraphEdge;
 import consulo.versionControlSystem.log.graph.PrintElementManager;
-import jakarta.annotation.Nonnull;
 
 public class TerminalEdgePrintElement extends EdgePrintElementImpl {
   public TerminalEdgePrintElement(int rowIndex,
                                   int position,
-                                  @Nonnull Type type,
-                                  @Nonnull GraphEdge graphEdge,
-                                  @Nonnull PrintElementManager printElementManager) {
+                                  Type type,
+                                  GraphEdge graphEdge,
+                                  PrintElementManager printElementManager) {
     super(rowIndex, position, position, type, graphEdge, true, printElementManager);
   }
 }

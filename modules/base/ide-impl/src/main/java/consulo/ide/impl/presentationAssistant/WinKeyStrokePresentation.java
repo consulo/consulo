@@ -21,7 +21,6 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
@@ -102,7 +101,7 @@ class WinKeyStrokePresentation {
     }
   }
 
-  @Nonnull
+  
   public static String getWinModifiersText(int modifiers) {
     String[] array = inputEventMaskFieldNames.stream()
                                              .filter(it -> BitUtil.isSet(modifiers, it.getSecond()))

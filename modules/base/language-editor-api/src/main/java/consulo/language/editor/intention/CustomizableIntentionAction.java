@@ -2,7 +2,6 @@
 package consulo.language.editor.intention;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Intention action UI representation of which can be customized
@@ -35,7 +34,7 @@ public interface CustomizableIntentionAction extends IntentionAction {
   /**
    * Get text specifically for tooltip view
    */
-  @Nonnull
+  
   default LocalizeValue getTooltipText() {
     return getText();
   }

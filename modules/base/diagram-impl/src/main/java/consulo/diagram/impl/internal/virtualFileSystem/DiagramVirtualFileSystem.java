@@ -22,8 +22,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
         return (DiagramVirtualFileSystem) VirtualFileManager.getInstance().getFileSystem(PROTOCOL);
     }
 
-    @Nonnull
+    
     @Override
     public String getProtocol() {
         return PROTOCOL;
@@ -48,7 +47,7 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
 
     @Nullable
     @Override
-    public VirtualFile findFileByPath(@Nonnull String path) {
+    public VirtualFile findFileByPath(String path) {
         List<String> parts = StringUtil.split(path, URLUtil.ARCHIVE_SEPARATOR);
         if (parts.size() < 3) {
             return null;
@@ -59,7 +58,7 @@ public class DiagramVirtualFileSystem extends BaseVirtualFileSystem {
 
     @Nullable
     @Override
-    public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+    public VirtualFile refreshAndFindFileByPath(String path) {
         return findFileByPath(path);
     }
 

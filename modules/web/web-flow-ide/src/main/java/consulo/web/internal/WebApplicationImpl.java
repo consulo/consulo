@@ -8,8 +8,7 @@ import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BooleanSupplier;
 
@@ -22,7 +21,7 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
 
   private WebSession myCurrentSession;
 
-  public WebApplicationImpl(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splash) {
+  public WebApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splash) {
     super(componentBinding, splash);
   }
 
@@ -32,30 +31,30 @@ public class WebApplicationImpl extends UnifiedApplication implements WebApplica
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable) {
+  public void invokeLater(Runnable runnable) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+  public void invokeLater(Runnable runnable, BooleanSupplier expired) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state) {
+  public void invokeLater(Runnable runnable, consulo.ui.ModalityState state) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
   @Override
-  public void invokeLater(@Nonnull Runnable runnable, @Nonnull consulo.ui.ModalityState state, @Nonnull BooleanSupplier expired) {
+  public void invokeLater(Runnable runnable, consulo.ui.ModalityState state, BooleanSupplier expired) {
     WebSession currentSession = getCurrentSession();
     if (currentSession != null) currentSession.getAccess().giveIfNeed(runnable);
   }
 
-  @Nonnull
+  
   @Override
   public UIAccess getLastUIAccess() {
     WebSession currentSession = getCurrentSession();

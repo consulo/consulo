@@ -15,8 +15,7 @@
  */
 package consulo.task;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Date;
 
 /**
@@ -27,7 +26,7 @@ public class SimpleComment extends Comment {
   private final String myAuthor;
   private final Date myDate;
 
-  public SimpleComment(@Nullable Date date, @Nullable String author, @Nonnull String text) {
+  public SimpleComment(@Nullable Date date, @Nullable String author, String text) {
     myDate = date;
     myAuthor = author;
     myText = text;

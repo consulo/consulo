@@ -23,8 +23,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -69,12 +68,12 @@ public class Difference {
         return e.getContent().getString(e, gw);
       }
 
-      @Nonnull
+      
       public FilePath getFile() {
         return new FilePathImpl(new File(e.getPath()), e.isDirectory());
       }
 
-      @Nonnull
+      
       public VcsRevisionNumber getRevisionNumber() {
         return VcsRevisionNumber.NULL;
       }

@@ -18,8 +18,7 @@ import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -41,7 +40,7 @@ import java.util.Map;
 public class TextEditorWithPreviewImpl extends UserDataHolderBase implements TextEditorWithPreview {
     protected final TextEditor myEditor;
     protected final FileEditor myPreview;
-    @Nonnull
+    
     private final MyListenersMultimap myListenersGenerator = new MyListenersMultimap();
     private Layout myLayout;
     private JComponent myComponent;
@@ -51,23 +50,23 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     private final ActionToolbar myLeftToolbarActionToolbar;
     private final String myName;
 
-    public TextEditorWithPreviewImpl(@Nonnull TextEditor editor,
-                                     @Nonnull FileEditor preview,
+    public TextEditorWithPreviewImpl(TextEditor editor,
+                                     FileEditor preview,
                                      @Nullable ActionToolbar leftToolbarActionToolbar,
-                                     @Nonnull String editorName) {
+                                     String editorName) {
         myEditor = editor;
         myPreview = preview;
         myLeftToolbarActionToolbar = leftToolbarActionToolbar;
         myName = editorName;
     }
 
-    @Nonnull
+    
     @Override
     public TextEditor getTextEditor() {
         return myEditor;
     }
 
-    @Nonnull
+    
     @Override
     public FileEditor getPreviewEditor() {
         return myPreview;
@@ -116,7 +115,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         myPreview.deselectNotify();
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         if (myComponent == null) {
@@ -144,7 +143,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     }
 
     @Override
-    public void setState(@Nonnull FileEditorState state) {
+    public void setState(FileEditorState state) {
         if (state instanceof MyFileEditorState compositeState) {
             if (compositeState.getFirstState() != null) {
                 myEditor.setState(compositeState.getFirstState());
@@ -175,7 +174,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         }
     }
 
-    @Nonnull
+    
     protected String getSplitterProportionKey() {
         return "TextEditorWithPreview.SplitterProportionKey";
     }
@@ -194,20 +193,20 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         }
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
     }
 
-    @Nonnull
+    
     @Override
-    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+    public FileEditorState getState(FileEditorStateLevel level) {
         return new MyFileEditorState(myLayout, myEditor.getState(level), myPreview.getState(level));
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         myEditor.addPropertyChangeListener(listener);
         myPreview.addPropertyChangeListener(listener);
 
@@ -217,7 +216,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         myEditor.removePropertyChangeListener(listener);
         myPreview.removePropertyChangeListener(listener);
 
@@ -273,10 +272,10 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     }
 
     private class DoublingEventListenerDelegate implements PropertyChangeListener {
-        @Nonnull
+        
         private final PropertyChangeListener myDelegate;
 
-        private DoublingEventListenerDelegate(@Nonnull PropertyChangeListener delegate) {
+        private DoublingEventListenerDelegate(PropertyChangeListener delegate) {
             myDelegate = delegate;
         }
 
@@ -289,8 +288,8 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
     private class MyListenersMultimap {
         private final Map<PropertyChangeListener, Pair<Integer, DoublingEventListenerDelegate>> myMap = new HashMap<>();
 
-        @Nonnull
-        public DoublingEventListenerDelegate addListenerAndGetDelegate(@Nonnull PropertyChangeListener listener) {
+        
+        public DoublingEventListenerDelegate addListenerAndGetDelegate(PropertyChangeListener listener) {
             if (!myMap.containsKey(listener)) {
                 myMap.put(listener, Pair.create(1, new DoublingEventListenerDelegate(listener)));
             }
@@ -303,7 +302,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         }
 
         @Nullable
-        public DoublingEventListenerDelegate removeListenerAndGetDelegate(@Nonnull PropertyChangeListener listener) {
+        public DoublingEventListenerDelegate removeListenerAndGetDelegate(PropertyChangeListener listener) {
             Pair<Integer, DoublingEventListenerDelegate> oldPair = myMap.get(listener);
             if (oldPair == null) {
                 return null;
@@ -341,7 +340,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
             }
         };
 
-        public SplitEditorToolbar(@Nonnull JComponent targetComponentForActions) {
+        public SplitEditorToolbar(JComponent targetComponentForActions) {
             super(new BorderLayout());
 
             ActionToolbar leftToolbar = createToolbar();
@@ -360,7 +359,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
             setBorder(JBUI.Borders.customLine(JBColor.border(), 0, 0, 1, 0));
         }
 
-        public void addGutterToTrack(@Nonnull EditorGutterComponentEx gutterComponentEx) {
+        public void addGutterToTrack(EditorGutterComponentEx gutterComponentEx) {
             myGutters.add(gutterComponentEx);
 
             gutterComponentEx.getComponent().addComponentListener(myAdjustToGutterListener);
@@ -454,7 +453,7 @@ public class TextEditorWithPreviewImpl extends UserDataHolderBase implements Tex
         }
     }
 
-    @Nonnull
+    
     private String getLayoutPropertyName() {
         return myName + "Layout";
     }

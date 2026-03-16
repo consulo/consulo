@@ -27,8 +27,7 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBRectangle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,9 +50,9 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
     private static final Rectangle CloseHoverBounds = new JBRectangle(5, 5, 12, 10);
 
     public NotificationBalloonActionProvider(
-        @Nonnull BalloonImpl balloon,
+        BalloonImpl balloon,
         @Nullable Component repaintPanel,
-        @Nonnull BalloonLayoutData layoutData,
+        BalloonLayoutData layoutData,
         @Nullable String displayGroupId
     ) {
         myLayoutData = layoutData;
@@ -62,7 +61,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
         myRepaintPanel = repaintPanel;
     }
 
-    @Nonnull
+    
     @Override
     public List<BalloonImpl.ActionButton> createActions() {
         myActions = new ArrayList<>();
@@ -122,7 +121,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
             }
         ) {
             @Override
-            protected void paintIcon(@Nonnull Graphics g, @Nonnull Image icon) {
+            protected void paintIcon(Graphics g, Image icon) {
                 TargetAWT.to(icon).paintIcon(this, g, CloseHoverBounds.x, CloseHoverBounds.y);
             }
         };
@@ -132,7 +131,7 @@ public class NotificationBalloonActionProvider implements BalloonImpl.ActionProv
     }
 
     @Override
-    public void layout(@Nonnull Rectangle2D bounds) {
+    public void layout(Rectangle2D bounds) {
         Dimension closeSize = myCloseButton.getPreferredSize();
         ImmutableInsets borderInsets = myBalloon.getShadowBorderImmutableInsets();
         int x = bounds.maxX() - borderInsets.right() - closeSize.width - myLayoutData.configuration.rightActionsOffset.width;

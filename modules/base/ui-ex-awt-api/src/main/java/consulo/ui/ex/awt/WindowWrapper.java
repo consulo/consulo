@@ -3,9 +3,8 @@ package consulo.ui.ex.awt;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,13 +16,13 @@ public interface WindowWrapper extends Disposable {
   @Nullable
   Project getProject();
 
-  @Nonnull
+  
   JComponent getComponent();
 
-  @Nonnull
+  
   Mode getMode();
 
-  @Nonnull
+  
   Window getWindow();
 
   void setTitle(@Nullable String title);

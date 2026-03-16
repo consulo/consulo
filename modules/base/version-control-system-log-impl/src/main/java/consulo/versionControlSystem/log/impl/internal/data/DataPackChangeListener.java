@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 public interface DataPackChangeListener {
   /**
@@ -25,5 +24,5 @@ public interface DataPackChangeListener {
    * @param newDataPack new data pack
    */
   @RequiredUIAccess
-  void onDataPackChange(@Nonnull DataPack newDataPack);
+  void onDataPackChange(DataPack newDataPack);
 }

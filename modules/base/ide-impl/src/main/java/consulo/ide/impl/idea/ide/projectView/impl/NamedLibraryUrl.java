@@ -25,14 +25,13 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author cdr
  */
 public class NamedLibraryUrl extends AbstractUrl {
 
-  @NonNls private static final String ELEMENT_TYPE = "namedLibrary";
+  private static final String ELEMENT_TYPE = "namedLibrary";
 
   public NamedLibraryUrl(String url, String moduleName) {
     super(url, moduleName, ELEMENT_TYPE);

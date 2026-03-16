@@ -31,8 +31,6 @@ import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.awt.IssueLinkRenderer;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
@@ -91,7 +89,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     }
   }
 
-  @NonNls
+  
   public void renderChangeList(JComponent tree, CommittedChangeList changeList) {
     Container parent = tree.getParent();
     int rowX = getRowX(myTree, 2);
@@ -189,7 +187,7 @@ public class CommittedChangeListRenderer extends ColoredTreeCellRenderer {
     return description.substring(0, description.length()-1);
   }
 
-  @Nonnull
+  
   public Dimension getPreferredSize() {
     return new Dimension(2000, super.getPreferredSize().height);
   }

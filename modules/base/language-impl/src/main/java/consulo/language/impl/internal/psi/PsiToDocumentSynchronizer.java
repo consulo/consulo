@@ -37,8 +37,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.*;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
@@ -54,18 +53,18 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
 
   private volatile Document mySyncDocument;
 
-  PsiToDocumentSynchronizer(@Nonnull PsiDocumentManagerBase psiDocumentManager, @Nonnull MessageBus bus) {
+  PsiToDocumentSynchronizer(PsiDocumentManagerBase psiDocumentManager, MessageBus bus) {
     myPsiDocumentManager = psiDocumentManager;
     myBus = bus;
   }
 
   @Nullable
-  public DocumentChangeTransaction getTransaction(@Nonnull Document document) {
+  public DocumentChangeTransaction getTransaction(Document document) {
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(document);
     return Pair.getFirst(pair);
   }
 
-  public boolean isInSynchronization(@Nonnull Document document) {
+  public boolean isInSynchronization(Document document) {
     return mySyncDocument == document;
   }
 
@@ -77,10 +76,10 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
 
   @FunctionalInterface
   private interface DocSyncAction {
-    void syncDocument(@Nonnull Document document, @Nonnull PsiTreeChangeEventImpl event);
+    void syncDocument(Document document, PsiTreeChangeEventImpl event);
   }
 
-  private void checkPsiModificationAllowed(@Nonnull PsiTreeChangeEvent event) {
+  private void checkPsiModificationAllowed(PsiTreeChangeEvent event) {
     if (!toProcessPsiEvent()) return;
     PsiFile psiFile = event.getFile();
     if (!(psiFile instanceof PsiFileEx) || !((PsiFileEx)psiFile).isContentsLoaded()) return;
@@ -99,7 +98,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     return document;
   }
 
-  private void doSync(@Nonnull PsiTreeChangeEvent event, boolean force, @Nonnull DocSyncAction syncAction) {
+  private void doSync(PsiTreeChangeEvent event, boolean force, DocSyncAction syncAction) {
     if (!toProcessPsiEvent()) return;
     PsiFile psiFile = event.getFile();
     if (!(psiFile instanceof PsiFileEx) || !((PsiFileEx)psiFile).isContentsLoaded()) return;
@@ -115,11 +114,11 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     }
   }
 
-  static boolean isInsideAtomicChange(@Nonnull PsiFile file) {
+  static boolean isInsideAtomicChange(PsiFile file) {
     return Objects.equals(file.getUserData(PSI_DOCUMENT_ATOMIC_ACTION), Boolean.TRUE);
   }
 
-  public static void performAtomically(@Nonnull PsiFile file, @Nonnull Runnable runnable) {
+  public static void performAtomically(PsiFile file, Runnable runnable) {
     PsiUtilCore.ensureValid(file);
     assert !isInsideAtomicChange(file);
     file.putUserData(PSI_DOCUMENT_ATOMIC_ACTION, Boolean.TRUE);
@@ -133,41 +132,41 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   @Override
-  public void beforeChildAddition(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildAddition(PsiTreeChangeEvent event) {
     checkPsiModificationAllowed(event);
   }
 
   @Override
-  public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildRemoval(PsiTreeChangeEvent event) {
     checkPsiModificationAllowed(event);
   }
 
   @Override
-  public void beforeChildReplacement(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildReplacement(PsiTreeChangeEvent event) {
     checkPsiModificationAllowed(event);
   }
 
   @Override
-  public void beforeChildrenChange(@Nonnull PsiTreeChangeEvent event) {
+  public void beforeChildrenChange(PsiTreeChangeEvent event) {
     checkPsiModificationAllowed(event);
   }
 
   @Override
-  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+  public void childAdded(PsiTreeChangeEvent event) {
     if (!(event.getChild() instanceof ForeignLeafPsiElement)) {
       doSync(event, false, (document, event1) -> insertString(document, event1.getOffset(), event1.getChild().getText()));
     }
   }
 
   @Override
-  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+  public void childRemoved(PsiTreeChangeEvent event) {
     if (!(event.getChild() instanceof ForeignLeafPsiElement)) {
       doSync(event, false, (document, event1) -> deleteString(document, event1.getOffset(), event1.getOffset() + event1.getOldLength()));
     }
   }
 
   @Override
-  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+  public void childReplaced(PsiTreeChangeEvent event) {
     doSync(event, false, (document, event1) -> {
       int oldLength = event1.getOldChild() instanceof ForeignLeafPsiElement ? 0 : event1.getOldLength();
       String newText = event1.getNewChild() instanceof ForeignLeafPsiElement ? "" : event1.getNewChild().getText();
@@ -176,7 +175,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   @Override
-  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void childrenChanged(PsiTreeChangeEvent event) {
     doSync(event, false, (document, event1) -> replaceString(document, event1.getOffset(), event1.getOffset() + event1.getOldLength(), event1.getParent().getText(), event1.getParent()));
   }
 
@@ -195,32 +194,32 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   @TestOnly
-  public void replaceString(@Nonnull Document document, int startOffset, int endOffset, @Nonnull String s) {
+  public void replaceString(Document document, int startOffset, int endOffset, String s) {
     replaceString(document, startOffset, endOffset, s, null);
   }
 
-  private void replaceString(@Nonnull Document document, int startOffset, int endOffset, @Nonnull String s, @Nullable PsiElement replacement) {
+  private void replaceString(Document document, int startOffset, int endOffset, String s, @Nullable PsiElement replacement) {
     DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
     if (documentChangeTransaction != null) {
       documentChangeTransaction.replace(startOffset, endOffset - startOffset, s, replacement);
     }
   }
 
-  public void insertString(@Nonnull Document document, int offset, @Nonnull String s) {
+  public void insertString(Document document, int offset, String s) {
     DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
     if (documentChangeTransaction != null) {
       documentChangeTransaction.replace(offset, 0, s, null);
     }
   }
 
-  private void deleteString(@Nonnull Document document, int startOffset, int endOffset) {
+  private void deleteString(Document document, int startOffset, int endOffset) {
     DocumentChangeTransaction documentChangeTransaction = getTransaction(document);
     if (documentChangeTransaction != null) {
       documentChangeTransaction.replace(startOffset, endOffset - startOffset, "", null);
     }
   }
 
-  public void startTransaction(@Nonnull Project project, @Nonnull Document doc, @Nonnull PsiElement scope) {
+  public void startTransaction(Project project, Document doc, PsiElement scope) {
     LOG.assertTrue(!project.isDisposed());
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(doc);
     Pair<DocumentChangeTransaction, Integer> prev = pair;
@@ -235,7 +234,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     LOG.assertTrue(myTransactionsMap.put(doc, pair) == prev);
   }
 
-  public boolean commitTransaction(@Nonnull Document document) {
+  public boolean commitTransaction(Document document) {
     ApplicationManager.getApplication().assertIsWriteThread();
     DocumentChangeTransaction documentChangeTransaction = removeTransaction(document);
     if (documentChangeTransaction == null) return false;
@@ -260,7 +259,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     return true;
   }
 
-  private static void doCommitTransaction(@Nonnull Document document, @Nonnull DocumentChangeTransaction documentChangeTransaction) {
+  private static void doCommitTransaction(Document document, DocumentChangeTransaction documentChangeTransaction) {
     DocumentEx ex = (DocumentEx)document;
     ex.suppressGuardedExceptions();
     try {
@@ -279,7 +278,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   }
 
   @Nullable
-  private DocumentChangeTransaction removeTransaction(@Nonnull Document doc) {
+  private DocumentChangeTransaction removeTransaction(Document doc) {
     Pair<DocumentChangeTransaction, Integer> pair = myTransactionsMap.get(doc);
     if (pair == null) return null;
     int nestedCount = pair.getSecond().intValue();
@@ -292,7 +291,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     return pair.getFirst();
   }
 
-  public boolean isDocumentAffectedByTransactions(@Nonnull Document document) {
+  public boolean isDocumentAffectedByTransactions(Document document) {
     return myTransactionsMap.containsKey(document);
   }
 
@@ -301,17 +300,17 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     private final PsiFile myChangeScope;
     private ImmutableCharSequence myPsiText;
 
-    DocumentChangeTransaction(@Nonnull Document doc, @Nonnull PsiFile scope) {
+    DocumentChangeTransaction(Document doc, PsiFile scope) {
       myChangeScope = scope;
       myPsiText = CharArrayUtil.createImmutableCharSequence(doc.getImmutableCharSequence());
     }
 
-    @Nonnull
+    
     public Map<TextRange, CharSequence> getAffectedFragments() {
       return myAffectedFragments;
     }
 
-    public void replace(int psiStart, int length, @Nonnull String replace, @Nullable PsiElement replacement) {
+    public void replace(int psiStart, int length, String replace, @Nullable PsiElement replacement) {
       // calculating fragment
       // minimize replace
       int start = 0;
@@ -376,7 +375,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       updateFragments(start, end, replace.substring(newStartInReplace, newEndInReplace));
     }
 
-    private void updateFragments(int start, int end, @Nonnull String replace) {
+    private void updateFragments(int start, int end, String replace) {
       int docStart = psiToDocumentOffset(start);
       int docEnd = psiToDocumentOffset(end);
 

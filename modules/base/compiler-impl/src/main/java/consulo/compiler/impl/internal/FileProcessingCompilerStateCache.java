@@ -19,7 +19,7 @@ import consulo.compiler.ValidityState;
 import consulo.compiler.ValidityStateFactory;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.Collection;

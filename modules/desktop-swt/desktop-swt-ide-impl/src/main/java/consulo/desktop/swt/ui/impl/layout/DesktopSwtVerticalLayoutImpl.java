@@ -18,7 +18,6 @@ package consulo.desktop.swt.ui.impl.layout;
 import consulo.ui.Component;
 import consulo.ui.layout.LayoutConstraint;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Layout;

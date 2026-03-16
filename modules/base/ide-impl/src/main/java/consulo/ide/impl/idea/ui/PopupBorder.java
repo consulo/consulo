@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,12 +29,12 @@ public interface PopupBorder {
     private Factory() {
     }
 
-    @Nonnull
+    
     public static Border createEmpty() {
       return JBUI.Borders.empty();
     }
 
-    @Nonnull
+    
     public static Border create(boolean active, boolean windowWithShadow) {
       return new LineBorder(JBColor.border(), 1, UIManager.getInt("Component.arc") > 0);
     }

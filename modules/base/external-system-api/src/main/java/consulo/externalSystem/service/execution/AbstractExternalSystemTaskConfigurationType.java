@@ -19,8 +19,7 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collections;
@@ -36,12 +35,12 @@ import java.util.Map;
  */
 public abstract class AbstractExternalSystemTaskConfigurationType implements ConfigurationType {
 
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private final ConfigurationFactory[] myFactories = new ConfigurationFactory[1];
 
-  @Nonnull
+  
   private final LazyValue<Image> myIcon = LazyValue.notNull(() -> {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(getExternalSystemId());
     Image result = null;
@@ -51,7 +50,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     return result == null ? PlatformIconGroup.nodesTask() : result;
   });
 
-  protected AbstractExternalSystemTaskConfigurationType(@Nonnull ProjectSystemId externalSystemId) {
+  protected AbstractExternalSystemTaskConfigurationType(ProjectSystemId externalSystemId) {
     myExternalSystemId = externalSystemId;
     myFactories[0] = new ConfigurationFactory(this) {
       @Override
@@ -61,34 +60,34 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     };
   }
 
-  @Nonnull
+  
   public ProjectSystemId getExternalSystemId() {
     return myExternalSystemId;
   }
 
-  @Nonnull
+  
   public ConfigurationFactory getFactory() {
     return myFactories[0];
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  @Nonnull
-  protected ExternalSystemRunConfiguration doCreateConfiguration(@Nonnull ProjectSystemId externalSystemId,
-                                                                 @Nonnull Project project,
-                                                                 @Nonnull ConfigurationFactory factory,
-                                                                 @Nonnull String name)
+  
+  protected ExternalSystemRunConfiguration doCreateConfiguration(ProjectSystemId externalSystemId,
+                                                                 Project project,
+                                                                 ConfigurationFactory factory,
+                                                                 String name)
   {
     return new ExternalSystemRunConfiguration(externalSystemId, project, factory, name);
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDisplayName() {
     return myExternalSystemId.getDisplayName();
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getConfigurationTypeDescription() {
     return ExternalSystemLocalize.runConfigurationDescription(myExternalSystemId.getDisplayName());
   }
@@ -98,7 +97,7 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     return myIcon.get();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myExternalSystemId.getRunConfigurationId();
@@ -109,21 +108,21 @@ public abstract class AbstractExternalSystemTaskConfigurationType implements Con
     return myFactories;
   }
 
-  @Nonnull
-  public static String generateName(@Nonnull Project project, @Nonnull ExternalSystemTaskExecutionSettings settings) {
+  
+  public static String generateName(Project project, ExternalSystemTaskExecutionSettings settings) {
     return generateName(project, settings.getExternalSystemIdString(), settings.getExternalProjectPath(), settings.getTaskNames());
   }
 
-  @Nonnull
-  public static String generateName(@Nonnull Project project, @Nonnull ExternalTaskPojo task, @Nonnull String externalSystemId) {
+  
+  public static String generateName(Project project, ExternalTaskPojo task, String externalSystemId) {
     return generateName(project, externalSystemId, task.getLinkedExternalProjectPath(), Collections.singletonList(task.getName()));
   }
 
-  @Nonnull
-  public static String generateName(@Nonnull Project project,
-                                    @Nonnull String externalSystemId,
+  
+  public static String generateName(Project project,
+                                    String externalSystemId,
                                     @Nullable String externalProjectPath,
-                                    @Nonnull List<String> taskNames)
+                                    List<String> taskNames)
   {
     ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManagerStrict(externalSystemId);
 

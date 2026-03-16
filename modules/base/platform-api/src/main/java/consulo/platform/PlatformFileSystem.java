@@ -16,8 +16,7 @@
 package consulo.platform;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -35,13 +34,13 @@ public interface PlatformFileSystem {
      * @return image filemanager image for file. If return null it will use default icon from IDE
      */
     @Nullable
-    default Image getImage(@Nonnull File file) {
+    default Image getImage(File file) {
         return null;
     }
 
-    @Nonnull
-    Path getPath(@Nonnull String path);
+    
+    Path getPath(String path);
 
-    @Nonnull
-    Path getPath(@Nonnull String path, @Nonnull String... more);
+    
+    Path getPath(String path, String... more);
 }

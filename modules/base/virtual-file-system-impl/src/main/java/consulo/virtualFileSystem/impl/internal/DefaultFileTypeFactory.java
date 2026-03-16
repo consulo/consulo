@@ -21,7 +21,6 @@ import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class DefaultFileTypeFactory extends FileTypeFactory {
   @Override
-  public void createFileTypes(@Nonnull FileTypeConsumer consumer) {
+  public void createFileTypes(FileTypeConsumer consumer) {
     // eat jar file type, but java plugin will rewrite it
     consumer.consume(ZipArchiveFileType.INSTANCE, "zip;ear;ane;egg;jar");
 

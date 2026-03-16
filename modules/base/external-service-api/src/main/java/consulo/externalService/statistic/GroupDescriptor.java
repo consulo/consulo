@@ -16,13 +16,12 @@
 package consulo.externalService.statistic;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 public class GroupDescriptor {
   private String myId;
   private String myDisplayName;
-  @NonNls protected static final String ID_ATTR = "id";
-  @NonNls private static final String GROUP_PREFIX = "group.";
+  protected static final String ID_ATTR = "id";
+  private static final String GROUP_PREFIX = "group.";
 
   public GroupDescriptor() {
   }

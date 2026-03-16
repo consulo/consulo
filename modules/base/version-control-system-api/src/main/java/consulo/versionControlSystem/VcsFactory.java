@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,24 +26,24 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsFactory {
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
+  
   LocalizeValue getDisplayName();
 
-  @Nonnull
+  
   String getAdministrativeAreaName();
 
   default boolean isCrawlUpToCheckUnderVcs() {
     return false;
   }
 
-  @Nonnull
+  
   default VcsDescriptor createDescriptor() {
     return new VcsDescriptor(getAdministrativeAreaName(), getDisplayName(), getId(), isCrawlUpToCheckUnderVcs());
   }
 
-  @Nonnull
+  
   AbstractVcs<?> createVcs();
 }

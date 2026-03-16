@@ -20,7 +20,6 @@ import consulo.ui.ex.util.LafProperty;
 import consulo.ui.style.StyleManager;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -36,18 +35,18 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("UseJBColor")
 public class JBColor extends Color {
-  @Nonnull
-  public static JBColor namedColor(@Nonnull String propertyName, int defaultValueRGB) {
+  
+  public static JBColor namedColor(String propertyName, int defaultValueRGB) {
     return namedColor(propertyName, new Color(defaultValueRGB));
   }
 
-  @Nonnull
-  public static JBColor namedColor(@Nonnull String propertyName, int defaultValueRGB, int darkValueRGB) {
+  
+  public static JBColor namedColor(String propertyName, int defaultValueRGB, int darkValueRGB) {
     return namedColor(propertyName, new JBColor(defaultValueRGB, darkValueRGB));
   }
 
-  @Nonnull
-  public static JBColor namedColor(@Nonnull String propertyName, @Nonnull Color defaultColor) {
+  
+  public static JBColor namedColor(String propertyName, Color defaultColor) {
     return new JBColor(() -> {
       Color color = ObjectUtil.notNull(UIManager.getColor(propertyName), () -> ObjectUtil.notNull(findPatternMatch(propertyName), defaultColor));
       if (UIManager.get(propertyName) == null) {
@@ -59,7 +58,7 @@ public class JBColor extends Color {
 
   // Let's find if namedColor can be overridden by *.propertyName rule in ui theme and apply it
   // We need to cache calculated results. Cache and rules will be reset after LaF change
-  private static Color findPatternMatch(@Nonnull String name) {
+  private static Color findPatternMatch(String name) {
     Object value = UIManager.get("*");
 
     if (value instanceof Map) {

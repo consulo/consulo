@@ -74,8 +74,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -191,7 +190,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             }
 
             @Override
-            public void toolWindowRegistered(@Nonnull String id) {
+            public void toolWindowRegistered(String id) {
                 updateTabBorder();
             }
         });
@@ -206,13 +205,11 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
     }
 
     @Override
-    @Nonnull
     public ActionCallback setSelectedIndex(int indexToSelect) {
         return setSelectedIndex(indexToSelect, true);
     }
 
     @Override
-    @Nonnull
     public ActionCallback setSelectedIndex(int indexToSelect, boolean focusEditor) {
         if (indexToSelect >= myTabs.getTabCount()) {
             return ActionCallback.REJECTED;
@@ -220,7 +217,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         return myTabs.select(myTabs.getTabAt(indexToSelect), focusEditor);
     }
 
-    @Nonnull
     public static DockableEditor createDockableEditor(
         Project project,
         Image image,
@@ -289,12 +285,10 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         myTabs.getPresentation().setPaintBorder(border.top, border.left, border.right, border.bottom).setTabSidePaintBorder(5);
     }
 
-    @Nonnull
     public JComponent getComponent() {
         return myTabs.getComponent();
     }
 
-    @Nonnull
     @Override
     public ActionCallback removeTabAt(int componentIndex, int indexToSelect, boolean transferFocus) {
         TabInfo toSelect = indexToSelect >= 0 && indexToSelect < myTabs.getTabCount() ? myTabs.getTabAt(indexToSelect) : null;
@@ -456,7 +450,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
         }
 
         @Override
-        public void putInfo(@Nonnull Map<String, String> info) {
+        public void putInfo(Map<String, String> info) {
             info.put("editorTab", myTab.getText());
         }
     }
@@ -473,7 +467,7 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
 
     private class MyDataProvider implements UiDataProvider {
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(Project.KEY, myProject);
             VirtualFile selectedFile = myWindow.getSelectedFile();
             if (selectedFile != null) {
@@ -656,7 +650,6 @@ public final class DesktopAWTEditorTabbedContainer implements FileEditorTabbedCo
             myPinned = isFilePinned;
         }
 
-        @Nonnull
         @Override
         public VirtualFile getKey() {
             return myFile;

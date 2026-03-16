@@ -7,21 +7,20 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.project.Project;
 import consulo.remoteServer.ServerType;
 import consulo.remoteServer.configuration.RemoteServer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DeploymentConfigurationManager {
-    @Nonnull
-    public static DeploymentConfigurationManager getInstance(@Nonnull Project project) {
+    
+    public static DeploymentConfigurationManager getInstance(Project project) {
         return project.getInstance(DeploymentConfigurationManager.class);
     }
 
-    public abstract @Nonnull List<RunnerAndConfigurationSettings> getDeploymentConfigurations(@Nonnull ServerType<?> serverType);
+    public abstract List<RunnerAndConfigurationSettings> getDeploymentConfigurations(ServerType<?> serverType);
 
-    public abstract void createAndRunConfiguration(@Nonnull ServerType<?> serverType,
+    public abstract void createAndRunConfiguration(ServerType<?> serverType,
                                                    @Nullable RemoteServer<?> remoteServer,
                                                    @Nullable DeploymentSourceType<?> sourceType);
 }

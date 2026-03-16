@@ -18,15 +18,13 @@ package consulo.compiler.artifact.element;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.xml.serializer.annotation.Attribute;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public abstract class FileOrDirectoryCopyPackagingElement<T extends FileOrDirectoryCopyPackagingElement> extends PackagingElement<T> {
-  @NonNls public static final String PATH_ATTRIBUTE = "path";
+  public static final String PATH_ATTRIBUTE = "path";
   protected String myFilePath;
 
   public FileOrDirectoryCopyPackagingElement(PackagingElementType type) {
@@ -44,7 +42,7 @@ public abstract class FileOrDirectoryCopyPackagingElement<T extends FileOrDirect
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof FileOrDirectoryCopyPackagingElement &&
            myFilePath != null &&
            myFilePath.equals(((FileOrDirectoryCopyPackagingElement)element).getFilePath());

@@ -22,8 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -45,28 +44,28 @@ public class IdeaFileChooser {
     void cancelled();
   }
 
-  @Nonnull
+  
   @Deprecated
-  public static VirtualFile[] chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static VirtualFile[] chooseFiles(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFiles(descriptor, null, project, toSelect);
   }
 
-  @Nonnull
+  
   @Deprecated
-  public static VirtualFile[] chooseFiles(@Nonnull FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static VirtualFile[] chooseFiles(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     FileChooserDialog chooser = FileChooserFactory.getInstance().createFileChooser(descriptor, project, parent);
     return chooser.choose(project, toSelect == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{toSelect});
   }
 
   @Nullable
   @Deprecated
-  public static VirtualFile chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static VirtualFile chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     return chooseFile(descriptor, null, project, toSelect);
   }
 
   @Nullable
   @Deprecated
-  public static VirtualFile chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
+  public static VirtualFile chooseFile(FileChooserDescriptor descriptor, @Nullable Component parent, @Nullable ComponentManager project, @Nullable VirtualFile toSelect) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     return ArrayUtil.getFirstElement(chooseFiles(descriptor, parent, project, toSelect));
   }
@@ -82,10 +81,10 @@ public class IdeaFileChooser {
    * @since 11.1
    */
   @Deprecated
-  public static void chooseFiles(@Nonnull FileChooserDescriptor descriptor,
+  public static void chooseFiles(FileChooserDescriptor descriptor,
                                  @Nullable ComponentManager project,
                                  @Nullable VirtualFile toSelect,
-                                 @RequiredUIAccess @Nonnull Consumer<List<VirtualFile>> callback) {
+                                 @RequiredUIAccess Consumer<List<VirtualFile>> callback) {
     chooseFiles(descriptor, project, null, toSelect, callback);
   }
 
@@ -102,11 +101,11 @@ public class IdeaFileChooser {
    * @since 11.1
    */
   @Deprecated
-  public static void chooseFiles(@Nonnull FileChooserDescriptor descriptor,
+  public static void chooseFiles(FileChooserDescriptor descriptor,
                                  @Nullable ComponentManager project,
                                  @Nullable Component parent,
                                  @Nullable VirtualFile toSelect,
-                                 @Nonnull Consumer<List<VirtualFile>> callback) {
+                                 Consumer<List<VirtualFile>> callback) {
     FileChooserFactory factory = FileChooserFactory.getInstance();
     PathChooserDialog pathChooser = factory.createPathChooser(descriptor, project, parent);
     pathChooser.choose(toSelect, callback);
@@ -123,7 +122,7 @@ public class IdeaFileChooser {
    * @since 13
    */
   @Deprecated
-  public static void chooseFile(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect, @Nonnull Consumer<VirtualFile> callback) {
+  public static void chooseFile(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable VirtualFile toSelect, Consumer<VirtualFile> callback) {
     chooseFile(descriptor, project, null, toSelect, callback);
   }
 
@@ -139,11 +138,11 @@ public class IdeaFileChooser {
    * @since 13
    */
   @Deprecated
-  public static void chooseFile(@Nonnull FileChooserDescriptor descriptor,
+  public static void chooseFile(FileChooserDescriptor descriptor,
                                 @Nullable ComponentManager project,
                                 @Nullable Component parent,
                                 @Nullable VirtualFile toSelect,
-                                @Nonnull Consumer<VirtualFile> callback) {
+                                Consumer<VirtualFile> callback) {
     LOG.assertTrue(!descriptor.isChooseMultiple());
     chooseFiles(descriptor, project, parent, toSelect, files -> callback.accept(files.get(0)));
   }

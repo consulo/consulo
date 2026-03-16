@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.dialog.DialogService;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -44,7 +43,7 @@ public class ShowUITesterAction extends DumbAwareAction {
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     UITester.show(myDialogService);
   }
 }

@@ -23,7 +23,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.internal.OrderEnumeratorBase;
 
 import consulo.module.content.internal.OrderRootsCache;
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 
 /**
@@ -38,17 +37,17 @@ public class ModuleOrderEnumerator extends OrderEnumeratorBase {
   }
 
   @Override
-  public void processRootModules(@Nonnull Processor<Module> processor) {
+  public void processRootModules(Processor<Module> processor) {
     processor.process(myRootModel.getModule());
   }
 
   @Override
-  public void forEach(@Nonnull Processor<OrderEntry> processor) {
+  public void forEach(Processor<OrderEntry> processor) {
     processEntries(myRootModel, processor, myRecursively ? new HashSet<Module>() : null, true);
   }
 
   @Override
-  public boolean isRootModuleModel(@Nonnull ModuleRootModel rootModel) {
+  public boolean isRootModuleModel(ModuleRootModel rootModel) {
     return rootModel.equals(myRootModel);
   }
 }

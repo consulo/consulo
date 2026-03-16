@@ -18,7 +18,6 @@ package consulo.content.scope;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ScopeDescriptorProvider {
-    @Nonnull
+    
     ScopeDescriptor[] getScopeDescriptors(Project project);
 }

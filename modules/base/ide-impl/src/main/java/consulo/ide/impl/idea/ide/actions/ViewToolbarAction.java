@@ -22,7 +22,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ViewToolBar")
 public class ViewToolbarAction extends ToggleAction implements DumbAware {
@@ -31,13 +30,13 @@ public class ViewToolbarAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent event) {
+    public boolean isSelected(AnActionEvent event) {
         return UISettings.getInstance().getShowMainToolbar();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent event, boolean state) {
+    public void setSelected(AnActionEvent event, boolean state) {
         UISettings uiSettings = UISettings.getInstance();
         uiSettings.setShowMainToolbar(state);
         uiSettings.fireUISettingsChanged();

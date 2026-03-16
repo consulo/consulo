@@ -19,7 +19,6 @@ import consulo.logging.Logger;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,7 +32,7 @@ public class DesktopFontManagerImpl implements FontManager {
 
   private static final Logger LOG = Logger.getInstance(DesktopFontManagerImpl.class);
 
-  @Nonnull
+  
   @Override
   public Set<String> getAvailableFontNames() {
     GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -50,9 +49,9 @@ public class DesktopFontManagerImpl implements FontManager {
     return fontNames;
   }
 
-  @Nonnull
+  
   @Override
-  public Font createFont(@Nonnull String fontName, int fontSize, int fontStyle) {
+  public Font createFont(String fontName, int fontSize, int fontStyle) {
     return new DesktopFontImpl(fontName, fontSize, fontStyle);
   }
 }

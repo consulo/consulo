@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.io.UriUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +65,7 @@ public class FileTemplatesLoader {
     private FileTemplateStreamProvider myDefaultTemplateDescription;
     private FileTemplateStreamProvider myDefaultIncludeDescription;
 
-    protected FileTemplatesLoader(@Nonnull FileTypeManager typeManager, @Nullable Project project) {
+    protected FileTemplatesLoader(FileTypeManager typeManager, @Nullable Project project) {
         File configDir = project == null || project.isDefault()
             ? new File(ContainerPathManager.get().getConfigPath(), "fileTemplates")
             : new File(UriUtil.trimTrailingSlashes(project.getBaseDir() + "/" + Project.DIRECTORY_STORE_FOLDER + "/" + "fileTemplates"));
@@ -89,17 +88,17 @@ public class FileTemplatesLoader {
         }
     }
 
-    @Nonnull
+    
     public FTManager[] getAllManagers() {
         return myAllManagers;
     }
 
-    @Nonnull
+    
     public FTManager getDefaultTemplatesManager() {
         return new FTManager(myDefaultTemplatesManager);
     }
 
-    @Nonnull
+    
     public FTManager getInternalTemplatesManager() {
         return new FTManager(myInternalTemplatesManager);
     }

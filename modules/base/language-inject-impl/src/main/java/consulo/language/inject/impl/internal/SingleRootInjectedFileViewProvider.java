@@ -24,9 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 
 class SingleRootInjectedFileViewProvider extends SingleRootFileViewProvider implements InjectedFileViewProvider {
   static final ThreadLocal<Boolean> disabledTemporarily = ThreadLocal.withInitial(() -> false);
@@ -35,7 +33,7 @@ class SingleRootInjectedFileViewProvider extends SingleRootFileViewProvider impl
   private final DocumentWindowImpl myDocumentWindow;
   private boolean myPatchingLeaves;
 
-  SingleRootInjectedFileViewProvider(@Nonnull PsiManager psiManager, @Nonnull VirtualFileWindow virtualFile, @Nonnull DocumentWindowImpl documentWindow, @Nonnull Language language) {
+  SingleRootInjectedFileViewProvider(PsiManager psiManager, VirtualFileWindow virtualFile, DocumentWindowImpl documentWindow, Language language) {
     super(psiManager, (VirtualFile)virtualFile, true, language);
     myDocumentWindow = documentWindow;
   }
@@ -56,7 +54,7 @@ class SingleRootInjectedFileViewProvider extends SingleRootFileViewProvider impl
   }
 
   @Override
-  public void rootChanged(@Nonnull PsiFile psiFile) {
+  public void rootChanged(PsiFile psiFile) {
     super.rootChanged(psiFile);
     rootChangedImpl(psiFile);
   }
@@ -72,18 +70,18 @@ class SingleRootInjectedFileViewProvider extends SingleRootFileViewProvider impl
   }
 
   @Override
-  @Nonnull
+  
   public DocumentWindowImpl getDocument() {
     return myDocumentWindow;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "Single root injected file '" + getVirtualFile().getName() + "' " + (isValid() ? "" : " invalid") + (isPhysical() ? "" : " nonphysical");
   }
 
-  public void doNotInterruptMeWhileImPatchingLeaves(@Nonnull Runnable runnable) {
+  public void doNotInterruptMeWhileImPatchingLeaves(Runnable runnable) {
     myPatchingLeaves = true;
     try {
       runnable.run();

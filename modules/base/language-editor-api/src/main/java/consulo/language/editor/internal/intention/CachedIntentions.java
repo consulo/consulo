@@ -28,8 +28,7 @@ import consulo.util.collection.Sets;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,38 +46,38 @@ public class CachedIntentions {
     private int myOffset;
     @Nullable
     private final Editor myEditor;
-    @Nonnull
+    
     private final PsiFile myFile;
-    @Nonnull
+    
     private final Project myProject;
 
-    public CachedIntentions(@Nonnull Project project, @Nonnull PsiFile file, @Nullable Editor editor) {
+    public CachedIntentions(Project project, PsiFile file, @Nullable Editor editor) {
         myProject = project;
         myFile = file;
         myEditor = editor;
     }
 
-    @Nonnull
+    
     public Set<IntentionActionWithTextCaching> getIntentions() {
         return myIntentions;
     }
 
-    @Nonnull
+    
     public Set<IntentionActionWithTextCaching> getErrorFixes() {
         return myErrorFixes;
     }
 
-    @Nonnull
+    
     public Set<IntentionActionWithTextCaching> getInspectionFixes() {
         return myInspectionFixes;
     }
 
-    @Nonnull
+    
     public Set<IntentionActionWithTextCaching> getGutters() {
         return myGutters;
     }
 
-    @Nonnull
+    
     public Set<IntentionActionWithTextCaching> getNotifications() {
         return myNotifications;
     }
@@ -88,12 +87,12 @@ public class CachedIntentions {
         return myEditor;
     }
 
-    @Nonnull
+    
     public PsiFile getFile() {
         return myFile;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -102,15 +101,15 @@ public class CachedIntentions {
         return myOffset;
     }
 
-    @Nonnull
-    public static CachedIntentions create(@Nonnull Project project, @Nonnull PsiFile file, @Nullable Editor editor, @Nonnull IntentionsInfo intentions) {
+    
+    public static CachedIntentions create(Project project, PsiFile file, @Nullable Editor editor, IntentionsInfo intentions) {
         CachedIntentions res = new CachedIntentions(project, file, editor);
         res.wrapAndUpdateActions(intentions, false);
         return res;
     }
 
-    @Nonnull
-    public static CachedIntentions createAndUpdateActions(@Nonnull Project project, @Nonnull PsiFile file, @Nullable Editor editor, @Nonnull IntentionsInfo intentions) {
+    
+    public static CachedIntentions createAndUpdateActions(Project project, PsiFile file, @Nullable Editor editor, IntentionsInfo intentions) {
         CachedIntentions res = new CachedIntentions(project, file, editor);
         res.wrapAndUpdateActions(intentions, true);
         return res;
@@ -133,7 +132,7 @@ public class CachedIntentions {
     };
 
     @RequiredReadAction
-    public boolean wrapAndUpdateActions(@Nonnull IntentionsInfo newInfo, boolean callUpdate) {
+    public boolean wrapAndUpdateActions(IntentionsInfo newInfo, boolean callUpdate) {
         myOffset = newInfo.getOffset();
         boolean changed = wrapActionsTo(newInfo.errorFixesToShow, myErrorFixes, callUpdate);
         changed |= wrapActionsTo(newInfo.inspectionFixesToShow, myInspectionFixes, callUpdate);
@@ -143,7 +142,7 @@ public class CachedIntentions {
         return changed;
     }
 
-    public boolean addActions(@Nonnull IntentionsInfo info) {
+    public boolean addActions(IntentionsInfo info) {
         boolean changed = addActionsTo(info.errorFixesToShow, myErrorFixes);
         changed |= addActionsTo(info.inspectionFixesToShow, myInspectionFixes);
         changed |= addActionsTo(info.intentionsToShow, myIntentions);
@@ -152,7 +151,7 @@ public class CachedIntentions {
         return changed;
     }
 
-    private boolean addActionsTo(@Nonnull List<? extends IntentionActionDescriptor> newDescriptors, @Nonnull Set<? super IntentionActionWithTextCaching> cachedActions) {
+    private boolean addActionsTo(List<? extends IntentionActionDescriptor> newDescriptors, Set<? super IntentionActionWithTextCaching> cachedActions) {
         boolean changed = false;
         for (IntentionActionDescriptor descriptor : newDescriptors) {
             changed |= cachedActions.add(wrapAction(descriptor, myFile, myFile, myEditor));
@@ -161,8 +160,8 @@ public class CachedIntentions {
     }
 
     @RequiredReadAction
-    private boolean wrapActionsTo(@Nonnull List<? extends IntentionActionDescriptor> newDescriptors,
-                                  @Nonnull Set<IntentionActionWithTextCaching> cachedActions,
+    private boolean wrapActionsTo(List<? extends IntentionActionDescriptor> newDescriptors,
+                                  Set<IntentionActionWithTextCaching> cachedActions,
                                   boolean shouldCallIsAvailable) {
         if (cachedActions.isEmpty() && newDescriptors.isEmpty()) {
             return false;
@@ -241,10 +240,10 @@ public class CachedIntentions {
         return changed;
     }
 
-    @Nonnull
-    public IntentionActionWithTextCaching wrapAction(@Nonnull IntentionActionDescriptor descriptor,
-                                                     @Nonnull PsiElement element,
-                                                     @Nonnull PsiFile containingFile,
+    
+    public IntentionActionWithTextCaching wrapAction(IntentionActionDescriptor descriptor,
+                                                     PsiElement element,
+                                                     PsiFile containingFile,
                                                      @Nullable Editor containingEditor) {
         IntentionActionWithTextCaching cachedAction = new IntentionActionWithTextCaching(descriptor, (cached, action) -> {
             if (action instanceof QuickFixWrapper) {
@@ -286,13 +285,13 @@ public class CachedIntentions {
         return cachedAction;
     }
 
-    private void markInvoked(@Nonnull IntentionAction action) {
+    private void markInvoked(IntentionAction action) {
         if (myEditor != null) {
             ShowIntentionInternal.getInstance().markActionInvoked(myFile.getProject(), myEditor, action);
         }
     }
 
-    private void removeActionFromCached(@Nonnull IntentionActionWithTextCaching action) {
+    private void removeActionFromCached(IntentionActionWithTextCaching action) {
         // remove from the action from the list after invocation to make it appear unavailable sooner.
         // (the highlighting will process the whole file and remove the no more available action from the list automatically - but it's may be too long)
         myErrorFixes.remove(action);
@@ -302,7 +301,7 @@ public class CachedIntentions {
         myNotifications.remove(action);
     }
 
-    @Nonnull
+    
     public List<IntentionActionWithTextCaching> getAllActions() {
         List<IntentionActionWithTextCaching> result = new ArrayList<>(myErrorFixes);
         result.addAll(myInspectionFixes);
@@ -321,7 +320,7 @@ public class CachedIntentions {
         return result;
     }
 
-    private int getWeight(@Nonnull IntentionActionWithTextCaching action) {
+    private int getWeight(IntentionActionWithTextCaching action) {
         IntentionAction a = action.getAction();
         int group = getGroup(action).getPriority();
         while (a instanceof IntentionActionDelegate) {
@@ -351,8 +350,8 @@ public class CachedIntentions {
         }
     }
 
-    @Nonnull
-    public IntentionGroup getGroup(@Nonnull IntentionActionWithTextCaching action) {
+    
+    public IntentionGroup getGroup(IntentionActionWithTextCaching action) {
         if (myErrorFixes.contains(action)) {
             return IntentionGroup.ERROR;
         }
@@ -371,8 +370,8 @@ public class CachedIntentions {
         return IntentionGroup.OTHER;
     }
 
-    @Nonnull
-    public Image getIcon(@Nonnull IntentionActionWithTextCaching value) {
+    
+    public Image getIcon(IntentionActionWithTextCaching value) {
         if (value.getIcon() != null) {
             return value.getIcon();
         }

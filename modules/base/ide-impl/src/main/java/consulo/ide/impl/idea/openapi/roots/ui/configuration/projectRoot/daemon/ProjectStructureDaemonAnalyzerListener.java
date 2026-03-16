@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -23,5 +22,5 @@ import java.util.EventListener;
  * @author nik
  */
 public interface ProjectStructureDaemonAnalyzerListener extends EventListener {
-  void problemsChanged(@Nonnull ProjectStructureElement element);
+  void problemsChanged(ProjectStructureElement element);
 }

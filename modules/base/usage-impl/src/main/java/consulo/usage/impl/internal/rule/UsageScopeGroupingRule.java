@@ -31,14 +31,13 @@ import consulo.usage.rule.PsiElementUsage;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class UsageScopeGroupingRule implements UsageGroupingRule {
   @Override
-  public UsageGroup groupUsage(@Nonnull Usage usage) {
+  public UsageGroup groupUsage(Usage usage) {
     if (!(usage instanceof PsiElementUsage)) {
       return null;
     }
@@ -64,7 +63,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return "Test";
     }
@@ -76,7 +75,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return "Production";
     }
@@ -88,7 +87,7 @@ public class UsageScopeGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return "Library";
     }

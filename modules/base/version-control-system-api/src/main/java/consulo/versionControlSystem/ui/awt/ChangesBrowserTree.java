@@ -17,8 +17,7 @@ package consulo.versionControlSystem.ui.awt;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,7 +29,7 @@ import java.util.List;
  * @since 2025-08-30
  */
 public interface ChangesBrowserTree<T> {
-    void setEmptyText(@Nonnull String emptyText);
+    void setEmptyText(String emptyText);
 
     void setScrollPaneBorder(Border border);
 
@@ -48,10 +47,10 @@ public interface ChangesBrowserTree<T> {
 
     void setChangesToDisplay(List<T> changes, @Nullable VirtualFile toSelect);
 
-    @Nonnull
+    
     AnAction[] getTreeActions();
 
-    @Nonnull
+    
     default JComponent getComponent() {
         return (JComponent) this;
     }

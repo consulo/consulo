@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -50,16 +49,16 @@ import java.util.Map;
  */
 public class EditableNotificationMessageElement extends NotificationMessageElement implements EditableMessageElement {
 
-  @Nonnull
+  
   private final TreeCellEditor myRightTreeCellEditor;
-  @Nonnull
+  
   private final Notification myNotification;
-  @Nonnull
+  
   private final Map<String/*url*/, String/*link text to replace*/> disabledLinks;
 
   public EditableNotificationMessageElement(
-    @Nonnull Notification notification,
-    @Nonnull ErrorTreeElementKind kind,
+    Notification notification,
+    ErrorTreeElementKind kind,
     @Nullable GroupingElement parent,
     String[] message,
     Navigatable navigatable,
@@ -71,11 +70,11 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     myRightTreeCellEditor = new MyCellEditor();
   }
 
-  public void addDisabledLink(@Nonnull String url, @Nullable String text) {
+  public void addDisabledLink(String url, @Nullable String text) {
     disabledLinks.put(url, text);
   }
 
-  @Nonnull
+  
   @Override
   public TreeCellEditor getRightSelfEditor() {
     return myRightTreeCellEditor;
@@ -86,11 +85,11 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
     return true;
   }
 
-  public static void disableLink(@Nonnull HyperlinkEvent event) {
+  public static void disableLink(HyperlinkEvent event) {
     disableLink(event, null);
   }
 
-  private static void disableLink(@Nonnull HyperlinkEvent event, @Nullable String linkText) {
+  private static void disableLink(HyperlinkEvent event, @Nullable String linkText) {
     if (event.getSource() instanceof MyJEditorPane editorPane) {
       UIUtil.invokeLaterIfNeeded(() -> {
         editorPane.myElement.addDisabledLink(event.getDescription(), linkText);
@@ -100,7 +99,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   }
 
   @Override
-  protected void updateStyle(@Nonnull JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
+  protected void updateStyle(JEditorPane editorPane, @Nullable JTree tree, Object value, boolean selected, boolean hasFocus) {
     super.updateStyle(editorPane, tree, value, selected, hasFocus);
 
     HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
@@ -134,10 +133,10 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
   }
 
   private static class MyJEditorPane extends JEditorPane {
-    @Nonnull
+    
     private final EditableNotificationMessageElement myElement;
 
-    public MyJEditorPane(@Nonnull EditableNotificationMessageElement element) {
+    public MyJEditorPane(EditableNotificationMessageElement element) {
       myElement = element;
     }
   }

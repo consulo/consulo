@@ -32,7 +32,6 @@ import consulo.versionControlSystem.VcsToolWindow;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesViewContentManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -43,7 +42,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     private StatusBar myStatusBar;
 
     private Image myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideIncomingchangeson());
-    @Nonnull
+    
     private LocalizeValue myToolTipText = LocalizeValue.empty();
     private final StatusBarWidgetFactory myFactory;
     private final IncomingChangesIndicator myIncomingChangesIndicator;
@@ -70,11 +69,11 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
         );
     }
 
-    void setChangesAvailable(@Nonnull LocalizeValue toolTipText) {
+    void setChangesAvailable(LocalizeValue toolTipText) {
         update(PlatformIconGroup.ideIncomingchangeson(), toolTipText);
     }
 
-    private void update(@Nonnull Image icon, @Nonnull LocalizeValue toolTipText) {
+    private void update(Image icon, LocalizeValue toolTipText) {
         myCurrentIcon = icon;
         myToolTipText = toolTipText;
         if (myStatusBar != null) {
@@ -83,12 +82,12 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     }
 
     @Override
-    @Nonnull
+    
     public Image getIcon() {
         return myCurrentIcon;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipText() {
         return myToolTipText;
@@ -110,7 +109,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return myFactory.getId();
     }
@@ -121,7 +120,7 @@ class IncomingChangesWidget implements StatusBarWidget, StatusBarWidget.IconPres
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         myStatusBar = statusBar;
     }
 

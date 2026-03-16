@@ -14,8 +14,7 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -36,7 +35,6 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   private final String mySelectionStateKey;
   private final AtomicReference<String> myVisibleViewRef = new AtomicReference<>();
   private final
-  @Nonnull
   SwitchViewAction mySwitchViewAction;
 
   public CompositeView(@NonNls String selectionStateKey) {
@@ -45,7 +43,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     mySwitchViewAction = new SwitchViewAction();
   }
 
-  public void addView(@Nonnull T view, @Nonnull String viewName) {
+  public void addView(T view, String viewName) {
     T oldView = getView(viewName);
     if (oldView != null) {
       remove(oldView.getComponent());
@@ -56,7 +54,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     Disposer.register(this, view);
   }
 
-  public void addViewAndShowIfNeeded(@Nonnull T view, @Nonnull String viewName, boolean showByDefault) {
+  public void addViewAndShowIfNeeded(T view, String viewName, boolean showByDefault) {
     addView(view, viewName);
     String storedState = getStoredState();
     if (storedState != null && (storedState.equals(viewName)) || storedState == null && showByDefault) {
@@ -64,12 +62,12 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     }
   }
 
-  public void showView(@Nonnull String viewName) {
+  public void showView(String viewName) {
     showView(viewName, true);
     setStoredState(viewName);
   }
 
-  public void showView(@Nonnull String viewName, boolean requestFocus) {
+  public void showView(String viewName, boolean requestFocus) {
     if (!StringUtil.equals(viewName, myVisibleViewRef.get())) {
       myVisibleViewRef.set(viewName);
       CardLayout cl = (CardLayout)(getLayout());
@@ -89,23 +87,21 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     return StringUtil.equals(myVisibleViewRef.get(), viewName);
   }
 
-  public T getView(@Nonnull String viewName) {
+  public T getView(String viewName) {
     return myViewMap.get(viewName);
   }
 
   public
   @Nullable
-  <U> U getView(@Nonnull String viewName, @Nonnull Class<U> viewClass) {
+  <U> U getView(String viewName, Class<U> viewClass) {
     T view = getView(viewName);
     return viewClass.isInstance(view) ? viewClass.cast(view) : null;
   }
 
-  @Nonnull
   public AnAction[] createConsoleActions() {
     return AnAction.EMPTY_ARRAY;
   }
 
-  @Nonnull
   public AnAction[] getSwitchActions() {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     actionGroup.addSeparator();
@@ -115,7 +111,6 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
 
   @Override
   public
-  @Nonnull
   JComponent getComponent() {
     return this;
   }
@@ -130,7 +125,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     String visibleViewName = myVisibleViewRef.get();
     if (visibleViewName != null) {
       T visibleView = getView(visibleViewName);
@@ -162,7 +157,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       Presentation presentation = e.getPresentation();
       if (myViewMap.size() <= 1) {
         presentation.setEnabledAndVisible(false);
@@ -174,7 +169,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent event) {
+    public boolean isSelected(AnActionEvent event) {
       String visibleViewName = myVisibleViewRef.get();
       if (visibleViewName == null) return true;
       Set<String> viewNames = myViewMap.keySet();
@@ -182,7 +177,7 @@ public class CompositeView<T extends ComponentContainer> extends JPanel implemen
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+    public void setSelected(AnActionEvent event, boolean flag) {
       if (myViewMap.size() > 1) {
         List<String> names = new ArrayList<>(myViewMap.keySet());
         String viewName = flag ? names.get(0) : names.get(1);

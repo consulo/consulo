@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "templateEnter", order = "before editorEnter")
 public class EnterHandler extends BaseEnterHandler implements ExtensionEditorActionHandler {
@@ -42,7 +41,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
   }
 
   @Override
-  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     return myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
 
@@ -64,7 +63,7 @@ public class EnterHandler extends BaseEnterHandler implements ExtensionEditorAct
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_ENTER;

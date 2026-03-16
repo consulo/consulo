@@ -30,10 +30,8 @@ import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -294,9 +292,9 @@ public class GuiUtils {
     else if (component instanceof JLabel) {
       Color color = UIUtil.getInactiveTextColor();
       if (color == null) color = component.getForeground();
-      @NonNls String changeColorString = "<font color=#" + colorToHex(color) + ">";
+      String changeColorString = "<font color=#" + colorToHex(color) + ">";
       JLabel label = (JLabel)component;
-      @NonNls String text = label.getText();
+      String text = label.getText();
       if (text != null && text.startsWith("<html>")) {
         if (StringUtil.startsWithConcatenation(text, "<html>", changeColorString) && enabled) {
           text = "<html>" + text.substring(("<html>" + changeColorString).length());
@@ -330,11 +328,11 @@ public class GuiUtils {
     return s;
   }
 
-  public static void runOrInvokeAndWait(@Nonnull @RequiredUIAccess Runnable runnable) throws InvocationTargetException, InterruptedException {
+  public static void runOrInvokeAndWait(@RequiredUIAccess Runnable runnable) throws InvocationTargetException, InterruptedException {
     ApplicationManager.getApplication().invokeAndWait(runnable);
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
+  public static void invokeLaterIfNeeded(@RequiredUIAccess Runnable runnable, consulo.ui.ModalityState modalityState) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
@@ -344,7 +342,7 @@ public class GuiUtils {
     }
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState, @Nonnull BooleanSupplier expired) {
+  public static void invokeLaterIfNeeded(@RequiredUIAccess Runnable runnable, consulo.ui.ModalityState modalityState, BooleanSupplier expired) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
@@ -365,8 +363,8 @@ public class GuiUtils {
    * @param comp      component
    * @return dimension with width enough to insert provided number of chars into component
    */
-  @Nonnull
-  public static Dimension getSizeByChars(int charCount, @Nonnull JComponent comp) {
+  
+  public static Dimension getSizeByChars(int charCount, JComponent comp) {
     Dimension size = comp.getPreferredSize();
     FontMetrics fontMetrics = comp.getFontMetrics(comp.getFont());
     size.width = fontMetrics.charWidth('a') * charCount;
@@ -390,20 +388,20 @@ public class GuiUtils {
    * @param target the component representing the UI hierarchy and the target device
    * @param comp   the component to target
    */
-  public static void targetToDevice(@Nonnull Component comp, @Nullable Component target) {
+  public static void targetToDevice(Component comp, @Nullable Component target) {
     if (comp.isShowing()) return;
     GraphicsConfiguration gc = target != null ? target.getGraphicsConfiguration() : null;
     setGraphicsConfiguration(comp, gc);
   }
 
-  public static void setGraphicsConfiguration(@Nonnull Component comp, @Nullable GraphicsConfiguration gc) {
+  public static void setGraphicsConfiguration(Component comp, @Nullable GraphicsConfiguration gc) {
     AWTAccessorHacking.setGraphicsConfiguration(comp, gc);
   }
 
   /**
    * removes all children and parent references, listeners from {@code container} to avoid possible memory leaks
    */
-  public static void removePotentiallyLeakingReferences(@Nonnull Container container) {
+  public static void removePotentiallyLeakingReferences(Container container) {
     assert SwingUtilities.isEventDispatchThread();
     AWTAccessorHacking.setParent(container, null);
     container.removeAll();

@@ -37,7 +37,6 @@ import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.internal.CustomTooltipBuilder;
 import consulo.ui.ex.internal.KeyMapSetting;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.awt.event.KeyEvent;
@@ -60,7 +59,7 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().putClientProperty(
             CustomTooltipBuilder.KEY,
             (tooltip, presentation) -> {
@@ -87,7 +86,7 @@ public class SearchEverywhereAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (!myKeyMapSetting.isEnabledDoublePressShortcuts()
             && e.getInputEvent() instanceof KeyEvent keyEvent
             && keyEvent.getKeyCode() == KeyEvent.VK_SHIFT) {

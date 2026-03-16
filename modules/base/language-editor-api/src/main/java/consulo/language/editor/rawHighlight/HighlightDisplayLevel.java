@@ -26,8 +26,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,13 +78,13 @@ public class HighlightDisplayLevel {
         return ourMap.get(severity);
     }
 
-    public HighlightDisplayLevel(@Nonnull HighlightSeverity severity, @Nullable Image icon) {
+    public HighlightDisplayLevel(HighlightSeverity severity, @Nullable Image icon) {
         this(severity);
         myIcon = icon;
         ourMap.put(mySeverity, this);
     }
 
-    public HighlightDisplayLevel(@Nonnull HighlightSeverity severity) {
+    public HighlightDisplayLevel(HighlightSeverity severity) {
         mySeverity = severity;
     }
 
@@ -94,7 +93,7 @@ public class HighlightDisplayLevel {
         return mySeverity.toString();
     }
 
-    @Nonnull
+    
     public String getName() {
         return mySeverity.getName();
     }
@@ -104,12 +103,12 @@ public class HighlightDisplayLevel {
         return myIcon;
     }
 
-    @Nonnull
+    
     public HighlightSeverity getSeverity() {
         return mySeverity;
     }
 
-    public static void registerSeverity(@Nonnull HighlightSeverity severity, TextAttributesKey key, @Nullable Image icon) {
+    public static void registerSeverity(HighlightSeverity severity, TextAttributesKey key, @Nullable Image icon) {
         Image severityIcon = icon != null ? icon : createBoxIcon(key);
         HighlightDisplayLevel level = ourMap.get(severity);
         if (level == null) {
@@ -120,8 +119,8 @@ public class HighlightDisplayLevel {
         }
     }
 
-    @Nonnull
-    private static ColorValue buildColorValue(@Nonnull TextAttributesKey key) {
+    
+    private static ColorValue buildColorValue(TextAttributesKey key) {
         return ColorValue.lazy(() -> {
             EditorColorsManager manager = EditorColorsManager.getInstance();
             TextAttributes attributes = manager.getGlobalScheme().getAttributes(key);
@@ -137,22 +136,22 @@ public class HighlightDisplayLevel {
         return 14;
     }
 
-    @Nonnull
-    public static Image createBoxIcon(@Nonnull TextAttributesKey key) {
+    
+    public static Image createBoxIcon(TextAttributesKey key) {
         return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), buildColorValue(key));
     }
 
-    @Nonnull
-    private static Image createErrorIcon(@Nonnull TextAttributesKey textAttributesKey) {
+    
+    private static Image createErrorIcon(TextAttributesKey textAttributesKey) {
         return ImageEffects.colorize(PlatformIconGroup.generalInspectionserror(), buildColorValue(textAttributesKey));
     }
 
-    @Nonnull
-    private static Image createWarningIcon(@Nonnull TextAttributesKey textAttributesKey) {
+    
+    private static Image createWarningIcon(TextAttributesKey textAttributesKey) {
         return ImageEffects.colorize(PlatformIconGroup.generalInspectionswarning(), buildColorValue(textAttributesKey));
     }
 
-    @Nonnull
+    
     public static Image createIconByMask(ColorValue renderColor) {
         return ImageEffects.colorFilled(getEmptyIconDim(), getEmptyIconDim(), renderColor);
     }

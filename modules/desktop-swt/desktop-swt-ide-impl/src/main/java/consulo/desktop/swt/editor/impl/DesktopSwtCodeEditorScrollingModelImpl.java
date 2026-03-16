@@ -20,7 +20,6 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -42,30 +41,30 @@ public class DesktopSwtCodeEditorScrollingModelImpl extends CodeEditorScrollingM
 
   }
 
-  @Nonnull
+  
   @Override
   public Rectangle getVisibleArea() {
     return new Rectangle(0, 0);
   }
 
-  @Nonnull
+  
   @Override
   public Rectangle getVisibleAreaOnScrollingFinished() {
     return new Rectangle(0, 0);
   }
 
   @Override
-  public void scrollToCaret(@Nonnull ScrollType scrollType) {
+  public void scrollToCaret(ScrollType scrollType) {
 
   }
 
   @Override
-  public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
+  public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
 
   }
 
   @Override
-  public void runActionOnScrollingFinished(@Nonnull Runnable action) {
+  public void runActionOnScrollingFinished(Runnable action) {
 
   }
 

@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Model of a generic tree control displayed in the IDEA user interface, with a set
@@ -28,7 +27,7 @@ public interface TreeModel {
    *
    * @return the tree root.
    */
-  @Nonnull
+  
   TreeElement getRoot();
 
   /**
@@ -37,7 +36,7 @@ public interface TreeModel {
    * @return the array of grouping actions.
    * @see Grouper#EMPTY_ARRAY
    */
-  @Nonnull
+  
   Grouper[] getGroupers();
 
   /**
@@ -46,7 +45,7 @@ public interface TreeModel {
    * @return the array of sorting actions.
    * @see Sorter#EMPTY_ARRAY
    */
-  @Nonnull
+  
   Sorter[] getSorters();
 
   /**
@@ -55,6 +54,6 @@ public interface TreeModel {
    * @return the array of filtering actions.
    * @see Filter#EMPTY_ARRAY
    */
-  @Nonnull
+  
   Filter[] getFilters();
 }

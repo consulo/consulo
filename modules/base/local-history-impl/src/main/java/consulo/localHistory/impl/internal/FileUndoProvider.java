@@ -16,7 +16,6 @@ import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,7 +80,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     }
 
     @Override
-    public void before(@Nonnull List<? extends VFileEvent> events) {
+    public void before(List<? extends VFileEvent> events) {
         for (VFileEvent e : events) {
             if (e instanceof VFileContentChangeEvent) {
                 beforeContentsChange((VFileContentChangeEvent) e);
@@ -93,7 +92,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
     }
 
     @Override
-    public void after(@Nonnull List<? extends VFileEvent> events) {
+    public void after(List<? extends VFileEvent> events) {
         for (VFileEvent e : events) {
             if (e instanceof VFileCreateEvent || e instanceof VFileMoveEvent || e instanceof VFilePropertyChangeEvent && ((VFilePropertyChangeEvent) e).isRename()) {
                 VirtualFile file = e.getFile();
@@ -107,7 +106,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         }
     }
 
-    private void processEvent(@Nonnull VFileEvent e, @Nonnull VirtualFile file) {
+    private void processEvent(VFileEvent e, VirtualFile file) {
         if (!shouldProcess(e, file)) {
             return;
         }
@@ -119,7 +118,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         }
     }
 
-    private void beforeContentsChange(@Nonnull VFileContentChangeEvent e) {
+    private void beforeContentsChange(VFileContentChangeEvent e) {
         VirtualFile file = e.getFile();
         if (!shouldProcess(e, file)) {
             return;
@@ -130,7 +129,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         registerNonUndoableAction(file);
     }
 
-    private void beforeFileDeletion(@Nonnull VFileDeleteEvent e) {
+    private void beforeFileDeletion(VFileDeleteEvent e) {
         VirtualFile file = e.getFile();
         if (!shouldProcess(e, file)) {
             invalidateActionsFor(file);
@@ -144,7 +143,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         }
     }
 
-    private void fileDeleted(@Nonnull VFileDeleteEvent e) {
+    private void fileDeleted(VFileDeleteEvent e) {
         VirtualFile f = e.getFile();
         if (!shouldProcess(e, f)) {
             return;
@@ -157,7 +156,7 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         }
     }
 
-    private boolean shouldProcess(@Nonnull VFileEvent e, VirtualFile file) {
+    private boolean shouldProcess(VFileEvent e, VirtualFile file) {
         if (!myIsInsideCommand || myProject.isDisposed()) {
             return false;
         }
@@ -169,11 +168,11 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         return LocalHistory.getInstance().isUnderControl(file);
     }
 
-    private static boolean isUndoable(@Nonnull VFileEvent e, @Nonnull VirtualFile file) {
+    private static boolean isUndoable(VFileEvent e, VirtualFile file) {
         return !e.isFromRefresh() || Objects.equals(file.getUserData(UndoConstants.FORCE_RECORD_UNDO), Boolean.TRUE);
     }
 
-    private void registerUndoableAction(@Nonnull VirtualFile file) {
+    private void registerUndoableAction(VirtualFile file) {
         registerUndoableAction(createDocumentReference(file));
     }
 
@@ -181,17 +180,17 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
         getUndoManager().undoableActionPerformed(new MyUndoableAction(ref));
     }
 
-    private void registerNonUndoableAction(@Nonnull VirtualFile file) {
+    private void registerNonUndoableAction(VirtualFile file) {
         getUndoManager().nonundoableActionPerformed(createDocumentReference(file), true);
     }
 
-    private void invalidateActionsFor(@Nonnull VirtualFile file) {
+    private void invalidateActionsFor(VirtualFile file) {
         if (myProject == null || !myProject.isDisposed()) {
             getUndoManager().invalidateActionsFor(createDocumentReference(file));
         }
     }
 
-    private static DocumentReference createDocumentReference(@Nonnull VirtualFile file) {
+    private static DocumentReference createDocumentReference(VirtualFile file) {
         return DocumentReferenceManager.getInstance().create(file);
     }
 

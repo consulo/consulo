@@ -27,8 +27,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.VcsTaskHandler;
 import consulo.versionControlSystem.change.LocalChangeList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +37,7 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class TaskManager {
 
-  public static TaskManager getManager(@Nonnull Project project) {
+  public static TaskManager getManager(Project project) {
     return project.getComponent(TaskManager.class);
   }
 
@@ -73,7 +72,7 @@ public abstract class TaskManager {
    * @param forceRequest whether to download issues anew or use already cached ones.
    * @return tasks collected from all active repositories
    */
-  public List<Task> getIssues(@Nullable String query, int offset, int limit, boolean withClosed, @Nonnull ProgressIndicator indicator, boolean forceRequest) {
+  public List<Task> getIssues(@Nullable String query, int offset, int limit, boolean withClosed, ProgressIndicator indicator, boolean forceRequest) {
     return Collections.emptyList();
   }
 
@@ -87,7 +86,7 @@ public abstract class TaskManager {
   public abstract List<Task> getCachedIssues(boolean withClosed);
 
   @Nullable
-  public abstract Task updateIssue(@Nonnull String id);
+  public abstract Task updateIssue(String id);
 
   public abstract List<LocalTask> getLocalTasks();
 
@@ -97,9 +96,9 @@ public abstract class TaskManager {
 
   public abstract LocalTask createLocalTask(String summary);
 
-  public abstract LocalTask activateTask(@Nonnull Task task, boolean clearContext);
+  public abstract LocalTask activateTask(Task task, boolean clearContext);
 
-  @Nonnull
+  
   public abstract LocalTask getActiveTask();
 
   @Nullable
@@ -127,11 +126,11 @@ public abstract class TaskManager {
 
   public abstract void removeTask(LocalTask task);
 
-  public abstract void addTaskListener(@Nonnull TaskListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void addTaskListener(TaskListener listener, Disposable parentDisposable);
 
   public abstract TaskRepository[] getAllRepositories();
 
-  public abstract void addRepository(@Nonnull TaskRepository repository);
+  public abstract void addRepository(TaskRepository repository);
 
   public abstract boolean testConnection(TaskRepository repository);
 
@@ -139,8 +138,8 @@ public abstract class TaskManager {
 
   public abstract boolean isTrackContextForNewChangelist();
 
-  @Nonnull
-  public String suggestBranchName(@Nonnull Task task) {
+  
+  public String suggestBranchName(Task task) {
     String name = constructDefaultBranchName(task);
     if (task.isIssue()) {
       return name.replace(' ', '-');
@@ -150,8 +149,8 @@ public abstract class TaskManager {
     return StringUtil.join(strings, 0, Math.min(2, strings.length), "-");
   }
 
-  @Nonnull
-  public abstract String constructDefaultBranchName(@Nonnull Task task);
+  
+  public abstract String constructDefaultBranchName(Task task);
 
   public abstract void addBranches(LocalTask task, VcsTaskHandler.TaskInfo[] info, boolean original);
 }

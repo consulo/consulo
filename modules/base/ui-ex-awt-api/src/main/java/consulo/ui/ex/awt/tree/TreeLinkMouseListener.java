@@ -18,8 +18,7 @@ package consulo.ui.ex.awt.tree;
 import consulo.util.lang.Comparing;
 import consulo.ui.ex.awt.LinkMouseListenerBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
@@ -49,7 +48,7 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
 
   @Nullable
   @Override
-  protected Object getTagAt(@Nonnull MouseEvent e) {
+  protected Object getTagAt(MouseEvent e) {
     JTree tree = (JTree)e.getSource();
     Object tag = null;
     HaveTooltip haveTooltip = null;
@@ -72,7 +71,7 @@ public class TreeLinkMouseListener extends LinkMouseListenerBase {
     return tag;
   }
 
-  protected int getRendererRelativeX(@Nonnull MouseEvent e, @Nonnull JTree tree, @Nonnull TreePath path) {
+  protected int getRendererRelativeX(MouseEvent e, JTree tree, TreePath path) {
     Rectangle rectangle = tree.getPathBounds(path);
     assert rectangle != null;
     return e.getX() - rectangle.x;

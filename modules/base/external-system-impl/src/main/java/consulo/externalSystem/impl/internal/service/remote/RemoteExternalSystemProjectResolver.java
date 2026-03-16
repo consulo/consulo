@@ -23,8 +23,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.project.ProjectData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.Collections;
@@ -42,8 +41,8 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
     = new RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings>() {
     @Nullable
     @Override
-    public DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
-                                                    @Nonnull String projectPath,
+    public DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+                                                    String projectPath,
                                                     boolean isPreviewMode,
                                                     @Nullable ExternalSystemExecutionSettings settings)
       throws ExternalSystemException, IllegalArgumentException, IllegalStateException
@@ -52,24 +51,24 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
     }
 
     @Override
-    public void setSettings(@Nonnull ExternalSystemExecutionSettings settings) throws RemoteException {
+    public void setSettings(ExternalSystemExecutionSettings settings) throws RemoteException {
     }
 
     @Override
-    public void setNotificationListener(@Nonnull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+    public void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
     }
 
     @Override
-    public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+    public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
     @Override
-    public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+    public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
-    @Nonnull
+    
     @Override
     public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
       return Collections.emptyMap();
@@ -78,8 +77,8 @@ public interface RemoteExternalSystemProjectResolver<S extends ExternalSystemExe
 
 
   @Nullable
-  DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
-                                           @Nonnull String projectPath,
+  DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+                                           String projectPath,
                                            boolean isPreviewMode,
                                            @Nullable S settings)
     throws RemoteException, ExternalSystemException, IllegalArgumentException, IllegalStateException;

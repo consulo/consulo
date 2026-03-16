@@ -22,7 +22,6 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class XDebuggerWatchesManager implements PersistentStateComponent<XDebuggerWatchesManager.WatchesManagerState> {
     private final Map<String, XExpression[]> watches = new ConcurrentHashMap<>();
 
-    @Nonnull
+    
     public XExpression[] getWatches(String confName) {
         XExpression[] expressions = watches.get(confName);
         if (expressions == null) {

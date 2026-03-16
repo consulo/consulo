@@ -21,7 +21,6 @@ import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,28 +39,28 @@ public abstract class MemberChooserBuilderBase<T extends ClassMember> implements
     myElements = elements;
   }
 
-  @Nonnull
+  
   @Override
-  public MemberChooserBuilder<T> withTitle(@Nonnull LocalizeValue titleValue) {
+  public MemberChooserBuilder<T> withTitle(LocalizeValue titleValue) {
     myTitle = titleValue;
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public MemberChooserBuilder<T> withOption(@Nonnull KeyWithDefaultValue<Boolean> dataKey, @Nonnull LocalizeValue optionTitle) {
+  public MemberChooserBuilder<T> withOption(KeyWithDefaultValue<Boolean> dataKey, LocalizeValue optionTitle) {
     myOptions.add(Pair.create(dataKey, optionTitle));
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public MemberChooserBuilder<T> withEmptySelection() {
     myAllowEmptySelection = true;
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public MemberChooserBuilder<T> withMultipleSelection() {
     myAllowMultipleSelection = true;

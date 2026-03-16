@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.change;
 
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -32,11 +31,13 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * for vcses where it is reasonable to ask revision of each item separately
@@ -61,7 +62,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       return "NOT_LOADED";
     }
 
-    public int compareTo(@Nonnull VcsRevisionNumber o) {
+    public int compareTo(VcsRevisionNumber o) {
       return o == this ? 0 : -1;
     }
   };
@@ -70,7 +71,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
       return "UNKNOWN";
     }
 
-    public int compareTo(@Nonnull VcsRevisionNumber o) {
+    public int compareTo(VcsRevisionNumber o) {
       return o == this ? 0 : -1;
     }
   };
@@ -204,7 +205,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private VirtualFile getRootForPath(String s) {
     return myVcsManager.getVcsRootFor(VcsUtil.getFilePath(s, false));
   }
@@ -225,7 +226,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
   }
 
   // +-
-  @Nonnull
+  
   private LazyRefreshingSelfQueue<String> getQueue(VcsRoot vcsRoot) {
     synchronized (myLock) {
       LazyRefreshingSelfQueue<String> queue = myRefreshingQueues.get(vcsRoot);
@@ -275,7 +276,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
     }
   }
 
-  private class MyShouldUpdateChecker implements Computable<Boolean> {
+  private class MyShouldUpdateChecker implements Supplier<Boolean> {
     private final VcsRoot myVcsRoot;
 
     public MyShouldUpdateChecker(VcsRoot vcsRoot) {
@@ -284,7 +285,7 @@ public class RemoteRevisionsNumbersCache implements ChangesOnServerTracker {
 
     // Check if currently cached vcs root latest revision is less than latest vcs root revision
     // => update should be performed in this case
-    public Boolean compute() {
+    public Boolean get() {
       AbstractVcs vcs = myVcsRoot.getVcs();
       // won't be called in parallel for same vcs -> just synchronized map is ok
       String vcsName = vcs.getName();

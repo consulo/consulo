@@ -19,14 +19,13 @@ import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class SwingHelper {
-  @Nonnull
+  
   public static JEditorPane createHtmlViewer(boolean lineWrap, @Nullable Font font, @Nullable Color background, @Nullable Color foreground) {
     JEditorPane textPane;
     if (lineWrap) {

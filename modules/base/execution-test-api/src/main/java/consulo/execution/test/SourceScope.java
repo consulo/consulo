@@ -22,8 +22,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -190,12 +189,12 @@ public abstract class SourceScope {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return findScopeFor(file) != null;
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       GlobalSearchScope scope = findScopeFor(file1);
       assert scope != null;
       if (scope.contains(file2)) return scope.compare(file1, file2);
@@ -203,7 +202,7 @@ public abstract class SourceScope {
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return myMainScope.isSearchInModuleContent(aModule);
     }
 

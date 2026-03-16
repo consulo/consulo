@@ -26,19 +26,18 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.util.IncorrectOperationException;
 import consulo.sandboxPlugin.lang.psi.stub.SandClassStub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2014-03-19
  */
 public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements PsiNamedElement, PsiNameIdentifierOwner {
-    public SandClass(@Nonnull ASTNode node) {
+    public SandClass(ASTNode node) {
         super(node);
     }
 
-    public SandClass(@Nonnull SandClassStub stub, @Nonnull IStubElementType nodeType) {
+    public SandClass(SandClassStub stub, IStubElementType nodeType) {
         super(stub, nodeType);
     }
 
@@ -52,7 +51,7 @@ public class SandClass extends StubBasedPsiElementBase<SandClassStub> implements
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         return null;
     }
 

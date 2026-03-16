@@ -24,8 +24,7 @@ import consulo.util.lang.text.StringTokenizer;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.TempFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +42,7 @@ public class TestsLocationProviderUtil {
     }
 
     @Nullable
-    public static String extractPath(@Nonnull String locationUrl) {
+    public static String extractPath(String locationUrl) {
         int index = locationUrl.indexOf(PROTOCOL_SEPARATOR);
         if (index >= 0) {
             return locationUrl.substring(index + PROTOCOL_SEPARATOR.length());
@@ -94,7 +93,7 @@ public class TestsLocationProviderUtil {
      * @return
      */
     public static List<VirtualFile> findFilesClosestToTarget(
-        @Nonnull List<String> targetParentFolders,
+        List<String> targetParentFolders,
         List<FileInfo> candidates,
         int minProximityThreshold
     ) {

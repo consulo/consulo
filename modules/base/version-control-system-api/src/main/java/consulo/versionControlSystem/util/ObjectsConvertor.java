@@ -19,8 +19,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,23 +54,23 @@ public class ObjectsConvertor {
   private ObjectsConvertor() {
   }
 
-  public static List<VirtualFile> fp2vf(@Nonnull Collection<FilePath> in) {
+  public static List<VirtualFile> fp2vf(Collection<FilePath> in) {
     return convert(in, FILEPATH_TO_VIRTUAL);
   }
 
-  public static List<FilePath> vf2fp(@Nonnull List<VirtualFile> in) {
+  public static List<FilePath> vf2fp(List<VirtualFile> in) {
     return convert(in, VIRTUAL_FILEPATH);
   }
 
-  public static List<File> fp2jiof(@Nonnull Collection<FilePath> in) {
+  public static List<File> fp2jiof(Collection<FilePath> in) {
     return convert(in, FILEPATH_FILE);
   }
 
-  public static <T, S> List<S> convert(@Nonnull Collection<T> in, Function<T, S> converter) {
+  public static <T, S> List<S> convert(Collection<T> in, Function<T, S> converter) {
     return convert(in, converter, null);
   }
 
-  public static <T, U, S extends U> List<S> convert(@Nonnull Collection<T> in, Function<T, S> converter, @Nullable Function<U, Boolean> outFilter) {
+  public static <T, U, S extends U> List<S> convert(Collection<T> in, Function<T, S> converter, @Nullable Function<U, Boolean> outFilter) {
     List<S> out = new ArrayList<S>();
     for (T t : in) {
       S converted = converter.apply(t);

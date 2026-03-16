@@ -17,8 +17,7 @@ package consulo.externalSystem.service.module.extension;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.module.extension.ModuleExtension;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,8 +25,8 @@ import jakarta.annotation.Nullable;
  */
 public interface ExternalSystemModuleExtension<T extends ExternalSystemModuleExtension<T>> extends ModuleExtension<T> {
     @Nullable
-    String getOption(@Nonnull String key);
+    String getOption(String key);
 
-    @Nonnull
+    
     ProjectSystemId getProjectSystemId();
 }

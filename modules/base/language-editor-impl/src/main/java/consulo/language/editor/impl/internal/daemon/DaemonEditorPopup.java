@@ -18,7 +18,6 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -29,7 +28,7 @@ public class DaemonEditorPopup extends PopupHandler {
     private final Project myProject;
     private final Editor myEditor;
 
-    public DaemonEditorPopup(@Nonnull Project project, @Nonnull Editor editor) {
+    public DaemonEditorPopup(Project project, Editor editor) {
         myProject = project;
         myEditor = editor;
     }
@@ -49,7 +48,7 @@ public class DaemonEditorPopup extends PopupHandler {
         builder.add(new AnAction(CodeEditorLocalize.customizeHighlightingLevelMenuItem()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 JBPopup popup = ConfigureHighlightingLevel.getConfigureHighlightingLevelPopup(e.getDataContext());
                 if (popup != null) {
                     popup.show(new RelativePoint(comp, new Point(x, y)));
@@ -60,13 +59,13 @@ public class DaemonEditorPopup extends PopupHandler {
             builder.addSeparator();
             builder.add(new ToggleAction(CodeEditorLocalize.checkboxShowEditorPreviewPopup()) {
                 @Override
-                public boolean isSelected(@Nonnull AnActionEvent e) {
+                public boolean isSelected(AnActionEvent e) {
                     return UISettings.getInstance().getShowEditorToolTip();
                 }
 
                 @Override
                 @RequiredUIAccess
-                public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+                public void setSelected(AnActionEvent e, boolean state) {
                     UISettings.getInstance().setShowEditorToolTip(state);
                     UISettings.getInstance().fireUISettingsChanged();
                 }
@@ -81,7 +80,7 @@ public class DaemonEditorPopup extends PopupHandler {
         }
     }
 
-    @Nonnull
+    
     public static ActionGroup createGotoGroup() {
         Shortcut shortcut = KeymapUtil.getPrimaryShortcut("GotoNextError");
         String shortcutText = shortcut != null ? " (" + KeymapUtil.getShortcutText(shortcut) + ")" : "";
@@ -91,13 +90,13 @@ public class DaemonEditorPopup extends PopupHandler {
 
         builder.add(new ToggleAction(CodeEditorLocalize.errorsPanelGoToErrorsFirstRadio()) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return DaemonCodeAnalyzerSettings.getInstance().isNextErrorActionGoesToErrorsFirst();
             }
 
             @Override
             @RequiredUIAccess
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 DaemonCodeAnalyzerSettings.getInstance().setNextErrorActionGoesToErrorsFirst(state);
             }
 
@@ -108,13 +107,13 @@ public class DaemonEditorPopup extends PopupHandler {
         });
         builder.add(new ToggleAction(CodeEditorLocalize.errorsPanelGoToNextErrorWarningRadio()) {
             @Override
-            public boolean isSelected(@Nonnull AnActionEvent e) {
+            public boolean isSelected(AnActionEvent e) {
                 return !DaemonCodeAnalyzerSettings.getInstance().isNextErrorActionGoesToErrorsFirst();
             }
 
             @Override
             @RequiredUIAccess
-            public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+            public void setSelected(AnActionEvent e, boolean state) {
                 DaemonCodeAnalyzerSettings.getInstance().setNextErrorActionGoesToErrorsFirst(!state);
             }
 

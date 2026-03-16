@@ -29,8 +29,7 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -38,22 +37,22 @@ import java.util.function.Consumer;
 
 public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBarWidget.Multiframe, StatusBarWidget.IconPresentation {
     private Image myCurrentIcon;
-    @Nonnull
+    
     private LocalizeValue myToolTipText = LocalizeValue.empty();
 
-    public TogglePopupHintsPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public TogglePopupHintsPanel(Project project, StatusBarWidgetFactory factory) {
         super(project, factory);
         myCurrentIcon = ImageEffects.grayed(PlatformIconGroup.ideHectoroff());
     }
 
     @Override
-    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public void selectionChanged(FileEditorManagerEvent event) {
         updateStatus();
     }
 
 
     @Override
-    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
         updateStatus();
     }
 
@@ -68,7 +67,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
         return myCurrentIcon;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipText() {
         return myToolTipText;
@@ -89,7 +88,7 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         super.install(statusBar);
         myConnection.subscribe(PowerSaveModeListener.class, this::updateStatus);
         myConnection.subscribe(ProfileChangeAdapter.class, new ProfileChangeAdapter() {

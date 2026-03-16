@@ -20,8 +20,7 @@ import consulo.annotation.component.TopicAPI;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This listener is notified when some operation performs a massive batch file change, and when this change is completed.
@@ -34,9 +33,9 @@ public interface BatchFileChangeListener {
    * @param project      Project where many file changes are expected to happen
    * @param activityName the name of the activity (a noun phrase) causing this file change
    */
-  default void batchChangeStarted(@Nonnull ComponentManager project, @Nullable String activityName) {
+  default void batchChangeStarted(ComponentManager project, @Nullable String activityName) {
   }
 
-  default void batchChangeCompleted(@Nonnull ComponentManager project) {
+  default void batchChangeCompleted(ComponentManager project) {
   }
 }

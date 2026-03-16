@@ -3,15 +3,14 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.application.util.mac.foundation.ID;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 final class TBItemGroup extends TBItem {
     private final ItemsContainer myGroupItems;
 
-    TBItemGroup(@Nonnull String name, @Nullable ItemListener listener, @Nonnull List<AnAction> actions) {
+    TBItemGroup(String name, @Nullable ItemListener listener, List<AnAction> actions) {
         super("group", listener);
         myGroupItems = new ItemsContainer(name + "_group");
         for (AnAction action : actions) {

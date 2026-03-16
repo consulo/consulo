@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.welcomeScreen.impl.internal.editor.WelcomeConfigurationFileEditorProvider;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -33,7 +32,7 @@ import java.util.Map;
 @ExtensionImpl
 public class WelcomeProjectStartupActivity implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         if (!project.isWelcomeProject()) {
             return;
         }

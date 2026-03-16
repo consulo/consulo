@@ -21,10 +21,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.versionControlSystem.internal.FlatSpeedSearchPopupFactory;
-import jakarta.annotation.Nonnull;
 
 public class BranchLogSpeedSearchPopup {
-    public static ListPopup createSpeedSearchPopup(@Nonnull ActionGroup actionGroup, @Nonnull DataContext context) {
+    public static ListPopup createSpeedSearchPopup(ActionGroup actionGroup, DataContext context) {
         return FlatSpeedSearchPopupFactory.getInstance()
             .createFlatSpeedSearchPopup(
                 null,
@@ -35,15 +34,15 @@ public class BranchLogSpeedSearchPopup {
                 (action, holdingFilter) -> !holdingFilter || !(action instanceof ActionGroup));
     }
 
-    @Nonnull
-    public static ActionGroup createSpeedSearchActionGroup(@Nonnull ActionGroup actionGroup) {
+    
+    public static ActionGroup createSpeedSearchActionGroup(ActionGroup actionGroup) {
         ActionGroup.Builder speedSearchActions = ActionGroup.newImmutableBuilder();
         createSpeedSearchActions(actionGroup, speedSearchActions, true);
         return speedSearchActions.build();
     }
 
-    private static void createSpeedSearchActions(@Nonnull ActionGroup actionGroup,
-                                                 @Nonnull ActionGroup.Builder speedSearchActions,
+    private static void createSpeedSearchActions(ActionGroup actionGroup,
+                                                 ActionGroup.Builder speedSearchActions,
                                                  boolean isFirstLevel) {
         if (!isFirstLevel) {
             speedSearchActions.addSeparator(actionGroup.getTemplatePresentation().getTextValue());

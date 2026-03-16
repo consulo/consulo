@@ -38,8 +38,7 @@ import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileCopyEvent;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -61,11 +60,11 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
     private static final AtomicBoolean myInitialized = new AtomicBoolean();
 
-    @Nonnull
+    
     private final Project myProject;
 
     @Inject
-    public NonProjectFileWritingAccessProvider(@Nonnull Project project, @Nonnull VirtualFileManager virtualFileManager) {
+    public NonProjectFileWritingAccessProvider(Project project, VirtualFileManager virtualFileManager) {
         myProject = project;
 
         if (myInitialized.compareAndSet(false, true)) {
@@ -74,11 +73,11 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     }
 
     @Override
-    public boolean isPotentiallyWritable(@Nonnull VirtualFile file) {
+    public boolean isPotentiallyWritable(VirtualFile file) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Collection<VirtualFile> requestWriting(VirtualFile... files) {
@@ -114,7 +113,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
     @Nullable
     @RequiredUIAccess
-    private UnlockOption askToUnlock(@Nonnull List<VirtualFile> files) {
+    private UnlockOption askToUnlock(List<VirtualFile> files) {
         NonProjectFileWritingAccessDialog dialog = new NonProjectFileWritingAccessDialog(myProject, files);
         if (!dialog.showAndGet()) {
             return null;
@@ -122,7 +121,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
         return dialog.getUnlockOption();
     }
 
-    public static boolean isWriteAccessAllowed(@Nonnull VirtualFile file, @Nonnull Project project) {
+    public static boolean isWriteAccessAllowed(VirtualFile file, Project project) {
         if (isAllAccessAllowed()) {
             return true;
         }
@@ -158,7 +157,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     }
 
     @SuppressWarnings("SimplifiableIfStatement")
-    private static boolean isProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
+    private static boolean isProjectFile(VirtualFile file, Project project) {
         Boolean writable = project.getExtensionPoint(NonProjectFileWritingAccessExtension.class).computeSafeIfAny(each -> {
             if (each.isWritable(file)) {
                 return true;
@@ -190,7 +189,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
         }
     }
 
-    public static void disableChecksDuring(@Nonnull Runnable runnable) {
+    public static void disableChecksDuring(Runnable runnable) {
         Application app = getApp();
         ACCESS_ALLOWED.getValue(app).incrementAndGet();
         try {
@@ -202,7 +201,7 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     }
 
     @TestOnly
-    public static void enableChecksInTests(@Nonnull Disposable disposable) {
+    public static void enableChecksInTests(Disposable disposable) {
         getApp().putUserData(ENABLE_IN_TESTS, Boolean.TRUE);
         getApp().putUserData(ACCESS_ALLOWED, null);
 
@@ -235,16 +234,16 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
 
     private static class OurVirtualFileAdapter extends VirtualFileAdapter {
         @Override
-        public void fileCreated(@Nonnull VirtualFileEvent event) {
+        public void fileCreated(VirtualFileEvent event) {
             unlock(event);
         }
 
         @Override
-        public void fileCopied(@Nonnull VirtualFileCopyEvent event) {
+        public void fileCopied(VirtualFileCopyEvent event) {
             unlock(event);
         }
 
-        private static void unlock(@Nonnull VirtualFileEvent event) {
+        private static void unlock(VirtualFileEvent event) {
             if (!event.isFromRefresh() && !event.getFile().isDirectory()) {
                 allowWriting(event.getFile());
             }

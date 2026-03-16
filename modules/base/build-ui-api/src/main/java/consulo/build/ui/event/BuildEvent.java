@@ -15,8 +15,7 @@
  */
 package consulo.build.ui.event;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -27,7 +26,6 @@ public interface BuildEvent {
    *
    * @return The event id.
    */
-  @Nonnull
   Object getId();
 
   /**
@@ -50,15 +48,18 @@ public interface BuildEvent {
    *
    * @return The event text message.
    */
-  @Nonnull
   @BuildEventsNls.Message
   String getMessage();
 
   @Nullable
+
+
   @BuildEventsNls.Hint
   String getHint();
 
   @Nullable
+
+
   @BuildEventsNls.Description
   String getDescription();
 }

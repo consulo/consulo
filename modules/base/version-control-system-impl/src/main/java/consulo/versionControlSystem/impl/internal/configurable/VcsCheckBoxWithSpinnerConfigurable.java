@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -42,7 +41,7 @@ public abstract class VcsCheckBoxWithSpinnerConfigurable {
   }
 
   @RequiredUIAccess
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
     myHighlightRecentlyChanged = new JCheckBox(myCheckboxText);
     myHighlightInterval = new JSpinner(createSpinnerModel());

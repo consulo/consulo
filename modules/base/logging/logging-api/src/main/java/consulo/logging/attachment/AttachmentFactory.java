@@ -17,7 +17,6 @@ package consulo.logging.attachment;
 
 import consulo.logging.internal.AttachmentFactoryInternal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,12 +27,12 @@ public interface AttachmentFactory {
     return AttachmentFactoryInternal.get();
   }
 
-  @Nonnull
+  
   Attachment create(String path, String content);
 
-  @Nonnull
+  
   Attachment create(String path, byte[] bytes, String displayText);
 
-  @Nonnull
-  Attachment create(@Nonnull String name, @Nonnull Throwable throwable);
+  
+  Attachment create(String name, Throwable throwable);
 }

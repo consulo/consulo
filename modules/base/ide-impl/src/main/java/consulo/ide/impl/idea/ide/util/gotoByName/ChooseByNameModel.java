@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -31,7 +30,7 @@ public interface ChooseByNameModel {
     /**
      * @return consulo.localize.LocalizeValue#of() for disable
      */
-    @Nonnull
+    
     LocalizeValue getCheckBoxName();
 
     boolean loadInitialCheckBoxState();
@@ -46,16 +45,16 @@ public interface ChooseByNameModel {
      * @param checkBoxState the current state of the chooser checkbox (for example, [x] Include non-project classes for Ctrl-N)
      * @return the names to show. All items in the returned array must be non-null.
      */
-    @Nonnull
+    
     String[] getNames(boolean checkBoxState);
 
-    @Nonnull
+    
     Object[] getElementsByName(String name, boolean checkBoxState, String pattern);
 
     @Nullable
     String getElementName(Object element);
 
-    @Nonnull
+    
     String[] getSeparators();
 
     @Nullable

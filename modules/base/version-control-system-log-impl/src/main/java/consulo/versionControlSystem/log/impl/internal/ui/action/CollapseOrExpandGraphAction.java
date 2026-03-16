@@ -26,23 +26,22 @@ import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import jakarta.annotation.Nonnull;
 
 abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
-    @Nonnull
+    
     private final LocalizeValue myLinearBranchesText;
-    @Nonnull
+    
     private final LocalizeValue myLinearBranchesDescription;
-    @Nonnull
+    
     private final LocalizeValue myMergesText;
-    @Nonnull
+    
     private final LocalizeValue myMergesDescription;
 
     protected CollapseOrExpandGraphAction(
-        @Nonnull LocalizeValue linearBranchesText,
-        @Nonnull LocalizeValue linearBranchesDescription,
-        @Nonnull LocalizeValue mergesText,
-        @Nonnull LocalizeValue mergesDescription
+        LocalizeValue linearBranchesText,
+        LocalizeValue linearBranchesDescription,
+        LocalizeValue mergesText,
+        LocalizeValue mergesDescription
     ) {
         super(linearBranchesText, linearBranchesDescription);
         myLinearBranchesText = linearBranchesText;
@@ -53,7 +52,7 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VcsLogUtil.triggerUsage(e);
 
         VcsLogUi ui = e.getRequiredData(VcsLogUi.KEY);
@@ -61,7 +60,7 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VcsLogUi ui = e.getData(VcsLogUi.KEY);
         VcsLogUiProperties properties = e.getData(VcsLogInternalDataKeys.LOG_UI_PROPERTIES);
 
@@ -79,5 +78,5 @@ abstract class CollapseOrExpandGraphAction extends DumbAwareAction {
         }
     }
 
-    protected abstract void executeAction(@Nonnull VcsLogUiImpl vcsLogUi);
+    protected abstract void executeAction(VcsLogUiImpl vcsLogUi);
 }

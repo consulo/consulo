@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.notification;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -33,7 +32,7 @@ public enum NotificationType {
         };
     }
 
-    @Nonnull
+    
     public static NotificationType from(consulo.ui.NotificationType type) {
         return switch (type) {
             case INFO -> INFORMATION;

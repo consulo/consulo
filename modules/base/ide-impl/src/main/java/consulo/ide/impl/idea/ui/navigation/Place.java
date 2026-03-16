@@ -20,8 +20,7 @@ import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class Place implements ComparableObject {
   private SequencedMap<String, Object> myPath = new LinkedHashMap<>();
 
   @Override
-  @Nonnull
+  
   public final Object[] getEqualityObjects() {
     return new Object[] {myPath};
   }
@@ -46,7 +45,7 @@ public class Place implements ComparableObject {
     return ComparableObjectCheck.hashCode(this, super.hashCode());
   }
 
-  @Nonnull
+  
   public Place putPath(String name, Object value) {
     myPath.put(name, value);
     return this;
@@ -96,7 +95,7 @@ public class Place implements ComparableObject {
 
     AsyncResult<Void> navigateTo(@Nullable Place place, boolean requestFocus);
 
-    void queryPlace(@Nonnull Place place);
+    void queryPlace(Place place);
   }
 
   public static AsyncResult<Void> goFurther(Object object, Place place, boolean requestFocus) {

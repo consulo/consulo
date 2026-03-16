@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Use this project component to create {@link RefactoringActionHandler}s for various
@@ -41,15 +40,15 @@ public interface RefactoringActionHandlerFactory {
      * {@link RefactoringActionHandler#invoke(Project, PsiElement[], DataContext)}
      * accepts a list of {@link PsiElement}s to delete.
      */
-    @Nonnull
+    
     RefactoringActionHandler createSafeDeleteHandler();
 
-    @Nonnull
+    
     RefactoringActionHandler createMoveHandler();
 
-    @Nonnull
+    
     RefactoringActionHandler createRenameHandler();
 
-    @Nonnull
+    
     RefactoringActionHandler createInlineHandler();
 }

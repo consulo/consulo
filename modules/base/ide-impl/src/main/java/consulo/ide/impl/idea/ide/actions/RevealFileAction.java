@@ -26,8 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "RevealIn")
 public class RevealFileAction extends DumbAwareAction {
@@ -36,7 +35,7 @@ public class RevealFileAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile file = ShowFilePathAction.findLocalFile(e.getData(VirtualFile.KEY));
         Presentation presentation = e.getPresentation();
         presentation.setTextValue(getActionName(e.getPlace()));
@@ -45,7 +44,7 @@ public class RevealFileAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile file = ShowFilePathAction.findLocalFile(e.getRequiredData(VirtualFile.KEY));
         if (file == null) {
             return;
@@ -60,12 +59,12 @@ public class RevealFileAction extends DumbAwareAction {
         }
     }
 
-    @Nonnull
+    
     public static LocalizeValue getActionName() {
         return getActionName(null);
     }
 
-    @Nonnull
+    
     public static LocalizeValue getActionName(@Nullable String place) {
         String fileManagerName = Platform.current().fileManagerName();
         if (ActionPlaces.EDITOR_TAB_POPUP.equals(place)

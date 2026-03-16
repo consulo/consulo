@@ -24,7 +24,6 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointManagerImpl;
 import consulo.execution.debug.impl.internal.breakpoint.XDependentBreakpointManagerImpl;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +55,7 @@ public class XMasterBreakpointPanel extends XBreakpointPropertiesSubPanel {
     }
 
     @Override
-    public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
+    public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint) {
         super.init(project, breakpointManager, breakpoint);
         myDependentBreakpointManager = ((XBreakpointManagerImpl) breakpointManager).getDependentBreakpointManager();
         myMasterBreakpointChooser = new BreakpointChooser(project, new BreakpointChooser.Delegate() {

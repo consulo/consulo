@@ -16,8 +16,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.project.Project;
 import consulo.project.content.library.ProjectLibraryTable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thread-safe.
@@ -27,17 +26,17 @@ import jakarta.annotation.Nullable;
  */
 public class ProjectStructureHelper {
   @Nullable
-  public static Module findIdeModule(@Nonnull ModuleData module, @Nonnull Project ideProject) {
+  public static Module findIdeModule(ModuleData module, Project ideProject) {
     return findIdeModule(module.getInternalName(), ideProject);
   }
 
   @Nullable
-  public static Module findIdeModule(@Nonnull String ideModuleName, @Nonnull Project ideProject) {
+  public static Module findIdeModule(String ideModuleName, Project ideProject) {
     return ModuleManager.getInstance(ideProject).findModuleByName(ideModuleName);
   }
 
   @Nullable
-  public static Library findIdeLibrary(@Nonnull LibraryData libraryData, @Nonnull Project ideProject) {
+  public static Library findIdeLibrary(LibraryData libraryData, Project ideProject) {
     LibraryTable libraryTable = ProjectLibraryTable.getInstance(ideProject);
     for (Library ideLibrary : libraryTable.getLibraries()) {
       if (ExternalSystemApiUtil.isRelated(ideLibrary, libraryData)) return ideLibrary;
@@ -45,8 +44,8 @@ public class ProjectStructureHelper {
     return null;
   }
 
-  public static boolean isOrphanProjectLibrary(@Nonnull final Library library,
-                                               @Nonnull Module[] ideModules) {
+  public static boolean isOrphanProjectLibrary(final Library library,
+                                               Module[] ideModules) {
     RootPolicy<Boolean> visitor = new RootPolicy<Boolean>() {
       @Override
       public Boolean visitLibraryOrderEntry(LibraryOrderEntry ideDependency, Boolean value) {
@@ -62,7 +61,7 @@ public class ProjectStructureHelper {
   }
 
   @Nullable
-  public static ModuleOrderEntry findIdeModuleDependency(@Nonnull ModuleDependencyData dependency, @Nonnull ModifiableRootModel model) {
+  public static ModuleOrderEntry findIdeModuleDependency(ModuleDependencyData dependency, ModifiableRootModel model) {
     for (OrderEntry entry : model.getOrderEntries()) {
       if (entry instanceof ModuleOrderEntry) {
         ModuleOrderEntry candidate = (ModuleOrderEntry)entry;

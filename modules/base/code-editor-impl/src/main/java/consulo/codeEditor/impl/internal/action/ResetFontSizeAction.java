@@ -25,7 +25,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class ResetFontSizeAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             if (!(editor instanceof EditorEx editorEx)) {
                 return;
             }

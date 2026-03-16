@@ -27,7 +27,6 @@ import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewTypeLocation;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -35,7 +34,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "pomDefault", order = "last")
 public class UsagePomTargetDescriptionProvider extends PomDescriptionProvider {
   @Override
-  public String getElementDescription(@Nonnull PomTarget element, @Nonnull ElementDescriptionLocation location) {
+  public String getElementDescription(PomTarget element, ElementDescriptionLocation location) {
     if (element instanceof PsiElement) return null;
 
     if (location == UsageViewTypeLocation.INSTANCE) {

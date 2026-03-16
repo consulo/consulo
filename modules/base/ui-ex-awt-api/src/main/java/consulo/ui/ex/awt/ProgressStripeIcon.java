@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,18 +35,18 @@ import java.util.List;
 public abstract class ProgressStripeIcon implements Icon, Image {
     private static final int TRANSLATE = 1;
     private static final int HEIGHT = 3;
-    @Nonnull
+    
     private final JComponent myReferenceComponent;
     private final int myShift;
 
-    private ProgressStripeIcon(@Nonnull JComponent component, int shift) {
+    private ProgressStripeIcon(JComponent component, int shift) {
         myReferenceComponent = component;
         myShift = shift;
     }
 
     public abstract int getChunkWidth();
 
-    protected abstract void paint(@Nonnull Graphics2D g2, int x, int y, int shift);
+    protected abstract void paint(Graphics2D g2, int x, int y, int shift);
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -92,7 +91,7 @@ public abstract class ProgressStripeIcon implements Icon, Image {
         private static final JBColor BG_COLOR = new JBColor(ColorUtil.withAlpha(Gray._165, ALPHA), ColorUtil.withAlpha(Gray._110, ALPHA));
         private static final int WIDTH = 16;
 
-        private StripeIcon(@Nonnull JComponent component, int shift) {
+        private StripeIcon(JComponent component, int shift) {
             super(component, shift);
         }
 
@@ -102,7 +101,7 @@ public abstract class ProgressStripeIcon implements Icon, Image {
         }
 
         @Override
-        protected void paint(@Nonnull Graphics2D g2, int x, int y, int shift) {
+        protected void paint(Graphics2D g2, int x, int y, int shift) {
             g2.setColor(BG_COLOR);
 
             Path2D.Double path = new Path2D.Double();
@@ -121,8 +120,8 @@ public abstract class ProgressStripeIcon implements Icon, Image {
         }
     }
 
-    @Nonnull
-    public static AsyncProcessIcon generateIcon(@Nonnull JComponent component) {
+    
+    public static AsyncProcessIcon generateIcon(JComponent component) {
         List<Image> result = new ArrayList<>();
 
         for (int i = 0; i < JBUI.scale(StripeIcon.WIDTH); i += JBUI.scale(TRANSLATE)) {

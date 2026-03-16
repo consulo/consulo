@@ -7,8 +7,7 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -25,7 +24,7 @@ public class TextComponentCaretModel implements CaretModel {
     private final Caret myCaret;
     private final EventDispatcher<CaretActionListener> myCaretActionListeners = EventDispatcher.create(CaretActionListener.class);
 
-    public TextComponentCaretModel(@Nonnull JTextComponent textComponent, @Nonnull TextComponentEditor editor) {
+    public TextComponentCaretModel(JTextComponent textComponent, TextComponentEditor editor) {
         myTextComponent = textComponent;
         myEditor = editor;
         myCaret = new TextComponentCaret(editor);
@@ -41,12 +40,12 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+    public void moveToLogicalPosition(LogicalPosition pos) {
         moveToOffset(myEditor.logicalPositionToOffset(pos), false);
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+    public void moveToVisualPosition(VisualPosition pos) {
         moveToLogicalPosition(myEditor.visualToLogicalPosition(pos));
     }
 
@@ -78,7 +77,7 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    @Nonnull
+    
     public LogicalPosition getLogicalPosition() {
         int caretPos = myTextComponent.getCaretPosition();
         int line;
@@ -101,7 +100,7 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    @Nonnull
+    
     public VisualPosition getVisualPosition() {
         LogicalPosition pos = getLogicalPosition();
         return new VisualPosition(pos.line, pos.column);
@@ -113,12 +112,12 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void addCaretListener(@Nonnull CaretListener listener) {
+    public void addCaretListener(CaretListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void removeCaretListener(@Nonnull CaretListener listener) {
+    public void removeCaretListener(CaretListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -147,13 +146,13 @@ public class TextComponentCaretModel implements CaretModel {
         return 1;
     }
 
-    @Nonnull
+    
     @Override
     public Caret getCurrentCaret() {
         return myCaret;
     }
 
-    @Nonnull
+    
     @Override
     public Caret getPrimaryCaret() {
         return myCaret;
@@ -164,7 +163,7 @@ public class TextComponentCaretModel implements CaretModel {
         return 1;
     }
 
-    @Nonnull
+    
     @Override
     public List<Caret> getAllCarets() {
         return Collections.singletonList(myCaret);
@@ -172,24 +171,24 @@ public class TextComponentCaretModel implements CaretModel {
 
     @Nullable
     @Override
-    public Caret getCaretAt(@Nonnull VisualPosition pos) {
+    public Caret getCaretAt(VisualPosition pos) {
         return myCaret.getVisualPosition().equals(pos) ? myCaret : null;
     }
 
     @Nullable
     @Override
-    public Caret addCaret(@Nonnull VisualPosition pos) {
+    public Caret addCaret(VisualPosition pos) {
         return null;
     }
 
     @Nullable
     @Override
-    public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
+    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
         return null;
     }
 
     @Override
-    public boolean removeCaret(@Nonnull Caret caret) {
+    public boolean removeCaret(Caret caret) {
         return false;
     }
 
@@ -198,7 +197,7 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates) {
         if (caretStates.size() != 1) {
             throw new IllegalArgumentException("Exactly one CaretState object must be passed");
         }
@@ -214,11 +213,11 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates, boolean updateSystemSelection) {
         setCaretsAndSelections(caretStates);
     }
 
-    @Nonnull
+    
     @Override
     public List<CaretState> getCaretsAndSelections() {
         return Collections.singletonList(new CaretState(getLogicalPosition(), myEditor.offsetToLogicalPosition(myEditor.getSelectionModel().getSelectionStart()),
@@ -226,24 +225,24 @@ public class TextComponentCaretModel implements CaretModel {
     }
 
     @Override
-    public void runForEachCaret(@Nonnull CaretAction action) {
+    public void runForEachCaret(CaretAction action) {
         myCaretActionListeners.getMulticaster().beforeAllCaretsAction();
         action.perform(myCaret);
         myCaretActionListeners.getMulticaster().afterAllCaretsAction();
     }
 
     @Override
-    public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
+    public void runForEachCaret(CaretAction action, boolean reverseOrder) {
         runForEachCaret(action);
     }
 
     @Override
-    public void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable) {
+    public void addCaretActionListener(CaretActionListener listener, Disposable disposable) {
         myCaretActionListeners.addListener(listener, disposable);
     }
 
     @Override
-    public void runBatchCaretOperation(@Nonnull Runnable runnable) {
+    public void runBatchCaretOperation(Runnable runnable) {
         runnable.run();
     }
 }

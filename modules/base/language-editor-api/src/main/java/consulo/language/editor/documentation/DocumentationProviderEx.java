@@ -20,8 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 
@@ -56,12 +55,12 @@ public abstract class DocumentationProviderEx implements DocumentationProvider {
   }
 
   @Nullable
-  public PsiElement getCustomDocumentationElement(@Nonnull Editor editor, @Nonnull PsiFile file, @Nullable PsiElement contextElement) {
+  public PsiElement getCustomDocumentationElement(Editor editor, PsiFile file, @Nullable PsiElement contextElement) {
     return null;
   }
 
   @Nullable
-  public Image getLocalImageForElement(@Nonnull PsiElement element, @Nonnull String imageSpec) {
+  public Image getLocalImageForElement(PsiElement element, String imageSpec) {
     return null;
   }
 }

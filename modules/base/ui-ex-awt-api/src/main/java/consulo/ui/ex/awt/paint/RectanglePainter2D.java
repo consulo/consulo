@@ -7,8 +7,7 @@ import consulo.ui.ex.awt.paint.LinePainter2D.Align;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
@@ -38,7 +37,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull Graphics2D g, double x, double y, double width, double height) {
+    public void paint(Graphics2D g, double x, double y, double width, double height) {
       paint(g, x, y, width, height, null, StrokeType.INSIDE, 1, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
     }
 
@@ -46,12 +45,12 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull Graphics2D g,
+    public void paint(Graphics2D g,
                       Rectangle2D rect,
                       @Nullable Double arc,
-                      @Nonnull StrokeType strokeType,
+                      StrokeType strokeType,
                       double strokeWidth,
-                      @Nonnull Object valueAA)
+                      Object valueAA)
     {
       paint(g, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), arc, strokeType, strokeWidth, valueAA);
     }
@@ -60,9 +59,9 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull Graphics2D g,
+    public void paint(Graphics2D g,
                       double x, double y, double width, double height,
-                      @Nonnull StrokeType strokeType,
+                      StrokeType strokeType,
                       double strokeWidth)
     {
       paint(g, x, y, width, height, null, strokeType, strokeWidth, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
@@ -83,12 +82,12 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      *                affecting a rounding rectangle only
      */
     @Override
-    public void paint(@Nonnull Graphics2D g,
+    public void paint(Graphics2D g,
                       double x, double y, double width, double height,
                       @Nullable Double arc,
-                      @Nonnull StrokeType strokeType,
+                      StrokeType strokeType,
                       double strokeWidth,
-                      @Nonnull Object valueAA)
+                      Object valueAA)
     {
       if (width < 0 || height < 0) return;
 
@@ -140,7 +139,7 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull Graphics2D g, double x, double y, double width, double height) {
+    public void paint(Graphics2D g, double x, double y, double width, double height) {
       paint(g, x, y, width, height, null, StrokeType.INSIDE, 1, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
     }
 
@@ -148,12 +147,12 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull Graphics2D g,
+    public void paint(Graphics2D g,
                       Rectangle2D rect,
                       @Nullable Double arc,
-                      @Nonnull StrokeType strokeType,
+                      StrokeType strokeType,
                       double strokeWidth,
-                      @Nonnull Object valueAA)
+                      Object valueAA)
     {
       paint(g, rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight(), arc, strokeType, strokeWidth, valueAA);
     }
@@ -162,9 +161,9 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      * @see #paint(Graphics2D, double, double, double, double, Double, StrokeType, double, Object)
      */
     @Override
-    public void paint(@Nonnull Graphics2D g,
+    public void paint(Graphics2D g,
                       double x, double y, double width, double height,
-                      @Nonnull StrokeType strokeType,
+                      StrokeType strokeType,
                       double strokeWidth)
     {
       paint(g, x, y, width, height, null, strokeType, strokeWidth, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
@@ -185,12 +184,12 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
      *                affecting a rounding rectangle only
      */
     @Override
-    public void paint(@Nonnull Graphics2D g,
+    public void paint(Graphics2D g,
                       double x, double y, double width, double height,
                       @Nullable Double arc,
-                      @Nonnull StrokeType strokeType,
+                      StrokeType strokeType,
                       double strokeWidth,
-                      @Nonnull Object valueAA)
+                      Object valueAA)
     {
       if (width < 0 || height < 0) return;
 
@@ -242,11 +241,11 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
    * @param strokeWidth the stroke width
    * @return the rectangle with aligned coordinates and size with adjusted parity
    */
-  public static @Nonnull
-  Rectangle2D align(@Nonnull Graphics2D g,
-                    @Nonnull EnumSet<Align> align,
+  public static 
+  Rectangle2D align(Graphics2D g,
+                    EnumSet<Align> align,
                     double x, double y, double prefWidth, double prefHeight,
-                    @Nonnull StrokeType strokeType, double strokeWidth)
+                    StrokeType strokeType, double strokeWidth)
   {
     if (align.contains(Align.CENTER_X) && prefWidth >= strokeWidth * 2) {
       Pair<Double, Double> p = LinePainter2D.alignSizeXY(g, x, prefWidth, strokeType, strokeWidth, true);
@@ -279,24 +278,24 @@ public enum RectanglePainter2D implements RegionPainter2D<Double> {
    * @param strokeWidth the stroke width
    * @param valueAA overrides current {@link RenderingHints#KEY_ANTIALIASING} to {@code valueAA}
    */
-  public abstract void paint(@Nonnull Graphics2D g,
+  public abstract void paint(Graphics2D g,
                              double x, double y, double width, double height,
                              @Nullable Double arc,
-                             @Nonnull StrokeType strokeType,
+                             StrokeType strokeType,
                              double strokeWidth,
-                             @Nonnull Object valueAA);
+                             Object valueAA);
 
-  public abstract void paint(@Nonnull Graphics2D g,
+  public abstract void paint(Graphics2D g,
                              double x, double y, double width, double height,
-                             @Nonnull StrokeType strokeType,
+                             StrokeType strokeType,
                              double strokeWidth);
 
-  public abstract void paint(@Nonnull Graphics2D g, double x, double y, double width, double height);
+  public abstract void paint(Graphics2D g, double x, double y, double width, double height);
 
-  public abstract void paint(@Nonnull Graphics2D g,
+  public abstract void paint(Graphics2D g,
                              Rectangle2D rect,
                              @Nullable Double arc,
-                             @Nonnull StrokeType strokeType,
+                             StrokeType strokeType,
                              double strokeWidth,
-                             @Nonnull Object valueAA);
+                             Object valueAA);
 }

@@ -4,7 +4,6 @@ package consulo.execution.debug.stream.resolve;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
 import consulo.execution.debug.stream.wrapper.TraceUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -12,7 +11,7 @@ import java.util.*;
  * @author Vitaliy.Bibaev
  */
 public class PrependResolver implements ValuesOrderResolver {
-  @Nonnull
+  
   @Override
   public Result resolve(TraceInfo info) {
     Map<TraceElement, List<TraceElement>> direct = new HashMap<>();

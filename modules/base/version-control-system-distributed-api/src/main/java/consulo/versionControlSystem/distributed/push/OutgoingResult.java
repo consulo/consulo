@@ -17,26 +17,25 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class OutgoingResult {
-  @Nonnull
+  
   private final List<VcsError> myErrors;
-  @Nonnull
+  
   private final List<? extends VcsFullCommitDetails> myCommits;
 
-  public OutgoingResult(@Nonnull List<? extends VcsFullCommitDetails> commits, @Nonnull List<VcsError> errors) {
+  public OutgoingResult(List<? extends VcsFullCommitDetails> commits, List<VcsError> errors) {
     myCommits = commits;
     myErrors = errors;
   }
 
-  @Nonnull
+  
   public List<VcsError> getErrors() {
     return myErrors;
   }
 
-  @Nonnull
+  
   public List<? extends VcsFullCommitDetails> getCommits() {
     return myCommits;
   }

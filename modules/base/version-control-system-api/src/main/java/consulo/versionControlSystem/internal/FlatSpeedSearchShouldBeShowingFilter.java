@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.internal;
 
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,5 +23,5 @@ import jakarta.annotation.Nonnull;
  */
 @FunctionalInterface
 public interface FlatSpeedSearchShouldBeShowingFilter {
-    boolean shouldBeShowing(@Nonnull AnAction action, boolean holdingFilter);
+    boolean shouldBeShowing(AnAction action, boolean holdingFilter);
 }

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.startup.splash;
 
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;

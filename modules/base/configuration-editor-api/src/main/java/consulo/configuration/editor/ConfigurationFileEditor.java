@@ -20,7 +20,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
 
 import java.util.Map;
@@ -38,10 +37,10 @@ public abstract class ConfigurationFileEditor extends UserDataHolderBase impleme
         myProject = project;
     }
 
-    public void onUpdateRequestParams(@Nonnull Map<String, String> params) {
+    public void onUpdateRequestParams(Map<String, String> params) {
     }
 
-    @Nonnull
+    
     @Override
     public final String getName() {
         ConfigurationEditorVirtualFile virtualFile = (ConfigurationEditorVirtualFile) myVirtualFile;
@@ -67,10 +66,10 @@ public abstract class ConfigurationFileEditor extends UserDataHolderBase impleme
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
     }
 }

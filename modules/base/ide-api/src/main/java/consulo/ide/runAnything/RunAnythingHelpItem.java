@@ -6,28 +6,27 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RunAnythingHelpItem extends RunAnythingItemBase {
-    @Nonnull
+    
     private final String myPlaceholder;
     @Nullable
     private final String myDescription;
     @Nullable
     private final Image myIcon;
 
-    public RunAnythingHelpItem(@Nonnull String placeholder, @Nonnull String command, @Nullable String description, @Nullable Image icon) {
+    public RunAnythingHelpItem(String placeholder, String command, @Nullable String description, @Nullable Image icon) {
         super(command, icon);
         myPlaceholder = placeholder;
         myDescription = description;
         myIcon = icon;
     }
 
-    @Nonnull
+    
     @Override
     public Component createComponent(@Nullable String pattern, boolean isSelected, boolean hasFocus) {
         JPanel component = (JPanel)super.createComponent(pattern, isSelected, hasFocus);
@@ -42,7 +41,7 @@ public class RunAnythingHelpItem extends RunAnythingItemBase {
         return component;
     }
 
-    private static void parseAndApplyStyleToParameters(@Nonnull SimpleColoredComponent component, @Nonnull String placeholder) {
+    private static void parseAndApplyStyleToParameters(SimpleColoredComponent component, String placeholder) {
         int lt = StringUtil.indexOf(placeholder, "<");
         if (lt == -1) {
             component.append(placeholder);

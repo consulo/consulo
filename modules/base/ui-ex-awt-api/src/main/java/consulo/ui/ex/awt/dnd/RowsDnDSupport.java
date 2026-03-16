@@ -18,7 +18,6 @@ package consulo.ui.ex.awt.dnd;
 import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.RelativeRectangle;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Function;
@@ -32,22 +31,22 @@ public class RowsDnDSupport {
   private RowsDnDSupport() {
   }
 
-  public static void install(@Nonnull JTable table, @Nonnull EditableModel model) {
+  public static void install(JTable table, EditableModel model) {
     table.setDragEnabled(true);
     installImpl(table, model);
   }
 
-  public static void install(@Nonnull JList list, @Nonnull EditableModel model) {
+  public static void install(JList list, EditableModel model) {
     list.setDragEnabled(true);
     installImpl(list, model);
   }
 
-  public static void install(@Nonnull JTree tree, @Nonnull EditableModel model) {
+  public static void install(JTree tree, EditableModel model) {
     tree.setDragEnabled(true);
     installImpl(tree, model);
   }
 
-  private static void installImpl(@Nonnull final JComponent component, @Nonnull final EditableModel model) {
+  private static void installImpl(final JComponent component, final EditableModel model) {
     component.setTransferHandler(new TransferHandler(null));
     DnDSupport.createBuilder(component)
       .setBeanProvider(new Function<DnDActionInfo, DnDDragStartBean>() {
@@ -240,9 +239,9 @@ public class RowsDnDSupport {
 
     boolean isDropInto(JComponent component, int oldIndex, int newIndex);
     //oldIndex may be equal to newIndex
-    boolean canDrop(int oldIndex, int newIndex, @Nonnull Position position);
+    boolean canDrop(int oldIndex, int newIndex, Position position);
 
     //This method is also responsible for selection changing
-    void drop(int oldIndex, int newIndex, @Nonnull Position position);
+    void drop(int oldIndex, int newIndex, Position position);
   }
 }

@@ -19,7 +19,6 @@ import consulo.language.pom.PomRenameableTarget;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiWritableMetaData;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -27,13 +26,13 @@ import jakarta.annotation.Nonnull;
 public class PsiMetaDataTarget extends DelegatePsiTarget implements PomRenameableTarget<PsiMetaDataTarget> {
   private final PsiMetaData myMetaData;
 
-  public PsiMetaDataTarget(@Nonnull PsiMetaData metaData) {
+  public PsiMetaDataTarget(PsiMetaData metaData) {
     super(metaData.getDeclaration());
     myMetaData = metaData;
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myMetaData.getName();
   }
@@ -44,7 +43,7 @@ public class PsiMetaDataTarget extends DelegatePsiTarget implements PomRenameabl
   }
 
   @Override
-  public PsiMetaDataTarget setName(@Nonnull String newName) {
+  public PsiMetaDataTarget setName(String newName) {
     ((PsiWritableMetaData) myMetaData).setName(newName);
     return this;
   }

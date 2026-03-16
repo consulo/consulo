@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.ide.action.CreateFileAction;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -43,7 +42,7 @@ public class WeighingNewActionGroup extends WeighingActionGroup {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setTextValue(getTemplatePresentation().getTextValue());
     }

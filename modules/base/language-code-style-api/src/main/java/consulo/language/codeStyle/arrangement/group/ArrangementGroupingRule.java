@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.group;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Encapsulates information about grouping rules to use during arrangement.
@@ -30,26 +29,26 @@ import jakarta.annotation.Nonnull;
  */
 public class ArrangementGroupingRule {
 
-  @Nonnull
+  
   private final ArrangementSettingsToken myGroupingType;
-  @Nonnull
+  
   private final ArrangementSettingsToken myOrderType;
 
-  public ArrangementGroupingRule(@Nonnull ArrangementSettingsToken groupingType) {
+  public ArrangementGroupingRule(ArrangementSettingsToken groupingType) {
     this(groupingType, StdArrangementTokens.Order.KEEP);
   }
 
-  public ArrangementGroupingRule(@Nonnull ArrangementSettingsToken groupingType, @Nonnull ArrangementSettingsToken orderType) {
+  public ArrangementGroupingRule(ArrangementSettingsToken groupingType, ArrangementSettingsToken orderType) {
     myGroupingType = groupingType;
     myOrderType = orderType;
   }
 
-  @Nonnull
+  
   public ArrangementSettingsToken getGroupingType() {
     return myGroupingType;
   }
 
-  @Nonnull
+  
   public ArrangementSettingsToken getOrderType() {
     return myOrderType;
   }

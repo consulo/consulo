@@ -26,8 +26,7 @@ import consulo.diff.merge.MergeTool;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -44,7 +43,7 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
     FIRST_CHANGE, LAST_CHANGE;
 
     @Nullable
-    public <T> T select(@Nonnull List<T> changes) {
+    public <T> T select(List<T> changes) {
       if (this == FIRST_CHANGE) return ContainerUtil.getFirstItem(changes);
       if (this == LAST_CHANGE) return ContainerUtil.getLastItem(changes);
       throw new IllegalStateException();
@@ -57,12 +56,12 @@ public interface DiffUserDataKeysEx extends DiffUserDataKeys {
   Key<DiffNavigationContext> NAVIGATION_CONTEXT = Key.create("Diff.NavigationContext");
 
   interface DiffComputer {
-    @Nonnull
-    List<LineFragment> compute(@Nonnull CharSequence text1,
-                               @Nonnull CharSequence text2,
-                               @Nonnull ComparisonPolicy policy,
+    
+    List<LineFragment> compute(CharSequence text1,
+                               CharSequence text2,
+                               ComparisonPolicy policy,
                                boolean innerChanges,
-                               @Nonnull ProgressIndicator indicator);
+                               ProgressIndicator indicator);
   }
   Key<DiffComputer> CUSTOM_DIFF_COMPUTER = Key.create("Diff.CustomDiffComputer");
 

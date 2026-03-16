@@ -19,8 +19,6 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.ast.IElementType;
 import consulo.util.collection.SmartList;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,16 +46,16 @@ public class PathPattern {
     return left(PlatformPatterns.elementType());
   }
 
-  public PathPattern left(@Nonnull IElementType pattern) {
+  public PathPattern left(IElementType pattern) {
     return left(PlatformPatterns.elementType().equalTo(pattern));
   }
 
-  public PathPattern left(@Nonnull ElementPattern pattern) {
+  public PathPattern left(ElementPattern pattern) {
     myPath.add(pattern);
     return this;
   }
 
-  @NonNls
+  
   public String toString() {
     return Arrays.toString(myPath.toArray()).replaceAll("null", "UP");
   }

@@ -18,14 +18,13 @@ package consulo.language.psi;
 import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.StubElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public interface StubBasedPsiElement<Stub extends StubElement> extends PsiElement {
-  @Nonnull
+  
   IStubElementType getElementType();
 
   @Nullable

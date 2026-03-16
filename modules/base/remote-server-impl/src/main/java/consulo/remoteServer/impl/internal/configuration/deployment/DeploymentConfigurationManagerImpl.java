@@ -14,10 +14,9 @@ import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.deployment.DeploymentConfigurationManager;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.localize.RemoteServerLocalize;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,22 +24,22 @@ import java.util.List;
 @ServiceImpl
 public final class DeploymentConfigurationManagerImpl extends DeploymentConfigurationManager {
 
-    private final @Nonnull Project myProject;
+    private final Project myProject;
 
     @Inject
-    public DeploymentConfigurationManagerImpl(@Nonnull Project project) {
+    public DeploymentConfigurationManagerImpl(Project project) {
         myProject = project;
     }
 
     @Override
-    @Nonnull
-    public List<RunnerAndConfigurationSettings> getDeploymentConfigurations(@Nonnull ServerType<?> serverType) {
+    
+    public List<RunnerAndConfigurationSettings> getDeploymentConfigurations(ServerType<?> serverType) {
         DeployToServerConfigurationType<?> configurationType = DeployToServerConfigurationTypesRegistrar.getConfigurationType(serverType);
         return RunManager.getInstance(myProject).getConfigurationSettingsList(configurationType);
     }
 
     @Override
-    public void createAndRunConfiguration(@Nonnull ServerType<?> serverType,
+    public void createAndRunConfiguration(ServerType<?> serverType,
                                           @Nullable RemoteServer<?> remoteServer,
                                           @Nullable DeploymentSourceType<?> sourceType) {
         DeployToServerConfigurationType<?> configurationType = DeployToServerConfigurationTypesRegistrar.getConfigurationType(serverType);

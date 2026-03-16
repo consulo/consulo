@@ -30,8 +30,7 @@ import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -45,15 +44,15 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
   private static final Logger LOG = Logger.getInstance(VirtualFileGistImpl.class);
   private static final int ourInternalVersion = 2;
 
-  @Nonnull
+  
   private final String myId;
   private final int myVersion;
-  @Nonnull
+  
   private final BiFunction<Project, VirtualFile, Data> myCalculator;
-  @Nonnull
+  
   private final DataExternalizer<Data> myExternalizer;
 
-  VirtualFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull BiFunction<Project, VirtualFile, Data> calcData) {
+  VirtualFileGistImpl(String id, int version, DataExternalizer<Data> externalizer, BiFunction<Project, VirtualFile, Data> calcData) {
     myId = id;
     myVersion = version;
     myExternalizer = externalizer;
@@ -61,7 +60,7 @@ class VirtualFileGistImpl<Data> implements VirtualFileGist<Data> {
   }
 
   @Override
-  public Data getFileData(@Nullable Project project, @Nonnull VirtualFile file) {
+  public Data getFileData(@Nullable Project project, VirtualFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     ProgressManager.checkCanceled();
 

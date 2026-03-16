@@ -14,7 +14,6 @@ import consulo.credentialStorage.internal.PasswordSafeSettingsListener;
 import consulo.credentialStorage.internal.ProviderType;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 @State(name = "PasswordSafe",
@@ -72,7 +71,7 @@ public class PasswordSafeSettings implements PersistentStateComponent<PasswordSa
     }
 
     @Override
-    public void loadState(@Nonnull PasswordSafeOptions state) {
+    public void loadState(PasswordSafeOptions state) {
         CredentialStoreManager credentialStoreManager = CredentialStoreManager.getInstance();
         if ((state.getProvider() == ProviderType.DO_NOT_STORE && !credentialStoreManager.isSupported(ProviderType.MEMORY_ONLY))
             || (state.getProvider() != ProviderType.DO_NOT_STORE && !credentialStoreManager.isSupported(state.getProvider()))) {

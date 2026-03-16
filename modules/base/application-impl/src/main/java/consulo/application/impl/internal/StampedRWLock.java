@@ -18,7 +18,6 @@ package consulo.application.impl.internal;
 import consulo.application.AccessToken;
 import consulo.application.util.ApplicationUtil;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.locks.StampedLock;
 
@@ -139,7 +138,7 @@ public final class StampedRWLock implements RWLock {
     // ── Impatient Reader ──
 
     @Override
-    public void executeByImpatientReader(@Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    public void executeByImpatientReader(Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
         boolean old = myImpatientReads.get();
         try {
             myImpatientReads.set(true);

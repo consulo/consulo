@@ -20,7 +20,6 @@ import consulo.platform.PlatformFileSystem;
 import consulo.platform.PlatformOperatingSystem;
 
 import consulo.platform.os.WindowsOperatingSystem;
-import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -38,15 +37,15 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
     myAreSymLinksSupported = os.isUnix() || os instanceof WindowsOperatingSystem win && win.isWindows7OrNewer();
   }
 
-  @Nonnull
+  
   @Override
-  public Path getPath(@Nonnull String path) {
+  public Path getPath(String path) {
     return Path.of(path);
   }
 
-  @Nonnull
+  
   @Override
-  public Path getPath(@Nonnull String path, @Nonnull String... more) {
+  public Path getPath(String path, String... more) {
     return Path.of(path, path);
   }
 

@@ -16,7 +16,6 @@
 package consulo.codeEditor.internal;
 
 import consulo.document.util.Segment;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -26,14 +25,14 @@ import java.util.function.Predicate;
 
 @FunctionalInterface
 public interface SweepProcessor<T> {
-  boolean process(int offset, @Nonnull T interval, boolean atStart, @Nonnull Collection<T> overlappingIntervals);
+  boolean process(int offset, T interval, boolean atStart, Collection<T> overlappingIntervals);
 
   /**
    * Process all intervals from generator in their "start offset - then end offset" order.
    * For each interval call sweepProcessor and pass this interval with its current endpoint (start or end) and current overlapping intervals which this endpoint stabs.
    * E.g. for (0,4), (2,5) intervals call sweepProcessor with (0, empty), (2, 0-4), (4, 2-5), (5, empty)
    */
-  static <T extends Segment> boolean sweep(@Nonnull Generator<T> generator, @Nonnull SweepProcessor<T> sweepProcessor) {
+  static <T extends Segment> boolean sweep(Generator<T> generator, SweepProcessor<T> sweepProcessor) {
     Queue<T> ends = new PriorityQueue<>(5, Comparator.comparingInt(Segment::getEndOffset));
     if (!generator.generateInStartOffsetOrder(marker -> {
       // decide whether previous marker ends here or new marker begins
@@ -66,6 +65,6 @@ public interface SweepProcessor<T> {
 
   @FunctionalInterface
   interface Generator<T> {
-    boolean generateInStartOffsetOrder(@Nonnull Predicate<T> processor);
+    boolean generateInStartOffsetOrder(Predicate<T> processor);
   }
 }

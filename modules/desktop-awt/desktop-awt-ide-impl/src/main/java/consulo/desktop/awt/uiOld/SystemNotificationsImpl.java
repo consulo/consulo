@@ -26,7 +26,6 @@ import consulo.platform.PlatformOperatingSystem;
 import consulo.platform.os.UnixOperationSystem;
 import consulo.platform.os.WindowsOperatingSystem;
 import consulo.ui.ex.SystemNotifications;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -37,7 +36,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class SystemNotificationsImpl extends SystemNotifications {
     interface Notifier {
-        void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);
+        void notify(String name, String title, String description);
     }
 
     private final NullableLazyValue<Notifier> myNotifier = AtomicNullableLazyValue.createValue(SystemNotificationsImpl::getPlatformNotifier);
@@ -55,7 +54,7 @@ public class SystemNotificationsImpl extends SystemNotifications {
     }
 
     @Override
-    public void notify(@Nonnull String notificationName, @Nonnull String title, @Nonnull String text) {
+    public void notify(String notificationName, String title, String text) {
         if (NotificationsConfigurationImpl.getInstanceImpl().SYSTEM_NOTIFICATIONS && !myApplication.isActive()) {
             Notifier notifier = myNotifier.getValue();
             if (notifier != null) {

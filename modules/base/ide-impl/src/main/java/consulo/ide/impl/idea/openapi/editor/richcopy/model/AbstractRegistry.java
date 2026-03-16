@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.editor.richcopy.model;
 
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TObjectIntHashMap;
-import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -28,12 +27,12 @@ import java.util.Arrays;
  */
 public abstract class AbstractRegistry<T> implements Serializable {
 
-  @Nonnull
+  
   private final TIntObjectHashMap<T> myDataById = new TIntObjectHashMap<T>();
 
   private transient TObjectIntHashMap<T> myIdsByData = new TObjectIntHashMap<T>();
 
-  @Nonnull
+  
   public T dataById(int id) throws IllegalArgumentException {
     T result = myDataById.get(id);
     if (result == null) {
@@ -42,7 +41,7 @@ public abstract class AbstractRegistry<T> implements Serializable {
     return result;
   }
   
-  public int getId(@Nonnull T data) throws IllegalStateException {
+  public int getId(T data) throws IllegalStateException {
     if (myIdsByData == null) {
       throw new IllegalStateException(String.format(
         "Can't register data '%s'. Reason: the %s registry is already sealed", data, getClass().getName()

@@ -25,7 +25,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -128,7 +127,7 @@ public class DirectoryEntry extends Entry {
         return !entriesWithUnavailableContent.isEmpty();
     }
 
-    @Nonnull
+    
     @Override
     public DirectoryEntry copy() {
         DirectoryEntry result = copyEntry();

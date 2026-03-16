@@ -19,8 +19,7 @@ package consulo.ui.ex;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,26 +33,26 @@ public class SimpleColoredText implements ColoredTextContainer {
     public SimpleColoredText() {
     }
 
-    public SimpleColoredText(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+    public SimpleColoredText(String fragment, SimpleTextAttributes attributes) {
         this();
         append(fragment, attributes);
     }
 
     @Override
-    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+    public void append(String fragment, SimpleTextAttributes attributes) {
         myTexts.add(fragment);
         myCachedToString = null;
         myAttributes.add(attributes);
     }
 
-    public void insert(int index, @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+    public void insert(int index, String fragment, SimpleTextAttributes attributes) {
         myTexts.add(index, fragment);
         myCachedToString = null;
         myAttributes.add(index, attributes);
     }
 
     @Override
-    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
+    public void append(String fragment, SimpleTextAttributes attributes, Object tag) {
         append(fragment, attributes);
     }
 
@@ -65,13 +64,13 @@ public class SimpleColoredText implements ColoredTextContainer {
     public void setToolTipText(@Nullable String text) {
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getCharSequence(boolean mainOnly) {
         return toString();
     }
 
-    @Nonnull
+    
     @Override
     public ColoredIterator iterator() {
         throw new UnsupportedOperationException();
@@ -84,7 +83,7 @@ public class SimpleColoredText implements ColoredTextContainer {
         myAttributes.clear();
     }
 
-    public void appendToComponent(@Nonnull ColoredTextContainer component) {
+    public void appendToComponent(ColoredTextContainer component) {
         int size = myTexts.size();
         for (int i = 0; i < size; i++) {
             String text = myTexts.get(i);

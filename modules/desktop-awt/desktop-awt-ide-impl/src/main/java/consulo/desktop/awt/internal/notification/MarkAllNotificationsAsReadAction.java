@@ -6,7 +6,6 @@ import consulo.project.ui.localize.ProjectUILocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 public class MarkAllNotificationsAsReadAction extends DumbAwareAction {
     public MarkAllNotificationsAsReadAction() {
@@ -18,13 +17,13 @@ public class MarkAllNotificationsAsReadAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(!EventLog.getLogModel(e.getData(Project.KEY)).getNotifications().isEmpty());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         EventLog.markAllAsRead(e.getData(Project.KEY));
     }
 }

@@ -18,24 +18,23 @@ package consulo.versionControlSystem.log;
 import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.log.event.VcsLogListener;
 
-import jakarta.annotation.Nonnull;
 
 public interface VcsLogUi {
   Key<VcsLogUi> KEY = Key.create(VcsLogUi.class);
 
-  @Nonnull
+  
   VcsLogFilterUi getFilterUi();
 
-  @Nonnull
+  
   VcsLogDataPack getDataPack();
 
-  void addLogListener(@Nonnull VcsLogListener listener);
+  void addLogListener(VcsLogListener listener);
 
-  void removeLogListener(@Nonnull VcsLogListener listener);
+  void removeLogListener(VcsLogListener listener);
 
   boolean areGraphActionsEnabled();
 
   boolean isMultipleRoots();
 
-  boolean isHighlighterEnabled(@Nonnull String id);
+  boolean isHighlighterEnabled(String id);
 }

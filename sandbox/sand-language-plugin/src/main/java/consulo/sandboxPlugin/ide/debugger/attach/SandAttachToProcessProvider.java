@@ -22,7 +22,6 @@ import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,23 +33,23 @@ import java.util.List;
 @ExtensionImpl
 public class SandAttachToProcessProvider implements XAttachDebuggerProvider {
   @Override
-  public boolean isAttachHostApplicable(@Nonnull XAttachHost attachHost) {
+  public boolean isAttachHostApplicable(XAttachHost attachHost) {
     return attachHost instanceof LocalAttachHost;
   }
 
-  @Nonnull
+  
   @Override
-  public List<XAttachDebugger> getAvailableDebuggers(@Nonnull Project project, @Nonnull XAttachHost hostInfo, @Nonnull ProcessInfo process, @Nonnull UserDataHolder contextHolder) {
+  public List<XAttachDebugger> getAvailableDebuggers(Project project, XAttachHost hostInfo, ProcessInfo process, UserDataHolder contextHolder) {
     if(StringUtil.endsWith(process.getExecutableDisplayName(), "java")) {
       return Collections.singletonList(new XLocalAttachDebugger() {
-        @Nonnull
+        
         @Override
         public String getDebuggerDisplayName() {
           return "Test";
         }
 
         @Override
-        public void attachDebugSession(@Nonnull Project project, @Nonnull ProcessInfo info) throws ExecutionException {
+        public void attachDebugSession(Project project, ProcessInfo info) throws ExecutionException {
 
         }
       });

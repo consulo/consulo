@@ -15,7 +15,6 @@
  */
 package consulo.logging.attachment;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,6 +35,6 @@ public interface Attachment {
 
   void setIncluded(Boolean included);
 
-  @Nonnull
+  
   Attachment copy(String newPath);
 }

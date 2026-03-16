@@ -35,8 +35,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,7 +53,7 @@ public class OutputFileUtil {
   private OutputFileUtil() {
   }
 
-  public static File getOutputFile(@Nonnull RunConfigurationBase configuration) {
+  public static File getOutputFile(RunConfigurationBase configuration) {
     String outputFilePath = configuration.getOutputFilePath();
     if (outputFilePath != null) {
       String filePath = FileUtil.toSystemDependentName(outputFilePath);

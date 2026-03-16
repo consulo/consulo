@@ -20,7 +20,6 @@ import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RunConfigurationProducer;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -36,7 +35,7 @@ public class ConfigurationFromContextImpl extends ConfigurationFromContext {
     mySourceElement = element;
   }
 
-  @Nonnull
+  
   @Override
   public RunnerAndConfigurationSettings getConfigurationSettings() {
     return myConfigurationSettings;
@@ -47,7 +46,7 @@ public class ConfigurationFromContextImpl extends ConfigurationFromContext {
     myConfigurationSettings = configurationSettings;
   }
 
-  @Nonnull
+  
   @Override
   public PsiElement getSourceElement() {
     return mySourceElement;

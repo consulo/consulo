@@ -15,21 +15,20 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 public interface GraphChanges<NodeId> {
 
-  @Nonnull
+  
   Collection<Node<NodeId>> getChangedNodes();
 
-  @Nonnull
+  
   Collection<Edge<NodeId>> getChangedEdges();
 
   interface Node<NodeId> {
-    @Nonnull
+    
     NodeId getNodeId();
 
     boolean removed();
@@ -49,16 +48,16 @@ public interface GraphChanges<NodeId> {
   }
 
   class NodeImpl<NodeId> implements Node<NodeId> {
-    @Nonnull
+    
     private final NodeId myNodeId;
     private final boolean myRemoved;
 
-    public NodeImpl(@Nonnull NodeId nodeId, boolean removed) {
+    public NodeImpl(NodeId nodeId, boolean removed) {
       myNodeId = nodeId;
       myRemoved = removed;
     }
 
-    @Nonnull
+    
     @Override
     public NodeId getNodeId() {
       return myNodeId;
@@ -73,18 +72,18 @@ public interface GraphChanges<NodeId> {
   class EdgeImpl<NodeId> implements Edge<NodeId> {
     @Nullable private final NodeId myUpNodeId;
     @Nullable private final NodeId myDownNodeId;
-    @jakarta.annotation.Nullable
+    @Nullable
     private final NodeId myTargetId;
     private final boolean myRemoved;
 
-    public EdgeImpl(@Nullable NodeId upNodeId, @jakarta.annotation.Nullable NodeId downNodeId, @Nullable NodeId targetId, boolean removed) {
+    public EdgeImpl(@Nullable NodeId upNodeId, @Nullable NodeId downNodeId, @Nullable NodeId targetId, boolean removed) {
       myUpNodeId = upNodeId;
       myDownNodeId = downNodeId;
       myTargetId = targetId;
       myRemoved = removed;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     @Override
     public NodeId upNodeId() {
       return myUpNodeId;
@@ -117,13 +116,13 @@ public interface GraphChanges<NodeId> {
       myChangedEdges = changedEdges;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<Node<NodeId>> getChangedNodes() {
       return myChangedNodes;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<Edge<NodeId>> getChangedEdges() {
       return myChangedEdges;

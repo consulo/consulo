@@ -10,7 +10,6 @@ import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -19,25 +18,25 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "PsiViewerForContext")
 public class PsiViewerForContextAction extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public PsiViewerForContextAction(@Nonnull Application application) {
+    public PsiViewerForContextAction(Application application) {
         super(ActionLocalize.actionPsiviewerforcontextText());
         myApplication = application;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getRequiredData(Editor.KEY);
         PsiFile currentFile = e.getRequiredData(PsiFile.KEY);
         new PsiViewerDialog(currentFile.getProject(), false, currentFile, editor).show();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!myApplication.isInternal()) {
             e.getPresentation().setEnabledAndVisible(false);
             return;

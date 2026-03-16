@@ -35,8 +35,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -49,7 +48,7 @@ import java.util.function.Supplier;
 public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSettingsConfigurable.MyComponent>
     implements SearchableConfigurable, ApplicationConfigurable {
 
-    private record LocaleInfo(@Nonnull Locale locale, boolean isDefault) {
+    private record LocaleInfo(Locale locale, boolean isDefault) {
         public Locale setValue() {
             if (isDefault()) {
                 return null;
@@ -94,7 +93,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         private AtomicInteger myEventBlocker = new AtomicInteger();
 
         @RequiredUIAccess
-        public MyComponent(@Nonnull Application application) {
+        public MyComponent(Application application) {
             myRootLayout = VerticalLayout.create(0);
 
             VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
@@ -212,7 +211,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("File Dialogs"), fileDialogsLayout));
         }
 
-        @Nonnull
+        
         @Override
         public Component get() {
             return myRootLayout;
@@ -235,15 +234,15 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected MyComponent createPanel(@Nonnull Disposable uiDisposable) {
+    protected MyComponent createPanel(Disposable uiDisposable) {
         return new MyComponent(myApplication);
     }
 
     @RequiredUIAccess
     @Override
-    protected boolean isModified(@Nonnull MyComponent component) {
+    protected boolean isModified(MyComponent component) {
         GeneralSettings generalSettings = myGeneralSettings.get();
         RecentProjectsManager recentProjectsManager = RecentProjectsManager.getInstance();
 
@@ -278,7 +277,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         return isModified;
     }
 
-    private boolean isLocaleChanged(@Nonnull Locale locale) {
+    private boolean isLocaleChanged(Locale locale) {
         LocalizeManager localizeManager = LocalizeManager.get();
 
         if (locale == Locale.ROOT && localizeManager.isDefaultLocale()) {
@@ -300,7 +299,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @RequiredUIAccess
     @Override
-    protected void apply(@Nonnull MyComponent component) throws ConfigurationException {
+    protected void apply(MyComponent component) throws ConfigurationException {
         component.myApplied = true;
 
         GeneralSettings generalSettings = myGeneralSettings.get();
@@ -350,7 +349,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @RequiredUIAccess
     @Override
-    protected void disposeUIResources(@Nonnull MyComponent component) {
+    protected void disposeUIResources(MyComponent component) {
         super.disposeUIResources(component);
 
         LocalizeManager localizeManager = LocalizeManager.get();
@@ -365,7 +364,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
     @RequiredUIAccess
     @Override
-    protected void reset(@Nonnull MyComponent component) {
+    protected void reset(MyComponent component) {
         LocalizeManager localizeManager = LocalizeManager.get();
 
         component.myInitialLocale = new LocaleInfo(localizeManager.getLocale(), localizeManager.isDefaultLocale());
@@ -452,7 +451,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("System");
@@ -465,7 +464,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "preferences.general";
     }

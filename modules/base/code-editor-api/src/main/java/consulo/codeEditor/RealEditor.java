@@ -18,8 +18,7 @@ package consulo.codeEditor;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -34,7 +33,7 @@ public interface RealEditor extends EditorEx {
     Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
     Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
 
-    void throwEditorNotDisposedError(@Nonnull String msg);
+    void throwEditorNotDisposedError(String msg);
 
     void release();
 
@@ -49,10 +48,10 @@ public interface RealEditor extends EditorEx {
     default void validateSize() {
     }
 
-    @Nonnull
+    
     Disposable getDisposable();
 
-    boolean isHighlighterAvailable(@Nonnull RangeHighlighter highlighter);
+    boolean isHighlighterAvailable(RangeHighlighter highlighter);
 
     boolean isScrollToCaret();
 
@@ -81,11 +80,11 @@ public interface RealEditor extends EditorEx {
     default void updateCaretCursor() {
     }
 
-    default boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
+    default boolean isRtlLocation(VisualPosition visualPosition) {
         return false;
     }
 
-    default boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
+    default boolean isAtBidiRunBoundary(VisualPosition visualPosition) {
         return false;
     }
 

@@ -17,7 +17,7 @@ package consulo.execution.event;
 
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventObject;
 

@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To solve "caret after last symbol" problem consider using {@link BaseElementAtCaretIntentionAction}
@@ -34,7 +33,7 @@ import jakarta.annotation.Nullable;
  */
 public abstract class PsiElementBaseIntentionAction extends BaseIntentionAction {
   @Override
-  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (editor == null || !checkFile(file)) return;
     PsiElement element = getElement(editor, file);
     if (element != null) {
@@ -57,10 +56,10 @@ public abstract class PsiElementBaseIntentionAction extends BaseIntentionAction 
    * @param editor  the editor for the file.
    * @param element the element under cursor.
    */
-  public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
+  public abstract void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException;
 
   @Override
-  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
     if (!checkFile(file)) return false;
     PsiElement element = editor == null ? null : getElement(editor, file);
     return element != null && isAvailable(project, editor, element);
@@ -75,10 +74,10 @@ public abstract class PsiElementBaseIntentionAction extends BaseIntentionAction 
    * @param element the element under caret.
    * @return true if the intention is available, false otherwise.
    */
-  public abstract boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element);
+  public abstract boolean isAvailable(Project project, Editor editor, PsiElement element);
 
   @Nullable
-  private static PsiElement getElement(@Nonnull Editor editor, @Nonnull PsiFile file) {
+  private static PsiElement getElement(Editor editor, PsiFile file) {
     CaretModel caretModel = editor.getCaretModel();
     int position = caretModel.getOffset();
     return file.findElementAt(position);

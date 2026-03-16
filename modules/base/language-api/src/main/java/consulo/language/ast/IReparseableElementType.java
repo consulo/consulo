@@ -17,10 +17,8 @@ package consulo.language.ast;
 
 import consulo.language.Language;
 import consulo.project.Project;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A lazy-parseable element type which allows for incremental reparse. When the infrastructure detects
@@ -31,18 +29,18 @@ import jakarta.annotation.Nullable;
  * @author max
  */
 public class IReparseableElementType extends ILazyParseableElementType implements IReparseableElementTypeBase {
-  public IReparseableElementType(@Nonnull @NonNls String debugName) {
+  public IReparseableElementType(String debugName) {
     super(debugName);
   }
 
-  public IReparseableElementType(@Nonnull @NonNls String debugName, @Nonnull Language language) {
+  public IReparseableElementType(String debugName, Language language) {
     super(debugName, language);
   }
 
   /**
    * Allows to construct element types without registering them, as in {@link IElementType#IElementType(String, Language, boolean)}.
    */
-  public IReparseableElementType(@Nonnull @NonNls String debugName, @Nonnull Language language, boolean register) {
+  public IReparseableElementType(String debugName, Language language, boolean register) {
     super(debugName, language, register);
   }
 
@@ -56,7 +54,7 @@ public class IReparseableElementType extends ILazyParseableElementType implement
    * @return true if the content is valid, false if not
    */
 
-  public boolean isParsable(@Nonnull CharSequence buffer, @Nonnull Language fileLanguage, @Nonnull Project project) {
+  public boolean isParsable(CharSequence buffer, Language fileLanguage, Project project) {
     return false;
   }
 
@@ -79,12 +77,12 @@ public class IReparseableElementType extends ILazyParseableElementType implement
    * @return true if the content is valid, false if not
    */
   @Override
-  public boolean isParsable(@Nullable ASTNode parent, @Nonnull CharSequence buffer, @Nonnull Language fileLanguage, @Nonnull Project project) {
+  public boolean isParsable(@Nullable ASTNode parent, CharSequence buffer, Language fileLanguage, Project project) {
     return isParsable(buffer, fileLanguage, project);
   }
 
   @Override
-  public boolean isValidReparse(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
+  public boolean isValidReparse(ASTNode oldNode, ASTNode newNode) {
     return true;
   }
 

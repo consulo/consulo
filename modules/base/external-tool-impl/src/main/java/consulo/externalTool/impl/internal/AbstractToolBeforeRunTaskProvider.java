@@ -28,7 +28,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
@@ -41,7 +40,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
     return PlatformIconGroup.generalExternaltools();
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
@@ -79,7 +78,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
     return task.isExecutable();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription(T task) {
     String actionId = task.getToolActionId();
@@ -100,7 +99,7 @@ public abstract class AbstractToolBeforeRunTaskProvider<T extends AbstractToolBe
     return true;
   }
 
-  @Nonnull
+  
   @Override
   @SuppressWarnings("unchecked")
   public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, T task) {

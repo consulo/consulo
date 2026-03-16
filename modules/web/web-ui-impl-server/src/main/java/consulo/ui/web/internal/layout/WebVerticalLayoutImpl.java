@@ -22,7 +22,6 @@ import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 
-import jakarta.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
   public static class Vaadin extends VaadinComponentContainer {
     private final List<Component> myChildren = new LinkedList<>();
 
-    public void add(@Nonnull Component component) {
+    public void add(Component component) {
       addComponent(component);
       myChildren.add(component);
 
@@ -60,15 +59,15 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
   }
 
   @Override
-  @Nonnull
+  
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public VerticalLayout add(@Nonnull consulo.ui.Component component) {
+  public VerticalLayout add(consulo.ui.Component component) {
     getVaadinComponent().add(TargetVaddin.to(component));
     return this;
   }

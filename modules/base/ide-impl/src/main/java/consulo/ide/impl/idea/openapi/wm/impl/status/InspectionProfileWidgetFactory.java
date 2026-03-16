@@ -5,25 +5,24 @@ import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 // fully disabled
 @Deprecated
 public abstract class InspectionProfileWidgetFactory extends StatusBarEditorBasedWidgetFactory {
     @Override
-    public boolean isAvailable(@Nonnull Project project) {
+    public boolean isAvailable(Project project) {
         return false; // Possibly add a Registry key
     }
 
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return UILocalize.statusBarInspectionProfileWidgetName().get();
     }
 
-    @Nonnull
+    
     @Override
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    public StatusBarWidget createWidget(Project project) {
         return new TogglePopupHintsPanel(project, this);
     }
 }

@@ -26,8 +26,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,11 +44,11 @@ import java.util.List;
  */
 public final class IntentionActionMetaData {
   private static final Logger LOG = Logger.getInstance(IntentionActionMetaData.class);
-  @Nonnull
+  
   private final IntentionAction myAction;
 
   private final String myDescriptionDirectoryName;
-  @Nonnull
+  
   public final String[] myCategory;
 
   private TextDescriptor[] myExampleUsagesBefore = null;
@@ -63,14 +62,14 @@ public final class IntentionActionMetaData {
   private static final String DESCRIPTION_FILE_NAME = "description.html";
   private static final String INTENTION_DESCRIPTION_FOLDER = "intentionDescriptions";
 
-  public IntentionActionMetaData(@Nonnull IntentionAction action, @Nonnull String[] category, @Nonnull String descriptionDirectoryName) {
+  public IntentionActionMetaData(IntentionAction action, String[] category, String descriptionDirectoryName) {
     myAction = action;
     myCategory = category;
     myDescriptionDirectoryName = descriptionDirectoryName;
   }
 
-  public IntentionActionMetaData(@Nonnull IntentionAction action,
-                                 @Nonnull String[] category,
+  public IntentionActionMetaData(IntentionAction action,
+                                 String[] category,
                                  TextDescriptor description,
                                  TextDescriptor[] exampleUsagesBefore,
                                  TextDescriptor[] exampleUsagesAfter) {
@@ -82,7 +81,7 @@ public final class IntentionActionMetaData {
     myDescriptionDirectoryName = null;
   }
 
-  @Nonnull
+  
   public TextDescriptor[] getExampleUsagesBefore() {
     if (myExampleUsagesBefore == null) {
       try {
@@ -95,7 +94,7 @@ public final class IntentionActionMetaData {
     return myExampleUsagesBefore;
   }
 
-  @Nonnull
+  
   public TextDescriptor[] getExampleUsagesAfter() {
     if (myExampleUsagesAfter == null) {
       try {
@@ -108,7 +107,7 @@ public final class IntentionActionMetaData {
     return myExampleUsagesAfter;
   }
 
-  @Nonnull
+  
   public TextDescriptor getDescription() {
     if (myDescription == null) {
       try {
@@ -128,8 +127,8 @@ public final class IntentionActionMetaData {
     return myDescription;
   }
 
-  @Nonnull
-  private TextDescriptor[] retrieveURLs(@Nullable URL descriptionDirectory, @Nonnull String prefix, @Nonnull String suffix) throws MalformedURLException {
+  
+  private TextDescriptor[] retrieveURLs(@Nullable URL descriptionDirectory, String prefix, String suffix) throws MalformedURLException {
     if (descriptionDirectory == null) {
       return new TextDescriptor[0];
     }
@@ -228,12 +227,12 @@ public final class IntentionActionMetaData {
     return myDirURL;
   }
 
-  @Nonnull
+  
   public PluginId getPluginId() {
     return PluginManager.getPluginId(myAction.getClass());
   }
 
-  @Nonnull
+  
   public LocalizeValue getActionText() {
     LocalizeValue text = myAction.getText();
     if (text.isEmpty()) {
@@ -242,7 +241,7 @@ public final class IntentionActionMetaData {
     return text;
   }
 
-  @Nonnull
+  
   public IntentionAction getAction() {
     return myAction;
   }

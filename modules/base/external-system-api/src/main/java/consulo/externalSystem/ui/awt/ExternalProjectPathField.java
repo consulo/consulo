@@ -49,7 +49,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -63,20 +62,20 @@ import java.util.*;
  */
 public class ExternalProjectPathField extends Wrapper implements TextAccessor {
 
-    @Nonnull
+    
     private static final String PROJECT_FILE_TO_START_WITH_KEY = "external.system.task.project.file.to.start";
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ProjectSystemId myExternalSystemId;
 
     private final EditorTextField myEditorTextField;
 
-    public ExternalProjectPathField(@Nonnull Project project,
-                                    @Nonnull ProjectSystemId externalSystemId,
-                                    @Nonnull FileChooserDescriptor descriptor,
-                                    @Nonnull String fileChooserTitle) {
+    public ExternalProjectPathField(Project project,
+                                    ProjectSystemId externalSystemId,
+                                    FileChooserDescriptor descriptor,
+                                    String fileChooserTitle) {
         myExternalSystemId = externalSystemId;
         myProject = project;
         myEditorTextField = createTextField(project, externalSystemId);
@@ -133,8 +132,8 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         myEditorTextField.setSuffixComponent(toolbar.getComponent());
     }
 
-    @Nonnull
-    private static Tree buildRegisteredProjectsTree(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+    
+    private static Tree buildRegisteredProjectsTree(Project project, ProjectSystemId externalSystemId) {
         ExternalSystemTasksTreeModel model = new ExternalSystemTasksTreeModel(externalSystemId);
         ExternalSystemTasksTree result = new ExternalSystemTasksTree(model, new HashMap<>(), project, externalSystemId);
 
@@ -150,15 +149,15 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         return result;
     }
 
-    @Nonnull
-    private static EditorTextField createTextField(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId) {
+    
+    private static EditorTextField createTextField(Project project, ProjectSystemId externalSystemId) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
         final AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
         final ExternalSystemUiAware uiAware = ExternalSystemUiUtil.getUiAware(externalSystemId);
         TextFieldCompletionProvider provider = new TextFieldCompletionProviderDumbAware() {
             @Override
-            public void addCompletionVariants(@Nonnull String text, int offset, @Nonnull String prefix, @Nonnull CompletionResultSet result) {
+            public void addCompletionVariants(String text, int offset, String prefix, CompletionResultSet result) {
                 for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : settings.getAvailableProjects().entrySet()) {
                     String rootProjectPath = entry.getKey().getPath();
                     String rootProjectName = uiAware.getProjectRepresentationName(rootProjectPath, null);
@@ -199,9 +198,9 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         }
     }
 
-    private static void collapseIfPossible(@Nonnull Editor editor,
-                                           @Nonnull ProjectSystemId externalSystemId,
-                                           @Nonnull Project project) {
+    private static void collapseIfPossible(Editor editor,
+                                           ProjectSystemId externalSystemId,
+                                           Project project) {
         ExternalSystemManager<?, ?, ?, ?, ?> manager = ExternalSystemApiUtil.getManager(externalSystemId);
         assert manager != null;
         AbstractExternalSystemLocalSettings settings = manager.getLocalSettingsProvider().apply(project);
@@ -222,7 +221,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
         }
     }
 
-    private static void collapse(@Nonnull final Editor editor, @Nonnull final String placeholder) {
+    private static void collapse(final Editor editor, final String placeholder) {
         final FoldingModel foldingModel = editor.getFoldingModel();
         foldingModel.runBatchFoldingOperation(new Runnable() {
             @Override
@@ -245,16 +244,16 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
 
     private static class MyBrowseListener extends DumbAwareAction {
 
-        @Nonnull
+        
         private final FileChooserDescriptor myDescriptor;
-        @Nonnull
+        
         private final Project myProject;
         private final EditorTextField myPathField;
 
-        MyBrowseListener(@Nonnull FileChooserDescriptor descriptor,
-                         @Nonnull String fileChooserTitle,
-                         @Nonnull Project project,
-                         @Nonnull EditorTextField pathField) {
+        MyBrowseListener(FileChooserDescriptor descriptor,
+                         String fileChooserTitle,
+                         Project project,
+                         EditorTextField pathField) {
             super(fileChooserTitle, null, PlatformIconGroup.nodesFolder());
             descriptor.setTitle(fileChooserTitle);
             myDescriptor = descriptor;
@@ -285,13 +284,13 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
 
     public static class MyPathAndProjectButtonPanel extends JPanel {
 
-        @Nonnull
+        
         private final EditorTextField myTextField;
-        @Nonnull
+        
         private final FixedSizeButton myRegisteredProjectsButton;
 
-        public MyPathAndProjectButtonPanel(@Nonnull EditorTextField textField,
-                                           @Nonnull FixedSizeButton registeredProjectsButton) {
+        public MyPathAndProjectButtonPanel(EditorTextField textField,
+                                           FixedSizeButton registeredProjectsButton) {
             super(new GridBagLayout());
             myTextField = textField;
             myRegisteredProjectsButton = registeredProjectsButton;
@@ -299,7 +298,7 @@ public class ExternalProjectPathField extends Wrapper implements TextAccessor {
             add(myRegisteredProjectsButton, new GridBag().insets(0, 3, 0, 0));
         }
 
-        @Nonnull
+        
         public EditorTextField getTextField() {
             return myTextField;
         }

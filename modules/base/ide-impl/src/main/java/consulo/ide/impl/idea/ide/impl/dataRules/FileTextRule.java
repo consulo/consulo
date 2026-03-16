@@ -22,13 +22,12 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
 public final class FileTextRule {
-  static String getData(@Nonnull DataSnapshot dataProvider) {
+  static String getData(DataSnapshot dataProvider) {
     VirtualFile virtualFile = dataProvider.get(VirtualFile.KEY);
     if (virtualFile == null) {
       return null;

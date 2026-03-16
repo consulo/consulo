@@ -34,8 +34,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -47,7 +46,7 @@ public class FakeRerunAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         ExecutionEnvironment environment = getEnvironment(event);
         if (environment != null) {
@@ -66,7 +65,7 @@ public class FakeRerunAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         ExecutionEnvironment environment = getEnvironment(event);
         if (environment != null) {
             ExecutionUtil.restart(environment);
@@ -79,7 +78,7 @@ public class FakeRerunAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
+    protected ExecutionEnvironment getEnvironment(AnActionEvent event) {
         ExecutionEnvironment environment = event.getData(ExecutionEnvironment.KEY);
         if (environment == null) {
             Project project = event.getData(Project.KEY);

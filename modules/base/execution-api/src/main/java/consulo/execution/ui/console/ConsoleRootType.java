@@ -17,8 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.language.scratch.RootType;
 import consulo.util.lang.StringHash;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author gregsh
@@ -28,7 +27,7 @@ public abstract class ConsoleRootType extends RootType {
   public static final String SEPARATOR = "-. . -..- - / . -. - .-. -.--";
   private static final String PATH_PREFIX = "consoles/";
 
-  protected ConsoleRootType(@Nonnull String consoleTypeId, @Nullable String displayName) {
+  protected ConsoleRootType(String consoleTypeId, @Nullable String displayName) {
     super(PATH_PREFIX + consoleTypeId, displayName);
   }
 
@@ -36,22 +35,22 @@ public abstract class ConsoleRootType extends RootType {
     return getId().substring(PATH_PREFIX.length());
   }
 
-  @Nonnull
+  
   public String getEntrySeparator() {
     return "\n" + SEPARATOR + "\n";
   }
 
-  @Nonnull
-  public String getContentPathName(@Nonnull String id) {
+  
+  public String getContentPathName(String id) {
     return Long.toHexString(StringHash.calc(id));
   }
 
-  @Nonnull
-  public String getHistoryPathName(@Nonnull String id) {
+  
+  public String getHistoryPathName(String id) {
     return Long.toHexString(StringHash.calc(id));
   }
 
-  @Nonnull
+  
   public String getDefaultFileExtension() {
     return "txt";
   }

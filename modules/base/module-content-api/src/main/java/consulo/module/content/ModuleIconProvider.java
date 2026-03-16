@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,5 +28,5 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface ModuleIconProvider {
     @Nullable
-    Image getIcon(@Nonnull Module module);
+    Image getIcon(Module module);
 }

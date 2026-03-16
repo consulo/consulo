@@ -24,8 +24,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Function;
 
 /**
@@ -41,7 +40,7 @@ public interface ElementManipulator<T extends PsiElement> {
 
   @Nullable
   @SuppressWarnings("unchecked")
-  public static <T extends PsiElement> ElementManipulator<T> getManipulator(@Nonnull T element) {
+  public static <T extends PsiElement> ElementManipulator<T> getManipulator(T element) {
     Function<Class, ElementManipulator> call = Application.get().getExtensionPoint(ElementManipulator.class).getOrBuildCache(KEY);
     return call.apply(element.getClass());
   }
@@ -55,13 +54,13 @@ public interface ElementManipulator<T extends PsiElement> {
    * @return changed element
    * @throws IncorrectOperationException if something goes wrong
    */
-  T handleContentChange(@Nonnull T element, @Nonnull TextRange range, String newContent) throws IncorrectOperationException;
+  T handleContentChange(T element, TextRange range, String newContent) throws IncorrectOperationException;
 
-  T handleContentChange(@Nonnull T element, String newContent) throws IncorrectOperationException;
+  T handleContentChange(T element, String newContent) throws IncorrectOperationException;
 
-  @Nonnull
-  TextRange getRangeInElement(@Nonnull T element);
+  
+  TextRange getRangeInElement(T element);
 
-  @Nonnull
+  
   Class<T> getElementClass();
 }

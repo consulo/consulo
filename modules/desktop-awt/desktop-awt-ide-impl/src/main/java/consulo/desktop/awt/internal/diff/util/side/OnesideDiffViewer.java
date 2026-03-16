@@ -33,24 +33,19 @@ import consulo.dataContext.DataSink;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
 
 public abstract class OnesideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  @Nonnull
   protected final SimpleDiffPanel myPanel;
-  @Nonnull
   protected final OnesideContentPanel myContentPanel;
 
-  @Nonnull
   private final Side mySide;
-  @Nonnull
   private final T myHolder;
 
-  public OnesideDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request, @Nonnull EditorHolderFactory<T> factory) {
+  public OnesideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
     super(context, request);
 
     mySide = Side.fromRight(myRequest.getContents().get(0) instanceof EmptyContent);
@@ -80,8 +75,7 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Editors
   //
 
-  @Nonnull
-  protected T createEditorHolder(@Nonnull EditorHolderFactory<T> factory) {
+  protected T createEditorHolder(EditorHolderFactory<T> factory) {
     DiffContent content = mySide.select(myRequest.getContents());
     return factory.create(content, myContext);
   }
@@ -100,7 +94,6 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   // Getters
   //
 
-  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -113,23 +106,20 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
     return getEditorHolder().getPreferredFocusedComponent();
   }
 
-  @Nonnull
   public Side getSide() {
     return mySide;
   }
 
-  @Nonnull
   protected DiffContent getContent() {
     return mySide.select(myRequest.getContents());
   }
 
-  @Nonnull
   protected T getEditorHolder() {
     return myHolder;
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     super.uiDataSnapshot(sink);
     sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, mySide));
     sink.set(DiffDataKeys.CURRENT_CONTENT, getContent());
@@ -146,9 +136,9 @@ public abstract class OnesideDiffViewer<T extends EditorHolder> extends Listener
   }
 
   public static <T extends EditorHolder> boolean canShowRequest(
-    @Nonnull DiffContext context,
-    @Nonnull DiffRequest request,
-    @Nonnull EditorHolderFactory<T> factory
+    DiffContext context,
+    DiffRequest request,
+    EditorHolderFactory<T> factory
   ) {
     if (!(request instanceof ContentDiffRequest)) return false;
 

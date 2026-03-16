@@ -11,7 +11,6 @@ import consulo.ide.runAnything.RunAnythingItem;
 import consulo.ide.runAnything.RunAnythingProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,15 +21,15 @@ public class RunAnythingRecentGroup extends RunAnythingGroupBase {
     private RunAnythingRecentGroup() {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTitle() {
         return IdeLocalize.runAnythingRecentGroupTitle();
     }
 
-    @Nonnull
+    
     @Override
-    public Collection<RunAnythingItem> getGroupItems(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<RunAnythingItem> getGroupItems(DataContext dataContext, String pattern) {
         Project project = dataContext.getData(Project.KEY);
         assert project != null;
 

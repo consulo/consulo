@@ -18,7 +18,6 @@ import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,12 +33,11 @@ public class Utils {
 
     private static boolean DO_FULL_EXPAND = Boolean.getBoolean("actionSystem.use.full.group.expand"); // for tests and debug
 
-    @Nonnull
-    public static CompletableFuture<Void> fillMenu(@Nonnull ActionGroup group,
+    public static CompletableFuture<Void> fillMenu(ActionGroup group,
                                                     JComponent component,
                                                     boolean enableMnemonics,
                                                     PresentationFactory presentationFactory,
-                                                    @Nonnull DataContext context,
+                                                    DataContext context,
                                                     String place,
                                                     boolean isWindowMenu,
                                                     boolean isInModalContext,
@@ -48,17 +46,16 @@ public class Utils {
             isWindowMenu, isInModalContext, enableIcons, new EmptyProgressIndicator());
     }
 
-    @Nonnull
-    public static CompletableFuture<Void> fillMenu(@Nonnull ActionGroup group,
+    public static CompletableFuture<Void> fillMenu(ActionGroup group,
                                                     JComponent component,
                                                     boolean enableMnemonics,
                                                     PresentationFactory presentationFactory,
-                                                    @Nonnull DataContext context,
+                                                    DataContext context,
                                                     String place,
                                                     boolean isWindowMenu,
                                                     boolean isInModalContext,
                                                     boolean enableIcons,
-                                                    @Nonnull ProgressIndicator indicator) {
+                                                    ProgressIndicator indicator) {
         boolean checked = group instanceof CheckedActionGroup;
 
         DataContext asyncContext = context instanceof AsyncDataContext
@@ -158,8 +155,8 @@ public class Utils {
 
     private static ActionMenuItem createItem(AnAction action,
                                              Presentation presentation,
-                                             @Nonnull String place,
-                                             @Nonnull DataContext context,
+                                             String place,
+                                             DataContext context,
                                              boolean enableMnemonics,
                                              boolean prepareNow,
                                              boolean insideCheckedGroup,

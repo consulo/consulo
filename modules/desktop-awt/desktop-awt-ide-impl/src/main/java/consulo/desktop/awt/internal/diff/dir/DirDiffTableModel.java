@@ -49,8 +49,7 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -70,7 +69,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     public static final String COLUMN_NAME = "Name";
     public static final String COLUMN_SIZE = "Size";
     public static final String COLUMN_DATE = "Date";
-    @Nonnull
+    
     private final Project myProject;
     private final DirDiffSettings mySettings;
     private DiffElement mySrc;
@@ -89,7 +88,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     private DirDiffPanel myPanel;
     private volatile boolean myDisposed;
 
-    public DirDiffTableModel(@Nonnull Project project, DiffElement src, DiffElement trg, DirDiffSettings settings) {
+    public DirDiffTableModel(Project project, DiffElement src, DiffElement trg, DirDiffSettings settings) {
         UsageTrigger.trigger("diff.DirDiffTableModel");
         myProject = project;
         mySettings = settings;
@@ -579,7 +578,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
         };
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -883,7 +882,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
                     return true;
                 }
 
-                @Nonnull
+                
                 @Override
                 public LocalizeValue getDoNotShowMessage() {
                     return LocalizeValue.localizeTODO("Do not ask me again");

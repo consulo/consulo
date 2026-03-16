@@ -31,7 +31,6 @@ import consulo.usage.rule.FileGroupingRule;
 import consulo.usage.rule.FileStructureGroupRuleProvider;
 import consulo.usage.rule.UsageGroupingRule;
 import consulo.usage.rule.UsageGroupingRuleProvider;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -44,9 +43,9 @@ import java.util.List;
  */
 @ExtensionImpl
 public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider {
-    @Nonnull
+    
     @Override
-    public UsageGroupingRule[] getActiveRules(@Nonnull Project project) {
+    public UsageGroupingRule[] getActiveRules(Project project) {
         List<UsageGroupingRule> rules = new ArrayList<>();
         rules.add(new NonCodeUsageGroupingRule(project));
         if (UsageViewSettings.getInstance().GROUP_BY_SCOPE) {
@@ -76,7 +75,7 @@ public class UsageGroupingRuleProviderImpl implements UsageGroupingRuleProvider 
         return rules.toArray(new UsageGroupingRule[rules.size()]);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public AnAction[] createGroupingActions(UsageView view) {

@@ -22,7 +22,6 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +34,8 @@ import java.util.List;
  * Sudo builder which convert {@link GeneralCommandLine}
  */
 public class SudoBuilder {
-  public static GeneralCommandLine sudoCommand(@Nonnull GeneralCommandLine commandLine,
-                                                @Nonnull String prompt) throws ExecutionException, IOException {
+  public static GeneralCommandLine sudoCommand(GeneralCommandLine commandLine,
+                                                String prompt) throws ExecutionException, IOException {
     Platform platform = commandLine.getPlatform();
 
     if (platform.user().superUser()) {
@@ -100,15 +99,15 @@ public class SudoBuilder {
       .withRedirectErrorStream(commandLine.isRedirectErrorStream());
   }
 
-  @Nonnull
-  private static String escapeAppleScriptArgument(@Nonnull String arg) {
+  
+  private static String escapeAppleScriptArgument(String arg) {
     return "quoted form of \"" + arg.replace("\"", "\\\"") + "\"";
   }
 
-  @Nonnull
-  public static File createTempExecutableScript(@Nonnull String prefix,
-                                                @Nonnull String suffix,
-                                                @Nonnull String content) throws IOException, ExecutionException {
+  
+  public static File createTempExecutableScript(String prefix,
+                                                String suffix,
+                                                String content) throws IOException, ExecutionException {
     File tempDir = new File(ContainerPathManager.get().getTempPath());
     File tempFile = FileUtil.createTempFile(tempDir, prefix, suffix, true, true);
     FileUtil.writeToFile(tempFile, content.getBytes(StandardCharsets.UTF_8));
@@ -118,8 +117,8 @@ public class SudoBuilder {
     return tempFile;
   }
 
-  @Nonnull
-  public static String escapeUnixShellArgument(@Nonnull String arg) {
+  
+  public static String escapeUnixShellArgument(String arg) {
     return "'" + arg.replace("'", "'\"'\"'") + "'";
   }
 }

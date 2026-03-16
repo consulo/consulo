@@ -28,8 +28,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -56,12 +55,12 @@ public abstract class AbstractExternalSystemLocalSettings {
           new AtomicReference<Map<String, ExternalProjectBuildClasspathPojo>>(new HashMap<>());
   private final AtomicReference<Map<String/* external project config path */, Long>> myExternalConfigModificationStamps = new AtomicReference<Map<String, Long>>(new HashMap<>());
 
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private final Project myProject;
 
-  protected AbstractExternalSystemLocalSettings(@Nonnull ProjectSystemId externalSystemId, @Nonnull Project project) {
+  protected AbstractExternalSystemLocalSettings(ProjectSystemId externalSystemId, Project project) {
     myExternalSystemId = externalSystemId;
     myProject = project;
   }
@@ -71,7 +70,7 @@ public abstract class AbstractExternalSystemLocalSettings {
    *
    * @param linkedProjectPathsToForget target root external project paths
    */
-  public void forgetExternalProjects(@Nonnull Set<String> linkedProjectPathsToForget) {
+  public void forgetExternalProjects(Set<String> linkedProjectPathsToForget) {
     Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects = myAvailableProjects.get();
     for (Iterator<Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>>> it = projects.entrySet().iterator(); it.hasNext(); ) {
       Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry = it.next();
@@ -109,61 +108,61 @@ public abstract class AbstractExternalSystemLocalSettings {
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  @Nonnull
+  
   public Map<String, Boolean> getExpandStates() { // Necessary for the serialization.
     return myExpandStates.get();
   }
 
-  @Nonnull
+  
   public Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> getAvailableProjects() {
     return myAvailableProjects.get();
   }
 
-  public void setAvailableProjects(@Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects) {
+  public void setAvailableProjects(Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> projects) {
     myAvailableProjects.set(projects);
   }
 
-  @Nonnull
+  
   public Map<String, Collection<ExternalTaskPojo>> getAvailableTasks() {
     return myAvailableTasks.get();
   }
 
-  public void setAvailableTasks(@Nonnull Map<String, Collection<ExternalTaskPojo>> tasks) {
+  public void setAvailableTasks(Map<String, Collection<ExternalTaskPojo>> tasks) {
     myAvailableTasks.set(tasks);
   }
 
-  @Nonnull
+  
   public List<ExternalTaskExecutionInfo> getRecentTasks() {
     return myRecentTasks.get();
   }
 
-  public void setRecentTasks(@Nonnull List<ExternalTaskExecutionInfo> tasks) {
+  public void setRecentTasks(List<ExternalTaskExecutionInfo> tasks) {
     myRecentTasks.set(tasks);
   }
 
-  @Nonnull
+  
   public Map<String, Long> getExternalConfigModificationStamps() {
     return myExternalConfigModificationStamps.get();
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setExternalConfigModificationStamps(@Nonnull Map<String, Long> modificationStamps) {
+  public void setExternalConfigModificationStamps(Map<String, Long> modificationStamps) {
     // Required for IJ serialization.
     myExternalConfigModificationStamps.set(modificationStamps);
   }
 
-  @Nonnull
+  
   public Map<String, ExternalProjectBuildClasspathPojo> getProjectBuildClasspath() {
     return myProjectBuildClasspath.get();
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setProjectBuildClasspath(@Nonnull Map<String, ExternalProjectBuildClasspathPojo> projectsBuildClasspath) {
+  public void setProjectBuildClasspath(Map<String, ExternalProjectBuildClasspathPojo> projectsBuildClasspath) {
     // Required for IJ serialization.
     myProjectBuildClasspath.set(projectsBuildClasspath);
   }
 
-  public void fillState(@Nonnull State state) {
+  public void fillState(State state) {
     state.tasksExpandState = myExpandStates.get();
     state.recentTasks = myRecentTasks.get();
     state.availableProjects = myAvailableProjects.get();
@@ -172,7 +171,7 @@ public abstract class AbstractExternalSystemLocalSettings {
     state.projectBuildClasspath = myProjectBuildClasspath.get();
   }
 
-  public void loadState(@Nonnull State state) {
+  public void loadState(State state) {
     setIfNotNull(myExpandStates, state.tasksExpandState);
     setIfNotNull(myAvailableProjects, state.availableProjects);
     setIfNotNull(myAvailableTasks, state.availableTasks);
@@ -220,7 +219,7 @@ public abstract class AbstractExternalSystemLocalSettings {
     }
   }
 
-  private static <K, V> void setIfNotNull(@Nonnull AtomicReference<Map<K, V>> ref, @Nullable Map<K, V> candidate) {
+  private static <K, V> void setIfNotNull(AtomicReference<Map<K, V>> ref, @Nullable Map<K, V> candidate) {
     if (candidate == null) {
       return;
     }

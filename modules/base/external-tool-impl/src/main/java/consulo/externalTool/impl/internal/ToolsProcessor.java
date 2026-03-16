@@ -26,40 +26,38 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
 
 abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor<ToolsGroup<T>, ToolsGroup<T>> {
-  @NonNls private static final String TOOL_SET = "toolSet";
-  @NonNls private static final String TOOL = "tool";
-  @NonNls private static final String ATTRIBUTE_NAME = "name";
-  @NonNls private static final String NAME = ATTRIBUTE_NAME;
-  @NonNls private static final String DESCRIPTION = "description";
-  @NonNls private static final String SHOW_IN_MAIN_MENU = "showInMainMenu";
-  @NonNls private static final String SHOW_IN_EDITOR = "showInEditor";
-  @NonNls private static final String SHOW_IN_PROJECT = "showInProject";
-  @NonNls private static final String SHOW_IN_SEARCH_POPUP = "showInSearchPopup";
-  @NonNls private static final String DISABLED = "disabled";
-  @NonNls private static final String USE_CONSOLE = "useConsole";
-  @NonNls private static final String SHOW_CONSOLE_ON_STDOUT = "showConsoleOnStdOut";
-  @NonNls private static final String SHOW_CONSOLE_ON_STDERR = "showConsoleOnStdErr";
-  @NonNls private static final String SYNCHRONIZE_AFTER_EXECUTION = "synchronizeAfterRun";
-  @NonNls private static final String EXEC = "exec";
-  @NonNls private static final String WORKING_DIRECTORY = "WORKING_DIRECTORY";
-  @NonNls private static final String COMMAND = "COMMAND";
-  @NonNls private static final String PARAMETERS = "PARAMETERS";
-  @NonNls private static final String FILTER = "filter";
-  @NonNls private static final String ELEMENT_OPTION = "option";
-  @NonNls private static final String ATTRIBUTE_VALUE = "value";
+  private static final String TOOL_SET = "toolSet";
+  private static final String TOOL = "tool";
+  private static final String ATTRIBUTE_NAME = "name";
+  private static final String NAME = ATTRIBUTE_NAME;
+  private static final String DESCRIPTION = "description";
+  private static final String SHOW_IN_MAIN_MENU = "showInMainMenu";
+  private static final String SHOW_IN_EDITOR = "showInEditor";
+  private static final String SHOW_IN_PROJECT = "showInProject";
+  private static final String SHOW_IN_SEARCH_POPUP = "showInSearchPopup";
+  private static final String DISABLED = "disabled";
+  private static final String USE_CONSOLE = "useConsole";
+  private static final String SHOW_CONSOLE_ON_STDOUT = "showConsoleOnStdOut";
+  private static final String SHOW_CONSOLE_ON_STDERR = "showConsoleOnStdErr";
+  private static final String SYNCHRONIZE_AFTER_EXECUTION = "synchronizeAfterRun";
+  private static final String EXEC = "exec";
+  private static final String WORKING_DIRECTORY = "WORKING_DIRECTORY";
+  private static final String COMMAND = "COMMAND";
+  private static final String PARAMETERS = "PARAMETERS";
+  private static final String FILTER = "filter";
+  private static final String ELEMENT_OPTION = "option";
+  private static final String ATTRIBUTE_VALUE = "value";
 
-  @NonNls private static final String APPLICATION_HOME_MACRO = "$APPLICATION_HOME_DIR$";
+  private static final String APPLICATION_HOME_MACRO = "$APPLICATION_HOME_DIR$";
 
   @Override
-  public ToolsGroup<T> readScheme(@Nonnull Document document) throws InvalidDataException, IOException, JDOMException {
+  public ToolsGroup<T> readScheme(Document document) throws InvalidDataException, IOException, JDOMException {
     Element root = document.getRootElement();
     if (root == null || !TOOL_SET.equals(root.getName())) {
       throw new InvalidDataException();
@@ -131,14 +129,14 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
 
   protected abstract T createTool();
 
-  @Nonnull
+  
   @Override
-  public String getName(@Nonnull ToolsGroup<T> immutableElement) {
+  public String getName(ToolsGroup<T> immutableElement) {
     return immutableElement.getName();
   }
 
   @Override
-  public Parent writeScheme(@Nonnull ToolsGroup<T> scheme) throws WriteExternalException {
+  public Parent writeScheme(ToolsGroup<T> scheme) throws WriteExternalException {
     Element groupElement = new Element(TOOL_SET);
     if (scheme.getName() != null) {
       groupElement.setAttribute(ATTRIBUTE_NAME, scheme.getName());
@@ -152,7 +150,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
   }
 
   @Override
-  public boolean shouldBeSaved(@Nonnull ToolsGroup scheme) {
+  public boolean shouldBeSaved(ToolsGroup scheme) {
     return true;
   }
 

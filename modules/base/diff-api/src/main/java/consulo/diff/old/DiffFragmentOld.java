@@ -18,7 +18,7 @@ package consulo.diff.old;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 public class DiffFragmentOld {

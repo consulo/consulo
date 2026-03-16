@@ -19,7 +19,6 @@ import consulo.versionControlSystem.log.graph.GraphChanges;
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.GraphEdge;
 import consulo.versionControlSystem.log.graph.GraphChanges.EdgeImpl;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -28,20 +27,20 @@ import java.util.Set;
 
 public class GraphChangesUtil {
   public static final GraphChanges<Integer> SOME_CHANGES = new GraphChanges<>() {
-    @Nonnull
+    
     @Override
     public Collection<Node<Integer>> getChangedNodes() {
       return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public Collection<Edge<Integer>> getChangedEdges() {
       return Collections.emptyList();
     }
   };
 
-  public static EdgeImpl<Integer> edgeChanged(@Nonnull GraphEdge edge, @Nonnull LinearGraph graph, boolean removed) {
+  public static EdgeImpl<Integer> edgeChanged(GraphEdge edge, LinearGraph graph, boolean removed) {
     Integer up = null;
     Integer down = null;
     if (edge.getUpNodeIndex() != null) {

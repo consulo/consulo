@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.model.TableModel;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -42,21 +41,21 @@ class DesktopTableImpl<Item> extends SwingComponentDelegate<DesktopTableImpl.MyT
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTableImpl.this;
         }
     }
 
-    @Nonnull
+    
     private final Iterable<? extends TableColumn> myColumns;
-    @Nonnull
+    
     private final TableModel<Item> myModel;
 
     @SuppressWarnings("unchecked")
-    public DesktopTableImpl(@Nonnull Iterable<? extends TableColumn> columns,
-                            @Nonnull TableModel<Item> model) {
+    public DesktopTableImpl(Iterable<? extends TableColumn> columns,
+                            TableModel<Item> model) {
 
         myColumns = columns;
         myModel = model;

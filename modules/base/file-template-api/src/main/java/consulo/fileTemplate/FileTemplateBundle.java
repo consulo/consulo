@@ -21,7 +21,6 @@ import consulo.component.util.localize.AbstractBundle;
 import consulo.fileTemplate.localize.FileTemplateLocalize;
 import org.jetbrains.annotations.PropertyKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,12 +36,12 @@ public class FileTemplateBundle extends AbstractBundle {
     super("consulo.fileTemplate.FileTemplateBundle");
   }
 
-  @Nonnull
+  
   public static String message(@PropertyKey(resourceBundle = "consulo.fileTemplate.FileTemplateBundle") String key) {
     return INSTANCE.getMessage(key);
   }
 
-  @Nonnull
+  
   public static String message(@PropertyKey(resourceBundle = "consulo.fileTemplate.FileTemplateBundle") String key, Object... args) {
     return INSTANCE.getMessage(key, args);
   }

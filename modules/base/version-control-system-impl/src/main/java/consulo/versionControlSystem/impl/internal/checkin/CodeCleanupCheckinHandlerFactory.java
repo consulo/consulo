@@ -33,15 +33,14 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 @ExtensionImpl(id = "code-cleanup", order = "after todo")
 public class CodeCleanupCheckinHandlerFactory extends CheckinHandlerFactory {
     @Override
-    @Nonnull
-    public CheckinHandler createHandler(@Nonnull CheckinProjectPanel panel, @Nonnull CommitContext commitContext) {
+    
+    public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
         return new CleanupCodeCheckinHandler(panel);
     }
 

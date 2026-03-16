@@ -28,7 +28,6 @@ import consulo.project.ui.view.SelectInTarget;
 import consulo.project.ui.view.StandardTargetWeights;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ExtensionImpl
@@ -40,7 +39,7 @@ public class StructureViewSelectInTarget implements SelectInTarget {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return IdeLocalize.selectInFileStructure();

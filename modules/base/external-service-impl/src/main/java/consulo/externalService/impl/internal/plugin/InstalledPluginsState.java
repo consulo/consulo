@@ -24,7 +24,6 @@ import consulo.container.internal.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.HashSet;
@@ -43,7 +42,7 @@ import java.util.TreeSet;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class InstalledPluginsState {
-    @Nonnull
+    
     public static InstalledPluginsState getInstance() {
         Application application = ApplicationManager.getApplication();
         if (application == null) {
@@ -60,7 +59,7 @@ public class InstalledPluginsState {
 
     private final Set<PluginDescriptor> myAllPlugins = new HashSet<>();
 
-    public void updateExistingPlugin(@Nonnull PluginDescriptor descriptor, @Nonnull PluginDescriptor installed) {
+    public void updateExistingPlugin(PluginDescriptor descriptor, PluginDescriptor installed) {
         updateExistingPluginInfo(descriptor, installed);
         myUpdatedPlugins.add(installed.getPluginId());
     }

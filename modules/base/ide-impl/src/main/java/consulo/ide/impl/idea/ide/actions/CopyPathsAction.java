@@ -9,7 +9,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -24,7 +23,7 @@ public class CopyPathsAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (files != null && files.length > 0) {
             CopyPasteManager.getInstance().setContents(new StringSelection(getPaths(files)));
@@ -43,7 +42,7 @@ public class CopyPathsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabledAndVisible(KEYBOARD_SHORTCUT.equals(event.getPlace()));
     }
 }

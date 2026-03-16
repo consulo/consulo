@@ -16,7 +16,6 @@
 
 package consulo.index.io;
 
-import jakarta.annotation.Nonnull;
 import java.io.Flushable;
 import java.io.IOException;
 
@@ -28,11 +27,11 @@ public interface IndexStorage<Key, Value> extends Flushable {
 
   void addValue(Key key, int inputId, Value value) throws StorageException;
 
-  void removeAllValues(@Nonnull Key key, int inputId) throws StorageException;
+  void removeAllValues(Key key, int inputId) throws StorageException;
 
   void clear() throws StorageException;
 
-  @Nonnull
+  
   ValueContainer<Value> read(Key key) throws StorageException;
 
   void clearCaches();

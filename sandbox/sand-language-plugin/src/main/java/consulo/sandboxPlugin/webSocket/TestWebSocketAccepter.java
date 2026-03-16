@@ -18,7 +18,6 @@ package consulo.sandboxPlugin.webSocket;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.builtinWebServer.webSocket.WebSocketAccepter;
 import consulo.builtinWebServer.webSocket.WebSocketConnection;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class TestWebSocketAccepter implements WebSocketAccepter {
   @Override
-  public void accept(@Nonnull WebSocketConnection connection, @Nonnull String text) {
+  public void accept(WebSocketConnection connection, String text) {
     connection.send("reply for " + text);
   }
 }

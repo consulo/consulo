@@ -1,24 +1,23 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.awt.hacking;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InvocationEvent;
 import java.lang.reflect.Field;
 
 public class InvocationUtil {
-  @Nonnull
+  
   public static final Class<? extends Runnable> REPAINT_PROCESSING_CLASS = findProcessingClass();
-  @Nonnull
+  
   private static final Field INVOCATION_EVENT_RUNNABLE_FIELD = findRunnableField();
 
   public InvocationUtil() {
   }
 
   @Nullable
-  public static Runnable extractRunnable(@Nonnull AWTEvent event) {
+  public static Runnable extractRunnable(AWTEvent event) {
     if (event instanceof InvocationEvent) {
       try {
         return (Runnable)INVOCATION_EVENT_RUNNABLE_FIELD.get(event);
@@ -29,7 +28,7 @@ public class InvocationUtil {
     return null;
   }
 
-  @Nonnull
+  
   private static Class<? extends Runnable> findProcessingClass() {
     try {
       return Class.forName("javax.swing.RepaintManager$ProcessingRunnable", false, InvocationUtil.class.getClassLoader()).asSubclass(Runnable.class);
@@ -39,7 +38,7 @@ public class InvocationUtil {
     }
   }
 
-  @Nonnull
+  
   private static Field findRunnableField() {
     for (Class<?> aClass = InvocationEvent.class; aClass != null; aClass = aClass.getSuperclass()) {
       try {
@@ -55,7 +54,7 @@ public class InvocationUtil {
   }
 
   private static final class InternalAPIChangedException extends RuntimeException {
-    InternalAPIChangedException(@Nonnull Class<?> targetClass, @Nullable ReflectiveOperationException cause) {
+    InternalAPIChangedException(Class<?> targetClass, @Nullable ReflectiveOperationException cause) {
       super(targetClass + " class internal API has been changed", cause);
     }
   }

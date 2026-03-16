@@ -20,8 +20,7 @@ import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class WebProgressBarImpl extends VaadinComponentDelegate<WebProgressBarIm
   public void addStyle(ProgressBarStyle style) {
   }
 
-  @Nonnull
+  
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();

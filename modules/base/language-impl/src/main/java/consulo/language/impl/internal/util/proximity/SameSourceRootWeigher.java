@@ -23,7 +23,6 @@ import consulo.language.util.proximity.ProximityWeigher;
 import consulo.module.content.ProjectFileIndex;
 import consulo.util.dataholder.NullableLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -34,7 +33,7 @@ public class SameSourceRootWeigher extends ProximityWeigher {
       NullableLazyKey.create("sourceRoot", proximityLocation -> findSourceRoot(proximityLocation.getPosition()));
 
   @Override
-  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
+  public Comparable weigh(PsiElement element, ProximityLocation location) {
     if (location.getPosition() == null) {
       return null;
     }

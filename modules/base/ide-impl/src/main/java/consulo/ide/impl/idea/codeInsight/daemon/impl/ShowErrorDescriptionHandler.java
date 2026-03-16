@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
   private final int myWidth;
@@ -37,7 +36,7 @@ public class ShowErrorDescriptionHandler implements CodeInsightActionHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     int offset = editor.getCaretModel().getOffset();
     DaemonCodeAnalyzer codeAnalyzer = DaemonCodeAnalyzer.getInstance(project);
     HighlightInfoImpl info = ((DaemonCodeAnalyzerImpl)codeAnalyzer).findHighlightByOffset(editor.getDocument(), offset, false);

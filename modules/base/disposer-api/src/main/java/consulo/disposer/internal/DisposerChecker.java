@@ -16,6 +16,7 @@
 package consulo.disposer.internal;
 
 import consulo.disposer.Disposable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.ServiceLoader;
@@ -27,6 +28,7 @@ import java.util.ServiceLoader;
 public class DisposerChecker {
   private static boolean checkDisposer = Boolean.getBoolean("consulo.checker.disposer.register");
 
+  @Nullable
   private static List<DiposerRegisterChecker> CHECKERS;
 
   public static void checkRegister(Disposable parent, Disposable target) {

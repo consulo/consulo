@@ -22,8 +22,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -44,7 +43,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
   }
 
   @Override
-  public boolean contains(@Nonnull VirtualFile file) {
+  public boolean contains(VirtualFile file) {
     return myEntries.contains(getFileRoot(file));
   }
 
@@ -60,7 +59,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
   }
 
   @Override
-  public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+  public int compare(VirtualFile file1, VirtualFile file2) {
     VirtualFile r1 = getFileRoot(file1);
     VirtualFile r2 = getFileRoot(file2);
     for (VirtualFile root : myEntries) {
@@ -71,7 +70,7 @@ public abstract class LibraryScopeBase extends GlobalSearchScope {
   }
 
   @Override
-  public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+  public boolean isSearchInModuleContent(Module aModule) {
     return false;
   }
 

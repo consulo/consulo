@@ -18,8 +18,7 @@ package consulo.component.impl.internal.inject;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 class InstanceContainer {
@@ -77,7 +76,7 @@ class InstanceContainer {
     return myInstanceAdapters.containsKey(componentKey);
   }
 
-  public void registerComponent(@Nonnull ComponentAdapter componentAdapter) {
+  public void registerComponent(ComponentAdapter componentAdapter) {
     Class componentKey = componentAdapter.getComponentClass();
 
     if (contains(componentKey)) {
@@ -87,7 +86,7 @@ class InstanceContainer {
     myInstanceAdapters.put(componentKey, componentAdapter);
   }
 
-  private <T> T getLocalInstance(@Nonnull ComponentAdapter<T> componentAdapter) {
+  private <T> T getLocalInstance(ComponentAdapter<T> componentAdapter) {
     PicoException firstLevelException;
     try {
       return componentAdapter.getComponentInstance(this);

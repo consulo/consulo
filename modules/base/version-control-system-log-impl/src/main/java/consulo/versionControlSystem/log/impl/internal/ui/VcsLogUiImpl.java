@@ -23,7 +23,6 @@ import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize
 import consulo.versionControlSystem.log.ui.VcsLogColorManager;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -34,35 +33,35 @@ import java.util.function.BiFunction;
 public class VcsLogUiImpl implements VcsLogUi, Disposable {
     private static final Logger LOG = Logger.getInstance(VcsLogUiImpl.class);
 
-    @Nonnull
+    
     private final MainFrame myMainFrame;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final VcsLogColorManager myColorManager;
-    @Nonnull
+    
     private final VcsLog myLog;
-    @Nonnull
+    
     private final MainVcsLogUiProperties myUiProperties;
-    @Nonnull
+    
     private final VcsLogFilterer myFilterer;
 
-    @Nonnull
+    
     private final Collection<VcsLogListener> myLogListeners = new ArrayList<>();
-    @Nonnull
+    
     private final VisiblePackChangeListener myVisiblePackChangeListener;
-    @Nonnull
+    
     private final VcsLogUiPropertiesImpl.MainVcsLogUiPropertiesListener myPropertiesListener;
 
-    @Nonnull
+    
     private volatile VisiblePack myVisiblePack = VisiblePack.EMPTY;
 
     public VcsLogUiImpl(
-        @Nonnull VcsLogDataImpl logData,
-        @Nonnull Project project,
-        @Nonnull VcsLogColorManager manager,
-        @Nonnull MainVcsLogUiProperties uiProperties,
-        @Nonnull VcsLogFilterer filterer
+        VcsLogDataImpl logData,
+        Project project,
+        VcsLogColorManager manager,
+        MainVcsLogUiProperties uiProperties,
+        VcsLogFilterer filterer
     ) {
         myProject = project;
         myColorManager = manager;
@@ -99,7 +98,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     }
 
     @RequiredUIAccess
-    public void setVisiblePack(@Nonnull VisiblePack pack) {
+    public void setVisiblePack(VisiblePack pack) {
         UIAccess.assertIsUIThread();
 
         boolean permGraphChanged = myVisiblePack.getDataPack() != pack.getDataPack();
@@ -112,7 +111,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
         repaintUI();
     }
 
-    @Nonnull
+    
     public MainFrame getMainFrame() {
         return myMainFrame;
     }
@@ -121,7 +120,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
         myMainFrame.getGraphTable().repaint();
     }
 
-    private void performLongAction(@Nonnull GraphAction graphAction, @Nonnull LocalizeValue title) {
+    private void performLongAction(GraphAction graphAction, LocalizeValue title) {
         ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> {
                 GraphAnswer<Integer> answer = myVisiblePack.getVisibleGraph().getActionController().performAction(graphAction);
@@ -165,7 +164,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     }
 
     @Override
-    public boolean isHighlighterEnabled(@Nonnull String id) {
+    public boolean isHighlighterEnabled(String id) {
         MainVcsLogUiProperties.VcsLogHighlighterProperty property = MainVcsLogUiProperties.VcsLogHighlighterProperty.get(id);
         return myUiProperties.exists(property) && myUiProperties.get(property);
     }
@@ -183,29 +182,29 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
         return myUiProperties.get(MainVcsLogUiProperties.SHOW_TAG_NAMES);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public Future<Boolean> jumpToCommit(@Nonnull Hash commitHash, @Nonnull VirtualFile root) {
+    public Future<Boolean> jumpToCommit(Hash commitHash, VirtualFile root) {
         SettableFuture<Boolean> future = SettableFuture.create();
         jumpToCommit(commitHash, root, future);
         return future;
     }
 
     @RequiredUIAccess
-    public void jumpToCommit(@Nonnull Hash commitHash, @Nonnull VirtualFile root, @Nonnull SettableFuture<Boolean> future) {
+    public void jumpToCommit(Hash commitHash, VirtualFile root, SettableFuture<Boolean> future) {
         jumpTo(commitHash, (model, hash) -> model.getRowOfCommit(hash, root), future);
     }
 
     @RequiredUIAccess
-    public void jumpToCommitByPartOfHash(@Nonnull String commitHash, @Nonnull SettableFuture<Boolean> future) {
+    public void jumpToCommitByPartOfHash(String commitHash, SettableFuture<Boolean> future) {
         jumpTo(commitHash, GraphTableModel::getRowOfCommitByPartOfHash, future);
     }
 
     @RequiredUIAccess
     private <T> void jumpTo(
-        @Nonnull T commitId,
-        @Nonnull BiFunction<GraphTableModel, T, Integer> rowGetter,
-        @Nonnull SettableFuture<Boolean> future
+        T commitId,
+        BiFunction<GraphTableModel, T, Integer> rowGetter,
+        SettableFuture<Boolean> future
     ) {
         if (future.isCancelled()) {
             return;
@@ -230,12 +229,12 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
         }
     }
 
-    private void showMessage(@Nonnull NotificationType messageType, @Nonnull String message) {
+    private void showMessage(NotificationType messageType, String message) {
         LOG.info(message);
         VcsBalloonProblemNotifier.showOverChangesView(myProject, message, messageType);
     }
 
-    private void commitNotFound(@Nonnull String commitHash) {
+    private void commitNotFound(String commitHash) {
         if (myMainFrame.getFilterUi().getFilters().isEmpty()) {
             showMessage(NotificationType.WARNING, "Commit " + commitHash + " not found");
         }
@@ -249,68 +248,68 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
         return myColorManager.isMultipleRoots(); // somewhy color manager knows about this
     }
 
-    @Nonnull
+    
     public VcsLogColorManager getColorManager() {
         return myColorManager;
     }
 
-    public void applyFiltersAndUpdateUi(@Nonnull VcsLogFilterCollection filters) {
+    public void applyFiltersAndUpdateUi(VcsLogFilterCollection filters) {
         myFilterer.onFiltersChange(filters);
     }
 
-    @Nonnull
+    
     public VcsLogFilterer getFilterer() {
         return myFilterer;
     }
 
-    @Nonnull
+    
     public VcsLogGraphTable getTable() {
         return myMainFrame.getGraphTable();
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
 
-    @Nonnull
+    
     public JComponent getToolbar() {
         return myMainFrame.getToolbar();
     }
 
-    @Nonnull
+    
     public VcsLog getVcsLog() {
         return myLog;
     }
 
-    @Nonnull
+    
     @Override
     public VcsLogFilterUi getFilterUi() {
         return myMainFrame.getFilterUi();
     }
 
     @Override
-    @Nonnull
+    
     public VisiblePack getDataPack() {
         return myVisiblePack;
     }
 
     @Override
     @RequiredUIAccess
-    public void addLogListener(@Nonnull VcsLogListener listener) {
+    public void addLogListener(VcsLogListener listener) {
         UIAccess.assertIsUIThread();
         myLogListeners.add(listener);
     }
 
     @Override
     @RequiredUIAccess
-    public void removeLogListener(@Nonnull VcsLogListener listener) {
+    public void removeLogListener(VcsLogListener listener) {
         UIAccess.assertIsUIThread();
         myLogListeners.remove(listener);
     }
 
     @RequiredUIAccess
-    private void fireFilterChangeEvent(@Nonnull VisiblePack visiblePack, boolean refresh) {
+    private void fireFilterChangeEvent(VisiblePack visiblePack, boolean refresh) {
         UIAccess.assertIsUIThread();
         Collection<VcsLogListener> logListeners = new ArrayList<>(myLogListeners);
 
@@ -320,11 +319,11 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     }
 
     @RequiredUIAccess
-    public void invokeOnChange(@Nonnull final Runnable runnable) {
+    public void invokeOnChange(final Runnable runnable) {
         addLogListener(new VcsLogListener() {
             @Override
             @RequiredUIAccess
-            public void onChange(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened) {
+            public void onChange(VcsLogDataPack dataPack, boolean refreshHappened) {
                 runnable.run();
                 removeLogListener(this);
             }

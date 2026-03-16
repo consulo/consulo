@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,25 +28,25 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ContentFolderPropertyProvider<T> {
-    @Nonnull
+    
     public abstract Key<T> getKey();
 
     @Nullable
-    public abstract Image getIcon(@Nonnull T value, @Nonnull ContentFolderTypeProvider typeProvider);
+    public abstract Image getIcon(T value, ContentFolderTypeProvider typeProvider);
 
     public boolean isUpdateFullIcon() {
         return false;
     }
 
-    public abstract T fromString(@Nonnull String value);
+    public abstract T fromString(String value);
 
-    public abstract String toString(@Nonnull T value);
+    public abstract String toString(T value);
 
-    @Nonnull
+    
     public abstract T[] getValues();
 
     @Nullable
-    public static ContentFolderPropertyProvider<?> findProvider(@Nonnull String key) {
+    public static ContentFolderPropertyProvider<?> findProvider(String key) {
         return Application.get().getExtensionPoint(ContentFolderPropertyProvider.class)
             .findFirstSafe(provider -> key.equals(provider.getKey().toString()));
     }

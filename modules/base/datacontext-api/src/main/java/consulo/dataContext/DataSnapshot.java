@@ -16,8 +16,7 @@
 package consulo.dataContext;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Read-only view of captured data. Used by {@link UiDataRule} to access
@@ -27,5 +26,5 @@ import jakarta.annotation.Nullable;
  */
 public interface DataSnapshot {
     @Nullable
-    <T> T get(@Nonnull Key<T> key);
+    <T> T get(Key<T> key);
 }

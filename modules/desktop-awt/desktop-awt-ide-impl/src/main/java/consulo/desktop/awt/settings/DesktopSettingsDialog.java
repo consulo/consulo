@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -70,7 +69,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
      */
     public DesktopSettingsDialog(Project project,
                                  Function<Project, Configurable[]> configurablesBuilder,
-                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 ConfigurablePreselectStrategy strategy,
                                  boolean applicationModalIfPossible,
                                  Consumer<DesktopSettingsDialog> afteLoad
     ) {
@@ -85,7 +84,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
 
     public DesktopSettingsDialog(Project project,
                                  Function<Project, Configurable[]> configurablesBuilder,
-                                 @Nonnull ConfigurablePreselectStrategy strategy,
+                                 ConfigurablePreselectStrategy strategy,
                                  Consumer<DesktopSettingsDialog> afteLoad) {
         super(project, true);
         myProject = project;
@@ -96,7 +95,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
         init();
     }
 
-    @Nonnull
     @Override
     public String getSplitterKey() {
         return OptionsEditor.MAIN_SPLITTER_PROPORTION;
@@ -127,7 +125,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
     }
 
     @RequiredUIAccess
-    @Nonnull
     @Override
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {
         myEditor = new OptionsEditor(myProject, myConfigurablesBuilder, myPreselectStrategy, rootPanel, () -> myAfteLoad.accept(this));
@@ -240,7 +237,6 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
         super.doCancelAction();
     }
 
-    @Nonnull
     @Override
     protected Action[] createActions() {
         myApplyAction = new ApplyAction();
@@ -261,7 +257,7 @@ public class DesktopSettingsDialog extends WholeWestDialogWrapper implements UiD
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(Settings.KEY, myEditor);
         sink.lazy(ProjectStructureSelector.KEY, () -> new ProjectStructureSelectorOverSettings(myEditor));
     }

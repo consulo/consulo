@@ -26,8 +26,7 @@ import consulo.document.Document;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class is intended to simplify implementation of dummy editors needed only to pass to place which expect {@link Editor}
@@ -55,7 +54,7 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
     private EditorHighlighter myHighlighter;
     private EditorSettings mySettings;
 
-    public ImaginaryEditor(@Nonnull Project project, @Nonnull Document document) {
+    public ImaginaryEditor(Project project, Document document) {
         myProject = project;
         myDocument = document;
         myCaretModel = new ImaginaryCaretModel(this);
@@ -66,7 +65,7 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
      * Creates an ImaginaryEditor by capturing state from a real editor.
      * Captures caret position, selection, colors scheme, highlighter, and settings.
      */
-    public static ImaginaryEditor create(@Nonnull Editor realEditor) {
+    public static ImaginaryEditor create(Editor realEditor) {
         Document document = realEditor.getDocument();
         Project project = realEditor.getProject();
         ImaginaryEditor imaginary = new ImaginaryEditor(project, document);
@@ -91,7 +90,6 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         return new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
     public Document getDocument() {
         return myDocument;
@@ -103,19 +101,16 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         return myProject;
     }
 
-    @Nonnull
     @Override
     public CaretModel getCaretModel() {
         return myCaretModel;
     }
 
-    @Nonnull
     @Override
     public SelectionModel getSelectionModel() {
         return mySelectionModel;
     }
 
-    @Nonnull
     @Override
     public ScrollingModel getScrollingModel() {
         return new ImaginaryScrollingModel(this);
@@ -136,14 +131,13 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         return false;
     }
 
-    @Nonnull
     @Override
     public EditorKind getEditorKind() {
         return EditorKind.UNTYPED;
     }
 
     @Override
-    public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+    public int logicalPositionToOffset(LogicalPosition pos) {
         int lineCount = myDocument.getLineCount();
         if (lineCount == 0) {
             return 0;
@@ -154,7 +148,6 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         return Math.max(startOffset, Math.min(startOffset + pos.column, endOffset));
     }
 
-    @Nonnull
     @Override
     public LogicalPosition offsetToLogicalPosition(int offset) {
         int lineCount = myDocument.getLineCount();
@@ -167,32 +160,27 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         return new LogicalPosition(line, col);
     }
 
-    @Nonnull
     @Override
-    public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
+    public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
         return new VisualPosition(logicalPos.line, logicalPos.column);
     }
 
-    @Nonnull
     @Override
-    public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
+    public LogicalPosition visualToLogicalPosition(VisualPosition visiblePos) {
         return new LogicalPosition(visiblePos.line, visiblePos.column);
     }
 
-    @Nonnull
     @Override
     public VisualPosition offsetToVisualPosition(int offset) {
         LogicalPosition logicalPos = offsetToLogicalPosition(offset);
         return logicalToVisualPosition(logicalPos);
     }
 
-    @Nonnull
     @Override
     public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
         return offsetToVisualPosition(offset);
     }
 
-    @Nonnull
     @Override
     public EditorColorsScheme getColorsScheme() {
         if (myColorsScheme != null) {
@@ -201,7 +189,6 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public EditorHighlighter getHighlighter() {
         if (myHighlighter != null) {
@@ -210,7 +197,6 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public EditorSettings getSettings() {
         if (mySettings != null) {
@@ -231,25 +217,21 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public MarkupModel getMarkupModel() {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public FoldingModel getFoldingModel() {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public SoftWrapModel getSoftWrapModel() {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public EditorGutter getGutter() {
         throw notImplemented();
@@ -265,41 +247,38 @@ public class ImaginaryEditor extends UserDataHolderBase implements Editor {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public IndentsModel getIndentsModel() {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public InlayModel getInlayModel() {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public DataContext getDataContext() {
         throw notImplemented();
     }
 
     @Override
-    public void addEditorMouseListener(@Nonnull EditorMouseListener listener) {
+    public void addEditorMouseListener(EditorMouseListener listener) {
         LOG.info("Called ImaginaryEditor#addEditorMouseListener which is stubbed and has no implementation");
     }
 
     @Override
-    public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
+    public void removeEditorMouseListener(EditorMouseListener listener) {
         LOG.info("Called ImaginaryEditor#removeEditorMouseListener which is stubbed and has no implementation");
     }
 
     @Override
-    public void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+    public void addEditorMouseMotionListener(EditorMouseMotionListener listener) {
         throw notImplemented();
     }
 
     @Override
-    public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+    public void removeEditorMouseMotionListener(EditorMouseMotionListener listener) {
         throw notImplemented();
     }
 }

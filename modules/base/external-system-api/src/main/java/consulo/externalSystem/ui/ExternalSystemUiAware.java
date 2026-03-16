@@ -18,8 +18,7 @@ package consulo.externalSystem.ui;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -27,8 +26,8 @@ import jakarta.annotation.Nullable;
  */
 public interface ExternalSystemUiAware {
 
-  @Nonnull
-  String getProjectRepresentationName(@Nonnull String targetProjectPath, @Nullable String rootProjectPath);
+  
+  String getProjectRepresentationName(String targetProjectPath, @Nullable String rootProjectPath);
 
   @Nullable
   FileChooserDescriptor getExternalProjectConfigDescriptor();

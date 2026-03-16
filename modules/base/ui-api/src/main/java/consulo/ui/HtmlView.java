@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
@@ -31,27 +30,21 @@ import java.util.concurrent.CompletableFuture;
  * Simple html view. HTML5, CSS3, JS not supported. WebView can be used as replacement, if need more powerful html view
  */
 public interface HtmlView extends Component {
-    record RenderData(@Nonnull String html, @Nonnull String inlineCss, @Nonnull URL[] externalCsses) {
-        public RenderData(@Nonnull String html) {
+    record RenderData(String html, String inlineCss, URL[] externalCsses) {
+        public RenderData(String html) {
             this(html, "", new URL[0]);
         }
     }
-
-    @Nonnull
     static HtmlView create() {
         return UIInternal.get()._Components_htmlView();
     }
-
-    @Nonnull
-    CompletableFuture<?> render(@Nonnull RenderData renderData);
+    CompletableFuture<?> render(RenderData renderData);
 
     /**
      * Use only of result of processing {@link #render(RenderData)}
      */
     void scrollToMarkdownSrcOffset(int offset);
-
-    @Nonnull
-    default Disposable addHyperlinkListener(@Nonnull ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
+    default Disposable addHyperlinkListener(ComponentEventListener<Component, HyperlinkEvent> hyperlinkListener) {
         return addListener(HyperlinkEvent.class, hyperlinkListener);
     }
 }

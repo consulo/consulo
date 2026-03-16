@@ -25,8 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -39,19 +38,19 @@ public class XValueTextRendererImpl extends XValueTextRendererBase {
     }
 
     @Override
-    public void renderValue(@Nonnull String value) {
+    public void renderValue(String value) {
         XValuePresentationUtil.renderValue(value, myText, SimpleTextAttributes.REGULAR_ATTRIBUTES, -1, null);
     }
 
     @Override
-    protected void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
+    protected void renderRawValue(String value, TextAttributesKey key) {
         TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(key);
         SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
         myText.append(value, attributes);
     }
 
     @Override
-    public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+    public void renderStringValue(String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
         TextAttributes textAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DefaultLanguageHighlighterColors.STRING);
         SimpleTextAttributes attributes = TextAttributesUtil.fromTextAttributes(textAttributes);
         myText.append(String.valueOf(quoteChar), attributes);
@@ -60,17 +59,17 @@ public class XValueTextRendererImpl extends XValueTextRendererBase {
     }
 
     @Override
-    public void renderError(@Nonnull LocalizeValue errorValue) {
+    public void renderError(LocalizeValue errorValue) {
         myText.append(errorValue, SimpleTextAttributes.ERROR_ATTRIBUTES);
     }
 
     @Override
-    public void renderComment(@Nonnull String comment) {
+    public void renderComment(String comment) {
         myText.append(comment, SimpleTextAttributes.GRAY_ATTRIBUTES);
     }
 
     @Override
-    public void renderSpecialSymbol(@Nonnull String symbol) {
+    public void renderSpecialSymbol(String symbol) {
         myText.append(symbol, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 }

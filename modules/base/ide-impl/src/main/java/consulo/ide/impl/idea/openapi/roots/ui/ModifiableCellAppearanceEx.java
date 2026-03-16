@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui;
 import consulo.ide.ui.CellAppearanceEx;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ModifiableCellAppearanceEx extends CellAppearanceEx {
   void setIcon(@Nullable Image icon);

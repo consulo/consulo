@@ -17,7 +17,6 @@ package consulo.ui.web.internal;
 
 import consulo.ui.TextBoxWithExtensions;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,21 +27,21 @@ public class WebTextBoxWithExtensionsImpl extends WebTextBoxImpl implements Text
     super(text);
   }
 
-  @Nonnull
+  
   @Override
-  public TextBoxWithExtensions setExtensions(@Nonnull Extension... extensions) {
+  public TextBoxWithExtensions setExtensions(Extension... extensions) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public TextBoxWithExtensions addLastExtension(@Nonnull Extension extension) {
+  public TextBoxWithExtensions addLastExtension(Extension extension) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public TextBoxWithExtensions addFirstExtension(@Nonnull Extension extension) {
+  public TextBoxWithExtensions addFirstExtension(Extension extension) {
     return this;
   }
 }

@@ -24,23 +24,22 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseChooseRunConfigurationPopupAction extends AnAction {
     public BaseChooseRunConfigurationPopupAction(@Nullable String text, @Nullable String description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    public BaseChooseRunConfigurationPopupAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public BaseChooseRunConfigurationPopupAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
-    protected BaseChooseRunConfigurationPopupAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BaseChooseRunConfigurationPopupAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected BaseChooseRunConfigurationPopupAction(@Nonnull LocalizeValue text) {
+    protected BaseChooseRunConfigurationPopupAction(LocalizeValue text) {
         super(text);
     }
 
@@ -58,7 +57,7 @@ public abstract class BaseChooseRunConfigurationPopupAction extends AnAction {
     protected abstract String getAdKey();
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabledAndVisible(project != null && !project.isDisposed() && getDefaultExecutor() != null);
     }

@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShelvedChanges.ShowHideDeleted")
 public class ShowHideRecycledAction extends AnAction {
@@ -32,7 +31,7 @@ public class ShowHideRecycledAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Presentation presentation = e.getPresentation();
         if (project == null) {
@@ -46,7 +45,7 @@ public class ShowHideRecycledAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ShelveChangesManagerImpl manager = ShelveChangesManagerImpl.getInstance(project);
         manager.setShowRecycled(!manager.isShowRecycled());

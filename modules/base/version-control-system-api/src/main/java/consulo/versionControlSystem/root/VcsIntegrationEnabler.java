@@ -31,23 +31,22 @@ import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
 public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
-    @Nonnull
+    
     protected final Project myProject;
-    @Nonnull
+    
     protected final VcsT myVcs;
 
 
-    protected VcsIntegrationEnabler(@Nonnull VcsT vcs) {
+    protected VcsIntegrationEnabler(VcsT vcs) {
         myProject = vcs.getProject();
         myVcs = vcs;
     }
 
-    public void enable(@Nonnull Collection<VcsRoot> vcsRoots) {
+    public void enable(Collection<VcsRoot> vcsRoots) {
         Collection<VcsRoot> vcsFilterRoots = ContainerUtil.filter(vcsRoots, root -> {
             AbstractVcs vcs = root.getVcs();
             return vcs != null && vcs.getName().equals(myVcs.getName());
@@ -71,7 +70,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
         }
     }
 
-    private boolean isProjectBelowVcs(@Nonnull Collection<VirtualFile> vcsRoots) {
+    private boolean isProjectBelowVcs(Collection<VirtualFile> vcsRoots) {
         //check if there are vcs roots strictly above the project dir
         VirtualFile baseDir = myProject.getBaseDir();
         for (VirtualFile root : vcsRoots) {
@@ -82,12 +81,12 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
         return false;
     }
 
-    @Nonnull
-    public static String joinRootsPaths(@Nonnull Collection<VirtualFile> roots) {
+    
+    public static String joinRootsPaths(Collection<VirtualFile> roots) {
         return StringUtil.join(roots, VirtualFile::getPresentableUrl, ", ");
     }
 
-    protected abstract boolean initOrNotifyError(@Nonnull VirtualFile projectDir);
+    protected abstract boolean initOrNotifyError(VirtualFile projectDir);
 
     protected void notifyAddedRoots(Collection<VirtualFile> roots) {
         NotificationService.getInstance()
@@ -101,7 +100,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
             .notify(myProject);
     }
 
-    private void addVcsRoots(@Nonnull Collection<VirtualFile> roots) {
+    private void addVcsRoots(Collection<VirtualFile> roots) {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
         List<VirtualFile> currentVcsRoots = Arrays.asList(vcsManager.getRootsUnderVcs(myVcs));
 
@@ -115,7 +114,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
         vcsManager.setDirectoryMappings(mappings);
     }
 
-    protected static void refreshVcsDir(@Nonnull final VirtualFile projectDir, @Nonnull final String vcsDirName) {
+    protected static void refreshVcsDir(final VirtualFile projectDir, final String vcsDirName) {
         UIUtil.invokeAndWaitIfNeeded(new Runnable() {
             @Override
             @RequiredUIAccess

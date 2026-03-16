@@ -18,8 +18,7 @@ package consulo.ide.impl.idea.codeInsight.folding.impl;
 import consulo.language.editor.folding.ElementSignatureProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Aggregates 'generic' (language-agnostic) {@link ElementSignatureProvider signature providers}.
@@ -36,7 +35,7 @@ public class GenericElementSignatureProvider implements ElementSignatureProvider
   };
   
   @Override
-  public String getSignature(@Nonnull PsiElement element) {
+  public String getSignature(PsiElement element) {
     for (ElementSignatureProvider provider : PROVIDERS) {
       String result = provider.getSignature(element);
       if (result != null) {
@@ -47,7 +46,7 @@ public class GenericElementSignatureProvider implements ElementSignatureProvider
   }
 
   @Override
-  public PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage) {
+  public PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage) {
     for (ElementSignatureProvider provider : PROVIDERS) {
       PsiElement result = provider.restoreBySignature(file, signature, processingInfoStorage);
       if (result != null) {

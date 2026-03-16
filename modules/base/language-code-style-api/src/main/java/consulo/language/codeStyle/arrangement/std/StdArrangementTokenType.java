@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Type of {@link StdArrangementSettingsToken}. Defines UI role used to display the token. Used to differentiate between semantically
@@ -26,17 +25,17 @@ import jakarta.annotation.Nonnull;
  * @since 2013-07-31
  */
 public class StdArrangementTokenType {
-  @Nonnull
+  
   private final StdArrangementTokenUiRole myUiRole;
-  @Nonnull
+  
   private final String myId;
 
-  public StdArrangementTokenType(@Nonnull StdArrangementTokenUiRole uiRole, @Nonnull String id) {
+  public StdArrangementTokenType(StdArrangementTokenUiRole uiRole, String id) {
     myUiRole = uiRole;
     myId = id;
   }
 
-  @Nonnull
+  
   public StdArrangementTokenUiRole getUiRole() {
     return myUiRole;
   }

@@ -20,7 +20,6 @@ import com.ibm.icu.util.ValueIterator;
 import consulo.annotation.UsedInPlugin;
 import consulo.hacking.java.base.CharacterNameHacking;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ public final class UnicodeCharacterRegistry {
     private final String myName;
     private final int myCodePoint;
 
-    public UnicodeCharacter(@Nonnull String name, int codePoint) {
+    public UnicodeCharacter(String name, int codePoint) {
       myName = name;
       myCodePoint = codePoint;
     }
@@ -44,7 +43,7 @@ public final class UnicodeCharacterRegistry {
       return myCodePoint;
     }
 
-    @Nonnull
+    
     public String getName() {
       return myName;
     }
@@ -69,12 +68,12 @@ public final class UnicodeCharacterRegistry {
   }
 
   private interface Provider {
-    @Nonnull
+    
     List<UnicodeCharacter> list();
   }
 
   private static class ProviderFromJava implements Provider {
-    @Nonnull
+    
     @Override
     public List<UnicodeCharacter> list() {
       List<UnicodeCharacter> characters = new ArrayList<>(50_000);
@@ -88,7 +87,7 @@ public final class UnicodeCharacterRegistry {
   }
 
   private static class ProviderICU4J implements Provider {
-    @Nonnull
+    
     @Override
     public List<UnicodeCharacter> list() {
       List<UnicodeCharacter> characters = new ArrayList<>(150_000);
@@ -109,7 +108,7 @@ public final class UnicodeCharacterRegistry {
 
   private static List<UnicodeCharacter> ourCharacters;
 
-  @Nonnull
+  
   public static List<UnicodeCharacter> listCharacters() {
     if (ourCharacters == null) {
       ourCharacters = ourProvider.list();

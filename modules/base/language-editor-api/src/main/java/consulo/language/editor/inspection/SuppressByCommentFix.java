@@ -22,8 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author ven
@@ -31,7 +30,7 @@ import jakarta.annotation.Nullable;
 public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCommentFix {
   protected Class<? extends PsiElement> mySuppressionHolderClass;
 
-  public SuppressByCommentFix(@Nonnull HighlightDisplayKey key, @Nonnull Class<? extends PsiElement> suppressionHolderClass) {
+  public SuppressByCommentFix(HighlightDisplayKey key, Class<? extends PsiElement> suppressionHolderClass) {
     this(key.getID());
     mySuppressionHolderClass = suppressionHolderClass;
   }
@@ -41,7 +40,7 @@ public class SuppressByCommentFix extends AbstractBatchSuppressByNoInspectionCom
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return InspectionLocalize.suppressInspectionStatement();
   }

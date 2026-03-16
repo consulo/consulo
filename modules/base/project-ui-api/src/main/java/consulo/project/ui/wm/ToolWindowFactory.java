@@ -25,7 +25,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Performs lazy initialization of a toolwindow.
@@ -37,19 +36,19 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ToolWindowFactory {
-    @Nonnull
+    
     String getId();
 
     @RequiredUIAccess
-    void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow);
+    void createToolWindowContent(Project project, ToolWindow toolWindow);
 
-    @Nonnull
+    
     ToolWindowAnchor getAnchor();
 
-    @Nonnull
+    
     Image getIcon();
 
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 
     default boolean activateOnProjectOpening() {
@@ -95,7 +94,7 @@ public interface ToolWindowFactory {
      *
      * @see ToolWindow#isAvailable()
      */
-    default boolean shouldBeAvailable(@Nonnull Project project) {
+    default boolean shouldBeAvailable(Project project) {
         return true;
     }
 
@@ -106,7 +105,7 @@ public interface ToolWindowFactory {
     /**
      * If return false - toolwindow will be unregistered
      */
-    default boolean validate(@Nonnull Project project) {
+    default boolean validate(Project project) {
         return true;
     }
 }

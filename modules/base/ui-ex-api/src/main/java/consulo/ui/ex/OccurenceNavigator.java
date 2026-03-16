@@ -17,7 +17,6 @@ package consulo.ui.ex;
 
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nonnull;
 
 public interface OccurenceNavigator {
   OccurenceNavigator EMPTY = new OccurenceNavigator() {
@@ -41,13 +40,13 @@ public interface OccurenceNavigator {
       return null;
     }
 
-    @Nonnull
+    
     @Override
     public String getNextOccurenceActionName() {
       return "";
     }
 
-    @Nonnull
+    
     @Override
     public String getPreviousOccurenceActionName() {
       return "";

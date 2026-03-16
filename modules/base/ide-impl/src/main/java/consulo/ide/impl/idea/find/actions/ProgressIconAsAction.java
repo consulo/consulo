@@ -20,7 +20,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -35,14 +34,14 @@ public class ProgressIconAsAction extends DumbAwareAction implements CustomCompo
         myComponent = component;
     }
 
-    @Nonnull
+    
     @Override
-    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+    public JComponent createCustomComponent(Presentation presentation, String place) {
         return myComponent;
     }
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
     }
 }

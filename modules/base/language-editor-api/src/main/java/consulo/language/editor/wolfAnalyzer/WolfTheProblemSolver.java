@@ -23,7 +23,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -39,15 +38,15 @@ public abstract class WolfTheProblemSolver {
 
   public abstract boolean isProblemFile(VirtualFile virtualFile);
 
-  public abstract void weHaveGotProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems);
+  public abstract void weHaveGotProblems(VirtualFile virtualFile, List<Problem> problems);
 
-  public abstract void weHaveGotNonIgnorableProblems(@Nonnull VirtualFile virtualFile, @Nonnull List<Problem> problems);
+  public abstract void weHaveGotNonIgnorableProblems(VirtualFile virtualFile, List<Problem> problems);
 
-  public abstract void clearProblems(@Nonnull VirtualFile virtualFile);
+  public abstract void clearProblems(VirtualFile virtualFile);
 
-  public abstract boolean hasProblemFilesBeneath(@Nonnull Predicate<VirtualFile> condition);
+  public abstract boolean hasProblemFilesBeneath(Predicate<VirtualFile> condition);
 
-  public abstract boolean hasProblemFilesBeneath(@Nonnull Module scope);
+  public abstract boolean hasProblemFilesBeneath(Module scope);
 
   public abstract Problem convertToProblem(VirtualFile virtualFile, int line, int column, String[] message);
 
@@ -58,11 +57,11 @@ public abstract class WolfTheProblemSolver {
   @Deprecated
   public abstract static class ProblemListener implements consulo.language.editor.wolfAnalyzer.ProblemListener {
     @Override
-    public void problemsAppeared(@Nonnull VirtualFile file) {
+    public void problemsAppeared(VirtualFile file) {
     }
 
     @Override
-    public void problemsDisappeared(@Nonnull VirtualFile file) {
+    public void problemsDisappeared(VirtualFile file) {
     }
   }
 
@@ -70,7 +69,7 @@ public abstract class WolfTheProblemSolver {
    * @deprecated Use message bus {@link consulo.language.editor.wolfAnalyzer.ProblemListener#TOPIC} instead.
    */
   @Deprecated
-  public abstract void addProblemListener(@Nonnull ProblemListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void addProblemListener(ProblemListener listener, Disposable parentDisposable);
 
   public abstract void queue(VirtualFile suspiciousFile);
 }

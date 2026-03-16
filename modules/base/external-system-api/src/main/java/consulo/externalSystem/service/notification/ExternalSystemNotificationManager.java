@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,23 +27,23 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ExternalSystemNotificationManager {
-    @Nonnull
-    static ExternalSystemNotificationManager getInstance(@Nonnull Project project) {
+    
+    static ExternalSystemNotificationManager getInstance(Project project) {
         return project.getInstance(ExternalSystemNotificationManager.class);
     }
 
     @Deprecated
     default void clearNotifications(@Nullable String group,
-                                    @Nonnull NotificationSource notificationSource,
-                                    @Nonnull ProjectSystemId externalSystemId) {
+                                    NotificationSource notificationSource,
+                                    ProjectSystemId externalSystemId) {
         clearNotifications(notificationSource, externalSystemId);
     }
 
     void processExternalProjectRefreshError(
-        @Nonnull Throwable error,
-        @Nonnull String externalProjectName,
-        @Nonnull ProjectSystemId externalSystemId
+        Throwable error,
+        String externalProjectName,
+        ProjectSystemId externalSystemId
     );
 
-    void clearNotifications(@Nonnull NotificationSource notificationSource, @Nonnull ProjectSystemId externalSystemId);
+    void clearNotifications(NotificationSource notificationSource, ProjectSystemId externalSystemId);
 }

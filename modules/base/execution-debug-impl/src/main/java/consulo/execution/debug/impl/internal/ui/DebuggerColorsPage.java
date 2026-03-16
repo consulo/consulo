@@ -27,7 +27,6 @@ import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.internal.ColorPageWeights;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -35,13 +34,13 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight {
   @Override
-  @Nonnull
+  
   public LocalizeValue getDisplayName() {
     return XDebuggerLocalize.xdebuggerColorsPageName();
   }
 
   @Override
-  @Nonnull
+  
   public AttributesDescriptor[] getAttributeDescriptors() {
     return new AttributesDescriptor[] {
       new AttributesDescriptor(
@@ -72,7 +71,7 @@ public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight
   }
 
   @Override
-  @Nonnull
+  
   public ColorDescriptor[] getColorDescriptors() {
     return new ColorDescriptor[] {
       new ColorDescriptor(
@@ -84,13 +83,13 @@ public class DebuggerColorsPage implements ColorSettingsPage, ConfigurableWeight
   }
 
   @Override
-  @Nonnull
+  
   public SyntaxHighlighter getHighlighter() {
     return new DefaultSyntaxHighlighter();
   }
 
   @Override
-  @Nonnull
+  
   public String getDemoText() {
     return " ";
   }

@@ -2,16 +2,15 @@
 package consulo.execution.service;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 public interface ServiceViewToolWindowDescriptor {
-  @Nonnull
+  
   String getToolWindowId();
 
-  @Nonnull
+  
   Image getToolWindowIcon();
 
-  @Nonnull
+  
   String getStripeTitle();
 
   default boolean isExcludedByDefault() {

@@ -26,7 +26,6 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.*;
@@ -35,13 +34,13 @@ class DocumentFoldingInfo implements CodeFoldingState {
     private static final Logger LOG = Logger.getInstance(DocumentFoldingInfo.class);
     private static final Key<FoldingInfo> FOLDING_INFO_KEY = Key.create("FOLDING_INFO");
 
-    @Nonnull
+    
     private final Project myProject;
     private final VirtualFile myFile;
 
-    @Nonnull
+    
     private final List<Info> myInfos = Lists.newLockFreeCopyOnWriteList();
-    @Nonnull
+    
     private final List<RangeMarker> myRangeMarkers = Lists.newLockFreeCopyOnWriteList();
     private static final String DEFAULT_PLACEHOLDER = "...";
     private static final String ELEMENT_TAG = "element";
@@ -51,13 +50,13 @@ class DocumentFoldingInfo implements CodeFoldingState {
     private static final String DATE_ATT = "date";
     private static final String PLACEHOLDER_ATT = "ph";
 
-    DocumentFoldingInfo(@Nonnull Project project, @Nonnull Document document) {
+    DocumentFoldingInfo(Project project, Document document) {
         myProject = project;
         myFile = FileDocumentManager.getInstance().getFile(document);
     }
 
     @RequiredUIAccess
-    void loadFromEditor(@Nonnull Editor editor) {
+    void loadFromEditor(Editor editor) {
         UIAccess.assertIsUIThread();
         LOG.assertTrue(!editor.isDisposed());
         clear();
@@ -90,7 +89,7 @@ class DocumentFoldingInfo implements CodeFoldingState {
 
     @Override
     @RequiredUIAccess
-    public void setToEditor(@Nonnull Editor editor) {
+    public void setToEditor(Editor editor) {
         UIAccess.assertIsUIThread();
         PsiManager psiManager = PsiManager.getInstance(myProject);
         if (psiManager.isDisposed()) {
@@ -146,9 +145,9 @@ class DocumentFoldingInfo implements CodeFoldingState {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    private static Map<PsiElement, FoldingDescriptor> buildRanges(@Nonnull Editor editor, @Nonnull PsiFile psiFile) {
+    private static Map<PsiElement, FoldingDescriptor> buildRanges(Editor editor, PsiFile psiFile) {
         FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(psiFile.getLanguage());
         ASTNode node = psiFile.getNode();
         if (node == null) {
@@ -174,7 +173,7 @@ class DocumentFoldingInfo implements CodeFoldingState {
         myRangeMarkers.clear();
     }
 
-    void writeExternal(@Nonnull Element element) {
+    void writeExternal(Element element) {
         if (myInfos.isEmpty() && myRangeMarkers.isEmpty()) {
             return;
         }
@@ -328,9 +327,9 @@ class DocumentFoldingInfo implements CodeFoldingState {
         return true;
     }
 
-    private static record Info(@Nonnull String signature, boolean expanded) {
+    private static record Info(String signature, boolean expanded) {
     }
 
-    private static record FoldingInfo(@Nonnull String placeHolder, boolean expanded) {
+    private static record FoldingInfo(String placeHolder, boolean expanded) {
     }
 }

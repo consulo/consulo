@@ -64,8 +64,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,49 +80,36 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     @Nullable
     private final Project myProject;
-    @Nonnull
     private final DiffContext myContext;
 
-    @Nonnull
     private final DiffSettings mySettings;
-    @Nonnull
     private final List<DiffTool> myAvailableTools;
-    @Nonnull
     private final LinkedList<DiffTool> myToolOrder;
 
-    @Nonnull
     private final OpenInEditorAction myOpenInEditorAction;
     @Nullable
     private DefaultActionGroup myPopupActionGroup;
 
-    @Nonnull
     private final JPanel myPanel;
-    @Nonnull
     private final MyPanel myMainPanel;
-    @Nonnull
     private final Wrapper myContentPanel;
-    @Nonnull
     private final Wrapper myToolbarPanel; // TODO: allow to call 'updateToolbar' from Viewer ?
-    @Nonnull
     private final Wrapper myToolbarStatusPanel;
-    @Nonnull
     private final MyProgressBar myProgressBar;
 
-    @Nonnull
     private DiffRequest myActiveRequest;
 
-    @Nonnull
     private ViewerState myState;
 
     public DiffRequestProcessor(@Nullable Project project) {
         this(project, new UserDataHolderBase());
     }
 
-    public DiffRequestProcessor(@Nullable Project project, @Nonnull String place) {
+    public DiffRequestProcessor(@Nullable Project project, String place) {
         this(project, DiffImplUtil.createUserDataHolder(DiffUserDataKeys.PLACE, place));
     }
 
-    public DiffRequestProcessor(@Nullable Project project, @Nonnull UserDataHolder context) {
+    public DiffRequestProcessor(@Nullable Project project, UserDataHolder context) {
         myProject = project;
 
         myContext = new MyDiffContext(context);
@@ -190,7 +176,6 @@ public abstract class DiffRequestProcessor implements Disposable {
     @RequiredUIAccess
     public abstract void updateRequest(boolean force, @Nullable ScrollToPolicy scrollToChangePolicy);
 
-    @Nonnull
     private FrameDiffTool getFittedTool() {
         List<FrameDiffTool> tools = new ArrayList<>();
         for (DiffTool tool : myToolOrder) {
@@ -209,7 +194,6 @@ public abstract class DiffRequestProcessor implements Disposable {
         return tools.isEmpty() ? ErrorDiffTool.INSTANCE : tools.get(0);
     }
 
-    @Nonnull
     private List<FrameDiffTool> getAvailableFittedTools() {
         List<FrameDiffTool> tools = new ArrayList<>();
         for (DiffTool tool : myAvailableTools) {
@@ -226,7 +210,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         return DiffImplUtil.filterSuppressedTools(tools);
     }
 
-    private void moveToolOnTop(@Nonnull DiffTool tool) {
+    private void moveToolOnTop(DiffTool tool) {
         myToolOrder.remove(tool);
 
         FrameDiffTool toolToReplace = getFittedTool();
@@ -242,7 +226,6 @@ public abstract class DiffRequestProcessor implements Disposable {
         updateToolOrderSettings(myToolOrder);
     }
 
-    @Nonnull
     @RequiredUIAccess
     private ViewerState createState() {
         FrameDiffTool frameTool = getFittedTool();
@@ -269,7 +252,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     private ApplyData myQueuedApplyRequest;
 
     @RequiredUIAccess
-    protected void applyRequest(@Nonnull DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
+    protected void applyRequest(DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
         myIterationState = IterationState.NONE;
 
         force = force || (myQueuedApplyRequest != null && myQueuedApplyRequest.force);
@@ -287,7 +270,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @RequiredUIAccess
-    private void doApplyRequest(@Nonnull DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
+    private void doApplyRequest(DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
         if (!force && request == myActiveRequest) {
             return;
         }
@@ -321,7 +304,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
     }
 
-    protected void setWindowTitle(@Nonnull String title) {
+    protected void setWindowTitle(String title) {
     }
 
     protected void onAfterNavigate() {
@@ -332,15 +315,14 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @Nullable
-    public <T> T getContextUserData(@Nonnull Key<T> key) {
+    public <T> T getContextUserData(Key<T> key) {
         return myContext.getUserData(key);
     }
 
-    public <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putContextUserData(Key<T> key, @Nullable T value) {
         myContext.putUserData(key, value);
     }
 
-    @Nonnull
     protected List<AnAction> getNavigationActions() {
         return ContainerUtil.<AnAction>list(
             new MyPrevDifferenceAction(),
@@ -374,8 +356,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
     }
 
-    @Nonnull
-    protected List<DiffTool> getToolOrderFromSettings(@Nonnull List<DiffTool> availableTools) {
+    protected List<DiffTool> getToolOrderFromSettings(List<DiffTool> availableTools) {
         List<DiffTool> result = new ArrayList<>();
         List<String> savedOrder = getSettings().getDiffToolsOrder();
 
@@ -395,7 +376,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         return result;
     }
 
-    protected void updateToolOrderSettings(@Nonnull List<DiffTool> toolOrder) {
+    protected void updateToolOrderSettings(List<DiffTool> toolOrder) {
         List<String> savedOrder = new ArrayList<>();
         for (DiffTool tool : toolOrder) {
             savedOrder.add(tool.getClass().getCanonicalName());
@@ -428,7 +409,6 @@ public abstract class DiffRequestProcessor implements Disposable {
         });
     }
 
-    @Nonnull
     protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
         DefaultActionGroup group = new DefaultActionGroup();
 
@@ -458,7 +438,6 @@ public abstract class DiffRequestProcessor implements Disposable {
         return group;
     }
 
-    @Nonnull
     protected DefaultActionGroup collectPopupActions(@Nullable List<AnAction> viewerActions) {
         DefaultActionGroup group = new DefaultActionGroup();
 
@@ -510,7 +489,6 @@ public abstract class DiffRequestProcessor implements Disposable {
     // Getters
     //
 
-    @Nonnull
     public JComponent getComponent() {
         return myPanel;
     }
@@ -531,12 +509,10 @@ public abstract class DiffRequestProcessor implements Disposable {
         return myProject;
     }
 
-    @Nonnull
     public DiffContext getContext() {
         return myContext;
     }
 
-    @Nonnull
     protected DiffSettings getSettings() {
         return mySettings;
     }
@@ -555,7 +531,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ExternalDiffTool.isEnabled()) {
                 e.getPresentation().setEnabledAndVisible(false);
                 return;
@@ -566,7 +542,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             try {
                 ExternalDiffTool.showRequest(e.getData(Project.KEY), myActiveRequest);
             }
@@ -583,7 +559,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
 
             DiffTool activeTool = myState.getActiveTool();
@@ -603,7 +579,6 @@ public abstract class DiffRequestProcessor implements Disposable {
             presentation.setEnabledAndVisible(false);
         }
 
-        @Nonnull
         @Override
         public DefaultActionGroup createPopupActionGroup(JComponent button) {
             DefaultActionGroup group = new DefaultActionGroup();
@@ -616,10 +591,9 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     private class DiffToolToggleAction extends AnAction implements DumbAware {
-        @Nonnull
         private final DiffTool myDiffTool;
 
-        private DiffToolToggleAction(@Nonnull DiffTool tool) {
+        private DiffToolToggleAction(DiffTool tool) {
             super(tool.getName());
             setEnabledInModalContext(true);
             myDiffTool = tool;
@@ -627,7 +601,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (myState.getActiveTool() == myDiffTool) {
                 return;
             }
@@ -644,7 +618,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myPopupActionGroup != null && myPopupActionGroup.getChildrenCount() > 0);
         }
 
@@ -673,7 +647,6 @@ public abstract class DiffRequestProcessor implements Disposable {
         NONE
     }
 
-    @Nonnull
     private IterationState myIterationState = IterationState.NONE;
 
     protected boolean hasNextChange() {
@@ -698,7 +671,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     protected class MyNextDifferenceAction extends NextDifferenceAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabledAndVisible(true);
                 return;
@@ -720,7 +693,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoNext()) {
                 iterable.goNext();
@@ -744,7 +717,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     protected class MyPrevDifferenceAction extends PrevDifferenceAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabledAndVisible(true);
                 return;
@@ -766,7 +739,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PrevNextDifferenceIterable iterable = e.getData(DiffDataKeys.PREV_NEXT_DIFFERENCE_ITERABLE);
             if (iterable != null && iterable.canGoPrev()) {
                 iterable.goPrev();
@@ -789,7 +762,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     @RequiredUIAccess
-    private void notifyMessage(@Nonnull AnActionEvent e, boolean next) {
+    private void notifyMessage(AnActionEvent e, boolean next) {
         Editor editor = e.getData(DiffDataKeys.CURRENT_EDITOR);
 
         // TODO: provide "change" word in chain UserData - for tests/etc
@@ -836,8 +809,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
     }
 
-    @Nonnull
-    private static HintHint createNotifyHint(@Nonnull JComponent component, @Nonnull Point point, boolean above) {
+    private static HintHint createNotifyHint(JComponent component, Point point, boolean above) {
         return new HintHint(component, point)
             .setPreferredPosition(above ? Balloon.Position.above : Balloon.Position.below)
             .setAwtTooltip(true)
@@ -850,7 +822,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     protected class MyNextChangeAction extends NextChangeAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabledAndVisible(true);
                 return;
@@ -867,7 +839,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (!isNavigationEnabled() || !hasNextChange()) {
                 return;
             }
@@ -878,7 +850,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
     protected class MyPrevChangeAction extends PrevChangeAction {
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             if (!ActionPlaces.DIFF_TOOLBAR.equals(e.getPlace())) {
                 e.getPresentation().setEnabledAndVisible(true);
                 return;
@@ -895,7 +867,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (!isNavigationEnabled() || !hasPrevChange()) {
                 return;
             }
@@ -921,7 +893,7 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             DataProvider contentProvider =
                 ((BaseDataManager)DataManager.getInstance()).getDataProviderEx(myContentPanel.getTargetComponent());
             if (contentProvider instanceof UiDataProvider uiDataProvider) {
@@ -989,10 +961,9 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     private class MyDiffContext extends DiffContextEx {
-        @Nonnull
         private final UserDataHolder myContext;
 
-        public MyDiffContext(@Nonnull UserDataHolder context) {
+        public MyDiffContext(UserDataHolder context) {
             myContext = context;
         }
 
@@ -1042,24 +1013,23 @@ public abstract class DiffRequestProcessor implements Disposable {
 
         @Nullable
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             return myContext.getUserData(key);
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             myContext.putUserData(key, value);
         }
     }
 
     private static class ApplyData {
-        @Nonnull
         private final DiffRequest request;
         private final boolean force;
         @Nullable
         private final ScrollToPolicy scrollToChangePolicy;
 
-        public ApplyData(@Nonnull DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
+        public ApplyData(DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
             this.request = request;
             this.force = force;
             this.scrollToChangePolicy = scrollToChangePolicy;
@@ -1080,9 +1050,8 @@ public abstract class DiffRequestProcessor implements Disposable {
         @Nullable
         JComponent getPreferredFocusedComponent();
 
-        void uiDataSnapshot(@Nonnull DataSink sink);
+        void uiDataSnapshot(DataSink sink);
 
-        @Nonnull
         DiffTool getActiveTool();
     }
 
@@ -1106,10 +1075,9 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
         }
 
-        @Nonnull
         @Override
         public DiffTool getActiveTool() {
             return ErrorDiffTool.INSTANCE;
@@ -1119,19 +1087,17 @@ public abstract class DiffRequestProcessor implements Disposable {
     private class ErrorState implements ViewerState {
         @Nullable
         private final DiffTool myDiffTool;
-        @Nonnull
         private final MessageDiffRequest myRequest;
 
-        @Nonnull
         private final DiffViewer myViewer;
 
         @RequiredUIAccess
-        public ErrorState(@Nonnull MessageDiffRequest request) {
+        public ErrorState(MessageDiffRequest request) {
             this(request, null);
         }
 
         @RequiredUIAccess
-        public ErrorState(@Nonnull MessageDiffRequest request, @Nullable DiffTool diffTool) {
+        public ErrorState(MessageDiffRequest request, @Nullable DiffTool diffTool) {
             myDiffTool = diffTool;
             myRequest = request;
 
@@ -1160,10 +1126,9 @@ public abstract class DiffRequestProcessor implements Disposable {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
         }
 
-        @Nonnull
         @Override
         public DiffTool getActiveTool() {
             return myDiffTool != null ? myDiffTool : ErrorDiffTool.INSTANCE;
@@ -1171,12 +1136,10 @@ public abstract class DiffRequestProcessor implements Disposable {
     }
 
     private class DefaultState implements ViewerState {
-        @Nonnull
         private final DiffViewer myViewer;
-        @Nonnull
         private final FrameDiffTool myTool;
 
-        public DefaultState(@Nonnull DiffViewer viewer, @Nonnull FrameDiffTool tool) {
+        public DefaultState(DiffViewer viewer, FrameDiffTool tool) {
             myViewer = viewer;
             myTool = tool;
         }
@@ -1207,28 +1170,24 @@ public abstract class DiffRequestProcessor implements Disposable {
             return myViewer.getPreferredFocusedComponent();
         }
 
-        @Nonnull
         @Override
         public DiffTool getActiveTool() {
             return myTool;
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(DiffDataKeys.DIFF_VIEWER, myViewer);
         }
     }
 
     private class WrapperState implements ViewerState {
-        @Nonnull
         private final DiffViewer myViewer;
-        @Nonnull
         private final FrameDiffTool myTool;
 
-        @Nonnull
         private DiffViewer myWrapperViewer;
 
-        public WrapperState(@Nonnull DiffViewer viewer, @Nonnull FrameDiffTool tool, @Nonnull DiffViewerWrapper wrapper) {
+        public WrapperState(DiffViewer viewer, FrameDiffTool tool, DiffViewerWrapper wrapper) {
             myViewer = viewer;
             myTool = tool;
             myWrapperViewer = wrapper.createComponent(myContext, myActiveRequest, myViewer);
@@ -1285,14 +1244,13 @@ public abstract class DiffRequestProcessor implements Disposable {
             return myWrapperViewer.getPreferredFocusedComponent();
         }
 
-        @Nonnull
         @Override
         public DiffTool getActiveTool() {
             return myTool;
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(DiffDataKeys.WRAPPING_DIFF_VIEWER, myWrapperViewer);
             sink.set(DiffDataKeys.DIFF_VIEWER, myViewer);
         }

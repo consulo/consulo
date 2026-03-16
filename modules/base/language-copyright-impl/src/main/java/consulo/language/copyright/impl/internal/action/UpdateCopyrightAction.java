@@ -36,7 +36,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = "UpdateCopyright",
@@ -56,9 +55,8 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
         );
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return CodeExecution.run(() -> {
             boolean enabled = isEnabled(event);
             event.getPresentation().setEnabled(enabled);
@@ -68,7 +66,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
         }).toCoroutine();
     }
 
-    private static boolean isEnabled(@Nonnull AnActionEvent e) {
+    private static boolean isEnabled(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return false;
@@ -124,7 +122,7 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     }
 
     @Override
-    protected void analyze(@Nonnull final Project project, @Nonnull AnalysisScope scope) {
+    protected void analyze(final Project project, AnalysisScope scope) {
         if (scope.checkScopeWritable(project)) {
             return;
         }

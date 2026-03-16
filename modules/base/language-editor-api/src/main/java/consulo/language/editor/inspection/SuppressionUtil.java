@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -58,7 +57,7 @@ public class SuppressionUtil {
     private SuppressionUtil() {
     }
 
-    public static boolean isInspectionToolIdMentioned(@Nonnull String inspectionsList, String inspectionToolID) {
+    public static boolean isInspectionToolIdMentioned(String inspectionsList, String inspectionToolID) {
         Iterable<String> ids = StringUtil.tokenize(inspectionsList, "[, ]");
 
         for (String id : ids) {
@@ -108,8 +107,8 @@ public class SuppressionUtil {
             .runReadAction((Supplier<Object>)() -> getStatementToolSuppressedIn(place, toolId, statementClass)) != null;
     }
 
-    @Nonnull
-    public static PsiComment createComment(@Nonnull Project project, @Nonnull String commentText, @Nonnull Language language) {
+    
+    public static PsiComment createComment(Project project, String commentText, Language language) {
         PsiParserFacade parserFacade = PsiParserFacade.SERVICE.getInstance(project);
         return parserFacade.createLineOrBlockCommentFromText(language, commentText);
     }
@@ -130,13 +129,13 @@ public class SuppressionUtil {
 
     @Nullable
     @RequiredReadAction
-    public static String getLineCommentPrefix(@Nonnull PsiElement comment) {
+    public static String getLineCommentPrefix(PsiElement comment) {
         Commenter commenter = Commenter.forLanguage(comment.getLanguage());
         return commenter == null ? null : commenter.getLineCommentPrefix();
     }
 
     @RequiredReadAction
-    public static boolean isSuppressionComment(@Nonnull PsiElement comment) {
+    public static boolean isSuppressionComment(PsiElement comment) {
         String prefix = getLineCommentPrefix(comment);
         String commentText = comment.getText();
         if (prefix != null) {
@@ -149,10 +148,10 @@ public class SuppressionUtil {
 
     @RequiredWriteAction
     public static void replaceSuppressionComment(
-        @Nonnull PsiElement comment,
-        @Nonnull String id,
+        PsiElement comment,
+        String id,
         boolean replaceOtherSuppressionIds,
-        @Nonnull Language commentLanguage
+        Language commentLanguage
     ) {
         String oldSuppressionCommentText = comment.getText();
         String lineCommentPrefix = getLineCommentPrefix(comment);
@@ -183,17 +182,17 @@ public class SuppressionUtil {
     }
 
     public static void createSuppression(
-        @Nonnull Project project,
-        @Nonnull PsiElement container,
-        @Nonnull String id,
-        @Nonnull Language commentLanguage
+        Project project,
+        PsiElement container,
+        String id,
+        Language commentLanguage
     ) {
         String text = SUPPRESS_INSPECTIONS_TAG_NAME + " " + id;
         PsiComment comment = createComment(project, text, commentLanguage);
         container.getParent().addBefore(comment, container);
     }
 
-    public static boolean isSuppressed(@Nonnull PsiElement psiElement, String id) {
+    public static boolean isSuppressed(PsiElement psiElement, String id) {
         if (id == null) {
             return false;
         }
@@ -205,13 +204,13 @@ public class SuppressionUtil {
         return false;
     }
 
-    public static boolean inspectionResultSuppressed(@Nonnull PsiElement place, @Nonnull LocalInspectionTool tool) {
+    public static boolean inspectionResultSuppressed(PsiElement place, LocalInspectionTool tool) {
         return tool.isSuppressedFor(place);
     }
 
     @RequiredReadAction
-    @Nonnull
-    public static Set<InspectionSuppressor> getSuppressors(@Nonnull PsiElement element) {
+    
+    public static Set<InspectionSuppressor> getSuppressors(PsiElement element) {
         PsiUtilCore.ensureValid(element);
         PsiFile file = element.getContainingFile();
         if (file == null) {

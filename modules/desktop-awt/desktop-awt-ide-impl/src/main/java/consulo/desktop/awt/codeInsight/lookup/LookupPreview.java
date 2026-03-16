@@ -28,8 +28,7 @@ import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.JBColor;
 import consulo.util.collection.FList;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -98,24 +97,24 @@ class LookupPreview {
     }
   }
 
-  @Nonnull
+  
   private static EditorCustomElementRenderer createGrayRenderer(final String suffix) {
     return new EditorCustomElementRenderer() {
       @Override
-      public int calcWidthInPixels(@Nonnull Inlay inlay) {
+      public int calcWidthInPixels(Inlay inlay) {
         Editor editor = inlay.getEditor();
         return editor.getContentComponent().getFontMetrics(getFont(editor)).stringWidth(suffix);
       }
 
       @Override
-      public void paint(@Nonnull Inlay inlay, @Nonnull Graphics g, @Nonnull Rectangle r, @Nonnull TextAttributes textAttributes) {
+      public void paint(Inlay inlay, Graphics g, Rectangle r, TextAttributes textAttributes) {
         Editor editor = inlay.getEditor();
         g.setColor(JBColor.GRAY);
         g.setFont(getFont(editor));
         g.drawString(suffix, r.x, r.y + editor.getAscent());
       }
 
-      private Font getFont(@Nonnull Editor editor) {
+      private Font getFont(Editor editor) {
         return editor.getColorsScheme().getFont(EditorFontType.PLAIN);
       }
     };

@@ -25,7 +25,6 @@ import consulo.language.codeStyle.internal.BlockRangesMap;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +39,7 @@ public class WrapBlocksState extends State {
     private IndentAdjuster myIndentAdjuster;
     private WrapProcessor myWrapProcessor;
 
-    public WrapBlocksState(@Nonnull InitialInfoBuilder initialInfoBuilder, BlockIndentOptions blockIndentOptions) {
+    public WrapBlocksState(InitialInfoBuilder initialInfoBuilder, BlockIndentOptions blockIndentOptions) {
         myWrapper = initialInfoBuilder;
         myBlockIndentOptions = blockIndentOptions;
     }

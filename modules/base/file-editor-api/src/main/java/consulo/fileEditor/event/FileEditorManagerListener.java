@@ -21,19 +21,18 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface FileEditorManagerListener extends EventListener {
 
-  default void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+  default void fileOpened(FileEditorManager source, VirtualFile file) {
   }
 
-  default void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+  default void fileClosed(FileEditorManager source, VirtualFile file) {
   }
 
-  default void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+  default void selectionChanged(FileEditorManagerEvent event) {
   }
 
 }

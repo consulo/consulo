@@ -19,8 +19,7 @@ import consulo.platform.CpuArchitecture;
 import consulo.platform.PlatformJvm;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -80,25 +79,25 @@ class PlatformJvmImpl implements PlatformJvm {
     }
   }
 
-  @Nonnull
+  
   @Override
   public String version() {
     return myJavaVersion;
   }
 
-  @Nonnull
+  
   @Override
   public String runtimeVersion() {
     return myJavaRuntimeVersion;
   }
 
-  @Nonnull
+  
   @Override
   public String vendor() {
     return myJavaVendor;
   }
 
-  @Nonnull
+  
   @Override
   public String name() {
     return myJavaName;
@@ -106,11 +105,11 @@ class PlatformJvmImpl implements PlatformJvm {
 
   @Nullable
   @Override
-  public String getRuntimeProperty(@Nonnull String key) {
+  public String getRuntimeProperty(String key) {
     return System.getProperty(key);
   }
 
-  @Nonnull
+  
   @Override
   public Map<String, String> getRuntimeProperties() {
     Properties properties = System.getProperties();
@@ -122,7 +121,7 @@ class PlatformJvmImpl implements PlatformJvm {
   }
 
   @Override
-  @Nonnull
+  
   public CpuArchitecture arch() {
     return myCpuArchitecture;
   }

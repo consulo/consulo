@@ -23,16 +23,15 @@ import consulo.versionControlSystem.ui.awt.IssueLinkRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 public class CommitNode extends DefaultMutableTreeNode implements CustomRenderedTreeNode, TooltipNode {
-    @Nonnull
+    
     private final Project myProject;
 
-    public CommitNode(@Nonnull Project project, @Nonnull VcsFullCommitDetails commit) {
+    public CommitNode(Project project, VcsFullCommitDetails commit) {
         super(commit, false);
         myProject = project;
     }
@@ -43,7 +42,7 @@ public class CommitNode extends DefaultMutableTreeNode implements CustomRendered
     }
 
     @Override
-    public void render(@Nonnull ColoredTreeCellRenderer renderer) {
+    public void render(ColoredTreeCellRenderer renderer) {
         renderer.append("   ");
         TreeNode parent = getParent();
         new IssueLinkRenderer(myProject, renderer).appendTextWithLinks(

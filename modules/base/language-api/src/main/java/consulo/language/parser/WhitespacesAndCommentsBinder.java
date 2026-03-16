@@ -17,7 +17,6 @@ package consulo.language.parser;
 
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public interface WhitespacesAndCommentsBinder {
      * Provides an ability for the processor to get a text of any of given tokens.
      */
     interface TokenTextGetter {
-        @Nonnull
+        
         CharSequence get(int i);
     }
 

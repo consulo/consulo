@@ -48,8 +48,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,16 +56,16 @@ import java.util.List;
 public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     public static final Logger LOG = Logger.getInstance(SimpleThreesideDiffViewer.class);
 
-    @Nonnull
+    
     private final List<SimpleThreesideDiffChange> myDiffChanges = new ArrayList<>();
-    @Nonnull
+    
     private final List<SimpleThreesideDiffChange> myInvalidDiffChanges = new ArrayList<>();
 
-    public SimpleThreesideDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public SimpleThreesideDiffViewer(DiffContext context, DiffRequest request) {
         super(context, (ContentDiffRequest) request);
     }
 
-    @Nonnull
+    
     @Override
     protected List<AnAction> createToolbarActions() {
         List<AnAction> group = new ArrayList<>();
@@ -89,7 +88,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         return group;
     }
 
-    @Nonnull
+    
     @Override
     protected List<AnAction> createPopupActions() {
         List<AnAction> group = new ArrayList<>();
@@ -120,10 +119,10 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         myInitialScrollHelper.onSlowRediff();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
+    protected Runnable performRediff(ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
@@ -190,19 +189,19 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
 
     @Nullable
     private static CharSequence getChunkContent(
-        @Nonnull MergeLineFragment fragment,
-        @Nonnull List<Document> documents,
-        @Nonnull ThreeSide side
+        MergeLineFragment fragment,
+        List<Document> documents,
+        ThreeSide side
     ) {
         int startLine = fragment.getStartLine(side);
         int endLine = fragment.getEndLine(side);
         return startLine != endLine ? DiffImplUtil.getLinesContent(side.select(documents), startLine, endLine) : null;
     }
 
-    @Nonnull
+    
     private Runnable apply(
-        @Nonnull List<MergeLineFragment> fragments,
-        @Nonnull List<MergeConflictType> conflictTypes,
+        List<MergeLineFragment> fragments,
+        List<MergeConflictType> conflictTypes,
         @Nullable List<MergeInnerDifferences> innerDifferences
     ) {
         return () -> {
@@ -250,7 +249,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
 
     @Override
     @RequiredUIAccess
-    protected void onBeforeDocumentChange(@Nonnull DocumentEvent e) {
+    protected void onBeforeDocumentChange(DocumentEvent e) {
         super.onBeforeDocumentChange(e);
         if (myDiffChanges.isEmpty()) {
             return;
@@ -279,7 +278,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         }
     }
 
-    @Nonnull
+    
     private IgnorePolicy getIgnorePolicy() {
         IgnorePolicy policy = getTextSettings().getIgnorePolicy();
         if (policy == IgnorePolicy.IGNORE_WHITESPACES_CHUNKS) {
@@ -288,7 +287,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
         return policy;
     }
 
-    @Nonnull
+    
     private HighlightPolicy getHighlightPolicy() {
         HighlightPolicy policy = getTextSettings().getHighlightPolicy();
         if (policy == HighlightPolicy.BY_WORD_SPLIT) {
@@ -304,15 +303,15 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     // Getters
     //
 
-    @Nonnull
+    
     @Override
     public List<SimpleThreesideDiffChange> getChanges() {
         return myDiffChanges;
     }
 
-    @Nonnull
+    
     @Override
-    protected DiffDividerDrawUtil.DividerPaintable getDividerPaintable(@Nonnull Side side) {
+    protected DiffDividerDrawUtil.DividerPaintable getDividerPaintable(Side side) {
         return new MyDividerPaintable(side);
     }
 
@@ -321,7 +320,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     //
 
     @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
         return ThreesideTextDiffViewer.canShowRequest(context, request);
     }
 
@@ -334,13 +333,13 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
             super(getTextSettings());
         }
 
-        @Nonnull
+        
         @Override
         protected IgnorePolicy getCurrentSetting() {
             return getIgnorePolicy();
         }
 
-        @Nonnull
+        
         @Override
         protected List<IgnorePolicy> getAvailableSettings() {
             List<IgnorePolicy> settings = ContainerUtil.newArrayList(IgnorePolicy.values());
@@ -360,13 +359,13 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
             super(getTextSettings());
         }
 
-        @Nonnull
+        
         @Override
         protected HighlightPolicy getCurrentSetting() {
             return getHighlightPolicy();
         }
 
-        @Nonnull
+        
         @Override
         protected List<HighlightPolicy> getAvailableSettings() {
             return ContainerUtil.list(HighlightPolicy.BY_LINE, HighlightPolicy.BY_WORD);
@@ -390,15 +389,15 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
     //
 
     private class MyDividerPaintable implements DiffDividerDrawUtil.DividerPaintable {
-        @Nonnull
+        
         private final Side mySide;
 
-        public MyDividerPaintable(@Nonnull Side side) {
+        public MyDividerPaintable(Side side) {
             mySide = side;
         }
 
         @Override
-        public void process(@Nonnull Handler handler) {
+        public void process(Handler handler) {
             ThreeSide left = mySide.select(ThreeSide.LEFT, ThreeSide.BASE);
             ThreeSide right = mySide.select(ThreeSide.BASE, ThreeSide.RIGHT);
 

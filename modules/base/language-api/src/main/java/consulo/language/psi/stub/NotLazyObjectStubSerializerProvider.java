@@ -15,8 +15,7 @@
  */
 package consulo.language.psi.stub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ class NotLazyObjectStubSerializerProvider implements ObjectStubSerializerProvide
     myObjectStubSerializer = objectStubSerializer;
   }
 
-  @Nonnull
+  
   @Override
   public String getExternalId() {
     return myObjectStubSerializer.getExternalId();

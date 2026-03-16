@@ -23,8 +23,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.webBrowser.BrowserSpecificSettings;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -69,7 +68,7 @@ public final class ChromeSettings extends BrowserSpecificSettings {
         myUseCustomProfile = useCustomProfile;
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getAdditionalParameters() {
         if (myCommandLineOptions == null) {
@@ -88,7 +87,7 @@ public final class ChromeSettings extends BrowserSpecificSettings {
         return cliOptions;
     }
 
-    @Nonnull
+    
     @Override
     public ChromeSettingsConfigurable createConfigurable() {
         return new ChromeSettingsConfigurable(this);

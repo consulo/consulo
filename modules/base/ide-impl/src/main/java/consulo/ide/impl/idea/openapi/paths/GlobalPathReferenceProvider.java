@@ -26,9 +26,7 @@ import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.path.PathReference;
 import consulo.language.psi.path.PathReferenceProvider;
 import consulo.language.impl.psi.path.WebReference;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,7 +35,7 @@ import java.util.List;
  */
 public class GlobalPathReferenceProvider implements PathReferenceProvider {
 
-  @NonNls private static final String[] PREFIXES = {"tel:", "sms:", "skype:", "data:", "xmpp:"};
+  private static final String[] PREFIXES = {"tel:", "sms:", "skype:", "data:", "xmpp:"};
 
   public static boolean startsWithAllowedPrefix(String s) {
     for (String prefix : PREFIXES) {
@@ -49,7 +47,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
   }
 
   @Override
-  public boolean createReferences(@Nonnull PsiElement psiElement, @Nonnull List<PsiReference> references, boolean soft) {
+  public boolean createReferences(PsiElement psiElement, List<PsiReference> references, boolean soft) {
     ElementManipulator<PsiElement> manipulator = ElementManipulators.getManipulator(psiElement);
     if (manipulator == null) {
       return false;
@@ -58,7 +56,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
                               references);
   }
 
-  public boolean createUrlReference(@Nonnull PsiElement psiElement, String url, TextRange rangeInElement, @Nonnull List<PsiReference> references) {
+  public boolean createUrlReference(PsiElement psiElement, String url, TextRange rangeInElement, List<PsiReference> references) {
     if (isWebReferenceUrl(url)) {
       references.add(new WebReference(psiElement, rangeInElement, url));
       return true;
@@ -76,7 +74,7 @@ public class GlobalPathReferenceProvider implements PathReferenceProvider {
 
   @Override
   @Nullable
-  public PathReference getPathReference(@Nonnull String path, @Nonnull PsiElement element) {
+  public PathReference getPathReference(String path, PsiElement element) {
     return URLUtil.containsScheme(path) ? new PathReference(path, PathReference.NULL_ICON) : null;
   }
 }

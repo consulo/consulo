@@ -39,7 +39,6 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,23 +51,20 @@ import java.util.concurrent.CompletableFuture;
 @ServiceImpl
 @Singleton
 public class ProjectCloseServiceImpl implements ProjectCloseService {
-    @Nonnull
     private final Application myApplication;
-    @Nonnull
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
     @Inject
-    public ProjectCloseServiceImpl(@Nonnull Application application,
-                                   @Nonnull ProgressBuilderFactory progressBuilderFactory) {
+    public ProjectCloseServiceImpl(Application application,
+                                   ProgressBuilderFactory progressBuilderFactory) {
         myApplication = application;
         myProgressBuilderFactory = progressBuilderFactory;
     }
 
-    @Nonnull
     @Override
     public CompletableFuture<Boolean> closeProjectAsync(
-        @Nonnull Project project,
-        @Nonnull UIAccess uiAccess,
+        Project project,
+        UIAccess uiAccess,
         boolean checkCanClose,
         boolean save,
         boolean dispose
@@ -170,7 +166,7 @@ public class ProjectCloseServiceImpl implements ProjectCloseService {
     }
 
     @RequiredUIAccess
-    private static boolean ensureCouldCloseIfUnableToSave(@Nonnull Project project) {
+    private static boolean ensureCouldCloseIfUnableToSave(Project project) {
         ProjectStorageUtil.UnableToSaveProjectNotification[] notifications =
             NotificationsManager.getNotificationsManager()
                 .getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, project);

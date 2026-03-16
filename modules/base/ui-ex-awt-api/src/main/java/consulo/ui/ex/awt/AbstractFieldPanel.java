@@ -23,7 +23,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -231,7 +230,7 @@ public abstract class AbstractFieldPanel extends JPanel {
             init();
         }
 
-        @Nonnull
+        
         @Override
         protected Action[] createActions() {
             return new Action[]{getOKAction(), getCancelAction()};

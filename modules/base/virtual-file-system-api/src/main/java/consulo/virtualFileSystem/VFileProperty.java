@@ -15,14 +15,13 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
 
 public enum VFileProperty {
   HIDDEN, SPECIAL, SYMLINK;
 
-  @Nonnull
+  
   public String getName() {
     return toString().toLowerCase(Locale.ENGLISH);
   }

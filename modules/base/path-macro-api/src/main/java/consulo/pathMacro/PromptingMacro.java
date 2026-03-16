@@ -17,7 +17,7 @@ package consulo.pathMacro;
 
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev

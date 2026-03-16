@@ -43,7 +43,6 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -57,7 +56,7 @@ import java.util.List;
 public class LibraryProjectStructureElement extends ProjectStructureElement {
     private final Library myLibrary;
 
-    public LibraryProjectStructureElement(@Nonnull Library library) {
+    public LibraryProjectStructureElement(Library library) {
         myLibrary = library;
     }
 
@@ -66,7 +65,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     }
 
     @Override
-    public void check(@Nonnull Project project, ProjectStructureProblemsHolder problemsHolder) {
+    public void check(Project project, ProjectStructureProblemsHolder problemsHolder) {
         if (myLibrary.isDisposed()) {
             return;
         }
@@ -154,7 +153,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         return XmlStringUtil.wrapInHtml(buffer);
     }
 
-    @Nonnull
+    
     private PlaceInProjectStructure createPlace() {
         return new PlaceInProjectStructureBase(this::librariesNavigator, this);
     }
@@ -183,7 +182,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         return createPlace().navigate(project);
     }
 
-    @Nonnull
+    
     private Library getSourceOrThis() {
         InvocationHandler invocationHandler = Proxy.isProxyClass(myLibrary.getClass()) ? Proxy.getInvocationHandler(myLibrary) : null;
         Library realLibrary =
@@ -207,7 +206,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
     }
 
     @Override
-    public ProjectStructureProblemDescription createUnusedElementWarning(@Nonnull Project project) {
+    public ProjectStructureProblemDescription createUnusedElementWarning(Project project) {
         List<ConfigurationErrorQuickFix> fixes = Arrays.asList(new AddLibraryToDependenciesFix(project), new RemoveLibraryFix(project));
         return new ProjectStructureProblemDescription(
             "Library '" + XmlStringUtil.escapeText(String.valueOf(myLibrary.getName())) + "' is not used",
@@ -250,7 +249,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
         }
 
         @Override
-        public void performFix(@Nonnull DataContext dataContext) {
+        public void performFix(DataContext dataContext) {
             ProjectStructureSettingsUtil util = ShowSettingsUtil.getInstance();
 
             LibrariesConfigurator librariesConfigurator = util.getLibrariesModel(myProject);
@@ -285,7 +284,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
         @Override
         @RequiredUIAccess
-        public void performFix(@Nonnull DataContext dataContext) {
+        public void performFix(DataContext dataContext) {
             LibraryEditingUtil.showDialogAndAddLibraryToDependencies(myLibrary, myProject, false);
         }
     }
@@ -297,7 +296,7 @@ public class LibraryProjectStructureElement extends ProjectStructureElement {
 
         @Override
         @RequiredUIAccess
-        public void performFix(@Nonnull DataContext dataContext) {
+        public void performFix(DataContext dataContext) {
             Settings settings = dataContext.getData(Settings.KEY);
             if (settings == null) {
                 return;

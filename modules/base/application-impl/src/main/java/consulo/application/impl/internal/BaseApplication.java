@@ -86,8 +86,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -108,7 +107,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 
-    @Nonnull
     protected final SimpleReference<? extends StartupProgress> mySplashRef;
 
     protected final Disposable myLastDisposable = Disposable.newDisposable(); // will be disposed last
@@ -142,7 +140,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return SemVer.parseFromText(version);
     });
 
-    public BaseApplication(@Nonnull ComponentBinding componentBinding, @Nonnull SimpleReference<? extends StartupProgress> splashRef) {
+    public BaseApplication(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(null, "Application", ComponentScope.APPLICATION, componentBinding);
         mySplashRef = splashRef;
         myStartTime = System.currentTimeMillis();
@@ -156,21 +154,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         super.initNotLazyServices();
     }
 
-    @Nonnull
     @Override
     @SuppressWarnings("deprecation")
     public CoroutineContext coroutineContext() {
         return getInstance(ApplicationConcurrency.class).coroutineContext();
     }
 
-    @Nonnull
     @Override
     public ProgressManager getProgressManager() {
         return myProgressManager;
     }
 
     @Override
-    public void executeNonCancelableSection(@Nonnull Runnable runnable) {
+    public void executeNonCancelableSection(Runnable runnable) {
         if (myProgressManager != null) {
             myProgressManager.executeNonCancelableSection(runnable);
         }
@@ -186,7 +182,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
 
         builder.bind(Application.class).to(this);
@@ -203,19 +199,19 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         myDispatcher.getMulticaster().applicationExiting();
     }
 
-    protected void fireBeforeWriteActionStart(@Nonnull Class action) {
+    protected void fireBeforeWriteActionStart(Class action) {
         myDispatcher.getMulticaster().beforeWriteActionStart(action);
     }
 
-    protected void fireWriteActionStarted(@Nonnull Class action) {
+    protected void fireWriteActionStarted(Class action) {
         myDispatcher.getMulticaster().writeActionStarted(action);
     }
 
-    protected void fireWriteActionFinished(@Nonnull Class action) {
+    protected void fireWriteActionFinished(Class action) {
         myDispatcher.getMulticaster().writeActionFinished(action);
     }
 
-    protected void fireAfterWriteActionFinished(@Nonnull Class action) {
+    protected void fireAfterWriteActionFinished(Class action) {
         myDispatcher.getMulticaster().afterWriteActionFinished(action);
     }
 
@@ -224,7 +220,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         load(ContainerPathManager.get().getConfigPath(), optionsPath == null ? ContainerPathManager.get().getOptionsPath() : optionsPath);
     }
 
-    public void load(@Nonnull String configPath, @Nonnull String optionsPath) throws IOException {
+    public void load(String configPath, String optionsPath) throws IOException {
         IApplicationStore store = getStateStore();
         store.setOptionsPath(optionsPath);
         store.setConfigPath(configPath);
@@ -267,7 +263,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         _saveSettings(UIAccess.current());
     }
 
-    public void saveSettings(@Nonnull UIAccess uiAccess) {
+    public void saveSettings(UIAccess uiAccess) {
         if (myDoNotSave) {
             return;
         }
@@ -275,7 +271,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     // public for testing purposes
-    public void _saveSettings(@Nonnull UIAccess uiAccess) {
+    public void _saveSettings(UIAccess uiAccess) {
         if (mySaveSettingsIsInProgress.compareAndSet(false, true)) {
             try {
                 StoreUtil.save(getStateStore(), uiAccess, false, null);
@@ -321,9 +317,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         })).runAsync(scope, null);
     }
 
-    @Nonnull
     @Override
-    public CompletableFuture<Void> saveAllWithProgress(@Nonnull UIAccess uiAccess) {
+    public CompletableFuture<Void> saveAllWithProgress(UIAccess uiAccess) {
         if (myDoNotSave) {
             return CompletableFuture.completedFuture(null);
         }
@@ -371,15 +366,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return myLoaded;
     }
 
-    @Nonnull
     @Override
-    public Future<?> executeOnPooledThread(@Nonnull Runnable action) {
+    public Future<?> executeOnPooledThread(Runnable action) {
         return getInstance(ApplicationConcurrency.class).getExecutorService().submit(new RunnableAsCallable(action, LOG));
     }
 
-    @Nonnull
     @Override
-    public <T> Future<T> executeOnPooledThread(@Nonnull final Callable<T> action) {
+    public <T> Future<T> executeOnPooledThread(final Callable<T> action) {
         return getInstance(ApplicationConcurrency.class).getExecutorService().submit(new Callable<T>() {
             @Override
             public T call() {
@@ -413,17 +406,17 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void addApplicationListener(@Nonnull ApplicationListener l) {
+    public void addApplicationListener(ApplicationListener l) {
         myDispatcher.addListener(l);
     }
 
     @Override
-    public void addApplicationListener(@Nonnull ApplicationListener l, @Nonnull Disposable parent) {
+    public void addApplicationListener(ApplicationListener l, Disposable parent) {
         myDispatcher.addListener(l, parent);
     }
 
     @Override
-    public void removeApplicationListener(@Nonnull ApplicationListener l) {
+    public void removeApplicationListener(ApplicationListener l) {
         myDispatcher.removeListener(l);
     }
 
@@ -467,45 +460,39 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         }
     }
 
-    @Nonnull
     @Override
     public IApplicationStore getStateStore() {
         return (IApplicationStore)super.getStateStore();
     }
 
     @Override
-    @Nonnull
     public IComponentStore getStateStoreImpl() {
         return getInstance(IApplicationStore.class);
     }
 
-    @Nonnull
     @Override
     public Image getIcon() {
         return ApplicationProperties.isInSandbox() ? PlatformIconGroup.icon16_sandbox() : PlatformIconGroup.icon16();
     }
 
-    @Nonnull
     @Override
     public Image getBigIcon() {
         return ApplicationProperties.isInSandbox() ? PlatformIconGroup.icon32_sandbox() : PlatformIconGroup.icon32();
     }
 
-    @Nonnull
     @Override
     public SemVer getVersion() {
         return myVersionValue.get();
     }
 
-    @Nonnull
     @Override
     public BuildNumber getBuildNumber() {
         return ApplicationInfo.getInstance().getBuild();
     }
 
     @Override
-    public <T, E extends Throwable> boolean tryRunReadAction(@Nonnull SimpleReference<T> ref,
-                                                          @Nonnull ThrowableSupplier<T, E> computation) throws E {
+    public <T, E extends Throwable> boolean tryRunReadAction(SimpleReference<T> ref,
+                                                          ThrowableSupplier<T, E> computation) throws E {
         //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
         RWLock.ReadToken status = myLock.startTryRead();
         if (status != null && !status.readRequested()) {
@@ -524,7 +511,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void runReadAction(@Nonnull Runnable action) {
+    public void runReadAction(Runnable action) {
         ThreadAssertion.assertTrue(UIAccess.isUIThread(), "Can't execute run action inside UI thread");
 
         RWLock.ReadToken status = myLock.startRead();
@@ -539,7 +526,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public <T> T runReadAction(@Nonnull Supplier<T> computation) {
+    public <T> T runReadAction(Supplier<T> computation) {
         ThreadAssertion.assertTrue(UIAccess.isUIThread(), "Can't execute run action inside UI thread");
 
         RWLock.ReadToken status = myLock.startRead();
@@ -554,7 +541,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+    public <T, E extends Throwable> T runReadAction(ThrowableSupplier<T, E> computation) throws E {
         ThreadAssertion.assertTrue(UIAccess.isUIThread(), "Can't execute run action inside UI thread");
 
         RWLock.ReadToken status = myLock.startRead();
@@ -569,7 +556,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public boolean tryRunReadAction(@Nonnull Runnable action) {
+    public boolean tryRunReadAction(Runnable action) {
         //if we are inside read action, do not try to acquire read lock again since it will deadlock if there is a pending writeAction
         RWLock.ReadToken status = myLock.startTryRead();
         if (status != null && !status.readRequested()) {
@@ -587,16 +574,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public boolean runWriteActionWithCancellableProgress(@Nonnull LocalizeValue title, @Nullable ComponentManager project, @Nonnull Consumer<? super ProgressIndicator> action) {
+    public boolean runWriteActionWithCancellableProgress(LocalizeValue title, @Nullable ComponentManager project, Consumer<? super ProgressIndicator> action) {
         return runWriteActionWithProgressOnPooledThread(title, action);
     }
 
     @Override
-    public boolean runWriteActionWithNonCancellableProgress(@Nonnull LocalizeValue title, @Nullable ComponentManager project, @Nonnull Consumer<? super ProgressIndicator> action) {
+    public boolean runWriteActionWithNonCancellableProgress(LocalizeValue title, @Nullable ComponentManager project, Consumer<? super ProgressIndicator> action) {
         return runWriteActionWithProgressOnPooledThread(title, action);
     }
 
-    private boolean runWriteActionWithProgressOnPooledThread(@Nonnull LocalizeValue title, @Nonnull Consumer<? super ProgressIndicator> action) {
+    private boolean runWriteActionWithProgressOnPooledThread(LocalizeValue title, Consumer<? super ProgressIndicator> action) {
         ProgressIndicatorBase indicator = new ProgressIndicatorBase();
         indicator.setText(title.get());
 
@@ -664,7 +651,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
      * if there is a pending write action.
      */
     @Override
-    public void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    public void executeByImpatientReader(@RequiredReadAction Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
         myLock.executeByImpatientReader(runnable);
     }
 
@@ -675,13 +662,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull String progressTitle,
+        Runnable process,
+        String progressTitle,
         boolean canBeCanceled,
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
+        LocalizeValue cancelText
     ) {
         if (isWriteAccessAllowed()) {
             LOG.error("Running progress synchronously under write action is not allowed", new Throwable());
@@ -710,14 +697,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return !result.isCanceled();
     }
 
-    @Nonnull
     public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(
-        @Nonnull String progressTitle,
+        String progressTitle,
         boolean canBeCanceled,
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
+        LocalizeValue cancelText
     ) {
         if (UIAccess.isUIThread()) {
             return CompletableFuture.completedFuture(createProgressWindow(
@@ -742,14 +728,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         );
     }
 
-    @Nonnull
     public ProgressWindow createProgressWindow(
-        @Nonnull String progressTitle,
+        String progressTitle,
         boolean canBeCanceled,
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
+        LocalizeValue cancelText
     ) {
         ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project) project, parentComponent, cancelText);
         // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
@@ -759,7 +744,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return progress;
     }
 
-    protected void startWrite(@Nonnull Class clazz) {
+    protected void startWrite(Class clazz) {
         boolean writeActionPending = myWriteActionPending;
         myWriteActionPending = true;
         try {
@@ -815,7 +800,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void runWriteAction(@Nonnull Runnable action) {
+    public void runWriteAction(Runnable action) {
         Class<? extends Runnable> clazz = action.getClass();
         startWrite(clazz);
         try {
@@ -827,18 +812,18 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public <T> T runWriteAction(@Nonnull Supplier<T> computation) {
+    public <T> T runWriteAction(Supplier<T> computation) {
         return runWriteActionWithClass(computation.getClass(), computation::get);
     }
 
     @Override
-    public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+    public <T, E extends Throwable> T runWriteAction(ThrowableSupplier<T, E> computation) throws E {
         return runWriteActionWithClass(computation.getClass(), computation);
     }
 
     @Override
     @RequiredReadAction
-    public boolean hasWriteAction(@Nonnull Class<?> actionClass) {
+    public boolean hasWriteAction(Class<?> actionClass) {
         assertReadAccessAllowed();
 
         for (int i = myWriteActionsStack.size() - 1; i >= 0; i--) {
@@ -857,8 +842,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     protected <T, E extends Throwable> T runWriteActionWithClass(
-        @Nonnull Class<?> clazz,
-        @Nonnull ThrowableSupplier<T, E> computable
+        Class<?> clazz,
+        ThrowableSupplier<T, E> computable
     ) throws E {
         startWrite(clazz);
         try {
@@ -870,12 +855,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable) {
+    public void invokeLater(Runnable runnable) {
         getLastUIAccess().give(runnable);
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull BooleanSupplier expired) {
+    public void invokeLater(Runnable runnable, BooleanSupplier expired) {
         getLastUIAccess().give(() -> {
             if (expired.getAsBoolean()) {
                 return;
@@ -886,12 +871,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+    public void invokeLater(Runnable runnable, ModalityState state) {
         getLastUIAccess().give(runnable);
     }
 
     @Override
-    public void invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired) {
+    public void invokeLater(Runnable runnable, ModalityState state, BooleanSupplier expired) {
         getLastUIAccess().give(() -> {
             if (expired.getAsBoolean()) {
                 return;
@@ -903,7 +888,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @RequiredUIAccess
     @Override
-    public void invokeAndWait(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+    public void invokeAndWait(Runnable runnable, ModalityState modalityState) {
         if (isDispatchThread()) {
             runnable.run();
             return;

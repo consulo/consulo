@@ -19,14 +19,13 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +52,7 @@ public final class FileChooserUtil {
 
     @Nullable
     public static VirtualFile getFileToSelect(
-        @Nonnull FileChooserDescriptor descriptor,
+        FileChooserDescriptor descriptor,
         @Nullable Project project,
         @Nullable VirtualFile toSelect,
         @Nullable VirtualFile lastPath
@@ -85,16 +84,16 @@ public final class FileChooserUtil {
             }
         }
         else if (Platform.current().os().isUnix()) {
-            result = VfsUtil.getUserHomeDir();
+            result = VirtualFileUtil.getUserHomeDir();
         }
 
         return result;
     }
 
-    @Nonnull
+    
     public static List<VirtualFile> getChosenFiles(
-        @Nonnull FileChooserDescriptor descriptor,
-        @Nonnull Collection<VirtualFile> selectedFiles
+        FileChooserDescriptor descriptor,
+        Collection<VirtualFile> selectedFiles
     ) {
         return ContainerUtil.mapNotNull(selectedFiles, file -> file != null && file.isValid() ? descriptor.getFileToSelect(file) : null);
     }

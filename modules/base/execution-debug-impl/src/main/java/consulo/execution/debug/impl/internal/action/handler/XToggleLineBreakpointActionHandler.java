@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +45,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
 
   @Override
   @RequiredUIAccess
-  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+  public boolean isEnabled(Project project, AnActionEvent event) {
     XLineBreakpointType<?>[] breakpointTypes = XDebuggerUtil.getInstance().getLineBreakpointTypes();
     XBreakpointManager breakpointManager = XDebuggerManager.getInstance(project).getBreakpointManager();
     for (XSourcePosition position : XDebuggerUtilImpl.getAllCaretsPositions(project, event.getDataContext())) {
@@ -62,7 +61,7 @@ public class XToggleLineBreakpointActionHandler extends DebuggerActionHandler {
   }
 
   @Override
-  public void perform(@Nonnull Project project, AnActionEvent event) {
+  public void perform(Project project, AnActionEvent event) {
     Editor editor = event.getData(Editor.KEY);
     // do not toggle more than once on the same line
     Set<Integer> processedLines = new HashSet<>();

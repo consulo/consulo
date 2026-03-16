@@ -22,8 +22,7 @@ import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,7 +52,7 @@ public interface ScopeOptimizer {
    */
   @Deprecated
   @Nullable
-  default GlobalSearchScope getScopeToExclude(@Nonnull PsiElement element) {
+  default GlobalSearchScope getScopeToExclude(PsiElement element) {
     return null;
   }
 
@@ -62,14 +61,14 @@ public interface ScopeOptimizer {
    * @return is null when given optimizer can't provide a scope to restrict
    */
   @Nullable
-  default SearchScope getRestrictedUseScope(@Nonnull PsiElement element) {
+  default SearchScope getRestrictedUseScope(PsiElement element) {
     GlobalSearchScope scopeToExclude = getScopeToExclude(element);
 
     return scopeToExclude == null ? null : GlobalSearchScope.notScope(scopeToExclude);
   }
 
   @Nullable
-  static SearchScope calculateOverallRestrictedUseScope(@Nonnull List<ScopeOptimizer> optimizers, @Nonnull PsiElement element) {
+  static SearchScope calculateOverallRestrictedUseScope(List<ScopeOptimizer> optimizers, PsiElement element) {
     return optimizers.stream().peek(optimizer -> ProgressManager.checkCanceled()).map(optimizer -> optimizer.getRestrictedUseScope(element)).filter(Objects::nonNull)
             .reduce(SearchScope::intersectWith).orElse(null);
   }

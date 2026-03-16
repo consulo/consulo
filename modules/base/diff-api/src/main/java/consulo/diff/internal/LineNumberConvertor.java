@@ -18,7 +18,6 @@ package consulo.diff.internal;
 import consulo.diff.util.Side;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,24 +25,24 @@ import java.util.function.IntUnaryOperator;
 
 public class LineNumberConvertor {
   // One-side -> Two-side
-  @Nonnull
+  
   private final TreeMap<Integer, Integer> myFragments1;
-  @Nonnull
+  
   private final TreeMap<Integer, Integer> myFragments2;
 
   // Two-side -> One-side
-  @Nonnull
+  
   private final TreeMap<Integer, Integer> myInvertedFragments1;
-  @Nonnull
+  
   private final TreeMap<Integer, Integer> myInvertedFragments2;
 
-  @Nonnull
+  
   private final Corrector myCorrector = new Corrector();
 
-  public LineNumberConvertor(@Nonnull TreeMap<Integer, Integer> fragments1,
-                             @Nonnull TreeMap<Integer, Integer> fragments2,
-                             @Nonnull TreeMap<Integer, Integer> invertedFragments1,
-                             @Nonnull TreeMap<Integer, Integer> invertedFragments2) {
+  public LineNumberConvertor(TreeMap<Integer, Integer> fragments1,
+                             TreeMap<Integer, Integer> fragments2,
+                             TreeMap<Integer, Integer> invertedFragments1,
+                             TreeMap<Integer, Integer> invertedFragments2) {
     myFragments1 = fragments1;
     myFragments2 = fragments2;
     myInvertedFragments1 = invertedFragments1;
@@ -86,36 +85,36 @@ public class LineNumberConvertor {
   // Impl
   //
 
-  @Nonnull
+  
   public IntUnaryOperator createConvertor1() {
     return this::convert1;
   }
 
-  @Nonnull
+  
   public IntUnaryOperator createConvertor2() {
     return this::convert2;
   }
 
-  private int convert(int value, @Nonnull Side side, boolean fromOneside, boolean approximate) {
+  private int convert(int value, Side side, boolean fromOneside, boolean approximate) {
     return myCorrector.convertCorrected(value, side, fromOneside, approximate);
   }
 
   /*
    * Both one-side and one of the sides were changed in a same way. We should update converters, because of changed shift.
    */
-  public void handleOnesideChange(int startLine, int endLine, int shift, @Nonnull Side masterSide) {
+  public void handleOnesideChange(int startLine, int endLine, int shift, Side masterSide) {
     myCorrector.handleOnesideChange(startLine, endLine, shift, masterSide);
   }
 
 
-  private static int convert(@Nonnull TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
+  private static int convert(TreeMap<Integer, Integer> fragments, int value, boolean approximate) {
     return approximate ? convertApproximate(fragments, value) : convert(fragments, value);
   }
 
   /*
    * This converter returns exact matching between lines, and -1 if it's impossible
    */
-  private static int convert(@Nonnull TreeMap<Integer, Integer> fragments, int value) {
+  private static int convert(TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
     if (floor == null || floor.getValue() == -1) return -1;
     return floor.getValue() - floor.getKey() + value;
@@ -124,7 +123,7 @@ public class LineNumberConvertor {
   /*
    * This converter returns 'good enough' position, even if exact matching is impossible
    */
-  private static int convertApproximate(@Nonnull TreeMap<Integer, Integer> fragments, int value) {
+  private static int convertApproximate(TreeMap<Integer, Integer> fragments, int value) {
     Map.Entry<Integer, Integer> floor = fragments.floorEntry(value);
     if (floor == null) return 0;
     if (floor.getValue() != -1) return floor.getValue() - floor.getKey() + value;
@@ -135,21 +134,21 @@ public class LineNumberConvertor {
     return floorHead.getValue() - floorHead.getKey() + floor.getKey();
   }
 
-  @Nonnull
-  private TreeMap<Integer, Integer> getFragments(@Nonnull Side side, boolean fromOneside) {
+  
+  private TreeMap<Integer, Integer> getFragments(Side side, boolean fromOneside) {
     return fromOneside ? side.select(myFragments1, myFragments2)
                        : side.select(myInvertedFragments1, myInvertedFragments2);
   }
 
   public static class Builder {
-    @Nonnull
+    
     private final TreeMap<Integer, Integer> myFragments1 = new TreeMap<>();
-    @Nonnull
+    
     private final TreeMap<Integer, Integer> myFragments2 = new TreeMap<>();
 
-    @Nonnull
+    
     private final TreeMap<Integer, Integer> myInvertedFragments1 = new TreeMap<>();
-    @Nonnull
+    
     private final TreeMap<Integer, Integer> myInvertedFragments2 = new TreeMap<>();
 
     public void put1(int start, int newStart, int length) {
@@ -168,7 +167,7 @@ public class LineNumberConvertor {
       myInvertedFragments2.put(newStart + length, -1);
     }
 
-    @Nonnull
+    
     public LineNumberConvertor build() {
       return new LineNumberConvertor(myFragments1, myFragments2, myInvertedFragments1, myInvertedFragments2);
     }
@@ -221,7 +220,7 @@ public class LineNumberConvertor {
     private final List<CorrectedChange> myChanges = new SmartList<>();
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public void handleOnesideChange(int startLine, int endLine, int shift, @Nonnull Side masterSide) {
+    public void handleOnesideChange(int startLine, int endLine, int shift, Side masterSide) {
       int oldOnesideStart = startLine;
       int oldTwosideStart = convert(startLine, masterSide, true, false);
       assert oldTwosideStart != -1;
@@ -232,7 +231,7 @@ public class LineNumberConvertor {
       myChanges.add(new CorrectedChange(oldOnesideStart, oldTwosideStart, oldLength, newLength, masterSide));
     }
 
-    public int convertCorrected(int value, @Nonnull Side side, boolean fromOneside, boolean approximate) {
+    public int convertCorrected(int value, Side side, boolean fromOneside, boolean approximate) {
       if (fromOneside) {
         return convertFromOneside(value, side, approximate, myChanges.size() - 1);
       }
@@ -241,7 +240,7 @@ public class LineNumberConvertor {
       }
     }
 
-    private int convertFromTwoside(int value, @Nonnull Side side, boolean approximate, int index) {
+    private int convertFromTwoside(int value, Side side, boolean approximate, int index) {
       if (index < 0) {
         return convert(getFragments(side, false), value, approximate);
       }
@@ -287,7 +286,7 @@ public class LineNumberConvertor {
       }
     }
 
-    private int convertFromOneside(int value, @Nonnull Side side, boolean approximate, int index) {
+    private int convertFromOneside(int value, Side side, boolean approximate, int index) {
       if (index < 0) {
         return convert(getFragments(side, true), value, approximate);
       }
@@ -331,10 +330,10 @@ public class LineNumberConvertor {
     public final int startTwoside;
     public final int oldLength;
     public final int newLength;
-    @Nonnull
+    
     public final Side side;
 
-    public CorrectedChange(int startOneside, int startTwoside, int oldLength, int newLength, @Nonnull Side side) {
+    public CorrectedChange(int startOneside, int startTwoside, int oldLength, int newLength, Side side) {
       this.startOneside = startOneside;
       this.startTwoside = startTwoside;
       this.oldLength = oldLength;

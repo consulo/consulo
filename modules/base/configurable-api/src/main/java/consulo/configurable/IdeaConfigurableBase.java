@@ -18,8 +18,7 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -32,19 +31,19 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
 
     private UI ui;
 
-    protected IdeaConfigurableBase(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nullable String helpTopic) {
+    protected IdeaConfigurableBase(String id, LocalizeValue displayName, @Nullable String helpTopic) {
         this.id = id;
         this.displayName = displayName;
         this.helpTopic = helpTopic;
     }
 
-    @Nonnull
+    
     @Override
     public final String getId() {
         return id;
     }
 
-    @Nonnull
+    
     @Override
     public final LocalizeValue getDisplayName() {
         return displayName;
@@ -62,7 +61,7 @@ public abstract class IdeaConfigurableBase<UI extends IdeaConfigurableUi<S>, S> 
         return null;
     }
 
-    @Nonnull
+    
     protected abstract S getSettings();
 
     @Override

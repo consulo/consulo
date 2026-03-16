@@ -6,10 +6,8 @@ import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
-import org.jetbrains.annotations.NonNls;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class BoundedTaskExecutor extends AbstractExecutorService {
   private volatile boolean myShutdown;
-  @Nonnull
+  
   private final String myName;
   private final Executor myBackendExecutor;
   private final int myMaxThreads;
@@ -36,14 +34,14 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
 
   private final boolean myChangeThreadName;
 
-  public BoundedTaskExecutor(@Nonnull @NonNls String name, @Nonnull Executor backendExecutor, int maxThreads, boolean changeThreadName) {
+  public BoundedTaskExecutor(String name, Executor backendExecutor, int maxThreads, boolean changeThreadName) {
     this(name, backendExecutor, maxThreads, changeThreadName, new LinkedBlockingQueue<>());
     if (name.isEmpty() || !Character.isUpperCase(name.charAt(0))) {
       LoggerFactory.getLogger(getClass()).warn("Pool name must be capitalized but got: '" + name + "'", new IllegalArgumentException());
     }
   }
 
-  public BoundedTaskExecutor(@Nonnull @NonNls String name, @Nonnull Executor backendExecutor, int maxThreads, boolean changeThreadName, @Nonnull BlockingQueue<Runnable> queue) {
+  public BoundedTaskExecutor(String name, Executor backendExecutor, int maxThreads, boolean changeThreadName, BlockingQueue<Runnable> queue) {
     myName = name;
     myBackendExecutor = backendExecutor;
     if (maxThreads < 1) {
@@ -77,7 +75,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     myShutdown = true;
   }
 
-  @Nonnull
+  
   @Override
   public List<Runnable> shutdownNow() {
     shutdown();
@@ -96,13 +94,13 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
 
   // can be executed even after shutdown
   private static class LastTask extends FutureTask<Void> {
-    LastTask(@Nonnull Runnable runnable) {
+    LastTask(Runnable runnable) {
       super(runnable, null);
     }
   }
 
   @Override
-  public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
     if (!isShutdown()) throw new IllegalStateException("you must call shutdown() or shutdownNow() first");
     try {
       waitAllTasksExecuted(timeout, unit);
@@ -117,7 +115,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
   }
 
   @Override
-  public void execute(@Nonnull Runnable task) {
+  public void execute(Runnable task) {
     if (isShutdown() && !(task instanceof LastTask)) {
       throw new RejectedExecutionException("Already shutdown");
     }
@@ -165,7 +163,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     return null;
   }
 
-  private void wrapAndExecute(@Nonnull Runnable firstTask, long status) {
+  private void wrapAndExecute(Runnable firstTask, long status) {
     try {
       AtomicReference<Runnable> currentTask = new AtomicReference<>(firstTask);
       myBackendExecutor.execute(new Runnable() {
@@ -222,7 +220,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     }
   }
 
-  public synchronized void waitAllTasksExecuted(long timeout, @Nonnull TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
+  public synchronized void waitAllTasksExecuted(long timeout, TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
     CountDownLatch started = new CountDownLatch(myMaxThreads);
     CountDownLatch readyToFinish = new CountDownLatch(1);
     Runnable runnable = new Runnable() {
@@ -274,7 +272,7 @@ public final class BoundedTaskExecutor extends AbstractExecutorService {
     return myTaskQueue.size();
   }
 
-  @Nonnull
+  
   public List<Runnable> clearAndCancelAll() {
     List<Runnable> queued = new ArrayList<>();
     myTaskQueue.drainTo(queued);

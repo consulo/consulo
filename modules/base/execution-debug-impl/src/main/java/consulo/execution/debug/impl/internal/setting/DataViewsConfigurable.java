@@ -19,16 +19,15 @@ import consulo.configurable.Configurable;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 class DataViewsConfigurable extends SubCompositeConfigurable implements Configurable.NoScroll {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "debugger.dataViews";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return XDebuggerLocalize.debuggerDataviewsDisplayName();
@@ -39,13 +38,13 @@ class DataViewsConfigurable extends SubCompositeConfigurable implements Configur
     return new DataViewsConfigurableUi();
   }
 
-  @Nonnull
+  
   @Override
   protected DebuggerSettingsCategory getCategory() {
     return DebuggerSettingsCategory.DATA_VIEWS;
   }
 
-  @Nonnull
+  
   @Override
   protected XDebuggerDataViewSettings getSettings() {
     return XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings();

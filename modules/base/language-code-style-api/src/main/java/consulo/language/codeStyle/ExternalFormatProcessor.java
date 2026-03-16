@@ -12,8 +12,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ public interface ExternalFormatProcessor {
      * @param source the source file with code
      * @return true, if external processor selected as active (enabled) for the source file
      */
-    boolean activeForFile(@Nonnull PsiFile source);
+    boolean activeForFile(PsiFile source);
 
     /**
      * Formats the range in a source file.
@@ -36,7 +35,7 @@ public interface ExternalFormatProcessor {
      * @return the range after formatting or null, if external format procedure cannot be applied to the source
      */
     @Nullable
-    TextRange format(@Nonnull PsiFile source, @Nonnull TextRange range, boolean canChangeWhiteSpacesOnly);
+    TextRange format(PsiFile source, TextRange range, boolean canChangeWhiteSpacesOnly);
 
     /**
      * Indents the line.
@@ -46,19 +45,19 @@ public interface ExternalFormatProcessor {
      * @return the indentation String or null if nothing to be changed
      */
     @Nullable
-    String indent(@Nonnull PsiFile source, int lineStartOffset);
+    String indent(PsiFile source, int lineStartOffset);
 
     /**
      * @return the unique id for external formatter
      */
-    @Nonnull
+    
     String getId();
 
     /**
      * @param source the source file with code
      * @return true, if there is an active external (enabled) formatter for the source
      */
-    static boolean useExternalFormatter(@Nonnull PsiFile source) {
+    static boolean useExternalFormatter(PsiFile source) {
         return EP_NAME.getExtensionList().stream().anyMatch(efp -> efp.activeForFile(source));
     }
 
@@ -66,13 +65,13 @@ public interface ExternalFormatProcessor {
      * @param externalFormatterId the unique id for external formatter
      * @return the external formatter with the unique id, if any
      */
-    @Nonnull
-    static Optional<ExternalFormatProcessor> findExternalFormatter(@Nonnull String externalFormatterId) {
+    
+    static Optional<ExternalFormatProcessor> findExternalFormatter(String externalFormatterId) {
         return EP_NAME.getExtensionList().stream().filter(efp -> externalFormatterId.equals(efp.getId())).findFirst();
     }
 
     @Nullable
-    static ExternalFormatProcessor activeExternalFormatProcessor(@Nonnull PsiFile source) {
+    static ExternalFormatProcessor activeExternalFormatProcessor(PsiFile source) {
         for (ExternalFormatProcessor efp : EP_NAME.getExtensionList()) {
             if (efp.activeForFile(source)) {
                 return efp;
@@ -89,7 +88,7 @@ public interface ExternalFormatProcessor {
      * @return the range after indentation or null if nothing to be changed
      */
     @Nullable
-    static String indentLine(@Nonnull PsiFile source, int lineStartOffset) {
+    static String indentLine(PsiFile source, int lineStartOffset) {
         ExternalFormatProcessor efp = activeExternalFormatProcessor(source);
         return efp != null ? efp.indent(source, lineStartOffset) : null;
     }
@@ -101,7 +100,7 @@ public interface ExternalFormatProcessor {
      * @return the range after formatting or null, if external format procedure was not found or inactive (disabled)
      */
     @Nullable
-    static TextRange formatRangeInFile(@Nonnull PsiFile source, @Nonnull TextRange range, boolean canChangeWhiteSpacesOnly) {
+    static TextRange formatRangeInFile(PsiFile source, TextRange range, boolean canChangeWhiteSpacesOnly) {
         ExternalFormatProcessor efp = activeExternalFormatProcessor(source);
         return efp != null ? efp.format(source, range, canChangeWhiteSpacesOnly) : null;
     }
@@ -112,9 +111,9 @@ public interface ExternalFormatProcessor {
      * @param canChangeWhiteSpacesOnly procedure can change only whitespaces
      * @return the element after formatting
      */
-    @Nonnull
+    
     @RequiredReadAction
-    static PsiElement formatElement(@Nonnull PsiElement elementToFormat, @Nonnull TextRange range, boolean canChangeWhiteSpacesOnly) {
+    static PsiElement formatElement(PsiElement elementToFormat, TextRange range, boolean canChangeWhiteSpacesOnly) {
         PsiFile file = elementToFormat.getContainingFile();
         Document document = file.getViewProvider().getDocument();
         if (document != null) {

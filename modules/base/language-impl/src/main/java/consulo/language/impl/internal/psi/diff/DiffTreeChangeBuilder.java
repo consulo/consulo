@@ -16,15 +16,14 @@
 
 package consulo.language.impl.internal.psi.diff;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface DiffTreeChangeBuilder<OT, NT> {
-  void nodeReplaced(@Nonnull OT oldChild, @Nonnull NT newChild);
+  void nodeReplaced(OT oldChild, NT newChild);
 
-  void nodeDeleted(@Nonnull OT oldParent, @Nonnull OT oldNode);
+  void nodeDeleted(OT oldParent, OT oldNode);
 
-  void nodeInserted(@Nonnull OT oldParent, @Nonnull NT newNode, int pos);
+  void nodeInserted(OT oldParent, NT newNode, int pos);
 }

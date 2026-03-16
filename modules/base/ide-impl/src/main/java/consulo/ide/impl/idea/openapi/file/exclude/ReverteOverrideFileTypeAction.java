@@ -7,7 +7,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * removes destruction caused by {@link OverrideFileTypeAction} and restores the original file type
@@ -15,7 +14,7 @@ import jakarta.annotation.Nonnull;
 public class ReverteOverrideFileTypeAction extends AnAction {
   @Override
   @RequiredUIAccess
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     VirtualFile[] files =
       OverrideFileTypeAction.getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) != null);
     Presentation presentation = e.getPresentation();
@@ -30,7 +29,7 @@ public class ReverteOverrideFileTypeAction extends AnAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     VirtualFile[] files = OverrideFileTypeAction.getContextFiles(e, file -> OverrideFileTypeManager.getInstance().getFileValue(file) != null);
     for (VirtualFile file : files) {
       OverrideFileTypeManager.getInstance().removeFile(file);

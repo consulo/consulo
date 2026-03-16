@@ -3,8 +3,7 @@ package consulo.execution.coverage;
 import consulo.project.Project;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.rt.coverage.data.ProjectData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman.Chernyatchik
@@ -12,14 +11,14 @@ import jakarta.annotation.Nullable;
 public interface CoverageSuite extends JDOMExternalizable {
     boolean isValid();
 
-    @Nonnull
+    
     String getCoverageDataFileName();
 
     String getPresentableName();
 
     long getLastCoverageTimeStamp();
 
-    @Nonnull
+    
     CoverageFileProvider getCoverageDataFileProvider();
 
     boolean isCoverageByTestApplicable();
@@ -39,7 +38,7 @@ public interface CoverageSuite extends JDOMExternalizable {
 
     CoverageRunner getRunner();
 
-    @Nonnull
+    
     CoverageEngine getCoverageEngine();
 
     Project getProject();

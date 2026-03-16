@@ -20,8 +20,7 @@ import consulo.externalSystem.impl.internal.service.remote.RemoteExternalSystemT
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.rt.model.ExternalSystemException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -35,24 +34,24 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
   implements RemoteExternalSystemTaskManager<S>
 {
 
-  @Nonnull
+  
   private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-  public ExternalSystemTaskManagerWrapper(@Nonnull RemoteExternalSystemTaskManager<S> delegate,
-                                          @Nonnull RemoteExternalSystemProgressNotificationManager progressManager)
+  public ExternalSystemTaskManagerWrapper(RemoteExternalSystemTaskManager<S> delegate,
+                                          RemoteExternalSystemProgressNotificationManager progressManager)
   {
     super(delegate);
     myProgressManager = progressManager;
   }
 
   @Override
-  public void executeTasks(@Nonnull ExternalSystemTaskId id,
-                           @Nonnull List<String> taskNames,
-                           @Nonnull String projectPath,
+  public void executeTasks(ExternalSystemTaskId id,
+                           List<String> taskNames,
+                           String projectPath,
                            @Nullable S settings,
-                           @Nonnull List<String> vmOptions,
-                           @Nonnull List<String> scriptParameters,
-                           @jakarta.annotation.Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
+                           List<String> vmOptions,
+                           List<String> scriptParameters,
+                           @Nullable String debuggerSetup) throws RemoteException, ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {
@@ -72,7 +71,7 @@ public class ExternalSystemTaskManagerWrapper<S extends ExternalSystemExecutionS
   }
 
   @Override
-  public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
+  public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException, ExternalSystemException
   {
     myProgressManager.onQueued(id);
     try {

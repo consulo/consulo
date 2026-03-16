@@ -26,7 +26,6 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -61,21 +60,21 @@ public class SyntaxHighlighterOverEditorHighlighter implements SyntaxHighlighter
         }
     }
 
-    @Nonnull
+    
     @Override
     public Lexer getHighlightingLexer() {
         return myLexer;
     }
 
-    @Nonnull
+    
     @Override
-    public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
+    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         SyntaxHighlighter activeSyntaxHighlighter =
             myLayeredHighlighterIterator != null ? myLayeredHighlighterIterator.getActiveSyntaxHighlighter() : myHighlighter;
         return activeSyntaxHighlighter.getTokenHighlights(tokenType);
     }
 
-    public void restart(@Nonnull CharSequence text) {
+    public void restart(CharSequence text) {
         myLexer.start(text);
 
         if (myLexer instanceof LexerEditorHighlighterLexer hlLexer) {

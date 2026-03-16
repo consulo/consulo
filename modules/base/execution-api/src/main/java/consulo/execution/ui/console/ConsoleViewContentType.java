@@ -10,8 +10,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,19 +97,19 @@ public class ConsoleViewContentType {
     return myTextAttributesKey;
   }
 
-  @Nonnull
-  public static ConsoleViewContentType registerNewConsoleViewType(@Nonnull Key key, @Nonnull TextAttributesKey attributesKey) {
+  
+  public static ConsoleViewContentType registerNewConsoleViewType(Key key, TextAttributesKey attributesKey) {
     ConsoleViewContentType type = new ConsoleViewContentType(key.toString(), attributesKey);
     registerNewConsoleViewType(key, type);
     return type;
   }
 
-  public static synchronized void registerNewConsoleViewType(@Nonnull Key processOutputType, @Nonnull ConsoleViewContentType attributes) {
+  public static synchronized void registerNewConsoleViewType(Key processOutputType, ConsoleViewContentType attributes) {
     ourRegisteredTypes.put(processOutputType, attributes);
   }
 
-  @Nonnull
-  public static synchronized ConsoleViewContentType getConsoleViewType(@Nonnull Key processOutputType) {
+  
+  public static synchronized ConsoleViewContentType getConsoleViewType(Key processOutputType) {
     ConsoleViewContentType type = ourRegisteredTypes.get(processOutputType);
     if (type != null) {
       return type;
@@ -119,7 +118,7 @@ public class ConsoleViewContentType {
     return SYSTEM_OUTPUT;
   }
 
-  @Nonnull
+  
   public static synchronized Collection<ConsoleViewContentType> getRegisteredTypes() {
     return ourRegisteredTypes.values();
   }

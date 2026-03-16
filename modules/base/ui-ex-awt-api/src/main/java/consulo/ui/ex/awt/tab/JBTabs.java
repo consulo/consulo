@@ -19,8 +19,7 @@ import consulo.component.util.ActiveRunnable;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,45 +28,45 @@ import java.awt.event.MouseListener;
 
 public interface JBTabs {
 
-    @Nonnull
+    
     TabInfo addTab(TabInfo info, int index);
 
-    @Nonnull
+    
     TabInfo addTab(TabInfo info);
 
-    @Nonnull
+    
     ActionCallback removeTab(@Nullable TabInfo info);
 
     void removeAllTabs();
 
-    @Nonnull
-    JBTabs setPopupGroup(@Nonnull ActionGroup popupGroup, @Nonnull String place, boolean addNavigationGroup);
+    
+    JBTabs setPopupGroup(ActionGroup popupGroup, String place, boolean addNavigationGroup);
 
-    @Nonnull
-    ActionCallback select(@Nonnull TabInfo info, boolean requestFocus);
+    
+    ActionCallback select(TabInfo info, boolean requestFocus);
 
     @Nullable
     TabInfo getSelectedInfo();
 
-    @Nonnull
+    
     TabInfo getTabAt(int tabIndex);
 
     int getTabCount();
 
-    @Nonnull
+    
     JBTabsPresentation getPresentation();
 
     @Nullable
     TabInfo getTargetInfo();
 
-    @Nonnull
-    JBTabs addTabMouseListener(@Nonnull MouseListener listener);
+    
+    JBTabs addTabMouseListener(MouseListener listener);
 
-    JBTabs addListener(@Nonnull TabsListener listener);
+    JBTabs addListener(TabsListener listener);
 
     JBTabs setSelectionChangeHandler(SelectionChangeHandler handler);
 
-    @Nonnull
+    
     JComponent getComponent();
 
     @Nullable
@@ -93,7 +92,7 @@ public interface JBTabs {
     void processDropOver(TabInfo over, RelativePoint point);
 
     interface SelectionChangeHandler {
-        @Nonnull
-        ActionCallback execute(TabInfo info, boolean requestFocus, @Nonnull ActiveRunnable doChangeSelection);
+        
+        ActionCallback execute(TabInfo info, boolean requestFocus, ActiveRunnable doChangeSelection);
     }
 }

@@ -9,8 +9,7 @@ import consulo.language.editor.postfixTemplate.PostfixTemplatesUtils;
 import consulo.language.editor.surroundWith.Surrounder;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base for surrounding postfix templates that utilize existing {@link Surrounder} implementations.
@@ -19,31 +18,31 @@ import jakarta.annotation.Nullable;
  */
 public abstract class SurroundPostfixTemplateBase extends PostfixTemplateWithExpressionSelector {
 
-  @Nonnull
+  
   protected final PostfixTemplatePsiInfo myPsiInfo;
 
   /**
    * @deprecated use {@link #SurroundPostfixTemplateBase(String, String, PostfixTemplatePsiInfo, PostfixTemplateExpressionSelector, PostfixTemplateProvider)}
    */
   @Deprecated(forRemoval = true)
-  protected SurroundPostfixTemplateBase(@Nonnull String name,
-                                        @Nonnull String descr,
-                                        @Nonnull PostfixTemplatePsiInfo psiInfo,
-                                        @Nonnull PostfixTemplateExpressionSelector selector) {
+  protected SurroundPostfixTemplateBase(String name,
+                                        String descr,
+                                        PostfixTemplatePsiInfo psiInfo,
+                                        PostfixTemplateExpressionSelector selector) {
     this(name, descr, psiInfo, selector, null);
   }
 
-  protected SurroundPostfixTemplateBase(@Nonnull String name,
-                                        @Nonnull String descr,
-                                        @Nonnull PostfixTemplatePsiInfo psiInfo,
-                                        @Nonnull PostfixTemplateExpressionSelector selector,
+  protected SurroundPostfixTemplateBase(String name,
+                                        String descr,
+                                        PostfixTemplatePsiInfo psiInfo,
+                                        PostfixTemplateExpressionSelector selector,
                                         @Nullable PostfixTemplateProvider provider) {
     super(null, name, descr, selector, provider);
     myPsiInfo = psiInfo;
   }
 
   @Override
-  public final void expandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
+  public final void expandForChooseExpression(PsiElement expression, Editor editor) {
     PsiElement replace = getReplacedExpression(expression);
     TextRange range = PostfixTemplatesUtils.surround(getSurrounder(), editor, replace);
 
@@ -52,7 +51,7 @@ public abstract class SurroundPostfixTemplateBase extends PostfixTemplateWithExp
     }
   }
 
-  protected PsiElement getReplacedExpression(@Nonnull PsiElement expression) {
+  protected PsiElement getReplacedExpression(PsiElement expression) {
     PsiElement wrappedExpression = getWrappedExpression(expression);
     return expression.replace(wrappedExpression);
   }
@@ -68,17 +67,17 @@ public abstract class SurroundPostfixTemplateBase extends PostfixTemplateWithExp
     return myPsiInfo.createExpression(expression, getHead(), getTail());
   }
 
-  @Nonnull
+  
   protected String getHead() {
     return "";
   }
 
-  @Nonnull
+  
   protected String getTail() {
     return "";
   }
 
-  @Nonnull
+  
   protected abstract Surrounder getSurrounder();
 }
 

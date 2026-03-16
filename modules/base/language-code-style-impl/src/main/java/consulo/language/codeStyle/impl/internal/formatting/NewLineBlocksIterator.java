@@ -21,8 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.codeStyle.Block;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.Iterator;
@@ -40,11 +39,11 @@ public class NewLineBlocksIterator implements Iterator<Block> {
   private final Stack<Block> myStack = new Stack<>();
 
   @TestOnly
-  public NewLineBlocksIterator(@Nonnull Block root, @Nonnull Document document) {
+  public NewLineBlocksIterator(Block root, Document document) {
     this(root, document, null);
   }
 
-  public NewLineBlocksIterator(@Nonnull Block root, @Nonnull Document document, @Nullable ProgressIndicator indicator) {
+  public NewLineBlocksIterator(Block root, Document document, @Nullable ProgressIndicator indicator) {
     myStack.add(root);
     myDocument = document;
     myTotalLines = myDocument.getLineCount();

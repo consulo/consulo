@@ -17,14 +17,12 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 01/08/2021
  */
 public final class AttachEvent extends ComponentEvent<Component> {
-  public AttachEvent(@Nonnull Component component) {
+  public AttachEvent(Component component) {
     super(component);
   }
 }

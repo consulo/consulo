@@ -15,7 +15,6 @@
  */
 package consulo.compiler.artifact.element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,5 +24,5 @@ public interface RenameablePackagingElement {
 
   boolean canBeRenamed();
 
-  void rename(@Nonnull String newName);
+  void rename(String newName);
 }

@@ -27,8 +27,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
@@ -39,7 +38,7 @@ import java.util.function.Function;
 public abstract class StubTreeLoader {
   private static final PerApplicationInstance<StubTreeLoader> ourInstance = PerApplicationInstance.of(StubTreeLoader.class);
 
-  @Nonnull
+  
   public static StubTreeLoader getInstance() {
     return ourInstance.get();
   }
@@ -54,20 +53,20 @@ public abstract class StubTreeLoader {
 
   public abstract boolean canHaveStub(VirtualFile file);
 
-  protected boolean hasPsiInManyProjects(@Nonnull VirtualFile virtualFile) {
+  protected boolean hasPsiInManyProjects(VirtualFile virtualFile) {
     return false;
   }
 
   @Nullable
-  protected IndexingStampInfo getIndexingStampInfo(@Nonnull VirtualFile file) {
+  protected IndexingStampInfo getIndexingStampInfo(VirtualFile file) {
     return null;
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public abstract RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, @Nullable Throwable cause);
+  public abstract RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, PsiFileWithStubSupport psiFile, @Nullable Throwable cause);
 
-  public static String getFileViewProviderMismatchDiagnostics(@Nonnull FileViewProvider provider) {
+  public static String getFileViewProviderMismatchDiagnostics(FileViewProvider provider) {
     Function<PsiFile, String> fileClassName = file -> file.getClass().getSimpleName();
     Function<Pair<IStubFileElementType, PsiFile>, String> stubRootToString = pair -> "(" + pair.first.toString() + ", " + pair.first.getLanguage() + " -> " + fileClassName.apply(pair.second) + ")";
     List<Pair<IStubFileElementType, PsiFile>> roots = StubTreeBuilder.getStubbedRoots(provider);

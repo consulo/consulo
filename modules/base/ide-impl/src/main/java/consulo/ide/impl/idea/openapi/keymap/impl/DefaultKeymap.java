@@ -30,7 +30,6 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -60,7 +59,7 @@ public class DefaultKeymap {
     }
 
     @Inject
-    public DefaultKeymap(@Nonnull Application application) {
+    public DefaultKeymap(Application application) {
         for (BundledKeymapProvider provider : application.getExtensionPoint(BundledKeymapProvider.class).getExtensionList()) {
             for (String keymapFile : provider.getKeymapFiles()) {
                 try {
@@ -96,7 +95,7 @@ public class DefaultKeymap {
         return myKeymaps;
     }
 
-    @Nonnull
+    
     public String getDefaultKeymapName() {
         PlatformOperatingSystem os = Platform.current().os();
 

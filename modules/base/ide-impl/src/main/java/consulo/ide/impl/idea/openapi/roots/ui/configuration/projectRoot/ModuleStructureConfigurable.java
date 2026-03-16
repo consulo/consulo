@@ -58,8 +58,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -159,7 +158,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     @Override
-    @Nonnull
     protected List<AnAction> createActions(boolean fromPopup) {
         List<AnAction> result = super.createActions(fromPopup);
         result.add(AnSeparator.getInstance());
@@ -177,7 +175,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         myUiDisposed = false;
     }
 
-    @Nonnull
     @Override
     @RequiredReadAction
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
@@ -328,7 +325,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+    public JComponent createComponent(Disposable parentUIDisposable) {
         return new MyDataProviderWrapper(super.createComponent(parentUIDisposable));
     }
 
@@ -342,7 +339,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         return false;
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectLocalize.projectRootsDisplayName();
@@ -469,7 +465,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     }
 
     @Override
-    @Nonnull
     public String getId() {
         return ID;
     }
@@ -512,7 +507,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.lazy(LangDataKeys.MODULE_CONTEXT_ARRAY, () -> {
                 TreePath[] paths = myTree.getSelectionPaths();
                 if (paths != null) {
@@ -543,7 +538,7 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
             LocalizeValue text = ProjectLocalize.projectRootsPlainModeActionTextDisabled();
@@ -560,13 +555,13 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myPlainMode;
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myPlainMode = state;
             DefaultMutableTreeNode selection = null;
             TreePath selectionPath = myTree.getSelectionPath();
@@ -602,7 +597,6 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
     protected AbstractAddGroup createAddAction() {
         return new AbstractAddGroup(ProjectLocalize.addNewHeaderText()) {
             @Override
-            @Nonnull
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
 
                 ArrayList<AnAction> result = new ArrayList<>();
@@ -667,13 +661,13 @@ public class ModuleStructureConfigurable extends BaseStructureConfigurable imple
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             addModule(myImport);
         }
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             if (myImport) {
                 Presentation presentation = e.getPresentation();

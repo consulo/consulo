@@ -23,8 +23,7 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.HashSet;
 import java.util.List;
@@ -42,8 +41,8 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   @Override
-  public boolean checkReportedProblems(@Nonnull GlobalInspectionContextImpl context,
-                                       @Nonnull InspectionToolWrapper toolWrapper) {
+  public boolean checkReportedProblems(GlobalInspectionContextImpl context,
+                                       InspectionToolWrapper toolWrapper) {
     InspectionToolPresentation presentation = context.getPresentation(toolWrapper);
     presentation.updateContent();
     return presentation.hasReportedProblems();
@@ -51,7 +50,7 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
 
   @Override
   @Nullable
-  public QuickFixAction[] getQuickFixes(@Nonnull InspectionToolWrapper toolWrapper, @Nonnull InspectionTree tree) {
+  public QuickFixAction[] getQuickFixes(InspectionToolWrapper toolWrapper, InspectionTree tree) {
     RefEntity[] refEntities = tree.getSelectedElements();
     InspectionToolPresentation presentation = tree.getContext().getPresentation(toolWrapper);
     return refEntities.length == 0 ? null : presentation.getQuickFixes(refEntities);
@@ -59,12 +58,12 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
 
 
   @Override
-  public void appendToolNodeContent(@Nonnull GlobalInspectionContextImpl context,
-                                    @Nonnull InspectionNode toolNode,
-                                    @Nonnull InspectionTreeNode parentNode,
+  public void appendToolNodeContent(GlobalInspectionContextImpl context,
+                                    InspectionNode toolNode,
+                                    InspectionTreeNode parentNode,
                                     boolean showStructure,
-                                    @Nonnull Map<String, Set<RefEntity>> contents,
-                                    @Nonnull Map<RefEntity, CommonProblemDescriptor[]> problems,
+                                    Map<String, Set<RefEntity>> contents,
+                                    Map<RefEntity, CommonProblemDescriptor[]> problems,
                                     DefaultTreeModel model) {
     InspectionToolWrapper toolWrapper = toolNode.getToolWrapper();
 
@@ -99,10 +98,10 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   @Override
-  protected void appendDescriptor(@Nonnull GlobalInspectionContextImpl context,
-                                  @Nonnull InspectionToolWrapper toolWrapper,
-                                  @Nonnull UserObjectContainer container,
-                                  @Nonnull InspectionPackageNode pNode,
+  protected void appendDescriptor(GlobalInspectionContextImpl context,
+                                  InspectionToolWrapper toolWrapper,
+                                  UserObjectContainer container,
+                                  InspectionPackageNode pNode,
                                   boolean canPackageRepeat) {
     RefElementContainer refElementDescriptor = (RefElementContainer)container;
     RefEntity refElement = refElementDescriptor.getUserObject();
@@ -135,11 +134,11 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
   }
 
   private static class RefElementContainer implements UserObjectContainer<RefEntity> {
-    @Nonnull
+    
     private final RefEntity myElement;
     private final CommonProblemDescriptor[] myDescriptors;
 
-    public RefElementContainer(@Nonnull RefEntity element, CommonProblemDescriptor[] descriptors) {
+    public RefElementContainer(RefEntity element, CommonProblemDescriptor[] descriptors) {
       myElement = element;
       myDescriptors = descriptors;
     }
@@ -154,14 +153,14 @@ public class InspectionRVContentProviderImpl extends InspectionRVContentProvider
       return null;
     }
 
-    @Nonnull
+    
     @Override
-    public RefElementNode createNode(@Nonnull InspectionToolPresentation presentation) {
+    public RefElementNode createNode(InspectionToolPresentation presentation) {
       return new RefElementNode(myElement, presentation);
     }
 
     @Override
-    @Nonnull
+    
     public RefEntity getUserObject() {
       return myElement;
     }

@@ -8,29 +8,28 @@ import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessListener;
 import consulo.process.internal.RawExitCodeGetterProcessHandler;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
 public final class CapturingProcessRunner {
-  @Nonnull
+  
   private final ProcessOutput myOutput;
-  @Nonnull
+  
   private final ProcessHandler myProcessHandler;
-  @Nonnull
+  
   private static final Logger LOG = Logger.getInstance(CapturingProcessRunner.class);
 
-  public CapturingProcessRunner(@Nonnull ProcessHandler processHandler) {
+  public CapturingProcessRunner(ProcessHandler processHandler) {
     this(processHandler, CapturingProcessAdapter::new);
   }
 
-  public CapturingProcessRunner(@Nonnull ProcessHandler processHandler, @Nonnull Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
+  public CapturingProcessRunner(ProcessHandler processHandler, Function<? super ProcessOutput, ? extends ProcessListener> processAdapterProducer) {
     myOutput = new ProcessOutput();
     myProcessHandler = processHandler;
     myProcessHandler.addProcessListener(processAdapterProducer.apply(myOutput));
   }
 
-  @Nonnull
+  
   public ProcessOutput runProcess() {
     myProcessHandler.startNotify();
     if (myProcessHandler.waitFor()) {
@@ -42,12 +41,12 @@ public final class CapturingProcessRunner {
     return myOutput;
   }
 
-  @Nonnull
+  
   public ProcessOutput runProcess(int timeoutInMilliseconds) {
     return runProcess(timeoutInMilliseconds, true);
   }
 
-  @Nonnull
+  
   public ProcessOutput runProcess(int timeoutInMilliseconds, boolean destroyOnTimeout) {
     // keep in sync with runProcessWithProgressIndicator
     if (timeoutInMilliseconds <= 0) {
@@ -68,18 +67,18 @@ public final class CapturingProcessRunner {
     }
   }
 
-  @Nonnull
-  public ProcessOutput runProcess(@Nonnull ProgressIndicator indicator) {
+  
+  public ProcessOutput runProcess(ProgressIndicator indicator) {
     return runProcess(indicator, -1);
   }
 
-  @Nonnull
-  public ProcessOutput runProcess(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds) {
+  
+  public ProcessOutput runProcess(ProgressIndicator indicator, int timeoutInMilliseconds) {
     return runProcess(indicator, timeoutInMilliseconds, true);
   }
 
-  @Nonnull
-  public ProcessOutput runProcess(@Nonnull ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
+  
+  public ProcessOutput runProcess(ProgressIndicator indicator, int timeoutInMilliseconds, boolean destroyOnTimeout) {
     // keep in sync with runProcess
     if (timeoutInMilliseconds <= 0) {
       timeoutInMilliseconds = Integer.MAX_VALUE;

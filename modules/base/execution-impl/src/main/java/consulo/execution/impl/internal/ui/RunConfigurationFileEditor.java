@@ -21,7 +21,6 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class RunConfigurationFileEditor extends ConfigurableFileEditor<RunConfig
     }
 
     @Override
-    public void onUpdateRequestParams(@Nonnull Map<String, String> params) {
+    public void onUpdateRequestParams(Map<String, String> params) {
 
         RunConfiguration selected = null;
         String preselectedId = params.get(RunConfigurationEditorProvider.RUN_CONFIGURATION_ID);
@@ -56,7 +55,7 @@ public class RunConfigurationFileEditor extends ConfigurableFileEditor<RunConfig
         }
     }
 
-    @Nonnull
+    
     @Override
     protected RunConfigurable createConfigurable() {
         return new RunConfigurable(myProject);

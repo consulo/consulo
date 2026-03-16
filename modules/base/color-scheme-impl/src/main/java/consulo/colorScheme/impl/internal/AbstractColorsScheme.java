@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.awt.*;
@@ -46,11 +45,11 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     protected FontSize myQuickDocFontSize = DEFAULT_FONT_SIZE;
     protected float myLineSpacing;
 
-    @Nonnull
+    
     private final Map<EditorFontType, Font> myFonts = new EnumMap<>(EditorFontType.class);
-    @Nonnull
+    
     private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
-    @Nonnull
+    
     private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
 
     private final ValueElementReader myValueReader = new TextAttributesReader();
@@ -88,27 +87,27 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     private static final String CONSOLE_LIGATURES = "CONSOLE_LIGATURES";
     private static final String EDITOR_QUICK_JAVADOC_FONT_SIZE = "EDITOR_QUICK_DOC_FONT_SIZE";
 
-    protected AbstractColorsScheme(@Nullable EditorColorsScheme parentScheme, @Nonnull EditorColorsManager editorColorsManager) {
+    protected AbstractColorsScheme(@Nullable EditorColorsScheme parentScheme, EditorColorsManager editorColorsManager) {
         myParentScheme = parentScheme;
         myEditorColorsManager = editorColorsManager;
         myFontPreferences.setChangeListener(() -> initFonts());
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getDefaultBackground() {
         ColorValue c = getAttributes(StandardTextAttributesKeys.TEXT).getBackgroundColor();
         return c != null ? c : StandardColors.WHITE;
     }
 
-    @Nonnull
+    
     @Override
     public ColorValue getDefaultForeground() {
         ColorValue c = getAttributes(StandardTextAttributesKeys.TEXT).getForegroundColor();
         return c != null ? c : StandardColors.BLACK;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return mySchemeName;
@@ -155,7 +154,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
     @Override
-    public void setQuickDocFontSize(@Nonnull FontSize fontSize) {
+    public void setQuickDocFontSize(FontSize fontSize) {
         myQuickDocFontSize = fontSize;
     }
 
@@ -174,18 +173,18 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
     @Override
-    public void setName(@Nonnull String name) {
+    public void setName(String name) {
         mySchemeName = name;
     }
 
-    @Nonnull
+    
     @Override
     public FontPreferences getFontPreferences() {
         return myFontPreferences;
     }
 
     @Override
-    public void setFontPreferences(@Nonnull FontPreferences preferences) {
+    public void setFontPreferences(FontPreferences preferences) {
         preferences.copyTo(myFontPreferences);
         initFonts();
     }
@@ -213,7 +212,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         return myFontPreferences.getSize(getEditorFontName());
     }
 
-    @Nonnull
+    
     @Override
     public FontSize getQuickDocFontSize() {
         return myQuickDocFontSize;
@@ -334,7 +333,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         initFonts();
     }
 
-    protected void readAttributes(@Nonnull Element childNode) {
+    protected void readAttributes(Element childNode) {
         for (Element e : childNode.getChildren(OPTION_ELEMENT)) {
             TextAttributesKey name = TextAttributesKey.find(e.getAttributeValue(NAME_ATTR));
             TextAttributes attr = new TextAttributes(e.getChild(VALUE_ELEMENT));
@@ -432,7 +431,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         }
     }
 
-    private static void readFontSettings(@Nonnull Element element, @Nonnull FontPreferencesImpl preferences) {
+    private static void readFontSettings(Element element, FontPreferencesImpl preferences) {
         List children = element.getChildren(OPTION_ELEMENT);
         String fontFamily = null;
         int size = -1;
@@ -557,7 +556,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
     }
 
 
-    private static void writeFontPreferences(@Nonnull String key, @Nonnull Element parent, @Nonnull FontPreferences preferences) {
+    private static void writeFontPreferences(String key, Element parent, FontPreferences preferences) {
         for (String fontFamily : preferences.getRealFontFamilies()) {
             Element element = new Element(key);
             Element e = new Element(OPTION_ELEMENT);
@@ -642,14 +641,14 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
 
     }
 
-    @Nonnull
+    
     @Override
     public FontPreferences getConsoleFontPreferences() {
         return myConsoleFontPreferences;
     }
 
     @Override
-    public void setConsoleFontPreferences(@Nonnull FontPreferences preferences) {
+    public void setConsoleFontPreferences(FontPreferences preferences) {
         preferences.copyTo(myConsoleFontPreferences);
         initFonts();
     }
@@ -723,7 +722,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         return myAttributesMap.containsKey(key);
     }
 
-    public boolean setColorValueIfNew(@Nonnull EditorColorKey colorKey, @Nonnull ColorValue colorValue) {
+    public boolean setColorValueIfNew(EditorColorKey colorKey, ColorValue colorValue) {
         if (myColorsMap.containsKey(colorKey)) {
             return false;
         }
@@ -732,7 +731,7 @@ public abstract class AbstractColorsScheme implements EditorColorsScheme {
         return true;
     }
 
-    public boolean setTextAttributesIfNew(@Nonnull TextAttributesKey key, @Nonnull TextAttributes attributes) {
+    public boolean setTextAttributesIfNew(TextAttributesKey key, TextAttributes attributes) {
         if (myAttributesMap.containsKey(key)) {
             return false;
         }

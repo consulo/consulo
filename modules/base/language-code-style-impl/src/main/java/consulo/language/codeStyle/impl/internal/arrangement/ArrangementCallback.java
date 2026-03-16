@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.impl.internal.arrangement;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,5 +29,5 @@ public interface ArrangementCallback {
    * 
    * @param moveInfos  information about the changes performed during arrangement
    */
-  void afterArrangement(@Nonnull List<ArrangementMoveInfo> moveInfos);
+  void afterArrangement(List<ArrangementMoveInfo> moveInfos);
 }

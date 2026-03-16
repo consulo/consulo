@@ -18,8 +18,7 @@ package consulo.execution.process;
 import consulo.process.event.ProcessListener;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.function.Function;
@@ -99,11 +98,11 @@ public class ExecutionMode {
     }
   }
 
-  public void addProcessListener(@Nonnull ProcessListener listener) {
+  public void addProcessListener(ProcessListener listener) {
     myListeners.add(listener);
   }
 
-  @Nonnull
+  
   public List<ProcessListener> getProcessListeners() {
     return myListeners;
   }

@@ -32,7 +32,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = IdeActions.ACTION_ANALYZE_DEPENDENCIES,
@@ -52,7 +51,7 @@ public class AnalyzeDependenciesAction extends BaseAnalysisAction {
     }
 
     @Override
-    protected void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope) {
+    protected void analyze(Project project, AnalysisScope scope) {
         new AnalyzeDependenciesHandler(
             project,
             scope,

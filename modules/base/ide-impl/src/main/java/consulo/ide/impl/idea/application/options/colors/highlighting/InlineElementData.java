@@ -8,8 +8,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.ide.impl.idea.codeInsight.hints.HintRenderer;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -37,7 +36,7 @@ public final class InlineElementData extends HighlightData {
         int offset = getStartOffset();
         RendererWrapper renderer = new RendererWrapper(new HintRenderer(myText) {
             @Override
-            protected @Nullable TextAttributes getTextAttributes(@Nonnull Editor editor) {
+            protected @Nullable TextAttributes getTextAttributes(Editor editor) {
                 return editor.getColorsScheme().getAttributes(getHighlightKey());
             }
         }, myAddBorder);
@@ -45,7 +44,7 @@ public final class InlineElementData extends HighlightData {
     }
 
     @Override
-    public void addToCollection(@Nonnull Collection<? super HighlightData> list, boolean highlighted) {
+    public void addToCollection(Collection<? super HighlightData> list, boolean highlighted) {
         list.add(new InlineElementData(getStartOffset(), getHighlightKey(), myText, highlighted, getAdditionalColorKey()));
     }
 }

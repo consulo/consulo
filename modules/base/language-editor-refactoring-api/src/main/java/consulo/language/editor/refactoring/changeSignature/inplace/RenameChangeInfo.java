@@ -23,8 +23,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.editor.refactoring.changeSignature.ChangeInfo;
 import consulo.language.editor.refactoring.changeSignature.ParameterInfo;
 import consulo.language.editor.refactoring.rename.RenameProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class RenameChangeInfo implements ChangeInfo {
   private final PsiFile myFile;
@@ -37,7 +36,7 @@ public abstract class RenameChangeInfo implements ChangeInfo {
     myOffset = namedElement.getTextOffset();
   }
 
-  @Nonnull
+  
   @Override
   public ParameterInfo[] getNewParameters() {
     return new ParameterInfo[0];

@@ -18,8 +18,7 @@ package consulo.versionControlSystem.log.impl.internal.ui.filter;
 import consulo.versionControlSystem.log.VcsLogDataPack;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,18 +26,18 @@ import java.util.List;
 import java.util.function.Supplier;
 
 abstract class FilterModel<Filter extends VcsLogFilter> {
-  @Nonnull
+  
   private final String myName;
-  @Nonnull
+  
   protected final MainVcsLogUiProperties myUiProperties;
-  @Nonnull
+  
   private final Supplier<VcsLogDataPack> myDataPackProvider;
-  @Nonnull
+  
   private final Collection<Runnable> mySetFilterListeners = new ArrayList<>();
 
   @Nullable private Filter myFilter;
 
-  FilterModel(@Nonnull String name, @Nonnull Supplier<VcsLogDataPack> provider, @Nonnull MainVcsLogUiProperties uiProperties) {
+  FilterModel(String name, Supplier<VcsLogDataPack> provider, MainVcsLogUiProperties uiProperties) {
     myName = name;
     myUiProperties = uiProperties;
     myDataPackProvider = provider;
@@ -65,10 +64,10 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
   }
 
   @Nullable
-  protected abstract Filter createFilter(@Nonnull List<String> values);
+  protected abstract Filter createFilter(List<String> values);
 
-  @Nonnull
-  protected abstract List<String> getFilterValues(@Nonnull Filter filter);
+  
+  protected abstract List<String> getFilterValues(Filter filter);
 
   @Nullable
   protected Filter getLastFilter() {
@@ -79,12 +78,12 @@ abstract class FilterModel<Filter extends VcsLogFilter> {
     return null;
   }
 
-  @Nonnull
+  
   VcsLogDataPack getDataPack() {
     return myDataPackProvider.get();
   }
 
-  void addSetFilterListener(@Nonnull Runnable runnable) {
+  void addSetFilterListener(Runnable runnable) {
     mySetFilterListeners.add(runnable);
   }
 }

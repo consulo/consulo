@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLoadingPanel;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -33,18 +32,18 @@ import java.util.List;
 
 public abstract class CommitSelectionListener implements ListSelectionListener {
   private final static Logger LOG = Logger.getInstance(CommitSelectionListener.class);
-  @Nonnull
+  
   private final VcsLogDataImpl myLogData;
-  @Nonnull
+  
   protected final VcsLogGraphTable myGraphTable;
-  @Nonnull
+  
   private final JBLoadingPanel myLoadingPanel;
 
   @Nullable private ListSelectionEvent myLastEvent;
   @Nullable
   private ProgressIndicator myLastRequest;
 
-  protected CommitSelectionListener(@Nonnull VcsLogDataImpl data, @Nonnull VcsLogGraphTable table, @Nonnull JBLoadingPanel panel) {
+  protected CommitSelectionListener(VcsLogDataImpl data, VcsLogGraphTable table, JBLoadingPanel panel) {
     myLogData = data;
     myGraphTable = table;
     myLoadingPanel = panel;
@@ -88,16 +87,16 @@ public abstract class CommitSelectionListener implements ListSelectionListener {
     }
   }
 
-  @Nonnull
+  
   protected List<Integer> getSelectionToLoad() {
     return Ints.asList(myGraphTable.getSelectedRows());
   }
 
   @RequiredUIAccess
-  protected abstract void onDetailsLoaded(@Nonnull List<VcsFullCommitDetails> detailsList);
+  protected abstract void onDetailsLoaded(List<VcsFullCommitDetails> detailsList);
 
   @RequiredUIAccess
-  protected abstract void onSelection(@Nonnull int[] selection);
+  protected abstract void onSelection(int[] selection);
 
   @RequiredUIAccess
   protected abstract void onEmptySelection();

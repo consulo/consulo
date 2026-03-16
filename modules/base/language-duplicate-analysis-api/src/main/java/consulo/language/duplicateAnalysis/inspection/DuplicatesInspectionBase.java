@@ -52,8 +52,7 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntLongHashMap;
 import gnu.trove.TIntObjectHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -66,7 +65,7 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
 
   @Nullable
   @Override
-  public ProblemDescriptor[] checkFile(@Nonnull PsiFile psiFile, @Nonnull InspectionManager manager, boolean isOnTheFly) {
+  public ProblemDescriptor[] checkFile(PsiFile psiFile, InspectionManager manager, boolean isOnTheFly) {
     VirtualFile virtualFile = psiFile.getVirtualFile();
     if (!(virtualFile instanceof VirtualFileWithId) || /*!isOnTheFly || */!DuplicatesIndex.ourEnabled) return ProblemDescriptor.EMPTY_ARRAY;
     DuplicatesProfile profile = DuplicatesIndex.findDuplicatesProfile(psiFile.getFileType());
@@ -172,7 +171,7 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
     return processorRef.get();
   }
 
-  protected LocalQuickFix createNavigateToDupeFix(@Nonnull VirtualFile file, int offsetInOtherFile) {
+  protected LocalQuickFix createNavigateToDupeFix(VirtualFile file, int offsetInOtherFile) {
     return null;
   }
 
@@ -180,7 +179,7 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
     return null;
   }
 
-  protected LocalQuickFix createExtractMethodFix(@Nonnull PsiElement targetElement,
+  protected LocalQuickFix createExtractMethodFix(PsiElement targetElement,
                                                  @Nullable TextRange rangeInElement,
                                                  int hash,
                                                  int hash2) {
@@ -190,7 +189,7 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
   private class LightDuplicatedCodeProcessor extends DuplicatedCodeProcessor<LighterASTNode> {
     private final TreeBackedLighterAST myAst;
 
-    private LightDuplicatedCodeProcessor(@Nonnull TreeBackedLighterAST ast, VirtualFile file, Project project) {
+    private LightDuplicatedCodeProcessor(TreeBackedLighterAST ast, VirtualFile file, Project project) {
       super(file, project, myFilterOutGeneratedCode);
       myAst = ast;
     }
@@ -297,7 +296,7 @@ public abstract class DuplicatesInspectionBase extends LocalInspectionTool {
     }
 
     @Override
-    public boolean process(@Nonnull VirtualFile file, IntList list) {
+    public boolean process(VirtualFile file, IntList list) {
       for(int i = 0, len = list.size(); i < len; i+=2) {
         ProgressManager.checkCanceled();
 

@@ -15,8 +15,7 @@
  */
 package consulo.ui.impl.image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Library implementation, used when catch some problem with initializing default libraries
@@ -25,13 +24,13 @@ import jakarta.annotation.Nullable;
  * @since 07-Mar-22
  */
 class ErrorBaseIconLibraryImpl extends BaseIconLibraryImpl {
-  ErrorBaseIconLibraryImpl(@Nonnull BaseIconLibraryManager baseIconLibraryManager) {
+  ErrorBaseIconLibraryImpl(BaseIconLibraryManager baseIconLibraryManager) {
     super("", baseIconLibraryManager);
   }
 
-  @Nonnull
+  
   @Override
-  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+  protected ImageReference createImageReference(byte[] _1xData,
                                                 @Nullable byte[] _2xdata,
                                                 boolean isSVG,
                                                 String groupId,

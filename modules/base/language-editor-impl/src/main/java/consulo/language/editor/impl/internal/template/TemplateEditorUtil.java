@@ -34,8 +34,7 @@ import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -135,14 +134,14 @@ public class TemplateEditorUtil {
         }
 
         @Override
-        @Nonnull
+        
         public Lexer getHighlightingLexer() {
             return myLexer;
         }
 
         @Override
-        @Nonnull
-        public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
+        
+        public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
             if (tokenType == TemplateTokenType.VARIABLE) {
                 return SyntaxHighlighterBase.pack(
                     myOriginalHighlighter.getTokenHighlights(tokenType),

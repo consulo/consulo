@@ -31,8 +31,7 @@ import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -125,7 +124,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
      * {@link Predicate#test(Object) given} as an argument to the strategy)
      */
     @SuppressWarnings("unchecked")
-    @Nonnull
+    
     protected Predicate<Integer> getWideSelectionBackgroundCondition() {
         return Predicates.alwaysTrue();
     }
@@ -135,14 +134,14 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public StatusText getEmptyText() {
         return myEmptyText;
     }
 
     @Override
-    @Nonnull
+    
     public ExpandableItemsHandler<Integer> getExpandableItemsHandler() {
         return myExpandableItemsHandler;
     }
@@ -792,7 +791,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
         UIUtil.setLineStyleAngled(this);
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public <T> T[] getSelectedNodes(Class<T> nodeType, @Nullable NodeFilter<T> filter) {
         TreePath[] paths = getSelectionPaths();
@@ -820,7 +819,7 @@ public class Tree extends JTree implements ComponentWithEmptyText, ComponentWith
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         TreePath[] selection = getSelectionPaths();
         if (selection == null) {
             return;

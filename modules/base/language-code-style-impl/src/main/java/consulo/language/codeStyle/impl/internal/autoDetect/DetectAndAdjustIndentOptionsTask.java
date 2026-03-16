@@ -35,7 +35,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -51,7 +50,7 @@ class DetectAndAdjustIndentOptionsTask {
   private final Project myProject;
   private final TimeStampedIndentOptions myOptionsToAdjust;
 
-  DetectAndAdjustIndentOptionsTask(@Nonnull Project project, @Nonnull Document document, @Nonnull TimeStampedIndentOptions toAdjust) {
+  DetectAndAdjustIndentOptionsTask(Project project, Document document, TimeStampedIndentOptions toAdjust) {
     myProject = project;
     myDocument = document;
     myOptionsToAdjust = toAdjust;
@@ -61,8 +60,8 @@ class DetectAndAdjustIndentOptionsTask {
     return PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
   }
 
-  @Nonnull
-  private Runnable calcIndentAdjuster(@Nonnull ProgressIndicator indicator) {
+  
+  private Runnable calcIndentAdjuster(ProgressIndicator indicator) {
     PsiFile file = getFile();
     IndentOptionsAdjuster adjuster = file == null ? null : new IndentOptionsDetectorImpl(file, indicator).getIndentOptionsAdjuster();
     return adjuster != null ? () -> adjustOptions(adjuster) : EmptyRunnable.INSTANCE;
@@ -109,8 +108,8 @@ class DetectAndAdjustIndentOptionsTask {
     }
   }
 
-  @Nonnull
-  static TimeStampedIndentOptions getDefaultIndentOptions(@Nonnull PsiFile file, @Nonnull Document document) {
+  
+  static TimeStampedIndentOptions getDefaultIndentOptions(PsiFile file, Document document) {
     FileType fileType = file.getFileType();
     CodeStyleSettings settings = CodeStyle.getSettings(file);
     return new TimeStampedIndentOptions(settings.getIndentOptions(fileType), document.getModificationStamp());

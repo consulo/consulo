@@ -11,8 +11,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.RadioButton;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "other_scope", order = "after vcs_scope")
 public final class OtherScopeItemPresenter implements ModelScopeItemPresenter {
@@ -22,7 +21,7 @@ public final class OtherScopeItemPresenter implements ModelScopeItemPresenter {
     return AnalysisScope.FILE;
   }
 
-  @Nonnull
+  
   @Override
   public RadioButton getButton(ModelScopeItem m) {
     OtherScopeItem model = (OtherScopeItem)m;
@@ -55,8 +54,8 @@ public final class OtherScopeItemPresenter implements ModelScopeItemPresenter {
 
   @Override
   @Nullable
-  public ModelScopeItem tryCreate(@Nonnull Project project,
-                                  @Nonnull AnalysisScope scope,
+  public ModelScopeItem tryCreate(Project project,
+                                  AnalysisScope scope,
                                   @Nullable Module module,
                                   @Nullable PsiElement context) {
     return OtherScopeItem.tryCreate(scope);

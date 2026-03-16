@@ -20,7 +20,6 @@ import consulo.language.Language;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class PlainTextSpellcheckingStrategyImpl extends SpellcheckingStrategy {
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return PlainTextLanguage.INSTANCE;

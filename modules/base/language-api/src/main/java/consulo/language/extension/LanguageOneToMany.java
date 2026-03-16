@@ -17,7 +17,6 @@ package consulo.language.extension;
 
 import consulo.component.extension.ExtensionWalker;
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,9 +41,9 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
       walker.walk(extension -> myRawExtension.computeIfAbsent(extension.getLanguage(), i -> new ArrayList<>()).add(extension));
     }
 
-    @Nonnull
+    
     @Override
-    public List<T> get(@Nonnull Language l) {
+    public List<T> get(Language l) {
       return myExtensions.computeIfAbsent(l, language -> {
         Set<T> allExtensions = new HashSet<>();
         // add any
@@ -64,7 +63,7 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
     }
   }
 
-  @Nonnull
+  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<List<E1>>> build(boolean withAnyLanguage) {
     return new LanguageOneToMany<>(withAnyLanguage);
   }

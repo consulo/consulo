@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.fileType;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.nio.charset.Charset;
 
 /**
@@ -26,6 +25,6 @@ import java.nio.charset.Charset;
  * @since 29.04.14
  */
 public interface FileTypeWithPredefinedCharset extends FileType {
-  @Nonnull
-  Pair<Charset, String> getPredefinedCharset(@Nonnull VirtualFile virtualFile);
+  
+  Pair<Charset, String> getPredefinedCharset(VirtualFile virtualFile);
 }

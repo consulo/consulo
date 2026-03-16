@@ -4,7 +4,6 @@ package consulo.ui.ex.awt.internal;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.paint.PaintUtil;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -34,7 +33,7 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
    * @deprecated use {@link #createFrom(Image, float, ImageObserver)} instead
    */
   @Deprecated
-  @Nonnull
+  
   public static Image createFrom(Image image, int scale, ImageObserver observer) {
     return createFrom(image, (float)scale, observer);
   }
@@ -49,39 +48,39 @@ public class RetinaImage { // [tav] todo: create HiDPIImage class
    * @param observer the raw image observer
    * @return the Retina-aware wrapper
    */
-  @Nonnull
+  
   public static Image createFrom(Image image, double scale, ImageObserver observer) {
     int w = image.getWidth(observer);
     int h = image.getHeight(observer);
     return new JBHiDPIScaledImage(image, w / scale, h / scale, BufferedImage.TYPE_INT_ARGB);
   }
 
-  @Nonnull
+  
   public static BufferedImage create(int width, int height, int type) {
     return new JBHiDPIScaledImage(width, height, type);
   }
 
-  @Nonnull
+  
   public static BufferedImage create(Graphics2D g, int width, int height, int type) {
     return new JBHiDPIScaledImage(g, width, height, type);
   }
 
-  @Nonnull
+  
   public static BufferedImage create(Graphics2D g, double width, double height, int type, PaintUtil.RoundingMode rm) {
     return new JBHiDPIScaledImage(g, width, height, type, rm);
   }
 
-  @Nonnull
+  
   public static BufferedImage create(GraphicsConfiguration gc, int width, int height, int type) {
     return new JBHiDPIScaledImage(gc, width, height, type);
   }
 
-  @Nonnull
+  
   public static BufferedImage create(GraphicsConfiguration gc, double width, double height, int type, PaintUtil.RoundingMode rm) {
     return new JBHiDPIScaledImage(gc, width, height, type, rm);
   }
 
-  @Nonnull
+  
   public static BufferedImage create(JBUI.ScaleContext ctx, double width, double height, int type, PaintUtil.RoundingMode rm) {
     return new JBHiDPIScaledImage(ctx, width, height, type, rm);
   }

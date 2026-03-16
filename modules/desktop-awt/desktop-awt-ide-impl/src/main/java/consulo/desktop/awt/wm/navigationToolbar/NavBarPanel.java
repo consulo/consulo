@@ -57,8 +57,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -104,7 +103,7 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
     private boolean myDisposed = false;
     private RelativePoint myLocationCache;
 
-    public NavBarPanel(@Nonnull Project project, boolean docked) {
+    public NavBarPanel(Project project, boolean docked) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
         myProject = project;
         myModel = createModel();
@@ -440,12 +439,11 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         }
     }
 
-    void installPopupHandler(@Nonnull JComponent component, int index) {
+    void installPopupHandler(JComponent component, int index) {
         ActionManager actionManager = ActionManager.getInstance();
         PopupHandler.installPopupHandler(
             component,
             new ActionGroup() {
-                @Nonnull
                 @Override
                 public AnAction[] getChildren(@Nullable AnActionEvent e) {
                     if (e == null) {
@@ -681,9 +679,8 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         }
     }
 
-    @Nullable
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myProject.isDisposed()) {
             return;
         }
@@ -701,7 +698,6 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         sink.set(IdeView.KEY, myIdeView);
     }
 
-    @Nonnull
     JBIterable<?> getSelection() {
         Object value = myModel.getSelectedValue();
         if (value != null) {
@@ -711,8 +707,7 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         return JBIterable.of(size > 0 ? myModel.getElement(size - 1) : null);
     }
 
-    @Nonnull
-    private CopyPasteSupport getCopyPasteDelegator(@Nonnull JComponent source) {
+    private CopyPasteSupport getCopyPasteDelegator(JComponent source) {
         String key = "NavBarPanel.copyPasteDelegator";
         Object result = source.getClientProperty(key);
         if (!(result instanceof CopyPasteSupport)) {
@@ -852,7 +847,7 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < myList.size(); i++) {
             NavBarItem each = myList.get(i);
@@ -889,7 +884,6 @@ public class NavBarPanel extends JPanel implements UiDataProvider, PopupOwner, D
         }
     }
 
-    @Nonnull
     public NavBarUI getNavBarUI() {
         return NavBarUIManager.getUI();
     }

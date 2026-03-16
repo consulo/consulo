@@ -34,7 +34,6 @@ import consulo.versionControlSystem.change.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.io.File;
@@ -61,12 +60,12 @@ public class ChangelistConflictTracker {
   private final Set<VirtualFile> myCheckSet;
   private final Object myCheckSetLock;
 
-  public ChangelistConflictTracker(@Nonnull Project project,
-                                   @Nonnull ChangeListManager changeListManager,
-                                   @Nonnull FileStatusManager fileStatusManager,
-                                   @Nonnull EditorNotifications editorNotifications,
-                                   @Nonnull ApplicationConcurrency applicationConcurrency,
-                                   @Nonnull FileDocumentManager fileDocumentManager) {
+  public ChangelistConflictTracker(Project project,
+                                   ChangeListManager changeListManager,
+                                   FileStatusManager fileStatusManager,
+                                   EditorNotifications editorNotifications,
+                                   ApplicationConcurrency applicationConcurrency,
+                                   FileDocumentManager fileDocumentManager) {
     myProject = project;
 
     myChangeListManager = changeListManager;
@@ -168,7 +167,7 @@ public class ChangelistConflictTracker {
     }
   }
 
-  public boolean isWritingAllowed(@Nonnull VirtualFile file) {
+  public boolean isWritingAllowed(VirtualFile file) {
     if (isFromActiveChangelist(file)) return true;
     Conflict conflict = myConflicts.get(file.getPath());
     return conflict != null && conflict.ignored;
@@ -257,7 +256,7 @@ public class ChangelistConflictTracker {
     boolean ignored;
   }
 
-  public boolean hasConflict(@Nonnull VirtualFile file) {
+  public boolean hasConflict(VirtualFile file) {
     if (!myOptions.TRACKING_ENABLED) {
       return false;
     }
@@ -275,7 +274,7 @@ public class ChangelistConflictTracker {
     }
   }
 
-  public void ignoreConflict(@Nonnull VirtualFile file, boolean ignore) {
+  public void ignoreConflict(VirtualFile file, boolean ignore) {
     String path = file.getPath();
     Conflict conflict = myConflicts.get(path);
     if (conflict == null) {

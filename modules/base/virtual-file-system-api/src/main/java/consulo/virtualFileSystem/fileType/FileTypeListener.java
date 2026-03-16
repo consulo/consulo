@@ -18,16 +18,15 @@ package consulo.virtualFileSystem.fileType;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
 @TopicAPI(ComponentScope.APPLICATION)
 public interface FileTypeListener extends EventListener {
-  default void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
+  default void beforeFileTypesChanged(FileTypeEvent event) {
   }
 
-  default void fileTypesChanged(@Nonnull FileTypeEvent event) {
+  default void fileTypesChanged(FileTypeEvent event) {
   }
 
   /**

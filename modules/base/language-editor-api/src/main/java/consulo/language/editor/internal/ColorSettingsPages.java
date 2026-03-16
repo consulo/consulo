@@ -22,7 +22,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Registry for custom pages shown in the "Colors and Fonts" settings dialog.

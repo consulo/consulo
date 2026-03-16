@@ -18,10 +18,6 @@ package consulo.ide.impl.idea.ide.impl;
 import consulo.application.ApplicationManager;
 import consulo.content.ContentIterator;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
-import consulo.util.io.FileUtil;
-import consulo.util.lang.Comparing;
-import consulo.util.lang.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -32,11 +28,13 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -70,7 +68,7 @@ public class PatchProjectUtil {
         iterate(contentRoot, new ContentIterator() {
           @Override
           public boolean processFile(VirtualFile fileOrDir) {
-            String relativeName = VfsUtilCore.getRelativePath(fileOrDir, contentRoot, '/');
+            String relativeName = VirtualFileUtil.getRelativePath(fileOrDir, contentRoot, '/');
             for (Pattern module : excludePatterns.keySet()) {
               if (module == null || module.matcher(modules[idx].getName()).matches()) {
                 Set<Pattern> dirPatterns = excludePatterns.get(module);
@@ -120,7 +118,7 @@ public class PatchProjectUtil {
       for (VirtualFile toExclude : parent.getChildren()) {  // if it will ever dead-loop on symlink blame anna.kozlova
         boolean toExcludeSibling = true;
         for (VirtualFile includeRoot : included) {
-          if (VfsUtilCore.isAncestor(toExclude, includeRoot, false)) {
+          if (VirtualFileUtil.isAncestor(toExclude, includeRoot, false)) {
             toExcludeSibling = false;
           }
         }
@@ -133,9 +131,9 @@ public class PatchProjectUtil {
   }
 
   public static void iterate(VirtualFile contentRoot, final ContentIterator iterator, final ProjectFileIndex idx) {
-    VfsUtilCore.visitChildrenRecursively(contentRoot, new VirtualFileVisitor() {
+    VirtualFileUtil.visitChildrenRecursively(contentRoot, new VirtualFileVisitor() {
       @Override
-      public boolean visitFile(@Nonnull VirtualFile file) {
+      public boolean visitFile(VirtualFile file) {
         if (!iterator.processFile(file)) return false;
         if (idx.getModuleForFile(file) == null) return false;  // already excluded
         return true;
@@ -143,7 +141,7 @@ public class PatchProjectUtil {
     });
   }
 
-  public static Map<Pattern, Set<Pattern>> loadPatterns(@NonNls String propertyKey) {
+  public static Map<Pattern, Set<Pattern>> loadPatterns(String propertyKey) {
     Map<Pattern, Set<Pattern>> result = new HashMap<Pattern, Set<Pattern>>();
     String patterns = System.getProperty(propertyKey);
     if (patterns != null) {

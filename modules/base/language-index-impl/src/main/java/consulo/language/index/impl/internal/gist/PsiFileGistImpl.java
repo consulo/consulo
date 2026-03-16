@@ -38,7 +38,6 @@ import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -51,7 +50,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   private final BiFunction<Project, VirtualFile, Data> myCalculator;
   private final Key<CachedValue<Data>> myCacheKey;
 
-  PsiFileGistImpl(@Nonnull String id, int version, @Nonnull DataExternalizer<Data> externalizer, @Nonnull Function<PsiFile, Data> calculator) {
+  PsiFileGistImpl(String id, int version, DataExternalizer<Data> externalizer, Function<PsiFile, Data> calculator) {
     myCalculator = (project, file) -> {
       PsiFile psiFile = getPsiFile(project, file);
       return psiFile == null ? null : calculator.apply(psiFile);
@@ -61,7 +60,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
   }
 
   @Override
-  public Data getFileData(@Nonnull PsiFile file) {
+  public Data getFileData(PsiFile file) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
 
     if (shouldUseMemoryStorage(file)) {
@@ -83,7 +82,7 @@ class PsiFileGistImpl<Data> implements PsiFileGist<Data> {
     return document != null && (pdm.isUncommited(document) || FileDocumentManager.getInstance().isDocumentUnsaved(document));
   }
 
-  private static PsiFile getPsiFile(@Nonnull Project project, @Nonnull VirtualFile file) {
+  private static PsiFile getPsiFile(Project project, VirtualFile file) {
     PsiFile psi = PsiManager.getInstance(project).findFile(file);
     if (!(psi instanceof PsiFileImpl) || ((PsiFileImpl)psi).isContentsLoaded()) {
       return psi;

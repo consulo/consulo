@@ -26,8 +26,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.versionControlSystem.internal.LineStatusTrackerManagerI;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.BitSet;
 import java.util.List;
@@ -43,7 +42,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor editor = e.getData(Editor.KEY);
         if (project == null || editor == null) {
@@ -69,7 +68,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
         LineStatusTracker tracker = (LineStatusTracker) LineStatusTrackerManagerI.getInstance(project).getLineStatusTracker(editor.getDocument());
@@ -78,7 +77,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
         rollback(tracker, editor, null);
     }
 
-    protected static boolean isSomeChangeSelected(@Nonnull Editor editor, @Nonnull LineStatusTracker tracker) {
+    protected static boolean isSomeChangeSelected(Editor editor, LineStatusTracker tracker) {
         List<Caret> carets = editor.getCaretModel().getAllCarets();
         if (carets.size() != 1) {
             return true;
@@ -95,7 +94,7 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    protected static void rollback(@Nonnull LineStatusTracker tracker, @Nullable Editor editor, @Nullable VcsRange range) {
+    protected static void rollback(LineStatusTracker tracker, @Nullable Editor editor, @Nullable VcsRange range) {
         assert editor != null || range != null;
 
         if (range != null) {
@@ -107,17 +106,17 @@ public class RollbackLineStatusAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    private static void doRollback(@Nonnull LineStatusTracker tracker, @Nonnull VcsRange range) {
+    private static void doRollback(LineStatusTracker tracker, VcsRange range) {
         execute(tracker, () -> tracker.rollbackChanges(range));
     }
 
     @RequiredUIAccess
-    private static void doRollback(@Nonnull LineStatusTracker tracker, @Nonnull BitSet lines) {
+    private static void doRollback(LineStatusTracker tracker, BitSet lines) {
         execute(tracker, () -> tracker.rollbackChanges(lines));
     }
 
     @RequiredUIAccess
-    private static void execute(@Nonnull LineStatusTracker tracker, @RequiredUIAccess @Nonnull Runnable task) {
+    private static void execute(LineStatusTracker tracker, @RequiredUIAccess Runnable task) {
         CommandProcessor.getInstance().newCommand()
             .project(tracker.getProject())
             .document(tracker.getDocument())

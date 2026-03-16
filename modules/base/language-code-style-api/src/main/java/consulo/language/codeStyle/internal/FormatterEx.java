@@ -6,8 +6,7 @@ import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class FormatterEx implements Formatter {
   public abstract void format(FormattingModel model, CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions indentOptions, FormatTextRanges affectedRanges)
@@ -36,7 +35,7 @@ public abstract class FormatterEx implements Formatter {
 
   public abstract void formatAroundRange(FormattingModel model, CodeStyleSettings settings, PsiFile file, TextRange textRange);
 
-  public abstract void setProgressTask(@Nonnull FormattingProgressCallback progressIndicator);
+  public abstract void setProgressTask(FormattingProgressCallback progressIndicator);
 
   /**
    * Calculates minimum spacing, allowed by formatting model (in columns) for a block starting at given offset,

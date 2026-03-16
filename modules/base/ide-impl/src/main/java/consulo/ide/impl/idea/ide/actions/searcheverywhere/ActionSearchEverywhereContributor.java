@@ -26,8 +26,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,13 +55,13 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         myProvider = new GotoActionItemProvider(myModel);
     }
 
-    @Nonnull
+   
     @Override
     public String getGroupName() {
         return "Actions";
     }
 
-    @Nonnull
+   
     @Override
     public String getAdvertisement() {
         ShortcutSet altEnterShortcutSet = getActiveKeymapShortcuts(IdeActions.ACTION_SHOW_INTENTION_ACTIONS);
@@ -86,9 +85,9 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
 
     @Override
     public void fetchElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super GotoActionModel.MatchedValue> predicate
+        String pattern,
+        ProgressIndicator progressIndicator,
+        Predicate<? super GotoActionModel.MatchedValue> predicate
     ) {
         if (StringUtil.isEmptyOrSpaces(pattern)) {
             return;
@@ -117,9 +116,9 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         );
     }
 
-    @Nonnull
+   
     @Override
-    public List<AnAction> getActions(@Nonnull Runnable onChanged) {
+    public List<AnAction> getActions(Runnable onChanged) {
         return Collections.singletonList(new CheckBoxSearchEverywhereToggleAction(includeNonProjectItemsText()) {
             @Override
             public boolean isEverywhere() {
@@ -134,7 +133,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         });
     }
 
-    @Nonnull
+   
     @Override
     public ListCellRenderer<? super GotoActionModel.MatchedValue> getElementsRenderer() {
         return new GotoActionModel.GotoActionListCellRenderer(myModel::getGroupName, true);
@@ -145,14 +144,14 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         return false;
     }
 
-    @Nonnull
+   
     @Override
     public String getSearchProviderId() {
         return ActionSearchEverywhereContributor.class.getSimpleName();
     }
 
     @Override
-    public Object getDataForItem(@Nonnull GotoActionModel.MatchedValue element, @Nonnull Key dataId) {
+    public Object getDataForItem(GotoActionModel.MatchedValue element, Key dataId) {
         if (SetShortcutAction.SELECTED_ACTION == dataId) {
             return getAction(element);
         }
@@ -175,7 +174,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
 
     @Override
     @RequiredUIAccess
-    public boolean processSelectedItem(@Nonnull GotoActionModel.MatchedValue item, int modifiers, @Nonnull String text) {
+    public boolean processSelectedItem(GotoActionModel.MatchedValue item, int modifiers, String text) {
         if (modifiers == InputEvent.ALT_MASK) {
             showAssignShortcutDialog(item);
             return true;
@@ -194,8 +193,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         return !inplaceChange;
     }
 
-    @Nullable
-    private static AnAction getAction(@Nonnull GotoActionModel.MatchedValue element) {
+    private static AnAction getAction(GotoActionModel.@Nullable MatchedValue element) {
         Object value = element.value;
         if (value instanceof GotoActionModel.ActionWrapper actionWrapper) {
             value = actionWrapper.getAction();
@@ -203,7 +201,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
         return value instanceof AnAction action ? action : null;
     }
 
-    private void showAssignShortcutDialog(@Nonnull GotoActionModel.MatchedValue value) {
+    private void showAssignShortcutDialog(GotoActionModel.MatchedValue value) {
         AnAction action = getAction(value);
         if (action == null) {
             return;

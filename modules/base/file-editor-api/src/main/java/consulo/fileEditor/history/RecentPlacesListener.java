@@ -18,7 +18,6 @@ package consulo.fileEditor.history;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
@@ -32,7 +31,7 @@ public interface RecentPlacesListener {
    * @param isChanged   true if place info was added into the changed infos list {@link #myChangePlaces};
    *                    false if place info was added into the back infos list {@link #myBackPlaces}
    */
-  void recentPlaceAdded(@Nonnull PlaceInfo changePlace, boolean isChanged);
+  void recentPlaceAdded(PlaceInfo changePlace, boolean isChanged);
 
   /**
    * Fires on a place info removing from the {@link #myChangePlaces} or the {@link #myBackPlaces} infos list
@@ -41,5 +40,5 @@ public interface RecentPlacesListener {
    * @param isChanged   true if place info was removed from the changed infos list {@link #myChangePlaces};
    *                    false if place info was removed from the back infos list {@link #myBackPlaces}
    */
-  void recentPlaceRemoved(@Nonnull PlaceInfo changePlace, boolean isChanged);
+  void recentPlaceRemoved(PlaceInfo changePlace, boolean isChanged);
 }

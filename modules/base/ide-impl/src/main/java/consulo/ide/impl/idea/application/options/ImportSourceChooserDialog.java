@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

@@ -19,8 +19,6 @@ import consulo.application.Application;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +59,9 @@ public class HTMLExportFrameMaker {
     HTMLExportUtil.writeFile(myRootFolder, "index.html", buf, myProject);
   }
 
-  public void startInspection(@Nonnull InspectionToolWrapper toolWrapper) {
+  public void startInspection(InspectionToolWrapper toolWrapper) {
     myInspectionToolWrappers.add(toolWrapper);
-    @NonNls StringBuffer buf = new StringBuffer();
+    StringBuffer buf = new StringBuffer();
     buf.append("<HTML><HEAD><TITLE>");
     buf.append(Application.get().getName());
     buf.append(InspectionLocalize.inspectionExportTitle());

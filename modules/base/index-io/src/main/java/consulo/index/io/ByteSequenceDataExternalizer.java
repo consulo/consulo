@@ -18,7 +18,6 @@ package consulo.index.io;
 import consulo.index.io.data.DataExternalizer;
 import consulo.util.io.ByteArraySequence;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -31,12 +30,12 @@ public class ByteSequenceDataExternalizer implements DataExternalizer<ByteArrayS
   public static final ByteSequenceDataExternalizer INSTANCE = new ByteSequenceDataExternalizer();
 
   @Override
-  public void save(@Nonnull DataOutput out, ByteArraySequence value) throws IOException {
+  public void save(DataOutput out, ByteArraySequence value) throws IOException {
     out.write(value.getBytes(), value.getOffset(), value.getLength()); // todo fix double copying
   }
 
   @Override
-  public ByteArraySequence read(@Nonnull DataInput in) throws IOException {
+  public ByteArraySequence read(DataInput in) throws IOException {
     byte[] buf = new byte[((InputStream)in).available()]; // todo fix double copying
     in.readFully(buf);
     return new ByteArraySequence(buf);

@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.component.ComponentManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -26,7 +25,7 @@ import java.util.function.Consumer;
  */
 public abstract class ActionsTopHitProvider implements SearchTopHitProvider {
     @Override
-    public void consumeTopHits(@Nonnull String pattern, @Nonnull Consumer<Object> collector, ComponentManager project) {
+    public void consumeTopHits(String pattern, Consumer<Object> collector, ComponentManager project) {
          ActionManager actionManager = ActionManager.getInstance();
         for (String[] strings : getActionsMatrix()) {
             if (StringUtil.isBetween(pattern, strings[0], strings[1])) {

@@ -27,19 +27,17 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
 
 public class LocalFilePath implements FilePath {
-  @Nonnull
+  
   private final String myPath;
   private final boolean myIsDirectory;
 
-  public LocalFilePath(@Nonnull String path, boolean isDirectory) {
+  public LocalFilePath(String path, boolean isDirectory) {
     myPath = FileUtil.toCanonicalPath(path);
     myIsDirectory = isDirectory;
   }
@@ -73,7 +71,7 @@ public class LocalFilePath implements FilePath {
     LocalFileSystem.getInstance().refreshAndFindFileByPath(myPath);
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return myPath;
@@ -85,7 +83,7 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  public boolean isUnder(@Nonnull FilePath parent, boolean strict) {
+  public boolean isUnder(FilePath parent, boolean strict) {
     return FileUtil.isAncestor(parent.getPath(), getPath(), strict);
   }
 
@@ -110,25 +108,25 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  @Nonnull
+  
   public File getIOFile() {
     return new File(myPath);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return PathUtil.getFileName(myPath);
   }
 
-  @Nonnull
+  
   @Override
   public String getPresentableUrl() {
     return FileUtil.toSystemDependentName(myPath);
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public Document getDocument() {
     VirtualFile file = getVirtualFile();
     if (file == null || file.getFileType().isBinary()) {
@@ -138,13 +136,13 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  @Nonnull
+  
   public Charset getCharset() {
     return getCharset(null);
   }
 
   @Override
-  @Nonnull
+  
   public Charset getCharset(@Nullable Project project) {
     VirtualFile file = getVirtualFile();
     String path = myPath;
@@ -160,7 +158,7 @@ public class LocalFilePath implements FilePath {
   }
 
   @Override
-  @Nonnull
+  
   public FileType getFileType() {
     VirtualFile file = getVirtualFile();
     FileTypeRegistry manager = FileTypeRegistry.getInstance();

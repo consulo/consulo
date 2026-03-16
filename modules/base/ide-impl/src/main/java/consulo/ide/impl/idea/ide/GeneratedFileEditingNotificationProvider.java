@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.ui.NotificationType;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.function.Supplier;
@@ -44,7 +43,7 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "file-is-generated";
@@ -53,7 +52,7 @@ public class GeneratedFileEditingNotificationProvider implements EditorNotificat
     @RequiredReadAction
     @Nullable
     @Override
-    public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+    public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
         if (!GeneratedSourcesFilter.isGeneratedSourceByAnyFilter(file, myProject)) {
             return null;
         }

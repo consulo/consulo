@@ -17,7 +17,6 @@ package consulo.http.impl.internal.proxy;
 
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -51,15 +50,15 @@ public class PropertiesEncryptionSupport {
         return new SecretKeySpec(bytes, "AES");
     }
 
-    @Nonnull
-    public Properties load(@Nonnull File file) throws Exception {
+    
+    public Properties load(File file) throws Exception {
         byte[] bytes = decrypt(Files.readAllBytes(file.toPath()));
         Properties props = new Properties();
         props.load(new ByteArrayInputStream(bytes));
         return props;
     }
 
-    public void store(@Nonnull Properties props, @Nonnull String comments, @Nonnull File file) throws Exception {
+    public void store(Properties props, String comments, File file) throws Exception {
         if (props.isEmpty()) {
             FileUtil.delete(file);
             return;

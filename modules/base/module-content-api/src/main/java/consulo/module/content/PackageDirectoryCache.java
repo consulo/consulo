@@ -22,8 +22,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -36,7 +35,7 @@ public class PackageDirectoryCache {
   private final Map<String, PackageInfo> myDirectoriesByPackageNameCache = new ConcurrentHashMap<>();
   private final Set<String> myNonExistentPackages = ConcurrentHashMap.newKeySet();
 
-  public PackageDirectoryCache(@Nonnull MultiMap<String, VirtualFile> rootsByPackagePrefix) {
+  public PackageDirectoryCache(MultiMap<String, VirtualFile> rootsByPackagePrefix) {
     myRootsByPackagePrefix = rootsByPackagePrefix;
   }
 
@@ -44,14 +43,14 @@ public class PackageDirectoryCache {
     myNonExistentPackages.clear();
   }
 
-  @Nonnull
-  public List<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName) {
+  
+  public List<VirtualFile> getDirectoriesByPackageName(String packageName) {
     PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptyList() : info.myPackageDirectories;
   }
 
   @Nullable
-  private PackageInfo getPackageInfo(@Nonnull String packageName) {
+  private PackageInfo getPackageInfo(String packageName) {
     PackageInfo info = myDirectoriesByPackageNameCache.get(packageName);
     if (info == null) {
       if (myNonExistentPackages.contains(packageName)) return null;
@@ -92,7 +91,7 @@ public class PackageDirectoryCache {
     return info;
   }
 
-  public Set<String> getSubpackageNames(@Nonnull String packageName) {
+  public Set<String> getSubpackageNames(String packageName) {
     PackageInfo info = getPackageInfo(packageName);
     return info == null ? Collections.emptySet() : Collections.unmodifiableSet(info.mySubPackages.get().keySet());
   }
@@ -120,13 +119,13 @@ public class PackageDirectoryCache {
       });
     }
 
-    @Nonnull
+    
     Collection<VirtualFile> getSubPackageDirectories(String shortName) {
       return mySubPackages.get().get(shortName);
     }
   }
 
-  protected boolean isPackageDirectory(@Nonnull VirtualFile dir, @Nonnull String packageName) {
+  protected boolean isPackageDirectory(VirtualFile dir, String packageName) {
     return true;
   }
 }

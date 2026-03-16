@@ -6,9 +6,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,45 +30,45 @@ public abstract class ActionGroup extends AnAction {
         protected Builder() {
         }
 
-        @Nonnull
-        public Builder text(@Nonnull LocalizeValue text) {
+        
+        public Builder text(LocalizeValue text) {
             myText = text;
             return this;
         }
 
-        @Nonnull
+        
         public Builder setPopup() {
             myPopup = true;
             return this;
         }
 
-        @Nonnull
-        public Builder add(@Nonnull AnAction anAction) {
+        
+        public Builder add(AnAction anAction) {
             myActions.add(anAction);
             return this;
         }
 
-        @Nonnull
-        public Builder addAll(@Nonnull List<? extends AnAction> items) {
+        
+        public Builder addAll(List<? extends AnAction> items) {
             myActions.addAll(items);
             return this;
         }
 
-        @Nonnull
-        public Builder addAll(@Nonnull AnAction... actions) {
+        
+        public Builder addAll(AnAction... actions) {
             for (AnAction action : actions) {
                 myActions.add(action);
             }
             return this;
         }
 
-        @Nonnull
+        
         public Builder addSeparator() {
             return add(AnSeparator.create());
         }
 
-        @Nonnull
-        public Builder addSeparator(@Nonnull LocalizeValue separatorText) {
+        
+        public Builder addSeparator(LocalizeValue separatorText) {
             return add(AnSeparator.create(separatorText));
         }
 
@@ -82,7 +80,7 @@ public abstract class ActionGroup extends AnAction {
             return myActions.isEmpty();
         }
 
-        @Nonnull
+        
         public abstract ActionGroup build();
     }
 
@@ -104,7 +102,7 @@ public abstract class ActionGroup extends AnAction {
             return myPopup;
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myChildren;
@@ -115,25 +113,25 @@ public abstract class ActionGroup extends AnAction {
         private ImmutableBuilder() {
         }
 
-        @Nonnull
+        
         @Override
         public ActionGroup build() {
             return new ImmutableActionGroup(ContainerUtil.toArray(myActions, ARRAY_FACTORY), myPopup, myText);
         }
     }
 
-    @Nonnull
-    public static ActionGroup of(@Nonnull AnAction... actions) {
+    
+    public static ActionGroup of(AnAction... actions) {
         return newImmutableBuilder().addAll(actions).build();
     }
 
-    @Nonnull
+    
     public static Builder newImmutableBuilder() {
         return new ImmutableBuilder();
     }
 
     public static final ActionGroup EMPTY_GROUP = new DumbAwareActionGroup() {
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return EMPTY_ARRAY;
@@ -157,30 +155,30 @@ public abstract class ActionGroup extends AnAction {
      *                  otherwise
      */
     @Deprecated
-    public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String shortName, boolean popup) {
+    public ActionGroup( String shortName, boolean popup) {
         super(shortName);
         setPopup(popup);
     }
 
     @Deprecated
-    public ActionGroup(@Nls(capitalization = Nls.Capitalization.Title) String text, @Nls(capitalization = Nls.Capitalization.Sentence) String description, Image icon) {
+    public ActionGroup( String text,  String description, Image icon) {
         super(text, description, icon);
     }
 
-    protected ActionGroup(@Nonnull LocalizeValue text) {
+    protected ActionGroup(LocalizeValue text) {
         super(text);
     }
 
-    protected ActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    protected ActionGroup(LocalizeValue text, boolean popup) {
         super(text);
         setPopup(popup);
     }
 
-    protected ActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ActionGroup(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected ActionGroup(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected ActionGroup(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -189,7 +187,7 @@ public abstract class ActionGroup extends AnAction {
      */
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
     }
 
     /**
@@ -201,7 +199,7 @@ public abstract class ActionGroup extends AnAction {
         return getTemplatePresentation().isPopupGroup();
     }
 
-    public boolean isPopup(@Nonnull String place) {
+    public boolean isPopup(String place) {
         return isPopup();
     }
 
@@ -219,11 +217,11 @@ public abstract class ActionGroup extends AnAction {
      *
      * @return An array representing children of this group. All returned children must be not {@code null}.
      */
-    @Nonnull
+    
     public abstract AnAction[] getChildren(@Nullable AnActionEvent e);
 
-    @Nonnull
-    public AnAction[] getChildren(@Nullable AnActionEvent e, @Nonnull ActionManager actionManager) {
+    
+    public AnAction[] getChildren(@Nullable AnActionEvent e, ActionManager actionManager) {
         return getChildren(null);
     }
 
@@ -232,8 +230,8 @@ public abstract class ActionGroup extends AnAction {
         return super.isDumbAware() || getClass() == DefaultActionGroup.class;
     }
 
-    @Nonnull
-    public List<AnAction> postProcessVisibleChildren(@Nonnull List<AnAction> visibleChildren) {
+    
+    public List<AnAction> postProcessVisibleChildren(List<AnAction> visibleChildren) {
         return Collections.unmodifiableList(visibleChildren);
     }
 

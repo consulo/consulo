@@ -14,8 +14,7 @@ import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.internal.FSRecordsProxy;
 import gnu.trove.TObjectLongHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -104,7 +103,7 @@ public class IndexingStamp {
         }
     }
 
-    public static synchronized void rewriteVersion(@Nonnull ID<?, ?> indexId, int version) throws IOException {
+    public static synchronized void rewriteVersion(ID<?, ?> indexId, int version) throws IOException {
         File file = IndexInfrastructure.getVersionFile(indexId);
         if (FileBasedIndexImpl.LOG.isDebugEnabled()) {
             FileBasedIndexImpl.LOG.debug("Rewriting " + file + "," + version);
@@ -147,7 +146,7 @@ public class IndexingStamp {
 
     private static final int OUR_INDICES_TIMESTAMP_INCREMENT = SystemProperties.getIntProperty("idea.indices.timestamp.resolution", 1);
 
-    public static boolean versionDiffers(@Nonnull ID<?, ?> indexId, int currentIndexVersion) {
+    public static boolean versionDiffers(ID<?, ?> indexId, int currentIndexVersion) {
         IndexVersion version = getIndexVersion(indexId);
         if (version.myIndexVersion != currentIndexVersion) {
             return true;
@@ -163,7 +162,7 @@ public class IndexingStamp {
         return false;
     }
 
-    public static long getIndexCreationStamp(@Nonnull ID<?, ?> indexName) {
+    public static long getIndexCreationStamp(ID<?, ?> indexName) {
         IndexVersion version = getIndexVersion(indexName);
         return version.myModificationCount;
     }
@@ -171,8 +170,8 @@ public class IndexingStamp {
     private static final IndexVersion NON_EXISTING_INDEX_VERSION = new IndexVersion(0, -1, -1);
 
     private static
-    @Nonnull
-    IndexVersion getIndexVersion(@Nonnull ID<?, ?> indexName) {
+    
+    IndexVersion getIndexVersion(ID<?, ?> indexName) {
         IndexVersion version = ourIndexIdToCreationStamp.get(indexName);
         if (version != null) {
             return version;
@@ -396,7 +395,7 @@ public class IndexingStamp {
         return timestamps;
     }
 
-    public static void update(int fileId, @Nonnull ID<?, ?> indexName, long indexCreationStamp) {
+    public static void update(int fileId, ID<?, ?> indexName, long indexCreationStamp) {
         if (fileId < 0 || fileId == INVALID_FILE_ID) {
             return;
         }
@@ -413,7 +412,7 @@ public class IndexingStamp {
         }
     }
 
-    @Nonnull
+    
     public static List<ID<?, ?>> getNontrivialFileIndexedStates(int fileId) {
         if (fileId != INVALID_FILE_ID) {
             Lock readLock = getStripedLock(fileId).readLock();

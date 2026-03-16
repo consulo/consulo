@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -30,7 +29,7 @@ public interface ActionPopupMenu {
     /**
      * Returns the visual presentation of the popup menu.
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Desktop only")
     default JPopupMenu getComponent() {
@@ -40,13 +39,13 @@ public interface ActionPopupMenu {
     /**
      * Returns the place where the action group is displayed (the first parameter of {@link ActionManager#createActionPopupMenu(String, ActionGroup)}.
      */
-    @Nonnull
+    
     String getPlace();
 
     /**
      * Returns the action group from which the menu was created.
      */
-    @Nonnull
+    
     ActionGroup getActionGroup();
 
     /**
@@ -54,14 +53,14 @@ public interface ActionPopupMenu {
      */
     @Deprecated
     @DeprecationInfo("Desktop only")
-    default void setTargetComponent(@Nonnull JComponent component) {
+    default void setTargetComponent(JComponent component) {
         throw new UnsupportedOperationException("unsupported platform");
     }
 
     /**
      * Will be used for data-context retrieval.
      */
-    void setTargetComponent(@Nonnull Component component);
+    void setTargetComponent(Component component);
 
     void show(Component component, int x, int y);
 

@@ -20,7 +20,6 @@ import consulo.util.collection.ContainerUtil;
 import io.netty.channel.*;
 import io.netty.util.concurrent.GenericFutureListener;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -40,7 +39,7 @@ public final class ChannelRegistrar extends ChannelInboundHandlerAdapter {
     return serverChannel.get() == null && clientChannels.isEmpty();
   }
 
-  public void setServerChannel(@Nonnull Channel channel, boolean isOwnEventLoopGroup) {
+  public void setServerChannel(Channel channel, boolean isOwnEventLoopGroup) {
     boolean isSet = serverChannel.compareAndSet(null, (ServerChannel)channel);
     LOG.assertTrue(isSet);
 
@@ -48,14 +47,14 @@ public final class ChannelRegistrar extends ChannelInboundHandlerAdapter {
   }
 
   @Override
-  public void channelActive(@Nonnull ChannelHandlerContext context) throws Exception {
+  public void channelActive(ChannelHandlerContext context) throws Exception {
     clientChannels.add(context.channel());
 
     super.channelActive(context);
   }
 
   @Override
-  public void channelInactive(@Nonnull ChannelHandlerContext context) throws Exception {
+  public void channelInactive(ChannelHandlerContext context) throws Exception {
     clientChannels.remove(context.channel());
 
     super.channelInactive(context);
@@ -84,7 +83,7 @@ public final class ChannelRegistrar extends ChannelInboundHandlerAdapter {
       final CountDownLatch countDown = new CountDownLatch(clientChannels.length + 1);
       GenericFutureListener<ChannelFuture> listener = new GenericFutureListener<ChannelFuture>() {
         @Override
-        public void operationComplete(@Nonnull ChannelFuture future) throws Exception {
+        public void operationComplete(ChannelFuture future) throws Exception {
           try {
             Throwable cause = future.cause();
             if (cause != null) {

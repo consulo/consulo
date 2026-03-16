@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -29,5 +28,5 @@ import jakarta.annotation.Nonnull;
 public interface PsiTreeChangePreprocessor {
   ExtensionPointName<PsiTreeChangePreprocessor> EP_NAME = ExtensionPointName.create(PsiTreeChangePreprocessor.class);
 
-  void treeChanged(@Nonnull PsiTreeChangeEvent event);
+  void treeChanged(PsiTreeChangeEvent event);
 }

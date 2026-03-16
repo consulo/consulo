@@ -4,7 +4,6 @@ package consulo.desktop.awt.ui.popup;
 import consulo.ui.Point2D;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.awt.JBUIScale;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
@@ -38,28 +37,28 @@ public class BalloonShaper {
         return (int)myPath.getCurrentPoint().getY();
     }
 
-    @Nonnull
+    
     public BalloonShaper roundUpRight() {
         int x = getX(), y = getY(), r = myBorderRadius;
         myPath.quadTo(x, y - r, x + r, y - r);
         return this;
     }
 
-    @Nonnull
+    
     public BalloonShaper roundRightDown() {
         int x = getX(), y = getY(), r = myBorderRadius;
         myPath.quadTo(x + r, y, x + r, y + r);
         return this;
     }
 
-    @Nonnull
+    
     public BalloonShaper roundLeftUp() {
         int x = getX(), y = getY(), r = myBorderRadius;
         myPath.quadTo(x - r, y, x - r, y - r);
         return this;
     }
 
-    @Nonnull
+    
     public BalloonShaper roundLeftDown() {
         int x = getX(), y = getY(), r = myBorderRadius;
         myPath.quadTo(x, y + r, x - r, y + r);
@@ -85,22 +84,22 @@ public class BalloonShaper {
         return lineTo(myPointerTarget.x(), myPointerTarget.y());
     }
 
-    @Nonnull
+    
     public BalloonShaper toRightCurve() {
         return horLineTo(myBodyBounds.maxX() - myBorderRadius - JBUIScale.scale(1));
     }
 
-    @Nonnull
+    
     public BalloonShaper toBottomCurve() {
         return vertLineTo(myBodyBounds.maxY() - myBorderRadius - JBUIScale.scale(1));
     }
 
-    @Nonnull
+    
     public BalloonShaper toLeftCurve() {
         return horLineTo(myBodyBounds.minX() + myBorderRadius);
     }
 
-    @Nonnull
+    
     public BalloonShaper toTopCurve() {
         return vertLineTo(myBodyBounds.minY() + myBorderRadius);
     }

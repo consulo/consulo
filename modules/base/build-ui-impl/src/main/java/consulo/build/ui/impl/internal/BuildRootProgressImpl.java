@@ -9,64 +9,63 @@ import consulo.build.ui.impl.internal.event.*;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
-import jakarta.annotation.Nonnull;
 
 public class BuildRootProgressImpl extends BuildProgressImpl {
     public BuildRootProgressImpl() {
         super(null);
     }
 
-    @Nonnull
+    
     @Override
     public Object getId() {
         return getBuildId();
     }
 
     @Override
-    @Nonnull
+    
     protected StartEvent createStartEvent(BuildProgressDescriptor descriptor) {
         return new StartBuildEventImpl(descriptor.getBuildDescriptor(), BuildLocalize.buildStatusRunning().get());
     }
 
     @Override
-    public @Nonnull
+    public 
     BuildProgress<BuildProgressDescriptor> finish() {
         return finish(System.currentTimeMillis(), false, BuildLocalize.buildStatusFinished().get());
     }
 
-    @Nonnull
+    
     @Override
-    public BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, @Nonnull @BuildEventsNls.Message String message) {
+    public BuildProgress<BuildProgressDescriptor> finish(long timeStamp, boolean isUpToDate, @BuildEventsNls.Message String message) {
         assertStarted();
         FinishEvent event = new FinishBuildEventImpl(getId(), null, timeStamp, message, new SuccessResultImpl(isUpToDate));
         onEvent(getBuildId(), event);
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BuildProgress<BuildProgressDescriptor> fail() {
         return fail(System.currentTimeMillis(), BuildLocalize.buildStatusFailed().get());
     }
 
-    @Nonnull
+    
     @Override
-    public BuildRootProgressImpl fail(long timeStamp, @Nonnull @BuildEventsNls.Message String message) {
+    public BuildRootProgressImpl fail(long timeStamp, @BuildEventsNls.Message String message) {
         assertStarted();
         FinishBuildEvent event = new FinishBuildEventImpl(getId(), null, timeStamp, message, new FailureResultImpl());
         onEvent(getBuildId(), event);
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public BuildProgress<BuildProgressDescriptor> cancel() {
         return cancel(System.currentTimeMillis(), BuildLocalize.buildStatusCancelled().get());
     }
 
-    @Nonnull
+    
     @Override
-    public BuildRootProgressImpl cancel(long timeStamp, @Nonnull String message) {
+    public BuildRootProgressImpl cancel(long timeStamp, String message) {
         assertStarted();
         FinishBuildEventImpl event = new FinishBuildEventImpl(getId(), null, timeStamp, message, new SkippedResultImpl());
         onEvent(getBuildId(), event);

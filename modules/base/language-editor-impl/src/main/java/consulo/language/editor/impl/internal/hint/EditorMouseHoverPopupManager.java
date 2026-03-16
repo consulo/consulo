@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,14 +29,14 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface EditorMouseHoverPopupManager {
-  @Nonnull
+  
   public static EditorMouseHoverPopupManager getInstance() {
     return Application.get().getInstance(EditorMouseHoverPopupManager.class);
   }
 
-  void showInfoTooltip(@Nonnull Editor editor, @Nonnull HighlightInfo info, int offset, boolean requestFocus, boolean showImmediately);
+  void showInfoTooltip(Editor editor, HighlightInfo info, int offset, boolean requestFocus, boolean showImmediately);
 
-  void handleMouseMoved(@Nonnull EditorMouseEvent e);
+  void handleMouseMoved(EditorMouseEvent e);
 
   void skipNextMovement();
 

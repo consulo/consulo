@@ -34,8 +34,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -65,14 +64,13 @@ public abstract class BaseDataManager implements DataManagerEx {
             myCachedData.clear();
         }
 
-        @Nonnull
         protected M getDataManager() {
             return myDataManager;
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getData(@Nonnull Key<T> dataId) {
+        public <T> T getData(Key<T> dataId) {
             if (ourSafeKeys.contains(dataId)) {
                 Object answer = myCachedData.get(dataId);
                 if (answer == null) {
@@ -99,17 +97,16 @@ public abstract class BaseDataManager implements DataManagerEx {
         }
 
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             //noinspection unchecked
             return (T) getOrCreateMap().get(key);
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             getOrCreateMap().put(key, value);
         }
 
-        @Nonnull
         private Map<Key, Object> getOrCreateMap() {
             Map<Key, Object> userData = myUserData;
             if (userData == null) {
@@ -127,7 +124,7 @@ public abstract class BaseDataManager implements DataManagerEx {
         @Override
         @Nullable
         @SuppressWarnings("unchecked")
-        protected <T> T doGetData(@Nonnull Key<T> dataId) {
+        protected <T> T doGetData(Key<T> dataId) {
             consulo.ui.Component component = getComponent();
             if (PlatformDataKeys.IS_MODAL_CONTEXT == dataId) {
                 if (component == null) {
@@ -168,7 +165,6 @@ public abstract class BaseDataManager implements DataManagerEx {
         myWindowManager = windowManagerProvider;
     }
 
-    @Nonnull
     @Override
     public AsyncResult<DataContext> getDataContextFromFocus() {
         AsyncResult<DataContext> context = AsyncResult.undefined();
@@ -176,7 +172,6 @@ public abstract class BaseDataManager implements DataManagerEx {
         return context;
     }
 
-    @Nonnull
     @Override
     public Promise<DataContext> getDataContextFromFocusAsync() {
         AsyncPromise<DataContext> result = new AsyncPromise<>();
@@ -185,7 +180,7 @@ public abstract class BaseDataManager implements DataManagerEx {
     }
 
     @Nullable
-    public <T> T getDataFromProvider(@Nonnull DataProvider provider, @Nonnull Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
+    public <T> T getDataFromProvider(DataProvider provider, Key<T> dataId, @Nullable Set<Key> alreadyComputedIds) {
         if (alreadyComputedIds != null && alreadyComputedIds.contains(dataId)) {
             return null;
         }
@@ -204,7 +199,7 @@ public abstract class BaseDataManager implements DataManagerEx {
     }
 
     @Nullable
-    protected static <T> T validated(@Nonnull T data, @Nonnull Key<T> dataId, @Nonnull Object dataSource) {
+    protected static <T> T validated(T data, Key<T> dataId, Object dataSource) {
         T invalidData = DataValidators.findInvalidData(dataId, data, dataSource);
         if (invalidData != null) {
             return null;
@@ -224,7 +219,7 @@ public abstract class BaseDataManager implements DataManagerEx {
     }
 
     @Override
-    public <T> void saveInDataContext(DataContext dataContext, @Nonnull Key<T> dataKey, @Nullable T data) {
+    public <T> void saveInDataContext(DataContext dataContext, Key<T> dataKey, @Nullable T data) {
         if (dataContext instanceof UserDataHolder) {
             ((UserDataHolder) dataContext).putUserData(dataKey, data);
         }
@@ -232,12 +227,11 @@ public abstract class BaseDataManager implements DataManagerEx {
 
     @Override
     @Nullable
-    public <T> T loadFromDataContext(@Nonnull DataContext dataContext, @Nonnull Key<T> dataKey) {
+    public <T> T loadFromDataContext(DataContext dataContext, Key<T> dataKey) {
         return dataContext instanceof UserDataHolder ? ((UserDataHolder) dataContext).getUserData(dataKey) : null;
     }
 
-    @Nullable
-    protected <T> T getData(@Nonnull Key<T> dataId, consulo.ui.Component focusedComponent) {
+    protected <T> T getData(Key<T> dataId, consulo.ui.@Nullable Component focusedComponent) {
         for (consulo.ui.Component c = focusedComponent; c != null; c = c.getParent()) {
             DataProvider dataProvider = getDataProviderForComponent(c);
             T data = getDataFromProvider(dataProvider, dataId, null);
@@ -248,17 +242,15 @@ public abstract class BaseDataManager implements DataManagerEx {
         return null;
     }
 
-    @Nonnull
-    protected DataProvider getDataProviderForComponent(@Nonnull consulo.ui.Component component) {
+    protected DataProvider getDataProviderForComponent(consulo.ui.Component component) {
         if (component instanceof UiDataProvider uiProvider) {
             return new UiDataProviderAdapter(uiProvider);
         }
         return component::getUserData;
     }
 
-    @Nonnull
     @Override
-    public AsyncDataContext createAsyncDataContext(@Nonnull DataContext dataContext) {
+    public AsyncDataContext createAsyncDataContext(DataContext dataContext) {
         consulo.ui.Component component = dataContext.getData(PlatformDataKeys.CONTEXT_UI_COMPONENT);
         List<DataProvider> providers = new ArrayList<>();
         for (consulo.ui.Component c = component; c != null; c = c.getParent()) {
@@ -268,9 +260,8 @@ public abstract class BaseDataManager implements DataManagerEx {
         return new PreCachedDataContext(this, providers);
     }
 
-    @Nonnull
     @Override
-    public DataContext getDataContext(@Nullable consulo.ui.Component component) {
+    public DataContext getDataContext(consulo.ui.@Nullable Component component) {
         return new MyUIDataContext(this, component);
     }
 }

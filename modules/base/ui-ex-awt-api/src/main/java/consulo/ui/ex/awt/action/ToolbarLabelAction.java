@@ -9,37 +9,36 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class ToolbarLabelAction extends DumbAwareAction implements CustomComponentAction {
-    protected ToolbarLabelAction(@Nonnull LocalizeValue text) {
+    protected ToolbarLabelAction(LocalizeValue text) {
         super(text);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(false);
     }
 
     @RequiredUIAccess
     @Override
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         //do nothing
     }
 
-    @Nonnull
+    
     @Override
-    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+    public JComponent createCustomComponent(Presentation presentation, String place) {
         return new MyLabel(presentation).withFont(JBUI.Fonts.toolbarFont()).withBorder(JBUI.Borders.empty(0, 6, 0, 5));
     }
 
     private static class MyLabel extends JBLabel {
-        @Nonnull
+        
         private final Presentation myPresentation;
 
-        MyLabel(@Nonnull Presentation presentation) {
+        MyLabel(Presentation presentation) {
             myPresentation = presentation;
 
             presentation.addPropertyChangeListener(e -> {

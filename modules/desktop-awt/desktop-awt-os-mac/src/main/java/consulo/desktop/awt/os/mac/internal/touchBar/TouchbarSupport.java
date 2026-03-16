@@ -14,8 +14,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.jna.JnaLoader;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +23,7 @@ import java.awt.event.AWTEventListener;
 public final class TouchbarSupport {
     private static final String IS_ENABLED_KEY = "ide.mac.touchbar.enabled";
     private static final Logger LOG = Logger.getInstance(TouchbarSupport.class);
-    private static final @Nonnull AWTEventListener ourAWTEventListener = e -> {
+    private static final AWTEventListener ourAWTEventListener = e -> {
         TouchBarsManager.processAWTEvent(e);
     };
     private static final long ourEventMask = AWTEvent.FOCUS_EVENT_MASK | AWTEvent.KEY_EVENT_MASK;
@@ -116,12 +115,12 @@ public final class TouchbarSupport {
         ourConnection = ApplicationManager.getApplication().getMessageBus().connect();
         ourConnection.subscribe(PluginActionListener.class, new PluginActionListener() {
             @Override
-            public void pluginsInstalled(@Nonnull PluginId[] pluginIds) {
+            public void pluginsInstalled(PluginId[] pluginIds) {
                 reloadAllActions();
             }
 
             @Override
-            public void pluginsUninstalled(@Nonnull PluginId[] pluginIds) {
+            public void pluginsUninstalled(PluginId[] pluginIds) {
                 reloadAllActions();
             }
         });
@@ -167,7 +166,7 @@ public final class TouchbarSupport {
         return isAvailable() && isEnabled && Registry.is(IS_ENABLED_KEY);
     }
 
-    public static void onUpdateEditorHeader(@Nonnull Editor editor) {
+    public static void onUpdateEditorHeader(Editor editor) {
         if (!isInitialized || !isEnabled()) {
             return;
         }
@@ -175,7 +174,7 @@ public final class TouchbarSupport {
         CtxEditors.onUpdateEditorHeader(editor);
     }
 
-    public static void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent) {
+    public static void showPopupItems(JBPopup popup, JComponent popupComponent) {
         if (!isInitialized || !isEnabled()) {
             return;
         }
@@ -185,7 +184,7 @@ public final class TouchbarSupport {
         }
     }
 
-    public static @Nullable Disposable showWindowActions(@Nonnull Component contentPane) {
+    public static @Nullable Disposable showWindowActions(Component contentPane) {
         if (!isInitialized || !isEnabled()) {
             return null;
         }
@@ -193,7 +192,7 @@ public final class TouchbarSupport {
         return CtxDialogs.showWindowActions(contentPane);
     }
 
-    public static void showWindowActions(@Nonnull Disposable parent, @Nonnull Component contentPane) {
+    public static void showWindowActions(Disposable parent, Component contentPane) {
         Disposable tb = showWindowActions(contentPane);
         if (tb != null) {
             Disposer.register(parent, tb);

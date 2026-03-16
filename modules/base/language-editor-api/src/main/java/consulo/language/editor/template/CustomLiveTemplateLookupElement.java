@@ -19,21 +19,20 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
-  @Nonnull
+  
   private final CustomLiveTemplateBase myCustomLiveTemplate;
 
-  @Nonnull
+  
   private final String myTemplateKey;
-  @Nonnull
+  
   private final String myItemText;
 
-  public CustomLiveTemplateLookupElement(@Nonnull CustomLiveTemplateBase customLiveTemplate,
-                                         @Nonnull String templateKey,
-                                         @Nonnull String itemText,
+  public CustomLiveTemplateLookupElement(CustomLiveTemplateBase customLiveTemplate,
+                                         String templateKey,
+                                         String itemText,
                                          @Nullable String description,
                                          boolean sudden,
                                          boolean worthShowingInAutoPopup) {
@@ -43,13 +42,13 @@ public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
     myItemText = itemText;
   }
 
-  @Nonnull
+  
   @Override
   protected String getItemText() {
     return myItemText;
   }
 
-  @Nonnull
+  
   public CustomLiveTemplateBase getCustomLiveTemplate() {
     return myCustomLiveTemplate;
   }
@@ -65,7 +64,7 @@ public class CustomLiveTemplateLookupElement extends LiveTemplateLookupElement {
     expandTemplate(context.getEditor(), context.getFile());
   }
 
-  public void expandTemplate(@Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void expandTemplate(Editor editor, PsiFile file) {
     myCustomLiveTemplate.expand(myTemplateKey, new CustomTemplateCallback(editor, file));
   }
 }

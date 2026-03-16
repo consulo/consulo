@@ -19,8 +19,7 @@ import consulo.diff.internal.DiffImplUtil;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class VcsRange {
   private RangeHighlighter myRangeHighlighter;
   private boolean myValid = true;
 
-  public VcsRange(@Nonnull VcsRange range) {
+  public VcsRange(VcsRange range) {
     this(range.getLine1(), range.getLine2(), range.getVcsLine1(), range.getVcsLine2());
   }
 
@@ -219,7 +218,7 @@ public class VcsRange {
     return DiffImplUtil.isSelectedByLine(line, myLine1, myLine2);
   }
 
-  @Nonnull
+  
   private static String getTypeName(byte type) {
     switch (type) {
       case MODIFIED:

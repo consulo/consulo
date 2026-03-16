@@ -2,20 +2,19 @@
 package consulo.execution.debug.stream.trace.dsl;
 
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface Variable extends Expression {
-  @Nonnull
+  
   GenericType getType();
 
-  @Nonnull
+  
   String getName();
 
   @Override
-  @Nonnull
+  
   default String toCode(int indent) {
     return withIndent(getName(), indent);
   }

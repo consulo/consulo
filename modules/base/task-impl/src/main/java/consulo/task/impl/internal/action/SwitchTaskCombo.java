@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -37,14 +36,14 @@ import javax.swing.*;
  * @author Dmitry Avdeev
  */
 public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
-    @Nonnull
+    
     @Override
-    public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+    public JBPopup createPopup(JComponent component, DataContext context, Runnable onDispose) {
         return SwitchTaskAction.createPopup(context, onDispose, false);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         if (project == null || project.isDefault() || project.isDisposed()) {
@@ -69,7 +68,7 @@ public class SwitchTaskCombo extends ComboBoxAction implements DumbAware {
         }
     }
 
-    @Nonnull
+    
     @Override
     protected DefaultActionGroup createPopupActionGroup(JComponent button) {
         throw new IllegalArgumentException();

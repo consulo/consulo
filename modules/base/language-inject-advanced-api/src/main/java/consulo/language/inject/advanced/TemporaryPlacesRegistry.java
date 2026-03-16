@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -50,7 +49,7 @@ public class TemporaryPlacesRegistry {
     private volatile long myPsiModificationCounter;
 
     private final LanguageInjectionSupport myInjectorSupport = new AbstractLanguageInjectionSupport() {
-        @Nonnull
+        
         @Override
         public String getId() {
             return "temp";
@@ -61,7 +60,7 @@ public class TemporaryPlacesRegistry {
             return true;
         }
 
-        @Nonnull
+        
         @Override
         public Class[] getPatternClasses() {
             return ArrayUtil.EMPTY_CLASS_ARRAY;
@@ -178,7 +177,7 @@ public class TemporaryPlacesRegistry {
 
     @Nullable
     @RequiredReadAction
-    public InjectedLanguage getLanguageFor(@Nonnull PsiLanguageInjectionHost host, PsiFile containingFile) {
+    public InjectedLanguage getLanguageFor(PsiLanguageInjectionHost host, PsiFile containingFile) {
         PsiLanguageInjectionHost originalHost = CompletionUtilCore.getOriginalElement(host, containingFile);
         PsiLanguageInjectionHost injectionHost = originalHost == null ? host : originalHost;
         getInjectionPlacesSafe();

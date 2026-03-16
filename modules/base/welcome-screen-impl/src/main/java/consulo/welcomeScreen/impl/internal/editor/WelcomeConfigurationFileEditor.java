@@ -28,8 +28,7 @@ import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,6 @@ public class WelcomeConfigurationFileEditor extends ConfigurationFileEditor {
         super(project, virtualFile);
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     public Component getUIComponent() {

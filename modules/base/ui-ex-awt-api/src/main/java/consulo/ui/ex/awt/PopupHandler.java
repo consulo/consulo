@@ -17,10 +17,8 @@ package consulo.ui.ex.awt;
 
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.action.*;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
@@ -59,31 +57,31 @@ public abstract class PopupHandler extends MouseAdapter {
     }
   }
 
-  public static void installPopupMenu(JComponent component, @NonNls String groupId, @NonNls String place) {
+  public static void installPopupMenu(JComponent component, String groupId, String place) {
       installPopupHandler(component, groupId, place);
   }
 
-  public static void installPopupHandler(JComponent component, @NonNls String groupId, @NonNls String place) {
+  public static void installPopupHandler(JComponent component, String groupId, String place) {
     ActionManager actionManager = ActionManager.getInstance();
     ActionGroup group = (ActionGroup)actionManager.getAction(groupId);
     installPopupHandler(component, group, place, actionManager);
   }
 
-  @Nonnull
-  public static MouseListener installPopupHandler(JComponent component, @Nonnull ActionGroup group, @NonNls String place) {
+  
+  public static MouseListener installPopupHandler(JComponent component, ActionGroup group, String place) {
     return installPopupHandler(component, group, place, ActionManager.getInstance());
   }
 
-  @Nonnull
-  public static MouseListener installPopupHandler(JComponent component, @Nonnull ActionGroup group, @NonNls String place, ActionManager actionManager) {
+  
+  public static MouseListener installPopupHandler(JComponent component, ActionGroup group, String place, ActionManager actionManager) {
     return installPopupHandler(component, group, place, actionManager, null);
   }
 
-  @Nonnull
-  public static MouseListener installPopupHandler(@Nonnull JComponent component,
-                                                  @Nonnull ActionGroup group,
-                                                  @NonNls String place,
-                                                  @Nonnull ActionManager actionManager,
+  
+  public static MouseListener installPopupHandler(JComponent component,
+                                                  ActionGroup group,
+                                                  String place,
+                                                  ActionManager actionManager,
                                                   @Nullable PopupMenuListener menuListener) {
     if (ApplicationManager.getApplication() == null) {
       return new MouseAdapter() {
@@ -103,7 +101,7 @@ public abstract class PopupHandler extends MouseAdapter {
     return popupHandler;
   }
 
-  public static MouseListener installFollowingSelectionTreePopup(final JTree tree, @Nonnull final ActionGroup group, final String place, final ActionManager actionManager) {
+  public static MouseListener installFollowingSelectionTreePopup(final JTree tree, final ActionGroup group, final String place, final ActionManager actionManager) {
     if (ApplicationManager.getApplication() == null) {
       return new MouseAdapter() {
       };
@@ -125,7 +123,7 @@ public abstract class PopupHandler extends MouseAdapter {
     return installPopupHandler(component, group, ActionPlaces.UNKNOWN, actionManager);
   }
 
-  public static MouseListener installPopupHandlerFromCustomActions(JComponent component, @Nonnull final String groupId, final String place) {
+  public static MouseListener installPopupHandlerFromCustomActions(JComponent component, final String groupId, final String place) {
     if (ApplicationManager.getApplication() == null) {
       return new MouseAdapter() {
       };

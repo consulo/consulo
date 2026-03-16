@@ -24,7 +24,6 @@ import consulo.module.content.layer.ContentFolderSupportPatcher;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -35,7 +34,7 @@ import java.util.Set;
  * @since 2013-11-07
  */
 public class ContentFoldersSupportUtil {
-    @Nonnull
+    
     public static Set<ContentFolderTypeProvider> getSupportedFolders(ModifiableRootModel moduleRootManager) {
         Set<ContentFolderTypeProvider> providers = new LinkedHashSet<>();
         for (ContentFolderSupportPatcher patcher : ContentFolderSupportPatcher.EP_NAME.getExtensionList()) {
@@ -45,9 +44,9 @@ public class ContentFoldersSupportUtil {
         return providers;
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public static Image getContentFolderIcon(@Nonnull ContentFolderTypeProvider typeProvider, @Nonnull Map<Key, Object> params) {
+    public static Image getContentFolderIcon(ContentFolderTypeProvider typeProvider, Map<Key, Object> params) {
         if (params.isEmpty()) {
             return typeProvider.getIcon();
         }

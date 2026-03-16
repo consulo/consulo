@@ -23,8 +23,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author UNV
@@ -34,19 +33,19 @@ public abstract class FindReplaceInPathActionBase extends AnAction implements Du
     public static final NotificationGroup NOTIFICATION_GROUP =
         NotificationGroup.toolWindowGroup("findInPath", LocalizeValue.localizeTODO("Find in Path"), ToolWindowId.FIND, false);
 
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     public FindReplaceInPathActionBase(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
-        @Nonnull NotificationService notificationService
+        LocalizeValue text,
+        LocalizeValue description,
+        NotificationService notificationService
     ) {
         super(text, description);
         myNotificationService = notificationService;
     }
 
-    protected void showNotAvailableMessage(@Nonnull AnActionEvent e, @Nullable Project project) {
+    protected void showNotAvailableMessage(AnActionEvent e, @Nullable Project project) {
         myNotificationService.newWarn(NOTIFICATION_GROUP)
             .content(LocalizeValue.localizeTODO("'" + e.getPresentation().getText() + "' is not available while search is in progress"))
             .notify(project);

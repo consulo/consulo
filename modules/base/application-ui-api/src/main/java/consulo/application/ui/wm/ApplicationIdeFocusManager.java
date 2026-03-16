@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -31,17 +30,17 @@ import java.awt.*;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationIdeFocusManager extends IdeFocusManager {
-  @Nonnull
+  
   static ApplicationIdeFocusManager getInstance() {
     return Application.get().getComponent(ApplicationIdeFocusManager.class);
   }
 
-  @Nonnull
-  IdeFocusManager findInstanceByComponent(@Nonnull Component c);
+  
+  IdeFocusManager findInstanceByComponent(Component c);
 
-  @Nonnull
+  
   IdeFocusManager findInstanceByContext(@Nullable DataContext context);
 
-  @Nonnull
+  
   IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager);
 }

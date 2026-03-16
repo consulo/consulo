@@ -18,9 +18,8 @@ package consulo.desktop.awt.editor.impl;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import gnu.trove.TLongArrayList;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -71,8 +70,8 @@ class EditorSizeAdjustmentStrategy {
    * @param editor           target editor
    * @return preferred size to use (given 'new preferred size' may be adjusted)
    */
-  @Nonnull
-  Dimension adjust(@Nonnull Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, @Nonnull DesktopEditorImpl editor) {
+  
+  Dimension adjust(Dimension newPreferredSize, @Nullable Dimension oldPreferredSize, DesktopEditorImpl editor) {
     if (oldPreferredSize == null || myInsideValidation) {
       return newPreferredSize;
     }
@@ -124,7 +123,7 @@ class EditorSizeAdjustmentStrategy {
     }
   }
 
-  private void scheduleSizeUpdate(@Nonnull DesktopEditorImpl editor) {
+  private void scheduleSizeUpdate(DesktopEditorImpl editor) {
     myAlarm.cancelAllRequests();
     myAlarm.addRequest(new UpdateSizeTask(editor), 1000);
   }
@@ -132,7 +131,7 @@ class EditorSizeAdjustmentStrategy {
   private class UpdateSizeTask implements Runnable {
     private final DesktopEditorImpl myEditor;
 
-    UpdateSizeTask(@Nonnull DesktopEditorImpl editor) {
+    UpdateSizeTask(DesktopEditorImpl editor) {
       myEditor = editor;
     }
 

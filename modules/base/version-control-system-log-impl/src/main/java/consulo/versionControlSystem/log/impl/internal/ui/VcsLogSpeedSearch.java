@@ -16,14 +16,13 @@
 package consulo.versionControlSystem.log.impl.internal.ui;
 
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.AbstractList;
 import java.util.ListIterator;
 
 public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
-  public VcsLogSpeedSearch(@Nonnull VcsLogGraphTable component) {
+  public VcsLogSpeedSearch(VcsLogGraphTable component) {
     super(component);
   }
 
@@ -32,7 +31,7 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
     return myComponent.getRowCount();
   }
 
-  @Nonnull
+  
   @Override
   protected ListIterator<Object> getElementIterator(int startingIndex) {
     return new MyRowsList().listIterator(startingIndex);
@@ -43,7 +42,7 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
     return myComponent.getSelectedRow();
   }
 
-  @Nonnull
+  
   @Override
   protected Object[] getAllElements() {
     throw new UnsupportedOperationException("Getting all elements in a Log in an array is unsupported.");
@@ -51,12 +50,12 @@ public class VcsLogSpeedSearch extends SpeedSearchBase<VcsLogGraphTable> {
 
   @Nullable
   @Override
-  protected String getElementText(@Nonnull Object row) {
+  protected String getElementText(Object row) {
     return myComponent.getModel().getShortDetails((Integer)row).getSubject();
   }
 
   @Override
-  protected void selectElement(@Nonnull Object row, @Nonnull String selectedText) {
+  protected void selectElement(Object row, String selectedText) {
     myComponent.jumpToRow((Integer)row);
   }
 

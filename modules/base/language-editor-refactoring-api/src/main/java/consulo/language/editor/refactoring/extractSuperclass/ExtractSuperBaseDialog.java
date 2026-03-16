@@ -32,8 +32,7 @@ import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +69,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
 
     protected abstract JTextField createSourceClassField();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getDocCommentPanelName();
 
     protected abstract String getExtractedSuperNameNotSpecifiedMessage();
@@ -102,7 +101,7 @@ public abstract class ExtractSuperBaseDialog<ClassType extends PsiElement, Membe
     public ExtractSuperBaseDialog(Project project,
                                   ClassType sourceClass,
                                   List<MemberInfoType> members,
-                                  @Nonnull LocalizeValue refactoringName) {
+                                  LocalizeValue refactoringName) {
         super(project, true);
         myRefactoringName = refactoringName;
 

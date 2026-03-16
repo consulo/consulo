@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.template.LiveTemplateContributor;
 import consulo.language.editor.template.context.EverywhereContextType;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public class SandLiveTemplateContributor implements LiveTemplateContributor {
     private static final LocalizeValue SAND = LocalizeValue.of("Sand");
 
     @Override
-    public void contribute(@Nonnull Factory factory) {
+    public void contribute(Factory factory) {
         try (Builder builder = factory.newBuilder("sandTest", "test", "test($V$)", LocalizeValue.localizeTODO("Sand Test Expression"))) {
             builder.withReformat();
             builder.withVariable("V", "1", "1", true);
@@ -39,13 +38,13 @@ public class SandLiveTemplateContributor implements LiveTemplateContributor {
         }
     }
 
-    @Nonnull
+    
     @Override
     public String groupId() {
         return "SAND";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue groupName() {
         return SAND;

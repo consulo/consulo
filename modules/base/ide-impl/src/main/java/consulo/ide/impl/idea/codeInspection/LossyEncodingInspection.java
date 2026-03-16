@@ -48,8 +48,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.File;
@@ -71,26 +70,26 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     private static final LocalQuickFix CHANGE_ENCODING_FIX = new ChangeEncodingFix();
     private static final LocalQuickFix RELOAD_ENCODING_FIX = new ReloadInAnotherEncodingFix();
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.groupNamesInternationalizationIssues();
     }
 
-    @Nonnull
+    
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionLocalize.lossyEncoding();
     }
 
     @Override
-    @Nonnull
+    
     public String getShortName() {
         return "LossyEncoding";
     }
@@ -98,7 +97,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     @Nullable
     @Override
     @RequiredReadAction
-    public ProblemDescriptor[] checkFile(@Nonnull PsiFile file, @Nonnull InspectionManager manager, boolean isOnTheFly) {
+    public ProblemDescriptor[] checkFile(PsiFile file, InspectionManager manager, boolean isOnTheFly) {
         if (InjectedLanguageManager.getInstance(file.getProject()).isInjectedFragment(file)) {
             return null;
         }
@@ -134,12 +133,12 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     }
 
     private static boolean checkFileLoadedInWrongEncoding(
-        @Nonnull PsiFile file,
-        @Nonnull InspectionManager manager,
+        PsiFile file,
+        InspectionManager manager,
         boolean isOnTheFly,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Charset charset,
-        @Nonnull List<ProblemDescriptor> descriptors
+        VirtualFile virtualFile,
+        Charset charset,
+        List<ProblemDescriptor> descriptors
     ) {
         if (FileDocumentManager.getInstance().isFileModified(virtualFile) // when file is modified, it's too late to reload it
             || !EncodingUtil.canReload(virtualFile) // can't reload in another encoding, no point trying
@@ -161,7 +160,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
 
     // check if file was loaded in correct encoding
     // returns true if text converted with charset is equals to the bytes currently on disk
-    private static boolean isGoodCharset(@Nonnull VirtualFile virtualFile, @Nonnull Charset charset) {
+    private static boolean isGoodCharset(VirtualFile virtualFile, Charset charset) {
         FileDocumentManager documentManager = FileDocumentManager.getInstance();
         Document document = documentManager.getDocument(virtualFile);
         if (document == null) {
@@ -195,12 +194,12 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     }
 
     private static void checkIfCharactersWillBeLostAfterSave(
-        @Nonnull PsiFile file,
-        @Nonnull InspectionManager manager,
+        PsiFile file,
+        InspectionManager manager,
         boolean isOnTheFly,
-        @Nonnull CharSequence text,
-        @Nonnull Charset charset,
-        @Nonnull List<ProblemDescriptor> descriptors
+        CharSequence text,
+        Charset charset,
+        List<ProblemDescriptor> descriptors
     ) {
         int errorCount = 0;
         int start = -1;
@@ -232,7 +231,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
         }
     }
 
-    private static boolean isRepresentable(char c, @Nonnull Charset charset) {
+    private static boolean isRepresentable(char c, Charset charset) {
         String str = Character.toString(c);
         ByteBuffer out = charset.encode(str);
         CharBuffer buffer = charset.decode(out);
@@ -240,7 +239,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     }
 
     private static class ReloadInAnotherEncodingFix extends ChangeEncodingFix {
-        @Nonnull
+        
         @Override
         public LocalizeValue getName() {
             return LocalizeValue.localizeTODO("Reload in another encoding");
@@ -248,7 +247,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
 
         @Override
         @RequiredReadAction
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             if (FileDocumentManager.getInstance().isFileModified(descriptor.getPsiElement().getContainingFile().getVirtualFile())) {
                 return;
             }
@@ -257,7 +256,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     }
 
     private static class ChangeEncodingFix implements LocalQuickFix {
-        @Nonnull
+        
         @Override
         public LocalizeValue getName() {
             return LocalizeValue.localizeTODO("Change file encoding");
@@ -265,7 +264,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
 
         @Override
         @RequiredReadAction
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             PsiFile psiFile = descriptor.getPsiElement().getContainingFile();
             VirtualFile virtualFile = psiFile.getVirtualFile();
 
@@ -277,7 +276,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
             }
         }
 
-        @Nonnull
+        
         public static DataContext createDataContext(Editor editor, Component component, VirtualFile selectedFile, Project project) {
             DataContext parent = DataManager.getInstance().getDataContext(component);
             DataContext context =

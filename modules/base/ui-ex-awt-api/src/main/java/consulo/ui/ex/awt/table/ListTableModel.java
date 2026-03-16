@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.EditableModel;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.*;
 
@@ -31,19 +30,19 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
   private boolean myIsSortable = false;
   private SortOrder mySortOrder = SortOrder.ASCENDING;
 
-  public ListTableModel(@Nonnull ColumnInfo... columnInfos) {
+  public ListTableModel(ColumnInfo... columnInfos) {
     this(columnInfos, new ArrayList<>(), 0, SortOrder.ASCENDING);
   }
 
-  public ListTableModel(@Nonnull ColumnInfo[] columnNames, @Nonnull List<Item> items, int selectedColumn) {
+  public ListTableModel(ColumnInfo[] columnNames, List<Item> items, int selectedColumn) {
     this(columnNames, items, selectedColumn, SortOrder.ASCENDING);
   }
 
-  public ListTableModel(@Nonnull ColumnInfo[] columnNames, @Nonnull List<Item> items) {
+  public ListTableModel(ColumnInfo[] columnNames, List<Item> items) {
     this(columnNames, items, 0);
   }
 
-  public ListTableModel(@Nonnull ColumnInfo[] columnNames, @Nonnull List<Item> items, int selectedColumn, @Nonnull SortOrder order) {
+  public ListTableModel(ColumnInfo[] columnNames, List<Item> items, int selectedColumn, SortOrder order) {
     myColumnInfos = columnNames;
     myItems = items;
     mySortByColumn = selectedColumn;
@@ -97,7 +96,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
   }
 
   @Override
-  public void setItems(@Nonnull List<Item> items) {
+  public void setItems(List<Item> items) {
     myItems = items;
     fireTableDataChanged();
   }
@@ -128,7 +127,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public List<Item> getItems() {
     return Collections.unmodifiableList(myItems);
@@ -188,7 +187,7 @@ public class ListTableModel<Item> extends TableViewModel<Item> implements Editab
     fireTableRowsInserted(index, index);
   }
 
-  public void addRows(@Nonnull Collection<Item> items) {
+  public void addRows(Collection<Item> items) {
     myItems.addAll(items);
     if (!myItems.isEmpty()) {
       fireTableRowsInserted(myItems.size() - items.size(), myItems.size() - 1);

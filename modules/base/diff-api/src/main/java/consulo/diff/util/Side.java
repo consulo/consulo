@@ -20,8 +20,7 @@ import consulo.diff.fragment.LineFragment;
 import consulo.util.lang.Couple;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public enum Side {
@@ -34,19 +33,19 @@ public enum Side {
     myIndex = index;
   }
 
-  @Nonnull
+  
   public static Side fromIndex(int index) {
     if (index == 0) return LEFT;
     if (index == 1) return RIGHT;
     throw new IndexOutOfBoundsException("index: " + index);
   }
 
-  @Nonnull
+  
   public static Side fromLeft(boolean isLeft) {
     return isLeft ? LEFT : RIGHT;
   }
 
-  @Nonnull
+  
   public static Side fromRight(boolean isRight) {
     return isRight ? RIGHT : LEFT;
   }
@@ -59,12 +58,12 @@ public enum Side {
     return myIndex == 0;
   }
 
-  @Nonnull
+  
   public Side other() {
     return isLeft() ? RIGHT : LEFT;
   }
 
-  @Nonnull
+  
   public Side other(boolean other) {
     return other ? other() : this;
   }
@@ -83,54 +82,54 @@ public enum Side {
     return isLeft() ? left : right;
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull T left, @Nonnull T right) {
+  
+  public <T> T selectNotNull(T left, T right) {
     return isLeft() ? left : right;
   }
 
-  public boolean select(@Nonnull boolean[] array) {
+  public boolean select(boolean[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  public int select(@Nonnull int[] array) {
+  public int select(int[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  public <T> T select(@Nonnull T[] array) {
+  public <T> T select(T[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull T[] array) {
+  
+  public <T> T selectNotNull(T[] array) {
     assert array.length == 2;
     return array[myIndex];
   }
 
-  public <T> T select(@Nonnull List<T> list) {
+  public <T> T select(List<T> list) {
     assert list.size() == 2;
     return list.get(myIndex);
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull List<T> list) {
+  
+  public <T> T selectNotNull(List<T> list) {
     assert list.size() == 2;
     return list.get(myIndex);
   }
 
-  public <T> T select(@Nonnull Couple<T> region) {
+  public <T> T select(Couple<T> region) {
     return isLeft() ? region.first : region.second;
   }
 
-  @Nonnull
-  public <T> T selectNotNull(@Nonnull Couple<T> region) {
+  
+  public <T> T selectNotNull(Couple<T> region) {
     return isLeft() ? region.first : region.second;
   }
 
   @Nullable
-  public static <T> Side fromValue(@Nonnull List<? extends T> list, @Nullable T value) {
+  public static <T> Side fromValue(List<? extends T> list, @Nullable T value) {
     assert list.size() == 2;
     int index = list.indexOf(value);
     return index != -1 ? fromIndex(index) : null;
@@ -140,19 +139,19 @@ public enum Side {
   // Fragments
   //
 
-  public int getStartOffset(@Nonnull DiffFragment fragment) {
+  public int getStartOffset(DiffFragment fragment) {
     return isLeft() ? fragment.getStartOffset1() : fragment.getStartOffset2();
   }
 
-  public int getEndOffset(@Nonnull DiffFragment fragment) {
+  public int getEndOffset(DiffFragment fragment) {
     return isLeft() ? fragment.getEndOffset1() : fragment.getEndOffset2();
   }
 
-  public int getStartLine(@Nonnull LineFragment fragment) {
+  public int getStartLine(LineFragment fragment) {
     return isLeft() ? fragment.getStartLine1() : fragment.getStartLine2();
   }
 
-  public int getEndLine(@Nonnull LineFragment fragment) {
+  public int getEndLine(LineFragment fragment) {
     return isLeft() ? fragment.getEndLine1() : fragment.getEndLine2();
   }
 }

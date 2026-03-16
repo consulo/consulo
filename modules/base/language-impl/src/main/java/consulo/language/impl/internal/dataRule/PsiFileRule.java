@@ -25,12 +25,11 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PsiFileRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         sink.lazyValue(PsiFile.KEY, dataProvider -> {
             PsiElement element = dataProvider.get(PsiElement.KEY);
             if (element != null) {

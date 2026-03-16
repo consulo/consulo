@@ -18,8 +18,7 @@ package consulo.language.codeStyle;
 
 import consulo.util.lang.CharArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class IndentInside {
     public int whiteSpaces = 0;
@@ -65,13 +64,13 @@ public class IndentInside {
         return whiteSpaces + tabs * options.TAB_SIZE;
     }
 
-    @Nonnull
-    public static IndentInside getLastLineIndent(@Nonnull CharSequence text) {
+    
+    public static IndentInside getLastLineIndent(CharSequence text) {
         CharSequence lastLine = getLastLine(text);
         return createIndentOn(lastLine);
     }
 
-    @Nonnull
+    
     public static IndentInside createIndentOn(@Nullable CharSequence lastLine) {
         IndentInside result = new IndentInside();
         if (lastLine == null) {
@@ -88,8 +87,8 @@ public class IndentInside {
         return result;
     }
 
-    @Nonnull
-    public static CharSequence getLastLine(@Nonnull CharSequence text) {
+    
+    public static CharSequence getLastLine(CharSequence text) {
         int i = CharArrayUtil.shiftBackwardUntil(text, text.length() - 1, "\n");
         if (i < 0) {
             return text;

@@ -32,8 +32,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -76,11 +75,10 @@ public final class BuildContentManagerImpl implements BuildContentManager {
     private final Map<Content, Pair<Image, AtomicInteger>> liveContentsMap = new ConcurrentHashMap<>();
 
     @Inject
-    public BuildContentManagerImpl(@Nonnull Project project) {
+    public BuildContentManagerImpl(Project project) {
         myProject = project;
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     public ToolWindow getOrCreateToolWindow() {
@@ -99,7 +97,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         return toolWindow;
     }
 
-    private void invokeLaterIfNeeded(@Nonnull Runnable runnable) {
+    private void invokeLaterIfNeeded(Runnable runnable) {
         if (myProject.isDefault()) {
             return;
         }
@@ -176,7 +174,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
 
     @Override
     public void setSelectedContent(
-        @Nonnull Content content,
+        Content content,
         boolean requestFocus,
         boolean forcedFocus,
         boolean activate,
@@ -196,9 +194,9 @@ public final class BuildContentManagerImpl implements BuildContentManager {
 
     @Override
     public Content addTabbedContent(
-        @Nonnull JComponent contentComponent,
-        @Nonnull String groupPrefix,
-        @Nonnull String tabName,
+        JComponent contentComponent,
+        String groupPrefix,
+        String tabName,
         @Nullable Image icon,
         @Nullable Disposable childDisposable
     ) {
@@ -216,8 +214,8 @@ public final class BuildContentManagerImpl implements BuildContentManager {
     }
 
     public void startBuildNotified(
-        @Nonnull BuildDescriptor buildDescriptor,
-        @Nonnull Content content,
+        BuildDescriptor buildDescriptor,
+        Content content,
         @Nullable BuildProcessHandler processHandler
     ) {
         if (processHandler != null) {
@@ -248,7 +246,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         });
     }
 
-    public void finishBuildNotified(@Nonnull BuildDescriptor buildDescriptor, @Nonnull Content content) {
+    public void finishBuildNotified(BuildDescriptor buildDescriptor, Content content) {
         Map<Object, CloseListener> closeListenerMap = content.getUserData(CONTENT_CLOSE_LISTENERS);
         if (closeListenerMap != null) {
             CloseListener closeListener = closeListenerMap.remove(buildDescriptor.getId());
@@ -281,13 +279,13 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         @Nullable
         BuildProcessHandler myProcessHandler;
 
-        private CloseListener( @Nonnull Content content, @Nonnull BuildProcessHandler processHandler) {
+        private CloseListener( Content content, BuildProcessHandler processHandler) {
             super(content, myProject);
             myProcessHandler = processHandler;
         }
 
         @Override
-        protected void disposeContent(@Nonnull Content content) {
+        protected void disposeContent(Content content) {
             if (myProcessHandler instanceof Disposable disposable) {
                 Disposer.dispose(disposable);
             }
@@ -295,7 +293,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
         }
 
         @Override
-        protected boolean closeQuery(@Nonnull Content content, boolean modal) {
+        protected boolean closeQuery(Content content, boolean modal) {
             if (myProcessHandler == null || myProcessHandler.isProcessTerminated() || myProcessHandler.isProcessTerminating()) {
                 return true;
             }

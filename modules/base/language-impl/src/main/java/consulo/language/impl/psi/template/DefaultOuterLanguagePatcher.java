@@ -1,14 +1,13 @@
 package consulo.language.impl.psi.template;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class DefaultOuterLanguagePatcher implements OuterLanguageRangePatcher {
   public static final String OUTER_EXPRESSION_PLACEHOLDER = "jbIdentifier6b52cc4b";
 
   @Override
   @Nullable
-  public String getTextForOuterLanguageInsertionRange(@Nonnull TemplateDataElementType templateDataElementType, @Nonnull CharSequence outerElementText) {
+  public String getTextForOuterLanguageInsertionRange(TemplateDataElementType templateDataElementType, CharSequence outerElementText) {
     return OUTER_EXPRESSION_PLACEHOLDER;
   }
 }

@@ -8,8 +8,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ErrorStripeUpdateManager {
@@ -21,14 +20,14 @@ public abstract class ErrorStripeUpdateManager {
    * Repaint the error stripe panel. Reads PsiFile asynchronously on background thread
    * and dispatches UI update to EDT. Can be called from any thread.
    */
-  public abstract void repaintErrorStripePanel(@Nonnull Editor editor);
+  public abstract void repaintErrorStripePanel(Editor editor);
 
   /**
    * Repaint the error stripe panel with a pre-read PsiFile. Must be called on EDT.
    */
   @RequiredUIAccess
-  public abstract void repaintErrorStripePanel(@Nonnull Editor editor, @Nullable PsiFile psiFile);
+  public abstract void repaintErrorStripePanel(Editor editor, @Nullable PsiFile psiFile);
 
   @RequiredUIAccess
-  public abstract void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel, @Nullable PsiFile file);
+  public abstract void setOrRefreshErrorStripeRenderer(EditorMarkupModel editorMarkupModel, @Nullable PsiFile file);
 }

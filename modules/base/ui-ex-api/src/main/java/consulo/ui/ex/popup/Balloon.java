@@ -20,7 +20,6 @@ import consulo.ui.ex.LightweightWindow;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.event.JBPopupListener;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, Li
 
     void setBounds(Rectangle bounds);
 
-    void addListener(@Nonnull JBPopupListener listener);
+    void addListener(JBPopupListener listener);
 
     void hide();
 
@@ -72,7 +71,7 @@ public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, Li
         return false;
     }
 
-    default boolean isMovingForward(@Nonnull RelativePoint target) {
+    default boolean isMovingForward(RelativePoint target) {
         return false;
     }
 

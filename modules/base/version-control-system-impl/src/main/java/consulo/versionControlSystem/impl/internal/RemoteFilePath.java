@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -37,11 +36,11 @@ public class RemoteFilePath implements FilePath {
 
   private static final HashingStrategy<CharSequence> CASE_SENSITIVE_STRATEGY = CharSequenceHashingStrategy.of(true);
 
-  @Nonnull
+  
   private final String myPath;
   private final boolean myIsDirectory;
 
-  public RemoteFilePath(@Nonnull String path, boolean isDirectory) {
+  public RemoteFilePath(String path, boolean isDirectory) {
     myPath = path;
     myIsDirectory = isDirectory;
   }
@@ -58,19 +57,19 @@ public class RemoteFilePath implements FilePath {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public File getIOFile() {
     return new File(myPath);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return PathUtil.getFileName(myPath);
   }
 
-  @Nonnull
+  
   @Override
   public String getPresentableUrl() {
     return getPath();
@@ -82,20 +81,20 @@ public class RemoteFilePath implements FilePath {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public Charset getCharset() {
     return getCharset(null);
   }
 
-  @Nonnull
+  
   @Override
   public Charset getCharset(@Nullable Project project) {
     EncodingManager em = project == null ? EncodingManager.getInstance() : EncodingProjectManager.getInstance(project);
     return em.getDefaultCharset();
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return FileTypeRegistry.getInstance().getFileTypeByFileName(getName());
@@ -109,7 +108,7 @@ public class RemoteFilePath implements FilePath {
   public void hardRefresh() {
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return myPath;
@@ -121,7 +120,7 @@ public class RemoteFilePath implements FilePath {
   }
 
   @Override
-  public boolean isUnder(@Nonnull FilePath parent, boolean strict) {
+  public boolean isUnder(FilePath parent, boolean strict) {
     return FileUtil.isAncestor(parent.getPath(), getPath(), strict);
   }
 

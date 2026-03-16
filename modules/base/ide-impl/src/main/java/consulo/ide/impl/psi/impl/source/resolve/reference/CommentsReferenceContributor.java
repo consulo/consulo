@@ -23,7 +23,6 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiReferenceContributor;
 import consulo.language.psi.PsiReferenceRegistrar;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class CommentsReferenceContributor extends PsiReferenceContributor {
@@ -37,11 +36,11 @@ public class CommentsReferenceContributor extends PsiReferenceContributor {
   public static final ReferenceProviderType COMMENTS_REFERENCE_PROVIDER_TYPE = new ReferenceProviderType("commentsReferenceProvider");
 
   @Override
-  public void registerReferenceProviders(@Nonnull PsiReferenceRegistrar registrar) {
+  public void registerReferenceProviders(PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(PlatformPatterns.psiElement(PsiComment.class), COMMENTS_REFERENCE_PROVIDER_TYPE.getProvider());
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

@@ -68,8 +68,7 @@ import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -78,7 +77,7 @@ import java.util.function.Predicate;
 public class DiffImplUtil {
     private static final Logger LOG = Logger.getInstance(DiffImplUtil.class);
 
-    @Nonnull
+    
     public static final String DIFF_CONFIG = StoragePathMacros.APP_CONFIG + "/diff.xml";
     public static final JBValue TITLE_GAP = new JBValue.Float(2);
 
@@ -86,23 +85,23 @@ public class DiffImplUtil {
     // Editor
     //
 
-    public static boolean isDiffEditor(@Nonnull Editor editor) {
+    public static boolean isDiffEditor(Editor editor) {
         return editor.getEditorKind() == EditorKind.DIFF;
     }
 
-    public static void setFoldingModelSupport(@Nonnull EditorEx editor) {
+    public static void setFoldingModelSupport(EditorEx editor) {
         editor.getSettings().setFoldingOutlineShown(true);
         editor.getSettings().setAutoCodeFoldingEnabled(false);
         editor.getColorsScheme().setAttributes(EditorColors.FOLDED_TEXT_ATTRIBUTES, null);
     }
 
-    @Nonnull
-    public static EditorEx createEditor(@Nonnull Document document, @Nullable Project project, boolean isViewer) {
+    
+    public static EditorEx createEditor(Document document, @Nullable Project project, boolean isViewer) {
         return createEditor(document, project, isViewer, false);
     }
 
-    @Nonnull
-    public static EditorEx createEditor(@Nonnull Document document, @Nullable Project project, boolean isViewer, boolean enableFolding) {
+    
+    public static EditorEx createEditor(Document document, @Nullable Project project, boolean isViewer, boolean enableFolding) {
         EditorFactory factory = EditorFactory.getInstance();
         EditorEx editor = (EditorEx) (isViewer
             ? factory.createViewer(document, project, EditorKind.DIFF)
@@ -125,7 +124,7 @@ public class DiffImplUtil {
         return editor;
     }
 
-    public static boolean isMirrored(@Nonnull Editor editor) {
+    public static boolean isMirrored(Editor editor) {
         return editor instanceof EditorEx editorEx && editorEx.getVerticalScrollbarOrientation() == EditorEx.VERTICAL_SCROLLBAR_LEFT;
     }
 
@@ -167,7 +166,7 @@ public class DiffImplUtil {
         }
     }
 
-    @Nonnull
+    
     public static LogicalPosition getCaretPosition(@Nullable Editor editor) {
         return editor != null ? editor.getCaretModel().getLogicalPosition() : new LogicalPosition(0, 0);
     }
@@ -176,13 +175,13 @@ public class DiffImplUtil {
     // Icons
     //
 
-    @Nonnull
-    public static Image getArrowIcon(@Nonnull Side sourceSide) {
+    
+    public static Image getArrowIcon(Side sourceSide) {
         return sourceSide.select(PlatformIconGroup.diffArrowright(), PlatformIconGroup.diffArrow());
     }
 
-    @Nonnull
-    public static Image getArrowDownIcon(@Nonnull Side sourceSide) {
+    
+    public static Image getArrowDownIcon(Side sourceSide) {
         return sourceSide.select(PlatformIconGroup.diffArrowright(), PlatformIconGroup.diffArrowleftdown());
     }
 
@@ -190,11 +189,11 @@ public class DiffImplUtil {
     // UI
     //
 
-    public static void addActionBlock(@Nonnull DefaultActionGroup group, AnAction... actions) {
+    public static void addActionBlock(DefaultActionGroup group, AnAction... actions) {
         addActionBlock(group, Arrays.asList(actions));
     }
 
-    public static void addActionBlock(@Nonnull DefaultActionGroup group, @Nullable List<? extends AnAction> actions) {
+    public static void addActionBlock(DefaultActionGroup group, @Nullable List<? extends AnAction> actions) {
         if (actions == null || actions.isEmpty()) {
             return;
         }
@@ -208,13 +207,13 @@ public class DiffImplUtil {
         }
     }
 
-    @Nonnull
+    
     public static String getSettingsConfigurablePath() {
         return "Settings | Tools | Diff";
     }
 
-    @Nonnull
-    public static String createTooltipText(@Nonnull String text, @Nullable String appendix) {
+    
+    public static String createTooltipText(String text, @Nullable String appendix) {
         StringBuilder result = new StringBuilder();
         result.append("<html><body>");
         result.append(text);
@@ -227,8 +226,8 @@ public class DiffImplUtil {
         return result.toString();
     }
 
-    @Nonnull
-    public static String createNotificationText(@Nonnull String text, @Nullable String appendix) {
+    
+    public static String createNotificationText(String text, @Nullable String appendix) {
         StringBuilder result = new StringBuilder();
         result.append("<html><body>");
         result.append(text);
@@ -241,13 +240,13 @@ public class DiffImplUtil {
         return result.toString();
     }
 
-    @Nonnull
+    
     public static List<LineFragment> compare(
-        @Nonnull DiffRequest request,
-        @Nonnull CharSequence text1,
-        @Nonnull CharSequence text2,
-        @Nonnull DiffConfig config,
-        @Nonnull ProgressIndicator indicator
+        DiffRequest request,
+        CharSequence text1,
+        CharSequence text2,
+        DiffConfig config,
+        ProgressIndicator indicator
     ) {
         indicator.checkCanceled();
 
@@ -273,9 +272,9 @@ public class DiffImplUtil {
 
     @Nullable
     public static MergeInnerDifferences compareThreesideInner(
-        @Nonnull List<CharSequence> chunks,
-        @Nonnull ComparisonPolicy comparisonPolicy,
-        @Nonnull ProgressIndicator indicator
+        List<CharSequence> chunks,
+        ComparisonPolicy comparisonPolicy,
+        ProgressIndicator indicator
     ) {
         if (chunks.get(0) == null && chunks.get(1) == null && chunks.get(2) == null) {
             return null; // ---
@@ -340,7 +339,7 @@ public class DiffImplUtil {
     private static boolean isChunksEquals(
         @Nullable CharSequence chunk1,
         @Nullable CharSequence chunk2,
-        @Nonnull ComparisonPolicy comparisonPolicy
+        ComparisonPolicy comparisonPolicy
     ) {
         if (chunk1 == null) {
             chunk1 = "";
@@ -351,8 +350,8 @@ public class DiffImplUtil {
         return ComparisonManager.getInstance().isEquals(chunk1, chunk2, comparisonPolicy);
     }
 
-    @Nonnull
-    public static <T> int[] getSortedIndexes(@Nonnull List<T> values, @Nonnull Comparator<T> comparator) {
+    
+    public static <T> int[] getSortedIndexes(List<T> values, Comparator<T> comparator) {
         List<Integer> indexes = new ArrayList<>(values.size());
         for (int i = 0; i < values.size(); i++) {
             indexes.add(i);
@@ -367,8 +366,8 @@ public class DiffImplUtil {
         return ArrayUtil.toIntArray(indexes);
     }
 
-    @Nonnull
-    public static int[] invertIndexes(@Nonnull int[] indexes) {
+    
+    public static int[] invertIndexes(int[] indexes) {
         int[] inverted = new int[indexes.length];
         for (int i = 0; i < indexes.length; i++) {
             inverted[indexes[i]] = i;
@@ -380,8 +379,8 @@ public class DiffImplUtil {
     // Document modification
     //
 
-    @Nonnull
-    public static BitSet getSelectedLines(@Nonnull Editor editor) {
+    
+    public static BitSet getSelectedLines(Editor editor) {
         Document document = editor.getDocument();
         int totalLines = getLineCount(document);
         BitSet lines = new BitSet(totalLines + 1);
@@ -411,7 +410,7 @@ public class DiffImplUtil {
             || line >= line1 && line < line2;
     }
 
-    public static boolean isSelectedByLine(@Nonnull BitSet selected, int line1, int line2) {
+    public static boolean isSelectedByLine(BitSet selected, int line1, int line2) {
         if (line1 == line2) {
             return selected.get(line1);
         }
@@ -421,7 +420,7 @@ public class DiffImplUtil {
         }
     }
 
-    private static void deleteLines(@Nonnull Document document, int line1, int line2) {
+    private static void deleteLines(Document document, int line1, int line2) {
         TextRange range = getLinesRange(document, line1, line2);
         int offset1 = range.getStartOffset();
         int offset2 = range.getEndOffset();
@@ -435,7 +434,7 @@ public class DiffImplUtil {
         document.deleteString(offset1, offset2);
     }
 
-    private static void insertLines(@Nonnull Document document, int line, @Nonnull CharSequence text) {
+    private static void insertLines(Document document, int line, CharSequence text) {
         if (line == getLineCount(document)) {
             document.insertString(document.getTextLength(), "\n" + text);
         }
@@ -444,7 +443,7 @@ public class DiffImplUtil {
         }
     }
 
-    private static void replaceLines(@Nonnull Document document, int line1, int line2, @Nonnull CharSequence text) {
+    private static void replaceLines(Document document, int line1, int line2, CharSequence text) {
         TextRange currentTextRange = getLinesRange(document, line1, line2);
         int offset1 = currentTextRange.getStartOffset();
         int offset2 = currentTextRange.getEndOffset();
@@ -453,10 +452,10 @@ public class DiffImplUtil {
     }
 
     public static void applyModification(
-        @Nonnull Document document,
+        Document document,
         int line1,
         int line2,
-        @Nonnull List<? extends CharSequence> newLines
+        List<? extends CharSequence> newLines
     ) {
         if (line1 == line2 && newLines.isEmpty()) {
             return;
@@ -473,10 +472,10 @@ public class DiffImplUtil {
     }
 
     public static void applyModification(
-        @Nonnull Document document1,
+        Document document1,
         int line1,
         int line2,
-        @Nonnull Document document2,
+        Document document2,
         int oLine1,
         int oLine2
     ) {
@@ -494,8 +493,8 @@ public class DiffImplUtil {
         }
     }
 
-    @Nonnull
-    public static CharSequence getLinesContent(@Nonnull Document document, int line1, int line2) {
+    
+    public static CharSequence getLinesContent(Document document, int line1, int line2) {
         TextRange otherRange = getLinesRange(document, line1, line2);
         return document.getImmutableCharSequence().subSequence(otherRange.getStartOffset(), otherRange.getEndOffset());
     }
@@ -506,12 +505,12 @@ public class DiffImplUtil {
      * we consider '\n' not as a part of line, but a separator between lines
      * ex: if last line is not empty, the last symbol will not be '\n'
      */
-    public static TextRange getLinesRange(@Nonnull Document document, int line1, int line2) {
+    public static TextRange getLinesRange(Document document, int line1, int line2) {
         return getLinesRange(document, line1, line2, false);
     }
 
-    @Nonnull
-    public static TextRange getLinesRange(@Nonnull Document document, int line1, int line2, boolean includeNewline) {
+    
+    public static TextRange getLinesRange(Document document, int line1, int line2, boolean includeNewline) {
         if (line1 == line2) {
             int lineStartOffset = line1 < getLineCount(document) ? document.getLineStartOffset(line1) : document.getTextLength();
             return new TextRange(lineStartOffset, lineStartOffset);
@@ -526,7 +525,7 @@ public class DiffImplUtil {
         }
     }
 
-    public static int getOffset(@Nonnull Document document, int line, int column) {
+    public static int getOffset(Document document, int line, int column) {
         if (line < 0) {
             return 0;
         }
@@ -539,11 +538,11 @@ public class DiffImplUtil {
         return Math.min(start + column, end);
     }
 
-    public static int getLineCount(@Nonnull Document document) {
+    public static int getLineCount(Document document) {
         return Math.max(document.getLineCount(), 1);
     }
 
-    public static int lineToY(@Nonnull Editor editor, int line) {
+    public static int lineToY(Editor editor, int line) {
         Document document = editor.getDocument();
         if (line >= getLineCount(document)) {
             int y = lineToY(editor, getLineCount(document) - 1);
@@ -552,13 +551,13 @@ public class DiffImplUtil {
         return editor.logicalPositionToXY(editor.offsetToLogicalPosition(document.getLineStartOffset(line))).y;
     }
 
-    @Nonnull
-    public static List<String> getLines(@Nonnull Document document) {
+    
+    public static List<String> getLines(Document document) {
         return getLines(document, 0, getLineCount(document));
     }
 
-    @Nonnull
-    public static List<String> getLines(@Nonnull Document document, int startLine, int endLine) {
+    
+    public static List<String> getLines(Document document, int startLine, int endLine) {
         if (startLine < 0 || startLine > endLine || endLine > getLineCount(document)) {
             throw new IndexOutOfBoundsException(String.format(
                 "Wrong line range: [%d, %d); lineCount: '%d'",
@@ -581,23 +580,23 @@ public class DiffImplUtil {
     // Updating ranges on change
     //
 
-    @Nonnull
-    public static LineRange getAffectedLineRange(@Nonnull DocumentEvent e) {
+    
+    public static LineRange getAffectedLineRange(DocumentEvent e) {
         int line1 = e.getDocument().getLineNumber(e.getOffset());
         int line2 = e.getDocument().getLineNumber(e.getOffset() + e.getOldLength()) + 1;
         return new LineRange(line1, line2);
     }
 
-    public static int countLinesShift(@Nonnull DocumentEvent e) {
+    public static int countLinesShift(DocumentEvent e) {
         return StringUtil.countNewLines(e.getNewFragment()) - StringUtil.countNewLines(e.getOldFragment());
     }
 
-    @Nonnull
+    
     public static UpdatedLineRange updateRangeOnModification(int start, int end, int changeStart, int changeEnd, int shift) {
         return updateRangeOnModification(start, end, changeStart, changeEnd, shift, false);
     }
 
-    @Nonnull
+    
     public static UpdatedLineRange updateRangeOnModification(
         int start,
         int end,
@@ -652,21 +651,21 @@ public class DiffImplUtil {
     // Types
     //
 
-    @Nonnull
-    public static TextDiffType getLineDiffType(@Nonnull LineFragment fragment) {
+    
+    public static TextDiffType getLineDiffType(LineFragment fragment) {
         boolean left = fragment.getStartLine1() != fragment.getEndLine1();
         boolean right = fragment.getStartLine2() != fragment.getEndLine2();
         return getDiffType(left, right);
     }
 
-    @Nonnull
-    public static TextDiffType getDiffType(@Nonnull DiffFragment fragment) {
+    
+    public static TextDiffType getDiffType(DiffFragment fragment) {
         boolean left = fragment.getEndOffset1() != fragment.getStartOffset1();
         boolean right = fragment.getEndOffset2() != fragment.getStartOffset2();
         return getDiffType(left, right);
     }
 
-    @Nonnull
+    
     public static TextDiffType getDiffType(boolean hasDeleted, boolean hasInserted) {
         if (hasDeleted && hasInserted) {
             return TextDiffType.MODIFIED;
@@ -683,10 +682,10 @@ public class DiffImplUtil {
         }
     }
 
-    @Nonnull
+    
     public static MergeConflictType getMergeType(
-        @Nonnull Predicate<ThreeSide> emptiness,
-        @Nonnull BiPredicate<ThreeSide, ThreeSide> equality
+        Predicate<ThreeSide> emptiness,
+        BiPredicate<ThreeSide, ThreeSide> equality
     ) {
         boolean isLeftEmpty = emptiness.test(ThreeSide.LEFT);
         boolean isBaseEmpty = emptiness.test(ThreeSide.BASE);
@@ -725,11 +724,11 @@ public class DiffImplUtil {
         }
     }
 
-    @Nonnull
+    
     public static MergeConflictType getLineMergeType(
-        @Nonnull MergeLineFragment fragment,
-        @Nonnull List<? extends Document> documents,
-        @Nonnull ComparisonPolicy policy
+        MergeLineFragment fragment,
+        List<? extends Document> documents,
+        ComparisonPolicy policy
     ) {
         return getMergeType(
             (side) -> isLineMergeIntervalEmpty(fragment, side),
@@ -738,11 +737,11 @@ public class DiffImplUtil {
     }
 
     private static boolean compareLineMergeContents(
-        @Nonnull MergeLineFragment fragment,
-        @Nonnull List<? extends Document> documents,
-        @Nonnull ComparisonPolicy policy,
-        @Nonnull ThreeSide side1,
-        @Nonnull ThreeSide side2
+        MergeLineFragment fragment,
+        List<? extends Document> documents,
+        ComparisonPolicy policy,
+        ThreeSide side1,
+        ThreeSide side2
     ) {
         int start1 = fragment.getStartLine(side1);
         int end1 = fragment.getEndLine(side1);
@@ -770,7 +769,7 @@ public class DiffImplUtil {
         return true;
     }
 
-    private static boolean isLineMergeIntervalEmpty(@Nonnull MergeLineFragment fragment, @Nonnull ThreeSide side) {
+    private static boolean isLineMergeIntervalEmpty(MergeLineFragment fragment, ThreeSide side) {
         return fragment.getStartLine(side) == fragment.getEndLine(side);
     }
 
@@ -800,12 +799,12 @@ public class DiffImplUtil {
     @RequiredUIAccess
     public static void executeWriteCommand(
         @Nullable Project project,
-        @Nonnull Document document,
+        Document document,
         @Nullable String commandName,
         @Nullable String commandGroupId,
-        @Nonnull UndoConfirmationPolicy confirmationPolicy,
+        UndoConfirmationPolicy confirmationPolicy,
         boolean underBulkUpdate,
-        @Nonnull Runnable task
+        Runnable task
     ) {
         CommandProcessor.getInstance().newCommand()
             .project(project)
@@ -821,10 +820,10 @@ public class DiffImplUtil {
     @Deprecated(forRemoval = true)
     @RequiredUIAccess
     public static void executeWriteCommand(
-        @Nonnull Document document,
+        Document document,
         @Nullable Project project,
         @Nullable String commandName,
-        @Nonnull Runnable task
+        Runnable task
     ) {
         CommandProcessor.getInstance().newCommand()
             .project(project)
@@ -834,11 +833,11 @@ public class DiffImplUtil {
             .run(task);
     }
 
-    public static boolean isEditable(@Nonnull Editor editor) {
+    public static boolean isEditable(Editor editor) {
         return !editor.isViewer() && canMakeWritable(editor.getDocument());
     }
 
-    public static boolean canMakeWritable(@Nonnull Document document) {
+    public static boolean canMakeWritable(Document document) {
         if (document.isWritable()) {
             return true;
         }
@@ -847,7 +846,7 @@ public class DiffImplUtil {
     }
 
     @RequiredUIAccess
-    public static boolean makeWritable(@Nullable Project project, @Nonnull Document document) {
+    public static boolean makeWritable(@Nullable Project project, Document document) {
         VirtualFile file = FileDocumentManager.getInstance().getFile(document);
         if (file == null || !file.isValid()) {
             return document.isWritable();
@@ -856,14 +855,14 @@ public class DiffImplUtil {
     }
 
     @RequiredUIAccess
-    public static boolean makeWritable(@Nullable Project project, @Nonnull VirtualFile file) {
+    public static boolean makeWritable(@Nullable Project project, VirtualFile file) {
         if (project == null) {
             project = ProjectManager.getInstance().getDefaultProject();
         }
         return !ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(file).hasReadonlyFiles();
     }
 
-    public static void putNonundoableOperation(@Nullable Project project, @Nonnull Document document) {
+    public static void putNonundoableOperation(@Nullable Project project, Document document) {
         UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
         if (undoManager != null) {
             DocumentReference ref = DocumentReferenceManager.getInstance().create(document);
@@ -874,19 +873,19 @@ public class DiffImplUtil {
     /**
      * Difference with {@link VfsUtil#markDirtyAndRefresh} is that refresh from VfsUtil will be performed with ModalityState.NON_MODAL.
      */
-    public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, VirtualFile... files) {
         ModalityState modalityState = Application.get().getDefaultModalityState();
         VirtualFileUtil.markDirty(recursive, reloadChildren, files);
         RefreshQueue.getInstance().refresh(async, recursive, null, modalityState, files);
     }
 
-    public static <T> UserDataHolderBase createUserDataHolder(@Nonnull Key<T> key, @Nullable T value) {
+    public static <T> UserDataHolderBase createUserDataHolder(Key<T> key, @Nullable T value) {
         UserDataHolderBase holder = new UserDataHolderBase();
         holder.putUserData(key, value);
         return holder;
     }
 
-    public static boolean isUserDataFlagSet(@Nonnull Key<Boolean> key, UserDataHolder... holders) {
+    public static boolean isUserDataFlagSet(Key<Boolean> key, UserDataHolder... holders) {
         for (UserDataHolder holder : holders) {
             if (holder == null) {
                 continue;
@@ -899,7 +898,7 @@ public class DiffImplUtil {
         return false;
     }
 
-    public static <T> T getUserData(@Nullable UserDataHolder first, @Nullable UserDataHolder second, @Nonnull Key<T> key) {
+    public static <T> T getUserData(@Nullable UserDataHolder first, @Nullable UserDataHolder second, Key<T> key) {
         if (first != null) {
             T data = first.getUserData(key);
             if (data != null) {
@@ -916,7 +915,7 @@ public class DiffImplUtil {
     }
 
     @Nullable
-    public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull Side currentSide) {
+    public static VirtualFile getVirtualFile(ContentDiffRequest request, Side currentSide) {
         List<DiffContent> contents = request.getContents();
         if (currentSide.select(contents) instanceof FileContent content1) {
             return content1.getFile();
@@ -928,7 +927,7 @@ public class DiffImplUtil {
     }
 
     @Nullable
-    public static VirtualFile getVirtualFile(@Nonnull ContentDiffRequest request, @Nonnull ThreeSide currentSide) {
+    public static VirtualFile getVirtualFile(ContentDiffRequest request, ThreeSide currentSide) {
         List<DiffContent> contents = request.getContents();
         if (currentSide.select(contents) instanceof FileContent content1) {
             return content1.getFile();
@@ -956,8 +955,8 @@ public class DiffImplUtil {
         return null;
     }
 
-    @Nonnull
-    public static DiffSettingsHolder.DiffSettings getDiffSettings(@Nonnull DiffContext context) {
+    
+    public static DiffSettingsHolder.DiffSettings getDiffSettings(DiffContext context) {
         DiffSettingsHolder.DiffSettings settings = context.getUserData(DiffSettingsHolder.KEY);
         if (settings == null) {
             settings = DiffSettingsHolder.DiffSettings.getSettings(context.getUserData(DiffUserDataKeys.PLACE));
@@ -970,8 +969,8 @@ public class DiffImplUtil {
     // Tools
     //
 
-    @Nonnull
-    public static <T extends DiffTool> List<T> filterSuppressedTools(@Nonnull List<T> tools) {
+    
+    public static <T extends DiffTool> List<T> filterSuppressedTools(List<T> tools) {
         if (tools.size() < 2) {
             return tools;
         }
@@ -1001,20 +1000,20 @@ public class DiffImplUtil {
     //
 
     public static class DiffConfig {
-        @Nonnull
+        
         public final ComparisonPolicy policy;
         public final boolean innerFragments;
         public final boolean squashFragments;
         public final boolean trimFragments;
 
-        public DiffConfig(@Nonnull ComparisonPolicy policy, boolean innerFragments, boolean squashFragments, boolean trimFragments) {
+        public DiffConfig(ComparisonPolicy policy, boolean innerFragments, boolean squashFragments, boolean trimFragments) {
             this.policy = policy;
             this.innerFragments = innerFragments;
             this.squashFragments = squashFragments;
             this.trimFragments = trimFragments;
         }
 
-        public DiffConfig(@Nonnull IgnorePolicy ignorePolicy, @Nonnull HighlightPolicy highlightPolicy) {
+        public DiffConfig(IgnorePolicy ignorePolicy, HighlightPolicy highlightPolicy) {
             this(ignorePolicy.getComparisonPolicy(), highlightPolicy.isFineFragments(), highlightPolicy.isShouldSquash(),
                 ignorePolicy.isShouldTrimChunks()
             );

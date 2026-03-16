@@ -21,7 +21,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.hint.TooltipEvent;
 import consulo.ui.ex.popup.Balloon;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;

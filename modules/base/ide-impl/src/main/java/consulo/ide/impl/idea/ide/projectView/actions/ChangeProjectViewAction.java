@@ -24,7 +24,6 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ProjectViewChangeView")
 public final class ChangeProjectViewAction extends AnAction {
@@ -34,14 +33,14 @@ public final class ChangeProjectViewAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ProjectView projectView = ProjectView.getInstance(project);
         projectView.changeView();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         if (project == null) {
             event.getPresentation().setEnabled(false);

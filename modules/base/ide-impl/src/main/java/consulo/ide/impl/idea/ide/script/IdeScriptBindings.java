@@ -17,15 +17,14 @@ package consulo.ide.impl.idea.ide.script;
 
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.ide.impl.script.IdeScriptEngine;
 
 public class IdeScriptBindings {
   public static final Binding<IDE> IDE = Binding.create("IDE", IDE.class);
 
-  public static void ensureIdeIsBound(@Nullable Project project, @Nonnull IdeScriptEngine engine) {
+  public static void ensureIdeIsBound(@Nullable Project project, IdeScriptEngine engine) {
     IDE oldIdeBinding = IDE.get(engine);
     if (oldIdeBinding == null) {
       IDE.set(engine, new IDE(project, engine));
@@ -39,20 +38,20 @@ public class IdeScriptBindings {
     private final String myName;
     private final Class<T> myClass;
 
-    private Binding(@Nonnull String name, @Nonnull Class<T> clazz) {
+    private Binding(String name, Class<T> clazz) {
       myName = name;
       myClass = clazz;
     }
 
-    public void set(@Nonnull IdeScriptEngine engine, T value) {
+    public void set(IdeScriptEngine engine, T value) {
       engine.setBinding(myName, value);
     }
 
-    public T get(@Nonnull IdeScriptEngine engine) {
+    public T get(IdeScriptEngine engine) {
       return ObjectUtil.tryCast(engine.getBinding(myName), myClass);
     }
 
-    static <T> Binding<T> create(@Nonnull String name, @Nonnull Class<T> clazz) {
+    static <T> Binding<T> create(String name, Class<T> clazz) {
       return new Binding<>(name, clazz);
     }
   }

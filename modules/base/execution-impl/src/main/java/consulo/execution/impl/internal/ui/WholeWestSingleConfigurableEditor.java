@@ -32,9 +32,7 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +52,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
 
     public WholeWestSingleConfigurableEditor(@Nullable Project project,
                                              Configurable configurable,
-                                             @NonNls String dimensionKey,
+                                             String dimensionKey,
                                              boolean showApplyButton,
                                              IdeModalityType ideModalityType,
                                              boolean doNotCallInit) {
@@ -69,7 +67,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
 
     public WholeWestSingleConfigurableEditor(@Nullable Project project,
                                              Configurable configurable,
-                                             @NonNls String dimensionKey,
+                                             String dimensionKey,
                                              boolean showApplyButton,
                                              IdeModalityType ideModalityType) {
         super(project, true, ideModalityType);
@@ -99,7 +97,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         myConfigurable.reset();
     }
 
-    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, boolean showApplyButton) {
+    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey, boolean showApplyButton) {
         this(project, configurable, dimensionKey, showApplyButton, IdeModalityType.IDE);
     }
 
@@ -107,11 +105,11 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
         this(parent, configurable, dimensionServiceKey, showApplyButton, IdeModalityType.IDE);
     }
 
-    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey, IdeModalityType ideModalityType) {
+    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey, IdeModalityType ideModalityType) {
         this(project, configurable, dimensionKey, true, ideModalityType);
     }
 
-    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, @NonNls String dimensionKey) {
+    public WholeWestSingleConfigurableEditor(@Nullable Project project, Configurable configurable, String dimensionKey) {
         this(project, configurable, dimensionKey, true);
     }
 
@@ -156,7 +154,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<Action>();
         actions.add(getOKAction());
@@ -262,7 +260,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
 
     @RequiredUIAccess
     @Override
-    protected void initRootPanel(@Nonnull JPanel rootPanel) {
+    protected void initRootPanel(JPanel rootPanel) {
         myRootPanel = rootPanel;
         super.initRootPanel(rootPanel);
     }

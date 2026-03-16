@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.archive.ArchiveHandler;
 import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +45,7 @@ public class VfsImplUtil {
     }
 
     @Nullable
-    public static NewVirtualFile findFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    public static NewVirtualFile findFileByPath(NewVirtualFileSystem vfs, String path) {
         Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
         if (data == null) {
             return null;
@@ -79,12 +78,12 @@ public class VfsImplUtil {
     }
 
     @Nullable
-    public static NewVirtualFile findFileByPathIfCached(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    public static NewVirtualFile findFileByPathIfCached(NewVirtualFileSystem vfs, String path) {
         return findCachedFileByPath(vfs, path).first;
     }
 
-    @Nonnull
-    public static Couple<NewVirtualFile> findCachedFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    
+    public static Couple<NewVirtualFile> findCachedFileByPath(NewVirtualFileSystem vfs, String path) {
         Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
         if (data == null) {
             return Couple.of();
@@ -120,7 +119,7 @@ public class VfsImplUtil {
     }
 
     @Nullable
-    public static NewVirtualFile refreshAndFindFileByPath(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    public static NewVirtualFile refreshAndFindFileByPath(NewVirtualFileSystem vfs, String path) {
         Pair<NewVirtualFile, Iterable<String>> data = prepare(vfs, path);
         if (data == null) {
             return null;
@@ -154,7 +153,7 @@ public class VfsImplUtil {
     }
 
     @Nullable
-    private static Pair<NewVirtualFile, Iterable<String>> prepare(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    private static Pair<NewVirtualFile, Iterable<String>> prepare(NewVirtualFileSystem vfs, String path) {
         String normalizedPath = normalize(vfs, path);
         if (StringUtil.isEmptyOrSpaces(normalizedPath)) {
             return null;
@@ -175,7 +174,7 @@ public class VfsImplUtil {
         return Pair.create(root, parts);
     }
 
-    public static void refresh(@Nonnull NewVirtualFileSystem vfs, boolean asynchronous) {
+    public static void refresh(NewVirtualFileSystem vfs, boolean asynchronous) {
         VirtualFile[] roots = ManagingFS.getInstance().getRoots(vfs);
         if (roots.length > 0) {
             RefreshQueue.getInstance().refresh(asynchronous, true, null, roots);
@@ -183,7 +182,7 @@ public class VfsImplUtil {
     }
 
     @Nullable
-    public static String normalize(@Nonnull NewVirtualFileSystem vfs, @Nonnull String path) {
+    public static String normalize(NewVirtualFileSystem vfs, String path) {
         return vfs.normalize(path);
     }
 
@@ -192,21 +191,21 @@ public class VfsImplUtil {
     private static final Map<String, Pair<BaseArchiveFileSystem, ArchiveHandler>> ourHandlers = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
     private static final Map<String, Set<String>> ourDominatorsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
 
-    @Nonnull
+    
     public static <T extends ArchiveHandler, S extends BaseArchiveFileSystem> T getHandler(
-        @Nonnull S vfs,
-        @Nonnull VirtualFile entryFile,
-        @Nonnull BiFunction<String, S, T> producer
+        S vfs,
+        VirtualFile entryFile,
+        BiFunction<String, S, T> producer
     ) {
         String localPath = vfs.extractLocalPath(vfs.extractRootPath(entryFile.getPath()));
         return getHandler(vfs, localPath, producer);
     }
 
-    @Nonnull
+    
     public static <T extends ArchiveHandler, S extends BaseArchiveFileSystem> T getHandler(
-        @Nonnull S vfs,
-        @Nonnull String localPath,
-        @Nonnull BiFunction<String, S, T> producer
+        S vfs,
+        String localPath,
+        BiFunction<String, S, T> producer
     ) {
         checkSubscription();
 
@@ -252,7 +251,7 @@ public class VfsImplUtil {
         Application app = Application.get();
         app.getMessageBus().connect(app).subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 InvalidationState state = null;
 
                 synchronized (ourLock) {
@@ -339,8 +338,8 @@ public class VfsImplUtil {
         }
     }
 
-    @Nonnull
-    public static byte[] loadBytes(@Nonnull VirtualFile file) throws IOException {
+    
+    public static byte[] loadBytes(VirtualFile file) throws IOException {
         return RawFileLoader.getInstance().isTooLarge(file.getLength())
             ? FileUtil.loadFirstAndClose(file.getInputStream(), RawFileLoader.getInstance().getLargeFilePreviewSize())
             : file.contentsToByteArray();

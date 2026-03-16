@@ -26,8 +26,7 @@ import consulo.externalSystem.setting.ExternalSystemSettingsListener;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A control which knows how to manage settings of external project being imported.
@@ -36,22 +35,22 @@ import jakarta.annotation.Nullable;
  * @since 4/30/13 2:33 PM
  */
 public abstract class AbstractImportFromExternalSystemControl<ProjectSettings extends ExternalProjectSettings, L extends ExternalSystemSettingsListener<ProjectSettings>, SystemSettings extends AbstractExternalSystemSettings<SystemSettings, ProjectSettings, L>> {
-    @Nonnull
+    
     private final SystemSettings mySystemSettings;
-    @Nonnull
+    
     private final ProjectSettings myProjectSettings;
 
-    @Nonnull
+    
     private final ExternalSystemSettingsControl<ProjectSettings> myProjectSettingsControl;
-    @Nonnull
+    
     private final ProjectSystemId myExternalSystemId;
     @Nullable
     private final ExternalSystemSettingsControl<SystemSettings> mySystemSettingsControl;
 
     protected AbstractImportFromExternalSystemControl(
-        @Nonnull ProjectSystemId externalSystemId,
-        @Nonnull SystemSettings systemSettings,
-        @Nonnull ProjectSettings projectSettings
+        ProjectSystemId externalSystemId,
+        SystemSettings systemSettings,
+        ProjectSettings projectSettings
     ) {
         myExternalSystemId = externalSystemId;
         mySystemSettings = systemSettings;
@@ -60,7 +59,7 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
         mySystemSettingsControl = createSystemSettingsControl(systemSettings);
     }
 
-    public abstract void onLinkedProjectPathChange(@Nonnull String path);
+    public abstract void onLinkedProjectPathChange(String path);
 
     /**
      * Creates a control for managing given project settings.
@@ -68,8 +67,8 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
      * @param settings target external project settings
      * @return control for managing given project settings
      */
-    @Nonnull
-    protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(@Nonnull ProjectSettings settings);
+    
+    protected abstract ExternalSystemSettingsControl<ProjectSettings> createProjectSettingsControl(ProjectSettings settings);
 
     /**
      * Creates a control for managing given system-level settings (if any).
@@ -79,9 +78,9 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
      * <code>null</code> if current external system doesn't have system-level settings (only project-level settings)
      */
     @Nullable
-    protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(@Nonnull SystemSettings settings);
+    protected abstract ExternalSystemSettingsControl<SystemSettings> createSystemSettingsControl(SystemSettings settings);
 
-    @Nonnull
+    
     public ExternalSystemSettingsControl<ProjectSettings> getProjectSettingsControl() {
         return myProjectSettingsControl;
     }
@@ -91,12 +90,12 @@ public abstract class AbstractImportFromExternalSystemControl<ProjectSettings ex
         return mySystemSettingsControl;
     }
 
-    @Nonnull
+    
     public SystemSettings getSystemSettings() {
         return mySystemSettings;
     }
 
-    @Nonnull
+    
     public ProjectSettings getProjectSettings() {
         return myProjectSettings;
     }

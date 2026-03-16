@@ -17,13 +17,12 @@ package consulo.language.editor.codeFragment;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author oleg
  */
 public class CodeFragmentUtil {
-  public static Position getPosition(@Nonnull PsiElement element, int startOffset, int endOffset) {
+  public static Position getPosition(PsiElement element, int startOffset, int endOffset) {
     int offset = element.getTextOffset();
     if (offset < startOffset) {
       return Position.BEFORE;

@@ -3,7 +3,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -90,7 +89,7 @@ public abstract class Spacing {
     public static Spacing createDependentLFSpacing(
         int minSpaces,
         int maxSpaces,
-        @Nonnull TextRange dependency,
+        TextRange dependency,
         boolean keepLineBreaks,
         int keepBlankLines
     ) {
@@ -108,7 +107,7 @@ public abstract class Spacing {
     public static Spacing createDependentLFSpacing(
         int minSpaces,
         int maxSpaces,
-        @Nonnull List<TextRange> dependency,
+        List<TextRange> dependency,
         boolean keepLineBreaks,
         int keepBlankLines
     ) {
@@ -139,10 +138,10 @@ public abstract class Spacing {
     public static Spacing createDependentLFSpacing(
         int minSpaces,
         int maxSpaces,
-        @Nonnull TextRange dependencyRange,
+        TextRange dependencyRange,
         boolean keepLineBreaks,
         int keepBlankLines,
-        @Nonnull DependentSpacingRule rule
+        DependentSpacingRule rule
     ) {
         return Formatter.getInstance()
             .createDependentLFSpacing(minSpaces, maxSpaces, dependencyRange, keepLineBreaks, keepBlankLines, rule);

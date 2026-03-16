@@ -18,7 +18,6 @@ package consulo.module.content.layer.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.module.Module;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,17 +25,17 @@ import jakarta.annotation.Nonnull;
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface ModuleRootLayerListener {
-  default void layerRemove(@Nonnull Module module, @Nonnull String layerName) {
+  default void layerRemove(Module module, String layerName) {
   }
 
-  default void layerAdded(@Nonnull Module module, @Nonnull String layerName) {
+  default void layerAdded(Module module, String layerName) {
   }
 
-  default void layerChanged(@Nonnull Module module, @Nonnull String layerName) {
+  default void layerChanged(Module module, String layerName) {
   }
 
-  default void currentLayerChanged(@Nonnull Module module,
-                                   @Nonnull String oldLayerName,
-                                   @Nonnull String newLayerName) {
+  default void currentLayerChanged(Module module,
+                                   String oldLayerName,
+                                   String newLayerName) {
   }
 }

@@ -18,7 +18,6 @@ package consulo.ide.impl.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.keymap.BundledKeymapProvider;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DefaultBundledKeymapProvider implements BundledKeymapProvider {
-  @Nonnull
+  
   @Override
   public String[] getKeymapFiles() {
     return new String[]{

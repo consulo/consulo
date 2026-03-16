@@ -29,7 +29,6 @@ import consulo.document.Document;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Works like a usual backspace except the situation when the caret is located after white space - all white space symbols
@@ -47,7 +46,7 @@ public class HungryBackspaceAction extends TextComponentEditorAction {
 
         @Override
         @RequiredWriteAction
-        public void executeWriteAction(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
+        public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
             Document document = editor.getDocument();
             int caretOffset = editor.getCaretModel().getOffset();
             if (caretOffset < 1) {

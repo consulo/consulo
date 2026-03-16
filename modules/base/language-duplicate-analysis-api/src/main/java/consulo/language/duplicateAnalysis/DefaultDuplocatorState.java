@@ -1,7 +1,6 @@
 package consulo.language.duplicateAnalysis;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene.Kudelevsky
@@ -16,7 +15,7 @@ public class DefaultDuplocatorState implements ExternalizableDuplocatorState {
   public int DISCARD_COST = 0;
 
   @Override
-  public boolean distinguishRole(@Nonnull PsiElementRole role) {
+  public boolean distinguishRole(PsiElementRole role) {
     switch (role) {
       case VARIABLE_NAME:
         return DISTINGUISH_VARIABLES;

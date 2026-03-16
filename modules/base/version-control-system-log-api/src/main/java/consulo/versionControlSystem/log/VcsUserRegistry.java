@@ -18,14 +18,13 @@ package consulo.versionControlSystem.log;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsUserRegistry {
-  @Nonnull
+  
   Set<VcsUser> getUsers();
 
-  @Nonnull
-  VcsUser createUser(@Nonnull String name, @Nonnull String email);
+  
+  VcsUser createUser(String name, String email);
 }

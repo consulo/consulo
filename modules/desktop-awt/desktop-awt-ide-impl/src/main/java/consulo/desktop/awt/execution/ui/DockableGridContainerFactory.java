@@ -19,7 +19,6 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockContainerFactory;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dennis.Ushakov
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class DockableGridContainerFactory implements DockContainerFactory {
   public static final String TYPE = "runner-grid";
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return TYPE;

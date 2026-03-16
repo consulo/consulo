@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The context for a global inspection run. Provides access to the reference graph
@@ -46,7 +45,7 @@ public interface GlobalInspectionContext extends UserDataHolder {
    *
    * @return the reference graph instance.
    */
-  @Nonnull
+  
   RefManager getRefManager();
 
   /**
@@ -79,26 +78,26 @@ public interface GlobalInspectionContext extends UserDataHolder {
    * @param inspectionToolId the ID of the inspection to check.
    * @return true if the inspection is suppressed, false otherwise.
    */
-  boolean isSuppressed(@Nonnull PsiElement element, String inspectionToolId);
+  boolean isSuppressed(PsiElement element, String inspectionToolId);
 
-  @Nonnull
+  
   Project getProject();
 
   <T> T getExtension(Key<T> key);
 
   void incrementJobDoneAmount(JobDescriptor job, String message);
 
-  @Nonnull
+  
   StdJobDescriptors getStdJobDescriptors();
 
   void cleanup();
 
-  default boolean isToCheckMember(@Nonnull RefElement owner, @Nonnull InspectionTool tool) {
+  default boolean isToCheckMember(RefElement owner, InspectionTool tool) {
     return isToCheckFile(owner.getContainingFile(), tool) && !owner.isSuppressed(tool.getShortName());
   }
 
-  boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool);
+  boolean isToCheckFile(PsiFile file, InspectionTool tool);
 
   @Nullable
-  Tools getTools(@Nonnull String shortName);
+  Tools getTools(String shortName);
 }

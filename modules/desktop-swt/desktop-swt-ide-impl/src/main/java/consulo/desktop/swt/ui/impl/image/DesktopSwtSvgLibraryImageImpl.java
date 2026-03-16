@@ -15,7 +15,6 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import jakarta.annotation.Nonnull;
 import org.eclipse.nebula.cwt.svg.SvgDocument;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -36,7 +35,7 @@ public class DesktopSwtSvgLibraryImageImpl implements DesktopSwtImageReference {
     return mySvgDocument;
   }
 
-  @Nonnull
+  
   @Override
   public Image toSWTImage(int width, int height) {
 

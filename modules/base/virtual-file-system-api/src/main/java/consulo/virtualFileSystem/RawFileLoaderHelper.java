@@ -19,7 +19,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,16 +27,16 @@ import jakarta.annotation.Nonnull;
 public class RawFileLoaderHelper {
   private static final Key<Boolean> OUR_NO_SIZE_LIMIT_KEY = Key.create("no.size.limit");
 
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile) {
+  public static boolean isTooLargeForIntelligence(VirtualFile vFile) {
     if (!checkFileSizeLimit(vFile)) return false;
     return fileSizeIsGreaterThan(vFile, RawFileLoader.getInstance().getMaxIntellisenseFileSize());
   }
 
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile) {
+  public static boolean isTooLargeForContentLoading(VirtualFile vFile) {
     return fileSizeIsGreaterThan(vFile, RawFileLoader.getInstance().getFileLengthToCacheThreshold());
   }
 
-  private static boolean checkFileSizeLimit(@Nonnull VirtualFile vFile) {
+  private static boolean checkFileSizeLimit(VirtualFile vFile) {
     if (Boolean.TRUE.equals(vFile.getCopyableUserData(OUR_NO_SIZE_LIMIT_KEY))) {
       return false;
     }
@@ -48,20 +47,20 @@ public class RawFileLoaderHelper {
     return true;
   }
 
-  public static void doNotCheckFileSizeLimit(@Nonnull VirtualFile vFile) {
+  public static void doNotCheckFileSizeLimit(VirtualFile vFile) {
     vFile.putCopyableUserData(OUR_NO_SIZE_LIMIT_KEY, Boolean.TRUE);
   }
 
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, long contentSize) {
+  public static boolean isTooLargeForIntelligence(VirtualFile vFile, long contentSize) {
     if (!checkFileSizeLimit(vFile)) return false;
     return contentSize > RawFileLoader.getInstance().getMaxIntellisenseFileSize();
   }
 
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, long contentSize) {
+  public static boolean isTooLargeForContentLoading(VirtualFile vFile, long contentSize) {
     return contentSize > RawFileLoader.getInstance().getFileLengthToCacheThreshold();
   }
 
-  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, long maxBytes) {
+  public static boolean fileSizeIsGreaterThan(VirtualFile vFile, long maxBytes) {
     if (vFile instanceof TextLightVirtualFileBase) {
       // This is optimization in order to avoid conversion of [large] file contents to bytes
       int lengthInChars = ((TextLightVirtualFileBase)vFile).getContent().length();

@@ -25,8 +25,7 @@ import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,24 +40,24 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
   private boolean forceUseAllFilters;
   private final DumbService myDumbService;
 
-  public CompositeFilter(@Nonnull Project project) {
+  public CompositeFilter(Project project) {
     this(project, Collections.emptyList());
   }
 
-  public CompositeFilter(@Nonnull Project project, @Nonnull List<? extends Filter> filters) {
+  public CompositeFilter(Project project, List<? extends Filter> filters) {
     myDumbService = DumbService.getInstance(project);
     myFilters = new ArrayList<>(filters);
     myFilters.forEach(filter -> myIsAnyHeavy |= filter instanceof FilterMixin);
   }
 
-  protected CompositeFilter(@Nonnull DumbService dumbService) {
+  protected CompositeFilter(DumbService dumbService) {
     myDumbService = dumbService;
     myFilters = new ArrayList<>();
   }
 
   @Override
   @Nullable
-  public Result applyFilter(@Nonnull String line, int entireLength) {
+  public Result applyFilter(String line, int entireLength) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     boolean dumb = myDumbService.isDumb();
     List<Filter> filters = myFilters;
@@ -100,8 +99,8 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     return createFinalResult(resultItems);
   }
 
-  @Nonnull
-  private static Result createFinalResult(@Nonnull List<? extends ResultItem> resultItems) {
+  
+  private static Result createFinalResult(List<? extends ResultItem> resultItems) {
     if (resultItems.size() == 1) {
       ResultItem resultItem = resultItems.get(0);
       return new Result(resultItem.getHighlightStartOffset(), resultItem.getHighlightEndOffset(), resultItem.getHyperlinkInfo(), resultItem.getHighlightAttributes(), resultItem.getFollowedHyperlinkAttributes()) {
@@ -114,12 +113,12 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     return new Result(resultItems);
   }
 
-  private boolean shouldStopFiltering(@Nonnull Result result) {
+  private boolean shouldStopFiltering(Result result) {
     return result.getNextAction() == NextAction.EXIT && !forceUseAllFilters;
   }
 
-  @Nonnull
-  private static List<ResultItem> merge(@Nullable List<ResultItem> resultItems, @Nonnull Result newResult, int entireLength, @Nonnull Filter filter) {
+  
+  private static List<ResultItem> merge(@Nullable List<ResultItem> resultItems, Result newResult, int entireLength, Filter filter) {
     if (resultItems == null) {
       resultItems = new ArrayList<>();
     }
@@ -133,7 +132,7 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     return resultItems;
   }
 
-  private static boolean checkOffsetsCorrect(@Nonnull ResultItem item, int entireLength, @Nonnull Filter filter) {
+  private static boolean checkOffsetsCorrect(ResultItem item, int entireLength, Filter filter) {
     int start = item.getHighlightStartOffset();
     int end = item.getHighlightEndOffset();
     if (end < start || end > entireLength) {
@@ -143,7 +142,7 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     return true;
   }
 
-  protected static boolean intersects(@Nonnull List<? extends ResultItem> items, @Nonnull ResultItem newItem) {
+  protected static boolean intersects(List<? extends ResultItem> items, ResultItem newItem) {
     TextRange newItemTextRange = null;
 
     for (int i = 0; i < items.size(); i++) {
@@ -169,7 +168,7 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
   }
 
   @Override
-  public void applyHeavyFilter(@Nonnull Document copiedFragment, int startOffset, int startLineNumber, @Nonnull Consumer<? super AdditionalHighlight> consumer) {
+  public void applyHeavyFilter(Document copiedFragment, int startOffset, int startLineNumber, Consumer<? super AdditionalHighlight> consumer) {
     List<Filter> filters = myFilters;
     int count = filters.size();
 
@@ -181,7 +180,7 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     }
   }
 
-  @Nonnull
+  
   @Override
   public String getUpdateMessage() {
     List<Filter> filters = myFilters;
@@ -206,12 +205,12 @@ public class CompositeFilter implements Filter, FilterMixin, DumbAware {
     return myIsAnyHeavy;
   }
 
-  public void addFilter(@Nonnull Filter filter) {
+  public void addFilter(Filter filter) {
     myFilters.add(filter);
     myIsAnyHeavy |= filter instanceof FilterMixin;
   }
 
-  @Nonnull
+  
   public List<Filter> getFilters() {
     return Collections.unmodifiableList(myFilters);
   }

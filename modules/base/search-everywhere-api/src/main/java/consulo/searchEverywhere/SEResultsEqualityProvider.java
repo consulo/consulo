@@ -4,7 +4,6 @@ package consulo.searchEverywhere;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,25 +16,25 @@ public interface SEResultsEqualityProvider {
         REPLACE
     }
 
-    @Nonnull
+    
     SEEqualElementsActionType compareItems(
-        @Nonnull SearchEverywhereFoundElementInfo newItem,
-        @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem
+        SearchEverywhereFoundElementInfo newItem,
+        SearchEverywhereFoundElementInfo alreadyFoundItem
     );
 
-    @Nonnull
+    
     static List<SEResultsEqualityProvider> getProviders() {
         return Application.get().getExtensionPoint(SEResultsEqualityProvider.class).getExtensionList();
     }
 
-    @Nonnull
-    static SEResultsEqualityProvider composite(@Nonnull Collection<? extends SEResultsEqualityProvider> providers) {
+    
+    static SEResultsEqualityProvider composite(Collection<? extends SEResultsEqualityProvider> providers) {
         return new SEResultsEqualityProvider() {
-            @Nonnull
+            
             @Override
             public SEEqualElementsActionType compareItems(
-                @Nonnull SearchEverywhereFoundElementInfo newItem,
-                @Nonnull SearchEverywhereFoundElementInfo alreadyFoundItem
+                SearchEverywhereFoundElementInfo newItem,
+                SearchEverywhereFoundElementInfo alreadyFoundItem
             ) {
                 return providers.stream()
                     .map(provider -> provider.compareItems(newItem, alreadyFoundItem))

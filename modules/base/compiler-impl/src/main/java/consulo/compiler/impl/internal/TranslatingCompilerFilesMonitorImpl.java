@@ -54,8 +54,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -105,7 +104,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             return value;
         }
 
-        @Nonnull
+        
         @Override
         public Outputs get(Integer key) {
             Outputs value = super.get(key);
@@ -113,7 +112,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
             return value;
         }
 
-        @Nonnull
+        
         @Override
         public Outputs createValue(Integer projectId) {
             VirtualFile projectDir = VirtualFileManager.getInstance().findFileById(projectId);
@@ -145,7 +144,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
     private final SLRUCache<Project, File> myGeneratedDataPaths = new SLRUCache<>(8, 8) {
         @Override
-        @Nonnull
+        
         public File createValue(Project project) {
             Disposer.register(project, () -> myGeneratedDataPaths.remove(project));
             return CompilerPaths.getGeneratedDataDirectory(project);
@@ -639,7 +638,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                 FileTypeManager fileTypeManager = FileTypeManager.getInstance();
                 VirtualFileUtil.visitChildrenRecursively(srcRoot, new VirtualFileVisitor() {
                     @Override
-                    public boolean visitFile(@Nonnull VirtualFile file) {
+                    public boolean visitFile(VirtualFile file) {
                         if (fileTypeManager.isFileIgnored(file)) {
                             return false;
                         }
@@ -730,7 +729,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
         // recursively mark all corresponding sources for recompilation
         VirtualFileUtil.visitChildrenRecursively(outputRoot, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (!file.isDirectory()) {
                     // todo: possible optimization - process only those outputs that are not marked for deletion yet
                     TranslationOutputFileInfo outputInfo = TranslationOutputFileInfo.loadOutputInfo(file);
@@ -924,7 +923,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
 
     @RequiredReadAction
-    protected VirtualFile[] getRootsForScan(@Nonnull Project project) {
+    protected VirtualFile[] getRootsForScan(Project project) {
         List<VirtualFile> list = new ArrayList<>();
         Module[] modules = ModuleManager.getInstance(project).getModules();
         ExtensionPoint<TranslatingCompilerFilesMonitorHelper> extensionPoint =

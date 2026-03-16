@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import java.util.function.BiConsumer;
@@ -28,11 +27,11 @@ public abstract class TreeModelAdapter implements TreeModelListener {
   
   public enum EventType {StructureChanged, NodesChanged, NodesInserted, NodesRemoved}
   
-  @Nonnull
-  public static TreeModelListener create(@Nonnull final BiConsumer<? super TreeModelEvent, ? super EventType> consumer) {
+  
+  public static TreeModelListener create(final BiConsumer<? super TreeModelEvent, ? super EventType> consumer) {
     return new TreeModelAdapter() {
       @Override
-      protected void process(@Nonnull TreeModelEvent event, @Nonnull EventType type) {
+      protected void process(TreeModelEvent event, EventType type) {
         consumer.accept(event, type);
       }
     };
@@ -44,7 +43,7 @@ public abstract class TreeModelAdapter implements TreeModelListener {
    * @param event the event object specifying changed nodes
    * @param type  the event type specifying a kind of changes
    */
-  protected void process(@Nonnull TreeModelEvent event, @Nonnull EventType type) {
+  protected void process(TreeModelEvent event, EventType type) {
   }
 
   /**

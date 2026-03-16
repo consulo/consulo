@@ -23,8 +23,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.webBrowser.BrowserSpecificSettings;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -63,7 +62,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
         myProfile = StringUtil.nullize(value);
     }
 
-    @Nonnull
+    
     @Override
     public Configurable createConfigurable() {
         return new FirefoxSettingsConfigurable(this);
@@ -77,7 +76,7 @@ public final class FirefoxSettings extends BrowserSpecificSettings {
         return FirefoxUtil.getDefaultProfileIniPath();
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getAdditionalParameters() {
         List<FirefoxProfile> profiles = FirefoxUtil.computeProfiles(getProfilesIniFile());

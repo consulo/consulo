@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.language.file.FileViewProvider;
 import consulo.application.progress.ProgressIndicatorProvider;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public abstract class PsiRecursiveElementWalkingVisitor extends PsiElementVisito
   private final boolean myVisitAllFileRoots;
   private final PsiWalkingState myWalkingState = new PsiWalkingState(this) {
     @Override
-    public void elementFinished(@Nonnull PsiElement element) {
+    public void elementFinished(PsiElement element) {
       PsiRecursiveElementWalkingVisitor.this.elementFinished(element);
     }
   };

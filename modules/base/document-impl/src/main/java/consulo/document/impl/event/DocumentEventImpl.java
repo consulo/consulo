@@ -9,16 +9,15 @@ import consulo.document.internal.LineSet;
 import consulo.document.internal.LineIterator;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.MergingCharSequence;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DocumentEventImpl extends DocumentEvent {
     private final int myOffset;
-    private final @Nonnull CharSequence myOldString;
+    private final CharSequence myOldString;
     private final int myOldLength;
-    private final @Nonnull CharSequence myNewString;
+    private final CharSequence myNewString;
     private final int myNewLength;
 
     private final long myOldTimeStamp;
@@ -33,10 +32,10 @@ public class DocumentEventImpl extends DocumentEvent {
     private LineSet myOldFragmentLineSet;
     private int myOldFragmentLineSetStart;
 
-    public DocumentEventImpl(@Nonnull Document document,
+    public DocumentEventImpl(Document document,
                              int offset,
-                             @Nonnull CharSequence oldString,
-                             @Nonnull CharSequence newString,
+                             CharSequence oldString,
+                             CharSequence newString,
                              long oldTimeStamp,
                              boolean wholeTextReplaced,
                              int initialStartOffset,
@@ -81,12 +80,12 @@ public class DocumentEventImpl extends DocumentEvent {
     }
 
     @Override
-    public @Nonnull CharSequence getOldFragment() {
+    public CharSequence getOldFragment() {
         return myOldString;
     }
 
     @Override
-    public @Nonnull CharSequence getNewFragment() {
+    public CharSequence getNewFragment() {
         return myNewString;
     }
 
@@ -188,7 +187,7 @@ public class DocumentEventImpl extends DocumentEvent {
         return myChange;
     }
 
-    @Nonnull
+    
     private String[] getOldLines() {
         createOldFragmentLineSetIfNeeded();
         int offsetDiff = myOffset - myOldFragmentLineSetStart;

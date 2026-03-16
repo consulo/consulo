@@ -5,9 +5,7 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,26 +26,26 @@ public final class CommandLineUtil {
   private static final char Q = '\"';
   private static final String QQ = "\"\"";
 
-  @Nonnull
-  public static String specialQuote(@Nonnull String parameter) {
+  
+  public static String specialQuote(String parameter) {
     return quote(parameter, INESCAPABLE_QUOTE);
   }
 
   public static
-  @Nonnull
-  List<String> toCommandLine(@Nonnull List<String> command) {
+  
+  List<String> toCommandLine(List<String> command) {
     assert !command.isEmpty();
     return toCommandLine(command.get(0), command.subList(1, command.size()));
   }
 
-  @Nonnull
-  public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters) {
+  
+  public static List<String> toCommandLine(String command, List<String> parameters) {
     return toCommandLine(command, parameters, FilePathSeparator.current());
   }
 
   // please keep an implementation in sync with [junit-rt] ProcessBuilder.createProcess()
-  @Nonnull
-  public static List<String> toCommandLine(@Nonnull String command, @Nonnull List<String> parameters, @Nonnull FilePathSeparator platform) {
+  
+  public static List<String> toCommandLine(String command, List<String> parameters, FilePathSeparator platform) {
     List<String> commandLine = new ArrayList<>(parameters.size() + 1);
 
     commandLine.add(FileUtil.toSystemDependentName(command, platform.fileSeparator));
@@ -414,16 +412,16 @@ public final class CommandLineUtil {
     return numTrailingBackslashes / 2;
   }
 
-  @Nonnull
+  
   public static String getWinShellName() {
     return "cmd.exe";
   }
 
-  private static boolean isWinShell(@NonNls String command) {
+  private static boolean isWinShell(String command) {
     return "cmd".equalsIgnoreCase(command) || "cmd.exe".equalsIgnoreCase(command);
   }
 
-  private static boolean isWinShellScript(@NonNls String command) {
+  private static boolean isWinShellScript(String command) {
     return endsWithIgnoreCase(command, ".cmd") || endsWithIgnoreCase(command, ".bat");
   }
 
@@ -460,8 +458,8 @@ public final class CommandLineUtil {
 
   @Contract(pure = true)
   public static
-  @Nonnull
-  String escapeParameterOnWindows(@Nonnull String parameter, boolean isWinShell) {
+  
+  String escapeParameterOnWindows(String parameter, boolean isWinShell) {
     String s = StringUtil.convertLineSeparators(parameter, "");
     if (s.isEmpty()) return QQ;
     boolean hadLineBreaks = !s.equals(parameter);
@@ -471,8 +469,8 @@ public final class CommandLineUtil {
   }
 
   public static
-  @Nonnull
-  String extractPresentableName(@Nonnull String commandLine) {
+  
+  String extractPresentableName(String commandLine) {
     String executable = commandLine.trim();
 
     List<String> words = StringUtil.splitHonorQuotes(executable, ' ');
@@ -491,7 +489,7 @@ public final class CommandLineUtil {
     return verbose ? StringUtil.shortenPathWithEllipsis(execName + " " + String.join(" ", args), 250) : new File(StringUtil.unquoteString(execName)).getName();
   }
 
-  public static boolean hasWinShellSpecialChars(@Nonnull String parameter) {
+  public static boolean hasWinShellSpecialChars(String parameter) {
     return WIN_CARET_SPECIAL.matcher(parameter).find();
   }
 
@@ -499,12 +497,12 @@ public final class CommandLineUtil {
    * When necessary, quotes the specified argument with single quotes, according to the POSIX shell rules,
    * replacing single quotes with hardly readable but recursion-safe {@code '"'"'}.
    */
-  @Nonnull
-  public static String posixQuote(@Nonnull String argument) {
+  
+  public static String posixQuote(String argument) {
     return shouldWrapWithQuotes(argument) ? "'" + StringUtil.replace(argument, "'", "'\"'\"'") + "'" : argument;
   }
 
-  private static boolean shouldWrapWithQuotes(@Nonnull CharSequence argument) {
+  private static boolean shouldWrapWithQuotes(CharSequence argument) {
     if (argument.length() == 0) {
       return true;
     }

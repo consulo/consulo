@@ -22,7 +22,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import jakarta.annotation.Nonnull;
 
 @SuppressWarnings({"HardCodedStringLiteral"})
 public class AddTestProcessActionIndefinite extends AnAction implements DumbAware {
@@ -37,7 +36,7 @@ public class AddTestProcessActionIndefinite extends AnAction implements DumbAwar
 
         new Task.Backgroundable(project, "Test", true) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     Thread.currentThread().sleep(6000);
 

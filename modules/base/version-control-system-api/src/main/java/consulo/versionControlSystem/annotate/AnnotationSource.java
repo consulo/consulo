@@ -18,11 +18,10 @@ package consulo.versionControlSystem.annotate;
 import consulo.colorScheme.EditorColorKey;
 import consulo.codeEditor.EditorColors;
 
-import jakarta.annotation.Nonnull;
 
 public enum AnnotationSource {
   LOCAL {
-    @Nonnull
+    
     @Override
     public EditorColorKey getColor() {
       return EditorColors.ANNOTATIONS_COLOR;
@@ -34,7 +33,7 @@ public enum AnnotationSource {
     }
   },
   MERGE {
-    @Nonnull
+    
     @Override
     public EditorColorKey getColor() {
       return EditorColors.ANNOTATIONS_COLOR;
@@ -48,7 +47,7 @@ public enum AnnotationSource {
 
   public abstract boolean showMerged();
 
-  @Nonnull
+  
   public abstract EditorColorKey getColor();
 
   public static AnnotationSource getInstance(boolean showMerged) {

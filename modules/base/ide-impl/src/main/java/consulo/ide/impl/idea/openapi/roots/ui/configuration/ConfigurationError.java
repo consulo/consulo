@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.ui.ex.RelativePoint;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,12 +37,12 @@ public abstract class ConfigurationError implements Comparable<ConfigurationErro
     myIgnored = ignored;
   }
 
-  @Nonnull
+  
   public String getPlainTextTitle() {
     return myPlainTextTitle;
   }
 
-  @Nonnull
+  
   public String getDescription() {
     return myDescription;
   }

@@ -35,8 +35,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -53,10 +52,10 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
   private SoftReference<StructureViewModel> currentFileStructure;
   private long currentFileModCount = -1;
 
-  @Nonnull
+  
   protected abstract Language getLanguage();
 
-  @Nonnull
+  
   protected List<NodeProvider<?>> getApplicableNodeProviders() {
     return Collections.emptyList();
   }
@@ -67,7 +66,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
 
   @Override
   @RequiredReadAction
-  public PsiElement getLeafElement(@Nonnull DataContext dataContext) {
+  public PsiElement getLeafElement(DataContext dataContext) {
     if (UISettings.getInstance().getShowMembersInNavigationBar()) {
       PsiFile psiFile = dataContext.getData(PsiFile.KEY);
       Editor editor = dataContext.getData(Editor.KEY);
@@ -105,7 +104,7 @@ public abstract class StructureAwareNavBarModelExtension extends AbstractNavBarM
   @Nullable
   @Override
   @RequiredReadAction
-  public PsiElement getParent(@Nonnull PsiElement psiElement) {
+  public PsiElement getParent(PsiElement psiElement) {
     if (psiElement.getLanguage() == getLanguage()) {
       PsiFile containingFile = psiElement.getContainingFile();
       if (containingFile == null) {

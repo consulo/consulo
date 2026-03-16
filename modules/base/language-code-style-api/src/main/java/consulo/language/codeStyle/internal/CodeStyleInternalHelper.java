@@ -26,8 +26,7 @@ import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 /**
@@ -40,8 +39,8 @@ public interface CodeStyleInternalHelper {
         return Application.get().getInstance(CodeStyleInternalHelper.class);
     }
 
-    void debugTreeToBuffer(@Nonnull Appendable buffer,
-                           @Nonnull ASTNode root,
+    void debugTreeToBuffer(Appendable buffer,
+                           ASTNode root,
                            int indent,
                            boolean skipWhiteSpaces,
                            boolean showRanges,
@@ -52,7 +51,7 @@ public interface CodeStyleInternalHelper {
 
     void replaceWhiteSpace(String whiteSpace, ASTNode leafElement, IElementType whiteSpaceToken, @Nullable TextRange textRange);
 
-    void replaceInnerWhiteSpace(@Nonnull String newWhiteSpaceText, @Nonnull ASTNode holder, @Nonnull TextRange whiteSpaceRange);
+    void replaceInnerWhiteSpace(String newWhiteSpaceText, ASTNode holder, TextRange whiteSpaceRange);
 
     boolean containsWhiteSpacesOnly(@Nullable ASTNode node);
 
@@ -63,15 +62,15 @@ public interface CodeStyleInternalHelper {
 
     FormattingDocumentModel createFormattingDocumentModel(PsiFile file);
 
-    FormattingDocumentModel createFormattingDocumentModel(@Nonnull Document document, @Nullable PsiFile file);
+    FormattingDocumentModel createFormattingDocumentModel(Document document, @Nullable PsiFile file);
 
-    int nextTabStop(int x, @Nonnull Object editor, int tabSize);
+    int nextTabStop(int x, Object editor, int tabSize);
 
-    int nextTabStop(int x, @Nonnull Object editor);
+    int nextTabStop(int x, Object editor);
 
-    int charWidth(char c, @JdkConstants.FontStyle int fontType, @Nonnull Object editor);
+    int charWidth(char c, @JdkConstants.FontStyle int fontType, Object editor);
 
-    int getSpaceWidth(@JdkConstants.FontStyle int fontType, @Nonnull Object editor);
+    int getSpaceWidth(@JdkConstants.FontStyle int fontType, Object editor);
 
     @RequiredUIAccess
     void showDetectIndentSettings(@Nullable Project project);

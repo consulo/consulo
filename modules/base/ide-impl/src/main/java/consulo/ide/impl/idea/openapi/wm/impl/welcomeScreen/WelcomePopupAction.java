@@ -28,8 +28,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -37,13 +36,13 @@ import java.util.Objects;
  * @author Vladislav.Kaznacheev
  */
 public abstract class WelcomePopupAction extends AnAction implements DumbAware {
-    protected WelcomePopupAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected WelcomePopupAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     protected abstract void fillActions(DefaultActionGroup group);
 
-    @Nonnull
+    
     protected abstract LocalizeValue getTextForEmpty();
 
     /**
@@ -57,7 +56,7 @@ public abstract class WelcomePopupAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final DefaultActionGroup group = new DefaultActionGroup();
         fillActions(group);
 
@@ -72,7 +71,7 @@ public abstract class WelcomePopupAction extends AnAction implements DumbAware {
             group.add(new AnAction(getTextForEmpty()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     group.setPopup(false);
                 }
             });

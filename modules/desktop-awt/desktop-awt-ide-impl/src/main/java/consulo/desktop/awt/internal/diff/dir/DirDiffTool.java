@@ -22,23 +22,22 @@ import consulo.diff.localize.DiffLocalize;
 import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "dir", order = "after binary")
 public class DirDiffTool implements FrameDiffTool {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public DiffViewer createComponent(DiffContext context, DiffRequest request) {
         return new DirDiffViewer(context, (ContentDiffRequest)request);
     }
 
     @Override
-    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public boolean canShow(DiffContext context, DiffRequest request) {
         return DirDiffViewer.canShowRequest(context, request);
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return DiffLocalize.directoryViewer().get();

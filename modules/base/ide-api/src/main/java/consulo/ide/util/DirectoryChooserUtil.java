@@ -27,8 +27,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class DirectoryChooserUtil {
   }
 
   @Nullable
-  public static PsiDirectory getOrChooseDirectory(@Nonnull IdeView view) {
+  public static PsiDirectory getOrChooseDirectory(IdeView view) {
     PsiDirectory[] dirs = view.getDirectories();
     if (dirs.length == 0) return null;
     if (dirs.length == 1) {
@@ -75,7 +74,7 @@ public class DirectoryChooserUtil {
   }
 
   @Nullable
-  public static PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, @Nonnull Project project, Map<PsiDirectory, String> relativePathsToCreate) {
+  public static PsiDirectory chooseDirectory(PsiDirectory[] targetDirectories, @Nullable PsiDirectory initialDirectory, Project project, Map<PsiDirectory, String> relativePathsToCreate) {
     DirectoryChooserDialog chooser = Application.get().getInstance(DirectoryChooserFactory.class).create(project);
     chooser.setTitle(RefactoringLocalize.chooseDestinationDirectory().get());
     chooser.fillList(targetDirectories, initialDirectory, project, relativePathsToCreate);

@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.regex.Pattern;
 
 /**
@@ -40,30 +39,30 @@ public class TodoPattern implements Cloneable {
   private static final String CASE_SENS_ATT = "case-sensitive";
   private static final String PATTERN_ATT = "pattern";
 
-  public TodoPattern(@Nonnull TodoAttributes attributes) {
+  public TodoPattern(TodoAttributes attributes) {
     this("", attributes, false);
   }
 
-  public TodoPattern(@Nonnull String patternString, @Nonnull TodoAttributes attributes, boolean caseSensitive) {
+  public TodoPattern(String patternString, TodoAttributes attributes, boolean caseSensitive) {
     myIndexPattern = new IndexPattern(patternString, caseSensitive);
     myAttributes = attributes;
   }
 
-  @Nonnull
+  
   public String getPatternString() {
     return myIndexPattern.getPatternString();
   }
 
-  public void setPatternString(@Nonnull String patternString) {
+  public void setPatternString(String patternString) {
     myIndexPattern.setPatternString(patternString);
   }
 
-  @Nonnull
+  
   public TodoAttributes getAttributes() {
     return myAttributes;
   }
 
-  public void setAttributes(@Nonnull TodoAttributes attributes) {
+  public void setAttributes(TodoAttributes attributes) {
     myAttributes = attributes;
   }
 

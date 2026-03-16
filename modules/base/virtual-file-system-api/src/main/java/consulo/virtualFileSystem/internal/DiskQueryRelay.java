@@ -4,7 +4,6 @@ package consulo.virtualFileSystem.internal;
 import consulo.application.internal.ProgressIndicatorUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,11 +23,11 @@ public final class DiskQueryRelay<Param, Result> {
      */
     private final Map<Param, Future<Result>> myTasks = new ConcurrentHashMap<>();
 
-    public DiskQueryRelay(@Nonnull Function<? super Param, ? extends Result> function) {
+    public DiskQueryRelay(Function<? super Param, ? extends Result> function) {
         myFunction = function;
     }
 
-    public Result accessDiskWithCheckCanceled(@Nonnull Param arg) {
+    public Result accessDiskWithCheckCanceled(Param arg) {
         ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
         if (indicator == null) {
             return myFunction.apply(arg);

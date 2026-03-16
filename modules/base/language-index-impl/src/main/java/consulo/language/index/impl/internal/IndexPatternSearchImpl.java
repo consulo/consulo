@@ -7,7 +7,6 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
 import consulo.language.psi.search.IndexPatternSearch;
 import consulo.language.psi.stub.todo.TodoCacheManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -23,14 +22,14 @@ public final class IndexPatternSearchImpl extends IndexPatternSearch {
   }
 
   @Override
-  protected int getOccurrencesCountImpl(@Nonnull PsiFile file, @Nonnull IndexPatternProvider provider) {
+  protected int getOccurrencesCountImpl(PsiFile file, IndexPatternProvider provider) {
     int count = TodoCacheManager.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), provider);
     if (count != -1) return count;
     return search(file, provider).findAll().size();
   }
 
   @Override
-  protected int getOccurrencesCountImpl(@Nonnull PsiFile file, @Nonnull IndexPattern pattern) {
+  protected int getOccurrencesCountImpl(PsiFile file, IndexPattern pattern) {
     int count = TodoCacheManager.getInstance(file.getProject()).getTodoCount(file.getVirtualFile(), pattern);
     if (count != -1) return count;
     return search(file, pattern).findAll().size();

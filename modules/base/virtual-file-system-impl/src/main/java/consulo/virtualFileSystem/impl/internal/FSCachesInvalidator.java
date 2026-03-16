@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.CachesInvalidator;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class FSCachesInvalidator extends CachesInvalidator {
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return LocalizeValue.localizeTODO("Invalidate file system cache (also clear local history)");

@@ -10,7 +10,6 @@ import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,17 +26,17 @@ public interface CompletionLookupArranger {
    *
    * @param presentation The presentation of the element (rendered with {@link LookupElement#renderElement(LookupElementPresentation)}
    */
-  void addElement(@Nonnull LookupElement element, @Nonnull CompletionSorter sorter, @Nonnull PrefixMatcher prefixMatcher, @Nonnull LookupElementPresentation presentation);
+  void addElement(LookupElement element, CompletionSorter sorter, PrefixMatcher prefixMatcher, LookupElementPresentation presentation);
 
   /**
    * Adds an element to be arranged, along with its prefix matcher.
    */
-  void addElement(@Nonnull CompletionResult result);
+  void addElement(CompletionResult result);
 
   /**
    * Returns the prefix matcher registered for the specified element.
    */
-  PrefixMatcher itemMatcher(@Nonnull LookupElement item);
+  PrefixMatcher itemMatcher(LookupElement item);
 
   /**
    * Returns the items in the appropriate order and the initial selection.

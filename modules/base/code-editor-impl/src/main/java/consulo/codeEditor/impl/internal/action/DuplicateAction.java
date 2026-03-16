@@ -27,8 +27,7 @@ import consulo.document.Document;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -48,7 +47,7 @@ public class DuplicateAction extends EditorAction {
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             return !editor.isOneLineMode() || editor.getSelectionModel().hasSelection();
         }
     }

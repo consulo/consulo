@@ -21,7 +21,7 @@ import consulo.module.Module;
 import consulo.process.cmd.SimpleProgramParameters;
 import consulo.project.Project;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ProgramParametersUtil {
   public static void configureConfiguration(SimpleProgramParameters parameters, CommonProgramRunConfigurationParameters configuration) {

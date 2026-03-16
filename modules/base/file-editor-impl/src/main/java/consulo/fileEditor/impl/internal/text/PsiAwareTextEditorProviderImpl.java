@@ -35,7 +35,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import org.jdom.Element;
 
@@ -53,24 +52,21 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     super(textEditorComponentContainerFactory);
   }
 
-  @Nonnull
   @Override
-  protected FileEditor createEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Document document) {
+  protected FileEditor createEditorImpl(Project project, VirtualFile file, Document document) {
     return new PsiAwareTextEditorImpl(project, file, document, this);
   }
 
   @RequiredUIAccess
   @Override
-  @Nonnull
-  public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public FileEditor createEditor(Project project, VirtualFile file) {
     Document document = Application.get().runReadAction(
         (java.util.function.Supplier<Document>) () -> FileDocumentManager.getInstance().getDocument(file));
     return new PsiAwareTextEditorImpl(project, file, document, this);
   }
 
   @Override
-  @Nonnull
-  public FileEditorState readState(@Nonnull Element element, @Nonnull Project project, @Nonnull VirtualFile file) {
+  public FileEditorState readState(Element element, Project project, VirtualFile file) {
     TextEditorState state = (TextEditorState)super.readState(element, project, file);
 
     // Foldings
@@ -93,7 +89,7 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   }
 
   @Override
-  public void writeState(@Nonnull FileEditorState _state, @Nonnull Project project, @Nonnull Element element) {
+  public void writeState(FileEditorState _state, Project project, Element element) {
     super.writeState(_state, project, element);
 
     TextEditorState state = (TextEditorState)_state;
@@ -112,9 +108,8 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     }
   }
 
-  @Nonnull
   @Override
-  public TextEditorState getStateImpl(Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level) {
+  public TextEditorState getStateImpl(Project project, Editor editor, FileEditorStateLevel level) {
     TextEditorState state = super.getStateImpl(project, editor, level);
     // Save folding only on FULL level. It's very expensive to commit document on every
     // type (caused by undo).
@@ -145,16 +140,15 @@ public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
     }
   }
 
-  @Nonnull
   @Override
-  protected EditorWrapper createWrapperForEditor(@Nonnull Editor editor) {
+  protected EditorWrapper createWrapperForEditor(Editor editor) {
     return new PsiAwareEditorWrapper(editor);
   }
 
   private final class PsiAwareEditorWrapper extends EditorWrapper {
     private final TextEditorBackgroundHighlighter myBackgroundHighlighter;
 
-    private PsiAwareEditorWrapper(@Nonnull Editor editor) {
+    private PsiAwareEditorWrapper(Editor editor) {
       super(editor);
       Project project = editor.getProject();
       myBackgroundHighlighter = project == null ? null : new TextEditorBackgroundHighlighter(project, editor);

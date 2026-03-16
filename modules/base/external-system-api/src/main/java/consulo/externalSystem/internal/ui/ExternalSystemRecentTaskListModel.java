@@ -21,7 +21,6 @@ import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +31,19 @@ import java.util.List;
  */
 public class ExternalSystemRecentTaskListModel extends DefaultListModel {
 
-  @Nonnull
+  
   private final ProjectSystemId myExternalSystemId;
-  @Nonnull
+  
   private final Project         myProject;
 
-  public ExternalSystemRecentTaskListModel(@Nonnull ProjectSystemId externalSystemId, @Nonnull Project project) {
+  public ExternalSystemRecentTaskListModel(ProjectSystemId externalSystemId, Project project) {
     myExternalSystemId = externalSystemId;
     myProject = project;
     ensureSize(ExternalSystemConstants.RECENT_TASKS_NUMBER);
   }
 
   @SuppressWarnings("unchecked")
-  public void setTasks(@Nonnull List<ExternalTaskExecutionInfo> tasks) {
+  public void setTasks(List<ExternalTaskExecutionInfo> tasks) {
     clear();
     List<ExternalTaskExecutionInfo> tasksToUse = new ArrayList<>(tasks);
     for (ExternalTaskExecutionInfo task : tasksToUse) {
@@ -53,7 +52,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
   }
 
   @SuppressWarnings("unchecked")
-  public void setFirst(@Nonnull ExternalTaskExecutionInfo task) {
+  public void setFirst(ExternalTaskExecutionInfo task) {
     insertElementAt(task, 0);
     for (int i = 1; i < size(); i++) {
       if (task.equals(getElementAt(i))) {
@@ -64,7 +63,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
     ensureSize(ExternalSystemConstants.RECENT_TASKS_NUMBER);
   }
 
-  @Nonnull
+  
   public List<ExternalTaskExecutionInfo> getTasks() {
     List<ExternalTaskExecutionInfo> result = new ArrayList<>();
     for (int i = 0; i < size(); i++) {
@@ -95,7 +94,7 @@ public class ExternalSystemRecentTaskListModel extends DefaultListModel {
    * 
    * @param externalProjectPath  target external project's path
    */
-  public void forgetTasksFrom(@Nonnull String externalProjectPath) {
+  public void forgetTasksFrom(String externalProjectPath) {
     for (int i = size() - 1; i >= 0; i--) {
       Object e = getElementAt(i);
       if (e instanceof ExternalTaskExecutionInfo externalTaskExecutionInfo) {

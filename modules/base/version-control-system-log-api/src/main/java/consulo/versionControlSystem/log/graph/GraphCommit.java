@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -23,10 +22,10 @@ import java.util.List;
  */
 public interface GraphCommit<Id> {
 
-  @Nonnull
+  
   Id getId();
 
-  @Nonnull
+  
   List<Id> getParents();
 
   /**

@@ -23,7 +23,6 @@ import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.language.codeStyle.internal.WrapImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
-import jakarta.annotation.Nonnull;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -84,7 +83,7 @@ public enum FormattingStateId {
   /**
    * @return    collection of formatting states that are assumed to be executed prior to the current one
    */
-  @Nonnull
+  
   public Set<FormattingStateId> getPreviousStates() {
     Set<FormattingStateId> result = EnumSet.noneOf(FormattingStateId.class);
     for (FormattingStateId state : values()) {

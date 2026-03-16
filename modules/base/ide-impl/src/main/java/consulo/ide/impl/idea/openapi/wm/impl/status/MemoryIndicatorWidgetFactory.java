@@ -7,18 +7,17 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "memoryIndicatorWidget", order = "last")
 public class MemoryIndicatorWidgetFactory implements StatusBarWidgetFactory {
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return UILocalize.statusBarMemoryUsageWidgetName().get();
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project) {
+    public boolean isAvailable(Project project) {
         return true;
     }
 
@@ -28,13 +27,13 @@ public class MemoryIndicatorWidgetFactory implements StatusBarWidgetFactory {
     }
 
     @Override
-    @Nonnull
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    public StatusBarWidget createWidget(Project project) {
         return new MemoryUsagePanel(project, this);
     }
 
     @Override
-    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+    public boolean canBeEnabledOn(StatusBar statusBar) {
         return true;
     }
 }

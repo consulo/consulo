@@ -7,8 +7,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILeafElementType;
 import consulo.language.ast.IReparseableLeafElementType;
 import consulo.language.template.ITemplateDataElementType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Element type that may be used for representing outer fragments in template language.
@@ -18,19 +17,19 @@ import jakarta.annotation.Nullable;
  * @see IReparseableLeafElementType
  */
 public class OuterLanguageElementType extends IElementType implements ILeafElementType {
-    public OuterLanguageElementType(@Nonnull String debugName,
-                                    @Nonnull Language language) {
+    public OuterLanguageElementType(String debugName,
+                                    Language language) {
         super(debugName, language);
     }
 
-    protected OuterLanguageElementType(@Nonnull String debugName,
+    protected OuterLanguageElementType(String debugName,
                                        @Nullable Language language, boolean register) {
         super(debugName, language, register);
     }
 
     @Override
-    @Nonnull
-    public ASTNode createLeafNode(@Nonnull CharSequence leafText) {
+    
+    public ASTNode createLeafNode(CharSequence leafText) {
         return new OuterLanguageElementImpl(this, leafText);
     }
 }

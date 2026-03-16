@@ -32,8 +32,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,17 +46,17 @@ import java.util.function.Supplier;
  * @since 21.08.14
  */
 public class SdkUtil {
-  @Nonnull
-  public static String createUniqueSdkName(@Nonnull Platform platform, @Nonnull BundleType type, Path home, Sdk[] sdks) {
+  
+  public static String createUniqueSdkName(Platform platform, BundleType type, Path home, Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(platform, null, home), sdks);
   }
 
-  @Nonnull
-  public static String createUniqueSdkName(@Nonnull SdkType type, String home, Sdk[] sdks) {
+  
+  public static String createUniqueSdkName(SdkType type, String home, Sdk[] sdks) {
     return createUniqueSdkName(type.suggestSdkName(null, home), sdks);
   }
 
-  @Nonnull
+  
   public static String createUniqueSdkName(String suggestedName, Sdk[] sdks) {
     Set<String> names = new HashSet<>();
     for (Sdk sdk : sdks) {
@@ -71,19 +70,19 @@ public class SdkUtil {
     return newSdkName;
   }
 
-  @Nonnull
+  
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
-  public static NamedPointer<Sdk> createPointer(@Nonnull Sdk sdk) {
+  public static NamedPointer<Sdk> createPointer(Sdk sdk) {
     return SdkPointerManager.getInstance().create(sdk);
   }
 
-  @Nonnull
+  
   @DeprecationInfo(value = "Use SdkPointerManager.getInstance()")
-  public static NamedPointer<Sdk> createPointer(@Nonnull String name) {
+  public static NamedPointer<Sdk> createPointer(String name) {
     return SdkPointerManager.getInstance().create(name);
   }
 
-  @Nonnull
+  
   public static Image getIcon(@Nullable Sdk sdk) {
     if (sdk == null) {
       return PlatformIconGroup.actionsHelp();
@@ -107,7 +106,7 @@ public class SdkUtil {
    * @return newly created SDK, or null.
    */
   @Nullable
-  public static Sdk createAndAddSDK(String path, SdkType sdkType, @Nonnull UIAccess uiAccess) {
+  public static Sdk createAndAddSDK(String path, SdkType sdkType, UIAccess uiAccess) {
     VirtualFile sdkHome = ApplicationManager.getApplication()
       .runWriteAction((Supplier<VirtualFile>)() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(path));
     if (sdkHome != null) {
@@ -127,7 +126,7 @@ public class SdkUtil {
                              boolean silent,
                              @Nullable SdkAdditionalData additionalData,
                              @Nullable String customSdkSuggestedName,
-                             @Nonnull UIAccess uiAccess) {
+                             UIAccess uiAccess) {
     if (sdkType instanceof BundleType bundleType) {
       return setupBundle(Platform.current(), allSdks, homeDir, bundleType, silent, additionalData, customSdkSuggestedName, uiAccess);
     }
@@ -143,7 +142,7 @@ public class SdkUtil {
                                 boolean silent,
                                 @Nullable SdkAdditionalData additionalData,
                                 @Nullable String customSdkSuggestedName,
-                                @Nonnull UIAccess uiAccess) {
+                                UIAccess uiAccess) {
     Sdk sdk;
     try {
       Path homeNioPath = homeDir.toNioPath();
@@ -189,7 +188,7 @@ public class SdkUtil {
     boolean silent,
     @Nullable SdkAdditionalData additionalData,
     @Nullable String customSdkSuggestedName,
-    @Nonnull UIAccess uiAccess
+    UIAccess uiAccess
   ) {
     Sdk sdk;
     try {
@@ -230,7 +229,7 @@ public class SdkUtil {
 
   @RequiredUIAccess
   @Deprecated
-  public static void selectSdkHome(SdkType sdkType, @Nonnull @RequiredUIAccess Consumer<String> consumer) {
+  public static void selectSdkHome(SdkType sdkType, @RequiredUIAccess Consumer<String> consumer) {
     if (sdkType instanceof BundleType bundleType) {
       selectSdkHome(Platform.current(), bundleType, path -> consumer.accept(path.toString()));
     } else {
@@ -239,7 +238,7 @@ public class SdkUtil {
   }
 
   @RequiredUIAccess
-  public static void selectSdkHome(Platform platform, BundleType bundleType, @Nonnull @RequiredUIAccess Consumer<Path> consumer) {
+  public static void selectSdkHome(Platform platform, BundleType bundleType, @RequiredUIAccess Consumer<Path> consumer) {
     FileChooserDescriptor descriptor = bundleType.getHomeChooserDescriptor(platform);
 
     FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(bundleType)).doWhenDone(virtualFiles -> {
@@ -257,7 +256,7 @@ public class SdkUtil {
   }
 
   @RequiredUIAccess
-  private static void selectLegacySdkHome(SdkType sdkType, @Nonnull @RequiredUIAccess Consumer<String> consumer) {
+  private static void selectLegacySdkHome(SdkType sdkType, @RequiredUIAccess Consumer<String> consumer) {
     FileChooserDescriptor descriptor = sdkType.getHomeChooserDescriptor();
 
     FileChooser.chooseFiles(descriptor, null, getSuggestedSdkPath(sdkType)).doWhenDone(virtualFiles -> {

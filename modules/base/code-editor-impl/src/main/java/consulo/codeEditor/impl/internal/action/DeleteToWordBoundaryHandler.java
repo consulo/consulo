@@ -10,7 +10,6 @@ import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author eldar
@@ -25,7 +24,7 @@ class DeleteToWordBoundaryHandler extends EditorWriteActionHandler.ForEachCaret 
     }
 
     @Override
-    public void executeWriteAction(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
         CommandProcessor.getInstance().setCurrentCommandGroupId(EditorActionUtil.DELETE_COMMAND_GROUP);
         CopyPasteManager.getInstance().stopKillRings();
 

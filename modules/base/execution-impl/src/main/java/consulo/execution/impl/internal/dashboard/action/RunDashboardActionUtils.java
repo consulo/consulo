@@ -12,8 +12,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.JBIterable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -21,18 +20,18 @@ final class RunDashboardActionUtils {
   private RunDashboardActionUtils() {
   }
 
-  @Nonnull
-  static List<RunDashboardRunConfigurationNode> getTargets(@Nonnull AnActionEvent e) {
+  
+  static List<RunDashboardRunConfigurationNode> getTargets(AnActionEvent e) {
     return ServiceViewActionUtils.getTargets(e, RunDashboardRunConfigurationNode.class);
   }
 
   @Nullable
-  static RunDashboardRunConfigurationNode getTarget(@Nonnull AnActionEvent e) {
+  static RunDashboardRunConfigurationNode getTarget(AnActionEvent e) {
     return ServiceViewActionUtils.getTarget(e, RunDashboardRunConfigurationNode.class);
   }
 
-  @Nonnull
-  static JBIterable<RunDashboardRunConfigurationNode> getLeafTargets(@Nonnull AnActionEvent e) {
+  
+  static JBIterable<RunDashboardRunConfigurationNode> getLeafTargets(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) return JBIterable.empty();
 

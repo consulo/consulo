@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 
 /**
@@ -29,22 +28,22 @@ import java.nio.file.Path;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PredefinedBundlesProvider {
   public interface Context {
-    @Nonnull
-    Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName);
+    
+    Sdk createSdkWithName(SdkType sdkType, String suggestName);
 
-    @Nonnull
-    Sdk createSdkWithName(@Nonnull BundleType bundleType, @Nonnull Path homePath, @Nonnull String suggestName);
+    
+    Sdk createSdkWithName(BundleType bundleType, Path homePath, String suggestName);
 
-    @Nonnull
-    default Sdk createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
+    
+    default Sdk createSdk(SdkType sdkType, String sdkHome) {
       return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
     }
 
-    @Nonnull
-    default Sdk createSdk(@Nonnull Platform platform, @Nonnull BundleType sdkType, @Nonnull Path homePath) {
+    
+    default Sdk createSdk(Platform platform, BundleType sdkType, Path homePath) {
       return createSdkWithName(sdkType, homePath, sdkType.suggestSdkName(platform, null, homePath));
     }
   }
 
-  public abstract void createBundles(@Nonnull Context context);
+  public abstract void createBundles(Context context);
 }

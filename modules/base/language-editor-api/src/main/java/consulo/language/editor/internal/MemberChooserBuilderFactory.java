@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.editor.generation.ClassMember;
 import consulo.language.editor.generation.MemberChooserBuilder;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,6 +27,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface MemberChooserBuilderFactory {
-  @Nonnull
+  
   <T extends ClassMember> MemberChooserBuilder<T> newBuilder(T[] elements);
 }

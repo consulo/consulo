@@ -28,8 +28,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -57,11 +56,11 @@ public class LazyParseableElement extends CompositeElement {
      * Cached or non-parsed text of this element. Must be non-null if {@link #myParsed} is false.
      * Coordinated writes to (myParsed, myText) are guarded by {@link #lock}
      */
-    @Nonnull
+    
     private volatile Supplier<CharSequence> myText;
     private volatile boolean myParsed;
 
-    public LazyParseableElement(@Nonnull IElementType type, @Nullable CharSequence text) {
+    public LazyParseableElement(IElementType type, @Nullable CharSequence text) {
         super(type);
         synchronized (lock) {
             if (text == null) {
@@ -88,7 +87,7 @@ public class LazyParseableElement extends CompositeElement {
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getText() {
@@ -101,7 +100,7 @@ public class LazyParseableElement extends CompositeElement {
         return s;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public CharSequence getChars() {
@@ -131,7 +130,7 @@ public class LazyParseableElement extends CompositeElement {
     }
 
     @Override
-    public int textMatches(@Nonnull CharSequence buffer, int start) {
+    public int textMatches(CharSequence buffer, int start) {
         CharSequence text = myText();
         if (text != null) {
             return LeafElement.leafTextMatches(text, buffer, start);
@@ -220,7 +219,7 @@ public class LazyParseableElement extends CompositeElement {
         }
     }
 
-    private void setChildren(@Nonnull TreeElement parsedNode) {
+    private void setChildren(TreeElement parsedNode) {
         ProgressManager.getInstance().executeNonCancelableSection(() -> {
             try {
                 TreeElement last = CompositeElement.rawSetParents(parsedNode, this);
@@ -234,7 +233,7 @@ public class LazyParseableElement extends CompositeElement {
     }
 
     @Override
-    public void rawAddChildrenWithoutNotifications(@Nonnull TreeElement first) {
+    public void rawAddChildrenWithoutNotifications(TreeElement first) {
         if (!isParsed()) {
             LOG.error("Mutating collapsed chameleon " + this.getClass());
         }

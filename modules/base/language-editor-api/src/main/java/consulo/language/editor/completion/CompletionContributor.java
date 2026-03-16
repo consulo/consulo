@@ -42,10 +42,8 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -138,8 +136,8 @@ public abstract class CompletionContributor implements LanguageExtension {
   private static final ExtensionPointCacheKey<CompletionContributor, ByLanguageValue<List<CompletionContributor>>> KEY =
           ExtensionPointCacheKey.create("CompletionContributor", LanguageOneToMany.build(true));
 
-  @Nonnull
-  public static List<CompletionContributor> forLanguage(@Nonnull Language language) {
+  
+  public static List<CompletionContributor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(CompletionContributor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -191,7 +189,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    *
    * @param context
    */
-  public void beforeCompletion(@Nonnull CompletionInitializationContext context) {
+  public void beforeCompletion(CompletionInitializationContext context) {
   }
 
   /**
@@ -200,7 +198,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @deprecated use {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet#addLookupAdvertisement(String)}
    */
   @Nullable
-  public String advertise(@Nonnull CompletionParameters parameters) {
+  public String advertise(CompletionParameters parameters) {
     return null;
   }
 
@@ -210,7 +208,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @return hint text to be shown if no variants are found, typically "No suggestions"
    */
   @Nullable
-  public String handleEmptyLookup(@Nonnull CompletionParameters parameters, Editor editor) {
+  public String handleEmptyLookup(CompletionParameters parameters, Editor editor) {
     return null;
   }
 
@@ -225,7 +223,7 @@ public abstract class CompletionContributor implements LanguageExtension {
   /**
    * Allow autoPopup to appear after custom symbol
    */
-  public boolean invokeAutoPopup(@Nonnull PsiElement position, char typeChar) {
+  public boolean invokeAutoPopup(PsiElement position, char typeChar) {
     return false;
   }
 
@@ -239,7 +237,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    *
    * @param context context
    */
-  public void duringCompletion(@Nonnull CompletionInitializationContext context) {
+  public void duringCompletion(CompletionInitializationContext context) {
   }
 
   /**
@@ -247,7 +245,7 @@ public abstract class CompletionContributor implements LanguageExtension {
    * @return String representation of action shortcut. Useful while advertising something
    * @see #advertise(CompletionParameters)
    */
-  public static String getActionShortcut(@NonNls String actionId) {
+  public static String getActionShortcut(String actionId) {
     return KeymapUtil.getFirstKeyboardShortcutText(ActionManager.getInstance().getAction(actionId));
   }
 
@@ -256,8 +254,8 @@ public abstract class CompletionContributor implements LanguageExtension {
             .runReadAction((Supplier<List<CompletionContributor>>)() -> forLanguage(PsiUtilCore.getLanguageAtOffset(parameters.getPosition().getContainingFile(), parameters.getOffset())));
   }
 
-  @Nonnull
-  public static List<CompletionContributor> forLanguageHonorDumbness(@Nonnull Language language, @Nonnull Project project) {
+  
+  public static List<CompletionContributor> forLanguageHonorDumbness(Language language, Project project) {
     return DumbService.getInstance(project).filterByDumbAwareness(forLanguage(language));
   }
 }

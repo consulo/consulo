@@ -22,7 +22,6 @@ import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelEx;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -36,13 +35,13 @@ public class DelegatingFormattingModel implements FormattingModelEx {
     myRootBlock = block;
   }
 
-  @Nonnull
+  
   @Override
   public Block getRootBlock() {
     return myRootBlock;
   }
 
-  @Nonnull
+  
   @Override
   public FormattingDocumentModel getDocumentModel() {
     return myBaseModel.getDocumentModel();

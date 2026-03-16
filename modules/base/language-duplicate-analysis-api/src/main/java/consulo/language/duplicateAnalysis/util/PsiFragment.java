@@ -11,8 +11,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.usage.UsageInfo;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -69,9 +68,9 @@ public abstract class PsiFragment {
                  : null;
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  private static Language doGetLanguageForElement(@Nonnull PsiElement element) {
+  private static Language doGetLanguageForElement(PsiElement element) {
     DuplicatesProfile profile = DuplicatesProfile.findProfileForLanguage(element.getLanguage());
     if (profile == null) {
       return element.getLanguage();

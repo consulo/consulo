@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -31,11 +30,10 @@ import java.util.concurrent.CompletableFuture;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectOpenService {
-    @Nonnull
     CompletableFuture<Project> openProjectAsync(
-        @Nonnull Path filePath,
-        @Nonnull UIAccess uiAccess,
-        @Nonnull ProjectOpenContext context
+        Path filePath,
+        UIAccess uiAccess,
+        ProjectOpenContext context
     );
 }
 

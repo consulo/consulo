@@ -20,8 +20,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.internal.RuntimeRootProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -41,13 +40,13 @@ public class CompilerRuntimeRootProvider implements RuntimeRootProvider {
 
     @Nullable
     @Override
-    public String getCompilerOutputUrl(@Nonnull ContentFolderTypeProvider contentFolderType) {
+    public String getCompilerOutputUrl(ContentFolderTypeProvider contentFolderType) {
         return myModuleCompilerPathsManager.getCompilerOutputUrl(contentFolderType);
     }
 
     @Nullable
     @Override
-    public VirtualFile getCompilerOutput(@Nonnull ContentFolderTypeProvider contentFolderType) {
+    public VirtualFile getCompilerOutput(ContentFolderTypeProvider contentFolderType) {
         return myModuleCompilerPathsManager.getCompilerOutput(contentFolderType);
     }
 }

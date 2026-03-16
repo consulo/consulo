@@ -17,7 +17,7 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

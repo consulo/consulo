@@ -18,8 +18,7 @@ package consulo.web.internal.ui;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -39,7 +38,7 @@ class WebTabImpl implements Tab {
     }
 
     @Override
-    public void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+    public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
         myRenderer = renderer;
     }
 

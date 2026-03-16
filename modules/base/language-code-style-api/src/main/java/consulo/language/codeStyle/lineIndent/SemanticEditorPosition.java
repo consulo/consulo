@@ -17,8 +17,7 @@ package consulo.language.codeStyle.lineIndent;
 
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -34,33 +33,33 @@ public interface SemanticEditorPosition {
   @Nullable
   Language getLanguage();
 
-  void moveToLeftParenthesisBackwardsSkippingNested(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis);
+  void moveToLeftParenthesisBackwardsSkippingNested(SyntaxElement leftParenthesis, SyntaxElement rightParenthesis);
 
-  SemanticEditorPosition beforeParentheses(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis);
+  SemanticEditorPosition beforeParentheses(SyntaxElement leftParenthesis, SyntaxElement rightParenthesis);
 
-  SemanticEditorPosition findLeftParenthesisBackwardsSkippingNested(@Nonnull SyntaxElement leftParenthesis,
-                                                                    @Nonnull SyntaxElement rightParenthesis);
+  SemanticEditorPosition findLeftParenthesisBackwardsSkippingNested(SyntaxElement leftParenthesis,
+                                                                    SyntaxElement rightParenthesis);
 
-  void moveToLeftParenthesisBackwardsSkippingNestedWithPredicate(@Nonnull SyntaxElement leftParenthesis,
-                                                                 @Nonnull SyntaxElement rightParenthesis,
-                                                                 @Nonnull Predicate<SemanticEditorPosition> terminationCondition);
+  void moveToLeftParenthesisBackwardsSkippingNestedWithPredicate(SyntaxElement leftParenthesis,
+                                                                 SyntaxElement rightParenthesis,
+                                                                 Predicate<SemanticEditorPosition> terminationCondition);
 
-  boolean isAt(@Nonnull SyntaxElement syntaxElement);
+  boolean isAt(SyntaxElement syntaxElement);
 
-  boolean isAt(@Nonnull IElementType elementType);
+  boolean isAt(IElementType elementType);
 
   boolean isAtEnd();
 
   int getStartOffset();
 
-  boolean isAtAnyOf(@Nonnull SyntaxElement... syntaxElements);
+  boolean isAtAnyOf(SyntaxElement... syntaxElements);
 
   CharSequence getChars();
 
-  boolean isAfterOnSameLine(@Nonnull SyntaxElement... syntaxElements);
+  boolean isAfterOnSameLine(SyntaxElement... syntaxElements);
 
   @Nullable
-  SyntaxElement elementAfterOnSameLine(@Nonnull SyntaxElement... syntaxElements);
+  SyntaxElement elementAfterOnSameLine(SyntaxElement... syntaxElements);
 
   boolean isAtMultiline(SyntaxElement... elements);
 
@@ -76,48 +75,48 @@ public interface SemanticEditorPosition {
 
   SemanticEditorPosition before();
 
-  void moveAfterOptional(@Nonnull SyntaxElement syntaxElement);
+  void moveAfterOptional(SyntaxElement syntaxElement);
 
-  SemanticEditorPosition afterOptional(@Nonnull SyntaxElement syntaxElement);
+  SemanticEditorPosition afterOptional(SyntaxElement syntaxElement);
 
   void moveAfter();
 
   SemanticEditorPosition after();
 
-  void moveBeforeParentheses(@Nonnull SyntaxElement leftParenthesis, @Nonnull SyntaxElement rightParenthesis);
+  void moveBeforeParentheses(SyntaxElement leftParenthesis, SyntaxElement rightParenthesis);
 
-  SemanticEditorPosition findLeftParenthesisBackwardsSkippingNestedWithPredicate(@Nonnull SyntaxElement leftParenthesis,
-                                                                                 @Nonnull SyntaxElement rightParenthesis,
-                                                                                 @Nonnull Predicate<SemanticEditorPosition> terminationCondition);
+  SemanticEditorPosition findLeftParenthesisBackwardsSkippingNestedWithPredicate(SyntaxElement leftParenthesis,
+                                                                                 SyntaxElement rightParenthesis,
+                                                                                 Predicate<SemanticEditorPosition> terminationCondition);
 
-  boolean matchesRule(@Nonnull Predicate<SemanticEditorPosition> rule);
+  boolean matchesRule(Predicate<SemanticEditorPosition> rule);
 
-  SyntaxElement map(@Nonnull IElementType elementType);
+  SyntaxElement map(IElementType elementType);
 
   @Nullable
   SyntaxElement getCurrElement();
 
   boolean hasEmptyLineAfter(int offset);
 
-  int findStartOf(@Nonnull SyntaxElement element);
+  int findStartOf(SyntaxElement element);
 
   boolean isAtLanguage(@Nullable Language language);
 
   SemanticEditorPosition copy();
 
-  SemanticEditorPosition copyAnd(@Nonnull Consumer<SemanticEditorPosition> modifier);
+  SemanticEditorPosition copyAnd(Consumer<SemanticEditorPosition> modifier);
 
-  void moveAfterOptionalMix(@Nonnull SyntaxElement... elements);
+  void moveAfterOptionalMix(SyntaxElement... elements);
 
-  void moveBeforeOptionalMix(@Nonnull SyntaxElement... elements);
+  void moveBeforeOptionalMix(SyntaxElement... elements);
 
-  void moveBeforeOptional(@Nonnull SyntaxElement syntaxElement);
+  void moveBeforeOptional(SyntaxElement syntaxElement);
 
   void moveBefore();
 
-  SemanticEditorPosition beforeOptionalMix(@Nonnull SyntaxElement... elements);
+  SemanticEditorPosition beforeOptionalMix(SyntaxElement... elements);
 
-  SemanticEditorPosition beforeOptional(@Nonnull SyntaxElement syntaxElement);
+  SemanticEditorPosition beforeOptional(SyntaxElement syntaxElement);
 
-  SemanticEditorPosition afterOptionalMix(@Nonnull SyntaxElement... elements);
+  SemanticEditorPosition afterOptionalMix(SyntaxElement... elements);
 }

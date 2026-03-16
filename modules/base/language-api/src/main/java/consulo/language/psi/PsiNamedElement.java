@@ -20,8 +20,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A PSI element which has a name and can be renamed (for example, a class or a method).
@@ -49,5 +48,5 @@ public interface PsiNamedElement extends PsiElement {
    * @throws IncorrectOperationException if the modification is not supported or not possible for some reason.
    */
   @RequiredWriteAction
-  PsiElement setName(@Nonnull String name) throws IncorrectOperationException;
+  PsiElement setName(String name) throws IncorrectOperationException;
 }

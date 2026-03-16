@@ -16,9 +16,9 @@
 package consulo.language.editor.todo.impl.internal.versionSystemControl;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.application.util.function.Computable;
 import consulo.diff.old.*;
 import consulo.document.util.TextRange;
 import consulo.language.editor.todo.TodoFilter;
@@ -38,8 +38,7 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -107,25 +106,14 @@ public class TodoCheckinHandlerWorker {
             myPsiFile = null;
 
             if (afterFile.isValid()) {
-                myPsiFile = ApplicationManager.getApplication().runReadAction(new Computable<PsiFile>() {
-                    @Override
-                    public PsiFile compute() {
-                        return myPsiManager.findFile(afterFile);
-                    }
-                });
+                myPsiFile = ReadAction.compute(() -> myPsiManager.findFile(afterFile));
             }
             if (myPsiFile == null) {
                 mySkipped.add(Pair.create(change.getAfterRevision().getFile(), ourInvalidFile));
                 continue;
             }
 
-            myNewTodoItems = new ArrayList<TodoItem>(Arrays.asList(
-                ApplicationManager.getApplication().runReadAction(new Computable<TodoItem[]>() {
-                    @Override
-                    public TodoItem[] compute() {
-                        return mySearchHelper.findTodoItems(myPsiFile);
-                    }
-                })));
+            myNewTodoItems = new ArrayList<>(Arrays.asList(ReadAction.compute(() -> mySearchHelper.findTodoItems(myPsiFile))));
             applyFilterAndRemoveDuplicates(myNewTodoItems, myTodoFilter);
             if (change.getBeforeRevision() == null) {
                 // take just all todos
@@ -141,7 +129,7 @@ public class TodoCheckinHandlerWorker {
     }
 
     @Nullable
-    private static VirtualFile getFileWithRefresh(@Nonnull FilePath filePath) {
+    private static VirtualFile getFileWithRefresh(FilePath filePath) {
         VirtualFile file = filePath.getVirtualFile();
         if (file == null) {
             file = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(filePath.getIOFile());

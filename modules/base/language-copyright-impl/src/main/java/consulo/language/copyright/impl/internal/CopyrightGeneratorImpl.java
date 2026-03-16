@@ -28,8 +28,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.velocity.VelocityContext;
@@ -79,9 +78,9 @@ public class CopyrightGeneratorImpl implements CopyrightGenerator {
     });
   }
 
-  @Nonnull
+  
   @Override
-  public String generate(@Nullable PsiFile file, @Nullable Module module, @Nonnull String template) throws Exception {
+  public String generate(@Nullable PsiFile file, @Nullable Module module, String template) throws Exception {
     VelocityEngine engine = myVelocityEngine.get();
 
     VelocityContext vc = new VelocityContext();

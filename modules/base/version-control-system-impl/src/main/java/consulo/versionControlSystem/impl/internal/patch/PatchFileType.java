@@ -22,8 +22,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -35,25 +34,25 @@ public class PatchFileType implements FileType {
   public static final PatchFileType INSTANCE = new PatchFileType();
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "PATCH";
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDescription() {
     return VcsLocalize.patchFileTypeDescription();
   }
 
   @Override
-  @Nonnull
+  
   public String getDefaultExtension() {
     return "patch";
   }
 
   @Override
-  @Nonnull
+  
   public Image getIcon() {
     return PlatformIconGroup.filetypesPatch();
   }
@@ -62,7 +61,7 @@ public class PatchFileType implements FileType {
     return vFile != null && vFile.getFileType() == PatchFileType.INSTANCE;
   }
 
-  public static boolean isPatchFile(@Nonnull File file) {
+  public static boolean isPatchFile(File file) {
     return isPatchFile(VirtualFileUtil.findFileByIoFile(file, true));
   }
 }

@@ -19,13 +19,12 @@ import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 class UsageTargetNode extends Node {
-  UsageTargetNode(@Nonnull UsageTarget target) {
+  UsageTargetNode(UsageTarget target) {
     setUserObject(target);
   }
 
@@ -49,13 +48,13 @@ class UsageTargetNode extends Node {
     return false;
   }
 
-  @Nonnull
+  
   @Override
-  protected String getText(@Nonnull UsageView view) {
+  protected String getText(UsageView view) {
     return ObjectUtil.notNull(getTarget().getPresentation().getPresentableText(), "");
   }
 
-  @Nonnull
+  
   public UsageTarget getTarget() {
     return (UsageTarget)getUserObject();
   }

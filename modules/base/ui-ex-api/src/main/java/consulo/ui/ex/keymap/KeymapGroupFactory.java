@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -32,32 +31,32 @@ public abstract class KeymapGroupFactory {
         return Application.get().getInstance(KeymapGroupFactory.class);
     }
 
-    @Nonnull
+    
     public abstract KeymapGroup.Builder newBuilder();
 
-    @Nonnull
-    public abstract KeymapGroup createGroup(@Nonnull LocalizeValue name);
+    
+    public abstract KeymapGroup createGroup(LocalizeValue name);
 
-    @Nonnull
-    public abstract KeymapGroup createGroup(@Nonnull LocalizeValue name, Image icon);
+    
+    public abstract KeymapGroup createGroup(LocalizeValue name, Image icon);
 
-    @Nonnull
-    public abstract KeymapGroup createGroup(@Nonnull LocalizeValue name, String id, Image icon);
+    
+    public abstract KeymapGroup createGroup(LocalizeValue name, String id, Image icon);
 
     @Deprecated
-    @Nonnull
+    
     public KeymapGroup createGroup(String name) {
         return createGroup(LocalizeValue.ofNullable(name));
     }
 
     @Deprecated
-    @Nonnull
+    
     public KeymapGroup createGroup(String name, Image icon) {
         return createGroup(LocalizeValue.ofNullable(name), icon);
     }
 
     @Deprecated
-    @Nonnull
+    
     public KeymapGroup createGroup(String name, String id, Image icon) {
         return createGroup(LocalizeValue.ofNullable(name), id, icon);
     }

@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -42,27 +41,27 @@ public class VcsNotifier {
     public static final NotificationGroup SILENT_NOTIFICATION =
         new NotificationGroup("Vcs Silent Notifications", NotificationDisplayType.NONE, true);
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
-    public static VcsNotifier getInstance(@Nonnull Project project) {
+    public static VcsNotifier getInstance(Project project) {
         return project.getInstance(VcsNotifier.class);
     }
 
     @Inject
-    public VcsNotifier(@Nonnull Project project, @Nonnull NotificationService notificationService) {
+    public VcsNotifier(Project project, NotificationService notificationService) {
         myProject = project;
         myNotificationService = notificationService;
     }
 
-    @Nonnull
+    
     public static Notification createNotification(
-        @Nonnull NotificationGroup notificationGroup,
-        @Nonnull String title,
-        @Nonnull String message,
-        @Nonnull NotificationType type,
+        NotificationGroup notificationGroup,
+        String title,
+        String message,
+        NotificationType type,
         @Nullable NotificationListener listener
     ) {
         // title can be empty; message can't be neither null, nor empty
@@ -82,12 +81,12 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
+    
     public Notification notify(
-        @Nonnull NotificationGroup notificationGroup,
-        @Nonnull String title,
-        @Nonnull String message,
-        @Nonnull NotificationType type,
+        NotificationGroup notificationGroup,
+        String title,
+        String message,
+        NotificationType type,
         @Nullable NotificationListener listener
     ) {
         return myNotificationService.newOfType(notificationGroup, type)
@@ -98,20 +97,20 @@ public class VcsNotifier {
     }
 
     @Deprecated
-    @Nonnull
-    public Notification notify(@Nonnull Notification notification) {
+    
+    public Notification notify(Notification notification) {
         notification.notify(myProject);
         return notification;
     }
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
+    
     public Notification notifyError(
         @Nullable String displayId,
-        @Nonnull String title,
-        @Nonnull String message,
-        @Nonnull NotificationAction... actions
+        String title,
+        String message,
+        NotificationAction... actions
     ) {
         return myNotificationService.newError(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
@@ -121,8 +120,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyError(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyError(String title, String message) {
         return myNotificationService.newError(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -131,8 +130,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyError(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyError(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newError(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -142,8 +141,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyWeakError(@Nonnull String message) {
+    
+    public Notification notifyWeakError(String message) {
         return myNotificationService.newError(NOTIFICATION_GROUP_ID)
             .content(LocalizeValue.localizeTODO(message))
             .notifyAndGet(myProject);
@@ -151,8 +150,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifySuccess(@Nonnull String message) {
+    
+    public Notification notifySuccess(String message) {
         return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
             .content(LocalizeValue.localizeTODO(message))
             .notifyAndGet(myProject);
@@ -160,8 +159,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifySuccess(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifySuccess(String title, String message) {
         return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -170,8 +169,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifySuccess(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifySuccess(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -181,8 +180,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyImportantInfo(String title, String message) {
         return myNotificationService.newInfo(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -191,8 +190,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyImportantInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyImportantInfo(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newInfo(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -202,8 +201,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyInfo(@Nonnull String message) {
+    
+    public Notification notifyInfo(String message) {
         return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
             .content(LocalizeValue.localizeTODO(message))
             .notifyAndGet(myProject);
@@ -211,8 +210,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyInfo(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyInfo(String title, String message) {
         return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -221,8 +220,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyInfo(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newInfo(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -232,8 +231,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyMinorWarning(String title, String message) {
         return myNotificationService.newWarn(STANDARD_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -242,8 +241,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyMinorWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyMinorWarning(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newWarn(STANDARD_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -253,8 +252,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyWarning(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyWarning(String title, String message) {
         return myNotificationService.newWarn(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -263,8 +262,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyWarning(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newWarn(NOTIFICATION_GROUP_ID)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -274,8 +273,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyImportantWarning(String title, String message) {
         return myNotificationService.newWarn(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -284,8 +283,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyImportantWarning(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyImportantWarning(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newWarn(IMPORTANT_ERROR_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -295,8 +294,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message) {
+    
+    public Notification notifyMinorInfo(String title, String message) {
         return myNotificationService.newInfo(STANDARD_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -305,8 +304,8 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
-    public Notification notifyMinorInfo(@Nonnull String title, @Nonnull String message, @Nullable NotificationListener listener) {
+    
+    public Notification notifyMinorInfo(String title, String message, @Nullable NotificationListener listener) {
         return myNotificationService.newInfo(STANDARD_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))
@@ -316,12 +315,12 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    @Nonnull
+    
     public Notification notifyMinorInfo(
         @Nullable String displayId,
-        @Nonnull String title,
-        @Nonnull String message,
-        @Nonnull NotificationAction... actions
+        String title,
+        String message,
+        NotificationAction... actions
     ) {
         return myNotificationService.newInfo(STANDARD_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
@@ -332,7 +331,7 @@ public class VcsNotifier {
 
     @Deprecated
     @DeprecationInfo("Use NotificationGroup.newError/newWarning/newInfo()...notify()")
-    public Notification logInfo(@Nonnull String title, @Nonnull String message) {
+    public Notification logInfo(String title, String message) {
         return myNotificationService.newInfo(SILENT_NOTIFICATION)
             .title(LocalizeValue.localizeTODO(title))
             .content(LocalizeValue.localizeTODO(message))

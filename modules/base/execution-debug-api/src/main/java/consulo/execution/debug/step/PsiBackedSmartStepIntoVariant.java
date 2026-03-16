@@ -21,7 +21,6 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
 * @author Maxim.Mossienko
@@ -30,7 +29,7 @@ public class PsiBackedSmartStepIntoVariant<T extends PsiNamedElement & Navigatio
   private final T myElement;
   private final ItemPresentation myPresentation;
 
-  public PsiBackedSmartStepIntoVariant(@Nonnull T element) {
+  public PsiBackedSmartStepIntoVariant(T element) {
     myElement = element;
     myPresentation = element.getPresentation();
     assert myPresentation != null: "Invalid presentation:" + myElement;

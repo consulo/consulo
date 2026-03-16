@@ -37,8 +37,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -55,11 +54,11 @@ import java.util.*;
  */
 public class InspectionTree extends Tree {
     private final HashSet<Object> myExpandedUserObjects;
-    @Nonnull
+    
     private final GlobalInspectionContextImpl myContext;
     private SelectionPath mySelectionPath;
 
-    public InspectionTree(@Nonnull Project project, @Nonnull GlobalInspectionContextImpl context) {
+    public InspectionTree(Project project, GlobalInspectionContextImpl context) {
         super(new InspectionRootNode(project));
         myContext = context;
 
@@ -118,7 +117,7 @@ public class InspectionTree extends Tree {
         return toolWrapper;
     }
 
-    @Nonnull
+    
     public RefEntity[] getSelectedElements() {
         TreePath[] selectionPaths = getSelectionPaths();
         if (selectionPaths != null) {
@@ -242,7 +241,7 @@ public class InspectionTree extends Tree {
 
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -403,7 +402,7 @@ public class InspectionTree extends Tree {
         }
     }
 
-    @Nonnull
+    
     public GlobalInspectionContextImpl getContext() {
         return myContext;
     }

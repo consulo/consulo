@@ -24,62 +24,61 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
 public interface RunnerLayoutUi  {
 
-  @Nonnull
+  
   LayoutStateDefaults getDefaults();
 
-  @Nonnull
+  
   LayoutViewOptions getOptions();
 
-  @Nonnull
+  
   ContentManager getContentManager();
 
-  @Nonnull
-  Content addContent(@Nonnull Content content);
+  
+  Content addContent(Content content);
 
-  @Nonnull
-  Content addContent(@Nonnull Content content, int defaultTabId, @Nonnull PlaceInGrid defaultPlace, boolean defaultIsMinimized);
+  
+  Content addContent(Content content, int defaultTabId, PlaceInGrid defaultPlace, boolean defaultIsMinimized);
 
-  @Nonnull
-  Content createContent(@Nonnull String contentId, @Nonnull JComponent component, @Nonnull String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
+  
+  Content createContent(String contentId, JComponent component, String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
 
-  @Nonnull
-  Content createContent(@Nonnull String contentId, @Nonnull ComponentWithActions contentWithActions, @Nonnull String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
+  
+  Content createContent(String contentId, ComponentWithActions contentWithActions, String displayName, @Nullable Image icon, @Nullable JComponent toFocus);
 
   boolean removeContent(@Nullable Content content, boolean dispose);
 
   @Nullable
-  Content findContent(@Nonnull String contentId);
+  Content findContent(String contentId);
 
-  @Nonnull
+  
   ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced);
-  @Nonnull
+  
   ActionCallback selectAndFocus(@Nullable Content content, boolean requestFocus, boolean forced, boolean implicit);
 
-  @Nonnull
-  RunnerLayoutUi addListener(@Nonnull ContentManagerListener listener, @Nonnull Disposable parent);
+  
+  RunnerLayoutUi addListener(ContentManagerListener listener, Disposable parent);
 
-  void removeListener(@Nonnull ContentManagerListener listener);
+  void removeListener(ContentManagerListener listener);
 
-  void attractBy(@Nonnull String condition);
-  void clearAttractionBy(@Nonnull String condition);
+  void attractBy(String condition);
+  void clearAttractionBy(String condition);
 
-  void setBouncing(@Nonnull Content content, boolean activate);
+  void setBouncing(Content content, boolean activate);
 
-  @Nonnull
+  
   JComponent getComponent();
 
   boolean isDisposed();
 
   void updateActionsNow(UIAccess uiAccess);
 
-  @Nonnull
+  
   Content[] getContents();
 
 }

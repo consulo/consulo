@@ -21,7 +21,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsKey;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -29,8 +28,8 @@ public class DescindingFilesFilter {
     private DescindingFilesFilter() {
     }
 
-    @Nonnull
-    public static FilePath[] filterDescindingFiles(@Nonnull FilePath[] roots, Project project) {
+    
+    public static FilePath[] filterDescindingFiles(FilePath[] roots, Project project) {
         List<FilePath> result = new LinkedList<>();
         ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
 

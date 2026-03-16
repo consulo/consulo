@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -24,8 +23,8 @@ import jakarta.annotation.Nonnull;
 public abstract class TempFileSystem extends NewVirtualFileSystem {
   public static final String PROTOCOL = "temp";
 
-  @Nonnull
-  public static TempFileSystem get(@Nonnull VirtualFileManager manager) {
+  
+  public static TempFileSystem get(VirtualFileManager manager) {
     return (TempFileSystem)manager.getFileSystem(PROTOCOL);
   }
 

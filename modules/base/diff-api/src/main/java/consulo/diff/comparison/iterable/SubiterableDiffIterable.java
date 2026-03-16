@@ -16,19 +16,18 @@
 package consulo.diff.comparison.iterable;
 
 import consulo.diff.util.Range;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
 class SubiterableDiffIterable extends ChangeDiffIterableBase {
-  @Nonnull
+  
   private final DiffIterable myIterable;
   private final int myStart1;
   private final int myStart2;
   private final int myEnd1;
   private final int myEnd2;
 
-  public SubiterableDiffIterable(@Nonnull DiffIterable iterable, int start1, int end1, int start2, int end2) {
+  public SubiterableDiffIterable(DiffIterable iterable, int start1, int end1, int start2, int end2) {
     super(end1 - start1, end2 - start2);
     myIterable = iterable;
     myStart1 = start1;
@@ -37,7 +36,7 @@ class SubiterableDiffIterable extends ChangeDiffIterableBase {
     myEnd2 = end2;
   }
 
-  @Nonnull
+  
   @Override
   protected ChangeIterable createChangeIterable() {
     return new SubiterableChangeIterable();

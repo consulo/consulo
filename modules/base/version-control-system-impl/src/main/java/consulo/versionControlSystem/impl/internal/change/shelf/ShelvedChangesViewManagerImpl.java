@@ -62,8 +62,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.awt.IssueLinkRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -262,7 +261,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
     private class ShelfTree extends Tree implements UiDataProvider {
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             Set<ShelvedChangeListImpl> nonRecycledLists = getSelectedLists(false);
             if (nonRecycledLists.size() > 0) {
                 sink.set(SHELVED_CHANGELIST_KEY, nonRecycledLists.toArray(new ShelvedChangeListImpl[nonRecycledLists.size()]));
@@ -396,7 +395,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,
@@ -462,7 +461,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
     private class MyChangeListDeleteProvider implements DeleteProvider {
         @Override
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             //noinspection unchecked
             List<ShelvedChangeListImpl> shelvedChangeLists = getLists(dataContext);
             if (shelvedChangeLists.isEmpty()) {
@@ -488,7 +487,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         }
 
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             //noinspection unchecked
             return !getLists(dataContext).isEmpty();
         }
@@ -510,7 +509,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
 
     private class MyChangesDeleteProvider implements DeleteProvider {
         @Override
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             Project project = dataContext.getData(Project.KEY);
             if (project == null) {
                 return;
@@ -564,7 +563,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         }
 
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             ShelvedChangeListImpl[] shelved = dataContext.getData(SHELVED_CHANGELIST_KEY);
             if (shelved == null || (shelved.length != 1)) {
                 return false;
@@ -596,7 +595,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         }
 
         @Override
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             DeleteProvider delegate = selectDelegate(dataContext);
             if (delegate != null) {
                 delegate.deleteElement(dataContext);
@@ -604,7 +603,7 @@ public class ShelvedChangesViewManagerImpl implements ShelvedChangesViewManager 
         }
 
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             return selectDelegate(dataContext) != null;
         }
     }

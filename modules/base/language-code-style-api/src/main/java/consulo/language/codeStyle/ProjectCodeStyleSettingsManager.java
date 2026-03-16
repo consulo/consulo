@@ -23,15 +23,14 @@ import consulo.component.persist.Storage;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 @Singleton
 @State(name = "ProjectCodeStyleSettingsManager", storages = @Storage("codeStyleSettings.xml"))
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class ProjectCodeStyleSettingsManager extends CodeStyleSettingsManager {
-    @Nonnull
-    public static ProjectCodeStyleSettingsManager getInstance(@Nonnull Project project) {
+    
+    public static ProjectCodeStyleSettingsManager getInstance(Project project) {
         return project.getInstance(ProjectCodeStyleSettingsManager.class);
     }
 }

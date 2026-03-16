@@ -20,8 +20,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -30,9 +29,9 @@ import java.io.File;
  */
 public abstract class ProjectOpenProcessor {
     @Nullable
-    public abstract Image getIcon(@Nonnull VirtualFile file);
+    public abstract Image getIcon(VirtualFile file);
 
-    public abstract boolean canOpenProject(@Nonnull File file);
+    public abstract boolean canOpenProject(File file);
 
     /**
      * Extend the coroutine chain with preparation steps for opening a project.
@@ -49,10 +48,9 @@ public abstract class ProjectOpenProcessor {
      * @param in       the incoming coroutine chain ending with VirtualFile
      * @return the extended coroutine chain
      */
-    @Nonnull
-    public <I> Coroutine<I, VirtualFile> prepareSteps(@Nonnull UIAccess uiAccess,
-                                                       @Nonnull ProjectOpenContext context,
-                                                       @Nonnull Coroutine<I, VirtualFile> in) {
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                       ProjectOpenContext context,
+                                                       Coroutine<I, VirtualFile> in) {
         return in;
     }
 }

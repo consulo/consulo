@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -32,7 +31,7 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    * @return instanceof {@link TemplateLanguage}
    */
   @Override
-  @Nonnull
+  
   Language getBaseLanguage();
 
   /**
@@ -40,7 +39,7 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    *
    * @return not instanceof {@link consulo.ide.impl.idea.lang.DependentLanguage}
    */
-  @Nonnull
+  
   Language getTemplateDataLanguage();
 
   /**
@@ -50,7 +49,7 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
    * @param language for which we want to create a file
    * @return content element type for non-base language, null otherwise
    */
-  default IElementType getContentElementType(@Nonnull Language language) {
+  default IElementType getContentElementType(Language language) {
     return null;
   }
 }

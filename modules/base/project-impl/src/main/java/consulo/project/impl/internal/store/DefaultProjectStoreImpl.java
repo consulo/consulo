@@ -29,8 +29,7 @@ import consulo.project.impl.internal.DefaultProjectImpl;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.macro.ProjectPathMacroManager;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -47,7 +46,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   private static final String ROOT_TAG_NAME = "defaultProject";
 
   @Inject
-  public DefaultProjectStoreImpl(@Nonnull Project project, @Nonnull Provider<ProjectPathMacroManager> pathMacroManager, @Nonnull Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
+  public DefaultProjectStoreImpl(Project project, Provider<ProjectPathMacroManager> pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(project, pathMacroManager, applicationDefaultStoreCache);
   }
 
@@ -58,12 +57,12 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   }
 
   @Override
-  @Nonnull
+  
   protected DefaultProjectImpl getProject() {
     return (DefaultProjectImpl)super.getProject();
   }
 
-  @Nonnull
+  
   @Override
   protected StateStorageManager createStateStorageManager() {
     final XmlElementStorage storage =
@@ -75,7 +74,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
               }
 
               @Override
-              protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
+              protected XmlElementStorageSaveSession createSaveSession(StorageData storageData) {
                 return new XmlElementStorageSaveSession(storageData) {
                   @Override
                   protected void doSave(@Nullable Element element) {
@@ -97,13 +96,13 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
     //noinspection deprecation
     return new StateStorageManager() {
       @Override
-      public void addMacro(@Nonnull String macro, @Nonnull String expansion) {
+      public void addMacro(String macro, String expansion) {
         throw new UnsupportedOperationException("Method addMacro not implemented in " + getClass());
       }
 
-      @Nonnull
+      
       @Override
-      public String buildFileSpec(@Nonnull Storage storage) {
+      public String buildFileSpec(Storage storage) {
         throw new UnsupportedOperationException("Method buildFileSpec not implemented in " + getClass());
       }
 
@@ -115,18 +114,18 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
 
       @Override
       @Nullable
-      public StateStorage getStateStorage(@Nonnull Storage storageSpec) throws StateStorageException {
+      public StateStorage getStateStorage(Storage storageSpec) throws StateStorageException {
         return storage;
       }
 
       @Nullable
       @Override
-      public StateStorage getStateStorage(@Nonnull String fileSpec, @Nonnull RoamingType roamingType) {
+      public StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
         return storage;
       }
 
       @Override
-      public void clearStateStorage(@Nonnull String file) {
+      public void clearStateStorage(String file) {
       }
 
       @Nullable
@@ -136,15 +135,15 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         return externalizationSession == null ? null : new MyExternalizationSession(externalizationSession);
       }
 
-      @Nonnull
+      
       @Override
-      public String expandMacros(@Nonnull String file) {
+      public String expandMacros(String file) {
         throw new UnsupportedOperationException("Method expandMacros not implemented in " + getClass());
       }
 
-      @Nonnull
+      
       @Override
-      public String collapseMacros(@Nonnull String path) {
+      public String collapseMacros(String path) {
         throw new UnsupportedOperationException("Method collapseMacros not implemented in " + getClass());
       }
 
@@ -159,7 +158,7 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
         throw new UnsupportedOperationException("Method getStreamProviders not implemented in " + getClass());
       }
 
-      @Nonnull
+      
       @Override
       public Collection<String> getStorageFileNames() {
         throw new UnsupportedOperationException("Method getStorageFileNames not implemented in " + getClass());
@@ -177,19 +176,19 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   }
 
   private static class MyExternalizationSession implements StateStorageManager.ExternalizationSession {
-    @Nonnull
+    
     final StateStorage.ExternalizationSession externalizationSession;
 
-    public MyExternalizationSession(@Nonnull StateStorage.ExternalizationSession externalizationSession) {
+    public MyExternalizationSession(StateStorage.ExternalizationSession externalizationSession) {
       this.externalizationSession = externalizationSession;
     }
 
     @Override
-    public void setState(@Nonnull Storage[] storageSpecs, @Nonnull Object component, @Nonnull String componentName, @Nonnull Object state) {
+    public void setState(Storage[] storageSpecs, Object component, String componentName, Object state) {
       externalizationSession.setState(component, componentName, state, null);
     }
 
-    @Nonnull
+    
     @Override
     public List<SaveSession> createSaveSessions(boolean force) {
       return ContainerUtil.createMaybeSingletonList(externalizationSession.createSaveSession(false));

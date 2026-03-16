@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.event;
 
-import jakarta.annotation.Nonnull;
 
 public class EditorMouseEventArea {
   private final String myDebugName;
@@ -26,7 +25,7 @@ public class EditorMouseEventArea {
   public static final EditorMouseEventArea LINE_MARKERS_AREA = new EditorMouseEventArea("LINE_MARKERS_AREA");
   public static final EditorMouseEventArea FOLDING_OUTLINE_AREA = new EditorMouseEventArea("FOLDING_OUTLINE_AREA");
 
-  private EditorMouseEventArea(@Nonnull String debugName) {
+  private EditorMouseEventArea(String debugName) {
     myDebugName = debugName;
   }
 

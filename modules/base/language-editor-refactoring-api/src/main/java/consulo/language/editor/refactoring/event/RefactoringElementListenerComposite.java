@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring.event;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public class RefactoringElementListenerComposite implements RefactoringElementListener, UndoRefactoringElementListener {
@@ -30,21 +29,21 @@ public class RefactoringElementListenerComposite implements RefactoringElementLi
   }
 
   @Override
-  public void elementMoved(@Nonnull PsiElement newElement){
+  public void elementMoved(PsiElement newElement){
     for (RefactoringElementListener myListener : myListeners) {
       myListener.elementMoved(newElement);
     }
   }
 
   @Override
-  public void elementRenamed(@Nonnull PsiElement newElement){
+  public void elementRenamed(PsiElement newElement){
     for (RefactoringElementListener myListener : myListeners) {
       myListener.elementRenamed(newElement);
     }
   }
 
   @Override
-  public void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName) {
+  public void undoElementMovedOrRenamed(PsiElement newElement, String oldQualifiedName) {
     for (RefactoringElementListener listener : myListeners) {
       if (listener instanceof UndoRefactoringElementListener) {
         ((UndoRefactoringElementListener)listener).undoElementMovedOrRenamed(newElement, oldQualifiedName);

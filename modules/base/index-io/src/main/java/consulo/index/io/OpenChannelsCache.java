@@ -15,7 +15,6 @@
  */
 package consulo.index.io;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,7 +33,7 @@ public class OpenChannelsCache { // TODO: Will it make sense to have a backgroun
   private final String myAccessMode;
   private final Map<File, ChannelDescriptor> myCache;
 
-  public OpenChannelsCache(int cacheSizeLimit, @NonNls String accessMode) {
+  public OpenChannelsCache(int cacheSizeLimit, String accessMode) {
     myCacheSizeLimit = cacheSizeLimit;
     myAccessMode = accessMode;
     myCache = new LinkedHashMap<File, ChannelDescriptor>(cacheSizeLimit, 0.5f, true);

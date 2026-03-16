@@ -21,7 +21,6 @@ import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,7 +38,7 @@ class MemoryDiskConflictResolver {
     private final Set<VirtualFile> myConflicts = new LinkedHashSet<>();
     private Throwable myConflictAppeared;
 
-    void beforeContentChange(@Nonnull VFileContentChangeEvent event) {
+    void beforeContentChange(VFileContentChangeEvent event) {
         if (event.isFromSave()) {
             return;
         }

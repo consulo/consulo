@@ -19,7 +19,6 @@ import consulo.execution.action.PsiLocation;
 import consulo.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -27,15 +26,15 @@ import jakarta.annotation.Nonnull;
  */
 public class ExternalSystemTaskLocation extends PsiLocation<PsiFile> {
 
-  @Nonnull
+  
   private final ExternalTaskExecutionInfo myTaskInfo;
 
-  public ExternalSystemTaskLocation(@Nonnull Project project, @Nonnull PsiFile psiElement, @Nonnull ExternalTaskExecutionInfo taskInfo) {
+  public ExternalSystemTaskLocation(Project project, PsiFile psiElement, ExternalTaskExecutionInfo taskInfo) {
     super(project, psiElement);
     myTaskInfo = taskInfo;
   }
 
-  @Nonnull
+  
   public ExternalTaskExecutionInfo getTaskInfo() {
     return myTaskInfo;
   }

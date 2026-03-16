@@ -19,8 +19,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -267,7 +266,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      *
      * @param component is the owner component for the tooltip.
      */
-    public void installOn(@Nonnull JComponent component) {
+    public void installOn(JComponent component) {
         neverHide = neverHide || UIUtil.isHelpButton(component);
 
         createMouseListeners();
@@ -318,7 +317,7 @@ public class HelpTooltipImpl implements HelpTooltip {
             .setShowShadow(true);
     }
 
-    protected void initPopupBuilder(@Nonnull HelpTooltipImpl instance) {
+    protected void initPopupBuilder(HelpTooltipImpl instance) {
         instance.initPopupBuilder();
         myPopupSize = instance.myPopupSize;
         myPopupBuilder = instance.myPopupBuilder;
@@ -377,13 +376,13 @@ public class HelpTooltipImpl implements HelpTooltip {
         return tipPanel;
     }
 
-    private void installMouseListeners(@Nonnull JComponent owner) {
+    private void installMouseListeners(JComponent owner) {
         owner.addMouseListener(myMouseListener);
         owner.addMouseMotionListener(myMouseListener);
         owner.addHierarchyListener(myHierarchyListener);
     }
 
-    private void uninstallMouseListeners(@Nonnull JComponent owner) {
+    private void uninstallMouseListeners(JComponent owner) {
         owner.removeMouseListener(myMouseListener);
         owner.removeMouseMotionListener(myMouseListener);
         owner.removeHierarchyListener(myHierarchyListener);
@@ -396,7 +395,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      *
      * @param owner a possible {@code HelpTooltip} owner.
      */
-    public static void dispose(@Nonnull Component owner) {
+    public static void dispose(Component owner) {
         if (owner instanceof JComponent) {
             JComponent component = (JComponent) owner;
             HelpTooltipImpl instance = (HelpTooltipImpl) component.getClientProperty(TOOLTIP_PROPERTY);
@@ -417,7 +416,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      *
      * @param owner a possible {@code HelpTooltip} owner.
      */
-    public static void hide(@Nonnull Component owner) {
+    public static void hide(Component owner) {
         if (owner instanceof JComponent) {
             HelpTooltipImpl instance = (HelpTooltipImpl) ((JComponent) owner).getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null) {
@@ -433,7 +432,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param owner  possible owner
      * @param master master popup
      */
-    public static void setMasterPopup(@Nonnull Component owner, JBPopup master) {
+    public static void setMasterPopup(Component owner, JBPopup master) {
         if (owner instanceof JComponent) {
             HelpTooltipImpl instance = (HelpTooltipImpl) ((JComponent) owner).getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null && instance.myPopup != master) {
@@ -450,7 +449,7 @@ public class HelpTooltipImpl implements HelpTooltip {
      * @param owner     possible owner
      * @param condition a {@code BooleanSupplier} for open condition
      */
-    public static void setMasterPopupOpenCondition(@Nonnull Component owner, @Nullable BooleanSupplier condition) {
+    public static void setMasterPopupOpenCondition(Component owner, @Nullable BooleanSupplier condition) {
         if (owner instanceof JComponent) {
             HelpTooltipImpl instance = (HelpTooltipImpl) ((JComponent) owner).getClientProperty(TOOLTIP_PROPERTY);
             if (instance != null) {
@@ -534,13 +533,13 @@ public class HelpTooltipImpl implements HelpTooltip {
     }
 
     private static class BoundWidthLabel extends JLabel {
-        private static Collection<View> getRows(@Nonnull View root) {
+        private static Collection<View> getRows(View root) {
             Collection<View> rows = new ArrayList<>();
             visit(root, rows);
             return rows;
         }
 
-        private static void visit(@Nonnull View v, Collection<? super View> result) {
+        private static void visit(View v, Collection<? super View> result) {
             String cname = v.getClass().getCanonicalName();
             if (cname != null && cname.contains("ParagraphView.Row")) {
                 result.add(v);

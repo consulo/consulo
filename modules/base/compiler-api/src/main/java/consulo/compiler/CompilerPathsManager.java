@@ -27,8 +27,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,8 +39,8 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class CompilerPathsManager {
-    @Nonnull
-    public static CompilerPathsManager getInstance(@Nonnull Project project) {
+    
+    public static CompilerPathsManager getInstance(Project project) {
         return project.getComponent(CompilerPathsManager.class);
     }
 
@@ -70,41 +69,41 @@ public class CompilerPathsManager {
         CompilerConfiguration.getInstance(myProject).setCompilerOutputUrl(compilerOutputUrl);
     }
 
-    public boolean isInheritedCompilerOutput(@Nonnull Module module) {
+    public boolean isInheritedCompilerOutput(Module module) {
         return ModuleCompilerPathsManager.getInstance(module).isInheritedCompilerOutput();
     }
 
-    public void setInheritedCompilerOutput(@Nonnull Module module, boolean val) {
+    public void setInheritedCompilerOutput(Module module, boolean val) {
         ModuleCompilerPathsManager.getInstance(module).setInheritedCompilerOutput(val);
     }
 
-    public boolean isExcludeOutput(@Nonnull Module module) {
+    public boolean isExcludeOutput(Module module) {
         return ModuleCompilerPathsManager.getInstance(module).isExcludeOutput();
     }
 
-    public void setExcludeOutput(@Nonnull Module module, boolean val) {
+    public void setExcludeOutput(Module module, boolean val) {
         ModuleCompilerPathsManager.getInstance(module).setExcludeOutput(val);
     }
 
     public void setCompilerOutputUrl(
-        @Nonnull Module module,
-        @Nonnull ContentFolderTypeProvider contentFolderType,
+        Module module,
+        ContentFolderTypeProvider contentFolderType,
         @Nullable String compilerOutputUrl
     ) {
         ModuleCompilerPathsManager.getInstance(module).setCompilerOutputUrl(contentFolderType, compilerOutputUrl);
     }
 
-    public String getCompilerOutputUrl(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
+    public String getCompilerOutputUrl(Module module, ContentFolderTypeProvider contentFolderType) {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
     }
 
     @Nullable
-    public VirtualFile getCompilerOutput(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
+    public VirtualFile getCompilerOutput(Module module, ContentFolderTypeProvider contentFolderType) {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(contentFolderType);
     }
 
-    @Nonnull
-    public VirtualFilePointer getCompilerOutputPointer(@Nonnull Module module, @Nonnull ContentFolderTypeProvider contentFolderType) {
+    
+    public VirtualFilePointer getCompilerOutputPointer(Module module, ContentFolderTypeProvider contentFolderType) {
         return ModuleCompilerPathsManager.getInstance(module).getCompilerOutputPointer(contentFolderType);
     }
 }

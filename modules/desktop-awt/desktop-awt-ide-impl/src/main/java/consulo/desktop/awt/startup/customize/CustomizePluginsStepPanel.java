@@ -24,8 +24,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -163,7 +162,7 @@ public class CustomizePluginsStepPanel extends AbstractCustomizeWizardStep {
         }
     }
 
-    @Nonnull
+    
     public Set<PluginDescriptor> getPluginsForDownload() {
         Set<PluginDescriptor> set = new HashSet<>();
         collect(myRoot, set);

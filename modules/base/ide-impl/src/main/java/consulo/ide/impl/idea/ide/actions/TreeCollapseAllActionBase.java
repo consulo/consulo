@@ -29,8 +29,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Function;
@@ -40,8 +39,8 @@ import java.util.function.Function;
  */
 public abstract class TreeCollapseAllActionBase extends DumbAwareAction implements DumbAware {
     protected TreeCollapseAllActionBase(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
@@ -49,7 +48,7 @@ public abstract class TreeCollapseAllActionBase extends DumbAwareAction implemen
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         TreeExpander expander = getExpanderMaybeFromToolWindow(e, this::getExpander);
         if (expander == null) {
             return;

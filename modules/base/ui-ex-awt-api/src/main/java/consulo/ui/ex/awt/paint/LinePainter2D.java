@@ -7,7 +7,6 @@ import consulo.ui.ex.awt.paint.PaintUtil.ParityMode;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -61,7 +60,7 @@ public class LinePainter2D {
   /**
    * @see #paint(Graphics2D, double, double, double, double, StrokeType, double, Object)
    */
-  public static void paint(@Nonnull Graphics2D g, double x1, double y1, double x2, double y2) {
+  public static void paint(Graphics2D g, double x1, double y1, double x2, double y2) {
     double sw = g.getStroke() instanceof BasicStroke ? ((BasicStroke)g.getStroke()).getLineWidth() : 1;
     paint(g, x1, y1, x2, y2, StrokeType.INSIDE, sw);
   }
@@ -69,14 +68,14 @@ public class LinePainter2D {
   /**
    * @see #paint(Graphics2D, double, double, double, double, StrokeType, double, Object)
    */
-  public static void paint(@Nonnull Graphics2D g, double x1, double y1, double x2, double y2, @Nonnull StrokeType strokeType, double strokeWidth) {
+  public static void paint(Graphics2D g, double x1, double y1, double x2, double y2, StrokeType strokeType, double strokeWidth) {
     paint(g, x1, y1, x2, y2, strokeType, strokeWidth, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
   }
 
   /**
    * @see #paint(Graphics2D, double, double, double, double, StrokeType, double, Object)
    */
-  public static void paint(@Nonnull Graphics2D g, @Nonnull Line2D line, @Nonnull StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void paint(Graphics2D g, Line2D line, StrokeType strokeType, double strokeWidth, Object valueAA) {
     paint(g, line.getX1(), line.getY1(), line.getX2(), line.getY2(), strokeType, strokeWidth, valueAA);
   }
 
@@ -93,7 +92,7 @@ public class LinePainter2D {
    * @param valueAA     overrides current {@link RenderingHints#KEY_ANTIALIASING} to {@code valueAA}
    */
   @SuppressWarnings("Duplicates")
-  public static void paint(@Nonnull Graphics2D g, double x1, double y1, double x2, double y2, @Nonnull StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void paint(Graphics2D g, double x1, double y1, double x2, double y2, StrokeType strokeType, double strokeWidth, Object valueAA) {
     boolean horizontal = y1 == y2;
     boolean vertical = x1 == x2;
     boolean dot = horizontal && vertical;
@@ -209,7 +208,7 @@ public class LinePainter2D {
    * @param strokeWidth the stroke width
    * @param valueAA     overrides current {@link RenderingHints#KEY_ANTIALIASING} to {@code valueAA}
    */
-  public static void fillPolygon(@Nonnull Graphics2D g, double[] xPoints, double[] yPoints, int nPoints, StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void fillPolygon(Graphics2D g, double[] xPoints, double[] yPoints, int nPoints, StrokeType strokeType, double strokeWidth, Object valueAA) {
     // [tav] todo: mind strokeWidth and strokeType
     Path2D path = new Path2D.Double(Path2D.WIND_EVEN_ODD);
     path.moveTo(xPoints[0], yPoints[0]);
@@ -231,7 +230,7 @@ public class LinePainter2D {
    * @param strokeWidth the stroke width
    * @param valueAA     overrides current {@link RenderingHints#KEY_ANTIALIASING} to {@code valueAA}
    */
-  public static void paintPolygon(@Nonnull Graphics2D g, double[] xPoints, double[] yPoints, int nPoints, StrokeType strokeType, double strokeWidth, @Nonnull Object valueAA) {
+  public static void paintPolygon(Graphics2D g, double[] xPoints, double[] yPoints, int nPoints, StrokeType strokeType, double strokeWidth, Object valueAA) {
     double x1, x2, y1, y2;
     boolean thickPixel = UIUtil.isJreHiDPIEnabled() && PaintUtil.devValue(strokeWidth, g) > 1;
     boolean prevStraight = nPoints <= 1 || isStraightLine(xPoints, yPoints, nPoints, nPoints);
@@ -288,8 +287,8 @@ public class LinePainter2D {
    * @return the line with aligned coordinates and length with adjusted parity
    */
   public static
-  @Nonnull
-  Line2D align(@Nonnull Graphics2D g, @Nonnull EnumSet<Align> align, double x, double y, double prefLength, boolean vertical, StrokeType strokeType, double strokeWidth) {
+  
+  Line2D align(Graphics2D g, EnumSet<Align> align, double x, double y, double prefLength, boolean vertical, StrokeType strokeType, double strokeWidth) {
     if (align.contains(Align.CENTER_X)) {
       if (vertical) {
         x = alignStrokeXY(g, x, strokeType, strokeWidth);

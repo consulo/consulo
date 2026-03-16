@@ -2,8 +2,7 @@
 package consulo.application.impl.internal.performance;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -19,7 +18,7 @@ public interface EventWatcher {
     }
   }
 
-  @Nonnull
+  
   InstanceHolder ourInstance = new InstanceHolder();
 
   static boolean isEnabled() {
@@ -32,22 +31,22 @@ public interface EventWatcher {
   }
 
   @RequiredUIAccess
-  void runnableStarted(@Nonnull Runnable runnable, long startedAt);
+  void runnableStarted(Runnable runnable, long startedAt);
 
   @RequiredUIAccess
-  void runnableFinished(@Nonnull Runnable runnable, long finishedAt);
+  void runnableFinished(Runnable runnable, long finishedAt);
 
   @RequiredUIAccess
-  void edtEventStarted(@Nonnull AWTEvent event, long startedAt);
+  void edtEventStarted(AWTEvent event, long startedAt);
 
   @RequiredUIAccess
-  void edtEventFinished(@Nonnull AWTEvent event, long finishedAt);
+  void edtEventFinished(AWTEvent event, long finishedAt);
 
   void reset();
 
-  void logTimeMillis(@Nonnull String processId, long startedAt, @Nonnull Class<? extends Runnable> runnableClass);
+  void logTimeMillis(String processId, long startedAt, Class<? extends Runnable> runnableClass);
 
-  default void logTimeMillis(@Nonnull String processId, long startedAt) {
+  default void logTimeMillis(String processId, long startedAt) {
     logTimeMillis(processId, startedAt, Runnable.class);
   }
 }

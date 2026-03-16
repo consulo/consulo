@@ -18,11 +18,10 @@ package consulo.execution.impl.internal.ui.layout.action;
 import consulo.execution.internal.layout.RunnerContentUi;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 public class ToggleToolbarLayoutAction extends ToggleAction {
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     if (!e.hasData(RunnerContentUi.KEY)) {
       e.getPresentation().setEnabled(false);
     }
@@ -32,13 +31,13 @@ public class ToggleToolbarLayoutAction extends ToggleAction {
   }
 
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
+  public boolean isSelected(AnActionEvent e) {
     RunnerContentUi ui = e.getData(RunnerContentUi.KEY);
     return ui != null && ui.isHorizontalToolbar();
   }
 
   @Override
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+  public void setSelected(AnActionEvent e, boolean state) {
     e.getRequiredData(RunnerContentUi.KEY).setHorizontalToolbar(state);
   }
 }

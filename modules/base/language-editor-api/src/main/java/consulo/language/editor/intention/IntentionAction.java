@@ -26,7 +26,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Interface for intention actions. Intention actions are invoked by pressing
@@ -52,7 +51,7 @@ public interface IntentionAction extends FileModifier {
    * @return the text to show in the intention popup.
    * @see #isAvailable(Project, Editor, PsiFile)
    */
-  @Nonnull
+  
   LocalizeValue getText();
 
   /**
@@ -64,7 +63,7 @@ public interface IntentionAction extends FileModifier {
    * @param file    the file open in the editor.
    * @return true if the intention is available, false otherwise.
    */
-  default boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  default boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return true;
   }
 
@@ -77,7 +76,7 @@ public interface IntentionAction extends FileModifier {
    * @param editor  the editor in which the intention is invoked.
    * @param file    the file open in the editor.
    */
-  void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException;
+  void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException;
 
   /**
    * Indicate whether this action should be invoked inside write action.

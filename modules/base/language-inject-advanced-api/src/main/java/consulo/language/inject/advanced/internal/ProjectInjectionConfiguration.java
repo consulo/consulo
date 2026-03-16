@@ -24,7 +24,6 @@ import consulo.component.persist.Storage;
 import consulo.language.inject.advanced.BaseInjection;
 import consulo.language.inject.advanced.Configuration;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -65,7 +64,7 @@ public class ProjectInjectionConfiguration extends Configuration {
     return injections;
   }
 
-  @Nonnull
+  
   @Override
   public List<BaseInjection> getInjections(String injectorId) {
     return ContainerUtil.concat(myParentConfiguration.getInjections(injectorId), getOwnInjections(injectorId));

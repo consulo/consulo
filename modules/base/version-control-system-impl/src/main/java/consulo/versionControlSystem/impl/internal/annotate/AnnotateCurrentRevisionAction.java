@@ -8,8 +8,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 
 import java.util.HashMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ class AnnotateCurrentRevisionAction extends AnnotateRevisionAction {
     @Nullable
     private final List<VcsFileRevision> myRevisions;
 
-    public AnnotateCurrentRevisionAction(@Nonnull FileAnnotation annotation, @Nonnull AbstractVcs vcs) {
+    public AnnotateCurrentRevisionAction(FileAnnotation annotation, AbstractVcs vcs) {
         super(
             "Annotate Revision",
             "Annotate selected revision in new tab",

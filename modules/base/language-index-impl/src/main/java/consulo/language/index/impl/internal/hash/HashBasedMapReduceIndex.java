@@ -10,40 +10,39 @@ import consulo.language.index.impl.internal.provided.ProvidedIndexExtension;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.function.IntUnaryOperator;
 
 class HashBasedMapReduceIndex<Key, Value> extends VfsAwareMapReduceIndex<Key, Value, FileContent> {
-  @Nonnull
+  
   private final ProvidedIndexExtension<Key, Value> myProvidedExtension;
 
-  @Nonnull
-  static <Key, Value> HashBasedMapReduceIndex<Key, Value> create(@Nonnull ProvidedIndexExtension<Key, Value> providedExtension, @Nonnull FileBasedIndexExtension<Key, Value> originalExtension)
+  
+  static <Key, Value> HashBasedMapReduceIndex<Key, Value> create(ProvidedIndexExtension<Key, Value> providedExtension, FileBasedIndexExtension<Key, Value> originalExtension)
           throws IOException {
     File file = providedExtension.getIndexPath();
     return new HashBasedMapReduceIndex<>(file, originalExtension, providedExtension, ((FileBasedIndexImpl)FileBasedIndex.getInstance()).getFileContentHashIndex(file));
   }
 
-  private HashBasedMapReduceIndex(@Nonnull File baseFile,
-                                  @Nonnull FileBasedIndexExtension<Key, Value> originalExtension,
-                                  @Nonnull ProvidedIndexExtension<Key, Value> providedExtension,
-                                  @Nonnull FileContentHashIndex hashIndex) throws IOException {
+  private HashBasedMapReduceIndex(File baseFile,
+                                  FileBasedIndexExtension<Key, Value> originalExtension,
+                                  ProvidedIndexExtension<Key, Value> providedExtension,
+                                  FileContentHashIndex hashIndex) throws IOException {
     super(originalExtension, createStorage(baseFile, originalExtension, providedExtension, hashIndex.toHashIdToFileIdFunction()), null, null, null, null);
     myProvidedExtension = providedExtension;
   }
 
-  @Nonnull
+  
   public ProvidedIndexExtension<Key, Value> getProvidedExtension() {
     return myProvidedExtension;
   }
 
-  private static <Key, Value> IndexStorage<Key, Value> createStorage(@Nonnull File baseFile,
-                                                                     @Nonnull FileBasedIndexExtension<Key, Value> originalExtension,
-                                                                     @Nonnull ProvidedIndexExtension<Key, Value> providedExtension,
-                                                                     @Nonnull IntUnaryOperator hashToFileId) throws IOException {
+  private static <Key, Value> IndexStorage<Key, Value> createStorage(File baseFile,
+                                                                     FileBasedIndexExtension<Key, Value> originalExtension,
+                                                                     ProvidedIndexExtension<Key, Value> providedExtension,
+                                                                     IntUnaryOperator hashToFileId) throws IOException {
     return new MapIndexStorage<Key, Value>(new File(baseFile, originalExtension.getName().getName()), providedExtension.createKeyDescriptor(), providedExtension.createValueExternalizer(),
                                            originalExtension.getCacheSize(), originalExtension.keyIsUniqueForIndexedFile(), true, true, hashToFileId) {
       @Override

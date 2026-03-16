@@ -17,8 +17,7 @@ package consulo.versionControlSystem.impl.internal.annotate;
 
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -50,7 +49,7 @@ public enum ShortNameType {
   }
 
   @Nullable
-  public static String shorten(@Nullable String name, @Nonnull ShortNameType type) {
+  public static String shorten(@Nullable String name, ShortNameType type) {
     if (name == null) return null;
     if (type == NONE) return name;
 

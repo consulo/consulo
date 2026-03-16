@@ -23,7 +23,6 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.internal.EditorColorsManagerInternal;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -36,22 +35,22 @@ public sealed interface EditorColorsManager permits EditorColorsManagerInternal 
         return Application.get().getInstance(EditorColorsManager.class);
     }
 
-    void addColorsScheme(@Nonnull EditorColorsScheme scheme);
+    void addColorsScheme(EditorColorsScheme scheme);
 
     void removeAllSchemes();
 
-    @Nonnull
+    
     EditorColorsScheme[] getAllSchemes();
 
-    @Nonnull
+    
     Map<String, EditorColorsScheme> getBundledSchemes();
 
     void setGlobalScheme(EditorColorsScheme scheme);
 
-    @Nonnull
+    
     EditorColorsScheme getGlobalScheme();
 
-    @Nonnull
+    
     default EditorColorsScheme getCurrentScheme() {
         return getGlobalScheme();
     }
@@ -65,7 +64,7 @@ public sealed interface EditorColorsManager permits EditorColorsManagerInternal 
      */
     @SuppressWarnings("MethodMayBeStatic")
     @Deprecated
-    default void addEditorColorsListener(@Nonnull EditorColorsListener listener) {
+    default void addEditorColorsListener(EditorColorsListener listener) {
         ApplicationManager.getApplication().getMessageBus().connect().subscribe(EditorColorsListener.class, listener);
     }
 
@@ -74,11 +73,11 @@ public sealed interface EditorColorsManager permits EditorColorsManagerInternal 
      */
     @SuppressWarnings("MethodMayBeStatic")
     @Deprecated
-    default void addEditorColorsListener(@Nonnull EditorColorsListener listener, @Nonnull Disposable disposable) {
+    default void addEditorColorsListener(EditorColorsListener listener, Disposable disposable) {
         ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(EditorColorsListener.class, listener);
     }
 
-    @Nonnull
+    
     default EditorColorsScheme getSchemeForCurrentUITheme() {
         return getGlobalScheme();
     }

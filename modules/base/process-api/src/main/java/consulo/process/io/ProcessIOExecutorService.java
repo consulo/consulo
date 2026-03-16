@@ -2,7 +2,6 @@ package consulo.process.io;
 
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,9 +20,9 @@ public class ProcessIOExecutorService extends ThreadPoolExecutor {
   private ProcessIOExecutorService() {
     super(1, Integer.MAX_VALUE, 1, TimeUnit.MINUTES, new SynchronousQueue<Runnable>());
     setThreadFactory(new ThreadFactory() {
-      @Nonnull
+      
       @Override
-      public Thread newThread(@Nonnull Runnable r) {
+      public Thread newThread(Runnable r) {
         Thread thread = new Thread(r, POOLED_THREAD_PREFIX + counter.incrementAndGet());
         thread.setPriority(Thread.NORM_PRIORITY - 1);
         return thread;

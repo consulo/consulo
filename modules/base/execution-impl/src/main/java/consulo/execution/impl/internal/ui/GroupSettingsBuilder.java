@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.execution.configuration.ui.CompositeSettingsBuilder;
 import consulo.execution.configuration.ui.SettingsEditor;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
     myGroup = group;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<SettingsEditor<T>> getEditors() {
     List<SettingsEditor<T>> result = new ArrayList<>();
@@ -51,18 +50,18 @@ public class GroupSettingsBuilder<T> implements CompositeSettingsBuilder<T> {
     return result;
   }
 
-  @Nonnull
+  
   @Override
-  public JComponent createCompoundEditor(@Nonnull Disposable disposable) {
+  public JComponent createCompoundEditor(Disposable disposable) {
     if (myComponent == null) {
       myComponent = doCreateComponent(disposable);
     }
     return myComponent;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
-  private JComponent doCreateComponent(@Nonnull Disposable disposable) {
+  private JComponent doCreateComponent(Disposable disposable) {
     List<Pair<LocalizeValue,SettingsEditor<T>>> editors = myGroup.getEditors();
     if (editors.size() == 0) return new JPanel();
     if (editors.size() == 1) return editors.get(0).getSecond().getComponent();

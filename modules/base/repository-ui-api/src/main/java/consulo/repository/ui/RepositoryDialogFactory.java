@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,5 +28,5 @@ import jakarta.annotation.Nullable;
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RepositoryDialogFactory {
   @RequiredUIAccess
-  void showManagePackagesDialogAsync(@Nonnull PackageManagementService service, @Nullable PackageManagementService.Listener listener);
+  void showManagePackagesDialogAsync(PackageManagementService service, PackageManagementService.@Nullable Listener listener);
 }

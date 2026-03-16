@@ -31,7 +31,6 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.RightAlignedToolbarAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Provider;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -53,7 +52,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
     Presentation presentation = e.getPresentation();
@@ -73,7 +72,7 @@ public class LoginAction extends AnAction implements RightAlignedToolbarAction, 
 
   @RequiredUIAccess
   @Override
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     ExternalServiceConfiguration configuration = myExternalServiceConfigurationProvider.get();
 
     if(configuration.getEmail() != null) {

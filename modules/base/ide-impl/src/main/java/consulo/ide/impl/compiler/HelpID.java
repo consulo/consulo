@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.compiler;
 
-import org.jetbrains.annotations.NonNls;
 
 public interface HelpID {
-  @NonNls  String  COMPILER = "reference.toolWindows.messages";
-  @NonNls  String  GENERATE_ANT_BUILD = "editing.generateAntBuild";
+  String  COMPILER = "reference.toolWindows.messages";
+  String  GENERATE_ANT_BUILD = "editing.generateAntBuild";
 }

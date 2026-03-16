@@ -32,7 +32,6 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.ui.ex.SimpleTextAttributes;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -45,13 +44,13 @@ import java.util.Set;
 public class ModuleSourceItemGroup extends PackagingSourceItem {
   private final Module myModule;
 
-  public ModuleSourceItemGroup(@Nonnull Module module) {
+  public ModuleSourceItemGroup(Module module) {
     super(true);
     myModule = module;
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
     return new ModuleSourceItemPresentation(myModule, context);
   }
 
@@ -64,8 +63,8 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
   }
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
+  
+  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
     Set<Module> modules = new LinkedHashSet<>();
     collectDependentModules(myModule, modules, context);
 
@@ -117,7 +116,7 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     private final Module myModule;
     private final ArtifactEditorContext myContext;
 
-    public ModuleSourceItemPresentation(@Nonnull Module module, ArtifactEditorContext context) {
+    public ModuleSourceItemPresentation(Module module, ArtifactEditorContext context) {
       myModule = module;
       myContext = context;
     }
@@ -128,7 +127,7 @@ public class ModuleSourceItemGroup extends PackagingSourceItem {
     }
 
     @Override
-    public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+    public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                        SimpleTextAttributes commentAttributes) {
       presentationData.setIcon(AllIcons.Nodes.Module);
       presentationData.addText(myModule.getName(), mainAttributes);

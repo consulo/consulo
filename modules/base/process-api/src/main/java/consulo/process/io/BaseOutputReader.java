@@ -3,8 +3,7 @@ package consulo.process.io;
 
 import consulo.util.lang.SystemProperties;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -68,19 +67,19 @@ public abstract class BaseOutputReader extends BaseDataReader {
   private final StringBuilder myLineBuffer = new StringBuilder();
   private boolean myCarry;
 
-  public BaseOutputReader(@Nonnull InputStream inputStream, @Nullable Charset charset) {
+  public BaseOutputReader(InputStream inputStream, @Nullable Charset charset) {
     this(createInputStreamReader(inputStream, charset));
   }
 
-  public BaseOutputReader(@Nonnull InputStream inputStream, @Nullable Charset charset, @Nonnull Options options) {
+  public BaseOutputReader(InputStream inputStream, @Nullable Charset charset, Options options) {
     this(createInputStreamReader(inputStream, charset), options);
   }
 
-  public BaseOutputReader(@Nonnull Reader reader) {
+  public BaseOutputReader(Reader reader) {
     this(reader, new Options());
   }
 
-  public BaseOutputReader(@Nonnull Reader reader, @Nonnull Options options) {
+  public BaseOutputReader(Reader reader, Options options) {
     super(options.policy());
 
     if (options.policy() == SleepingPolicy.BLOCKING && !(reader instanceof BaseInputStreamReader)) {
@@ -91,7 +90,7 @@ public abstract class BaseOutputReader extends BaseDataReader {
     myOptions = options;
   }
 
-  private static Reader createInputStreamReader(@Nonnull InputStream stream, @Nullable Charset charset) {
+  private static Reader createInputStreamReader(InputStream stream, @Nullable Charset charset) {
     return charset == null ? new BaseInputStreamReader(stream) : new BaseInputStreamReader(stream, charset);
   }
 
@@ -213,7 +212,7 @@ public abstract class BaseOutputReader extends BaseDataReader {
     }
   }
 
-  private void sendText(@Nonnull StringBuilder line) {
+  private void sendText(StringBuilder line) {
     String text = line.toString();
     line.setLength(0);
     onTextAvailable(text);
@@ -224,7 +223,7 @@ public abstract class BaseOutputReader extends BaseDataReader {
     myReader.close();
   }
 
-  protected abstract void onTextAvailable(@Nonnull String text);
+  protected abstract void onTextAvailable(String text);
 
   //<editor-fold desc="Deprecated stuff.">
 
@@ -233,7 +232,7 @@ public abstract class BaseOutputReader extends BaseDataReader {
    */
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2021.1")
-  public BaseOutputReader(@Nonnull Reader reader, @Nullable SleepingPolicy policy) {
+  public BaseOutputReader(Reader reader, @Nullable SleepingPolicy policy) {
     this(reader, Options.withPolicy(policy));
   }
   //</editor-fold>

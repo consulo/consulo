@@ -16,7 +16,6 @@
 package consulo.compiler.artifact.ui;
 
 import consulo.content.library.Library;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -24,7 +23,7 @@ import jakarta.annotation.Nonnull;
 public interface ArtifactEditor {
   void updateLayoutTree();
 
-  void putLibraryIntoDefaultLocation(@Nonnull Library library);
+  void putLibraryIntoDefaultLocation(Library library);
 
   boolean isDisposed();
 }

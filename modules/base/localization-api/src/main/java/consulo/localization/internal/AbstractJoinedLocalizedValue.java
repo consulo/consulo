@@ -17,7 +17,6 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
@@ -27,16 +26,12 @@ import java.util.Arrays;
  */
 public sealed class AbstractJoinedLocalizedValue extends CachingLocalizedValue
     permits JoinedLocalizedValue, SeparatorJoinedLocalizedValue, SeparatorJoinedLocalizedValue2 {
-
-    @Nonnull
     protected final LocalizedValue[] myValues;
 
-    protected AbstractJoinedLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizedValue[] values) {
+    protected AbstractJoinedLocalizedValue(LocalizationManager manager, LocalizedValue[] values) {
         super(manager);
         myValues = values;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         StringBuilder sb = new StringBuilder().append('[');
@@ -48,8 +43,6 @@ public sealed class AbstractJoinedLocalizedValue extends CachingLocalizedValue
         }
         return sb.append("]->join").toString();
     }
-
-    @Nonnull
     @Override
     protected String calcValue() {
         StringBuilder builder = new StringBuilder();

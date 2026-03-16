@@ -24,8 +24,7 @@ import consulo.versionControlSystem.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -132,7 +131,7 @@ public class AllVcsesImpl implements AllVcses, Disposable {
     return result.toArray(new VcsDescriptor[result.size()]);
   }
 
-  @Nonnull
+  
   @Override
   public Collection<AbstractVcs> getSupportedVcses() {
     ArrayList<String> names;

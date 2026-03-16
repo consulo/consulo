@@ -25,8 +25,7 @@ import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -37,13 +36,13 @@ import java.util.*;
 public class LogModel implements Disposable {
     private final List<Notification> myNotifications = new ArrayList<>();
     private final Map<Notification, Long> myStamps = Collections.synchronizedMap(new WeakHashMap<Notification, Long>());
-    @Nonnull
+    
     private final Application myApplication;
     @Nullable
     private final Project myProject;
     final Map<Notification, Runnable> removeHandlers = new HashMap<>();
 
-    LogModel(@Nonnull Application application, @Nullable Project project) {
+    LogModel(Application application, @Nullable Project project) {
         myApplication = application;
         myProject = project;
         Disposer.register(project != null ? project : application, this);

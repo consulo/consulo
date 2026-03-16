@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.ast.ASTNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -51,8 +50,8 @@ public interface PreFormatProcessor {
      * @param range   target range within the given element
      * @return range recommended to use for further processing
      */
-    @Nonnull
-    TextRange process(@Nonnull ASTNode element, @Nonnull TextRange range);
+    
+    TextRange process(ASTNode element, TextRange range);
 
     /**
      * Returns true if this preprocessor changes only whitespaces and can run when the canChangeWhiteSpacesOnly flag is passed to the formatter.

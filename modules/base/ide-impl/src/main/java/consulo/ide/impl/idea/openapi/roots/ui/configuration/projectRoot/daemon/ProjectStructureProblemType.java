@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,29 +25,29 @@ public class ProjectStructureProblemType {
   private final String myId;
   private final Severity mySeverity;
 
-  public ProjectStructureProblemType(@Nonnull String id, @Nonnull Severity severity) {
+  public ProjectStructureProblemType(String id, Severity severity) {
     myId = id;
     mySeverity = severity;
   }
 
-  public static ProjectStructureProblemType error(@Nonnull String id) {
+  public static ProjectStructureProblemType error(String id) {
     return new ProjectStructureProblemType(id, Severity.ERROR);
   }
 
-  public static ProjectStructureProblemType warning(@Nonnull String id) {
+  public static ProjectStructureProblemType warning(String id) {
     return new ProjectStructureProblemType(id, Severity.WARNING);
   }
 
-  public static ProjectStructureProblemType unused(@Nonnull String id) {
+  public static ProjectStructureProblemType unused(String id) {
     return new ProjectStructureProblemType(id, Severity.UNUSED);
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
 
-  @Nonnull
+  
   public Severity getSeverity() {
     return mySeverity;
   }

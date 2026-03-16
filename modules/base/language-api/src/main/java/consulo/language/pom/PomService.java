@@ -21,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -33,14 +32,14 @@ public abstract class PomService {
     return project.getInstance(PomService.class);
   }
 
-  @Nonnull
-  protected abstract PsiElement convertToPsi(@Nonnull PomTarget target);
+  
+  protected abstract PsiElement convertToPsi(PomTarget target);
 
-  public static PsiElement convertToPsi(@Nonnull Project project, @Nonnull PomTarget target) {
+  public static PsiElement convertToPsi(Project project, PomTarget target) {
     return getInstance(project).convertToPsi(target);
   }
 
-  public static PsiElement convertToPsi(@Nonnull PsiTarget target) {
+  public static PsiElement convertToPsi(PsiTarget target) {
     return getInstance(target.getNavigationElement().getProject()).convertToPsi((PomTarget)target);
   }
 }

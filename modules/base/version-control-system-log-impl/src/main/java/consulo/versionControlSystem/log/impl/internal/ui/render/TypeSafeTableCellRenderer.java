@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.impl.internal.ui.render;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -30,15 +29,15 @@ public abstract class TypeSafeTableCellRenderer<T> implements TableCellRenderer 
     return getTableCellRendererComponentImpl(table, getValue(notNull(value)), isSelected, hasFocus, row, column);
   }
 
-  @Nonnull
-  protected T getValue(@Nonnull Object value) {
+  
+  protected T getValue(Object value) {
     //noinspection unchecked
     return (T)value;
   }
 
 
-  protected abstract Component getTableCellRendererComponentImpl(@Nonnull JTable table,
-                                                                 @Nonnull T value,
+  protected abstract Component getTableCellRendererComponentImpl(JTable table,
+                                                                 T value,
                                                                  boolean isSelected,
                                                                  boolean hasFocus,
                                                                  int row,

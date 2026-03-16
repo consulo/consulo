@@ -9,14 +9,12 @@ import consulo.disposer.Disposable;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.project.Project;
 import kava.beans.PropertyChangeListener;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class LookupManager {
-  public static LookupManager getInstance(@Nonnull Project project) {
+  public static LookupManager getInstance(Project project) {
     return project.getInstance(LookupManager.class);
   }
 
@@ -34,21 +32,21 @@ public abstract class LookupManager {
   }
 
   @Nullable
-  public LookupEx showLookup(@Nonnull Editor editor, @Nonnull LookupElement... items) {
+  public LookupEx showLookup(Editor editor, LookupElement... items) {
     return showLookup(editor, items, "", new LookupArranger.DefaultArranger());
   }
 
   @Nullable
-  public LookupEx showLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull String prefix) {
+  public LookupEx showLookup(Editor editor, LookupElement[] items, String prefix) {
     return showLookup(editor, items, prefix, new LookupArranger.DefaultArranger());
   }
 
   @Nullable
-  public abstract LookupEx showLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull String prefix, @Nonnull LookupArranger arranger);
+  public abstract LookupEx showLookup(Editor editor, LookupElement[] items, String prefix, LookupArranger arranger);
 
   public abstract void hideActiveLookup();
 
-  public static void hideActiveLookup(@Nonnull Project project) {
+  public static void hideActiveLookup(Project project) {
     LookupManager lookupManager = LookupManager.getInstance(project);
     lookupManager.hideActiveLookup();
   }
@@ -56,16 +54,16 @@ public abstract class LookupManager {
   @Nullable
   public abstract LookupEx getActiveLookup();
 
-  @NonNls
+  
   public static final String PROP_ACTIVE_LOOKUP = "activeLookup";
 
-  public abstract void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
+  public abstract void addPropertyChangeListener(PropertyChangeListener listener);
 
-  public abstract void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable disposable);
+  public abstract void addPropertyChangeListener(PropertyChangeListener listener, Disposable disposable);
 
-  public abstract void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
+  public abstract void removePropertyChangeListener(PropertyChangeListener listener);
 
-  @Nonnull
-  public abstract Lookup createLookup(@Nonnull Editor editor, @Nonnull LookupElement[] items, @Nonnull String prefix, @Nonnull LookupArranger arranger);
+  
+  public abstract Lookup createLookup(Editor editor, LookupElement[] items, String prefix, LookupArranger arranger);
 
 }

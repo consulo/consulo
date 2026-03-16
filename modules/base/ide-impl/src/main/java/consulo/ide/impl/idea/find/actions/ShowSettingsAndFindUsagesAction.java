@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.find.FindManager;
 import consulo.language.psi.PsiElement;
-import consulo.platform.base.localize.ActionLocalize;import jakarta.annotation.Nonnull;
+import consulo.platform.base.localize.ActionLocalize;
 
 @ActionImpl(id = "ShowSettingsAndFindUsages")
 public class ShowSettingsAndFindUsagesAction extends FindUsagesAction {
@@ -27,7 +27,7 @@ public class ShowSettingsAndFindUsagesAction extends FindUsagesAction {
     }
 
     @Override
-    protected void startFindUsages(@Nonnull PsiElement element) {
+    protected void startFindUsages(PsiElement element) {
         FindManager.getInstance(element.getProject()).findUsages(element, true);
     }
 }

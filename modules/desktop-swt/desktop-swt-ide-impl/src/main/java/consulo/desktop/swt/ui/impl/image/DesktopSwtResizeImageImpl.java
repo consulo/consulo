@@ -17,7 +17,6 @@ package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ public class DesktopSwtResizeImageImpl implements Image, DesktopSwtImage {
     return myWidth;
   }
 
-  @Nonnull
+  
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
     return ((DesktopSwtImage)myOriginal).toSWTImage();

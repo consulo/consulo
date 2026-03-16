@@ -18,7 +18,6 @@ package consulo.externalSystem.util;
 import consulo.component.ComponentManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public abstract class DisposeAwareProjectChange implements Runnable {
   private final ComponentManager myComponentManager;
 
-  protected DisposeAwareProjectChange(@Nonnull ComponentManager componentManager) {
+  protected DisposeAwareProjectChange(ComponentManager componentManager) {
     myComponentManager = componentManager;
   }
 

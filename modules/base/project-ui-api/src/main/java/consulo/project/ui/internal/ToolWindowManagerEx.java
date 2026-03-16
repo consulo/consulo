@@ -27,8 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.function.Predicate;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
     @RequiredUIAccess
-    public abstract void initToolWindow(@Nonnull ToolWindowFactory toolWindowFactory);
+    public abstract void initToolWindow(ToolWindowFactory toolWindowFactory);
 
     public static ToolWindowManagerEx getInstanceEx(Project project) {
         return (ToolWindowManagerEx) getInstance(project);
@@ -45,15 +44,15 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
 
     @Deprecated
     @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
-    public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
+    public abstract void addToolWindowManagerListener(ToolWindowManagerListener l);
 
     @Deprecated
     @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
-    public abstract void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable);
+    public abstract void addToolWindowManagerListener(ToolWindowManagerListener l, Disposable parentDisposable);
 
     @Deprecated
     @DeprecationInfo("Use ToolWindowManagerListener#TOPIC")
-    public abstract void removeToolWindowManagerListener(@Nonnull ToolWindowManagerListener l);
+    public abstract void removeToolWindowManagerListener(ToolWindowManagerListener l);
 
     /**
      * @return <code>ID</code> of tool window that was activated last time.
@@ -68,7 +67,7 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
      * @return layout of tool windows.
      */
     @RequiredUIAccess
-    @Nonnull
+    
     public abstract ToolWindowLayout getLayout();
 
     public abstract void setLayoutToRestoreLater(ToolWindowLayout layout);
@@ -79,27 +78,27 @@ public abstract class ToolWindowManagerEx extends ToolWindowManager {
      * Copied <code>layout</code> into internal layout and rearranges tool windows.
      */
     @RequiredUIAccess
-    public abstract void setLayout(@Nonnull ToolWindowLayout layout);
+    public abstract void setLayout(ToolWindowLayout layout);
 
     public abstract void clearSideStack();
 
     @RequiredUIAccess
-    public abstract void hideToolWindow(@Nonnull String id, boolean hideSide);
+    public abstract void hideToolWindow(String id, boolean hideSide);
 
     @RequiredUIAccess
     public void hideToolWindow(String id, boolean hideSide, boolean moveFocus) {
         hideToolWindow(id, hideSide);
     }
 
-    public abstract List<String> getIdsOn(@Nonnull ToolWindowAnchor anchor);
+    public abstract List<String> getIdsOn(ToolWindowAnchor anchor);
 
     public abstract List<ToolWindow> getToolWindows();
 
-    public abstract void doContentRename(@Nonnull DataContext dataContext,
-                                         @Nonnull ToolWindow toolWindow,
+    public abstract void doContentRename(DataContext dataContext,
+                                         ToolWindow toolWindow,
                                          @Nullable Content content,
-                                         @Nonnull LocalizeValue labelText,
-                                         @Nonnull BiConsumer<Content, String>consumer);
+                                         LocalizeValue labelText,
+                                         BiConsumer<Content, String>consumer);
 
     // TODO [VISTALL] AWT & Swing dependency
     // region AWT & Swing dependency

@@ -32,8 +32,7 @@ import consulo.navigation.NavigateOptions;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -42,18 +41,18 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
     private final PomTarget myTarget;
     private final Project myProject;
 
-    public PomTargetPsiElementImpl(@Nonnull PsiTarget target) {
+    public PomTargetPsiElementImpl(PsiTarget target) {
         this(target.getNavigationElement().getProject(), target);
     }
 
-    public PomTargetPsiElementImpl(@Nonnull Project project, @Nonnull PomTarget target) {
+    public PomTargetPsiElementImpl(Project project, PomTarget target) {
         super(null);
         myProject = project;
         myTarget = target;
     }
 
     @Override
-    @Nonnull
+    
     public PomTarget getTarget() {
         return myTarget;
     }
@@ -82,7 +81,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
             .getName() + "; see PomDescriptionProvider");
     }
 
-    @Nonnull
+    
     @Override
     public PsiElement getNavigationElement() {
         if (myTarget instanceof PsiTarget target) {
@@ -117,7 +116,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
     @RequiredWriteAction
     @Override
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         if (myTarget instanceof PomRenameableTarget renameableTarget) {
             renameableTarget.setName(name);
             return this;
@@ -181,7 +180,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
@@ -191,7 +190,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
         return Language.ANY;
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myProject;

@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.MultiRowFlowPanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -48,16 +47,16 @@ import java.util.*;
  */
 public class ArrangementMatchingRuleEditor extends JPanel implements ArrangementUiComponent.Listener {
 
-  @Nonnull
+  
   private final Map<ArrangementSettingsToken, ArrangementUiComponent> myComponents = new HashMap<>();
-  @Nonnull
+  
   private final List<MultiRowFlowPanel> myRows = new ArrayList<>();
 
-  @Nonnull
+  
   private final ArrangementMatchingRulesControl myControl;
-  @Nonnull
+  
   private final ArrangementStandardSettingsManager mySettingsManager;
-  @Nonnull
+  
   private final ArrangementColorsProvider myColorsProvider;
 
   private int myRow = -1;
@@ -70,16 +69,16 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
 
   private boolean mySkipStateChange;
 
-  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
-                                       @Nonnull ArrangementColorsProvider colorsProvider,
-                                       @Nonnull ArrangementMatchingRulesControl control) {
+  public ArrangementMatchingRuleEditor(ArrangementStandardSettingsManager settingsManager,
+                                       ArrangementColorsProvider colorsProvider,
+                                       ArrangementMatchingRulesControl control) {
     this(settingsManager, settingsManager.getSupportedMatchingTokens(), colorsProvider, control);
   }
 
-  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRuleEditor(ArrangementStandardSettingsManager settingsManager,
                                        @Nullable List<CompositeArrangementSettingsToken> tokens,
-                                       @Nonnull ArrangementColorsProvider colorsProvider,
-                                       @Nonnull ArrangementMatchingRulesControl control) {
+                                       ArrangementColorsProvider colorsProvider,
+                                       ArrangementMatchingRulesControl control) {
     mySettingsManager = settingsManager;
     myColorsProvider = colorsProvider;
     myControl = control;
@@ -105,7 +104,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     applyBackground(UIUtil.getListBackground());
   }
 
-  private void addToken(@Nonnull CompositeArrangementSettingsToken rowToken) {
+  private void addToken(CompositeArrangementSettingsToken rowToken) {
     List<CompositeArrangementSettingsToken> tokens = ArrangementUtil.flatten(rowToken);
     GridBag labelConstraints = new GridBag().anchor(GridBagConstraints.NORTHWEST).insets(ArrangementConstants.VERTICAL_PADDING, 0, 0, 0);
     MultiRowFlowPanel panel = new MultiRowFlowPanel(FlowLayout.LEFT, ArrangementConstants.HORIZONTAL_GAP, ArrangementConstants.VERTICAL_GAP);
@@ -177,8 +176,8 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     addRowIfNecessary(panel);
   }
 
-  @Nonnull
-  private MultiRowFlowPanel addRowIfNecessary(@Nonnull MultiRowFlowPanel panel) {
+  
+  private MultiRowFlowPanel addRowIfNecessary(MultiRowFlowPanel panel) {
     if (panel.getComponentCount() <= 0) {
       return panel;
     }
@@ -324,7 +323,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private boolean isEnabled(@Nullable ArrangementMatchCondition condition, @Nonnull ArrangementSettingsToken token) {
+  private boolean isEnabled(@Nullable ArrangementMatchCondition condition, ArrangementSettingsToken token) {
     return ArrangementSectionRuleManager.isEnabled(token) || mySettingsManager.isEnabled(token, condition);
   }
 
@@ -348,14 +347,14 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     validate();
   }
 
-  private void applyBackground(@Nonnull Color color) {
+  private void applyBackground(Color color) {
     setBackground(color);
     for (JComponent component : myRows) {
       component.setBackground(color);
     }
   }
 
-  private void onMouseClicked(@Nonnull MouseEvent e) {
+  private void onMouseClicked(MouseEvent e) {
     if (myRow < 0) {
       return;
     }
@@ -383,7 +382,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private void addCondition(@Nonnull ArrangementUiComponent component) {
+  private void addCondition(ArrangementUiComponent component) {
     mySkipStateChange = true;
     try {
       component.setSelected(true);
@@ -401,7 +400,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private void updateMutexConditions(@Nonnull ArrangementUiComponent component, @Nonnull Set<ArrangementSettingsToken> mutex) {
+  private void updateMutexConditions(ArrangementUiComponent component, Set<ArrangementSettingsToken> mutex) {
     if (!mutex.contains(component.getToken())) {
       return;
     }
@@ -416,7 +415,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
     }
   }
 
-  private void removeCondition(@Nonnull ArrangementUiComponent component) {
+  private void removeCondition(ArrangementUiComponent component) {
     component.setSelected(false);
     refreshConditions();
   }

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.ui.impl;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.ui.wm.IdeFocusManager;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -30,10 +29,10 @@ import java.awt.event.MouseMotionListener;
  */
 @SuppressWarnings("ConstantConditions")
 public class HeadlessDialog implements AbstractDialog {
-  @Nonnull
+  
   private final DialogWrapper myWrapper;
 
-  public HeadlessDialog(@Nonnull DialogWrapper wrapper) {
+  public HeadlessDialog(DialogWrapper wrapper) {
     myWrapper = wrapper;
   }
 
@@ -151,14 +150,14 @@ public class HeadlessDialog implements AbstractDialog {
   public void setResizable(boolean resizable) {
   }
 
-  @Nonnull
+  
   @Override
   public Point getLocation() {
     return new Point(0,0);
   }
 
   @Override
-  public void setLocation(@Nonnull Point p) {
+  public void setLocation(Point p) {
   }
 
   @Override

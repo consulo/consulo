@@ -38,7 +38,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
@@ -164,7 +163,7 @@ public class DesktopAWTIndentPass extends IndentsPass {
     }
   };
 
-  public DesktopAWTIndentPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public DesktopAWTIndentPass(Project project, Editor editor, PsiFile file) {
     super(project, editor, file);
   }
 
@@ -189,7 +188,7 @@ public class DesktopAWTIndentPass extends IndentsPass {
   }
 
   @Override
-  @Nonnull
+  
   protected RangeHighlighter createHighlighter(MarkupModel mm, TextRange range) {
     RangeHighlighter highlighter = mm.addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), 0, null, HighlighterTargetArea.EXACT_RANGE);
     highlighter.setCustomRenderer(RENDERER);

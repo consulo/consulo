@@ -20,7 +20,6 @@ import consulo.language.impl.ast.OwnBufferLeafPsiElement;
 import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.PsiElementVisitor;
-import jakarta.annotation.Nonnull;
 
 public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlainText {
   protected PsiPlainTextImpl(CharSequence text) {
@@ -28,7 +27,7 @@ public class PsiPlainTextImpl extends OwnBufferLeafPsiElement implements PsiPlai
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor){
+  public void accept(PsiElementVisitor visitor){
     visitor.visitPlainText(this);
   }
 

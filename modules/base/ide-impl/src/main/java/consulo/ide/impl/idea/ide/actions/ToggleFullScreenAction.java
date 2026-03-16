@@ -29,8 +29,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,16 +45,15 @@ public class ToggleFullScreenAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         IdeFrameEx frame = getFrame();
         if (frame != null) {
             frame.toggleFullScreen(!frame.isInFullScreen());
         }
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return Coroutine.first(UIAction.apply(o -> {
             Presentation p = e.getPresentation();
 

@@ -21,8 +21,7 @@ import consulo.process.internal.ProcessInternal;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class AnsiEscapeDecoder {
      * @param textAcceptor receives text fragments with color attributes.
      *                     It can implement ColoredChunksAcceptor to receive list of pairs (text, attribute).
      */
-    public void escapeText(@Nonnull String text, @Nonnull Key outputType, @Nonnull ColoredTextAcceptor textAcceptor) {
+    public void escapeText(String text, Key outputType, ColoredTextAcceptor textAcceptor) {
         List<Pair<String, Key>> chunks = null;
         int pos = 0;
         text = normalizeAsciiControlCharacters(text);
@@ -82,8 +81,8 @@ public class AnsiEscapeDecoder {
         }
     }
 
-    @Nonnull
-    private static String normalizeAsciiControlCharacters(@Nonnull String text) {
+    
+    private static String normalizeAsciiControlCharacters(String text) {
         int ind = text.indexOf(BACKSPACE);
         if (ind == -1) {
             return text;
@@ -128,7 +127,7 @@ public class AnsiEscapeDecoder {
      * Selects all consecutive escape sequences and returns escape sequence end index (exclusive).
      * If the escape sequence isn't finished, returns -1.
      */
-    private static int findEscSeqEndIndex(@Nonnull String text, int escSeqBeginInd) {
+    private static int findEscSeqEndIndex(String text, int escSeqBeginInd) {
         int beginInd = escSeqBeginInd;
         while (true) {
             int letterInd = findEscSeqLetterIndex(text, beginInd);
@@ -142,7 +141,7 @@ public class AnsiEscapeDecoder {
         }
     }
 
-    private static int findEscSeqLetterIndex(@Nonnull String text, int escSeqBeginInd) {
+    private static int findEscSeqLetterIndex(String text, int escSeqBeginInd) {
         if (!text.regionMatches(escSeqBeginInd, CSI, 0, CSI.length())) {
             return -1;
         }
@@ -167,9 +166,9 @@ public class AnsiEscapeDecoder {
 
     @Nullable
     private List<Pair<String, Key>> processTextChunk(@Nullable List<Pair<String, Key>> buffer,
-                                                     @Nonnull String text,
-                                                     @Nonnull Key outputType,
-                                                     @Nonnull ColoredTextAcceptor textAcceptor) {
+                                                     String text,
+                                                     Key outputType,
+                                                     ColoredTextAcceptor textAcceptor) {
         Key attributes = getCurrentOutputAttributes(outputType);
         if (textAcceptor instanceof ColoredChunksAcceptor) {
             if (buffer == null) {
@@ -183,15 +182,15 @@ public class AnsiEscapeDecoder {
         return buffer;
     }
 
-    @Nonnull
-    protected Key getCurrentOutputAttributes(@Nonnull Key outputType) {
+    
+    protected Key getCurrentOutputAttributes(Key outputType) {
         if (outputType == ProcessOutputTypes.STDERR || outputType == ProcessOutputTypes.SYSTEM) {
             return outputType;
         }
         return myCurrentTextAttributes != null ? myCurrentTextAttributes : outputType;
     }
 
-    public void coloredTextAvailable(@Nonnull List<Pair<String, Key>> textChunks, ColoredTextAcceptor textAcceptor) {
+    public void coloredTextAvailable(List<Pair<String, Key>> textChunks, ColoredTextAcceptor textAcceptor) {
         for (Pair<String, Key> textChunk : textChunks) {
             textAcceptor.coloredTextAvailable(textChunk.getFirst(), textChunk.getSecond());
         }
@@ -202,7 +201,7 @@ public class AnsiEscapeDecoder {
      */
     @Deprecated
     public interface ColoredChunksAcceptor extends ColoredTextAcceptor {
-        void coloredChunksAvailable(@Nonnull List<Pair<String, Key>> chunks);
+        void coloredChunksAvailable(List<Pair<String, Key>> chunks);
     }
 
     public interface ColoredTextAcceptor {

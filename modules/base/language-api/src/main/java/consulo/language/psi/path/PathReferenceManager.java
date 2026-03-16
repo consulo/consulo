@@ -24,8 +24,7 @@ import consulo.language.psi.PsiReference;
 import consulo.module.Module;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -34,7 +33,7 @@ import java.util.ArrayList;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class PathReferenceManager {
-  @Nonnull
+  
   public static PathReferenceManager getInstance() {
     return Application.get().getInstance(PathReferenceManager.class);
   }
@@ -49,8 +48,8 @@ public abstract class PathReferenceManager {
    * @param additionalProviders additional providers to process.
    * @return created references or an empty array.
    */
-  @Nonnull
-  public abstract PsiReference[] createReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... additionalProviders);
+  
+  public abstract PsiReference[] createReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... additionalProviders);
 
   /**
    * Create web path references for given PsiElement.
@@ -62,37 +61,37 @@ public abstract class PathReferenceManager {
    *                              Otherwise, web application root will be used.
    * @param additionalProviders   additional providers to process.  @return created references or an empty array.
    */
-  @Nonnull
-  public abstract PsiReference[] createReferences(@Nonnull PsiElement psiElement,
+  
+  public abstract PsiReference[] createReferences(PsiElement psiElement,
                                                   boolean soft,
                                                   boolean endingSlashNotAllowed,
                                                   boolean relativePathsAllowed,
                                                   PathReferenceProvider... additionalProviders);
 
-  public abstract PsiReference[] createReferences(@Nonnull PsiElement psiElement,
+  public abstract PsiReference[] createReferences(PsiElement psiElement,
                                                   boolean soft,
                                                   boolean endingSlashNotAllowed,
                                                   boolean relativePathsAllowed,
                                                   FileType[] suitableFileTypes,
                                                   PathReferenceProvider... additionalProviders);
 
-  @Nonnull
-  public abstract PsiReference[] createCustomReferences(@Nonnull PsiElement psiElement, boolean soft, PathReferenceProvider... providers);
+  
+  public abstract PsiReference[] createCustomReferences(PsiElement psiElement, boolean soft, PathReferenceProvider... providers);
 
 
   @Nullable
-  public abstract PathReference getPathReference(@Nonnull String path, @Nonnull PsiElement element, PathReferenceProvider... additionalProviders);
+  public abstract PathReference getPathReference(String path, PsiElement element, PathReferenceProvider... additionalProviders);
 
   @Nullable
-  public abstract PathReference getCustomPathReference(@Nonnull String path, @Nonnull Module module, @Nonnull PsiElement element, PathReferenceProvider... providers);
+  public abstract PathReference getCustomPathReference(String path, Module module, PsiElement element, PathReferenceProvider... providers);
 
-  @Nonnull
+  
   public abstract PathReferenceProvider getGlobalWebPathReferenceProvider();
 
-  @Nonnull
+  
   public abstract PathReferenceProvider createStaticPathReferenceProvider(boolean relativePathsAllowed);
 
-  public static PsiReference[] getReferencesFromProvider(@Nonnull PathReferenceProvider provider, @Nonnull PsiElement psiElement, boolean soft) {
+  public static PsiReference[] getReferencesFromProvider(PathReferenceProvider provider, PsiElement psiElement, boolean soft) {
     ArrayList<PsiReference> references = new ArrayList<PsiReference>();
     provider.createReferences(psiElement, references, soft);
     return references.toArray(new PsiReference[references.size()]);

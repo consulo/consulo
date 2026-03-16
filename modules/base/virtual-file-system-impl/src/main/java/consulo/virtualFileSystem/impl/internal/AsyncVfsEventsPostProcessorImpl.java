@@ -28,7 +28,6 @@ import consulo.virtualFileSystem.event.AsyncVfsEventsListener;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -53,7 +52,7 @@ public class AsyncVfsEventsPostProcessorImpl implements AsyncVfsEventsPostProces
   public AsyncVfsEventsPostProcessorImpl(Application application) {
     application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
+      public void after(List<? extends VFileEvent> events) {
         myQueue.add(events);
       }
     });
@@ -77,7 +76,7 @@ public class AsyncVfsEventsPostProcessorImpl implements AsyncVfsEventsPostProces
   }
 
   @Override
-  public void addListener(@Nonnull AsyncVfsEventsListener listener, @Nonnull Disposable disposable) {
+  public void addListener(AsyncVfsEventsListener listener, Disposable disposable) {
     ListenerAndDisposable element = new ListenerAndDisposable(listener, disposable);
     Disposer.register(disposable, () -> myListeners.remove(element));
     myListeners.add(element);

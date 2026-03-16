@@ -17,7 +17,6 @@ package consulo.http.internal;
 
 import consulo.http.HttpProxyManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Mikhail Golubev
@@ -26,7 +25,7 @@ public class IdeHttpClientHelpers {
     private IdeHttpClientHelpers() {
     }
 
-    @Nonnull
+    
     public static HttpProxyManager getHttpProxyManager() {
         return HttpProxyManager.getInstance();
     }
@@ -39,7 +38,7 @@ public class IdeHttpClientHelpers {
         return getHttpProxyManager().isProxyAuthenticationEnabled();
     }
 
-    @Nonnull
+    
     public static String getProxyHost() {
         return StringUtil.notNullize(getHttpProxyManager().getProxyHost());
     }
@@ -48,12 +47,12 @@ public class IdeHttpClientHelpers {
         return getHttpProxyManager().getProxyPort();
     }
 
-    @Nonnull
+    
     public static String getProxyLogin() {
         return StringUtil.notNullize(getHttpProxyManager().getProxyLogin());
     }
 
-    @Nonnull
+    
     public static String getProxyPassword() {
         return StringUtil.notNullize(getHttpProxyManager().getPlainProxyPassword());
     }

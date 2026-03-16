@@ -22,7 +22,6 @@ import consulo.ui.WindowOwner;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -32,21 +31,21 @@ import jakarta.inject.Singleton;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedDialogServiceImpl implements DialogService {
-    @Nonnull
+    
     @Override
-    public Dialog build(@Nonnull DialogDescriptor descriptor) {
+    public Dialog build(DialogDescriptor descriptor) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
-    public Dialog build(@Nonnull Component parent, @Nonnull DialogDescriptor descriptor) {
+    public Dialog build(Component parent, DialogDescriptor descriptor) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
-    public Dialog build(@Nonnull WindowOwner windowOwner, @Nonnull DialogDescriptor descriptor) {
+    public Dialog build(WindowOwner windowOwner, DialogDescriptor descriptor) {
         return null;
     }
 }

@@ -26,8 +26,7 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.versionControlSystem.VcsToolWindow;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 
@@ -43,22 +42,22 @@ public class VcsBalloonProblemNotifier implements Runnable {
         VcsToolWindow.ID,
         true
     );
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final String myMessage;
     private final NotificationType myMessageType;
     private final boolean myShowOverChangesView;
     @Nullable
     private final NamedRunnable[] myNotificationListener;
 
-    public VcsBalloonProblemNotifier(@Nonnull Project project, @Nonnull String message, NotificationType messageType) {
+    public VcsBalloonProblemNotifier(Project project, String message, NotificationType messageType) {
         this(project, message, messageType, true, null);
     }
 
     public VcsBalloonProblemNotifier(
-        @Nonnull Project project,
-        @Nonnull String message,
+        Project project,
+        String message,
         NotificationType messageType,
         boolean showOverChangesView,
         @Nullable NamedRunnable[] notificationListener
@@ -71,8 +70,8 @@ public class VcsBalloonProblemNotifier implements Runnable {
     }
 
     public static void showOverChangesView(
-        @Nonnull Project project,
-        @Nonnull String message,
+        Project project,
+        String message,
         NotificationType type,
         NamedRunnable... notificationListener
     ) {
@@ -80,8 +79,8 @@ public class VcsBalloonProblemNotifier implements Runnable {
     }
 
     public static void showOverVersionControlView(
-        @Nonnull Project project,
-        @Nonnull String message,
+        Project project,
+        String message,
         NotificationType type
     ) {
         show(project, message, type, false, null);

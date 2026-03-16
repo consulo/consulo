@@ -22,14 +22,13 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class EditorNotifications  {
-  @Nonnull
+  
   public static EditorNotifications getInstance(Project project) {
     return project.getInstance(EditorNotifications.class);
   }

@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides common functionality for <code>'toggle soft wraps usage'</code> actions.
@@ -45,14 +44,14 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
      * @param global         indicates if soft wraps should be changed for the current editor only or for the all editors
      *                       used at the target appliance place
      */
-    public AbstractToggleUseSoftWrapsAction(@Nonnull SoftWrapAppliancePlaces appliancePlace, boolean global) {
+    public AbstractToggleUseSoftWrapsAction(SoftWrapAppliancePlaces appliancePlace, boolean global) {
         myAppliancePlace = appliancePlace;
         myGlobal = global;
     }
 
     protected AbstractToggleUseSoftWrapsAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon,
         SoftWrapAppliancePlaces appliancePlace,
         boolean global
@@ -63,7 +62,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (myGlobal) {
             Editor editor = getEditor(e);
             if (editor != null && editor.getSettings().getSoftWrapAppliancePlace() != myAppliancePlace) {
@@ -75,7 +74,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         if (myGlobal) {
             return PersistentEditorSettings.getInstance().isUseSoftWraps(myAppliancePlace);
         }
@@ -85,7 +84,7 @@ public abstract class AbstractToggleUseSoftWrapsAction extends ToggleAction impl
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Editor editor = getEditor(e);
         if (editor == null) {
             return;

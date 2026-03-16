@@ -23,7 +23,6 @@ import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -55,7 +54,7 @@ public class DaemonProgressIndicator extends AbstractProgressIndicatorBase imple
     Disposer.dispose(this);
   }
 
-  public void cancel(@Nonnull Throwable cause) {
+  public void cancel(Throwable cause) {
     myTraceableDisposable.killExceptionally(cause);
     super.cancel();
     Disposer.dispose(this);

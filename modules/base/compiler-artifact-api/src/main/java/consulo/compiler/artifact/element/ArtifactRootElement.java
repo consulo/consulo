@@ -15,7 +15,6 @@
  */
 package consulo.compiler.artifact.element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,7 +25,7 @@ public abstract class ArtifactRootElement<S> extends CompositePackagingElement<S
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return false;
   }
 }

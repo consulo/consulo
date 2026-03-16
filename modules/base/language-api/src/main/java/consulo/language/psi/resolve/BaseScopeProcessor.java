@@ -18,13 +18,12 @@ package consulo.language.psi.resolve;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use PsiScopeProcessor directly")
 public abstract class BaseScopeProcessor implements PsiScopeProcessor {
   @Override
-  public <T> T getHint(@Nonnull Key<T> hintKey) {
+  public <T> T getHint(Key<T> hintKey) {
     return null;
   }
 

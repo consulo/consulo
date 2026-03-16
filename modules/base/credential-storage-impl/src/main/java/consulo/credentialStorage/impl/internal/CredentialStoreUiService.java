@@ -3,8 +3,7 @@ package consulo.credentialStorage.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -16,7 +15,7 @@ public interface CredentialStoreUiService {
     }
 
     boolean showChangeMainPasswordDialog(@Nullable Component contextComponent,
-                                         @Nonnull ChangePasswordHandler setNewMainPassword);
+                                         ChangePasswordHandler setNewMainPassword);
 
 
 

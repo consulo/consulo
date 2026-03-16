@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.editor.refactoring.NamesValidator;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public class DefaultNamesValidator implements NamesValidator {
   @Override
@@ -41,7 +40,7 @@ public class DefaultNamesValidator implements NamesValidator {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

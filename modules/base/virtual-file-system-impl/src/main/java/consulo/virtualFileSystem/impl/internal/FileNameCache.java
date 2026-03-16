@@ -20,7 +20,6 @@ import consulo.util.lang.ByteArrayCharSequence;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.impl.internal.util.IntObjectLRUMap;
 import consulo.virtualFileSystem.impl.internal.util.IntSLRUCache;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,14 +43,14 @@ public class FileNameCache {
 
   private static final String FS_SEPARATORS = "/" + (File.separatorChar == '/' ? "" : File.separatorChar);
 
-  public static int storeName(@Nonnull String name) {
+  public static int storeName(String name) {
     assertShortFileName(name);
     int idx = FSRecords.getNameId(name);
     cacheData(name, idx, calcStripeIdFromNameId(idx));
     return idx;
   }
 
-  private static void assertShortFileName(@Nonnull String name) {
+  private static void assertShortFileName(String name) {
     if (name.length() <= 1) return;
     int start = 0;
     if (Platform.current().os().isWindows() && name.startsWith("//")) {  // Windows UNC: //Network/Ubuntu
@@ -63,7 +62,7 @@ public class FileNameCache {
     }
   }
 
-  @Nonnull
+  
   private static IntObjectLRUMap.MapEntry<CharSequence> cacheData(String name, int id, int stripe) {
     if (name == null) {
       FSRecords.handleError(new RuntimeException("VFS name enumerator corrupted"));
@@ -103,8 +102,8 @@ public class FileNameCache {
     String compute(int id) throws IOException;
   }
 
-  @Nonnull
-  public static CharSequence getVFileName(int nameId, @Nonnull NameComputer computeName) throws IOException {
+  
+  public static CharSequence getVFileName(int nameId, NameComputer computeName) throws IOException {
     assert nameId > 0 : nameId;
 
     if (ourTrackStats) {
@@ -141,7 +140,7 @@ public class FileNameCache {
     return entry.value;
   }
 
-  @Nonnull
+  
   public static CharSequence getVFileName(int nameId) {
     try {
       return getVFileName(nameId, FSRecords::getNameByNameId);

@@ -18,20 +18,15 @@ package consulo.ui;
 import consulo.localize.LocalizeValue;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 12-Jun-16
  */
 public interface HtmlLabel extends Label {
-  @Nonnull
-  static HtmlLabel create(@Nonnull LocalizeValue html) {
+  static HtmlLabel create(LocalizeValue html) {
     return create(html, LabelOptions.builder().build());
   }
-
-  @Nonnull
-  static HtmlLabel create(@Nonnull LocalizeValue html, @Nonnull LabelOptions labelOptions) {
+  static HtmlLabel create(LocalizeValue html, LabelOptions labelOptions) {
     return UIInternal.get()._Components_htmlLabel(html, labelOptions);
   }
 }

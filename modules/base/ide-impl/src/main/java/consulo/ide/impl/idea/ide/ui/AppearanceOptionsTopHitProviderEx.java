@@ -20,8 +20,7 @@ import consulo.component.ComponentManager;
 import consulo.ui.ex.action.BooleanOptionDescription;
 import consulo.ide.localize.IdeLocalize;
 import consulo.ui.ex.action.OptionsTopHitProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +38,7 @@ public class AppearanceOptionsTopHitProviderEx extends OptionsTopHitProvider imp
     AppearanceOptionsTopHitProvider.appearance(IdeLocalize.labelOptionView(IdeLocalize.showNavigationBar()), "SHOW_NAVIGATION_BAR")
   );
 
-  @Nonnull
+  
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;

@@ -19,7 +19,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.change.Change;
 
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -96,7 +95,7 @@ public class CommittedChangeListImpl implements CommittedChangeList {
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }

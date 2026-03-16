@@ -19,7 +19,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ import java.util.List;
  * @author cdr
  */
 public class PackageEntryTable implements JDOMExternalizable, Cloneable {
-    @Nonnull
+    
     private final List<PackageEntry> myEntries = new ArrayList<>();
 
     @Override

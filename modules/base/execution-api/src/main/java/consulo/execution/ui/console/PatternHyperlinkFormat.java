@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-import jakarta.annotation.Nonnull;
 import java.util.regex.Pattern;
 
 public class PatternHyperlinkFormat {
@@ -24,14 +23,14 @@ public class PatternHyperlinkFormat {
   private final boolean myZeroBasedColumnNumbering;
   private final PatternHyperlinkPart[] myLinkParts;
 
-  public PatternHyperlinkFormat(@Nonnull Pattern pattern, boolean zeroBasedLineNumbering, boolean zeroBasedColumnNumbering, @Nonnull PatternHyperlinkPart... linkParts) {
+  public PatternHyperlinkFormat(Pattern pattern, boolean zeroBasedLineNumbering, boolean zeroBasedColumnNumbering, PatternHyperlinkPart... linkParts) {
     myPattern = pattern;
     myZeroBasedLineNumbering = zeroBasedLineNumbering;
     myZeroBasedColumnNumbering = zeroBasedColumnNumbering;
     myLinkParts = linkParts;
   }
 
-  @Nonnull
+  
   public Pattern getPattern() {
     return myPattern;
   }
@@ -44,7 +43,7 @@ public class PatternHyperlinkFormat {
     return myZeroBasedColumnNumbering;
   }
 
-  @Nonnull
+  
   public PatternHyperlinkPart[] getLinkParts() {
     return myLinkParts;
   }

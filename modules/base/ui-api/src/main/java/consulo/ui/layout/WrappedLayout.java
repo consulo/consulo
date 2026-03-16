@@ -19,32 +19,26 @@ import consulo.ui.Component;
 import consulo.ui.PseudoComponent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 25-Oct-17
  */
 public interface WrappedLayout extends Layout<LayoutConstraint> {
-    @Nonnull
     static WrappedLayout create() {
         return UIInternal.get()._Layouts_wrapped();
     }
-
-    @Nonnull
     @RequiredUIAccess
-    static WrappedLayout create(@Nonnull Component component) {
+    static WrappedLayout create(Component component) {
         return UIInternal.get()._Layouts_wrapped().set(component);
     }
 
     @RequiredUIAccess
-    @Nonnull
     WrappedLayout set(@Nullable Component component);
 
     @RequiredUIAccess
-    @Nonnull
-    default WrappedLayout set(@Nonnull PseudoComponent component) {
+    default WrappedLayout set(PseudoComponent component) {
         return set(component.getComponent());
     }
 }

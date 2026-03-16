@@ -13,8 +13,7 @@ import consulo.language.psi.LeafPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ class TreeHasherBase extends AbstractTreeHasher {
   private final DuplicatesProfile myProfile;
 
   TreeHasherBase(@Nullable FragmentsCollector callback,
-                 @Nonnull DuplicatesProfile profile,
+                 DuplicatesProfile profile,
                  int discardCost, boolean forIndexing) {
     super(callback, forIndexing);
     myCallback = callback;
@@ -45,7 +44,7 @@ class TreeHasherBase extends AbstractTreeHasher {
   }
 
   @Override
-  protected TreeHashResult hash(@Nonnull PsiElement root, PsiFragment upper, @Nonnull NodeSpecificHasher hasher) {
+  protected TreeHashResult hash(PsiElement root, PsiFragment upper, NodeSpecificHasher hasher) {
     TreeHashResult result = computeHash(root, upper, hasher);
 
     // todo: try to optimize (ex. compute cost and hash separately)
@@ -101,7 +100,7 @@ class TreeHasherBase extends AbstractTreeHasher {
   }
 
   @Override
-  protected TreeHashResult computeElementHash(@Nonnull PsiElement root, PsiFragment upper, NodeSpecificHasher hasher) {
+  protected TreeHashResult computeElementHash(PsiElement root, PsiFragment upper, NodeSpecificHasher hasher) {
     if (myForIndexing) {
       return TreeHashingUtils.computeElementHashForIndexing(this, myCallBack, root, upper, hasher);
     }
@@ -219,7 +218,7 @@ class TreeHasherBase extends AbstractTreeHasher {
     return filteredElements;
   }
 
-  @Nonnull
+  
   private Couple<Integer> computeHash(SingleChildDescriptor childDescriptor,
                                                         PsiFragment parentFragment,
                                                         NodeSpecificHasher nodeSpecificHasher) {
@@ -244,7 +243,7 @@ class TreeHasherBase extends AbstractTreeHasher {
     return role != null && !duplicatesProfile.getDuplocatorState(duplicatesProfile.getLanguage(element)).distinguishRole(role);
   }
 
-  @Nonnull
+  
   private Couple<Integer> doComputeHash(SingleChildDescriptor childDescriptor,
                                                           PsiFragment parentFragment,
                                                           NodeSpecificHasher nodeSpecificHasher) {
@@ -282,7 +281,7 @@ class TreeHasherBase extends AbstractTreeHasher {
     }
   }
 
-  @Nonnull
+  
   private Couple<Integer> computeHash(MultiChildDescriptor childDescriptor,
                                                         PsiFragment parentFragment,
                                                         NodeSpecificHasher nodeSpecificHasher) {
@@ -320,7 +319,7 @@ class TreeHasherBase extends AbstractTreeHasher {
     }
   }
 
-  @Nonnull
+  
   private TreeHashResult[] computeHashesForChildren(PsiElement element,
                                                     PsiFragment parentFragment,
                                                     NodeSpecificHasher nodeSpecificHasher) {
@@ -333,7 +332,7 @@ class TreeHasherBase extends AbstractTreeHasher {
     return result.toArray(new TreeHashResult[0]);
   }
 
-  @Nonnull
+  
   private TreeHashResult[] computeHashes(PsiElement[] elements,
                                          PsiFragment parentFragment,
                                          NodeSpecificHasher nodeSpecificHasher) {

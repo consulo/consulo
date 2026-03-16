@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkListener;
 import javax.swing.tree.TreeNode;
@@ -47,7 +46,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
 
   private MessageTreeNode(XDebuggerTree tree,
                           @Nullable XDebuggerTreeNode parent,
-                          @Nonnull LocalizeValue message,
+                          LocalizeValue message,
                           SimpleTextAttributes attributes,
                           @Nullable Image icon) {
     this(tree, parent, message, attributes, icon, null);
@@ -56,7 +55,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   private MessageTreeNode(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    @Nonnull LocalizeValue message,
+    LocalizeValue message,
     SimpleTextAttributes attributes,
     @Nullable Image icon,
     XDebuggerTreeNodeHyperlink link
@@ -67,7 +66,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   private MessageTreeNode(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    @Nonnull LocalizeValue message,
+    LocalizeValue message,
     SimpleTextAttributes attributes,
     @Nullable Image icon,
     boolean ellipsis,
@@ -89,7 +88,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     myEllipsis = false;
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends TreeNode> getChildren() {
     return Collections.emptyList();
@@ -105,7 +104,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     return myLink;
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends XDebuggerTreeNode> getLoadedChildren() {
     return Collections.emptyList();
@@ -154,7 +153,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   public static List<MessageTreeNode> createMessages(
     XDebuggerTree tree,
     XDebuggerTreeNode parent,
-    @Nonnull LocalizeValue errorMessage,
+    LocalizeValue errorMessage,
     XDebuggerTreeNodeHyperlink link,
     Image icon,
     SimpleTextAttributes attributes
@@ -167,13 +166,13 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     return messages;
   }
 
-  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, @Nonnull LocalizeValue message) {
+  public static MessageTreeNode createInfoMessage(XDebuggerTree tree, LocalizeValue message) {
     return createInfoMessage(tree, message, null);
   }
 
   public static MessageTreeNode createInfoMessage(
     XDebuggerTree tree,
-    @Nonnull LocalizeValue messageValue,
+    LocalizeValue messageValue,
     @Nullable HyperlinkListener hyperlinkListener
   ) {
     String message = messageValue.get();
@@ -216,7 +215,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     }
 
     @Override
-    public void appendToComponent(@Nonnull ColoredTextContainer component) {
+    public void appendToComponent(ColoredTextContainer component) {
       for (Object object : objects) {
         if (object instanceof String) {
           component.append((String)object, SimpleTextAttributes.REGULAR_ATTRIBUTES);
@@ -233,7 +232,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
     private final HyperlinkListener hyperlinkListener;
     private final String href;
 
-    public HyperlinkListenerDelegator(@Nonnull LocalizeValue linkText, @Nullable String href, @Nonnull HyperlinkListener hyperlinkListener) {
+    public HyperlinkListenerDelegator(LocalizeValue linkText, @Nullable String href, HyperlinkListener hyperlinkListener) {
       super(linkText);
 
       this.hyperlinkListener = hyperlinkListener;

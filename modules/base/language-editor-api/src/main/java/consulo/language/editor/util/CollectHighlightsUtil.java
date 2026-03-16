@@ -26,8 +26,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.ints.IntStack;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,15 +36,15 @@ public class CollectHighlightsUtil {
   private CollectHighlightsUtil() {
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, int startOffset, int endOffset) {
+  public static List<PsiElement> getElementsInRange(PsiElement root, int startOffset, int endOffset) {
     return getElementsInRange(root, startOffset, endOffset, false);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static List<PsiElement> getElementsInRange(@Nonnull PsiElement root, int startOffset, int endOffset, boolean includeAllParents) {
+  public static List<PsiElement> getElementsInRange(PsiElement root, int startOffset, int endOffset, boolean includeAllParents) {
     PsiElement commonParent = findCommonParent(root, startOffset, endOffset);
     if (commonParent == null) return new ArrayList<>();
     List<PsiElement> list = getElementsToHighlight(commonParent, startOffset, endOffset);
@@ -63,9 +62,9 @@ public class CollectHighlightsUtil {
 
   private static final int STARTING_TREE_HEIGHT = 100;
 
-  @Nonnull
+  
   @RequiredReadAction
-  private static List<PsiElement> getElementsToHighlight(@Nonnull PsiElement commonParent, int startOffset, int endOffset) {
+  private static List<PsiElement> getElementsToHighlight(PsiElement commonParent, int startOffset, int endOffset) {
     List<PsiElement> result = new ArrayList<>();
 
     int offset = commonParent.getTextRange().getStartOffset();

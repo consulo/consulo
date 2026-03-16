@@ -20,8 +20,7 @@ import consulo.container.plugin.PluginId;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * from kotlin
@@ -34,5 +33,5 @@ public interface ActionStubBase {
   String getIconPath();
 
   @Nullable
-  AnAction initialize(@Nonnull Application application, @Nonnull ActionManager manager);
+  AnAction initialize(Application application, ActionManager manager);
 }

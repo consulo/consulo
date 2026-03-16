@@ -23,8 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.util.concurrent.AtomicFieldUpdater;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountedCompleter;
@@ -47,9 +46,9 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   private final boolean runInReadAction;
   private final boolean failFastOnAcquireReadAction;
   private final ProgressIndicator progressIndicator;
-  @Nonnull
+  
   private final List<? extends T> array;
-  @Nonnull
+  
   private final Predicate<? super T> processor;
   private final int lo;
   private final int hi;
@@ -71,12 +70,12 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
   ApplierCompleter(ApplierCompleter<T> parent,
                    boolean runInReadAction,
                    boolean failFastOnAcquireReadAction,
-                   @Nonnull ProgressIndicator progressIndicator,
-                   @Nonnull List<? extends T> array,
-                   @Nonnull Predicate<? super T> processor,
+                   ProgressIndicator progressIndicator,
+                   List<? extends T> array,
+                   Predicate<? super T> processor,
                    int lo,
                    int hi,
-                   @Nonnull Collection<ApplierCompleter<T>> failedSubTasks,
+                   Collection<ApplierCompleter<T>> failedSubTasks,
                    ApplierCompleter<T> next) {
     super(parent);
     this.runInReadAction = runInReadAction;
@@ -100,7 +99,7 @@ class ApplierCompleter<T> extends CountedCompleter<Void> {
     }
   }
 
-  private void wrapInReadActionAndIndicator(@Nonnull Runnable process) {
+  private void wrapInReadActionAndIndicator(Runnable process) {
     Runnable toRun = runInReadAction ? () -> {
       if (!ApplicationManagerEx.getApplicationEx().tryRunReadAction(process)) {
         failedSubTasks.add(this);

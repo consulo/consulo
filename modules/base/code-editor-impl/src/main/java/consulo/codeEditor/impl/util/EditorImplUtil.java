@@ -33,8 +33,7 @@ import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.*;
@@ -53,7 +52,7 @@ import static consulo.codeEditor.util.EditorUtil.getTabSize;
 public class EditorImplUtil {
     private static final Logger LOG = Logger.getInstance(EditorImplUtil.class);
 
-    public static int getNotFoldedLineStartOffset(@Nonnull Document document, @Nonnull FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
+    public static int getNotFoldedLineStartOffset(Document document, FoldingModel foldingModel, int startOffset, boolean stopAtInvisibleFoldRegions) {
         int offset = startOffset;
         while (true) {
             offset = DocumentUtil.getLineStartOffset(offset, document);
@@ -71,7 +70,7 @@ public class EditorImplUtil {
     /**
      * Tells whether given inlay element is invisible due to folding of text in editor
      */
-    public static boolean isInlayFolded(@Nonnull Inlay inlay) {
+    public static boolean isInlayFolded(Inlay inlay) {
         if (CodeEditorInlayModelBase.showWhenFolded(inlay)) {
             return false;
         }
@@ -105,8 +104,8 @@ public class EditorImplUtil {
      * @return EXCLUSIVE intervals [startY, endY)
      * @see #yToLogicalLineRange(Editor, int)
      */
-    @Nonnull
-    public static Pair<Interval, Interval> logicalLineToYRange(@Nonnull Editor editor, int logicalLine) {
+    
+    public static Pair<Interval, Interval> logicalLineToYRange(Editor editor, int logicalLine) {
         if (logicalLine < 0) {
             throw new IllegalArgumentException("Logical line is negative: " + logicalLine);
         }
@@ -143,13 +142,13 @@ public class EditorImplUtil {
         return Pair.create(new TextRangeInterval(startY, endY), startYEx < endYEx ? new TextRangeInterval(startYEx, endYEx) : null);
     }
 
-    public static int logicalToVisualLine(@Nonnull Editor editor, int logicalLine) {
+    public static int logicalToVisualLine(Editor editor, int logicalLine) {
         LogicalPosition logicalPosition = new LogicalPosition(logicalLine, 0);
         VisualPosition visualPosition = editor.logicalToVisualPosition(logicalPosition);
         return visualPosition.line;
     }
 
-    public static int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
+    public static int getLastVisualLineColumnNumber(Editor editor, int line) {
         if (editor instanceof RealEditorWithEditorView editorImpl) {
             int lineEndOffset = line >= editorImpl.getVisibleLineCount()
                 ? editor.getDocument().getTextLength()
@@ -263,20 +262,20 @@ public class EditorImplUtil {
     }
 
     @Deprecated
-    public static int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
+    public static int calcColumnNumber(Editor editor, CharSequence text, int start, int offset) {
         return EditorUtil.calcColumnNumber(editor, text, start, offset);
     }
 
     @Deprecated
     public static int calcColumnNumber(@Nullable Editor editor,
-                                       @Nonnull CharSequence text,
+                                       CharSequence text,
                                        int start,
                                        int offset,
                                        int tabSize) {
         return EditorUtil.calcColumnNumber(editor, text, start, offset, tabSize);
     }
 
-    public static int textWidthInColumns(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int end, int x) {
+    public static int textWidthInColumns(Editor editor, CharSequence text, int start, int end, int x) {
         int startToUse = start;
         int lastTabSymbolIndex = -1;
 
@@ -330,7 +329,7 @@ public class EditorImplUtil {
         return result;
     }
 
-    public static int nextTabStop(int x, @Nonnull Editor editor) {
+    public static int nextTabStop(int x, Editor editor) {
         int tabSize = getTabSize(editor);
         if (tabSize <= 0) {
             tabSize = 1;
@@ -353,7 +352,7 @@ public class EditorImplUtil {
         return result;
     }
 
-    public static int nextTabStop(int x, @Nonnull Editor editor, int tabSize) {
+    public static int nextTabStop(int x, Editor editor, int tabSize) {
         int leftInset = editor.getContentComponent().getInsets().left;
         return nextTabStop(x - leftInset, getSpaceWidth(Font.PLAIN, editor), tabSize) + leftInset;
     }
@@ -368,21 +367,21 @@ public class EditorImplUtil {
         return (nTabs + 1) * tabSize;
     }
 
-    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, @Nonnull Editor editor) {
+    public static int getSpaceWidth(@JdkConstants.FontStyle int fontType, Editor editor) {
         int width = charWidth(' ', fontType, editor);
         return width > 0 ? width : 1;
     }
 
-    public static int getPlainSpaceWidth(@Nonnull Editor editor) {
+    public static int getPlainSpaceWidth(Editor editor) {
         return getSpaceWidth(Font.PLAIN, editor);
     }
 
-    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, @Nonnull Editor editor) {
+    public static int charWidth(char c, @JdkConstants.FontStyle int fontType, Editor editor) {
         return fontForChar(c, fontType, editor).charWidth(c);
     }
 
-    @Nonnull
-    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, @Nonnull Editor editor) {
+    
+    public static FontInfo fontForChar(char c, @JdkConstants.FontStyle int style, Editor editor) {
         EditorColorsScheme colorsScheme = editor.getColorsScheme();
         return ComplementaryFontsRegistry.getFontAbleToDisplay(c,
             style,

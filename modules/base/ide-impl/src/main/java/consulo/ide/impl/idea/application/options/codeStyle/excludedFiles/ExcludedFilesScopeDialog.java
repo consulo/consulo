@@ -5,9 +5,8 @@ import consulo.language.codeStyle.fileSet.FileSetDescriptor;
 import consulo.language.codeStyle.fileSet.NamedScopeDescriptor;
 import consulo.project.Project;
 import consulo.content.scope.NamedScope;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -21,7 +20,7 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
   private final Action myEditAction;
   private final List<NamedScope> myAvailableScopes;
 
-  protected ExcludedFilesScopeDialog(@Nonnull Project project, @Nonnull List<NamedScope> availableScopes) {
+  protected ExcludedFilesScopeDialog(Project project, List<NamedScope> availableScopes) {
     super(project);
     myAvailableScopes = availableScopes;
     setTitle("Add Scope");
@@ -37,7 +36,7 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
   }
 
 
-  private void fillScopesList(@Nonnull List<NamedScope> availableScopes) {
+  private void fillScopesList(List<NamedScope> availableScopes) {
     myScopeListModel = new DefaultComboBoxModel<>();
     for (NamedScope scope : availableScopes) {
       myScopeListModel.addElement(scope.getName());
@@ -68,7 +67,7 @@ public class ExcludedFilesScopeDialog extends ExcludedFilesDialogBase {
     return myForm.getTopPanel();
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), myEditAction};

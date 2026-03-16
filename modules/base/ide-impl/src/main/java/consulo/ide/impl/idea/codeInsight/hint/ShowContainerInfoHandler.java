@@ -34,7 +34,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -45,7 +44,7 @@ public class ShowContainerInfoHandler implements CodeInsightActionHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     PsiDocumentManager.getInstance(project).commitAllDocuments();
 
     PsiElement container = null;

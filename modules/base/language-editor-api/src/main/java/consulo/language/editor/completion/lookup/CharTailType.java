@@ -17,7 +17,6 @@ package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -36,7 +35,7 @@ public class CharTailType extends TailType {
   }
 
   @Override
-  public boolean isApplicable(@Nonnull InsertionContext context) {
+  public boolean isApplicable(InsertionContext context) {
     return !context.shouldAddCompletionChar() || context.getCompletionChar() != myChar;
   }
 

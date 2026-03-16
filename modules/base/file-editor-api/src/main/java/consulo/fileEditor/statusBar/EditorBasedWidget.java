@@ -25,8 +25,7 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -34,7 +33,6 @@ import java.awt.*;
 public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorManagerListener {
   private static final Logger LOG = Logger.getInstance(EditorBasedWidget.class);
 
-  @Nonnull
   protected final Project myProject;
 
   protected StatusBar myStatusBar;
@@ -42,12 +40,11 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   private volatile boolean myDisposed;
   protected final StatusBarWidgetFactory myFactory;
 
-  protected EditorBasedWidget(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+  protected EditorBasedWidget(Project project, StatusBarWidgetFactory factory) {
     myProject = project;
     myFactory = factory;
   }
 
-  @Nonnull
   @Override
   public String getId() {
     return myFactory.getId();
@@ -142,13 +139,12 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     return FileDocumentManager.getInstance().getFile(document);
   }
 
-  @Nonnull
   protected final Project getProject() {
     return myProject;
   }
 
   @Override
-  public void install(@Nonnull StatusBar statusBar) {
+  public void install(StatusBar statusBar) {
     assert statusBar.getProject() == null || statusBar.getProject().equals(myProject) : "Cannot install widget from one project on status bar of another project";
 
     myStatusBar = statusBar;

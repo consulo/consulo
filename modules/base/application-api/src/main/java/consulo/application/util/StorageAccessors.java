@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.util.config.Storage;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author dyoma
@@ -31,7 +30,7 @@ public class StorageAccessors {
     myStorage = storage;
   }
 
-  public static StorageAccessors createGlobal(@NonNls String prefix) {
+  public static StorageAccessors createGlobal(String prefix) {
     Application application = ApplicationManager.getApplication();
     Storage storage;
     if (application != null) storage = new Storage.PropertiesComponentStorage(prefix + ".", ApplicationPropertiesComponent.getInstance());

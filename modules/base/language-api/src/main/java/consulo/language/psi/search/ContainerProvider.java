@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Max Medvedev
@@ -31,5 +30,5 @@ public interface ContainerProvider {
     ExtensionPointName<ContainerProvider> EP_NAME = ExtensionPointName.create(ContainerProvider.class);
 
     @Nullable
-    PsiElement getContainer(@Nonnull PsiElement item);
+    PsiElement getContainer(PsiElement item);
 }

@@ -39,8 +39,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,9 +48,9 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   public static final Logger LOGGER = Logger.getInstance(UpdatePsiFileCopyright.class);
 
   private final T myFileConfig;
-  @Nonnull
+  
   private final PsiFile myPsiFile;
-  @Nonnull
+  
   private final CopyrightProfile myCopyrightProfile;
   private final Set<CommentAction> myActions = new TreeSet<CommentAction>();
 
@@ -60,7 +59,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
   private FileType myFileType;
 
   @SuppressWarnings("unchecked")
-  protected UpdatePsiFileCopyright(@Nonnull PsiFile psiFile, @Nonnull CopyrightProfile copyrightProfile) {
+  protected UpdatePsiFileCopyright(PsiFile psiFile, CopyrightProfile copyrightProfile) {
     myPsiFile = psiFile;
     myCopyrightProfile = copyrightProfile;
 
@@ -288,17 +287,17 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     }
   }
 
-  @Nonnull
+  
   public PsiFile getFile() {
     return myPsiFile;
   }
 
-  @Nonnull
+  
   public CopyrightFileConfig getFileConfig() {
     return myFileConfig;
   }
 
-  @Nonnull
+  
   public FileType getFileType() {
     return myFileType;
   }
@@ -308,7 +307,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
     return ModuleUtilCore.findModuleForPsiElement(myPsiFile);
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myPsiFile.getProject();
   }

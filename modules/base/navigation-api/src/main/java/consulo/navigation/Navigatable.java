@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -31,7 +30,6 @@ public interface Navigatable {
     Key<Navigatable[]> KEY_OF_ARRAY = Key.create(Navigatable[].class);
 
     @RequiredReadAction
-    @Nonnull
     @SuppressWarnings("deprecation")
     default NavigateOptions getNavigateOptions() {
         return new SimpleNavigateOptions(canNavigate(), canNavigateToSource());
@@ -43,9 +41,8 @@ public interface Navigatable {
      *
      * @param requestFocus <code>true</code> if focus requesting is necessary
      */
-    @Nonnull
     @SuppressWarnings("deprecation")
-    default CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+    default CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus) {
         return uiAccess.giveAsync(() -> navigate(requestFocus));
     }
 

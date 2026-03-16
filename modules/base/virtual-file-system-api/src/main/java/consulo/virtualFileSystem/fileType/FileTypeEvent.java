@@ -17,8 +17,7 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EventObject;
 
@@ -26,7 +25,7 @@ public class FileTypeEvent extends EventObject {
   private final FileType myAddedFileType;
   private final FileType myRemovedFileType;
 
-  public FileTypeEvent(@Nonnull Object source, @Nullable FileType addedFileType, @Nullable FileType removedFileType) {
+  public FileTypeEvent(Object source, @Nullable FileType addedFileType, @Nullable FileType removedFileType) {
     super(source);
     myAddedFileType = addedFileType;
     myRemovedFileType = removedFileType;

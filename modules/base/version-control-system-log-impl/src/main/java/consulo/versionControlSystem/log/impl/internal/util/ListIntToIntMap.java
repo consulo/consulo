@@ -16,19 +16,18 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
   public static final int DEFAULT_BLOCK_SIZE = 30;
 
-  @Nonnull
-  public static UpdatableIntToIntMap newInstance(@Nonnull Predicate<Integer> thisIsVisible, int longSize) {
+  
+  public static UpdatableIntToIntMap newInstance(Predicate<Integer> thisIsVisible, int longSize) {
     return newInstance(thisIsVisible, longSize, DEFAULT_BLOCK_SIZE);
   }
 
-  @Nonnull
+  
   public static UpdatableIntToIntMap newInstance(Flags visibleNodes) {
     return newInstance(visibleNodes::get, visibleNodes.size());
   }
@@ -38,8 +37,8 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
    *                  getLongIndex access need: log(longSize) + blockSize
    *                  getShortIndex access need: blockSize
    */
-  @Nonnull
-  public static UpdatableIntToIntMap newInstance(@Nonnull Predicate<Integer> thisIsVisible, int longSize, int blockSize) {
+  
+  public static UpdatableIntToIntMap newInstance(Predicate<Integer> thisIsVisible, int longSize, int blockSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 
     if (longSize == 0) return IDIntToIntMap.EMPTY;
@@ -50,7 +49,7 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
     return listIntToIntMap;
   }
 
-  @Nonnull
+  
   final Predicate<Integer> myThisIsVisible;
 
   private final int myLongSize;
@@ -58,7 +57,7 @@ public class ListIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
   private final int myBlockSize;
   private final int[] mySubSumOfBlocks;
 
-  private ListIntToIntMap(@Nonnull Predicate<Integer> thisIsVisible, int longSize, int blockSize, int[] subSumOfBlocks) {
+  private ListIntToIntMap(Predicate<Integer> thisIsVisible, int longSize, int blockSize, int[] subSumOfBlocks) {
     myLongSize = longSize;
     myThisIsVisible = thisIsVisible;
     myBlockSize = blockSize;

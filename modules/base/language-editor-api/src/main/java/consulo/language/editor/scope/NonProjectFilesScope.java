@@ -25,8 +25,7 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -39,7 +38,7 @@ public class NonProjectFilesScope extends NamedScope {
     public NonProjectFilesScope() {
         super(ID, LocalizeValue.localizeTODO("Non-Project Files"), new AbstractPackageSet("NonProject") {
             @Override
-            public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 // do not include fake-files e.g. fragment-editors, database consoles, etc.
                 if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
                     return false;
@@ -60,8 +59,8 @@ public class NonProjectFilesScope extends NamedScope {
         return "Yellow";
     }
 
-    @Nonnull
-    public static NamedScope[] removeFromList(@Nonnull NamedScope[] scopes) {
+    
+    public static NamedScope[] removeFromList(NamedScope[] scopes) {
         int nonProjectIdx = -1;
         for (int i = 0, length = scopes.length; i < length; i++) {
             NamedScope scope = scopes[i];

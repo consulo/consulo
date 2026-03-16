@@ -31,8 +31,7 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,14 +40,14 @@ import java.util.Properties;
 
 public class CreateFromTemplateDialog extends DialogWrapper {
     private static final Logger LOG = Logger.getInstance(CreateFromTemplateDialog.class);
-    @Nonnull
+    
     private final PsiDirectory myDirectory;
-    @Nonnull
+    
     private final Project myProject;
     private PsiElement myCreatedElement;
     private final CreateFromTemplatePanel myAttrPanel;
     private final JComponent myAttrComponent;
-    @Nonnull
+    
     private final FileTemplate myTemplate;
     private final Map<String, Object> myDefaultProperties;
 
@@ -56,9 +55,9 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     @DeprecationInfo("Use constructor with Map parameter instead of Properties")
     @RequiredUIAccess
     public CreateFromTemplateDialog(
-        @Nonnull Project project,
-        @Nonnull PsiDirectory directory,
-        @Nonnull FileTemplate template,
+        Project project,
+        PsiDirectory directory,
+        FileTemplate template,
         @Nullable AttributesDefaults attributesDefaults,
         @Nullable Properties defaultProperties
     ) {
@@ -67,8 +66,8 @@ public class CreateFromTemplateDialog extends DialogWrapper {
 
     @RequiredUIAccess
     public CreateFromTemplateDialog(
-        @Nonnull PsiDirectory directory,
-        @Nonnull FileTemplate template,
+        PsiDirectory directory,
+        FileTemplate template,
         @Nullable AttributesDefaults attributesDefaults,
         @Nullable Map<String, Object> defaultProperties
     ) {
@@ -176,7 +175,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
         return FileTemplateUtil.findHandler(myTemplate).getErrorMessage();
     }
 
-    @Nonnull
+    
     private String filterMessage(String message) {
         if (message == null) {
             message = "unknown error";

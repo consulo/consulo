@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,7 +39,7 @@ public class MovablePopup {
    * @param owner   a component to which this popup belongs
    * @param content a component to show within this popup
    */
-  public MovablePopup(@Nonnull Component owner, @Nonnull Component content) {
+  public MovablePopup(Component owner, Component content) {
     myOwner = owner;
     myContent = content;
     myViewBounds = new Rectangle(content.getPreferredSize());
@@ -95,7 +94,7 @@ public class MovablePopup {
     }
   }
 
-  public void setBounds(@Nonnull Rectangle bounds) {
+  public void setBounds(Rectangle bounds) {
     setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
@@ -108,7 +107,7 @@ public class MovablePopup {
     }
   }
 
-  public void setLocation(@Nonnull Point location) {
+  public void setLocation(Point location) {
     setLocation(location.x, location.y);
   }
 
@@ -121,7 +120,7 @@ public class MovablePopup {
     }
   }
 
-  public void setSize(@Nonnull Dimension size) {
+  public void setSize(Dimension size) {
     setSize(size.width, size.height);
   }
 

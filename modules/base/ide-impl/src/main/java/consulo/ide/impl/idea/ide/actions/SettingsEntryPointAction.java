@@ -10,8 +10,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.SettingsEntryPointActionProvider;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -51,7 +50,7 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
         setPopup(true);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<AnAction> groups = new ArrayList<>();
@@ -68,7 +67,7 @@ public final class SettingsEntryPointAction extends DumbAwareActionGroup impleme
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         IconState state = getState((UpdateSettingsEx) myUpdateSettingsProvider.get());
         presentation.setIcon(state.myIcon);

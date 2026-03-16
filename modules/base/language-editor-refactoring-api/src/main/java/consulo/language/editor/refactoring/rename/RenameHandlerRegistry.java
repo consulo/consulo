@@ -36,8 +36,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.RadioUpDownListener;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -119,7 +118,7 @@ public class RenameHandlerRegistry {
         return myDefaultElementRenameHandler.isRenaming(dataContext) ? myDefaultElementRenameHandler : null;
     }
 
-    @Nonnull
+    
     private static LocalizeValue getHandlerTitle(RenameHandler renameHandler) {
         return renameHandler.getActionTitleValue().capitalize();
     }

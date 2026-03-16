@@ -25,8 +25,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -34,7 +33,7 @@ import jakarta.annotation.Nullable;
 public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAware {
     protected static final Image ourCurrentAction = PlatformIconGroup.actionsForward();
     protected static final Image ourNotCurrentAction = Image.empty(Image.DEFAULT_ICON_SIZE);
-    @Nonnull
+    
     protected String myActionPlace = ActionPlaces.UNKNOWN;
 
     private final boolean myShowPopupWithNoActions;
@@ -47,13 +46,13 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
         myShowPopupWithNoActions = showPopupWithNoActions;
     }
 
-    protected QuickSwitchSchemeAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected QuickSwitchSchemeAction(LocalizeValue text, LocalizeValue description) {
         this(text, description, false);
     }
 
     protected QuickSwitchSchemeAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         boolean showPopupWithNoActions
     ) {
         super(text, description);
@@ -62,7 +61,7 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ActionGroup.Builder builder = ActionGroup.newImmutableBuilder();
         fillActions(project, builder, e.getDataContext());
@@ -70,8 +69,8 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
     }
 
     protected abstract void fillActions(@Nullable Project project,
-                                        @Nonnull ActionGroup.Builder group,
-                                        @Nonnull DataContext dataContext);
+                                        ActionGroup.Builder group,
+                                        DataContext dataContext);
 
     private void showPopup(AnActionEvent e, ActionGroup.Builder builder) {
         if (!myShowPopupWithNoActions && builder.isEmpty()) {
@@ -98,13 +97,13 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
         return JBPopupFactory.ActionSelectionAid.NUMBERING;
     }
 
-    @Nonnull
+    
     protected LocalizeValue getPopupTitle(AnActionEvent e) {
         return e.getPresentation().getTextValue();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && isEnabled());
     }

@@ -24,8 +24,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.NioFiles;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +55,7 @@ public class VMOptions {
         }
     }
 
-    public static int readOption(@Nonnull MemoryKind kind, boolean effective) {
+    public static int readOption(MemoryKind kind, boolean effective) {
         List<String> arguments;
         if (effective) {
             arguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
@@ -105,16 +104,16 @@ public class VMOptions {
         return 1;
     }
 
-    public static void writeOption(@Nonnull MemoryKind option, int value) {
+    public static void writeOption(MemoryKind option, int value) {
         String optionValue = option.option + value + "m";
         writeGeneralOption(option.pattern, optionValue);
     }
 
-    public static void writeOption(@Nonnull String option, @Nonnull String separator, @Nonnull String value) {
+    public static void writeOption(String option, String separator, String value) {
         writeGeneralOption(Pattern.compile("-D" + option + separator + "(true|false)*([a-zA-Z]*)"), "-D" + option + separator + value);
     }
 
-    private static void writeGeneralOption(@Nonnull Pattern pattern, @Nonnull String value) {
+    private static void writeGeneralOption(Pattern pattern, String value) {
         File file = getWriteFile();
         if (file == null) {
             LOG.warn("VM options file not configured");

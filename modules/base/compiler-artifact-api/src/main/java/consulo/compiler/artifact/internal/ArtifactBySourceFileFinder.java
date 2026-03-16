@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.compiler.artifact.Artifact;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -29,9 +28,9 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ArtifactBySourceFileFinder {
-  public static ArtifactBySourceFileFinder getInstance(@Nonnull Project project) {
+  public static ArtifactBySourceFileFinder getInstance(Project project) {
     return project.getInstance(ArtifactBySourceFileFinder.class);
   }
 
-  public abstract Collection<? extends Artifact> findArtifacts(@Nonnull VirtualFile sourceFile);
+  public abstract Collection<? extends Artifact> findArtifacts(VirtualFile sourceFile);
 }

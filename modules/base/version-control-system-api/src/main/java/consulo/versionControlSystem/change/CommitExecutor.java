@@ -16,15 +16,14 @@
 package consulo.versionControlSystem.change;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface CommitExecutor {
-    @Nonnull
+    
     LocalizeValue getActionText();
 
-    @Nonnull
+    
     CommitSession createCommitSession();
 }

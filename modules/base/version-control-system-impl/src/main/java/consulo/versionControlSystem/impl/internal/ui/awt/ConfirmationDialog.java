@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.OptionsMessageDialog;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ConfirmationDialog extends OptionsMessageDialog {
     private final VcsShowConfirmationOption myOption;
@@ -34,10 +33,10 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     @RequiredUIAccess
     public static boolean requestForConfirmation(
-        @Nonnull VcsShowConfirmationOption option,
-        @Nonnull Project project,
-        @Nonnull LocalizeValue message,
-        @Nonnull LocalizeValue title,
+        VcsShowConfirmationOption option,
+        Project project,
+        LocalizeValue message,
+        LocalizeValue title,
         @Nullable Image icon
     ) {
         return requestForConfirmation(option, project, message, title, icon, CommonLocalize.buttonYes(), CommonLocalize.buttonNo());
@@ -47,10 +46,10 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
     public static boolean requestForConfirmation(
-        @Nonnull VcsShowConfirmationOption option,
-        @Nonnull Project project,
-        @Nonnull String message,
-        @Nonnull String title,
+        VcsShowConfirmationOption option,
+        Project project,
+        String message,
+        String title,
         @Nullable Image icon
     ) {
         return requestForConfirmation(
@@ -66,13 +65,13 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     @RequiredUIAccess
     public static boolean requestForConfirmation(
-        @Nonnull VcsShowConfirmationOption option,
-        @Nonnull Project project,
-        @Nonnull LocalizeValue message,
-        @Nonnull LocalizeValue title,
+        VcsShowConfirmationOption option,
+        Project project,
+        LocalizeValue message,
+        LocalizeValue title,
         @Nullable Image icon,
-        @Nonnull LocalizeValue okActionName,
-        @Nonnull LocalizeValue cancelActionName
+        LocalizeValue okActionName,
+        LocalizeValue cancelActionName
     ) {
         if (option.getValue() == VcsShowConfirmationOption.Value.DO_NOTHING_SILENTLY) {
             return false;
@@ -91,10 +90,10 @@ public class ConfirmationDialog extends OptionsMessageDialog {
     @DeprecationInfo("Use variant with LocalizeValue")
     @RequiredUIAccess
     public static boolean requestForConfirmation(
-        @Nonnull VcsShowConfirmationOption option,
-        @Nonnull Project project,
-        @Nonnull String message,
-        @Nonnull String title,
+        VcsShowConfirmationOption option,
+        Project project,
+        String message,
+        String title,
         @Nullable Image icon,
         @Nullable String okActionName,
         @Nullable String cancelActionName
@@ -114,8 +113,8 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     public ConfirmationDialog(
         Project project,
-        @Nonnull LocalizeValue message,
-        @Nonnull LocalizeValue title,
+        LocalizeValue message,
+        LocalizeValue title,
         Image icon,
         VcsShowConfirmationOption option
     ) {
@@ -136,12 +135,12 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     public ConfirmationDialog(
         Project project,
-        @Nonnull LocalizeValue message,
-        @Nonnull LocalizeValue title,
+        LocalizeValue message,
+        LocalizeValue title,
         Image icon,
         VcsShowConfirmationOption option,
-        @Nonnull LocalizeValue okActionName,
-        @Nonnull LocalizeValue cancelActionName
+        LocalizeValue okActionName,
+        LocalizeValue cancelActionName
     ) {
         super(project, message, title, icon);
         myOption = option;
@@ -168,7 +167,7 @@ public class ConfirmationDialog extends OptionsMessageDialog {
         init();
     }
 
-    public void setDoNotShowAgainMessage(@Nonnull LocalizeValue doNotShowAgainMessage) {
+    public void setDoNotShowAgainMessage(LocalizeValue doNotShowAgainMessage) {
         myDoNotShowAgainMessage = doNotShowAgainMessage;
         myCheckBoxDoNotShowDialog.setLabelText(doNotShowAgainMessage);
     }
@@ -181,20 +180,20 @@ public class ConfirmationDialog extends OptionsMessageDialog {
 
     @Deprecated
     @DeprecationInfo("Use #getDoNotShowMessageValue()")
-    @Nonnull
+    
     @Override
     protected LocalizeValue getDoNotShowMessage() {
         return myDoNotShowAgainMessage.isEmpty() ? super.getDoNotShowMessage() : myDoNotShowAgainMessage;
     }
 
-    @Nonnull
+    
     @Override
     //TODO: rename to getOkActionName() after deprecation removal
     public LocalizeValue getOkActionValue() {
         return myOkActionName;
     }
 
-    @Nonnull
+    
     @Override
     //TODO: rename to getCancelActionName() after deprecation removal
     public LocalizeValue getCancelActionValue() {

@@ -20,7 +20,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.internal.UIInternal;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,28 +28,25 @@ import java.util.List;
  * @since 2018-05-15
  */
 public interface MutableListModel<E> extends ListModel<E> {
-  @Nonnull
-  static <T> MutableListModel<T> of(@Nonnull Collection<? extends T> items) {
+  static <T> MutableListModel<T> of(Collection<? extends T> items) {
     return UIInternal.get()._MutableListModel_create(items);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #of()")
-  static <T> MutableListModel<T> create(@Nonnull Collection<? extends T> items) {
+  static <T> MutableListModel<T> create(Collection<? extends T> items) {
     return UIInternal.get()._MutableListModel_create(items);
   }
 
   @RequiredUIAccess
-  default void add(@Nonnull E e) {
+  default void add(E e) {
     add(e, getSize());
   }
 
   @RequiredUIAccess
-  void add(@Nonnull E e, int index);
+  void add(E e, int index);
 
   @RequiredUIAccess
-  void remove(@Nonnull E e);
+  void remove(E e);
 
   @RequiredUIAccess
   void removeAll();
@@ -60,7 +56,7 @@ public interface MutableListModel<E> extends ListModel<E> {
    * @return oldItems
    */
   @RequiredUIAccess
-  List<E> replaceAll(@Nonnull Iterable<E> newItems);
+  List<E> replaceAll(Iterable<E> newItems);
 
-  Disposable adddListener(@Nonnull MutableListModelListener<E> modelListener);
+  Disposable adddListener(MutableListModelListener<E> modelListener);
 }

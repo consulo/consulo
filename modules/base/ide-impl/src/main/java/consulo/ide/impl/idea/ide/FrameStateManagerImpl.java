@@ -29,7 +29,6 @@ import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceImpl
@@ -96,17 +95,17 @@ public class FrameStateManagerImpl extends FrameStateManager {
   }
 
   @Override
-  public void addListener(@Nonnull FrameStateListener listener) {
+  public void addListener(FrameStateListener listener) {
     myDispatcher.addListener(listener);
   }
 
   @Override
-  public void addListener(@Nonnull FrameStateListener listener, @Nonnull Disposable disposable) {
+  public void addListener(FrameStateListener listener, Disposable disposable) {
     myDispatcher.addListener(listener, disposable);
   }
 
   @Override
-  public void removeListener(@Nonnull FrameStateListener listener) {
+  public void removeListener(FrameStateListener listener) {
     myDispatcher.addListener(listener);
   }
 }

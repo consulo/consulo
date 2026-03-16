@@ -17,7 +17,6 @@ package consulo.diff;
 
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
@@ -25,7 +24,7 @@ public class DiffNavigationContext {
   private final String myTargetString;
   private final Iterable<String> myPreviousLinesIterable;
 
-  public DiffNavigationContext(@Nonnull Iterable<String> previousLinesIterable, @Nonnull String targetString) {
+  public DiffNavigationContext(Iterable<String> previousLinesIterable, String targetString) {
     myPreviousLinesIterable = previousLinesIterable;
     myTargetString = targetString;
   }
@@ -39,7 +38,7 @@ public class DiffNavigationContext {
   }
 
 
-  public int contextMatchCheck(@Nonnull Iterator<Pair<Integer, CharSequence>> changedLinesIterator) {
+  public int contextMatchCheck(Iterator<Pair<Integer, CharSequence>> changedLinesIterator) {
     // we ignore spaces.. at least at start/end, since some version controls could ignore their changes when doing annotate
     Iterator<? extends CharSequence> iterator = getPreviousLinesIterable().iterator();
 

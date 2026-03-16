@@ -33,8 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.SystemIndependent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,12 +91,12 @@ public class ProgramParametersConfigurator {
   }
 
   @Nullable
-  protected String getDefaultWorkingDir(@Nonnull Project project) {
+  protected String getDefaultWorkingDir(Project project) {
     return VirtualFilePathUtil.getLocalPath(project.getBaseDir());
   }
 
   @Nullable
-  protected String getDefaultWorkingDir(@Nonnull Module module) {
+  protected String getDefaultWorkingDir(Module module) {
     for (WorkingDirectoryProvider provider : module.getApplication().getExtensionList(WorkingDirectoryProvider.class)) {
       @SystemIndependent String path = provider.getWorkingDirectoryPath(module);
       if (path != null) return path;

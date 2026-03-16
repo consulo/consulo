@@ -19,8 +19,7 @@ import consulo.annotation.component.ActionImpl;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "ExtractInterface")
 public class ExtractInterfaceAction extends ExtractSuperActionBase {
@@ -31,7 +30,7 @@ public class ExtractInterfaceAction extends ExtractSuperActionBase {
 
     @Nullable
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider supportProvider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider supportProvider) {
         return supportProvider.getExtractInterfaceHandler();
     }
 }

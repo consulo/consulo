@@ -16,14 +16,13 @@
 package consulo.language.pom.event;
 
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ik
  */
 public interface TreeChange {
 
-  @Nonnull
+  
   ASTNode[] getAffectedChildren();
 
   ChangeInfo getChangeByChild(ASTNode child);

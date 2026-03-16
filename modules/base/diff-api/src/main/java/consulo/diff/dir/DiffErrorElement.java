@@ -22,9 +22,9 @@ import consulo.diff.content.DiffContent;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,7 +36,7 @@ public class DiffErrorElement extends DiffElement {
     this("Can't load children", "");
   }
 
-  public DiffErrorElement(@Nonnull String message, @Nonnull String description) {
+  public DiffErrorElement(String message, String description) {
     myMessage = message;
   }
 
@@ -45,7 +45,7 @@ public class DiffErrorElement extends DiffElement {
     return "";
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myMessage;
@@ -71,7 +71,7 @@ public class DiffErrorElement extends DiffElement {
     return EMPTY_ARRAY;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public byte[] getContent() throws IOException {
     return null;
@@ -87,8 +87,8 @@ public class DiffErrorElement extends DiffElement {
     return PlatformIconGroup.generalError();
   }
 
-  @Nonnull
-  public DiffContent createDiffContent(@jakarta.annotation.Nullable Project project, @Nonnull ProgressIndicator indicator)
+  
+  public DiffContent createDiffContent(@Nullable Project project, ProgressIndicator indicator)
           throws DiffRequestProducerException, ProcessCanceledException {
     throw new DiffRequestProducerException(myMessage);
   }

@@ -23,20 +23,19 @@ import consulo.versionControlSystem.log.*;
 import consulo.versionControlSystem.log.base.SingletonRefGroup;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public abstract class BranchPopupBuilder {
-  @Nonnull
+  
   private final VcsLogDataPack myDataPack;
   @Nullable
   private final Collection<VirtualFile> myVisibleRoots;
   @Nullable
   private final List<List<String>> myRecentItems;
 
-  protected BranchPopupBuilder(@Nonnull VcsLogDataPack dataPack,
+  protected BranchPopupBuilder(VcsLogDataPack dataPack,
                                @Nullable Collection<VirtualFile> visibleRoots,
                                @Nullable List<List<String>> recentItems) {
     myDataPack = dataPack;
@@ -44,14 +43,14 @@ public abstract class BranchPopupBuilder {
     myRecentItems = recentItems;
   }
 
-  @Nonnull
-  protected abstract AnAction createAction(@Nonnull String name);
+  
+  protected abstract AnAction createAction(String name);
 
-  protected void createRecentAction(@Nonnull DefaultActionGroup actionGroup, @Nonnull List<String> recentItem) {
+  protected void createRecentAction(DefaultActionGroup actionGroup, List<String> recentItem) {
     assert myRecentItems == null;
   }
 
-  @Nonnull
+  
   protected AnAction createCollapsedAction(String actionName) {
     return createAction(actionName);
   }
@@ -60,7 +59,7 @@ public abstract class BranchPopupBuilder {
     return createActions(prepareGroups(myDataPack, myVisibleRoots, myRecentItems));
   }
 
-  private static Groups prepareGroups(@Nonnull VcsLogDataPack dataPack,
+  private static Groups prepareGroups(VcsLogDataPack dataPack,
                                       @Nullable Collection<VirtualFile> visibleRoots,
                                       @Nullable List<List<String>> recentItems) {
     Groups filteredGroups = new Groups();
@@ -92,7 +91,7 @@ public abstract class BranchPopupBuilder {
     return filteredGroups;
   }
 
-  private DefaultActionGroup createActions(@Nonnull Groups groups) {
+  private DefaultActionGroup createActions(Groups groups) {
     DefaultActionGroup actionGroup = new DefaultActionGroup();
     for (String actionName : groups.singletonGroups) {
       actionGroup.add(createAction(actionName));

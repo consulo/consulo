@@ -18,7 +18,6 @@ package consulo.index.io;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.io.*;
 import java.nio.ByteBuffer;
 
@@ -66,7 +65,7 @@ public class RandomAccessDataFile implements Forceable, Closeable {
     }
   }
 
-  @Nonnull
+  
   public File getFile() {
     return myFile;
   }

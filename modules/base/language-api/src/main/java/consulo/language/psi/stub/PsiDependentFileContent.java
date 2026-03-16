@@ -4,13 +4,12 @@ package consulo.language.psi.stub;
 import consulo.language.ast.LighterAST;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 public interface PsiDependentFileContent extends FileContent {
   @Override
-  @Nonnull
+  
   PsiFile getPsiFile();
 
-  @Nonnull
+  
   LighterAST getLighterAST();
 }

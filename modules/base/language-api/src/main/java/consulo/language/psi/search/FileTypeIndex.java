@@ -23,7 +23,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -38,16 +37,16 @@ public class FileTypeIndex {
   @Deprecated
   public static final ID<FileType, Void> NAME = ID.create("filetypes");
 
-  @Nonnull
-  public static Collection<VirtualFile> getFiles(@Nonnull FileType fileType, @Nonnull SearchScope scope) {
+  
+  public static Collection<VirtualFile> getFiles(FileType fileType, SearchScope scope) {
     return FilenameIndex.getService().getFilesWithFileType(fileType, scope);
   }
 
-  public static boolean containsFileOfType(@Nonnull FileType type, @Nonnull SearchScope scope) {
+  public static boolean containsFileOfType(FileType type, SearchScope scope) {
     return !processFiles(type, CommonProcessors.alwaysFalse(), scope);
   }
 
-  public static boolean processFiles(@Nonnull FileType fileType, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope scope) {
+  public static boolean processFiles(FileType fileType, Processor<? super VirtualFile> processor, SearchScope scope) {
     return FilenameIndex.getService().processFilesWithFileType(fileType, processor, scope);
   }
 }

@@ -37,8 +37,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -79,7 +78,7 @@ public class TabAction extends EditorAction {
         return Integer.MIN_VALUE;
     }
 
-    private static void insertTabAtCaret(Editor editor, @Nonnull Caret caret, @Nullable Project project) {
+    private static void insertTabAtCaret(Editor editor, Caret caret, @Nullable Project project) {
         CodeEditorInternalHelper.getInstance().hideCursorInEditor(editor);
         int columnNumber;
         if (caret.hasSelection()) {

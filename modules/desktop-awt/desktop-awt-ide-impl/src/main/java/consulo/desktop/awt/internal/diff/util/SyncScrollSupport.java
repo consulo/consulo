@@ -26,8 +26,7 @@ import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public class SyncScrollSupport {
         boolean isSyncScrollEnabled();
 
         @RequiredUIAccess
-        int transfer(@Nonnull Side baseSide, int line);
+        int transfer(Side baseSide, int line);
     }
 
     public interface Support {
@@ -50,17 +49,17 @@ public class SyncScrollSupport {
     }
 
     public static class TwosideSyncScrollSupport extends SyncScrollSupportBase {
-        @Nonnull
+        
         private final List<? extends Editor> myEditors;
-        @Nonnull
+        
         private final SyncScrollable myScrollable;
 
-        @Nonnull
+        
         private final ScrollHelper myHelper1;
-        @Nonnull
+        
         private final ScrollHelper myHelper2;
 
-        public TwosideSyncScrollSupport(@Nonnull List<? extends Editor> editors, @Nonnull SyncScrollable scrollable) {
+        public TwosideSyncScrollSupport(List<? extends Editor> editors, SyncScrollable scrollable) {
             myEditors = editors;
             myScrollable = scrollable;
 
@@ -69,18 +68,18 @@ public class SyncScrollSupport {
         }
 
         @Override
-        @Nonnull
+        
         protected List<? extends Editor> getEditors() {
             return myEditors;
         }
 
         @Override
-        @Nonnull
+        
         protected List<? extends ScrollHelper> getScrollHelpers() {
             return Arrays.asList(myHelper1, myHelper2);
         }
 
-        @Nonnull
+        
         public SyncScrollable getScrollable() {
             return myScrollable;
         }
@@ -106,40 +105,40 @@ public class SyncScrollSupport {
         }
 
         public void makeVisible(
-            @Nonnull Side masterSide,
+            Side masterSide,
             int startLine1, int endLine1, int startLine2, int endLine2,
             boolean animate
         ) {
             doMakeVisible(masterSide.getIndex(), new int[]{startLine1, startLine2}, new int[]{endLine1, endLine2}, animate);
         }
 
-        @Nonnull
-        private ScrollHelper create(@Nonnull Side side) {
+        
+        private ScrollHelper create(Side side) {
             return ScrollHelper.create(myEditors, side.getIndex(), side.other().getIndex(), myScrollable, side);
         }
     }
 
     public static class ThreesideSyncScrollSupport extends SyncScrollSupportBase {
-        @Nonnull
+        
         private final List<? extends Editor> myEditors;
-        @Nonnull
+        
         private final SyncScrollable myScrollable12;
-        @Nonnull
+        
         private final SyncScrollable myScrollable23;
 
-        @Nonnull
+        
         private final ScrollHelper myHelper12;
-        @Nonnull
+        
         private final ScrollHelper myHelper21;
-        @Nonnull
+        
         private final ScrollHelper myHelper23;
-        @Nonnull
+        
         private final ScrollHelper myHelper32;
 
         public ThreesideSyncScrollSupport(
-            @Nonnull List<? extends Editor> editors,
-            @Nonnull SyncScrollable scrollable12,
-            @Nonnull SyncScrollable scrollable23
+            List<? extends Editor> editors,
+            SyncScrollable scrollable12,
+            SyncScrollable scrollable23
         ) {
             assert editors.size() == 3;
 
@@ -154,24 +153,24 @@ public class SyncScrollSupport {
             myHelper32 = create(ThreeSide.RIGHT, ThreeSide.BASE);
         }
 
-        @Nonnull
+        
         @Override
         protected List<? extends Editor> getEditors() {
             return myEditors;
         }
 
-        @Nonnull
+        
         @Override
         protected List<? extends ScrollHelper> getScrollHelpers() {
             return Arrays.asList(myHelper12, myHelper21, myHelper23, myHelper32);
         }
 
-        @Nonnull
+        
         public SyncScrollable getScrollable12() {
             return myScrollable12;
         }
 
-        @Nonnull
+        
         public SyncScrollable getScrollable23() {
             return myScrollable23;
         }
@@ -214,12 +213,12 @@ public class SyncScrollSupport {
             }
         }
 
-        public void makeVisible(@Nonnull ThreeSide masterSide, int[] startLines, int[] endLines, boolean animate) {
+        public void makeVisible(ThreeSide masterSide, int[] startLines, int[] endLines, boolean animate) {
             doMakeVisible(masterSide.getIndex(), startLines, endLines, animate);
         }
 
-        @Nonnull
-        private ScrollHelper create(@Nonnull ThreeSide master, @Nonnull ThreeSide slave) {
+        
+        private ScrollHelper create(ThreeSide master, ThreeSide slave) {
             assert master != slave;
             assert master == ThreeSide.BASE || slave == ThreeSide.BASE;
 
@@ -264,10 +263,10 @@ public class SyncScrollSupport {
             assert myDuringSyncScrollDepth >= 0;
         }
 
-        @Nonnull
+        
         protected abstract List<? extends Editor> getEditors();
 
-        @Nonnull
+        
         protected abstract List<? extends ScrollHelper> getScrollHelpers();
 
         protected void doMakeVisible(int masterIndex, int[] startLines, int[] endLines, boolean animate) {
@@ -325,7 +324,7 @@ public class SyncScrollSupport {
     }
 
     private static abstract class ScrollHelper implements VisibleAreaListener {
-        @Nonnull
+        
         private final List<? extends Editor> myEditors;
         private final int myMasterIndex;
         private final int mySlaveIndex;
@@ -333,19 +332,19 @@ public class SyncScrollSupport {
         @Nullable
         private Anchor myAnchor;
 
-        public ScrollHelper(@Nonnull List<? extends Editor> editors, int masterIndex, int slaveIndex) {
+        public ScrollHelper(List<? extends Editor> editors, int masterIndex, int slaveIndex) {
             myEditors = editors;
             myMasterIndex = masterIndex;
             mySlaveIndex = slaveIndex;
         }
 
-        @Nonnull
+        
         public static ScrollHelper create(
-            @Nonnull List<? extends Editor> editors,
+            List<? extends Editor> editors,
             int masterIndex,
             int slaveIndex,
-            @Nonnull final SyncScrollable scrollable,
-            @Nonnull final Side side
+            final SyncScrollable scrollable,
+            final Side side
         ) {
             return new ScrollHelper(editors, masterIndex, slaveIndex) {
                 @Override
@@ -394,12 +393,12 @@ public class SyncScrollSupport {
             return mySlaveIndex;
         }
 
-        @Nonnull
+        
         public Editor getMaster() {
             return myEditors.get(myMasterIndex);
         }
 
-        @Nonnull
+        
         public Editor getSlave() {
             return myEditors.get(mySlaveIndex);
         }
@@ -439,7 +438,7 @@ public class SyncScrollSupport {
         }
     }
 
-    private static void doScrollVertically(@Nonnull Editor editor, int offset, boolean animated) {
+    private static void doScrollVertically(Editor editor, int offset, boolean animated) {
         ScrollingModel model = editor.getScrollingModel();
         if (!animated) {
             model.disableAnimation();
@@ -450,7 +449,7 @@ public class SyncScrollSupport {
         }
     }
 
-    private static void doScrollHorizontally(@Nonnull Editor editor, int offset, boolean animated) {
+    private static void doScrollHorizontally(Editor editor, int offset, boolean animated) {
         ScrollingModel model = editor.getScrollingModel();
         if (!animated) {
             model.disableAnimation();
@@ -461,14 +460,14 @@ public class SyncScrollSupport {
         }
     }
 
-    private static int getHeaderOffset(@Nonnull Editor editor) {
+    private static int getHeaderOffset(Editor editor) {
         JComponent header = editor.getHeaderComponent();
         return header == null ? 0 : header.getHeight();
     }
 
-    @Nonnull
+    
     public static int[] getTargetOffsets(
-        @Nonnull Editor editor1, @Nonnull Editor editor2,
+        Editor editor1, Editor editor2,
         int startLine1, int endLine1, int startLine2, int endLine2,
         int preferredTopShift
     ) {
@@ -480,8 +479,8 @@ public class SyncScrollSupport {
         );
     }
 
-    @Nonnull
-    private static int[] getTargetOffsets(@Nonnull Editor[] editors, int[] startLines, int[] endLines, int preferredTopShift) {
+    
+    private static int[] getTargetOffsets(Editor[] editors, int[] startLines, int[] endLines, int preferredTopShift) {
         int count = editors.length;
         assert startLines.length == count;
         assert endLines.length == count;

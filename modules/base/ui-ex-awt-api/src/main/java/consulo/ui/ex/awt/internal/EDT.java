@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.internal;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**

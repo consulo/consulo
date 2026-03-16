@@ -6,8 +6,6 @@ import consulo.diff.DiffContentFactory;
 import consulo.diff.content.DiffContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author oleg
@@ -16,10 +14,10 @@ import jakarta.annotation.Nonnull;
 public abstract class DiffPreviewProvider {
     //public static final ExtensionPointName<DiffPreviewProvider> EP_NAME = ExtensionPointName.create("consulo.diffPreviewProvider");
 
-    @Nonnull
+    
     public abstract DiffContent[] createContents();
 
-    @Nonnull
+    
     public static DiffContent[] getContents() {
         // Assuming that standalone IDE should provide one provider
         //List<DiffPreviewProvider> providers = EP_NAME.getExtensionList();
@@ -29,18 +27,18 @@ public abstract class DiffPreviewProvider {
         return createContent(LEFT_TEXT, CENTER_TEXT, RIGHT_TEXT, PlainTextFileType.INSTANCE);
     }
 
-    @Nonnull
+    
     public static DiffContent[] createContent(
-        @Nonnull String left,
-        @Nonnull String center,
-        @Nonnull String right,
-        @Nonnull FileType fileType
+        String left,
+        String center,
+        String right,
+        FileType fileType
     ) {
         return new DiffContent[]{createContent(left, fileType), createContent(center, fileType), createContent(right, fileType)};
     }
 
-    @Nonnull
-    private static DiffContent createContent(@Nonnull String text, @Nonnull FileType fileType) {
+    
+    private static DiffContent createContent(String text, FileType fileType) {
         return DiffContentFactory.getInstance().create(text, fileType);
     }
 

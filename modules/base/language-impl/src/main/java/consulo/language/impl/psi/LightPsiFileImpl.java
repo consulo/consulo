@@ -33,8 +33,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFileEx, PsiElementWithSubtreeChangeNotifier {
     private static final Logger LOG = Logger.getInstance(LightPsiFileImpl.class);
@@ -45,7 +44,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     private final PsiManagerImpl myManager;
     private final Language myLanguage;
 
-    public LightPsiFileImpl(@Nonnull FileViewProvider provider, @Nonnull Language language) {
+    public LightPsiFileImpl(FileViewProvider provider, Language language) {
         myViewProvider = provider;
         myManager = (PsiManagerImpl) provider.getManager();
         myLanguage = language;
@@ -116,7 +115,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return clone;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getName() {
@@ -125,7 +124,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
         subtreeChanged();
         return PsiFileImplUtil.setName(this, name);
@@ -182,7 +181,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    @Nonnull
+    
     public PsiFile getOriginalFile() {
         return myOriginalFile == null ? this : myOriginalFile;
     }
@@ -192,7 +191,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    @Nonnull
+    
     public PsiFile[] getPsiRoots() {
         return new PsiFile[]{this};
     }
@@ -204,25 +203,25 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Language getLanguage() {
         return myLanguage;
     }
 
     @Override
-    @Nonnull
+    
     public FileViewProvider getViewProvider() {
         return myViewProvider;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiManager getManager() {
         return myManager;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Project getProject() {
@@ -231,7 +230,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @Override
     @RequiredReadAction
-    public void acceptChildren(@Nonnull PsiElementVisitor visitor) {
+    public void acceptChildren(PsiElementVisitor visitor) {
         PsiElement child = getFirstChild();
         while (child != null) {
             PsiElement nextSibling = child.getNextSibling();
@@ -247,18 +246,18 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    public final void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public final void checkAdd(PsiElement element) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
     }
 
     @Override
-    @Nonnull
+    
     public synchronized PsiReference[] getReferences() {
         return SharedPsiElementImplUtil.getReferences(this);
     }
 
     @Override
-    @Nonnull
+    
     public SearchScope getUseScope() {
         return ResolveScopeManager.getElementUseScope(this);
     }
@@ -282,7 +281,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public char[] textToCharArray() {
         return CharArrayUtil.fromSequence(getViewProvider().getContents());
     }
@@ -303,7 +302,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public abstract PsiElement[] getChildren();
 
     @RequiredReadAction
@@ -320,7 +319,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
         return children.length == 0 ? null : children[children.length - 1];
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -346,13 +345,13 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return textMatches(element.getText());
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull CharSequence text) {
+    public boolean textMatches(CharSequence text) {
         return text.equals(getViewProvider().getContents());
     }
 
@@ -363,19 +362,19 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
     }
 
     @Override
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
     @RequiredWriteAction
     @Override
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
     @RequiredWriteAction
     @Override
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 
@@ -387,7 +386,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredWriteAction
     @Override
-    public final PsiElement addRangeBefore(@Nonnull PsiElement first, @Nonnull PsiElement last, PsiElement anchor)
+    public final PsiElement addRangeBefore(PsiElement first, PsiElement last, PsiElement anchor)
         throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
@@ -407,7 +406,7 @@ public abstract class LightPsiFileImpl extends PsiElementBase implements PsiFile
 
     @RequiredWriteAction
     @Override
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         throw new IncorrectOperationException("Not implemented");
     }
 

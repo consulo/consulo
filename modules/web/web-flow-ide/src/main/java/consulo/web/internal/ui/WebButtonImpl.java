@@ -26,8 +26,7 @@ import consulo.ui.event.details.InputDetails;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -69,7 +68,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return myTextValue;
@@ -77,12 +76,12 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
 
     @RequiredUIAccess
     @Override
-    public void setText(@Nonnull LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         myTextValue = text;
         toVaadinComponent().setText(text.get());
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
@@ -95,7 +94,7 @@ public class WebButtonImpl extends VaadinComponentDelegate<WebButtonImpl.Vaadin>
     }
 
     @Override
-    public void invoke(@Nonnull InputDetails inputDetails) {
+    public void invoke(InputDetails inputDetails) {
 
     }
 

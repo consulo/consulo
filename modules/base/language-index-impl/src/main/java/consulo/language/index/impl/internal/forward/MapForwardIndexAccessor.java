@@ -3,13 +3,12 @@ package consulo.language.index.impl.internal.forward;
 
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.InputData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
 public class MapForwardIndexAccessor<Key, Value> extends AbstractMapForwardIndexAccessor<Key, Value, Map<Key, Value>> {
-  public MapForwardIndexAccessor(@Nonnull DataExternalizer<Map<Key, Value>> externalizer) {
+  public MapForwardIndexAccessor(DataExternalizer<Map<Key, Value>> externalizer) {
     super(externalizer);
   }
 
@@ -20,13 +19,13 @@ public class MapForwardIndexAccessor<Key, Value> extends AbstractMapForwardIndex
   }
 
   @Override
-  protected int getBufferInitialSize(@Nonnull Map<Key, Value> map) {
+  protected int getBufferInitialSize(Map<Key, Value> map) {
     return 4 * map.size();
   }
 
   @Nullable
   @Override
-  public Map<Key, Value> convertToDataType(@Nonnull InputData<Key, Value> data) {
+  public Map<Key, Value> convertToDataType(InputData<Key, Value> data) {
     return data.getKeyValues();
   }
 }

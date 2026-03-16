@@ -23,7 +23,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.ex.action.ActionGroup;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,8 +38,8 @@ public class AddToFavoritesPopupAction extends QuickSwitchSchemeAction {
 
     @Override
     protected void fillActions(Project project,
-                               @Nonnull ActionGroup.Builder group,
-                               @Nonnull DataContext dataContext) {
+                               ActionGroup.Builder group,
+                               DataContext dataContext) {
         List<String> availableFavoritesLists = FavoritesManagerImpl.getInstance(project).getAvailableFavoritesListNames();
         availableFavoritesLists.remove(dataContext.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY));
 

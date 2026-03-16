@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.AdjustComponentWhenShown;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -144,7 +143,7 @@ public class ChangesBrowserDialog extends DialogWrapper {
     }
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     if (myMode == Mode.Simple) {

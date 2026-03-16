@@ -25,7 +25,6 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.refactoring.internal.unwrap.UnwrapHelper;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,29 +33,29 @@ import java.util.function.Function;
 public class ScopeHighlighter {
   public static final Function<PsiElement, TextRange> NATURAL_RANGER = PsiElement::getTextRange;
 
-  @Nonnull
+  
   private final Editor myEditor;
-  @Nonnull
+  
   private final List<RangeHighlighter> myActiveHighliters = new ArrayList<>();
-  @Nonnull
+  
   private final Function<? super PsiElement, ? extends TextRange> myRanger;
 
-  public ScopeHighlighter(@Nonnull Editor editor) {
+  public ScopeHighlighter(Editor editor) {
     this(editor, NATURAL_RANGER);
   }
 
-  public ScopeHighlighter(@Nonnull Editor editor, @Nonnull Function<? super PsiElement, ? extends TextRange> ranger) {
+  public ScopeHighlighter(Editor editor, Function<? super PsiElement, ? extends TextRange> ranger) {
     myEditor = editor;
     myRanger = ranger;
   }
 
-  public void highlight(@Nonnull PsiElement wholeAffected, @Nonnull List<? extends PsiElement> toExtract) {
+  public void highlight(PsiElement wholeAffected, List<? extends PsiElement> toExtract) {
     Pair<TextRange, List<TextRange>> ranges = collectTextRanges(wholeAffected, toExtract);
 
     highlight(ranges);
   }
 
-  public void highlight(@Nonnull Pair<TextRange, List<TextRange>> ranges) {
+  public void highlight(Pair<TextRange, List<TextRange>> ranges) {
     dropHighlight();
 
     TextRange wholeRange = ranges.first;
@@ -83,7 +82,7 @@ public class ScopeHighlighter {
     return Pair.create(affectedRange, rangesToExtract);
   }
 
-  @Nonnull
+  
   private TextRange getRange(PsiElement e) {
     return myRanger.apply(e);
   }

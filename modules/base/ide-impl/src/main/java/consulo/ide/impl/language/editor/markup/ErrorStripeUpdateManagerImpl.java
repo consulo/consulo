@@ -37,8 +37,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -57,7 +56,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
   }
 
   @Override
-  public void repaintErrorStripePanel(@Nonnull Editor editor) {
+  public void repaintErrorStripePanel(Editor editor) {
     if (!myProject.isInitialized()) return;
     // Read PsiFile on background thread to avoid blocking EDT with read lock
     ReadAction.nonBlocking(() -> myPsiDocumentManager.getPsiFile(editor.getDocument()))
@@ -73,7 +72,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
 
   @Override
   @RequiredUIAccess
-  public void repaintErrorStripePanel(@Nonnull Editor editor, @Nullable PsiFile psiFile) {
+  public void repaintErrorStripePanel(Editor editor, @Nullable PsiFile psiFile) {
     UIAccess.assertIsUIThread();
     if (!myProject.isInitialized()) return;
     EditorMarkupModel markup = (EditorMarkupModel)editor.getMarkupModel();
@@ -85,7 +84,7 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
 
   @Override
   @RequiredUIAccess
-  public void setOrRefreshErrorStripeRenderer(@Nonnull EditorMarkupModel editorMarkupModel, @Nullable PsiFile file) {
+  public void setOrRefreshErrorStripeRenderer(EditorMarkupModel editorMarkupModel, @Nullable PsiFile file) {
     UIAccess.assertIsUIThread();
     if (!editorMarkupModel.isErrorStripeVisible() || !DaemonCodeAnalyzer.getInstance(myProject).isHighlightingAvailable(file)) {
       return;
@@ -103,13 +102,12 @@ public class ErrorStripeUpdateManagerImpl extends ErrorStripeUpdateManager {
     editorMarkupModel.setErrorStripeRenderer(createRenderer(editor, file));
   }
 
-  @Nonnull
   private ErrorStripTooltipRendererProvider createTooltipRenderer(Editor editor) {
     return new DaemonTooltipRendererProvider(myProject, editor);
   }
 
   @Nullable
-  protected ErrorStripeRenderer createRenderer(@Nonnull Editor editor, @Nullable PsiFile file) {
+  protected ErrorStripeRenderer createRenderer(Editor editor, @Nullable PsiFile file) {
     return new TrafficLightRenderer(myProject, editor.getDocument());
   }
 }

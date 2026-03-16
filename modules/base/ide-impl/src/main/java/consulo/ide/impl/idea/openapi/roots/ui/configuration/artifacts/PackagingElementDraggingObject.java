@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.Pack
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public abstract class PackagingElementDraggingObject {
   public void beforeDrop() {
   }
 
-  public boolean canDropInto(@Nonnull PackagingElementNode node) {
+  public boolean canDropInto(PackagingElementNode node) {
     return true;
   }
 }

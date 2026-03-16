@@ -19,7 +19,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -41,7 +40,7 @@ public class NewScratchFileAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         getTemplatePresentation().setTextValue(myActionText.getValue());
 
         Project project = e.getData(Project.KEY);
@@ -55,7 +54,7 @@ public class NewScratchFileAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -76,7 +75,7 @@ public class NewScratchFileAction extends DumbAwareAction {
         }
     }
 
-    private void updatePresentationTextAndIcon(@Nonnull AnActionEvent e, @Nonnull Presentation presentation) {
+    private void updatePresentationTextAndIcon(AnActionEvent e, Presentation presentation) {
         presentation.setTextValue(myActionText.getValue());
         presentation.setIcon(ICON);
         if (ActionPlaces.MAIN_MENU.equals(e.getPlace()) && !NewActionGroup.isActionInNewPopupMenu(this)) {

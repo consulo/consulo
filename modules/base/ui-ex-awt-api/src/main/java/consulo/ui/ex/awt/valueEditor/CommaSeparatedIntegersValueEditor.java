@@ -1,8 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.valueEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,13 +11,13 @@ public class CommaSeparatedIntegersValueEditor extends TextFieldValueEditor<List
   private final int myMinValue;
   private final int myMaxValue;
 
-  public CommaSeparatedIntegersValueEditor(@Nonnull JTextField field, @Nullable String valueName, int minValue, int maxValue) {
+  public CommaSeparatedIntegersValueEditor(JTextField field, @Nullable String valueName, int minValue, int maxValue) {
     super(field, valueName, Collections.emptyList());
     myMinValue = minValue;
     myMaxValue = maxValue;
   }
 
-  @Nonnull
+  
   @Override
   public List<Integer> parseValue(@Nullable String text) throws ValueValidationException {
     if (text == null || text.isEmpty()) return Collections.emptyList();
@@ -41,16 +40,16 @@ public class CommaSeparatedIntegersValueEditor extends TextFieldValueEditor<List
   }
 
   @Override
-  public String valueToString(@Nonnull List<Integer> valueList) {
+  public String valueToString(List<Integer> valueList) {
     return intListToString(valueList);
   }
 
   @Override
-  public boolean isValid(@Nonnull List<Integer> value) {
+  public boolean isValid(List<Integer> value) {
     return true;
   }
 
-  public static String intListToString(@Nonnull List<Integer> valueList) {
+  public static String intListToString(List<Integer> valueList) {
     StringBuilder sb = new StringBuilder();
     for (Integer value : valueList) {
       if (sb.length() != 0) sb.append(", ");

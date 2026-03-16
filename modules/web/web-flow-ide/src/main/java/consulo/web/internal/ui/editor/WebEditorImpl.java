@@ -30,8 +30,7 @@ import consulo.util.dataholder.Key;
 import consulo.web.internal.ui.base.ComponentHolder;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -51,9 +50,8 @@ public class WebEditorImpl extends CodeEditorBase {
       super(text);
     }
 
-    @Nullable
     @Override
-    public consulo.ui.Component toUIComponent() {
+    public consulo.ui.@Nullable Component toUIComponent() {
       return myComponent;
     }
 
@@ -64,7 +62,7 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   private static class EditorComponent extends VaadinComponentDelegate<Vaadin> implements HasFocus {
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
       Vaadin vaadin = new Vaadin("");
@@ -82,7 +80,7 @@ public class WebEditorImpl extends CodeEditorBase {
   private final WebEditorGutterComponentImpl myGutterComponent;
 
   @RequiredReadAction
-  public WebEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
+  public WebEditorImpl(Document document, boolean viewer, @Nullable Project project, EditorKind kind) {
     super(document, viewer, project, kind);
 
     myGutterComponent = new WebEditorGutterComponentImpl();
@@ -158,7 +156,7 @@ public class WebEditorImpl extends CodeEditorBase {
 //    return map;
 //  }
 
-//  private void runMousePressedCommand(@Nonnull final MouseDownEvent e) {
+//  private void runMousePressedCommand(final MouseDownEvent e) {
 //    //myLastMousePressedLocation = xyToLogicalPosition(e.getPoint());
 //    //myCaretStateBeforeLastPress = isToggleCaretEvent(e) ? myCaretModel.getCaretsAndSelections() : Collections.emptyList();
 //    //myCurrentDragIsSubstantial = false;
@@ -235,13 +233,13 @@ public class WebEditorImpl extends CodeEditorBase {
     super.bulkUpdateFinished();
   }
 
-  @Nonnull
+  
   @Override
   public consulo.ui.Component getUIComponent() {
     return myEditorComponent;
   }
 
-  @Nonnull
+  
   @Override
   public Component getContentUIComponent() {
     return myEditorComponent;
@@ -282,7 +280,7 @@ public class WebEditorImpl extends CodeEditorBase {
     return new WebSoftWrapModelImpl(this);
   }
 
-  @Nonnull
+  
   @Override
   protected DataContext getComponentContext() {
     return DataManager.getInstance().getDataContext(getUIComponent());
@@ -348,7 +346,7 @@ public class WebEditorImpl extends CodeEditorBase {
 
   }
 
-  @Nonnull
+  
   @Override
   public EditorGutterComponentEx getGutterComponentEx() {
     return myGutterComponent;
@@ -425,7 +423,7 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   @Override
-  public void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor) {
+  public void setCustomCursor(Object requestor, @Nullable Cursor cursor) {
 
   }
 
@@ -435,7 +433,7 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   @Override
-  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+  public int logicalPositionToOffset(LogicalPosition pos) {
     return myView.logicalPositionToOffset(pos);
   }
 
@@ -449,39 +447,39 @@ public class WebEditorImpl extends CodeEditorBase {
     return myEditorComponent.isVisible();
   }
 
-  @Nonnull
+  
   @Override
-  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
+  public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
     return new VisualPosition(logicalPos.line, logicalPos.column, logicalPos.visualPositionLeansRight);
   }
 
-  @Nonnull
+  
   @Override
-  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
+  public LogicalPosition visualToLogicalPosition(VisualPosition visiblePos) {
     return new LogicalPosition(visiblePos.getLine(), visiblePos.getColumn(), visiblePos.leansRight);
   }
 
-  @Nonnull
+  
   @Override
   public LogicalPosition offsetToLogicalPosition(int offset) {
     return myView.offsetToLogicalPosition(offset);
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition offsetToVisualPosition(int offset) {
     LogicalPosition position = myView.offsetToLogicalPosition(offset);
     return logicalToVisualPosition(position);
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
     // todo impl
     return offsetToVisualPosition(offset);
   }
 
-  @Nonnull
+  
   @Override
   public EditorGutter getGutter() {
     return getGutterComponentEx();
@@ -492,14 +490,14 @@ public class WebEditorImpl extends CodeEditorBase {
     return false;
   }
 
-  @Nonnull
-  public LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p) {
+  
+  public LogicalPosition xyToLogicalPosition(java.awt.Point p) {
     // todo fake return
     return new LogicalPosition(0, 0);
   }
 
-  @Nonnull
-  public java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible) {
+  
+  public java.awt.Point visualPositionToXY(VisualPosition visible) {
     // todo fake return
     return new Point(1, 1);
   }

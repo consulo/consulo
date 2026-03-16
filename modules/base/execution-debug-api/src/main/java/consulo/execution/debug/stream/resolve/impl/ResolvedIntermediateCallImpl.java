@@ -5,7 +5,6 @@ import consulo.execution.debug.stream.resolve.ResolvedStreamCall;
 import consulo.execution.debug.stream.trace.NextAwareState;
 import consulo.execution.debug.stream.trace.PrevAwareState;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -15,26 +14,26 @@ public class ResolvedIntermediateCallImpl implements ResolvedStreamCall.Intermed
   private final NextAwareState myStateBefore;
   private final PrevAwareState myStateAfter;
 
-  public ResolvedIntermediateCallImpl(@Nonnull IntermediateStreamCall call,
-                                      @Nonnull NextAwareState stateBefore,
-                                      @Nonnull PrevAwareState stateAfter) {
+  public ResolvedIntermediateCallImpl(IntermediateStreamCall call,
+                                      NextAwareState stateBefore,
+                                      PrevAwareState stateAfter) {
     myCall = call;
     myStateBefore = stateBefore;
     myStateAfter = stateAfter;
   }
 
   @Override
-  public @Nonnull IntermediateStreamCall getCall() {
+  public IntermediateStreamCall getCall() {
     return myCall;
   }
 
   @Override
-  public @Nonnull NextAwareState getStateBefore() {
+  public NextAwareState getStateBefore() {
     return myStateBefore;
   }
 
   @Override
-  public @Nonnull PrevAwareState getStateAfter() {
+  public PrevAwareState getStateAfter() {
     return myStateAfter;
   }
 }

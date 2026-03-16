@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.AWTComponentProvider;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -39,7 +38,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
   Key<FileEditorsSplitters> KEY = Key.create("EditorsSplitters");
   Key<Boolean> OPENED_IN_BULK = Key.create("EditorSplitters.opened.in.bulk");
 
-  static boolean isOpenedInBulk(@Nonnull VirtualFile file) {
+  static boolean isOpenedInBulk(VirtualFile file) {
     return file.getUserData(OPENED_IN_BULK) != null;
   }
 
@@ -47,8 +46,8 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   void writeExternal(Element element);
 
-  @Nonnull
-  CompletableFuture<?> openFilesAsync(@Nonnull UIAccess uiAccess);
+  
+  CompletableFuture<?> openFilesAsync(UIAccess uiAccess);
 
   int getSplitCount();
 
@@ -56,7 +55,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   void clear();
 
-  @Nonnull
+  
   FileEditorWindow getOrCreateCurrentWindow(VirtualFile file);
 
   void setCurrentWindow(FileEditorWindow window, boolean requestFocus);
@@ -66,11 +65,11 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   @Deprecated
   @DeprecationInfo("Always call async version #updateFileIconAsync()")
-  default void updateFileIcon(@Nonnull VirtualFile virtualFile) {
+  default void updateFileIcon(VirtualFile virtualFile) {
     updateFileIconAsync(virtualFile);
   }
 
-  void updateFileIconAsync(@Nonnull VirtualFile virtualFile);
+  void updateFileIconAsync(VirtualFile virtualFile);
 
   void updateFileNameAsync(VirtualFile virtualFile);
 
@@ -87,14 +86,14 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
   @RequiredUIAccess
   void closeFile(VirtualFile file, boolean moveFocus);
 
-  @Nonnull
+  
   VirtualFile[] getSelectedFiles();
 
-  @Nonnull
+  
   FileEditor[] getSelectedEditors();
 
-  @Nonnull
-  List<FileEditorWithProviderComposite> findEditorComposites(@Nonnull VirtualFile file);
+  
+  List<FileEditorWithProviderComposite> findEditorComposites(VirtualFile file);
 
   FileEditorWithProviderComposite[] getEditorsComposites();
 
@@ -118,13 +117,13 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
 
   @Nullable
   @RequiredUIAccess
-  default FileEditorWindow openInRightSplit(@Nonnull VirtualFile file) {
+  default FileEditorWindow openInRightSplit(VirtualFile file) {
     return openInRightSplit(file, true);
   }
 
   @Nullable
   @RequiredUIAccess
-  default FileEditorWindow openInRightSplit(@Nonnull VirtualFile file, boolean requestFocus) {
+  default FileEditorWindow openInRightSplit(VirtualFile file, boolean requestFocus) {
     FileEditorWindow window = getCurrentWindow();
     if (window == null) {
       return null;
@@ -132,7 +131,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
     return window.split(SwingConstants.VERTICAL, true, file, true);
   }
 
-  @Nonnull
+  
   default Component getUIComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }
@@ -140,7 +139,7 @@ public interface FileEditorsSplitters extends AWTComponentProvider {
   @Override
   @Deprecated
   @DeprecationInfo("See #getUIComponent()")
-  @Nonnull
+  
   default javax.swing.JComponent getComponent() {
     throw new UnsupportedOperationException("Unsupported platform");
   }

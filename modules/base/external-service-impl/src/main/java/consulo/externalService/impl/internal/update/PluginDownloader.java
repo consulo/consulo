@@ -39,8 +39,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -63,14 +62,14 @@ public class PluginDownloader {
     private static final String CHECKSUM_ALGORITHM = "SHA3-256";
     private static final int MAX_TRIES = 3;
 
-    @Nonnull
-    public static PluginDownloader createDownloader(@Nonnull PluginDescriptor descriptor, boolean viaUpdate) {
+    
+    public static PluginDownloader createDownloader(PluginDescriptor descriptor, boolean viaUpdate) {
         return createDownloader(descriptor, null, viaUpdate);
     }
 
-    @Nonnull
+    
     public static PluginDownloader createDownloader(
-        @Nonnull PluginDescriptor d,
+        PluginDescriptor d,
         @Nullable String platformVersion,
         boolean viaUpdate
     ) {
@@ -97,7 +96,7 @@ public class PluginDownloader {
 
     private boolean myIsPlatform;
 
-    public PluginDownloader(@Nonnull PluginDescriptor pluginDescriptor, @Nonnull PluginDownloadUrlBuilder pluginDownloadUrlBuilder) {
+    public PluginDownloader(PluginDescriptor pluginDescriptor, PluginDownloadUrlBuilder pluginDownloadUrlBuilder) {
         myPluginId = pluginDescriptor.getPluginId();
         myDescriptor = pluginDescriptor;
         myPluginDownloadUrlBuilder = pluginDownloadUrlBuilder;
@@ -108,7 +107,7 @@ public class PluginDownloader {
         return myPluginDownloadUrlBuilder.buildUrl(myDescriptor, tryIndex);
     }
 
-    public void download(@Nonnull ProgressIndicator pi) throws PluginDownloadFailedException {
+    public void download(ProgressIndicator pi) throws PluginDownloadFailedException {
         PluginDescriptor descriptor;
         if (!Boolean.getBoolean(StartupActionScriptManager.STARTUP_WIZARD_MODE) && PluginManager.findPlugin(myPluginId) != null) {
             //store old plugins file
@@ -270,8 +269,8 @@ public class PluginDownloader {
         }
     }
 
-    @Nonnull
-    private Pair<File, String> downloadPlugin(@Nonnull ProgressIndicator indicator, String expectedChecksum, int tryIndex)
+    
+    private Pair<File, String> downloadPlugin(ProgressIndicator indicator, String expectedChecksum, int tryIndex)
         throws IOException {
         File pluginsTemp = new File(ContainerPathManager.get().getPluginTempPath());
         if (!pluginsTemp.exists() && !pluginsTemp.mkdirs()) {
@@ -314,22 +313,22 @@ public class PluginDownloader {
         }
     }
 
-    @Nonnull
+    
     public PluginId getPluginId() {
         return myPluginId;
     }
 
-    @Nonnull
+    
     private String getFileName() {
         return myPluginId + "_" + myDescriptor.getVersion() + (myIsPlatform ? ".tar.gz" : ".zip");
     }
 
-    @Nonnull
+    
     public String getPluginName() {
         return ObjectUtil.notNull(myDescriptor.getName(), myPluginId.toString());
     }
 
-    @Nonnull
+    
     public PluginDescriptor getPluginDescriptor() {
         return myDescriptor;
     }

@@ -19,20 +19,16 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface MenuItem extends Component {
-  @Nonnull
-  static MenuItem create(@Nonnull LocalizeValue text) {
+  static MenuItem create(LocalizeValue text) {
     return UIInternal.get()._MenuItem_create(text);
   }
-
-  @Nonnull
   LocalizeValue getText();
 
   void setIcon(@Nullable Image icon);

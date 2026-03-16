@@ -18,28 +18,27 @@ package consulo.versionControlSystem.log.impl.internal.util;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.PagedFileStorage;
 import consulo.index.io.PersistentBTreeEnumerator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 
 public class PersistentSetImpl<T> extends PersistentBTreeEnumerator<T> implements PersistentSet<T> {
 
-  public PersistentSetImpl(@Nonnull File file,
-                           @Nonnull KeyDescriptor<T> dataDescriptor,
+  public PersistentSetImpl(File file,
+                           KeyDescriptor<T> dataDescriptor,
                            int initialSize,
-                           @Nullable PagedFileStorage.StorageLockContext lockContext, int version) throws IOException {
+                           PagedFileStorage.@Nullable StorageLockContext lockContext, int version) throws IOException {
     super(file, dataDescriptor, initialSize, lockContext, version);
   }
 
   @Override
-  public boolean contains(@Nonnull T element) throws IOException {
+  public boolean contains(T element) throws IOException {
     return tryEnumerate(element) != NULL_ID;
   }
 
   @Override
-  public void put(@Nonnull T element) throws IOException {
+  public void put(T element) throws IOException {
     enumerate(element);
   }
 

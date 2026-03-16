@@ -21,7 +21,6 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.document.Document;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,12 +31,12 @@ import java.util.List;
  * @since 18-Mar-22
  */
 public class EditorModificationUtil {
-    public static void fillVirtualSpaceUntilCaret(@Nonnull Editor editor) {
+    public static void fillVirtualSpaceUntilCaret(Editor editor) {
         LogicalPosition position = editor.getCaretModel().getLogicalPosition();
         fillVirtualSpaceUntil(editor, position.column, position.line);
     }
 
-    public static void fillVirtualSpaceUntil(@Nonnull Editor editor, int columnNumber, int lineNumber) {
+    public static void fillVirtualSpaceUntil(Editor editor, int columnNumber, int lineNumber) {
         int offset = editor.logicalPositionToOffset(new LogicalPosition(lineNumber, columnNumber));
         String filler = EditorModificationUtil.calcStringToFillVirtualSpace(editor);
         if (!filler.isEmpty()) {
@@ -48,8 +47,8 @@ public class EditorModificationUtil {
         }
     }
 
-    @Nonnull
-    public static List<CaretState> calcBlockSelectionState(@Nonnull Editor editor, @Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+    
+    public static List<CaretState> calcBlockSelectionState(Editor editor, LogicalPosition blockStart, LogicalPosition blockEnd) {
         int startLine = Math.max(Math.min(blockStart.line, editor.getDocument().getLineCount() - 1), 0);
         int endLine = Math.max(Math.min(blockEnd.line, editor.getDocument().getLineCount() - 1), 0);
         int step = endLine < startLine ? -1 : 1;
@@ -88,48 +87,48 @@ public class EditorModificationUtil {
         return caretStates;
     }
 
-    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str) {
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str) {
         typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
     }
 
-    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, int caretShift) {
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, int caretShift) {
         typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
     }
 
-    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, boolean toProcessOverwriteMode) {
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, boolean toProcessOverwriteMode) {
         typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
     }
 
     /**
      * Inserts given string at each caret's position. Effective caret shift will be equal to <code>caretShift</code> for each caret.
      */
-    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, @Nonnull String str, boolean toProcessOverwriteMode, int caretShift)
+    public static void typeInStringAtCaretHonorMultipleCarets(Editor editor, String str, boolean toProcessOverwriteMode, int caretShift)
         throws ReadOnlyFragmentModificationException {
         editor.getCaretModel().runForEachCaret(caret -> insertStringAtCaretNoScrolling(editor, str, toProcessOverwriteMode, true, caretShift));
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
-    public static void moveAllCaretsRelatively(@Nonnull Editor editor, int caretShift) {
+    public static void moveAllCaretsRelatively(Editor editor, int caretShift) {
         editor.getCaretModel().runForEachCaret(caret -> caret.moveToOffset(caret.getOffset() + caretShift));
     }
 
-    public static void insertStringAtCaret(Editor editor, @Nonnull String s) {
+    public static void insertStringAtCaret(Editor editor, String s) {
         insertStringAtCaret(editor, s, false, true);
     }
 
-    public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode) {
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode) {
         return insertStringAtCaret(editor, s, toProcessOverwriteMode, s.length());
     }
 
-    public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
         return insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, s.length());
     }
 
-    public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, int caretShift) {
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, int caretShift) {
         return insertStringAtCaret(editor, s, toProcessOverwriteMode, true, caretShift);
     }
 
-    public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
+    public static int insertStringAtCaret(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
         int result = insertStringAtCaretNoScrolling(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
         if (toMoveCaret) {
             scrollToCaret(editor);
@@ -137,7 +136,7 @@ public class EditorModificationUtil {
         return result;
     }
 
-    private static int insertStringAtCaretNoScrolling(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
+    private static int insertStringAtCaretNoScrolling(Editor editor, String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
         SelectionModel selectionModel = editor.getSelectionModel();
         if (selectionModel.hasSelection()) {
             VisualPosition startPosition = selectionModel.getSelectionStartPosition();
@@ -219,7 +218,7 @@ public class EditorModificationUtil {
      * It scrolls to primary caret in both cases, and, in the former case, avoids performing excessive scrolling in case of large number
      * of carets.
      */
-    public static void scrollToCaret(@Nonnull Editor editor) {
+    public static void scrollToCaret(Editor editor) {
         if (editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret()) {
             editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
         }
@@ -327,12 +326,12 @@ public class EditorModificationUtil {
         return buf.toString();
     }
 
-    public static void moveCaretRelatively(@Nonnull Editor editor, int caretShift) {
+    public static void moveCaretRelatively(Editor editor, int caretShift) {
         CaretModel caretModel = editor.getCaretModel();
         caretModel.moveToOffset(caretModel.getOffset() + caretShift);
     }
 
-    public static void deleteSelectedTextForAllCarets(@Nonnull Editor editor) {
+    public static void deleteSelectedTextForAllCarets(Editor editor) {
         editor.getCaretModel().runForEachCaret(caret -> deleteSelectedText(editor));
     }
 }

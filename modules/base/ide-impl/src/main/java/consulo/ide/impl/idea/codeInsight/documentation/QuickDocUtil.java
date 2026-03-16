@@ -10,8 +10,7 @@ import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiQualifiedNamedElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.TimeUnit;
@@ -31,7 +30,7 @@ public class QuickDocUtil {
      * @return {@code true} if the action succeeded to run without interruptions, {@code false} otherwise
      */
     public static boolean runInReadActionWithWriteActionPriorityWithRetries(
-        @Nonnull Runnable action,
+        Runnable action,
         long timeout,
         long pauseBetweenRetries,
         @Nullable ProgressIndicator progressIndicator
@@ -58,7 +57,7 @@ public class QuickDocUtil {
      * progress indicator ({@link ProgressIndicatorProvider#getGlobalProgressIndicator()}).
      */
     public static boolean runInReadActionWithWriteActionPriorityWithRetries(
-        @Nonnull Runnable action,
+        Runnable action,
         long timeout,
         long pauseBetweenRetries
     ) {
@@ -70,7 +69,7 @@ public class QuickDocUtil {
         );
     }
 
-    private static boolean tryReadAction(@Nonnull Application application, @Nonnull Runnable action) {
+    private static boolean tryReadAction(Application application, Runnable action) {
         try {
             return application.tryRunReadAction(action);
         }
@@ -81,7 +80,7 @@ public class QuickDocUtil {
 
     @Contract("_, _, _, null -> null")
     public static String inferLinkFromFullDocumentation(
-        @Nonnull DocumentationProvider provider,
+        DocumentationProvider provider,
         PsiElement element,
         PsiElement originalElement,
         @Nullable String navigationInfo

@@ -47,8 +47,7 @@ import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -69,7 +68,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
     private Supplier<TestFrameworkRunningModel> myModelProvider;
     protected TestConsoleProperties myConsoleProperties;
 
-    protected AbstractRerunFailedTestsAction(@Nonnull ComponentContainer componentContainer) {
+    protected AbstractRerunFailedTestsAction(ComponentContainer componentContainer) {
         copyFrom(ActionManager.getInstance().getAction("RerunFailedTests"));
         registerCustomShortcutSet(getShortcutSet(), componentContainer.getComponent());
     }
@@ -87,7 +86,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isActive(e));
     }
 
@@ -111,8 +110,8 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         return false;
     }
 
-    @Nonnull
-    protected List<AbstractTestProxy> getFailedTests(@Nonnull Project project) {
+    
+    protected List<AbstractTestProxy> getFailedTests(Project project) {
         TestFrameworkRunningModel model = getModel();
         if (model == null) {
             return Collections.emptyList();
@@ -121,8 +120,8 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         return getFilter(project, model.getProperties().getScope()).select(model.getRoot().getAllTests());
     }
 
-    @Nonnull
-    protected Filter getFilter(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
+    
+    protected Filter getFilter(Project project, GlobalSearchScope searchScope) {
         return getFailuresFilter();
     }
 
@@ -140,7 +139,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ExecutionEnvironment environment = e.getData(ExecutionEnvironment.KEY);
         if (environment == null) {
             return;
@@ -149,7 +148,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         execute(e, environment);
     }
 
-    public void execute(@Nonnull AnActionEvent e, @Nonnull ExecutionEnvironment environment) {
+    public void execute(AnActionEvent e, ExecutionEnvironment environment) {
         MyRunProfile profile = getRunProfile(environment);
         if (profile == null) {
             return;
@@ -186,7 +185,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
             builder.setRenderer(new ColoredListCellRenderer<Executor>() {
                 @Override
                 protected void customizeCellRenderer(
-                    @Nonnull JList<? extends Executor> list,
+                    JList<? extends Executor> list,
                     Executor value,
                     int index,
                     boolean selected,
@@ -209,7 +208,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         }
     }
 
-    private static void performAction(@Nonnull ExecutionEnvironmentBuilder builder) {
+    private static void performAction(ExecutionEnvironmentBuilder builder) {
         ExecutionEnvironment environment = builder.build();
         try {
             environment.getRunner().execute(environment);
@@ -228,7 +227,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
     }
 
     @Nullable
-    protected MyRunProfile getRunProfile(@Nonnull ExecutionEnvironment environment) {
+    protected MyRunProfile getRunProfile(ExecutionEnvironment environment) {
         //noinspection deprecation
         return getRunProfile();
     }
@@ -281,13 +280,13 @@ public class AbstractRerunFailedTestsAction extends AnAction {
         }
 
         @Override
-        @Nonnull
+        
         public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
             return myConfiguration.getConfigurationEditor();
         }
 
         @Override
-        @Nonnull
+        
         public ConfigurationType getType() {
             return myConfiguration.getType();
         }
@@ -322,7 +321,7 @@ public class AbstractRerunFailedTestsAction extends AnAction {
             return myConfiguration.getPredefinedLogFiles();
         }
 
-        @Nonnull
+        
         @Override
         public ArrayList<LogFileOptions> getAllLogFiles() {
             return myConfiguration.getAllLogFiles();

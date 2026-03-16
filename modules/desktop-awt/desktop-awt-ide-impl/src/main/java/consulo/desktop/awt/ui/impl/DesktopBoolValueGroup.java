@@ -19,7 +19,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 import consulo.ui.ValueGroup;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +33,7 @@ public class DesktopBoolValueGroup extends ButtonGroup implements ValueGroup<Boo
     clearSelection();
   }
 
-  @Nonnull
+  
   @Override
   public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
     add((AbstractButton)TargetAWT.to(component));

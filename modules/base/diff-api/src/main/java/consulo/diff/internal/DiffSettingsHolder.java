@@ -25,8 +25,7 @@ import consulo.component.persist.Storage;
 import consulo.diff.DiffPlaces;
 import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -47,26 +46,26 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
   }
 
   private static class PlaceSettings {
-    @Nonnull
+    
     public List<String> DIFF_TOOLS_ORDER = new ArrayList<>();
     public boolean SYNC_BINARY_EDITOR_SETTINGS = true;
   }
 
   public static class DiffSettings {
-    @Nonnull
+    
     public SharedSettings SHARED_SETTINGS = new SharedSettings();
-    @Nonnull
+    
     public PlaceSettings PLACE_SETTINGS = new PlaceSettings();
 
     public DiffSettings() {
     }
 
-    public DiffSettings(@Nonnull SharedSettings SHARED_SETTINGS, @Nonnull PlaceSettings PLACE_SETTINGS) {
+    public DiffSettings(SharedSettings SHARED_SETTINGS, PlaceSettings PLACE_SETTINGS) {
       this.SHARED_SETTINGS = SHARED_SETTINGS;
       this.PLACE_SETTINGS = PLACE_SETTINGS;
     }
 
-    @Nonnull
+    
     public List<String> getDiffToolsOrder() {
       return PLACE_SETTINGS.DIFF_TOOLS_ORDER;
     }
@@ -79,7 +78,7 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
       SHARED_SETTINGS.SHOW_DIFF_IN_EDITOR_SETTING = value;
     }
 
-    public void setDiffToolsOrder(@Nonnull List<String> order) {
+    public void setDiffToolsOrder(List<String> order) {
       PLACE_SETTINGS.DIFF_TOOLS_ORDER = order;
     }
 
@@ -103,18 +102,18 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
     // Impl
     //
 
-    @Nonnull
+    
     public static DiffSettings getSettings() {
       return getSettings(null);
     }
 
-    @Nonnull
+    
     public static DiffSettings getSettings(@Nullable String place) {
       return getInstance().getSettings(place);
     }
   }
 
-  @Nonnull
+  
   public DiffSettings getSettings(@Nullable String place) {
     if (place == null) place = DiffPlaces.DEFAULT;
 
@@ -134,7 +133,7 @@ public class DiffSettingsHolder implements PersistentStateComponent<DiffSettings
 
   private State myState = new State();
 
-  @Nonnull
+  
   @Override
   public State getState() {
     return myState;

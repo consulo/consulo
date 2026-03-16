@@ -26,7 +26,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class ModuleListNode extends ProjectViewNode<Module> {
         super(project, value, viewSettings);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<AbstractTreeNode> getChildren() {
@@ -64,7 +63,7 @@ public class ModuleListNode extends ProjectViewNode<Module> {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         return someChildContainsFile(file);
     }
 

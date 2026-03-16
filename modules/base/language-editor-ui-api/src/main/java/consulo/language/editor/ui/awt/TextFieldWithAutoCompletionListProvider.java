@@ -23,30 +23,29 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
  * @author Roman.Chernyatchik
  */
 public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comparator<T> {
-  @Nonnull
+  
   private Collection<T> myVariants;
   @Nullable
   private String myCompletionAdvertisement;
 
   @Nullable
-  protected abstract Image getIcon(@Nonnull T item);
+  protected abstract Image getIcon(T item);
 
-  @Nonnull
-  protected abstract String getLookupString(@Nonnull T item);
-
-  @Nullable
-  protected abstract String getTailText(@Nonnull T item);
+  
+  protected abstract String getLookupString(T item);
 
   @Nullable
-  protected abstract String getTypeText(@Nonnull T item);
+  protected abstract String getTailText(T item);
+
+  @Nullable
+  protected abstract String getTypeText(T item);
 
   @Override
   public abstract int compare(T item1, T item2);
@@ -60,7 +59,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
     myVariants = (variants != null) ? variants : Collections.<T>emptyList();
   }
 
-  @Nonnull
+  
   public Collection<T> getItems(String prefix, boolean cached, CompletionParameters parameters) {
     if (prefix == null) {
       return Collections.emptyList();
@@ -79,7 +78,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
    * @return text
    */
   @Nullable
-  public String getQuickDocHotKeyAdvertisement(@Nonnull String shortcut) {
+  public String getQuickDocHotKeyAdvertisement(String shortcut) {
     String advertisementTail = getQuickDocHotKeyAdvertisementTail(shortcut);
     if (advertisementTail == null) {
       return null;
@@ -103,11 +102,11 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  public PrefixMatcher createPrefixMatcher(@Nonnull String prefix) {
+  public PrefixMatcher createPrefixMatcher(String prefix) {
     return new PlainPrefixMatcher(prefix);
   }
 
-  public LookupElementBuilder createLookupBuilder(@Nonnull T item) {
+  public LookupElementBuilder createLookupBuilder(T item) {
     LookupElementBuilder builder = LookupElementBuilder.create(item, getLookupString(item))
       .withIcon(getIcon(item));
 
@@ -129,7 +128,7 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  public String getPrefix(@Nonnull CompletionParameters parameters) {
+  public String getPrefix(CompletionParameters parameters) {
     return getCompletionPrefix(parameters);
   }
 
@@ -140,12 +139,12 @@ public abstract class TextFieldWithAutoCompletionListProvider<T> implements Comp
   }
 
   @Nullable
-  protected String getQuickDocHotKeyAdvertisementTail(@Nonnull String shortcut) {
+  protected String getQuickDocHotKeyAdvertisementTail(String shortcut) {
     return null;
   }
 
   @Nullable
-  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull T item) {
+  protected InsertHandler<LookupElement> createInsertHandler(T item) {
     return null;
   }
 }

@@ -27,25 +27,24 @@ import consulo.project.Project;
 import consulo.util.collection.MultiMap;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-08-25
  */
 public class LightProject extends BaseComponentManager implements Project {
-    @Nonnull
+    
     private final Application myApplication;
-    @Nonnull
+    
     private final String myName;
-    @Nonnull
+    
     private final LightExtensionRegistrator myRegistrator;
 
-    public LightProject(@Nonnull Application application,
-                        @Nonnull String name,
+    public LightProject(Application application,
+                        String name,
                         ComponentBinding componentBinding,
-                        @Nonnull LightExtensionRegistrator registrator) {
+                        LightExtensionRegistrator registrator) {
         super(application, name, ComponentScope.PROJECT, componentBinding, false);
         myApplication = application;
         myName = name;
@@ -59,7 +58,7 @@ public class LightProject extends BaseComponentManager implements Project {
         return ComponentProfiles.LIGHT_TEST;
     }
 
-    @Nonnull
+    
     @Override
     public Application getApplication() {
         return myApplication;
@@ -69,7 +68,7 @@ public class LightProject extends BaseComponentManager implements Project {
     protected void fillListenerDescriptors(MultiMap<String, InjectingBinding> mapByTopic) {
     }
 
-    @Nonnull
+    
     @Override
     protected InjectingContainer findRootContainer() {
         return InjectingContainer.root(getClass().getClassLoader());
@@ -81,13 +80,13 @@ public class LightProject extends BaseComponentManager implements Project {
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
 
         builder.bind(Project.class).to(this);
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
@@ -110,7 +109,7 @@ public class LightProject extends BaseComponentManager implements Project {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public String getProjectFilePath() {
         return null;
@@ -128,14 +127,14 @@ public class LightProject extends BaseComponentManager implements Project {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public String getLocationHash() {
         return null;
     }
 
     @Override
-    public void save(@Nonnull consulo.ui.UIAccess uiAccess) {
+    public void save(consulo.ui.UIAccess uiAccess) {
 
     }
 
@@ -154,7 +153,7 @@ public class LightProject extends BaseComponentManager implements Project {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

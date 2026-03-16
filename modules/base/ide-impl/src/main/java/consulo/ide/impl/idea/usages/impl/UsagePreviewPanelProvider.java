@@ -20,7 +20,6 @@ import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageContextPanelProvider;
 import consulo.usage.UsageView;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 /**
@@ -28,18 +27,18 @@ import jakarta.annotation.Nonnull;
 * @since 28-Jun-22
 */
 public class UsagePreviewPanelProvider implements UsageContextPanelProvider {
-  @Nonnull
+  
   @Override
-  public UsageContextPanel create(@Nonnull UsageView usageView) {
+  public UsageContextPanel create(UsageView usageView) {
     return new UsagePreviewPanel(((UsageViewImpl)usageView).getProject(), usageView.getPresentation(), true);
   }
 
   @Override
-  public boolean isAvailableFor(@Nonnull UsageView usageView) {
+  public boolean isAvailableFor(UsageView usageView) {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public String getTabTitle() {
     return "Preview";

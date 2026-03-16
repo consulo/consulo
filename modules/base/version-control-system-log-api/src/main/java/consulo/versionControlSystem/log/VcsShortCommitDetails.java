@@ -2,7 +2,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -21,16 +20,16 @@ import java.util.List;
  */
 public interface VcsShortCommitDetails extends TimedVcsCommit {
 
-  @Nonnull
+  
   VirtualFile getRoot();
 
-  @Nonnull
+  
   String getSubject();
 
-  @Nonnull
+  
   VcsUser getAuthor();
 
-  @Nonnull
+  
   VcsUser getCommitter();
 
   long getAuthorTime();

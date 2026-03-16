@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.FrameWrapper;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,5 +36,5 @@ public interface FrameWrapperPeerFactory {
 
   JDialog createJDialog(FrameWrapper owner, IdeFrame parent);
 
-  void updateWindowIcon(@Nonnull Window window, boolean dark);
+  void updateWindowIcon(Window window, boolean dark);
 }

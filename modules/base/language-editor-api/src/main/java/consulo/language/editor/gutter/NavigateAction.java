@@ -22,8 +22,7 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 
@@ -33,8 +32,8 @@ import java.awt.event.MouseEvent;
 public class NavigateAction<T extends PsiElement> extends AnAction {
   private final LineMarkerInfo<T> myInfo;
 
-  public NavigateAction(@Nonnull String text,
-                        @Nonnull LineMarkerInfo<T> info,
+  public NavigateAction(String text,
+                        LineMarkerInfo<T> info,
                         @Nullable String originalActionId) {
     super(text);
     myInfo = info;
@@ -44,7 +43,7 @@ public class NavigateAction<T extends PsiElement> extends AnAction {
     }
   }
 
-  public NavigateAction(@Nonnull LineMarkerInfo<T> info) {
+  public NavigateAction(LineMarkerInfo<T> info) {
     myInfo = info;
   }
 
@@ -60,8 +59,8 @@ public class NavigateAction<T extends PsiElement> extends AnAction {
     }
   }
 
-  @Nonnull
-  public static <T extends PsiElement> LineMarkerInfo<T> setNavigateAction(@Nonnull LineMarkerInfo<T> info, @Nonnull String text, @Nullable String originalActionId) {
+  
+  public static <T extends PsiElement> LineMarkerInfo<T> setNavigateAction(LineMarkerInfo<T> info, String text, @Nullable String originalActionId) {
     NavigateAction<T> action = new NavigateAction<T>(text, info, originalActionId);
     info.setNavigateAction(action);
     return info;

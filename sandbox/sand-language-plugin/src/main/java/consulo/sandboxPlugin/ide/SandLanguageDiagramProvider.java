@@ -30,8 +30,7 @@ import consulo.project.Project;
 import consulo.sandboxPlugin.lang.psi.SandFile;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,34 +38,34 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionImpl
 public class SandLanguageDiagramProvider implements LanguageGraphProvider<SandFile> {
-    @Nonnull
+    
     @Override
     public String getId() {
         return "sand";
     }
 
-    @Nonnull
+    
     @Override
-    public String getName(@Nonnull SandFile element) {
+    public String getName(SandFile element) {
         return element.getVirtualFile().getName();
     }
 
     @Override
-    public boolean isSupported(@Nonnull PsiElement element) {
+    public boolean isSupported(PsiElement element) {
         return element instanceof SandFile;
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public String getURL(@Nonnull SandFile element) {
+    public String getURL(SandFile element) {
         return element.getVirtualFile().getPath();
     }
 
     @RequiredReadAction
     @Nullable
     @Override
-    public PsiElement restoreFromURL(@Nonnull Project project, @Nonnull String url) {
+    public PsiElement restoreFromURL(Project project, String url) {
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(url);
         if (file == null || !file.isValid()) {
             return null;
@@ -80,9 +79,9 @@ public class SandLanguageDiagramProvider implements LanguageGraphProvider<SandFi
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public GraphBuilder createBuilder(@Nonnull SandFile element) {
+    public GraphBuilder createBuilder(SandFile element) {
         GraphBuilderFactory graphBuilderFactory = GraphBuilderFactory.getInstance();
 
         GraphBuilder builder = graphBuilderFactory.createBuilder();

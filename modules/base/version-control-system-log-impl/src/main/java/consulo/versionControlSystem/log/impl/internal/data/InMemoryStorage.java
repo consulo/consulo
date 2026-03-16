@@ -22,8 +22,7 @@ import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.VcsLogStorage;
 import consulo.versionControlSystem.log.VcsRef;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -32,15 +31,15 @@ public class InMemoryStorage implements VcsLogStorage {
     private final BiDirectionalEnumerator<VcsRef> myRefsEnumerator = new BiDirectionalEnumerator<>(1, HashingStrategy.canonical());
 
     @Override
-    public int getCommitIndex(@Nonnull Hash hash, @Nonnull VirtualFile root) {
+    public int getCommitIndex(Hash hash, VirtualFile root) {
         return getOrPut(hash, root);
     }
 
-    private int getOrPut(@Nonnull Hash hash, @Nonnull VirtualFile root) {
+    private int getOrPut(Hash hash, VirtualFile root) {
         return myCommitIdEnumerator.enumerate(new CommitId(hash, root));
     }
 
-    @Nonnull
+    
     @Override
     public CommitId getCommitId(int commitIndex) {
         return myCommitIdEnumerator.getValue(commitIndex);
@@ -48,7 +47,7 @@ public class InMemoryStorage implements VcsLogStorage {
 
     @Nullable
     @Override
-    public CommitId findCommitId(@Nonnull Predicate<CommitId> condition) {
+    public CommitId findCommitId(Predicate<CommitId> condition) {
         CommitId[] result = new CommitId[]{null};
         myCommitIdEnumerator.forEachValue(commitId -> {
             if (condition.test(commitId)) {
@@ -59,7 +58,7 @@ public class InMemoryStorage implements VcsLogStorage {
     }
 
     @Override
-    public int getRefIndex(@Nonnull VcsRef ref) {
+    public int getRefIndex(VcsRef ref) {
         return myRefsEnumerator.enumerate(ref);
     }
 

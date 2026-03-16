@@ -40,8 +40,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -54,12 +53,12 @@ import static consulo.diff.internal.DiffImplUtil.getDiffSettings;
 public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolder> {
     public static final Logger LOG = Logger.getInstance(TwosideBinaryDiffViewer.class);
 
-    @Nonnull
+    
     private final TransferableFileEditorStateSupport myTransferableStateSupport;
-    @Nonnull
+    
     private final StatusPanel myStatusPanel;
 
-    public TwosideBinaryDiffViewer(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public TwosideBinaryDiffViewer(DiffContext context, DiffRequest request) {
         super(context, (ContentDiffRequest)request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
 
         myStatusPanel = new StatusPanel();
@@ -111,8 +110,8 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     }
 
     @Override
-    @Nonnull
-    protected Runnable performRediff(@Nonnull ProgressIndicator indicator) {
+    
+    protected Runnable performRediff(ProgressIndicator indicator) {
         try {
             indicator.checkCanceled();
 
@@ -155,7 +154,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
         }
     }
 
-    @Nonnull
+    
     private Runnable applyNotification(@Nullable JComponent notification) {
         return () -> {
             clearDiffPresentation();
@@ -174,12 +173,12 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     // Getters
     //
 
-    @Nonnull
+    
     FileEditor getCurrentEditor() {
         return getCurrentEditorHolder().getEditor();
     }
 
-    @Nonnull
+    
     @Override
     protected JComponent getStatusPanel() {
         return myStatusPanel;
@@ -189,7 +188,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     // Misc
     //
 
-    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
         return TwosideDiffViewer.canShowRequest(context, request, BinaryEditorHolder.BinaryEditorHolderFactory.INSTANCE);
     }
 
@@ -198,10 +197,10 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     //
 
     private class MyAcceptSideAction extends DumbAwareAction {
-        @Nonnull
+        
         private final Side myBaseSide;
 
-        public MyAcceptSideAction(@Nonnull Side baseSide) {
+        public MyAcceptSideAction(Side baseSide) {
             myBaseSide = baseSide;
             getTemplatePresentation().setText("Copy Content to " + baseSide.select("Right", "Left"));
             getTemplatePresentation().setIcon(baseSide.select(PlatformIconGroup.vcsArrow_right(), PlatformIconGroup.vcsArrow_left()));
@@ -211,7 +210,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             VirtualFile baseFile = getContentFile(myBaseSide);
             VirtualFile targetFile = getContentFile(myBaseSide.other());
 
@@ -221,7 +220,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             VirtualFile baseFile = getContentFile(myBaseSide);
             VirtualFile targetFile = getContentFile(myBaseSide.other());
             assert baseFile != null && targetFile != null;
@@ -236,7 +235,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
         }
 
         @Nullable
-        private VirtualFile getContentFile(@Nonnull Side side) {
+        private VirtualFile getContentFile(Side side) {
             DiffContent content = side.select(myRequest.getContents());
             VirtualFile file = content instanceof FileContent ? ((FileContent)content).getFile() : null;
             return file != null && file.isValid() ? file : null;
@@ -246,7 +245,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
     private class MyFocusOppositePaneAction extends FocusOppositePaneAction {
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             setCurrentSide(getCurrentSide().other());
             AWTDiffUtil.requestFocus(getProject(), getPreferredFocusedComponent());
         }

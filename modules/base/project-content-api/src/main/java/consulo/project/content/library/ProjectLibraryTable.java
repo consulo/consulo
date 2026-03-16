@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.content.library.LibraryTable;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,14 +30,14 @@ import jakarta.annotation.Nonnull;
 public interface ProjectLibraryTable extends LibraryTable {
   public static final String PROJECT_LEVEL = "project";
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Better use constructor injecting")
-  static ProjectLibraryTable getInstance(@Nonnull Project project) {
+  static ProjectLibraryTable getInstance(Project project) {
     return project.getInstance(ProjectLibraryTable.class);
   }
 
-  @Nonnull
+  
   Project getProject();
 
   @Override

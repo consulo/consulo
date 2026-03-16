@@ -21,8 +21,7 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public abstract class RefResolveService {
@@ -41,25 +40,25 @@ public abstract class RefResolveService {
    * @return null means the service has not resolved all files and is not ready yet
    */
   @Nullable
-  public abstract int[] getBackwardIds(@Nonnull VirtualFileWithId file);
+  public abstract int[] getBackwardIds(VirtualFileWithId file);
 
   /**
    * @return subset of scope containing only files which reference the virtualFile
    */
-  @Nonnull
-  public abstract GlobalSearchScope restrictByBackwardIds(@Nonnull VirtualFile virtualFile, @Nonnull GlobalSearchScope scope);
+  
+  public abstract GlobalSearchScope restrictByBackwardIds(VirtualFile virtualFile, GlobalSearchScope scope);
 
   /**
    * @return add files to the resolve queue. until all files from there are resolved, the service is in incomplete state and returns null from getBackwardIds()
    */
-  public abstract boolean queue(@Nonnull Collection<VirtualFile> files, @Nonnull Object reason);
+  public abstract boolean queue(Collection<VirtualFile> files, Object reason);
 
   public abstract boolean isUpToDate();
 
   public abstract int getQueueSize();
-  public abstract void addListener(@Nonnull Disposable parent, @Nonnull Listener listener);
+  public abstract void addListener(Disposable parent, Listener listener);
   public abstract static class Listener {
-    public void fileResolved(@Nonnull VirtualFile virtualFile) {}
+    public void fileResolved(VirtualFile virtualFile) {}
     public void allFilesResolved() {}
   }
 }

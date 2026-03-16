@@ -24,7 +24,6 @@ import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.Pair;
 import consulo.util.lang.TreeItem;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +53,7 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {
     return getFavoritesRoots(myProject, myName, this);
@@ -67,16 +66,16 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
     presentation.setLocationString(myDescription);
   }
 
-  @Nonnull
+  
   public static Collection<AbstractTreeNode> getFavoritesRoots(Project project, String listName, FavoritesListNode listNode) {
     Collection<TreeItem<Pair<AbstractUrl, String>>> pairs = FavoritesManager.getInstance(project).getFavoritesListRootUrls(listName);
     if (pairs.isEmpty()) return Collections.emptyList();
     return createFavoriteRoots(project, pairs, listNode);
   }
 
-  @Nonnull
+  
   private static Collection<AbstractTreeNode> createFavoriteRoots(Project project,
-                                                                  @Nonnull Collection<TreeItem<Pair<AbstractUrl, String>>> urls,
+                                                                  Collection<TreeItem<Pair<AbstractUrl, String>>> urls,
                                                                   AbstractTreeNode me) {
     Collection<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
     processUrls(project, urls, result, me);

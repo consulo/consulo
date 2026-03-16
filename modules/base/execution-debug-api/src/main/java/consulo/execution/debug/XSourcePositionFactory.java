@@ -22,8 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -65,7 +64,7 @@ public interface XSourcePositionFactory {
     @Nullable
     XSourcePosition createPositionByElement(@Nullable PsiElement element);
 
-    @Nonnull
+    
     @UsedInPlugin
-    Navigatable createDefaultNavigatable(@Nonnull Project project, @Nonnull XSourcePosition position);
+    Navigatable createDefaultNavigatable(Project project, XSourcePosition position);
 }

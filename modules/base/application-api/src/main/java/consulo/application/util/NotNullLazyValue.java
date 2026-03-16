@@ -17,7 +17,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -33,10 +32,10 @@ import java.util.function.Supplier;
 public abstract class NotNullLazyValue<T> implements Supplier<T> {
   private T myValue;
 
-  @Nonnull
+  
   protected abstract T compute();
 
-  @Nonnull
+  
   public T getValue() {
     T result = myValue;
     if (result == null) {
@@ -58,10 +57,10 @@ public abstract class NotNullLazyValue<T> implements Supplier<T> {
     return myValue != null;
   }
 
-  @Nonnull
-  public static <T> NotNullLazyValue<T> createConstantValue(@Nonnull final T value) {
+  
+  public static <T> NotNullLazyValue<T> createConstantValue(final T value) {
     return new NotNullLazyValue<T>() {
-      @Nonnull
+      
       @Override
       protected T compute() {
         return value;
@@ -69,10 +68,10 @@ public abstract class NotNullLazyValue<T> implements Supplier<T> {
     };
   }
 
-  @Nonnull
-  public static <T> NotNullLazyValue<T> createValue(@Nonnull final Supplier<T> value) {
+  
+  public static <T> NotNullLazyValue<T> createValue(final Supplier<T> value) {
     return new NotNullLazyValue<T>() {
-      @Nonnull
+      
       @Override
       protected T compute() {
         return Objects.requireNonNull(value.get());

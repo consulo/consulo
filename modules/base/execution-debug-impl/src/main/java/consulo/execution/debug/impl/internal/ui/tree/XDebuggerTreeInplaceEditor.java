@@ -24,7 +24,6 @@ import consulo.execution.debug.impl.internal.ui.XDebuggerExpressionComboBox;
 import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -38,7 +37,7 @@ public abstract class XDebuggerTreeInplaceEditor extends TreeInplaceEditor {
   protected final XDebuggerExpressionComboBox myExpressionEditor;
   protected final XDebuggerTree myTree;
 
-  public XDebuggerTreeInplaceEditor(XDebuggerTreeNode node, @NonNls String historyId) {
+  public XDebuggerTreeInplaceEditor(XDebuggerTreeNode node, String historyId) {
     myNode = node;
     myTree = myNode.getTree();
     myExpressionEditor = new XDebuggerExpressionComboBox(myTree.getProject(), myTree.getEditorsProvider(), historyId, myTree.getSourcePosition(), false);

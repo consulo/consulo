@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.internal.inject.InjectingBindingLoader;
 import consulo.component.internal.inject.TopicBindingLoader;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,5 +26,5 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 // implementation will be autoregistered by application start
-public record ComponentBinding(InjectingBindingLoader injectingBindingLoader, @Nonnull TopicBindingLoader topicBindingLoader) {
+public record ComponentBinding(InjectingBindingLoader injectingBindingLoader, TopicBindingLoader topicBindingLoader) {
 }

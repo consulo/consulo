@@ -28,8 +28,7 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +45,7 @@ import java.util.function.Predicate;
 public class VfsUtil extends VfsUtilCore {
     private static final Logger LOG = Logger.getInstance(VfsUtil.class);
 
-    public static void saveText(@Nonnull VirtualFile file, @Nonnull String text) throws IOException {
+    public static void saveText(VirtualFile file, String text) throws IOException {
         VirtualFileUtil.saveText(file, text);
     }
 
@@ -64,8 +63,8 @@ public class VfsUtil extends VfsUtilCore {
      */
     public static void copyDirectory(
         Object requestor,
-        @Nonnull VirtualFile fromDir,
-        @Nonnull VirtualFile toDir,
+        VirtualFile fromDir,
+        VirtualFile toDir,
         @Nullable VirtualFileFilter filter
     ) throws IOException {
         @SuppressWarnings("UnsafeVfsRecursion") VirtualFile[] children = fromDir.getChildren();
@@ -92,7 +91,7 @@ public class VfsUtil extends VfsUtilCore {
      * @param resourceUrl url of the resource to be copied
      * @throws IOException if resource not found or copying failed
      */
-    public static void copyFromResource(@Nonnull VirtualFile file, @Nonnull String resourceUrl) throws IOException {
+    public static void copyFromResource(VirtualFile file, String resourceUrl) throws IOException {
         InputStream out = VfsUtil.class.getResourceAsStream(resourceUrl);
         if (out == null) {
             throw new FileNotFoundException(resourceUrl);
@@ -118,7 +117,7 @@ public class VfsUtil extends VfsUtilCore {
      * @return a copy of the file
      * @throws IOException if file failed to be copied
      */
-    public static VirtualFile copy(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir) throws IOException {
+    public static VirtualFile copy(Object requestor, VirtualFile file, VirtualFile toDir) throws IOException {
         if (file.isDirectory()) {
             VirtualFile newDir = toDir.createChildDirectory(requestor, file.getName());
             copyDirectory(requestor, file, newDir, null);
@@ -135,8 +134,8 @@ public class VfsUtil extends VfsUtilCore {
      * @param files array of files
      * @return array of common ancestors for passed files
      */
-    @Nonnull
-    public static VirtualFile[] getCommonAncestors(@Nonnull VirtualFile[] files) {
+    
+    public static VirtualFile[] getCommonAncestors(VirtualFile[] files) {
         // Separate files by first component in the path.
         Map<VirtualFile, Set<VirtualFile>> map = new HashMap<>();
         for (VirtualFile aFile : files) {
@@ -178,7 +177,7 @@ public class VfsUtil extends VfsUtilCore {
      * Gets the common ancestor for passed files, or {@code null} if the files do not have common ancestors.
      */
     @Nullable
-    public static VirtualFile getCommonAncestor(@Nonnull Collection<? extends VirtualFile> files) {
+    public static VirtualFile getCommonAncestor(Collection<? extends VirtualFile> files) {
         VirtualFile ancestor = null;
         for (VirtualFile file : files) {
             if (ancestor == null) {
@@ -207,25 +206,25 @@ public class VfsUtil extends VfsUtilCore {
      * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
      */
     @Nullable
-    public static VirtualFile findFileByURL(@Nonnull URL url) {
+    public static VirtualFile findFileByURL(URL url) {
         return VirtualFileUtil.findFileByURL(url);
     }
 
     @Nullable
-    public static VirtualFile findFileByURL(@Nonnull URL url, @Nonnull VirtualFileManager virtualFileManager) {
+    public static VirtualFile findFileByURL(URL url, VirtualFileManager virtualFileManager) {
         return VirtualFileUtil.findFileByURL(url, virtualFileManager);
     }
 
     @Nullable
-    public static VirtualFile findFileByIoFile(@Nonnull File file, boolean refreshIfNeeded) {
+    public static VirtualFile findFileByIoFile(File file, boolean refreshIfNeeded) {
         return VirtualFileUtil.findFileByIoFile(file, refreshIfNeeded);
     }
 
     public static VirtualFile copyFileRelative(
         Object requestor,
-        @Nonnull VirtualFile file,
-        @Nonnull VirtualFile toDir,
-        @Nonnull String relativePath
+        VirtualFile file,
+        VirtualFile toDir,
+        String relativePath
     ) throws IOException {
         StringTokenizer tokenizer = new StringTokenizer(relativePath, "/");
         VirtualFile curDir = toDir;
@@ -245,24 +244,24 @@ public class VfsUtil extends VfsUtilCore {
         }
     }
 
-    @Nonnull
-    public static String toIdeaUrl(@Nonnull String url) {
+    
+    public static String toIdeaUrl(String url) {
         return toIdeaUrl(url, true);
     }
 
     /**
      * @return correct URL, must be used only for external communication
      */
-    @Nonnull
-    public static URI toUri(@Nonnull VirtualFile file) {
+    
+    public static URI toUri(VirtualFile file) {
         return VirtualFileUtil.toUri(file);
     }
 
     /**
      * @return correct URL, must be used only for external communication
      */
-    @Nonnull
-    public static URI toUri(@Nonnull File file) {
+    
+    public static URI toUri(File file) {
         return VirtualFileUtil.toUri(file);
     }
 
@@ -273,7 +272,7 @@ public class VfsUtil extends VfsUtilCore {
      * @return correct URI, must be used only for external communication
      */
     @Nullable
-    public static URI toUri(@Nonnull String uri) {
+    public static URI toUri(String uri) {
         return VirtualFileUtil.toUri(uri);
     }
 
@@ -287,7 +286,7 @@ public class VfsUtil extends VfsUtilCore {
      * @since 5.0.2
      */
     @Nullable
-    public static String getPath(@Nonnull VirtualFile src, @Nonnull VirtualFile dst, char separatorChar) {
+    public static String getPath(VirtualFile src, VirtualFile dst, char separatorChar) {
         VirtualFile commonAncestor = getCommonAncestor(src, dst);
         if (commonAncestor != null) {
             StringBuilder buffer = new StringBuilder();
@@ -304,15 +303,15 @@ public class VfsUtil extends VfsUtilCore {
         return null;
     }
 
-    public static String getUrlForLibraryRoot(@Nonnull File libraryRoot) {
+    public static String getUrlForLibraryRoot(File libraryRoot) {
         return VirtualFileUtil.getUrlForLibraryRoot(libraryRoot);
     }
 
     public static VirtualFile createChildSequent(
         Object requestor,
-        @Nonnull VirtualFile dir,
-        @Nonnull String prefix,
-        @Nonnull String extension
+        VirtualFile dir,
+        String prefix,
+        String extension
     ) throws IOException {
         String dotExt = PathUtil.makeFileName("", extension);
         String fileName = prefix + dotExt;
@@ -324,8 +323,8 @@ public class VfsUtil extends VfsUtilCore {
         return dir.createChildData(requestor, fileName);
     }
 
-    @Nonnull
-    public static String[] filterNames(@Nonnull String[] names) {
+    
+    public static String[] filterNames(String[] names) {
         return VirtualFileUtil.filterNames(names);
     }
 
@@ -333,7 +332,7 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.isBadName(name);
     }
 
-    public static VirtualFile createDirectories(@Nonnull String directoryPath) throws IOException {
+    public static VirtualFile createDirectories(String directoryPath) throws IOException {
         return VirtualFileUtil.createDirectories(directoryPath);
     }
 
@@ -342,7 +341,7 @@ public class VfsUtil extends VfsUtilCore {
     }
 
     @Nullable
-    public static VirtualFile createDirectoryIfMissing(@Nonnull String directoryPath) throws IOException {
+    public static VirtualFile createDirectoryIfMissing(String directoryPath) throws IOException {
         return VirtualFileUtil.createDirectoryIfMissing(directoryPath);
     }
 
@@ -352,8 +351,8 @@ public class VfsUtil extends VfsUtilCore {
      * @param root virtual file to get descendants
      * @return descendants
      */
-    @Nonnull
-    public static List<VirtualFile> collectChildrenRecursively(@Nonnull VirtualFile root) {
+    
+    public static List<VirtualFile> collectChildrenRecursively(VirtualFile root) {
         List<VirtualFile> result = new ArrayList<>();
         processFilesRecursively(root, t -> {
             result.add(t);
@@ -362,13 +361,13 @@ public class VfsUtil extends VfsUtilCore {
         return result;
     }
 
-    public static void processFileRecursivelyWithoutIgnored(@Nonnull VirtualFile root, @Nonnull Predicate<VirtualFile> processor) {
+    public static void processFileRecursivelyWithoutIgnored(VirtualFile root, Predicate<VirtualFile> processor) {
         FileTypeManager ftm = FileTypeManager.getInstance();
         processFilesRecursively(root, processor, vf -> !ftm.isFileIgnored(vf));
     }
 
     @Nullable
-    public static <T> T processInputStream(@Nonnull VirtualFile file, @Nonnull Function<InputStream, T> function) {
+    public static <T> T processInputStream(VirtualFile file, Function<InputStream, T> function) {
         InputStream stream = null;
         try {
             stream = file.getInputStream();
@@ -390,8 +389,8 @@ public class VfsUtil extends VfsUtilCore {
         return null;
     }
 
-    @Nonnull
-    public static String getReadableUrl(@Nonnull VirtualFile file) {
+    
+    public static String getReadableUrl(VirtualFile file) {
         String url = null;
         if (file.isInLocalFileSystem()) {
             url = file.getPresentableUrl();
@@ -408,14 +407,14 @@ public class VfsUtil extends VfsUtilCore {
         return LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(path));
     }
 
-    @Nonnull
-    public static VirtualFile[] getChildren(@Nonnull VirtualFile dir) {
+    
+    public static VirtualFile[] getChildren(VirtualFile dir) {
         VirtualFile[] children = dir.getChildren();
         return children == null ? VirtualFile.EMPTY_ARRAY : children;
     }
 
-    @Nonnull
-    public static List<VirtualFile> getChildren(@Nonnull VirtualFile dir, @Nonnull VirtualFileFilter filter) {
+    
+    public static List<VirtualFile> getChildren(VirtualFile dir, VirtualFileFilter filter) {
         return VirtualFileUtil.getChildren(dir, filter);
     }
 
@@ -441,17 +440,17 @@ public class VfsUtil extends VfsUtilCore {
         return VirtualFileUtil.extractFileName(urlOrPath);
     }
 
-    @Nonnull
-    public static List<VirtualFile> markDirty(boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    
+    public static List<VirtualFile> markDirty(boolean recursive, boolean reloadChildren, VirtualFile... files) {
         return VirtualFileUtil.markDirty(recursive, reloadChildren, files);
     }
 
-    public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
+    public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, VirtualFile... files) {
         VirtualFileUtil.markDirtyAndRefresh(async, recursive, reloadChildren, files);
     }
 
-    @Nonnull
-    public static VirtualFile getRootFile(@Nonnull VirtualFile file) {
+    
+    public static VirtualFile getRootFile(VirtualFile file) {
         while (true) {
             VirtualFile parent = file.getParent();
             if (parent == null) {
@@ -462,13 +461,13 @@ public class VfsUtil extends VfsUtilCore {
         return file;
     }
 
-    @Nonnull
-    public static Url newLocalFileUrl(@Nonnull VirtualFile file) {
+    
+    public static Url newLocalFileUrl(VirtualFile file) {
         return Urls.newLocalFileUrl(file.getPath());
     }
 
-    @Nonnull
-    public static Url newFromVirtualFile(@Nonnull VirtualFile file) {
+    
+    public static Url newFromVirtualFile(VirtualFile file) {
         if (file.isInLocalFileSystem()) {
             return Urls.newUri(file.getFileSystem().getProtocol(), file.getPath());
         }
@@ -478,7 +477,7 @@ public class VfsUtil extends VfsUtilCore {
         }
     }
 
-    public static boolean equalsIgnoreParameters(@Nonnull Url url, @Nonnull VirtualFile file) {
+    public static boolean equalsIgnoreParameters(Url url, VirtualFile file) {
         if (file.isInLocalFileSystem()) {
             return url.isInLocalFileSystem() && (
                 SystemInfoRt.isFileSystemCaseSensitive

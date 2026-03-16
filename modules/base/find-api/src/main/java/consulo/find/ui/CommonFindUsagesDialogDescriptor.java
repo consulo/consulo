@@ -29,22 +29,21 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.UsageViewUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2024-11-16
  */
 public class CommonFindUsagesDialogDescriptor extends AbstractFindUsagesDialogDescriptor {
-    @Nonnull
+    
     protected final PsiElement myPsiElement;
     private final FindUsagesHandler myHandler;
 
     @RequiredUIAccess
-    public CommonFindUsagesDialogDescriptor(@Nonnull PsiElement element,
-                                            @Nonnull Project project,
-                                            @Nonnull FindUsagesOptions findUsagesOptions,
+    public CommonFindUsagesDialogDescriptor(PsiElement element,
+                                            Project project,
+                                            FindUsagesOptions findUsagesOptions,
                                             boolean toShowInNewTab,
                                             boolean mustOpenInNewTab,
                                             boolean isSingleFile,
@@ -67,7 +66,7 @@ public class CommonFindUsagesDialogDescriptor extends AbstractFindUsagesDialogDe
 
     @RequiredUIAccess
     @Override
-    protected void configureLabelComponent(@Nonnull TextItemPresentation presentation, @Nonnull Disposable uiDisposable) {
+    protected void configureLabelComponent(TextItemPresentation presentation, Disposable uiDisposable) {
         presentation.append(StringUtil.capitalize(UsageViewUtil.getType(myPsiElement)));
         presentation.append(" ");
         presentation.append(DescriptiveNameUtil.getDescriptiveName(myPsiElement), TextAttribute.REGULAR_BOLD);

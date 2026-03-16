@@ -33,7 +33,6 @@ import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.project.Project;
 import consulo.util.collection.JBIterable;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -48,19 +47,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServiceImpl
 public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanRunnableCollector {
     private final Project myProject;
-    @Nonnull
+    
     private final Provider<ProjectFileIndex> myProjectFileIndexProvider;
     private final FileTypeManager myFileTypeManager;
 
     @Inject
-    public FileBasedIndexScanRunnableCollectorImpl(@Nonnull Project project, @Nonnull Provider<ProjectFileIndex> projectFileIndexProvider) {
+    public FileBasedIndexScanRunnableCollectorImpl(Project project, Provider<ProjectFileIndex> projectFileIndexProvider) {
         myProject = project;
         myProjectFileIndexProvider = projectFileIndexProvider;
         myFileTypeManager = FileTypeManager.getInstance();
     }
 
     @Override
-    public boolean shouldCollect(@Nonnull VirtualFile file) {
+    public boolean shouldCollect(VirtualFile file) {
         ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
         if (projectFileIndex.isInContent(file) || projectFileIndex.isInLibraryClasses(file) || projectFileIndex.isInLibrarySource(file)) {
             return !myFileTypeManager.isFileIgnored(file);
@@ -69,7 +68,7 @@ public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanR
     }
 
     @Override
-    public List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator) {
+    public List<Runnable> collectScanRootRunnables(ContentIterator processor, ProgressIndicator indicator) {
         ProjectFileIndex projectFileIndex = myProjectFileIndexProvider.get();
 
         return AccessRule.read(() -> {

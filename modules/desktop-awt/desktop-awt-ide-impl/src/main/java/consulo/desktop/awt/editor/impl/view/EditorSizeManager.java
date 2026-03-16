@@ -23,8 +23,7 @@ import consulo.util.lang.IntPair;
 import consulo.util.lang.ref.Ref;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.awt.*;
@@ -84,7 +83,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
 
     private final SoftWrapAwareDocumentParsingListenerAdapter mySoftWrapChangeListener = new SoftWrapAwareDocumentParsingListenerAdapter() {
         @Override
-        public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
+        public void onRecalculationEnd(IncrementalCacheUpdateEvent event) {
             onSoftWrapRecalculationEnd(event);
         }
     };
@@ -116,7 +115,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void beforeDocumentChange(@Nonnull DocumentEvent event) {
+    public void beforeDocumentChange(DocumentEvent event) {
         assert !myView.isAd();
         assertValidState(); // should be called at the start, as it can initiate soft wrap calculations
         myAfterLineEndInlayUpdated = false;
@@ -132,7 +131,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void documentChanged(@Nonnull DocumentEvent event) {
+    public void documentChanged(DocumentEvent event) {
         assert !myView.isAd();
         myDuringDocumentUpdate = false;
         if (myDocument.isInBulkUpdate()) return;
@@ -145,7 +144,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void onFoldRegionStateChange(@Nonnull FoldRegion region) {
+    public void onFoldRegionStateChange(FoldRegion region) {
         if (myDocument.isInBulkUpdate()) return;
         if (region.isValid()) {
             resetIfOutdated(true);
@@ -155,7 +154,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void beforeFoldRegionDisposed(@Nonnull FoldRegion region) {
+    public void beforeFoldRegionDisposed(FoldRegion region) {
         if (!myDuringDocumentUpdate || myDocument.isInBulkUpdate() || !(region instanceof CustomFoldRegion)) return;
         resetIfOutdated(true);
         myDocumentChangeStartOffset = Math.min(myDocumentChangeStartOffset, region.getStartOffset());
@@ -163,7 +162,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void onCustomFoldRegionPropertiesChange(@Nonnull CustomFoldRegion region, int flags) {
+    public void onCustomFoldRegionPropertiesChange(CustomFoldRegion region, int flags) {
         if ((flags & ChangeFlags.WIDTH_CHANGED) == 0 || myDocument.isInBulkUpdate() || checkDirty()) return;
         resetIfOutdated(true);
         int startOffset = region.getStartOffset();
@@ -192,7 +191,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void onAdded(@Nonnull Inlay<?> inlay) {
+    public void onAdded(Inlay<?> inlay) {
         if (myDocument.isInBulkUpdate() || myInlayModel.isInBatchMode()) return;
 
         if (inlay.getPlacement() == Inlay.Placement.INLINE || inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
@@ -204,7 +203,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void onRemoved(@Nonnull Inlay<?> inlay) {
+    public void onRemoved(Inlay<?> inlay) {
         if (myDocument.isInBulkUpdate() || myInlayModel.isInBatchMode()) return;
 
         if (inlay.getPlacement() == Inlay.Placement.INLINE || inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
@@ -216,7 +215,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void onUpdated(@Nonnull Inlay<?> inlay, int changeFlags) {
+    public void onUpdated(Inlay<?> inlay, int changeFlags) {
         if (myDocument.isInBulkUpdate() ||
             myInlayModel.isInBatchMode() ||
             (changeFlags & InlayModel.ChangeFlags.WIDTH_CHANGED) == 0) {
@@ -239,18 +238,18 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public void onBatchModeStart(@Nonnull Editor editor) {
+    public void onBatchModeStart(Editor editor) {
         if (myDocument.isInBulkUpdate()) return;
         getPreferredSize(); // make sure size is calculated (in case it will be required while batch mode is active)
     }
 
     @Override
-    public void onBatchModeFinish(@Nonnull Editor editor) {
+    public void onBatchModeFinish(Editor editor) {
         if (myDocument.isInBulkUpdate()) return;
         reset();
     }
 
-    private void onLineInlayUpdate(@Nonnull Inlay<?> inlay) {
+    private void onLineInlayUpdate(Inlay<?> inlay) {
         resetIfOutdated(true);
         if (myDuringDocumentUpdate) {
             if (inlay.getPlacement() == Inlay.Placement.AFTER_LINE_END) {
@@ -284,7 +283,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
         }
     }
 
-    @Nonnull
+    
     Dimension getPreferredSize() {
         resetIfOutdated(false);
 
@@ -464,7 +463,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
         return width;
     }
 
-    private int calculateLineWidth(@Nonnull VisualLinesIterator iterator, @Nullable Runnable quickEvaluationListener) {
+    private int calculateLineWidth(VisualLinesIterator iterator, @Nullable Runnable quickEvaluationListener) {
         CustomFoldRegion customFoldRegion = iterator.getCustomFoldRegion();
         if (customFoldRegion != null) {
             return customFoldRegion.getWidthInPixels();
@@ -668,7 +667,7 @@ final class EditorSizeManager implements PrioritizedDocumentListener, Disposable
     }
 
     @Override
-    public @Nonnull String dumpState() {
+    public String dumpState() {
         return "[cached width: " + myWidthInPixels +
             ", longest visual line: " + myWidthDefiningLineNumber +
             ", cached width is valid: " + myWidthIsValid +

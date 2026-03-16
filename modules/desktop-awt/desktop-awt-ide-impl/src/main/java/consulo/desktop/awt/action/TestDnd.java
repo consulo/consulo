@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.dnd.DnDDragStartBean;
 import consulo.ui.ex.awt.dnd.DnDImage;
 import consulo.ui.ex.awt.dnd.DnDSupport;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -37,7 +36,7 @@ import javax.swing.*;
 public class TestDnd extends AnAction {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     new DialogWrapper(e.getData(Project.KEY)) {
       {
         setTitle("DnD Test");

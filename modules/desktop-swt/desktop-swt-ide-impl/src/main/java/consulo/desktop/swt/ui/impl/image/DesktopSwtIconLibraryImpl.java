@@ -19,8 +19,7 @@ import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.nebula.cwt.svg.SvgDocument;
 
 /**
@@ -28,13 +27,13 @@ import org.eclipse.nebula.cwt.svg.SvgDocument;
  * @since 29/04/2021
  */
 public class DesktopSwtIconLibraryImpl extends BaseIconLibraryImpl {
-  public DesktopSwtIconLibraryImpl(@Nonnull String id, @Nonnull BaseIconLibraryManager baseIconLibraryManager) {
+  public DesktopSwtIconLibraryImpl(String id, BaseIconLibraryManager baseIconLibraryManager) {
     super(id, baseIconLibraryManager);
   }
 
-  @Nonnull
+  
   @Override
-  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+  protected ImageReference createImageReference(byte[] _1xData,
                                                 @Nullable byte[] _2xdata,
                                                 boolean isSVG,
                                                 String groupId,

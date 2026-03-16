@@ -18,8 +18,7 @@ package consulo.diff.old;
 import consulo.annotation.DeprecationInfo;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -179,8 +178,8 @@ public class LineFragment extends LineBlock implements Fragment {
         return myChildren == null || myChildren.isEmpty() ? null : myChildren.iterator();
     }
 
-    @Nonnull
-    public DiffString getText(@Nonnull DiffString text, @Nonnull FragmentSide side) {
+    
+    public DiffString getText(DiffString text, FragmentSide side) {
         TextRange range = getRange(side);
         return text.substring(range.getStartOffset(), range.getEndOffset());
     }

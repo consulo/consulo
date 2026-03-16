@@ -6,7 +6,6 @@ import consulo.process.ExecutionException;
 import consulo.process.util.ProcessOutput;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,29 +39,29 @@ final class WslDistributionDescriptor {
   WslDistributionDescriptor() {
   }
 
-  WslDistributionDescriptor(@Nonnull String id, @Nonnull String msId, @Nonnull String executablePath, @Nonnull String presentableName) {
+  WslDistributionDescriptor(String id, String msId, String executablePath, String presentableName) {
     myId = id;
     myMsId = msId;
     myExecutablePath = executablePath;
     this.myPresentableName = presentableName;
   }
 
-  @Nonnull
+  
   public String getId() {
     return Objects.requireNonNull(myId);
   }
 
-  @Nonnull
+  
   public String getMsId() {
     return Objects.requireNonNull(myMsId);
   }
 
-  @Nonnull
+  
   public String getExecutablePath() {
     return Objects.requireNonNull(myExecutablePath);
   }
 
-  @Nonnull
+  
   public String getPresentableName() {
     return Objects.requireNonNull(myPresentableName);
   }
@@ -96,7 +95,7 @@ final class WslDistributionDescriptor {
    * @return the mount point for current distribution. Default value of {@code /mnt/} may be overriden with {@code /etc/wsl.conf}
    * @apiNote caches value per IDE run. Meaning - reconfiguring of this option in WSL requires IDE restart.
    */
-  @Nonnull
+  
   final String getMntRoot() {
     return myMntRootProvider.getValue();
   }
@@ -104,7 +103,7 @@ final class WslDistributionDescriptor {
   /**
    * @see #getMntRoot()
    */
-  @Nonnull
+  
   private String computeMntRoot() {
     String windowsCurrentDirectory = System.getProperty("user.dir");
 

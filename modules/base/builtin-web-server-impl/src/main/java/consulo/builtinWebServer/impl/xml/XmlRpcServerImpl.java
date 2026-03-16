@@ -36,8 +36,7 @@ import org.apache.xmlrpc.common.XmlRpcStreamRequestConfig;
 import org.apache.xmlrpc.server.XmlRpcStreamServer;
 import org.xml.sax.SAXParseException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -88,9 +87,9 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     handlerMapping.remove(name);
   }
 
-  @Nonnull
+  
   @Override
-  public HttpResponse process(@Nonnull String path, @Nonnull HttpRequest request, @Nullable Map<String, Object> handlers) {
+  public HttpResponse process(String path, HttpRequest request, @Nullable Map<String, Object> handlers) {
     if (!(path.isEmpty() || (path.length() == 1 && path.charAt(0) == '/') || path.equalsIgnoreCase("/rpc2"))) {
       return HttpResponse.notFound();
     }
@@ -134,7 +133,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
     return HttpResponse.ok("text/xml", result);
   }
 
-  private static Object getHandler(@Nonnull String methodName, @Nonnull Map<String, Object> handlers) {
+  private static Object getHandler(String methodName, Map<String, Object> handlers) {
     Object handler = null;
     String handlerName = null;
     int dot = methodName.lastIndexOf('.');
@@ -156,7 +155,7 @@ public class XmlRpcServerImpl implements XmlRpcServer {
   }
 
   @Nullable
-  private static Object invokeHandler(@Nonnull Object handler, XmlRpcRequest request) throws Throwable {
+  private static Object invokeHandler(Object handler, XmlRpcRequest request) throws Throwable {
     if (handler instanceof XmlRpcHandler) {
       return handler;
     }

@@ -11,7 +11,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -20,14 +19,14 @@ import jakarta.annotation.Nonnull;
 public interface UsageGroupingRuleProvider {
     ExtensionPointName<UsageGroupingRuleProvider> EP_NAME = ExtensionPointName.create(UsageGroupingRuleProvider.class);
 
-    @Nonnull
-    UsageGroupingRule[] getActiveRules(@Nonnull Project project);
+    
+    UsageGroupingRule[] getActiveRules(Project project);
 
-    @Nonnull
-    default UsageGroupingRule[] getActiveRules(@Nonnull Project project, @Nonnull UsageViewSettings usageViewSettings) {
+    
+    default UsageGroupingRule[] getActiveRules(Project project, UsageViewSettings usageViewSettings) {
         return getActiveRules(project);
     }
 
-    @Nonnull
-    AnAction[] createGroupingActions(@Nonnull UsageView view);
+    
+    AnAction[] createGroupingActions(UsageView view);
 }

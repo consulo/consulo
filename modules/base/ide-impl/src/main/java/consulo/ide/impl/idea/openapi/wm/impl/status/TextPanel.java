@@ -10,8 +10,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -187,7 +186,7 @@ public class TextPanel extends NonOpaquePanel implements Accessible {
         private Image myIcon;
 
         @Override
-        protected void paintComponent(@Nonnull Graphics g) {
+        protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Icon icon = TargetAWT.to(myIcon == null || isEnabled() ? myIcon : ImageEffects.grayed(myIcon));
             if (icon != null) {

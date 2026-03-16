@@ -27,7 +27,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.ChangesBrowser;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.IgnoreUnversionedDialog;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +49,7 @@ public class IgnoreUnversionedAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
 
         if (!ChangeListManager.getInstance(project).isFreezedWithNotification(null)) {
@@ -67,7 +66,7 @@ public class IgnoreUnversionedAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && !Streams.isEmpty(e.getData(UNVERSIONED_FILES_DATA_KEY)));
     }
 }

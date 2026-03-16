@@ -29,8 +29,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     printOwnPrintablesOn(printer, true);
   }
 
-  public void printOwnPrintablesOn(@Nonnull Printer printer, boolean skipFileContent) {
+  public void printOwnPrintablesOn(Printer printer, boolean skipFileContent) {
     List<Printable> printables;
     synchronized (myNestedPrintables) {
       printables = ContainerUtil.filter(myNestedPrintables, printable -> !(printable instanceof AbstractTestProxy));
@@ -96,7 +95,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     myWrapper.printOn(printer, printables, skipFileContent);
   }
 
-  public void addLast(@Nonnull Printable printable) {
+  public void addLast(Printable printable) {
     synchronized (myNestedPrintables) {
       myNestedPrintables.add(printable);
       if (myNestedPrintables.size() > 500) {
@@ -105,7 +104,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     }
   }
 
-  public void insert(@Nonnull Printable printable, int i) {
+  public void insert(Printable printable, int i) {
     synchronized (myNestedPrintables) {
       if (i >= myNestedPrintables.size()) {
         myNestedPrintables.add(printable);
@@ -319,7 +318,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
       }
 
       @Override
-      public void onNewAvailable(@Nonnull Printable printable) {
+      public void onNewAvailable(Printable printable) {
       }
 
       @Override
@@ -400,7 +399,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
               }
 
               @Override
-              public void onNewAvailable(@Nonnull Printable printable) {
+              public void onNewAvailable(Printable printable) {
               }
 
               @Override

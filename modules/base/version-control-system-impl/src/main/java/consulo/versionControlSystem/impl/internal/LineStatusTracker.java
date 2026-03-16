@@ -35,7 +35,6 @@ import consulo.util.dataholder.Key;
 import consulo.versionControlSystem.change.VcsDirtyScopeManager;
 import consulo.versionControlSystem.internal.VcsRange;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -56,21 +55,21 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
     private static final Key<JComponent> PANEL_KEY = Key.create("LineStatusTracker.CanNotCalculateDiffPanel");
 
-    @Nonnull
+    
     private final VirtualFile myVirtualFile;
 
-    @Nonnull
+    
     private final FileEditorManager myFileEditorManager;
-    @Nonnull
+    
     private final VcsDirtyScopeManager myVcsDirtyScopeManager;
 
-    @Nonnull
+    
     private Mode myMode;
 
-    private LineStatusTracker(@Nonnull Project project,
-                              @Nonnull Document document,
-                              @Nonnull VirtualFile virtualFile,
-                              @Nonnull Mode mode) {
+    private LineStatusTracker(Project project,
+                              Document document,
+                              VirtualFile virtualFile,
+                              Mode mode) {
         super(project, document);
         myVirtualFile = virtualFile;
         myMode = mode;
@@ -79,26 +78,26 @@ public class LineStatusTracker extends LineStatusTrackerBase {
         myVcsDirtyScopeManager = VcsDirtyScopeManager.getInstance(project);
     }
 
-    public static LineStatusTracker createOn(@Nonnull VirtualFile virtualFile,
-                                             @Nonnull Document document,
-                                             @Nonnull Project project,
-                                             @Nonnull Mode mode) {
+    public static LineStatusTracker createOn(VirtualFile virtualFile,
+                                             Document document,
+                                             Project project,
+                                             Mode mode) {
         return new LineStatusTracker(project, document, virtualFile, mode);
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         //noinspection ConstantConditions
         return super.getProject();
     }
 
-    @Nonnull
+    
     public VirtualFile getVirtualFile() {
         return myVirtualFile;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public Mode getMode() {
         return myMode;
@@ -110,7 +109,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
     }
 
     @RequiredUIAccess
-    public void setMode(@Nonnull Mode mode) {
+    public void setMode(Mode mode) {
         if (myMode == mode) {
             return;
         }
@@ -127,7 +126,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
     @Override
     @RequiredUIAccess
-    protected void installNotification(@Nonnull String text) {
+    protected void installNotification(String text) {
         FileEditor[] editors = myFileEditorManager.getAllEditors(myVirtualFile);
         for (FileEditor editor : editors) {
             JComponent panel = editor.getUserData(PANEL_KEY);
@@ -159,7 +158,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
 
     @Override
     @RequiredUIAccess
-    protected void createHighlighter(@Nonnull VcsRange range) {
+    protected void createHighlighter(VcsRange range) {
         UIAccess.assertIsUIThread();
 
         if (range.getHighlighter() != null) {
@@ -199,7 +198,7 @@ public class LineStatusTracker extends LineStatusTrackerBase {
     }
 
     @Override
-    protected void doRollbackRange(@Nonnull VcsRange range) {
+    protected void doRollbackRange(VcsRange range) {
         super.doRollbackRange(range);
         markLinesUnchanged(range.getLine1(), range.getLine1() + range.getVcsLine2() - range.getVcsLine1());
     }

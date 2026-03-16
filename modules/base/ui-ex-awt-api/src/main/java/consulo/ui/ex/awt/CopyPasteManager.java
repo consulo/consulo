@@ -22,8 +22,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.EventListener;
@@ -36,24 +35,24 @@ public abstract class CopyPasteManager {
     return Application.get().getInstance(CopyPasteManager.class);
   }
 
-  public abstract void addContentChangedListener(@Nonnull ContentChangedListener listener);
+  public abstract void addContentChangedListener(ContentChangedListener listener);
 
-  public abstract void addContentChangedListener(@Nonnull ContentChangedListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void addContentChangedListener(ContentChangedListener listener, Disposable parentDisposable);
 
-  public abstract void removeContentChangedListener(@Nonnull ContentChangedListener listener);
+  public abstract void removeContentChangedListener(ContentChangedListener listener);
 
-  public abstract boolean areDataFlavorsAvailable(@Nonnull DataFlavor... flavors);
+  public abstract boolean areDataFlavorsAvailable(DataFlavor... flavors);
 
   @Nullable
   public abstract Transferable getContents();
 
   @Nullable
-  public abstract <T> T getContents(@Nonnull DataFlavor flavor);
+  public abstract <T> T getContents(DataFlavor flavor);
 
-  @Nonnull
+  
   public abstract Transferable[] getAllContents();
 
-  public abstract void setContents(@Nonnull Transferable content);
+  public abstract void setContents(Transferable content);
 
   public abstract boolean isCutElement(@Nullable Object element);
 

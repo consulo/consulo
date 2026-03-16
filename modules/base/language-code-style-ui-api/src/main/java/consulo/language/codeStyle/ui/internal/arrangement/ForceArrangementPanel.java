@@ -20,16 +20,15 @@ import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.EnumComboBoxModel;
 import consulo.ui.ex.awt.OptionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ForceArrangementPanel {
-    @Nonnull
+    
     private final JComboBox<SelectedMode> myForceRearrangeComboBox;
-    @Nonnull
+    
     private final JPanel myPanel;
 
     public ForceArrangementPanel() {
@@ -43,7 +42,7 @@ public class ForceArrangementPanel {
         return getSelectedMode().rearrangeMode;
     }
 
-    public void setSelectedMode(@Nonnull SelectedMode mode) {
+    public void setSelectedMode(SelectedMode mode) {
         myForceRearrangeComboBox.setSelectedItem(mode);
     }
 
@@ -53,12 +52,12 @@ public class ForceArrangementPanel {
         setSelectedMode(toSetUp);
     }
 
-    @Nonnull
+    
     public JPanel getPanel() {
         return myPanel;
     }
 
-    @Nonnull
+    
     private JPanel createPanel() {
         OptionGroup group = new OptionGroup(CodeStyleLocalize.arrangementSettingsAdditionalTitle().get());
         JPanel textWithComboPanel = new JPanel();
@@ -70,7 +69,7 @@ public class ForceArrangementPanel {
         return group.createPanel();
     }
 
-    @Nonnull
+    
     private SelectedMode getSelectedMode() {
         return (SelectedMode) myForceRearrangeComboBox.getSelectedItem();
     }
@@ -90,10 +89,10 @@ public class ForceArrangementPanel {
         );
 
         public final int rearrangeMode;
-        @Nonnull
+        
         private final LocalizeValue myName;
 
-        SelectedMode(@Nonnull LocalizeValue name, int mode) {
+        SelectedMode(LocalizeValue name, int mode) {
             myName = name;
             rearrangeMode = mode;
         }
@@ -108,7 +107,7 @@ public class ForceArrangementPanel {
             return null;
         }
 
-        @Nonnull
+        
         @Override
         public String toString() {
             return myName.get();

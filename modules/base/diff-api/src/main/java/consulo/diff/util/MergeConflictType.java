@@ -15,34 +15,33 @@
  */
 package consulo.diff.util;
 
-import jakarta.annotation.Nonnull;
 
 public class MergeConflictType {
-  @Nonnull
+  
   private final TextDiffType myType;
   private final boolean myLeftChange;
   private final boolean myRightChange;
 
-  public MergeConflictType(@Nonnull TextDiffType type) {
+  public MergeConflictType(TextDiffType type) {
     this(type, true, true);
   }
 
-  public MergeConflictType(@Nonnull TextDiffType type, boolean leftChange, boolean rightChange) {
+  public MergeConflictType(TextDiffType type, boolean leftChange, boolean rightChange) {
     myType = type;
     myLeftChange = leftChange;
     myRightChange = rightChange;
   }
 
-  @Nonnull
+  
   public TextDiffType getDiffType() {
     return myType;
   }
 
-  public boolean isChange(@Nonnull Side side) {
+  public boolean isChange(Side side) {
     return side.isLeft() ? myLeftChange : myRightChange;
   }
 
-  public boolean isChange(@Nonnull ThreeSide side) {
+  public boolean isChange(ThreeSide side) {
     switch (side) {
       case LEFT:
         return myLeftChange;

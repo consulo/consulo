@@ -24,8 +24,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -53,8 +52,8 @@ public class DocumentMarkupModelImpl {
      * @return the markup model instance.
      * @see Editor#getMarkupModel()
      */
-    @Nonnull
-    public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+    
+    public static MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create) {
         if (document instanceof DocumentWindow) {
             Document delegate = ((DocumentWindow) document).getDelegate();
             MarkupModelEx baseMarkupModel = forDocument(delegate, project, true);
@@ -102,7 +101,7 @@ public class DocumentMarkupModelImpl {
         return model;
     }
 
-    private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@Nonnull Document document) {
+    private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(Document document) {
         ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
         if (markupModelMap == null) {
             ConcurrentMap<Project, MarkupModelImpl> newMap = new ConcurrentHashMap<>();
@@ -111,7 +110,7 @@ public class DocumentMarkupModelImpl {
         return markupModelMap;
     }
 
-    static void removeMarkupModel(@Nonnull Document document, @Nonnull Project project) {
+    static void removeMarkupModel(Document document, Project project) {
         MarkupModelImpl removed = getMarkupModelMap(document).remove(project);
         if (removed != null) {
             removed.dispose();

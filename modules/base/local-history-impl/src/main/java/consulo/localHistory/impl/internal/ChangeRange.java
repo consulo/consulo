@@ -18,8 +18,7 @@ package consulo.localHistory.impl.internal;
 
 import consulo.localHistory.impl.internal.change.Change;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -29,7 +28,7 @@ public class ChangeRange {
   private final Long myFromChangeId;
   @Nullable private final Long myToChangeId;
 
-  public ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, @Nonnull Long changeId) {
+  public ChangeRange(IdeaGateway gw, LocalHistoryFacade vcs, Long changeId) {
     this(gw, vcs, changeId, changeId);
   }
 

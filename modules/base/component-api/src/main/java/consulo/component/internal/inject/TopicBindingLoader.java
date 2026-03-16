@@ -17,8 +17,7 @@ package consulo.component.internal.inject;
 
 import consulo.component.bind.TopicBinding;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,19 +30,19 @@ import java.util.Map;
 public class TopicBindingLoader extends BindingLoader<TopicBinding> {
   private Map<String, TopicBinding> myBindings = new HashMap<>();
 
-  @Nonnull
+  
   @Override
   protected Class<TopicBinding> getBindingClass() {
     return TopicBinding.class;
   }
 
   @Override
-  protected void process(@Nonnull TopicBinding binding) {
+  protected void process(TopicBinding binding) {
     myBindings.put(binding.getApiClassName(), binding);
   }
 
   @Nullable
-  public TopicBinding getBinding(@Nonnull String className) {
+  public TopicBinding getBinding(String className) {
     return myBindings.get(className);
   }
 

@@ -16,13 +16,12 @@
 package consulo.component.store.internal;
 
 import consulo.component.ComponentManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-01-31
  */
 public interface StorableComponent extends ComponentManager {
-    @Nonnull
+    
     IComponentStore getStateStore();
 }

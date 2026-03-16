@@ -16,7 +16,6 @@
 package consulo.desktop.swt.ui.impl.image;
 
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -24,6 +23,6 @@ import org.eclipse.swt.graphics.Image;
  * @since 26.05.2024
  */
 public interface DesktopSwtImageReference extends ImageReference {
-  @Nonnull
+  
   Image toSWTImage(int width, int height);
 }

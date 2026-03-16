@@ -23,8 +23,7 @@ import consulo.platform.Platform;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.internal.TouchBarFacade;
 import consulo.ui.ex.popup.JBPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,13 +35,13 @@ import java.util.Collection;
  */
 @ExtensionImpl
 public class MacTouchBarFacade implements TouchBarFacade {
-    @Nonnull
+    
     @Override
     public String getId() {
         return "macTouchBar";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Mac Touch Bar");
@@ -64,7 +63,7 @@ public class MacTouchBarFacade implements TouchBarFacade {
     }
 
     @Override
-    public void setButtonActions(@Nonnull JComponent component,
+    public void setButtonActions(JComponent component,
                                  Collection<? extends JButton> buttons,
                                  Collection<? extends JButton> principal,
                                  JButton defaultButton,
@@ -74,22 +73,22 @@ public class MacTouchBarFacade implements TouchBarFacade {
 
     @Nullable
     @Override
-    public Disposable showWindowActions(@Nonnull Component contentPane) {
+    public Disposable showWindowActions(Component contentPane) {
         return TouchbarSupport.showWindowActions(contentPane);
     }
 
     @Override
-    public void onUpdateEditorHeader(@Nonnull Object editor, JComponent header) {
+    public void onUpdateEditorHeader(Object editor, JComponent header) {
         TouchbarSupport.onUpdateEditorHeader((Editor) editor);
     }
 
     @Override
-    public void showPopupItems(@Nonnull JBPopup popup, @Nonnull JComponent popupComponent) {
+    public void showPopupItems(JBPopup popup, JComponent popupComponent) {
         TouchbarSupport.showPopupItems(popup, popupComponent);
     }
 
     @Override
-    public void setActions(@Nonnull JComponent component, @Nullable ActionGroup group) {
+    public void setActions(JComponent component, @Nullable ActionGroup group) {
         Touchbar.setActions(component, group);
     }
 }

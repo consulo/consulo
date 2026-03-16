@@ -21,13 +21,12 @@ import consulo.project.Project;
 import consulo.searchEverywhere.SearchEverywhereContributor;
 import consulo.searchEverywhere.SearchEverywhereContributorFactory;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class FileSearchEverywhereContributorFactory implements SearchEverywhereContributorFactory<Object> {
-    @Nonnull
+    
     @Override
-    public SearchEverywhereContributor<Object> createContributor(@Nonnull AnActionEvent initEvent) {
+    public SearchEverywhereContributor<Object> createContributor(AnActionEvent initEvent) {
         return new FileSearchEverywhereContributor(initEvent.getData(Project.KEY), GotoActionBase.getPsiContext(initEvent));
     }
 }

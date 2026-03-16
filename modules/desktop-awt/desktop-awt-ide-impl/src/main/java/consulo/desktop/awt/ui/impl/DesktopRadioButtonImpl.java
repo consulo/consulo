@@ -23,7 +23,6 @@ import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBRadioButton;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -47,7 +46,7 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
             }
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopRadioButtonImpl.this;
@@ -85,7 +84,7 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
         return component;
     }
 
-    @Nonnull
+    
     @Override
     public Boolean getValue() {
         return toAWTComponent().isSelected();
@@ -93,7 +92,7 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
 
     @RequiredUIAccess
     @Override
-    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+    public void setValue(Boolean value, boolean fireListeners) {
         toAWTComponent().setSelected(value);
 
         if (fireListeners) {
@@ -107,7 +106,7 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
         getListenerDispatcher(ValueComponentEvent.class).onEvent(new ValueComponentEvent(this, toAWTComponent().isSelected()));
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getLabelText() {
         return toAWTComponent().getLabelText();
@@ -115,7 +114,7 @@ class DesktopRadioButtonImpl extends SwingComponentDelegate<DesktopRadioButtonIm
 
     @RequiredUIAccess
     @Override
-    public void setLabelText(@Nonnull LocalizeValue labelText) {
+    public void setLabelText(LocalizeValue labelText) {
         toAWTComponent().setLabelText(labelText);
         toAWTComponent().updateLabelText();
     }

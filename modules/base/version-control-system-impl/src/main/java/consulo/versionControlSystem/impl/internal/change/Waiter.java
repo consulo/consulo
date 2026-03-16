@@ -23,28 +23,27 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.application.util.Semaphore;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Waiter extends Task.Modal {
   private static final Logger LOG = Logger.getInstance(Waiter.class);
 
-  @Nonnull
+  
   private final Runnable myRunnable;
-  @Nonnull
+  
   private final AtomicBoolean myStarted = new AtomicBoolean();
-  @Nonnull
+  
   private final Semaphore mySemaphore = new Semaphore();
 
-  public Waiter(@Nonnull Project project, @Nonnull Runnable runnable, String title, boolean cancellable) {
+  public Waiter(Project project, Runnable runnable, String title, boolean cancellable) {
     super(project, VcsBundle.message("change.list.manager.wait.lists.synchronization", title), cancellable);
     myRunnable = runnable;
     mySemaphore.down();
     setCancelText(LocalizeValue.localizeTODO("Skip"));
   }
 
-  public void run(@Nonnull ProgressIndicator indicator) {
+  public void run(ProgressIndicator indicator) {
     indicator.setIndeterminate(true);
     indicator.setText2(VcsBundle.message("commit.wait.util.synched.text"));
 

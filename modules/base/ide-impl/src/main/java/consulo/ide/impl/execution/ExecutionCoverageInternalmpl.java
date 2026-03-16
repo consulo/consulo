@@ -39,7 +39,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.HintHint;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -58,9 +57,9 @@ import java.util.function.Function;
 @Singleton
 public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public CompletableFuture<?> showExportDialog(@Nonnull Project project, @Nonnull String presentableName) {
+    public CompletableFuture<?> showExportDialog(Project project, String presentableName) {
         ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
         dialog.setTitle(ExecutionCoverageLocalize.generateCoverageReportFor(presentableName));
         dialog.reset();
@@ -117,23 +116,23 @@ public class ExecutionCoverageInternalmpl implements ExecutionCoverageInternal {
 
     @Override
     @RequiredUIAccess
-    public void showColorsSettings(@Nonnull Project project,
-                                   @Nonnull LineData lineData,
+    public void showColorsSettings(Project project,
+                                   LineData lineData,
                                    Function<LineData, TextAttributesKey> attributesKeyFunc) {
         ColorAndFontOptions colorAndFontOptions = new ColorAndFontOptions() {
             @Override
             protected List<ColorAndFontPanelFactory> createPanelFactories() {
                 final GeneralColorsPage colorsPage = new GeneralColorsPage(project.getApplication());
                 ColorAndFontPanelFactory panelFactory = new ColorAndFontPanelFactory() {
-                    @Nonnull
+                    
                     @Override
                     @RequiredUIAccess
-                    public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
+                    public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
                         SimpleEditorPreview preview = new SimpleEditorPreview(options, colorsPage);
                         return NewColorAndFontPanel.create(preview, colorsPage.getDisplayName(), options, null, colorsPage);
                     }
 
-                    @Nonnull
+                    
                     @Override
                     public LocalizeValue getPanelDisplayName() {
                         return ExecutionCoverageLocalize.configurableNameEditorColorsPage(

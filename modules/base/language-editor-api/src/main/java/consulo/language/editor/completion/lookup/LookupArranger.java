@@ -8,8 +8,7 @@ import consulo.language.editor.completion.WeighingContext;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -49,21 +48,21 @@ public abstract class LookupArranger implements WeighingContext {
     }
   }
 
-  public void registerMatcher(@Nonnull LookupElement item, @Nonnull PrefixMatcher matcher) {
+  public void registerMatcher(LookupElement item, PrefixMatcher matcher) {
     item.putUserData(myMatcherKey, matcher);
   }
 
   @Override
-  @Nonnull
-  public String itemPattern(@Nonnull LookupElement element) {
+  
+  public String itemPattern(LookupElement element) {
     String prefix = itemMatcher(element).getPrefix();
     String additionalPrefix = myAdditionalPrefix;
     return additionalPrefix.isEmpty() ? prefix : prefix + additionalPrefix;
   }
 
   @Override
-  @Nonnull
-  public PrefixMatcher itemMatcher(@Nonnull LookupElement item) {
+  
+  public PrefixMatcher itemMatcher(LookupElement item) {
     PrefixMatcher matcher = item.getUserData(myMatcherKey);
     if (matcher == null) {
       throw new AssertionError("Item not in lookup: item=" + item + "; lookup items=" + myItems);
@@ -126,7 +125,7 @@ public abstract class LookupArranger implements WeighingContext {
     return removed;
   }
 
-  public abstract Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction);
+  public abstract Pair<List<LookupElement>, Integer> arrangeItems(Lookup lookup, boolean onExplicitAction);
 
   public abstract LookupArranger createEmptyCopy();
 
@@ -156,15 +155,15 @@ public abstract class LookupArranger implements WeighingContext {
    * @return for each item, an (ordered) map of criteria used for lookup relevance sorting
    * along with the objects representing the weights in these criteria
    */
-  @Nonnull
-  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> items, boolean hideSingleValued) {
+  
+  public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> items, boolean hideSingleValued) {
     return Collections.emptyMap();
   }
 
   /**
    * Called when the prefix has been truncated farther than the additional prefix typed while the lookup was visible.
    */
-  public void prefixTruncated(@Nonnull LookupEx lookup, int hideOffset) {
+  public void prefixTruncated(LookupEx lookup, int hideOffset) {
     lookup.hideLookup(false);
   }
 
@@ -174,7 +173,7 @@ public abstract class LookupArranger implements WeighingContext {
 
   public static class DefaultArranger extends LookupArranger {
     @Override
-    public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
+    public Pair<List<LookupElement>, Integer> arrangeItems(Lookup lookup, boolean onExplicitAction) {
       LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
       result.addAll(getPrefixItems(true));
       result.addAll(getPrefixItems(false));

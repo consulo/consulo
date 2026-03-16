@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.CheckBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -46,7 +45,7 @@ public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> impleme
         return new Button(parent, SWT.CHECK);
     }
 
-    @Nonnull
+    
     @Override
     public Boolean getValue() {
         return myValue;
@@ -54,7 +53,7 @@ public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> impleme
 
     @RequiredUIAccess
     @Override
-    public void setValue(@Nonnull Boolean value, boolean fireListeners) {
+    public void setValue(Boolean value, boolean fireListeners) {
         myValue = value;
 
         if (myComponent != null) {
@@ -62,7 +61,7 @@ public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> impleme
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getLabelText() {
         return myText;
@@ -70,7 +69,7 @@ public class DesktopSwtCheckBoxImpl extends SWTComponentDelegate<Button> impleme
 
     @RequiredUIAccess
     @Override
-    public void setLabelText(@Nonnull LocalizeValue labelText) {
+    public void setLabelText(LocalizeValue labelText) {
         myText = labelText;
 
         if (myComponent != null) {

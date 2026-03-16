@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,13 +32,13 @@ import jakarta.annotation.Nonnull;
 public interface WebFileFilter {
     ExtensionPointName<WebFileFilter> EP_NAME = ExtensionPointName.create(WebFileFilter.class);
 
-    static boolean isFileAllowed(@Nonnull PsiFile file) {
+    static boolean isFileAllowed(PsiFile file) {
         return isFileAllowed(file.getProject(), file.getViewProvider().getVirtualFile());
     }
 
-    static boolean isFileAllowed(@Nonnull Project project, @Nonnull VirtualFile file) {
+    static boolean isFileAllowed(Project project, VirtualFile file) {
         return EP_NAME.computeSafeIfAny(Application.get(), it -> it.isWebFile(project, file) ? it : null) != null;
     }
 
-    boolean isWebFile(@Nonnull Project project, @Nonnull VirtualFile file);
+    boolean isWebFile(Project project, VirtualFile file);
 }

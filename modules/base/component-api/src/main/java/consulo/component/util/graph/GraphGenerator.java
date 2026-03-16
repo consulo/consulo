@@ -15,7 +15,6 @@
  */
 package consulo.component.util.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ import java.util.*;
  * @author dsl
  */
 public class GraphGenerator<Node> implements Graph<Node> {
-  @Nonnull
+  
   public static <T> Graph<T> generate(InboundSemiGraph<T> graph) {
     return new GraphGenerator<T>(graph);
   }
@@ -31,7 +30,7 @@ public class GraphGenerator<Node> implements Graph<Node> {
   private final InboundSemiGraph<Node> myGraph;
   private final Map<Node, Set<Node>> myOuts;
 
-  private GraphGenerator(@Nonnull InboundSemiGraph<Node> graph) {
+  private GraphGenerator(InboundSemiGraph<Node> graph) {
     myGraph = graph;
     myOuts = new LinkedHashMap<Node, Set<Node>>();
     buildOuts();

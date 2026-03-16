@@ -22,7 +22,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -36,13 +35,13 @@ public class PopupHectorAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         PsiFile file = e.getRequiredData(PsiFile.KEY);
         new HectorComponent(file).showComponent(JBPopupFactory.getInstance().guessBestPopupLocation(e.getDataContext()));
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(PsiFile.KEY));
     }
 }

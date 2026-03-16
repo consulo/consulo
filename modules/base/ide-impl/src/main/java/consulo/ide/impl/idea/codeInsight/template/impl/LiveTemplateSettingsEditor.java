@@ -64,7 +64,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -103,7 +102,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
             return myTitle;
         }
 
-        @Nonnull
+        
         public static ExpandByKey valueOfShortcutChar(char shortcutChar) {
             for (ExpandByKey value : values()) {
                 if (value.getShortcutChar() == shortcutChar) {
@@ -247,7 +246,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
         myTemplate.parseSegments();
     }
 
-    @Nonnull
+    
     private JComponent createNorthPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -374,7 +373,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 if (disposeContextPopup()) {
                     return false;
                 }

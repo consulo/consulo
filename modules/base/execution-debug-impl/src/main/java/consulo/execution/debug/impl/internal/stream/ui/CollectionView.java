@@ -10,7 +10,6 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +21,8 @@ import java.util.List;
 public class CollectionView extends JPanel implements TraceContainer {
     private final CollectionTree myInstancesTree;
 
-    CollectionView(@Nonnull JLabel header,
-                   @Nonnull CollectionTree collectionTree) {
+    CollectionView(JLabel header,
+                   CollectionTree collectionTree) {
         super(new BorderLayout());
         add(header, BorderLayout.NORTH);
 
@@ -35,11 +34,11 @@ public class CollectionView extends JPanel implements TraceContainer {
         Disposer.register(this, myInstancesTree);
     }
 
-    CollectionView(@Nonnull CollectionTree tree) {
+    CollectionView(CollectionTree tree) {
         this(createDefaultLabel(tree), tree);
     }
 
-    private static JLabel createDefaultLabel(@Nonnull CollectionTree tree) {
+    private static JLabel createDefaultLabel(CollectionTree tree) {
         JLabel label = new JBLabel(String.valueOf(tree.getItemsCount()), SwingConstants.CENTER);
         label.setForeground(JBColor.GRAY);
         Font oldFont = label.getFont();
@@ -53,17 +52,17 @@ public class CollectionView extends JPanel implements TraceContainer {
     }
 
     @Override
-    public void highlight(@Nonnull List<TraceElement> elements) {
+    public void highlight(List<TraceElement> elements) {
         myInstancesTree.highlight(elements);
     }
 
     @Override
-    public void select(@Nonnull List<TraceElement> elements) {
+    public void select(List<TraceElement> elements) {
         myInstancesTree.select(elements);
     }
 
     @Override
-    public void addSelectionListener(@Nonnull ValuesSelectionListener listener) {
+    public void addSelectionListener(ValuesSelectionListener listener) {
         myInstancesTree.addSelectionListener(listener);
     }
 
@@ -72,7 +71,7 @@ public class CollectionView extends JPanel implements TraceContainer {
         return myInstancesTree.highlightedExists();
     }
 
-    protected @Nonnull CollectionTree getInstancesTree() {
+    protected CollectionTree getInstancesTree() {
         return myInstancesTree;
     }
 }

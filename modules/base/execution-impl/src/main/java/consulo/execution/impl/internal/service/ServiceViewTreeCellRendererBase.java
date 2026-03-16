@@ -6,8 +6,6 @@ import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.awt.util.ComponentUtil;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import java.awt.*;
 
@@ -19,7 +17,7 @@ abstract class ServiceViewTreeCellRendererBase extends NodeRenderer {
   protected abstract Object getTag(String fragment);
 
   @Override
-  public void append(@Nls @Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
+  public void append(String fragment, SimpleTextAttributes attributes, boolean isMainText) {
     Object tag = myAppendingTag ? null : getTag(fragment);
     if (tag == null) {
       super.append(fragment, attributes, isMainText);
@@ -45,7 +43,7 @@ abstract class ServiceViewTreeCellRendererBase extends NodeRenderer {
   }
 
   @SimpleTextAttributes.StyleAttributeConstant
-  private static int getLinkStyle(@Nonnull SimpleTextAttributes attributes, boolean isActive) {
+  private static int getLinkStyle(SimpleTextAttributes attributes, boolean isActive) {
     int linkStyle = attributes.getStyle() & ~SimpleTextAttributes.STYLE_WAVED & ~SimpleTextAttributes.STYLE_BOLD_DOTTED_LINE;
     if (isActive) {
       linkStyle |= SimpleTextAttributes.STYLE_UNDERLINE;

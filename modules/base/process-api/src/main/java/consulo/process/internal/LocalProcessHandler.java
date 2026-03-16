@@ -10,8 +10,7 @@ import consulo.process.NativeProcessHandler;
 import consulo.process.TaskExecutor;
 import consulo.process.util.ProcessWaitFor;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,7 +28,7 @@ public abstract class LocalProcessHandler<T extends Process> extends BaseProcess
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public LocalProcessHandler(@Nonnull T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public LocalProcessHandler(T process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     myProcess = process;
     myCommandLine = commandLine;
     myCharset = charset;
@@ -46,7 +45,7 @@ public abstract class LocalProcessHandler<T extends Process> extends BaseProcess
   }
 
   @Override
-  @Nonnull
+  
   public final T getProcess() {
     return myProcess;
   }

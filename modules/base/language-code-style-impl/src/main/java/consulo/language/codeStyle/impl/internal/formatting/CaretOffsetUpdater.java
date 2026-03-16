@@ -19,7 +19,6 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.TextChange;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +27,14 @@ import java.util.Map;
 public class CaretOffsetUpdater {
     private final Map<Editor, Integer> myCaretOffsets = new HashMap<>();
 
-    public CaretOffsetUpdater(@Nonnull Document document) {
+    public CaretOffsetUpdater(Document document) {
         Editor[] editors = EditorFactory.getInstance().getEditors(document);
         for (Editor editor : editors) {
             myCaretOffsets.put(editor, editor.getCaretModel().getOffset());
         }
     }
 
-    public void update(@Nonnull List<? extends TextChange> changes) {
+    public void update(List<? extends TextChange> changes) {
         BulkChangesMerger merger = BulkChangesMerger.INSTANCE;
         for (Map.Entry<Editor, Integer> entry : myCaretOffsets.entrySet()) {
             entry.setValue(merger.updateOffset(entry.getValue(), changes));

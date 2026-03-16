@@ -20,8 +20,7 @@ import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.Tab;
 import consulo.ui.TextItemPresentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -49,7 +48,7 @@ public class DesktopSwtTabImpl implements Tab {
     }
 
     @Override
-    public void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+    public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
         myRenderer = renderer;
     }
 

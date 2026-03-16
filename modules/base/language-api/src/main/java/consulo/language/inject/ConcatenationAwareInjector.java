@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -30,5 +29,5 @@ import jakarta.annotation.Nonnull;
 public interface ConcatenationAwareInjector {
     ExtensionPointName<ConcatenationAwareInjector> EP_NAME = ExtensionPointName.create(ConcatenationAwareInjector.class);
 
-    void inject(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement... operands);
+    void inject(MultiHostRegistrar registrar, PsiElement... operands);
 }

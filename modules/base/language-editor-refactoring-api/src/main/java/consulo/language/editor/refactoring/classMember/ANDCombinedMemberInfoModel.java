@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.classMember;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -62,7 +61,7 @@ public class ANDCombinedMemberInfoModel<T extends PsiElement, M extends MemberIn
   }
 
   @Override
-  public int checkForProblems(@Nonnull M member) {
+  public int checkForProblems(M member) {
     return Math.max(myModel1.checkForProblems(member), myModel2.checkForProblems(member));
   }
 

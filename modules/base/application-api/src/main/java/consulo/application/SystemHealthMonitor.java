@@ -17,7 +17,6 @@ package consulo.application;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,8 +25,8 @@ import jakarta.annotation.Nonnull;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SystemHealthMonitor {
     interface Reporter {
-        void warning(@Nonnull String notificationText, @Nonnull String actionText, @Nonnull Runnable actionListener);
+        void warning(String notificationText, String actionText, Runnable actionListener);
     }
 
-    void check(@Nonnull Reporter reporter);
+    void check(Reporter reporter);
 }

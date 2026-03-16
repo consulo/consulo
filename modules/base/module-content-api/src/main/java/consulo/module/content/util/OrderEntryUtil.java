@@ -27,8 +27,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -39,7 +38,7 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static LibraryOrderEntry findLibraryOrderEntry(@Nonnull ModuleRootModel model, @Nullable Library library) {
+  public static LibraryOrderEntry findLibraryOrderEntry(ModuleRootModel model, @Nullable Library library) {
     if (library == null) return null;
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry && library.equals(((LibraryOrderEntry)orderEntry).getLibrary())) {
@@ -51,7 +50,7 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static LibraryOrderEntry findLibraryOrderEntry(@Nonnull ModuleRootModel model, @Nonnull String libraryName) {
+  public static LibraryOrderEntry findLibraryOrderEntry(ModuleRootModel model, String libraryName) {
     for (OrderEntry orderEntry : model.getOrderEntries()) {
       if (orderEntry instanceof LibraryOrderEntry) {
         String libName = ((LibraryOrderEntry)orderEntry).getLibraryName();
@@ -64,7 +63,7 @@ public class OrderEntryUtil {
   }
 
   @Nullable
-  public static ModuleOrderEntry findModuleOrderEntry(@Nonnull ModuleRootModel model, @Nullable Module module) {
+  public static ModuleOrderEntry findModuleOrderEntry(ModuleRootModel model, @Nullable Module module) {
     if (module == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
@@ -77,12 +76,12 @@ public class OrderEntryUtil {
 
   @Nullable
   @Deprecated
-  public static ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(@Nonnull ModuleRootModel model, @Nullable Sdk sdk) {
+  public static ModuleExtensionWithSdkOrderEntry findJdkOrderEntry(ModuleRootModel model, @Nullable Sdk sdk) {
     return findModuleExtensionWithSdkOrderEntry(model, sdk);
   }
 
   @Nullable
-  public static ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(@Nonnull ModuleRootModel model, @Nullable Sdk sdk) {
+  public static ModuleExtensionWithSdkOrderEntry findModuleExtensionWithSdkOrderEntry(ModuleRootModel model, @Nullable Sdk sdk) {
     if (sdk == null) return null;
 
     for (OrderEntry orderEntry : model.getOrderEntries()) {
@@ -145,7 +144,7 @@ public class OrderEntryUtil {
     addLibraryToRoots(module, library);
   }
 
-  public static void addLibraryToRoots(@Nonnull Module module, @Nonnull Library library) {
+  public static void addLibraryToRoots(Module module, Library library) {
     ModuleRootManager manager = ModuleRootManager.getInstance(module);
     ModifiableRootModel rootModel = manager.getModifiableModel();
 
@@ -166,7 +165,7 @@ public class OrderEntryUtil {
     rootModel.commit();
   }
 
-  public static void replaceLibrary(@Nonnull ModifiableRootModel model, @Nonnull Library oldLibrary, @Nonnull Library newLibrary) {
+  public static void replaceLibrary(ModifiableRootModel model, Library oldLibrary, Library newLibrary) {
     OrderEntry[] entries = model.getOrderEntries();
     for (int i = 0; i < entries.length; i++) {
       OrderEntry orderEntry = entries[i];
@@ -183,9 +182,9 @@ public class OrderEntryUtil {
     }
   }
 
-  public static <T extends OrderEntry> void processOrderEntries(@Nonnull Module module,
-                                                                @Nonnull Class<T> orderEntryClass,
-                                                                @Nonnull Predicate<T> processor) {
+  public static <T extends OrderEntry> void processOrderEntries(Module module,
+                                                                Class<T> orderEntryClass,
+                                                                Predicate<T> processor) {
     OrderEntry[] orderEntries = ModuleRootManager.getInstance(module).getOrderEntries();
     for (OrderEntry orderEntry : orderEntries) {
       if (orderEntryClass.isInstance(orderEntry)) {

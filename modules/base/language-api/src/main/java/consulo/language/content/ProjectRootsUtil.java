@@ -26,8 +26,7 @@ import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -69,27 +68,27 @@ public class ProjectRootsUtil {
     return projectFileIndex.isInTestResource(directoryFile);
   }
 
-  public static boolean isSourceOrTestRoot(@Nonnull VirtualFile virtualFile, Project project) {
+  public static boolean isSourceOrTestRoot(VirtualFile virtualFile, Project project) {
     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return projectFileIndex.isInSource(virtualFile);
   }
 
   @Nullable
-  public static ContentFolder getModuleSourceRoot(@Nonnull VirtualFile root, @Nonnull Project project) {
+  public static ContentFolder getModuleSourceRoot(VirtualFile root, Project project) {
     return findContentFolderForDirectory(root, project);
   }
 
-  public static boolean isModuleSourceRoot(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+  public static boolean isModuleSourceRoot(VirtualFile virtualFile, Project project) {
     return getModuleSourceRoot(virtualFile, project) != null;
   }
 
   @Nullable
-  public static ContentFolder findContentFolderForDirectory(@Nonnull VirtualFile virtualFile, Project project) {
+  public static ContentFolder findContentFolderForDirectory(VirtualFile virtualFile, Project project) {
     return findContentFolderForDirectory(ProjectRootManager.getInstance(project).getFileIndex(), virtualFile);
   }
 
   @Nullable
-  public static ContentFolder findContentFolderForDirectory(@Nonnull ProjectFileIndex projectFileIndex, @Nonnull VirtualFile virtualFile) {
+  public static ContentFolder findContentFolderForDirectory(ProjectFileIndex projectFileIndex, VirtualFile virtualFile) {
     Module module = projectFileIndex.getModuleForFile(virtualFile);
     if (module == null) {
       return null;
@@ -115,11 +114,11 @@ public class ProjectRootsUtil {
     return isModuleContentRoot(directory.getVirtualFile(), directory.getProject());
   }
 
-  public static boolean isModuleContentRoot(@Nonnull VirtualFile directoryFile, Project project) {
+  public static boolean isModuleContentRoot(VirtualFile directoryFile, Project project) {
     return isModuleContentRoot(ProjectRootManager.getInstance(project).getFileIndex(), directoryFile);
   }
 
-  public static boolean isModuleContentRoot(@Nonnull ProjectFileIndex projectFileIndex, @Nonnull VirtualFile directoryFile) {
+  public static boolean isModuleContentRoot(ProjectFileIndex projectFileIndex, VirtualFile directoryFile) {
     VirtualFile contentRootForFile = projectFileIndex.getContentRootForFile(directoryFile);
     return directoryFile.equals(contentRootForFile);
   }

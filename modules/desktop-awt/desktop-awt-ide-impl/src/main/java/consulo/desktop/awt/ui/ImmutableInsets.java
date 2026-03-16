@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui;
 
 import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -37,28 +36,28 @@ public record ImmutableInsets(int top, int right, int bottom, int left) implemen
         this(topBottom, leftRight, topBottom, leftRight);
     }
 
-    public Size2D stepOut(@Nonnull Size2D size) {
+    public Size2D stepOut(Size2D size) {
         return new Size2D(
             size.width() + left() + right(),
             size.height() + top() + bottom()
         );
     }
 
-    public Size2D stepIn(@Nonnull Size2D size) {
+    public Size2D stepIn(Size2D size) {
         return new Size2D(
             size.width() - left() - right(),
             size.height() - top() - bottom()
         );
     }
 
-    public Rectangle2D stepOut(@Nonnull Rectangle2D rectangle) {
+    public Rectangle2D stepOut(Rectangle2D rectangle) {
         return new Rectangle2D(
             rectangle.minPoint().translate(-left(), -top()),
             stepOut(rectangle.size())
         );
     }
 
-    public Rectangle2D stepIn(@Nonnull Rectangle2D rectangle) {
+    public Rectangle2D stepIn(Rectangle2D rectangle) {
         return new Rectangle2D(
             rectangle.minPoint().translate(left(), top()),
             stepIn(rectangle.size())
@@ -90,7 +89,7 @@ public record ImmutableInsets(int top, int right, int bottom, int left) implemen
     }
 
     @SuppressWarnings("UnnecessaryFullyQualifiedName")
-    public static ImmutableInsets of(@Nonnull Insets insets) {
+    public static ImmutableInsets of(Insets insets) {
         return new ImmutableInsets(insets.top, insets.right, insets.bottom, insets.left);
     }
 }

@@ -22,10 +22,8 @@ import consulo.logging.Logger;
 import consulo.process.local.EnvironmentUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,16 +37,16 @@ public class ParametersList implements Cloneable {
   private Map<String, String> myMacroMap = null;
   private List<ParamsGroup> myGroups = new ArrayList<ParamsGroup>();
 
-  public boolean hasParameter(@NonNls String param) {
+  public boolean hasParameter(String param) {
     return myParameters.contains(param);
   }
 
-  public boolean hasProperty(@NonNls String name) {
+  public boolean hasProperty(String name) {
     return getPropertyValue(name) != null;
   }
 
   @Nullable
-  public String getPropertyValue(@Nonnull @NonNls String name) {
+  public String getPropertyValue(String name) {
     String prefix = "-D" + name + "=";
     for (String parameter : myParameters) {
 
@@ -59,7 +57,7 @@ public class ParametersList implements Cloneable {
     return null;
   }
 
-  @Nonnull
+  
   public Map<String, String> getProperties() {
     Map<String, String> result = new HashMap<String, String>();
     for (String parameter : myParameters) {
@@ -71,17 +69,17 @@ public class ParametersList implements Cloneable {
     return result;
   }
 
-  @Nonnull
+  
   public String getParametersString() {
     return join(getList());
   }
 
-  @Nonnull
+  
   public String[] getArray() {
     return ArrayUtil.toStringArray(getList());
   }
 
-  @Nonnull
+  
   public List<String> getList() {
     if (myGroups.isEmpty()) {
       return Collections.unmodifiableList(myParameters);
@@ -100,11 +98,11 @@ public class ParametersList implements Cloneable {
     myGroups.clear();
   }
 
-  public void prepend(@NonNls String parameter) {
+  public void prepend(String parameter) {
     addAt(0, parameter);
   }
 
-  public void prependAll(@NonNls String... parameter) {
+  public void prependAll(String... parameter) {
     addAll(parameter);
     Collections.rotate(myParameters, parameter.length);
   }
@@ -118,25 +116,25 @@ public class ParametersList implements Cloneable {
     }
   }
 
-  public void add(@NonNls String parameter) {
+  public void add(String parameter) {
     myParameters.add(expandMacros(parameter));
   }
 
-  public ParamsGroup addParamsGroup(@Nonnull String groupId) {
+  public ParamsGroup addParamsGroup(String groupId) {
     return addParamsGroup(new ParamsGroup(groupId));
   }
 
-  public ParamsGroup addParamsGroup(@Nonnull ParamsGroup group) {
+  public ParamsGroup addParamsGroup(ParamsGroup group) {
     myGroups.add(group);
     return group;
   }
 
-  public ParamsGroup addParamsGroupAt(int index, @Nonnull ParamsGroup group) {
+  public ParamsGroup addParamsGroupAt(int index, ParamsGroup group) {
     myGroups.add(index, group);
     return group;
   }
 
-  public ParamsGroup addParamsGroupAt(int index, @Nonnull String groupId) {
+  public ParamsGroup addParamsGroupAt(int index, String groupId) {
     ParamsGroup group = new ParamsGroup(groupId);
     myGroups.add(index, group);
     return group;
@@ -159,7 +157,7 @@ public class ParametersList implements Cloneable {
   }
 
   @Nullable
-  public ParamsGroup getParamsGroup(@Nonnull String name) {
+  public ParamsGroup getParamsGroup(String name) {
     for (ParamsGroup group : myGroups) {
       if (name.equals(group.getId())) return group;
     }
@@ -170,24 +168,24 @@ public class ParametersList implements Cloneable {
     return myGroups.remove(index);
   }
 
-  public void addAt(int index, @Nonnull String parameter) {
+  public void addAt(int index, String parameter) {
     myParameters.add(index, expandMacros(parameter));
   }
 
-  public void defineProperty(@NonNls String propertyName, @NonNls String propertyValue) {
+  public void defineProperty(String propertyName, String propertyValue) {
     addProperty(propertyName, propertyValue);
   }
 
-  public void addProperty(@NonNls String propertyName, @NonNls String propertyValue) {
+  public void addProperty(String propertyName, String propertyValue) {
     //noinspection HardCodedStringLiteral
     myParameters.add("-D" + propertyName + "=" + propertyValue);
   }
 
-  public void replaceOrAppend(@NonNls String parameterPrefix, @NonNls String replacement) {
+  public void replaceOrAppend(String parameterPrefix, String replacement) {
     replaceOrAdd(parameterPrefix, replacement, myParameters.size());
   }
 
-  private void replaceOrAdd(@NonNls String parameterPrefix, @NonNls String replacement, int position) {
+  private void replaceOrAdd(String parameterPrefix, String replacement, int position) {
     for (ListIterator<String> iterator = myParameters.listIterator(); iterator.hasNext(); ) {
       String param = iterator.next();
       if (param.startsWith(parameterPrefix)) {
@@ -205,11 +203,11 @@ public class ParametersList implements Cloneable {
     }
   }
 
-  public void replaceOrPrepend(@NonNls String parameter, @NonNls String replacement) {
+  public void replaceOrPrepend(String parameter, String replacement) {
     replaceOrAdd(parameter, replacement, 0);
   }
 
-  public void set(int ind, @NonNls String value) {
+  public void set(int ind, String value) {
     myParameters.set(ind, value);
   }
 
@@ -217,7 +215,7 @@ public class ParametersList implements Cloneable {
     return myParameters.get(ind);
   }
 
-  public void add(@NonNls String name, @NonNls String value) {
+  public void add(String name, String value) {
     add(name);
     add(value);
   }
@@ -238,8 +236,8 @@ public class ParametersList implements Cloneable {
     return copyTo(new ParametersList());
   }
 
-  @Nonnull
-  ParametersList copyTo(@Nonnull ParametersList target) {
+  
+  ParametersList copyTo(ParametersList target) {
     target.myParameters.addAll(myParameters);
     for (ParamsGroup group : myGroups) {
       target.myGroups.add(group.clone());
@@ -250,15 +248,15 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#join(java.util.List)
    */
-  @Nonnull
-  public static String join(@Nonnull List<String> parameters) {
+  
+  public static String join(List<String> parameters) {
     return ParametersListUtil.join(parameters);
   }
 
   /**
    * @see ParametersListUtil#join(java.util.List)
    */
-  @Nonnull
+  
   public static String join(String... parameters) {
     return ParametersListUtil.join(parameters);
   }
@@ -266,8 +264,8 @@ public class ParametersList implements Cloneable {
   /**
    * @see ParametersListUtil#parseToArray(String)
    */
-  @Nonnull
-  public static String[] parse(@Nonnull String string) {
+  
+  public static String[] parse(String string) {
     return ParametersListUtil.parseToArray(string);
   }
 

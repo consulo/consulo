@@ -22,7 +22,6 @@ import consulo.language.content.FileIndexFacade;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -35,10 +34,10 @@ import jakarta.inject.Singleton;
 @Singleton
 public class LightPsiManager extends PsiManagerImpl {
   @Inject
-  public LightPsiManager(@Nonnull Application application,
-                         @Nonnull Project project,
-                         @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider,
-                         @Nonnull PsiModificationTracker modificationTracker) {
+  public LightPsiManager(Application application,
+                         Project project,
+                         Provider<FileIndexFacade> fileIndexFacadeProvider,
+                         PsiModificationTracker modificationTracker) {
     super(application, project, fileIndexFacadeProvider, modificationTracker);
   }
 }

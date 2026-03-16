@@ -33,8 +33,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "first")
 public class UnSelectWordHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -149,7 +148,7 @@ public class UnSelectWordHandler extends EditorActionHandler implements Extensio
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_UNSELECT_WORD_AT_CARET;

@@ -27,7 +27,6 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -38,9 +37,9 @@ public class AnalyzeDependenciesOnSpecifiedTargetHandler extends DependenciesHan
     private final GlobalSearchScope myTargetScope;
 
     public AnalyzeDependenciesOnSpecifiedTargetHandler(
-        @Nonnull Project project,
-        @Nonnull AnalysisScope scope,
-        @Nonnull GlobalSearchScope targetScope
+        Project project,
+        AnalysisScope scope,
+        GlobalSearchScope targetScope
     ) {
         super(project, Collections.singletonList(scope), Collections.<PsiFile>emptySet());
         myTargetScope = targetScope;

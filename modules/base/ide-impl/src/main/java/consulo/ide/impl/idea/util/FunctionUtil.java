@@ -15,8 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.function.Function;
@@ -28,28 +27,28 @@ public class FunctionUtil {
     private FunctionUtil() {
     }
 
-    @Nonnull
+    
     public static <T> Function<T, T> id() {
         return Function.identity();
     }
 
-    @Nonnull
+    
     public static <A, B> Function<A, B> nullConstant() {
         return a -> null;
     }
 
-    @Nonnull
+    
     public static <T> Function<T, String> string() {
         return Object::toString;
     }
 
-    @Nonnull
+    
     public static <A, B> Function<A, B> constant(B b) {
         return a -> b;
     }
 
-    @Nonnull
-    public static <A, B, C> Function<A, C> composition(@Nonnull Function<B, C> f, @Nonnull Function<A, B> g) {
+    
+    public static <A, B, C> Function<A, C> composition(Function<B, C> f, Function<A, B> g) {
         return a -> f.apply(g.apply(a));
     }
 

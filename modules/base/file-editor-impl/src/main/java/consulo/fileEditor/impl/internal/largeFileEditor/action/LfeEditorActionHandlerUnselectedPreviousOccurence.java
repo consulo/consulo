@@ -17,7 +17,6 @@ package consulo.fileEditor.impl.internal.largeFileEditor.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class LfeEditorActionHandlerUnselectedPreviousOccurence extends LfeEditorActionHandlerDisabled {
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_UNSELECT_PREVIOUS_OCCURENCE;

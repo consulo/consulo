@@ -1,7 +1,7 @@
 package consulo.language.duplicateAnalysis.treeHash;
 
 import consulo.language.duplicateAnalysis.util.PsiFragment;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene.Kudelevsky

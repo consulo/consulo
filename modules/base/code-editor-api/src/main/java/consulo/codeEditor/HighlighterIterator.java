@@ -19,12 +19,11 @@ package consulo.codeEditor;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
-import jakarta.annotation.Nonnull;
 
 public interface HighlighterIterator {
     TextAttributes getTextAttributes();
 
-    @Nonnull
+    
     default TextAttributesKey[] getTextAttributesKeys() {
         return TextAttributesKey.EMPTY_ARRAY;
     }

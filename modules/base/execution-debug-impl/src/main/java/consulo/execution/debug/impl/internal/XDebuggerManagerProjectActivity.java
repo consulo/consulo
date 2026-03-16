@@ -21,7 +21,6 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class XDebuggerManagerProjectActivity implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         XDebuggerManagerImpl manager = (XDebuggerManagerImpl) XDebuggerManager.getInstance(project);
 
         manager.projectOpened();

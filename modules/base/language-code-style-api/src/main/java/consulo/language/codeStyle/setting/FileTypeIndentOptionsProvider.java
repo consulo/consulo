@@ -23,7 +23,6 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to specify indent options for specific file types as opposed to languages. For a language it is highly recommended to use
@@ -45,7 +44,7 @@ public interface FileTypeIndentOptionsProvider {
 
     IndentOptionsEditor createOptionsEditor();
 
-    @Nonnull
+    
     String getPreviewText();
 
     void prepareForReformat(PsiFile psiFile);

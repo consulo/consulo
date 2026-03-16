@@ -17,8 +17,7 @@ package consulo.virtualFileSystem.encoding;
 
 import consulo.util.io.CharsetToolkit;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -39,7 +38,7 @@ public class EncodingReference {
     this.charset = charset;
   }
 
-  @Nonnull
+  
   public Charset dereference() {
     return charset == null ? CharsetToolkit.getDefaultSystemCharset() : charset;
   }

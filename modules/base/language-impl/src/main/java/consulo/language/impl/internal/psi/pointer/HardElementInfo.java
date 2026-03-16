@@ -20,23 +20,22 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import jakarta.annotation.Nonnull;
 
 class HardElementInfo extends SmartPointerElementInfo {
-  @Nonnull
+  
   private final PsiElement myElement;
 
-  HardElementInfo(@Nonnull PsiElement element) {
+  HardElementInfo(PsiElement element) {
     myElement = element;
   }
 
   @Override
-  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
+  PsiElement restoreElement(SmartPointerManagerImpl manager) {
     return myElement;
   }
 
   @Override
-  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
+  PsiFile restoreFile(SmartPointerManagerImpl manager) {
     return myElement.isValid() ? myElement.getContainingFile() : null;
   }
 
@@ -46,7 +45,7 @@ class HardElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  boolean pointsToTheSameElementAs(SmartPointerElementInfo other, SmartPointerManagerImpl manager) {
     return other instanceof HardElementInfo && myElement.equals(((HardElementInfo)other).myElement);
   }
 
@@ -56,12 +55,12 @@ class HardElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getRange(SmartPointerManagerImpl manager) {
     return myElement.getTextRange();
   }
 
   @Override
-  Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getPsiRange(SmartPointerManagerImpl manager) {
     return getRange(manager);
   }
 

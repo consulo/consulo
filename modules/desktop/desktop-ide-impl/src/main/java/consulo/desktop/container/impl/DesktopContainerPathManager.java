@@ -22,7 +22,6 @@ import consulo.platform.Platform;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 import java.io.*;
@@ -93,7 +92,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
    * @return home path of platform (in most cases path is $APP_HOME_PATH$/platform/$HOME_PATH$)
    */
   @Override
-  @Nonnull
+  
   public String getHomePath() {
     if (ourHomePath != null) return ourHomePath;
 
@@ -125,7 +124,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
    * @return external platform directory for mac, or platform directory inside application for other oses
    */
   @Override
-  @Nonnull
+  
   public File getExternalPlatformDirectory() {
     File defaultPath = new File(getAppHomeDirectory(), PLATFORM_FOLDER);
 
@@ -140,7 +139,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
    * @return app home, equal IDE installation path
    */
   @Override
-  @Nonnull
+  
   public File getAppHomeDirectory() {
     String appHomePath = System.getProperty(CONSULO_APP_HOME_PATH);
     if (appHomePath != null) {
@@ -159,20 +158,20 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   }
 
   @Override
-  @Nonnull
+  
   public String getBinPath() {
     return getHomePath() + File.separator + BIN_FOLDER;
   }
 
   @Override
-  @Nonnull
+  
   public String getLibPath() {
     return getHomePath() + File.separator + LIB_FOLDER;
   }
 
   // config paths
   @Override
-  @Nonnull
+  
   public String getConfigPath() {
     if (ourConfigPath != null) return ourConfigPath;
 
@@ -193,7 +192,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   }
 
   @Override
-  @Nonnull
+  
   public String getScratchPath() {
     if (ourScratchPath != null) return ourScratchPath;
 
@@ -213,19 +212,19 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   }
 
   @Override
-  @Nonnull
+  
   public String getOptionsPath() {
     return getConfigPath() + File.separator + OPTIONS_FOLDER;
   }
 
   @Override
-  @Nonnull
-  public File getOptionsFile(@Nonnull String fileName) {
+  
+  public File getOptionsFile(String fileName) {
     return new File(getOptionsPath(), fileName + ".xml");
   }
 
   @Override
-  @Nonnull
+  
   public String getInstallPluginsPath() {
     if (ourInstallPluginsPath != null) {
       return ourInstallPluginsPath;
@@ -252,7 +251,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   }
 
   @Override
-  @Nonnull
+  
   public String[] getPluginsPaths() {
     if (ourPluginsPaths != null) return ourPluginsPaths;
 
@@ -290,7 +289,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   // runtime paths
 
   @Override
-  @Nonnull
+  
   public String getSystemPath() {
     if (ourSystemPath != null) return ourSystemPath;
 
@@ -324,20 +323,20 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     return path;
   }
 
-  @Nonnull
+  
   @Override
   public File getDocumentsDir() {
     return DefaultPaths.getInstance().getDocumentsDir();
   }
 
   @Override
-  @Nonnull
+  
   public String getTempPath() {
     return getSystemPath() + File.separator + "tmp";
   }
 
   @Override
-  @Nonnull
+  
   public File getIndexRoot() {
     String indexRoot = System.getProperty("index_root_path", getSystemPath() + "/index");
     checkAndCreate(indexRoot, true);
@@ -345,7 +344,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   }
 
   @Override
-  @Nonnull
+  
   public File getLogPath() {
     if (ourLogPath != null) return ourLogPath;
 
@@ -365,7 +364,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
   }
 
   @Override
-  @Nonnull
+  
   public String getPluginTempPath() {
     return getSystemPath() + File.separator + PLUGINS_FOLDER;
   }
@@ -440,7 +439,7 @@ public class DesktopContainerPathManager extends ContainerPathManager {
     return new File(path).getAbsolutePath();
   }
 
-  @Nonnull
+  
   private static File getAbsoluteFile(String path) {
     if (path.startsWith("~/") || path.startsWith("~\\")) {
       path = Platform.current().user().homePath() + path.substring(1);

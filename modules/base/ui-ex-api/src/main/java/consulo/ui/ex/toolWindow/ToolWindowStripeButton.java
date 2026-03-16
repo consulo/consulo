@@ -19,21 +19,20 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 12-Oct-17
  */
 public interface ToolWindowStripeButton extends Disposable {
-  @Nonnull
+  
   WindowInfo getWindowInfo();
 
-  void apply(@Nonnull WindowInfo windowInfo);
+  void apply(WindowInfo windowInfo);
 
   @RequiredUIAccess
   void updatePresentation();
 
-  @Nonnull
+  
   Component getComponent();
 }

@@ -27,8 +27,7 @@ import consulo.language.editor.template.context.TemplateContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -55,14 +54,14 @@ public class TemplateImpl implements Template, SchemeElement {
 
     private boolean isDeactivated = false;
 
-    public TemplateImpl(@Nonnull String key, String group) {
+    public TemplateImpl(String key, String group) {
         this(key, null, group);
         myToParseSegments = false;
         myTemplateText = "";
         mySegments = new ArrayList<>();
     }
 
-    public TemplateImpl(@Nonnull String key, String string, String group) {
+    public TemplateImpl(String key, String string, String group) {
         myKey = key;
         myString = string;
         myGroupName = group;
@@ -78,7 +77,7 @@ public class TemplateImpl implements Template, SchemeElement {
     }
 
     @Override
-    public void addTextSegment(@Nonnull String text) {
+    public void addTextSegment(String text) {
         text = StringUtil.convertLineSeparators(text);
         myTemplateText += text;
     }
@@ -127,7 +126,7 @@ public class TemplateImpl implements Template, SchemeElement {
         return myId;
     }
 
-    @Nonnull
+    
     @Override
     public TemplateImpl copy() {
         TemplateImpl template = new TemplateImpl(myKey, myString, myGroupName);
@@ -174,7 +173,7 @@ public class TemplateImpl implements Template, SchemeElement {
         return isDeactivated;
     }
 
-    @Nonnull
+    
     @Override
     public TemplateContext getTemplateContext() {
         return myTemplateContext;
@@ -387,17 +386,17 @@ public class TemplateImpl implements Template, SchemeElement {
     }
 
     @Override
-    public boolean getOption(@Nonnull KeyWithDefaultValue<Boolean> key) {
+    public boolean getOption(KeyWithDefaultValue<Boolean> key) {
         return myOptions.getOrDefault(key.toString(), key.getDefaultValue());
     }
 
     @Override
-    public boolean containsOption(@Nonnull KeyWithDefaultValue<Boolean> key) {
+    public boolean containsOption(KeyWithDefaultValue<Boolean> key) {
         return myOptions.containsKey(key.toString());
     }
 
     @Override
-    public void setOption(@Nonnull KeyWithDefaultValue<Boolean> key, boolean value) {
+    public void setOption(KeyWithDefaultValue<Boolean> key, boolean value) {
         myOptions.put(key.toString(), value);
     }
 

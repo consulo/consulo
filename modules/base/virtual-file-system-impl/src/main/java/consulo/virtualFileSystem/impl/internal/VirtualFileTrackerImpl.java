@@ -25,8 +25,7 @@ import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -149,10 +148,10 @@ public class VirtualFileTrackerImpl implements VirtualFileTracker {
 
   @Override
   public void addTracker(
-    @Nonnull final String fileUrl,
-    @Nonnull final VirtualFileListener listener,
+    final String fileUrl,
+    final VirtualFileListener listener,
     final boolean fromRefreshOnly,
-    @Nonnull Disposable parentDisposable) {
+    Disposable parentDisposable) {
 
     getSet(fileUrl, myAllTrackers).add(listener);
 

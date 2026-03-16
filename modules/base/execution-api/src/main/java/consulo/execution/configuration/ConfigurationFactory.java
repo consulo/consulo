@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -45,7 +44,7 @@ public abstract class ConfigurationFactory {
         myType = (ConfigurationType) this;
     }
 
-    protected ConfigurationFactory(@Nonnull ConfigurationType type) {
+    protected ConfigurationFactory(ConfigurationType type) {
         myType = type;
     }
 
@@ -67,7 +66,7 @@ public abstract class ConfigurationFactory {
      *
      * @return {@code true} if it makes sense to create configurations of this type in {@code project}
      */
-    public boolean isApplicable(@Nonnull Project project) {
+    public boolean isApplicable(Project project) {
         return true;
     }
 
@@ -86,7 +85,7 @@ public abstract class ConfigurationFactory {
     /**
      * @return id for factory
      */
-    @Nonnull
+    
     public String getId() {
         return myType.getId();
     }
@@ -96,13 +95,13 @@ public abstract class ConfigurationFactory {
      *
      * @return the name of the run configuration variant created by this factory
      */
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return myType.getDisplayName();
     }
 
     @Nullable
-    public Image getIcon(@Nonnull RunConfiguration configuration) {
+    public Image getIcon(RunConfiguration configuration) {
         return getIcon();
     }
 
@@ -111,7 +110,7 @@ public abstract class ConfigurationFactory {
         return myType.getIcon();
     }
 
-    @Nonnull
+    
     public ConfigurationType getType() {
         return myType;
     }
@@ -133,13 +132,13 @@ public abstract class ConfigurationFactory {
         return true;
     }
 
-    public void onNewConfigurationCreated(@Nonnull RunConfiguration configuration) {
+    public void onNewConfigurationCreated(RunConfiguration configuration) {
         if (configuration instanceof ConfigurationCreationListener listener) {
             listener.onNewConfigurationCreated();
         }
     }
 
-    public void onConfigurationCopied(@Nonnull RunConfiguration configuration) {
+    public void onConfigurationCopied(RunConfiguration configuration) {
         if (configuration instanceof ConfigurationCreationListener listener) {
             listener.onConfigurationCopied();
         }

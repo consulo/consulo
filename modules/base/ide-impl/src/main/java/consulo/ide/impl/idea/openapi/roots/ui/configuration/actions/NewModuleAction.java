@@ -32,7 +32,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -46,7 +45,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile virtualFile = e.getData(VirtualFile.KEY);
 
@@ -82,7 +81,7 @@ public class NewModuleAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }

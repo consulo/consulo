@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.actionSystem.ex;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class QuickList implements ExternalizableScheme {
         return myDisplayName;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return getDisplayName();
@@ -124,7 +123,7 @@ public class QuickList implements ExternalizableScheme {
         myDisplayName = name;
     }
 
-    @Nonnull
+    
     @Override
     public ExternalInfo getExternalInfo() {
         return myExternalInfo;

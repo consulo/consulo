@@ -18,16 +18,15 @@ package consulo.content.scope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface PackageSet {
-    boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder);
+    boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder);
 
-    @Nonnull
+    
     PackageSet createCopy();
 
-    @Nonnull
+    
     String getText();
 
     int getNodePriority();

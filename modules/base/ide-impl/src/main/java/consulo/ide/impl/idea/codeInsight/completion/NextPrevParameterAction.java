@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -34,19 +33,19 @@ import jakarta.annotation.Nullable;
 public abstract class NextPrevParameterAction extends CodeInsightAction {
     private final boolean myNext;
 
-    protected NextPrevParameterAction(@Nonnull LocalizeValue text, boolean next) {
+    protected NextPrevParameterAction(LocalizeValue text, boolean next) {
         super(text, text);
         myNext = next;
     }
 
-    @Nonnull
+    
     @Override
     public CodeInsightActionHandler getHandler() {
         return new Handler();
     }
 
     @Override
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return hasSutablePolicy(editor, file);
     }
 
@@ -67,7 +66,7 @@ public abstract class NextPrevParameterAction extends CodeInsightAction {
     private class Handler implements CodeInsightActionHandler {
         @Override
         @RequiredUIAccess
-        public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+        public void invoke(Project project, Editor editor, PsiFile file) {
             TemplateParameterTraversalPolicy policy = findSuitableTraversalPolicy(editor, file);
             if (policy != null) {
                 policy.invoke(editor, file, myNext);

@@ -7,7 +7,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.psi.ReferenceRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,14 +16,14 @@ import java.util.function.Predicate;
  */
 public final class SingleTargetRequestResultProcessor extends RequestResultProcessor {
   private final PsiElement myTarget;
-  @Nonnull
+  
   private final PsiReferenceService myPsiReferenceService;
 
-  public SingleTargetRequestResultProcessor(@Nonnull PsiElement target) {
+  public SingleTargetRequestResultProcessor(PsiElement target) {
     this(target, PsiReferenceService.getService());
   }
 
-  public SingleTargetRequestResultProcessor(@Nonnull PsiElement target, @Nonnull PsiReferenceService psiReferenceService) {
+  public SingleTargetRequestResultProcessor(PsiElement target, PsiReferenceService psiReferenceService) {
     super(target);
     myTarget = target;
     myPsiReferenceService = psiReferenceService;
@@ -32,7 +31,7 @@ public final class SingleTargetRequestResultProcessor extends RequestResultProce
 
   @Override
   @RequiredReadAction
-  public boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull Predicate<? super PsiReference> consumer) {
+  public boolean processTextOccurrence(PsiElement element, int offsetInElement, Predicate<? super PsiReference> consumer) {
     if (!myTarget.isValid()) {
       return false;
     }

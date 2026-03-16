@@ -27,8 +27,7 @@ import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.ValueComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -75,8 +74,8 @@ public class RawCommandLineEditor extends Wrapper implements TextAccessor {
   //  return myTextField.getTextField().getDocument();
   //}
 
-  @Nonnull
-  public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<String>, ValueComponentEvent<String>> valueComponent) {
+  
+  public Disposable addValueListener(ComponentEventListener<ValueComponent<String>, ValueComponentEvent<String>> valueComponent) {
     return myTextBoxWithExpandAction.addValueListener(valueComponent);
   }
 

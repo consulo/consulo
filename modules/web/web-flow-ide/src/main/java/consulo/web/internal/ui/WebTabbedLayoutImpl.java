@@ -24,8 +24,7 @@ import consulo.ui.layout.TabbedLayout;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,12 +40,12 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     }
 
     @Override
-    @Nonnull
+    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    @Nonnull
+    
     @Override
     public Tab createTab() {
         return new WebTabImpl(this);
@@ -56,10 +55,10 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
     public void addStyle(LayoutStyle style) {
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public Tab addTab(@Nonnull Tab tab, @Nonnull Component component) {
+    public Tab addTab(Tab tab, Component component) {
         WebTabImpl webTab = (WebTabImpl) tab;
 
         com.vaadin.flow.component.tabs.Tab vaadinTab = new com.vaadin.flow.component.tabs.Tab();
@@ -69,17 +68,17 @@ public class WebTabbedLayoutImpl extends VaadinComponentDelegate<WebTabbedLayout
         return tab;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public Tab addTab(@Nonnull String tabName, @Nonnull Component component) {
+    public Tab addTab(String tabName, Component component) {
         WebTabImpl tab = new WebTabImpl(this);
         tab.setRenderer((t, p) -> p.append(tabName));
         return addTab(tab, component);
     }
 
     @Override
-    public void removeTab(@Nonnull Tab tab) {
+    public void removeTab(Tab tab) {
         // todo
     }
 }

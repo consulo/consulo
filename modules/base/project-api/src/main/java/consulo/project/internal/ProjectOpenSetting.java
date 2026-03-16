@@ -18,7 +18,6 @@ package consulo.project.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.MagicConstant;
 
 /**
@@ -27,7 +26,7 @@ import org.intellij.lang.annotations.MagicConstant;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectOpenSetting {
-    @Nonnull
+    
     @Deprecated
     static ProjectOpenSetting getInstance() {
         return Application.get().getInstance(ProjectOpenSetting.class);

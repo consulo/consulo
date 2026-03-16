@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.ui;
 
 import consulo.execution.debug.stream.trace.TraceElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 import java.util.List;
@@ -11,5 +10,5 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface ValuesHighlightingListener extends EventListener {
-  void highlightingChanged(@Nonnull List<TraceElement> values, @Nonnull PropagationDirection direction);
+  void highlightingChanged(List<TraceElement> values, PropagationDirection direction);
 }

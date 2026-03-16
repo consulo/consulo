@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -40,7 +39,7 @@ public interface UnnamedConfigurable {
   @Nullable
   @RequiredUIAccess
   @SuppressWarnings("deprecation")
-  default JComponent createComponent(@Nonnull Disposable parentDisposable) {
+  default JComponent createComponent(Disposable parentDisposable) {
     return createComponent();
   }
 
@@ -66,7 +65,7 @@ public interface UnnamedConfigurable {
   @Nullable
   @RequiredUIAccess
   @SuppressWarnings("deprecation")
-  default Component createUIComponent(@Nonnull Disposable parentDisposable) {
+  default Component createUIComponent(Disposable parentDisposable) {
     return createUIComponent();
   }
 

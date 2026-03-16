@@ -17,10 +17,9 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -33,9 +32,9 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     @RequiredReadAction
-    AnnotationBuilder range(@Nonnull TextRange range);
+    AnnotationBuilder range(TextRange range);
 
     /**
      * Specify annotation range is equal to the {@code element.getTextRange()}.
@@ -44,9 +43,9 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     @RequiredReadAction
-    AnnotationBuilder range(@Nonnull ASTNode element);
+    AnnotationBuilder range(ASTNode element);
 
     /**
      * Specify annotation range is equal to the {@code element.getTextRange()}.
@@ -55,16 +54,16 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     @RequiredReadAction
-    AnnotationBuilder range(@Nonnull PsiElement element);
+    AnnotationBuilder range(PsiElement element);
 
     /**
      * Specify annotation should be shown after the end of line. Useful for creating warnings of the type "unterminated string literal".
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     AnnotationBuilder afterEndOfLine();
 
     /**
@@ -73,7 +72,7 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     AnnotationBuilder fileLevel();
 
     /**
@@ -82,50 +81,50 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer);
+    
+    AnnotationBuilder gutterIconRenderer(GutterIconRenderer gutterIconRenderer);
 
     /**
      * Specify problem group for the annotation to group corresponding inspections.
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder problemGroup(@Nonnull ProblemGroup problemGroup);
+    
+    AnnotationBuilder problemGroup(ProblemGroup problemGroup);
 
     /**
      * Override text attributes for the annotation to change the defaults specified for the given severity.
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder enforcedTextAttributes(@Nonnull TextAttributes enforcedAttributes);
+    
+    AnnotationBuilder enforcedTextAttributes(TextAttributes enforcedAttributes);
 
     /**
      * Specify text attributes for the annotation to change the defaults specified for the given severity.
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder textAttributes(@Nonnull TextAttributesKey enforcedAttributes);
+    
+    AnnotationBuilder textAttributes(TextAttributesKey enforcedAttributes);
 
     /**
      * Specify the problem highlight type for the annotation. If not specified, the default type for the severity is used.
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder highlightType(@Nonnull ProblemHighlightType highlightType);
+    
+    AnnotationBuilder highlightType(ProblemHighlightType highlightType);
 
     /**
      * Specify tooltip for the annotation to popup on mouse hover.
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     @Deprecated(forRemoval = true)
     @DeprecationInfo("Use tooltip(LocalizeValue)")
-    default AnnotationBuilder tooltip(@Nonnull String tooltip) {
+    default AnnotationBuilder tooltip(String tooltip) {
         return tooltip(LocalizeValue.of(tooltip));
     }
 
@@ -134,15 +133,15 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder tooltip(@Nonnull LocalizeValue tooltip);
+    
+    AnnotationBuilder tooltip(LocalizeValue tooltip);
 
     /**
      * Optimization method specifying whether the annotation should be re-calculated when the user types in it.
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     AnnotationBuilder needsUpdateOnTyping();
 
     /**
@@ -150,7 +149,7 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     AnnotationBuilder needsUpdateOnTyping(boolean value);
 
     /**
@@ -159,8 +158,8 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
-    AnnotationBuilder withFix(@Nonnull IntentionAction fix);
+    
+    AnnotationBuilder withFix(IntentionAction fix);
 
     /**
      * Registers quick fix for this annotation if it is not null.
@@ -168,7 +167,7 @@ public interface AnnotationBuilder {
      * This is an intermediate method in the creating new annotation pipeline.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     default AnnotationBuilder withOptionalFix(@Nullable IntentionAction fix) {
         return fix != null ? withFix(fix) : this;
     }
@@ -180,8 +179,8 @@ public interface AnnotationBuilder {
      * @param fix an intention action to be shown for the annotation as a quick fix
      */
     @Contract(pure = true)
-    @Nonnull
-    FixBuilder newFix(@Nonnull IntentionAction fix);
+    
+    FixBuilder newFix(IntentionAction fix);
 
     /**
      * Begin registration of the new quickfix associated with the annotation.
@@ -191,8 +190,8 @@ public interface AnnotationBuilder {
      * @param problemDescriptor to be passed to {@link LocalQuickFix#applyFix(Project, CommonProblemDescriptor)}
      */
     @Contract(pure = true)
-    @Nonnull
-    FixBuilder newLocalQuickFix(@Nonnull LocalQuickFix fix, @Nonnull ProblemDescriptor problemDescriptor);
+    
+    FixBuilder newLocalQuickFix(LocalQuickFix fix, ProblemDescriptor problemDescriptor);
 
     interface FixBuilder {
         /**
@@ -200,19 +199,19 @@ public interface AnnotationBuilder {
          * This is an intermediate method in the registering new quick fix pipeline.
          */
         @Contract(pure = true)
-        @Nonnull
-        FixBuilder range(@Nonnull TextRange range);
+        
+        FixBuilder range(TextRange range);
 
         @Contract(pure = true)
-        @Nonnull
-        FixBuilder key(@Nonnull HighlightDisplayKey key);
+        
+        FixBuilder key(HighlightDisplayKey key);
 
         /**
          * Specify that the quickfix will be available during batch mode only.
          * This is an intermediate method in the registering new quick fix pipeline.
          */
         @Contract(pure = true)
-        @Nonnull
+        
         FixBuilder batch();
 
         /**
@@ -220,7 +219,7 @@ public interface AnnotationBuilder {
          * This is an intermediate method in the registering new quick fix pipeline.
          */
         @Contract(pure = true)
-        @Nonnull
+        
         FixBuilder universal();
 
         /**
@@ -234,7 +233,7 @@ public interface AnnotationBuilder {
          * }</pre>
          */
         @Contract(pure = true)
-        @Nonnull
+        
         AnnotationBuilder registerFix();
     }
 
@@ -242,7 +241,7 @@ public interface AnnotationBuilder {
      * Applies user defined operation to this builder.
      * This is an intermediate method in the creating new annotation pipeline.
      */
-    default AnnotationBuilder apply(@Nonnull Function<AnnotationBuilder, AnnotationBuilder> builderFunction) {
+    default AnnotationBuilder apply(Function<AnnotationBuilder, AnnotationBuilder> builderFunction) {
         return builderFunction.apply(this);
     }
 

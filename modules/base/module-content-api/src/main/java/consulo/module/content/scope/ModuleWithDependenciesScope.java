@@ -17,13 +17,12 @@ package consulo.module.content.scope;
 
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 03-Sep-22
  */
 public interface ModuleWithDependenciesScope extends ModuleAwareSearchScope {
-  @Nonnull
+  
   Module getModule();
 }

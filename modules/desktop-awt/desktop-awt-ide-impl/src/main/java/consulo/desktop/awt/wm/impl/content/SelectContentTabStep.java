@@ -21,7 +21,6 @@ import consulo.util.lang.Pair;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.TabbedContent;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class SelectContentTabStep extends BaseListPopupStep<Integer> {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public String getTextFor(Integer value) {
     return myTabs.get(value).getFirst();

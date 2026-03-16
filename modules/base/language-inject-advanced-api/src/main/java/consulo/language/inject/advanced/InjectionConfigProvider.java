@@ -17,7 +17,6 @@ package consulo.language.inject.advanced;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 import java.io.InputStream;
 
@@ -27,6 +26,6 @@ import java.io.InputStream;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface InjectionConfigProvider {
-    @Nonnull
+    
     InputStream openConfigFileStream() throws Exception;
 }

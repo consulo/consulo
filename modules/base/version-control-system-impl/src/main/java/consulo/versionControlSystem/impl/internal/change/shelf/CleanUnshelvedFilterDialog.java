@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.EnumComboBoxModel;
 import net.miginfocom.swing.MigLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,17 +37,17 @@ public class CleanUnshelvedFilterDialog extends DialogWrapper {
   private enum TimePeriod {
     Week {
       @Override
-      protected void updateCalendar(@Nonnull Calendar cal) {
+      protected void updateCalendar(Calendar cal) {
         cal.add(Calendar.DAY_OF_MONTH, -7);
       }
     }, Month {
       @Override
-      protected void updateCalendar(@Nonnull Calendar cal) {
+      protected void updateCalendar(Calendar cal) {
         cal.add(Calendar.MONTH, -1);
       }
     }, Year {
       @Override
-      protected void updateCalendar(@Nonnull Calendar cal) {
+      protected void updateCalendar(Calendar cal) {
         cal.add(Calendar.YEAR, -1);
       }
     };
@@ -59,7 +58,7 @@ public class CleanUnshelvedFilterDialog extends DialogWrapper {
       return cal.getTimeInMillis();
     }
 
-    protected abstract void updateCalendar(@Nonnull Calendar cal);
+    protected abstract void updateCalendar(Calendar cal);
   }
 
   public CleanUnshelvedFilterDialog(@Nullable Project project) {

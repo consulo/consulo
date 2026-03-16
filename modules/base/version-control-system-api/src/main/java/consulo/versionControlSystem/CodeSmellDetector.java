@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,14 +39,14 @@ public abstract class CodeSmellDetector {
    * @return the list of problems found during the analysis.
    * @throws ProcessCanceledException if the analysis was cancelled by the user.
    */
-  @Nonnull
-  public abstract List<CodeSmellInfo> findCodeSmells(@Nonnull List<VirtualFile> files) throws ProcessCanceledException;
+  
+  public abstract List<CodeSmellInfo> findCodeSmells(List<VirtualFile> files) throws ProcessCanceledException;
 
   /**
    * Shows the specified list of problems found during pre-checkin code analysis in a Messages pane.
    *
    * @param smells the problems to show.
    */
-  public abstract void showCodeSmellErrors(@Nonnull List<CodeSmellInfo> smells);
+  public abstract void showCodeSmellErrors(List<CodeSmellInfo> smells);
 
 }

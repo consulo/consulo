@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.checkin.BaseCheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.VcsCheckinHandlerFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -44,5 +43,5 @@ public abstract class CheckinHandlersManager {
    */
   public abstract List<BaseCheckinHandlerFactory> getRegisteredCheckinHandlerFactories(AbstractVcs[] allActiveVcss);
 
-  public abstract List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> keys);
+  public abstract List<VcsCheckinHandlerFactory> getMatchingVcsFactories(List<AbstractVcs> keys);
 }

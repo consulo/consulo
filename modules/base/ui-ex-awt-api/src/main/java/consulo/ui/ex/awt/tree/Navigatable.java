@@ -17,16 +17,15 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.util.concurrent.Promise;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreePath;
 
 /**
  * @author Sergey.Malenkov
  */
 public interface Navigatable {
-  @Nonnull
-  Promise<TreePath> nextTreePath(@Nonnull TreePath path, Object object);
+  
+  Promise<TreePath> nextTreePath(TreePath path, Object object);
 
-  @Nonnull
-  Promise<TreePath> prevTreePath(@Nonnull TreePath path, Object object);
+  
+  Promise<TreePath> prevTreePath(TreePath path, Object object);
 }

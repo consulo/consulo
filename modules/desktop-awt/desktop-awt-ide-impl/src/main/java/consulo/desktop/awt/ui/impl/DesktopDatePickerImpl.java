@@ -20,8 +20,7 @@ import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.DatePicker;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdesktop.swingx.JXDatePicker;
 
 import java.util.Date;
@@ -32,7 +31,7 @@ import java.util.Date;
  */
 public class DesktopDatePickerImpl extends SwingComponentDelegate<DesktopDatePickerImpl.DatePickerImpl> implements DatePicker {
     public class DatePickerImpl extends JXDatePicker implements FromSwingComponentWrapper {
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopDatePickerImpl.this;

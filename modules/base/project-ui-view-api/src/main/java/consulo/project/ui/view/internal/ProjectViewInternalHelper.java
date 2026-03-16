@@ -22,7 +22,6 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.function.ThrowableRunnable;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -37,15 +36,15 @@ public interface ProjectViewInternalHelper {
     return Application.get().getInstance(ProjectViewInternalHelper.class);
   }
 
-  default <E extends Throwable> void disallowTreeLoading(@Nonnull ThrowableRunnable<E> runnable) throws E {
+  default <E extends Throwable> void disallowTreeLoading(ThrowableRunnable<E> runnable) throws E {
     disallowTreeLoading(toComputable(runnable));
   }
 
-  default <T, E extends Throwable> T disallowTreeLoading(@Nonnull ThrowableComputable<? extends T, E> computable) throws E {
+  default <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable) throws E {
     return disallowTreeLoading(computable, () -> null);
   }
 
-  <T, E extends Throwable> T disallowTreeLoading(@Nonnull ThrowableComputable<? extends T, E> computable, @Nonnull Supplier<String> debugInfo) throws E;
+  <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable, Supplier<String> debugInfo) throws E;
 
   private static <E extends Throwable> ThrowableComputable<?, E> toComputable(ThrowableRunnable<? extends E> runnable) {
     return () -> {

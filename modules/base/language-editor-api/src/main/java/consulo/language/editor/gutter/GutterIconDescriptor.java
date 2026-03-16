@@ -18,8 +18,7 @@ package consulo.language.editor.gutter;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows user to configure visible gutter icons.
@@ -36,7 +35,7 @@ public abstract class GutterIconDescriptor {
    *
    * @return {@link LocalizeValue#empty()} if no configuration needed
    */
-  @Nonnull
+  
   public abstract LocalizeValue getName();
 
   @Nullable
@@ -61,7 +60,7 @@ public abstract class GutterIconDescriptor {
     private final LocalizeValue myName;
     private final Image myIcon;
 
-    public Option(@Nonnull String id, @Nonnull LocalizeValue name, Image icon) {
+    public Option(String id, LocalizeValue name, Image icon) {
       myId = id;
       myName = name;
       myIcon = icon;
@@ -77,7 +76,7 @@ public abstract class GutterIconDescriptor {
       return myIcon;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
       return myName;

@@ -16,7 +16,6 @@
 
 package consulo.project.ui.view;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -24,6 +23,6 @@ import java.util.Collection;
  * @author Gregory.Shrago
  */
 public interface CompositeSelectInTarget extends SelectInTarget {
-  @Nonnull
+  
   Collection<SelectInTarget> getSubTargets(SelectInContext context);
 }

@@ -20,19 +20,18 @@ import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 public abstract class XSourcePositionImpl implements XSourcePosition {
     private final VirtualFile myFile;
 
-    private XSourcePositionImpl(@Nonnull VirtualFile file) {
+    private XSourcePositionImpl(VirtualFile file) {
         myFile = file;
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile getFile() {
         return myFile;
     }
@@ -48,7 +47,7 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
 
         return new XSourcePositionImpl(file) {
             private final AtomicNotNullLazyValue<Integer> myLine = new AtomicNotNullLazyValue<Integer>() {
-                @Nonnull
+                
                 @Override
                 protected Integer compute() {
                     return ReadAction.compute(() -> {
@@ -96,7 +95,7 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
 
         return new XSourcePositionImpl(file) {
             private final AtomicNotNullLazyValue<XSourcePosition> myDelegate = new AtomicNotNullLazyValue<XSourcePosition>() {
-                @Nonnull
+                
                 @Override
                 protected XSourcePosition compute() {
                     return ReadAction.compute(() -> {
@@ -116,9 +115,9 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
                 return myDelegate.getValue().getOffset();
             }
 
-            @Nonnull
+            
             @Override
-            public Navigatable createNavigatable(@Nonnull Project project) {
+            public Navigatable createNavigatable(Project project) {
                 // no need to create delegate here, it may be expensive
                 if (myDelegate.isComputed()) {
                     return myDelegate.getValue().createNavigatable(project);
@@ -151,7 +150,7 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
 
         return new XSourcePositionImpl(file) {
             private final AtomicNotNullLazyValue<Integer> myOffset = new AtomicNotNullLazyValue<Integer>() {
-                @Nonnull
+                
                 @Override
                 protected Integer compute() {
                     return ReadAction.compute(() -> {
@@ -191,13 +190,13 @@ public abstract class XSourcePositionImpl implements XSourcePosition {
     }
 
     @Override
-    @Nonnull
-    public Navigatable createNavigatable(@Nonnull Project project) {
+    
+    public Navigatable createNavigatable(Project project) {
         return new XSourcePositionFactoryImpl.XSourcePositionNavigatable(project, this);
     }
 
-    @Nonnull
-    public static OpenFileDescriptor createOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
+    
+    public static OpenFileDescriptor createOpenFileDescriptor(Project project, XSourcePosition position) {
         OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(project);
 
         OpenFileDescriptorFactory.Builder builder = factory.newBuilder(position.getFile());

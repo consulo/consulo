@@ -15,21 +15,20 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import consulo.project.ui.notification.NotificationType;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
+import consulo.project.ui.notification.NotificationType;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Alexander Lobas
  */
 public class BalloonLayoutData {
-  @Nonnull
+  
   public static BalloonLayoutData createEmpty() {
     BalloonLayoutData layoutData = new BalloonLayoutData();
     layoutData.groupId = "";
@@ -57,7 +56,7 @@ public class BalloonLayoutData {
   public Runnable doLayout;
 
   public boolean showSettingButton = true;
-  public Computable<Boolean> showActions;
+  public Supplier<Boolean> showActions;
 
   public Project project;
 
@@ -71,12 +70,12 @@ public class BalloonLayoutData {
   public Color fillColor;
   public Color borderColor;
 
-  @Nonnull
+  
   public MergeInfo merge() {
     return new MergeInfo(mergeData, id);
   }
 
-  @Nonnull
+  
   public List<String> getMergeIds() {
     List<String> ids = new ArrayList<String>(mergeData.linkIds);
     ids.add(id);
@@ -87,7 +86,7 @@ public class BalloonLayoutData {
     public List<String> linkIds;
     public int count;
 
-    public MergeInfo(@Nullable MergeInfo info, @Nonnull String linkId) {
+    public MergeInfo(@Nullable MergeInfo info, String linkId) {
       if (info == null) {
         linkIds = new ArrayList<String>();
         count = 1;

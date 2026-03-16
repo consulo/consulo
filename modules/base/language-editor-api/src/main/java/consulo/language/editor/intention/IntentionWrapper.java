@@ -29,8 +29,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author angus
@@ -40,38 +39,38 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
   private final IntentionAction myAction;
 
   @Deprecated
-  public IntentionWrapper(@Nonnull IntentionAction action) {
+  public IntentionWrapper(IntentionAction action) {
     myAction = action;
   }
 
-  public IntentionWrapper(@Nonnull IntentionAction action, @Nonnull PsiFile file) {
+  public IntentionWrapper(IntentionAction action, PsiFile file) {
     myAction = action;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return myAction.getText();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myAction.getText();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return myAction.isAvailable(project, editor, file);
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myAction.invoke(project, editor, file);
   }
   @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
+  public PsiElement getElementToMakeWritable(PsiFile file) {
     return myAction.getElementToMakeWritable(file);
   }
 
@@ -80,14 +79,14 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
     return myAction.startInWriteAction();
   }
 
-  @Nonnull
+  
   public IntentionAction getAction() {
     return myAction;
   }
 
   @Override
   @RequiredReadAction
-  public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+  public void applyFix(Project project, ProblemDescriptor descriptor) {
     PsiElement element = descriptor.getPsiElement();
     PsiFile file = element == null ? null : element.getContainingFile();
     if (file != null) {
@@ -96,13 +95,13 @@ public class IntentionWrapper implements LocalQuickFix, IntentionAction, ActionC
     }
   }
 
-  @Nonnull
+  
   @Override
   public Class getActionClass() {
     return getAction().getClass();
   }
 
-  @Nonnull
+  
   @Override
   public IntentionAction getDelegate() {
     return myAction;

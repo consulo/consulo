@@ -28,7 +28,6 @@ import consulo.util.collection.Chunk;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -42,7 +41,7 @@ public class CompilerExtensionCache {
     private static final ExtensionPointCacheKey<Compiler, CompilerExtensionCache> KEY =
         ExtensionPointCacheKey.create("CompilerExtensionCache", CompilerExtensionCache::new);
 
-    @Nonnull
+    
     public static CompilerExtensionCache get(Project project) {
         return project.getExtensionPoint(Compiler.class).getOrBuildCache(KEY);
     }
@@ -76,7 +75,7 @@ public class CompilerExtensionCache {
         }
     }
 
-    public boolean isCompilableFileType(@Nonnull FileType type) {
+    public boolean isCompilableFileType(FileType type) {
         return myCompilableFileTypes.contains(type);
     }
 
@@ -108,21 +107,21 @@ public class CompilerExtensionCache {
         });
     }
 
-    @Nonnull
-    public Collection<FileType> getRegisteredInputTypes(@Nonnull TranslatingCompiler compiler) {
+    
+    public Collection<FileType> getRegisteredInputTypes(TranslatingCompiler compiler) {
         Collection<FileType> fileTypes = myTranslatingCompilerInputFileTypes.get(compiler);
         return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
     }
 
-    @Nonnull
-    public Collection<FileType> getRegisteredOutputTypes(@Nonnull TranslatingCompiler compiler) {
+    
+    public Collection<FileType> getRegisteredOutputTypes(TranslatingCompiler compiler) {
         Collection<FileType> fileTypes = myTranslatingCompilerOutputFileTypes.get(compiler);
         return fileTypes == null ? Collections.<FileType>emptyList() : fileTypes;
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
-    public <T extends Compiler> T[] getCompilers(@Nonnull Class<T> compilerClass, Predicate<Compiler> filter) {
+    public <T extends Compiler> T[] getCompilers(Class<T> compilerClass, Predicate<Compiler> filter) {
         List<T> compilers = new ArrayList<>(myCompilers.size());
         for (Compiler item : myCompilers) {
             if (compilerClass.isAssignableFrom(item.getClass()) && filter.test(item)) {

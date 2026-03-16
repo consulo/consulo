@@ -12,7 +12,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "RunDashboard.EditConfiguration")
 public final class EditConfigurationAction extends AnAction {
@@ -21,7 +20,7 @@ public final class EditConfigurationAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         RunDashboardRunConfigurationNode node = project == null ? null : RunDashboardActionUtils.getTarget(e);
         boolean enabled = node != null && RunManager.getInstance(project).hasSettings(node.getConfigurationSettings());
@@ -36,7 +35,7 @@ public final class EditConfigurationAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         RunDashboardRunConfigurationNode node = RunDashboardActionUtils.getTarget(e);
         if (node == null) {

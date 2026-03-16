@@ -16,13 +16,12 @@
 package consulo.virtualFileSystem.fileType.matcher;
 
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17/06/2023
  */
 public interface ExtensionFileNameMatcher extends FileNameMatcher {
-  @Nonnull
+  
   String getExtension();
 }

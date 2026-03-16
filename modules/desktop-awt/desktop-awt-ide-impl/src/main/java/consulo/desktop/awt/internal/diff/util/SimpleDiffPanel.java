@@ -18,7 +18,6 @@ package consulo.desktop.awt.internal.diff.util;
 import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffContext;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,9 +25,9 @@ public class SimpleDiffPanel extends DiffPanelBase {
   private static final String GOOD_CONTENT = "GoodContent";
   private static final String ERROR_CONTENT = "ErrorContent";
 
-  public SimpleDiffPanel(@Nonnull JComponent editorPanel,
-                         @Nonnull UiDataProvider dataProvider,
-                         @Nonnull DiffContext context) {
+  public SimpleDiffPanel(JComponent editorPanel,
+                         UiDataProvider dataProvider,
+                         DiffContext context) {
     super(context.getProject(), dataProvider, context);
     JPanel centerPanel = JBUI.Panels.simplePanel(editorPanel).addToTop(myNotificationsPanel);
 

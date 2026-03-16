@@ -18,7 +18,6 @@ package consulo.desktop.awt.ui.impl.image;
 import consulo.desktop.awt.facade.ToSwingIconWrapper;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -42,7 +41,7 @@ public final class DesktopImageOverIconImpl implements Image, ToSwingIconWrapper
     return myIcon.getIconWidth();
   }
 
-  @Nonnull
+  
   @Override
   public Icon toSwingIcon() {
     return myIcon;

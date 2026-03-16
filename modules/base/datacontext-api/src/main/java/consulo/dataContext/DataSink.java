@@ -17,8 +17,7 @@ package consulo.dataContext;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,7 +40,7 @@ public interface DataSink {
      * Sets an immediate (non-lazy) data value.
      * Use for data that is readily available on EDT without read access.
      */
-    <T> void set(@Nonnull Key<T> key, @Nullable T data);
+    <T> void set(Key<T> key, @Nullable T data);
 
     /**
      * Registers a lazy data supplier that will be resolved later under read access.
@@ -50,7 +49,7 @@ public interface DataSink {
      * @param key          the data key
      * @param dataSupplier supplier invoked later under {@code tryRunReadAction}
      */
-    <T> void lazy(@Nonnull Key<T> key, @RequiredReadAction @Nonnull Supplier<T> dataSupplier);
+    <T> void lazy(Key<T> key, @RequiredReadAction Supplier<T> dataSupplier);
 
     /**
      * Registers a lazy data function that receives a {@link DataSnapshot}
@@ -61,7 +60,7 @@ public interface DataSink {
      * @param dataFunction function invoked later under {@code tryRunReadAction},
      *                     receiving a snapshot of immediate data
      */
-    <T> void lazyValue(@Nonnull Key<T> key, @RequiredReadAction @Nonnull Function<DataSnapshot, T> dataFunction);
+    <T> void lazyValue(Key<T> key, @RequiredReadAction Function<DataSnapshot, T> dataFunction);
 
     /**
      * Delegates to another {@link UiDataProvider} to populate this sink.
@@ -69,5 +68,5 @@ public interface DataSink {
      *
      * @param provider the provider to collect data from
      */
-    void uiDataSnapshot(@Nonnull UiDataProvider provider);
+    void uiDataSnapshot(UiDataProvider provider);
 }

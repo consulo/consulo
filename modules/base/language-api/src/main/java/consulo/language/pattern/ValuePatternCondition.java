@@ -15,7 +15,6 @@
  */
 package consulo.language.pattern;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Collection;
 
@@ -24,7 +23,7 @@ import java.util.Collection;
  */
 public abstract class ValuePatternCondition<T> extends PatternCondition<T> {
 
-  protected ValuePatternCondition(@NonNls String methodName) {
+  protected ValuePatternCondition(String methodName) {
     super(methodName);
   }
 

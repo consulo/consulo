@@ -17,8 +17,7 @@ package consulo.execution.debug.frame;
 
 import consulo.execution.debug.ui.ValueMarkup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,17 +29,17 @@ public class XValueMarkers<V extends XValue, M> {
   private final XValueMarkerProvider<V, M> myProvider;
   private final Map<M, ValueMarkup> myMarkers;
 
-  private XValueMarkers(@Nonnull XValueMarkerProvider<V, M> provider) {
+  private XValueMarkers(XValueMarkerProvider<V, M> provider) {
     myProvider = provider;
     myMarkers = new HashMap<M, ValueMarkup>();
   }
 
-  public static <V extends XValue, M> XValueMarkers<V, M> createValueMarkers(@Nonnull XValueMarkerProvider<V, M> provider) {
+  public static <V extends XValue, M> XValueMarkers<V, M> createValueMarkers(XValueMarkerProvider<V, M> provider) {
     return new XValueMarkers<V, M>(provider);
   }
 
   @Nullable
-  public ValueMarkup getMarkup(@Nonnull XValue value) {
+  public ValueMarkup getMarkup(XValue value) {
     Class<V> valueClass = myProvider.getValueClass();
     if (!valueClass.isInstance(value)) return null;
 
@@ -53,20 +52,20 @@ public class XValueMarkers<V extends XValue, M> {
     return myMarkers.get(m);
   }
 
-  public boolean canMarkValue(@Nonnull XValue value) {
+  public boolean canMarkValue(XValue value) {
     Class<V> valueClass = myProvider.getValueClass();
     if (!valueClass.isInstance(value)) return false;
 
     return myProvider.canMark(valueClass.cast(value));
   }
 
-  public void markValue(@Nonnull XValue value, @Nonnull ValueMarkup markup) {
+  public void markValue(XValue value, ValueMarkup markup) {
     //noinspection unchecked
     M m = myProvider.markValue((V)value);
     myMarkers.put(m, markup);
   }
 
-  public void unmarkValue(@Nonnull XValue value) {
+  public void unmarkValue(XValue value) {
     //noinspection unchecked
     V v = (V)value;
     M m = myProvider.getMarker(v);

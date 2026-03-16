@@ -10,7 +10,6 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.getDeploymentTarget;
 
@@ -24,7 +23,7 @@ public class UndeployAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
         boolean visible = node != null;
         e.getPresentation().setVisible(visible);
@@ -33,7 +32,7 @@ public class UndeployAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
         if (node != null) {
             node.undeploy();

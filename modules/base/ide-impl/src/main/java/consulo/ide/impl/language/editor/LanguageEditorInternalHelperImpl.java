@@ -57,8 +57,7 @@ import consulo.ui.ex.awt.SelectionAwareListCellRenderer;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -75,10 +74,10 @@ import java.util.function.Function;
 @ServiceImpl
 public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalHelper {
     @Override
-    public void doWrapLongLinesIfNecessary(@Nonnull Editor editor,
-                                           @Nonnull Project project,
-                                           @Nonnull Language language,
-                                           @Nonnull Document document,
+    public void doWrapLongLinesIfNecessary(Editor editor,
+                                           Project project,
+                                           Language language,
+                                           Document document,
                                            int startOffset,
                                            int endOffset,
                                            List<? extends TextRange> enabledRanges) {
@@ -88,11 +87,11 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
     }
 
     @Override
-    public void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
-                                              @Nonnull String text,
-                                              @Nonnull SimpleTextAttributes attributes,
+    public void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,
+                                              String text,
+                                              SimpleTextAttributes attributes,
                                               boolean selected,
-                                              @Nonnull ColoredTextContainer simpleColoredComponent) {
+                                              ColoredTextContainer simpleColoredComponent) {
         SpeedSearchUtil.appendFragmentsForSpeedSearch(speedSearchEnabledComponent, text, attributes, selected, simpleColoredComponent);
     }
 
@@ -109,35 +108,34 @@ public class LanguageEditorInternalHelperImpl implements LanguageEditorInternalH
 
     @RequiredUIAccess
     @Override
-    public void showInspectionsSettings(@Nonnull Project project) {
+    public void showInspectionsSettings(Project project) {
         ShowSettingsUtil.getInstance().showAndSelect(project, ErrorsConfigurable.class);
     }
 
     @Override
-    @Nonnull
-    public List<Annotation> runAnnotator(@Nonnull Language language, Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+    public List<Annotation> runAnnotator(Language language, Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
         AnnotationHolderImpl holder = new AnnotationHolderImpl(language, new AnnotationSession(file), batchMode);
         holder.runAnnotatorWithContext(context, annotator);
         return holder;
     }
 
     @Override
-    public int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
+    public int adjustLineIndentNoCommit(Language language, Document document, Editor editor, int offset) {
         return EnterHandler.adjustLineIndentNoCommit(language, document, editor, offset);
     }
 
     @Override
-    public boolean isInlineRefactoringActive(@Nonnull Editor editor) {
+    public boolean isInlineRefactoringActive(Editor editor) {
         return editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null;
     }
 
     @Override
     @RequiredReadAction
-    public void setHighlightersToEditor(@Nonnull Project project,
-                                        @Nonnull Document document,
+    public void setHighlightersToEditor(Project project,
+                                        Document document,
                                         int startOffset,
                                         int endOffset,
-                                        @Nonnull Collection<HighlightInfo> highlights,
+                                        Collection<HighlightInfo> highlights,
                                         // if null global scheme will be used
                                         @Nullable EditorColorsScheme colorsScheme,
                                         int group) {

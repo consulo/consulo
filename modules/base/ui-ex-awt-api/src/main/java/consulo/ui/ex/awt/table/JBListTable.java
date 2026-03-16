@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.Animated;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -44,7 +43,7 @@ public abstract class JBListTable extends JPanel {
     private MouseEvent myMouseEvent;
     private MyCellEditor myCellEditor;
 
-    public JBListTable(@Nonnull final JTable t) {
+    public JBListTable(final JTable t) {
         super(new BorderLayout());
         myInternalTable = t;
         final JBListTableModel model = new JBListTableModel(t.getModel()) {
@@ -262,7 +261,7 @@ public abstract class JBListTable extends JPanel {
         private int step = 5;
         private int currentHeight;
 
-        private RowResizeAnimator(JTable table, int row, int height, JBTableRowEditor editor, @Nonnull Ref<Integer> index) {
+        private RowResizeAnimator(JTable table, int row, int height, JBTableRowEditor editor, Ref<Integer> index) {
             super("Row Animator");
             myTable = table;
             myRow = row;

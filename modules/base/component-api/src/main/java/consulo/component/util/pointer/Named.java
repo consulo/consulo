@@ -15,13 +15,12 @@
  */
 package consulo.component.util.pointer;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2013-06-15
  */
 public interface Named {
-    @Nonnull
+    
     String getName();
 }

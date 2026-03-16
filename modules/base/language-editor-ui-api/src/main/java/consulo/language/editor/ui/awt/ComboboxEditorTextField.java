@@ -23,7 +23,6 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +31,7 @@ import java.awt.*;
  * @author spLeaner
  */
 public class ComboboxEditorTextField extends EditorTextField {
-    public ComboboxEditorTextField(@Nonnull String text, Project project, FileType fileType) {
+    public ComboboxEditorTextField(String text, Project project, FileType fileType) {
         super(text, project, fileType);
         setOneLineMode(true);
         putClientProperty("JComboBox.isTableCellEditor", true);
@@ -53,7 +52,7 @@ public class ComboboxEditorTextField extends EditorTextField {
         setBorder(JBUI.Borders.empty());
     }
 
-    @Nonnull
+    
     @Override
     protected Color getBackgroundColor(boolean enabled) {
         return enabled ? super.getBackgroundColor(enabled) : UIManager.getColor("ComboBox.disabledBackground");

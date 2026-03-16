@@ -34,8 +34,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,14 +67,14 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
 
         RunConfigurationsComboBoxAction.updatePresentation(ExecutionTargetManager.getActiveTarget(myProject), myConfiguration, myProject, e.getPresentation(), e.getPlace());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         Presentation presentation = e.getPresentation();
@@ -96,7 +95,7 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
             actionList.add(new ExecutorAction(ExecutorRegistry.getInstance(), executor, fileService) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     RunManager.getInstance(myProject).setSelectedConfiguration(myConfiguration);
                     
                     super.actionPerformed(e);
@@ -104,7 +103,7 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
 
                 @Nullable
                 @Override
-                protected RunnerAndConfigurationSettings getConfiguration(@Nonnull Project project) {
+                protected RunnerAndConfigurationSettings getConfiguration(Project project) {
                     return myConfiguration;
                 }
             });
@@ -113,14 +112,14 @@ public class SelectConfigAction extends DumbAwareActionGroup implements AlwaysVi
         presentation.putClientProperty(ActionUtil.INLINE_ACTIONS, actionList);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         List<AnAction> actions = new ArrayList<>();
         actions.add(new DumbAwareAction(ExecutionLocalize.runConfigurationEditAction()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 Project project = e.getRequiredData(Project.KEY);
 
                 RunConfigurationEditor.getInstance(project).editOne(myConfiguration);

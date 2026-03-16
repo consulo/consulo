@@ -16,10 +16,9 @@
 package consulo.execution.debug.stream.lib.impl;
 
 import consulo.execution.debug.stream.resolve.ValuesOrderResolver;
-import jakarta.annotation.Nonnull;
 
 public class ConcatOperation extends OrderBasedOperation {
-  public ConcatOperation(@Nonnull String name, @Nonnull ValuesOrderResolver orderResolver) {
+  public ConcatOperation(String name, ValuesOrderResolver orderResolver) {
     super(name, orderResolver);
   }
 }

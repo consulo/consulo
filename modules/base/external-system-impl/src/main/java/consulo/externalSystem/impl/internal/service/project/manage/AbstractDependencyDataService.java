@@ -30,7 +30,6 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +44,7 @@ import java.util.function.Consumer;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public abstract class AbstractDependencyDataService<E extends AbstractDependencyData<?>, I extends ExportableOrderEntry> implements ProjectDataService<E, I> {
 
-  public void setScope(@Nonnull final DependencyScope scope, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
+  public void setScope(final DependencyScope scope, final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @RequiredUIAccess
       @Override
@@ -55,7 +54,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     });
   }
 
-  public void setExported(final boolean exported, @Nonnull final ExportableOrderEntry dependency, boolean synchronous) {
+  public void setExported(final boolean exported, final ExportableOrderEntry dependency, boolean synchronous) {
     ExternalSystemApiUtil.executeProjectChangeAction(synchronous, new DisposeAwareProjectChange(dependency.getOwnerModule()) {
       @RequiredUIAccess
       @Override
@@ -65,7 +64,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     });
   }
 
-  private static void doForDependency(@Nonnull ExportableOrderEntry entry, @Nonnull Consumer<ExportableOrderEntry> consumer) {
+  private static void doForDependency(ExportableOrderEntry entry, Consumer<ExportableOrderEntry> consumer) {
     // We need to get an up-to-date modifiable model to work with.
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(entry.getOwnerModule());
     ModifiableRootModel moduleRootModel = moduleRootManager.getModifiableModel();
@@ -86,7 +85,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
   }
 
   @Override
-  public void removeData(@Nonnull Collection<? extends I> toRemove, @Nonnull Project project, boolean synchronous) {
+  public void removeData(Collection<? extends I> toRemove, Project project, boolean synchronous) {
     if (toRemove.isEmpty()) {
       return;
     }
@@ -97,8 +96,8 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     }
   }
 
-  @Nonnull
-  private static Map<Module, Collection<ExportableOrderEntry>> groupByModule(@Nonnull Collection<? extends ExportableOrderEntry> data) {
+  
+  private static Map<Module, Collection<ExportableOrderEntry>> groupByModule(Collection<? extends ExportableOrderEntry> data) {
     Map<Module, Collection<ExportableOrderEntry>> result = new HashMap<>();
     for (ExportableOrderEntry entry : data) {
       Collection<ExportableOrderEntry> entries = result.get(entry.getOwnerModule());
@@ -110,7 +109,7 @@ public abstract class AbstractDependencyDataService<E extends AbstractDependency
     return result;
   }
 
-  public void removeData(@Nonnull Collection<? extends ExportableOrderEntry> toRemove, @Nonnull final Module module, boolean synchronous) {
+  public void removeData(Collection<? extends ExportableOrderEntry> toRemove, final Module module, boolean synchronous) {
     if (toRemove.isEmpty()) {
       return;
     }

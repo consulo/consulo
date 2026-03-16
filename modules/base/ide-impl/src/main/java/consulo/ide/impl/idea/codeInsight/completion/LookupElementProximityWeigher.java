@@ -22,7 +22,6 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.proximity.PsiProximityComparator;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 public class LookupElementProximityWeigher extends CompletionWeigher {
 
   @Override
-  public Comparable weigh(@Nonnull LookupElement item, @Nonnull CompletionLocation location) {
+  public Comparable weigh(LookupElement item, CompletionLocation location) {
     if (item.getObject() instanceof PsiElement) {
       return PsiProximityComparator.getProximity((NullableComputable<PsiElement>)() -> item.getPsiElement(), location.getCompletionParameters().getPosition(), location.getProcessingContext());
     }

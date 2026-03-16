@@ -15,8 +15,7 @@
  */
 package consulo.language.codeStyle.arrangement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ import java.util.List;
  */
 public class DefaultArrangementEntry implements ArrangementEntry {
 
-  @Nonnull
+  
   private final List<ArrangementEntry> myChildren = new ArrayList<ArrangementEntry>();
 
   @Nullable
@@ -54,13 +53,13 @@ public class DefaultArrangementEntry implements ArrangementEntry {
     return myParent;
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends ArrangementEntry> getChildren() {
     return myChildren;
   }
 
-  public void addChild(@Nonnull ArrangementEntry entry) {
+  public void addChild(ArrangementEntry entry) {
     myChildren.add(entry);
   }
 
@@ -70,7 +69,7 @@ public class DefaultArrangementEntry implements ArrangementEntry {
     return myDependencies;
   }
 
-  public void addDependency(@Nonnull ArrangementEntry dependency) {
+  public void addDependency(ArrangementEntry dependency) {
     if (myDependencies == null) {
       myDependencies = new ArrayList<ArrangementEntry>();
     }

@@ -25,8 +25,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines whether or not some elements can be indented when a user selects a fragment of text and invokes "indent" action (normally by
@@ -38,7 +37,7 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface IndentStrategy extends LanguageExtension {
     ExtensionPointCacheKey<IndentStrategy, ByLanguageValue<IndentStrategy>> KEY = ExtensionPointCacheKey.create("IndentStrategy", LanguageOneToOne.build(new IndentStrategy() {
-        @Nonnull
+        
         @Override
         public Language getLanguage() {
             return Language.ANY;
@@ -50,12 +49,12 @@ public interface IndentStrategy extends LanguageExtension {
         }
     }));
 
-    @Nonnull
-    static IndentStrategy forLanguage(@Nonnull Language language) {
+    
+    static IndentStrategy forLanguage(Language language) {
         return Application.get().getExtensionPoint(IndentStrategy.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
-    @Nonnull
+    
     static IndentStrategy forFile(@Nullable PsiFile file) {
         if (file != null) {
             Language language = file.getLanguage();

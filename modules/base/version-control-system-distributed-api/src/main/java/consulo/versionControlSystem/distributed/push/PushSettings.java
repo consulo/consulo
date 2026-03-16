@@ -17,7 +17,6 @@ package consulo.versionControlSystem.distributed.push;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -29,9 +28,9 @@ import java.util.Set;
 public interface PushSettings {
     Set<String> getExcludedRepoRoots();
 
-    void saveExcludedRepoRoots(@Nonnull Set<String> roots);
+    void saveExcludedRepoRoots(Set<String> roots);
 
-    boolean containsForcePushTarget(@Nonnull String remote, @Nonnull String branch);
+    boolean containsForcePushTarget(String remote, String branch);
 
-    void addForcePushTarget(@Nonnull String targetRemote, @Nonnull String targetBranch);
+    void addForcePushTarget(String targetRemote, String targetBranch);
 }

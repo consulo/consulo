@@ -9,7 +9,6 @@ import consulo.ui.image.ImageKey;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -80,7 +79,7 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
                 }
             }
 
-            private void setUnderlined(boolean underlined, @Nonnull Element element) {
+            private void setUnderlined(boolean underlined, Element element) {
                 AttributeSet attributes = element.getAttributes();
                 Object attribute = attributes.getAttribute(HTML.Tag.A);
                 if (attribute instanceof MutableAttributeSet) {
@@ -171,13 +170,13 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
         return myViewFactory;
     }
 
-    @Nonnull
-    private static List<LinkController> filterLinkControllerListeners(@Nonnull Object[] listeners) {
+    
+    private static List<LinkController> filterLinkControllerListeners(Object[] listeners) {
         return ContainerUtil.mapNotNull(listeners, o -> ObjectUtil.tryCast(o, LinkController.class));
     }
 
     @Override
-    public void deinstall(@Nonnull JEditorPane c) {
+    public void deinstall(JEditorPane c) {
         c.removeHyperlinkListener(myHyperlinkListener);
         super.deinstall(c);
     }
@@ -192,7 +191,7 @@ public class JBHtmlEditorKit extends HTMLEditorKit {
     // Workaround for https://bugs.openjdk.java.net/browse/JDK-8202529
     private static class MouseExitSupportLinkController extends LinkController {
         @Override
-        public void mouseExited(@Nonnull MouseEvent e) {
+        public void mouseExited(MouseEvent e) {
             mouseMoved(new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(), -1, -1, e.getClickCount(), e.isPopupTrigger(), e.getButton()));
         }
     }

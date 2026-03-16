@@ -17,7 +17,6 @@ package consulo.component.util.pointer;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
   private static final Logger LOG = Logger.getInstance(NamedPointerImpl.class);
 
   private T myValue;
-  @Nonnull
+  
   private String myName;
 
   public NamedPointerImpl(T value) {
@@ -35,25 +34,25 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
     myName = value.getName();
   }
 
-  public NamedPointerImpl(@Nonnull String name) {
+  public NamedPointerImpl(String name) {
     myValue = null;
     myName = name;
   }
 
-  public void setValue(@Nonnull T value) {
+  public void setValue(T value) {
     LOG.assertTrue(myValue == null);
     LOG.assertTrue(myName.equals(value.getName()));
     myName = value.getName();
     myValue = value;
   }
 
-  public void dropValue(@Nonnull T value) {
+  public void dropValue(T value) {
     LOG.assertTrue(myValue == value);
     myName = myValue.getName();
     myValue = null;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     if (myValue != null) {

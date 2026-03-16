@@ -27,19 +27,18 @@ import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.PsiFileWithStubSupport;
 import consulo.language.util.LanguageUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class AnchorElementInfo extends SelfElementInfo {
   private volatile long myStubElementTypeAndId; // stubId in the lower 32 bits; stubElementTypeIndex in the high 32 bits packed together for atomicity
 
-  AnchorElementInfo(@Nonnull PsiElement anchor, @Nonnull PsiFile containingFile, @Nonnull IdentikitImpl.ByAnchor identikit) {
+  AnchorElementInfo(PsiElement anchor, PsiFile containingFile, IdentikitImpl.ByAnchor identikit) {
     super(ProperTextRange.create(anchor.getTextRange()), identikit, containingFile, false);
     myStubElementTypeAndId = pack(-1, null);
   }
 
   // will restore by stub index until file tree get loaded
-  AnchorElementInfo(@Nonnull PsiElement anchor, @Nonnull PsiFileWithStubSupport containingFile, int stubId, @Nonnull IStubElementType stubElementType) {
+  AnchorElementInfo(PsiElement anchor, PsiFileWithStubSupport containingFile, int stubId, IStubElementType stubElementType) {
     super(null, IdentikitImpl.fromTypes(anchor.getClass(), stubElementType, LanguageUtil.getRootLanguage(containingFile)), containingFile, false);
     myStubElementTypeAndId = pack(stubId, stubElementType);
     assert !(anchor instanceof PsiFile) : "FileElementInfo must be used for file: " + anchor;
@@ -57,7 +56,7 @@ class AnchorElementInfo extends SelfElementInfo {
 
   @Override
   @Nullable
-  public PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
+  public PsiElement restoreElement(SmartPointerManagerImpl manager) {
     long typeAndId = myStubElementTypeAndId;
     int stubId = (int)typeAndId;
     if (stubId != -1) {
@@ -72,7 +71,7 @@ class AnchorElementInfo extends SelfElementInfo {
   }
 
   @Override
-  public boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  public boolean pointsToTheSameElementAs(SmartPointerElementInfo other, SmartPointerManagerImpl manager) {
     if (other instanceof AnchorElementInfo) {
       if (!getVirtualFile().equals(other.getVirtualFile())) return false;
 
@@ -90,14 +89,14 @@ class AnchorElementInfo extends SelfElementInfo {
   }
 
   @Override
-  public void fastenBelt(@Nonnull SmartPointerManagerImpl manager) {
+  public void fastenBelt(SmartPointerManagerImpl manager) {
     if (getStubId() != -1) {
       switchToTree(manager);
     }
     super.fastenBelt(manager);
   }
 
-  private void switchToTree(@Nonnull SmartPointerManagerImpl manager) {
+  private void switchToTree(SmartPointerManagerImpl manager) {
     PsiElement element = restoreElement(manager);
     SmartPointerTracker tracker = manager.getTracker(getVirtualFile());
     if (element != null && tracker != null) {
@@ -105,13 +104,13 @@ class AnchorElementInfo extends SelfElementInfo {
     }
   }
 
-  void switchToTreeRange(@Nonnull PsiElement element) {
+  void switchToTreeRange(PsiElement element) {
     switchToAnchor(element);
     myStubElementTypeAndId = pack(-1, null);
   }
 
   @Override
-  public Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
+  public Segment getRange(SmartPointerManagerImpl manager) {
     if (getStubId() != -1) {
       switchToTree(manager);
     }
@@ -120,7 +119,7 @@ class AnchorElementInfo extends SelfElementInfo {
 
   @Nullable
   @Override
-  public TextRange getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
+  public TextRange getPsiRange(SmartPointerManagerImpl manager) {
     if (getStubId() != -1) {
       switchToTree(manager);
     }

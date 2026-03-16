@@ -26,7 +26,6 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -76,11 +75,11 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
                          Math.max(d.height, AllIcons.General.ArrowDown.getHeight()));
   }
 
-  protected String getTextFor(@Nonnull T value) {
+  protected String getTextFor(T value) {
     return value.toString();
   }
 
-  protected Image getIconFor(@Nonnull T value) {
+  protected Image getIconFor(T value) {
     return null;
   }
 
@@ -88,7 +87,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     myPaintArrow = paintArrow;
   }
 
-  protected Runnable onChosen(@Nonnull T value) {
+  protected Runnable onChosen(T value) {
     stopCellEditing(value);
 
     return () -> stopCellEditing(value);
@@ -143,7 +142,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     List<T> filtered = ContainerUtil.findAll(myValues, t -> isApplicable(t, row));
     ListPopup popup = JBPopupFactory.getInstance().createListPopup(new ListStep<T>(filtered, value) {
       @Override
-      @Nonnull
+      
       public String getTextFor(T value) {
         return ComboBoxTableRenderer.this.getTextFor(value);
       }
@@ -322,7 +321,7 @@ public class ComboBoxTableRenderer<T> extends JLabel implements TableCellRendere
     }
 
     @Override
-    @Nonnull
+    
     public List<T> getValues() {
       return myValues;
     }

@@ -17,8 +17,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
@@ -44,21 +43,21 @@ public final class ParameterHintsPresentationManager implements Disposable {
         return ApplicationManager.getApplication().getService(ParameterHintsPresentationManager.class);
     }
 
-    public List<Inlay<?>> getParameterHintsInRange(@Nonnull Editor editor, int startOffset, int endOffset) {
+    public List<Inlay<?>> getParameterHintsInRange(Editor editor, int startOffset, int endOffset) {
         //noinspection unchecked
         return (List) editor.getInlayModel().getInlineElementsInRange(startOffset, endOffset, MyRenderer.class);
     }
 
-    public boolean isParameterHint(@Nonnull Inlay<?> inlay) {
+    public boolean isParameterHint(Inlay<?> inlay) {
         return inlay.getRenderer() instanceof MyRenderer;
     }
 
-    public String getHintText(@Nonnull Inlay inlay) {
+    public String getHintText(Inlay inlay) {
         EditorCustomElementRenderer renderer = inlay.getRenderer();
         return renderer instanceof MyRenderer myRenderer ? myRenderer.getText() : null;
     }
 
-    public Inlay addHint(@Nonnull Editor editor, int offset, boolean relatesToPrecedingText, @Nonnull String hintText,
+    public Inlay addHint(Editor editor, int offset, boolean relatesToPrecedingText, String hintText,
                          @Nullable HintWidthAdjustment widthAdjuster, boolean useAnimation) {
         MyRenderer renderer = new MyRenderer(editor, hintText, widthAdjuster, useAnimation);
         Inlay inlay = editor.getInlayModel().addInlineElement(offset, relatesToPrecedingText, renderer);
@@ -70,7 +69,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         return inlay;
     }
 
-    public void deleteHint(@Nonnull Editor editor, @Nonnull Inlay hint, boolean useAnimation) {
+    public void deleteHint(Editor editor, Inlay hint, boolean useAnimation) {
         if (useAnimation) {
             updateRenderer(editor, hint, null, null, true);
         }
@@ -79,12 +78,12 @@ public final class ParameterHintsPresentationManager implements Disposable {
         }
     }
 
-    public void replaceHint(@Nonnull Editor editor, @Nonnull Inlay hint, @Nonnull String newText, @Nullable HintWidthAdjustment widthAdjuster,
+    public void replaceHint(Editor editor, Inlay hint, String newText, @Nullable HintWidthAdjustment widthAdjuster,
                             boolean useAnimation) {
         updateRenderer(editor, hint, newText, widthAdjuster, useAnimation);
     }
 
-    public void setHighlighted(@Nonnull Inlay hint, boolean highlighted) {
+    public void setHighlighted(Inlay hint, boolean highlighted) {
         if (!isParameterHint(hint)) {
             throw new IllegalArgumentException("Not a parameter hint");
         }
@@ -96,7 +95,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         }
     }
 
-    public boolean isHighlighted(@Nonnull Inlay hint) {
+    public boolean isHighlighted(Inlay hint) {
         if (!isParameterHint(hint)) {
             throw new IllegalArgumentException("Not a parameter hint");
         }
@@ -104,7 +103,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         return renderer.highlighted;
     }
 
-    public void setCurrent(@Nonnull Inlay hint, boolean current) {
+    public void setCurrent(Inlay hint, boolean current) {
         if (!isParameterHint(hint)) {
             throw new IllegalArgumentException("Not a parameter hint");
         }
@@ -116,7 +115,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         }
     }
 
-    public boolean isCurrent(@Nonnull Inlay hint) {
+    public boolean isCurrent(Inlay hint) {
         if (!isParameterHint(hint)) {
             throw new IllegalArgumentException("Not a parameter hint");
         }
@@ -128,7 +127,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         PREVIEW_MODE.set(editor, b);
     }
 
-    private void updateRenderer(@Nonnull Editor editor, @Nonnull Inlay hint, @Nullable String newText, HintWidthAdjustment widthAdjuster,
+    private void updateRenderer(Editor editor, Inlay hint, @Nullable String newText, HintWidthAdjustment widthAdjuster,
                                 boolean useAnimation) {
         MyRenderer renderer = (MyRenderer) hint.getRenderer();
         renderer.update(editor, newText, widthAdjuster, useAnimation);
@@ -142,7 +141,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
     public void dispose() {
     }
 
-    private void scheduleRendererUpdate(@Nonnull Editor editor, @Nonnull Inlay inlay) {
+    private void scheduleRendererUpdate(Editor editor, Inlay inlay) {
         UIAccess.assertIsUIThread(); // to avoid race conditions in "new AnimationStep"
         AnimationStep step = editor.getUserData(ANIMATION_STEP);
         if (step == null) {
@@ -152,13 +151,13 @@ public final class ParameterHintsPresentationManager implements Disposable {
         scheduleAnimationStep(step);
     }
 
-    private void scheduleAnimationStep(@Nonnull AnimationStep step) {
+    private void scheduleAnimationStep(AnimationStep step) {
         myAlarm.cancelRequest(step);
         myAlarm.addRequest(step, ANIMATION_STEP_MS, ModalityState.any());
     }
 
     @TestOnly
-    public boolean isAnimationInProgress(@Nonnull Editor editor) {
+    public boolean isAnimationInProgress(Editor editor) {
         UIAccess.assertIsUIThread();
         return editor.getUserData(ANIMATION_STEP) != null;
     }
@@ -185,7 +184,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         }
 
         @Override
-        protected @Nullable TextAttributes getTextAttributes(@Nonnull Editor editor) {
+        protected @Nullable TextAttributes getTextAttributes(Editor editor) {
             if (step > steps || startWidth != 0) {
                 TextAttributes attributes = editor.getColorsScheme().getAttributes(current
                     ? DefaultLanguageHighlighterColors.INLINE_PARAMETER_HINT_CURRENT
@@ -204,7 +203,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         }
 
         @Override
-        public @Nonnull String getContextMenuGroupId(@Nonnull Inlay inlay) {
+        public String getContextMenuGroupId(Inlay inlay) {
             return "ParameterNameHints";
         }
 
@@ -223,7 +222,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         }
 
         @Override
-        public int calcWidthInPixels(@Nonnull Inlay inlay) {
+        public int calcWidthInPixels(Inlay inlay) {
             int endWidth = super.calcWidthInPixels(inlay);
             return step <= steps ? Math.max(1, startWidth + (endWidth - startWidth) / steps * step) : endWidth;
         }
@@ -233,7 +232,7 @@ public final class ParameterHintsPresentationManager implements Disposable {
         private final Editor myEditor;
         private final Set<Inlay> inlays = new HashSet<>();
 
-        AnimationStep(@Nonnull Editor editor) {
+        AnimationStep(Editor editor) {
             myEditor = editor;
             Disposer.register(((RealEditor) editor).getDisposable(), () -> myAlarm.cancelRequest(this));
         }

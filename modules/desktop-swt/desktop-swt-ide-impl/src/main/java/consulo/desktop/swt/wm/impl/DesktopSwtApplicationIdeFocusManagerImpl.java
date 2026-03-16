@@ -27,8 +27,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -40,34 +39,34 @@ import java.awt.*;
 @ServiceImpl
 public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeFocusManager {
   @Override
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
+  
+  public AsyncResult<Void> requestFocus(Component c, boolean forced) {
     return AsyncResult.resolved();
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+  public AsyncResult<Void> requestFocus(consulo.ui.Component c, boolean forced) {
     return AsyncResult.resolved();
   }
 
   @Override
-  public JComponent getFocusTargetFor(@Nonnull JComponent comp) {
+  public JComponent getFocusTargetFor(JComponent comp) {
     return null;
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
+  public void doWhenFocusSettlesDown(Runnable runnable) {
     runnable.run();
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
+  public void doWhenFocusSettlesDown(Runnable runnable, ModalityState modality) {
     runnable.run();
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
+  public void doWhenFocusSettlesDown(ExpirableRunnable runnable) {
     if (!runnable.isExpired()) {
       runnable.run();
     }
@@ -79,7 +78,7 @@ public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeF
   }
 
   @Override
-  @Nonnull
+  
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
     return AsyncResult.resolved();
   }
@@ -95,7 +94,7 @@ public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeF
   }
 
   @Override
-  public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
+  public void runOnOwnContext(DataContext context, Runnable runnable) {
     runnable.run();
   }
 
@@ -117,19 +116,19 @@ public class DesktopSwtApplicationIdeFocusManagerImpl implements ApplicationIdeF
   public void dispose() {
   }
 
-  @Nonnull
+  
   @Override
-  public IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
+  public IdeFocusManager findInstanceByComponent(Component c) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager) {
     return this;

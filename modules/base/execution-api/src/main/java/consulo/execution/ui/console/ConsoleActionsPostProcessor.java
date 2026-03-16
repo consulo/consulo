@@ -18,7 +18,6 @@ package consulo.execution.ui.console;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines contract for the {@link ConsoleView#createConsoleActions() console actions} customization.
@@ -37,13 +36,13 @@ public abstract class ConsoleActionsPostProcessor {
      * @param actions console actions that will be used by default
      * @return actions to use within the given console instance (given actions may be returned by default)
      */
-    @Nonnull
-    public AnAction[] postProcess(@Nonnull ConsoleView console, @Nonnull AnAction[] actions) {
+    
+    public AnAction[] postProcess(ConsoleView console, AnAction[] actions) {
         return actions;
     }
 
-    @Nonnull
-    public AnAction[] postProcessPopupActions(@Nonnull ConsoleView console, @Nonnull AnAction[] actions) {
+    
+    public AnAction[] postProcessPopupActions(ConsoleView console, AnAction[] actions) {
         return actions;
     }
 }

@@ -21,17 +21,16 @@ import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
 
 class MarginOptionsUtil {
-    public static String getDefaultRightMarginText(@Nonnull CodeStyleSettings settings) {
+    public static String getDefaultRightMarginText(CodeStyleSettings settings) {
         return getDefaultValueText(Integer.toString(settings.getDefaultRightMargin()));
     }
 
-    static String getDefaultVisualGuidesText(@Nonnull CodeStyleSettings settings) {
+    static String getDefaultVisualGuidesText(CodeStyleSettings settings) {
         List<Integer> softMargins = settings.getDefaultSoftMargins();
         return getDefaultValueText(
             softMargins.size() > 0
@@ -40,28 +39,28 @@ class MarginOptionsUtil {
         );
     }
 
-    static String getDefaultWrapOnTypingText(@Nonnull CodeStyleSettings settings) {
+    static String getDefaultWrapOnTypingText(CodeStyleSettings settings) {
         return getDefaultValueText(settings.WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN ? "Yes" : "No");
     }
 
-    static void customizeWrapOnTypingCombo(@Nonnull JComboBox<String> wrapOnTypingCombo, @Nonnull CodeStyleSettings settings) {
+    static void customizeWrapOnTypingCombo(JComboBox<String> wrapOnTypingCombo, CodeStyleSettings settings) {
         wrapOnTypingCombo.setRenderer(new WrapOnTypingListCellRenderer(settings));
     }
 
-    static String getDefaultValueText(@Nonnull String value) {
+    static String getDefaultValueText(String value) {
         return CodeStyleLocalize.settingsDefaultValuePrefix(value).get();
     }
 
     static class WrapOnTypingListCellRenderer extends ColoredListCellRenderer<String> {
         private final CodeStyleSettings mySettings;
 
-        public WrapOnTypingListCellRenderer(@Nonnull CodeStyleSettings settings) {
+        public WrapOnTypingListCellRenderer(CodeStyleSettings settings) {
             mySettings = settings;
         }
 
         @Override
         protected void customizeCellRenderer(
-            @Nonnull JList<? extends String> list,
+            JList<? extends String> list,
             String value,
             int index,
             boolean selected,

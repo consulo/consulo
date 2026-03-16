@@ -9,20 +9,19 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.AbstractTreeNodeVisitor;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Supplier;
 
 public class TodoNodeVisitor extends AbstractTreeNodeVisitor<Object> {
     private final VirtualFile myFile;
 
-    public TodoNodeVisitor(@Nonnull Supplier<Object> supplier, VirtualFile file) {
+    public TodoNodeVisitor(Supplier<Object> supplier, VirtualFile file) {
         super(supplier, null);
         myFile = file;
     }
 
     @Override
-    protected boolean contains(@Nonnull AbstractTreeNode node, @Nonnull Object element) {
+    protected boolean contains(AbstractTreeNode node, Object element) {
         if (node instanceof SummaryNode || node instanceof ToDoRootNode) {
             return true;
         }

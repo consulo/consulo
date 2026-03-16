@@ -34,8 +34,7 @@ import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
     private static final Logger LOG = Logger.getInstance(LocalInspectionsPassFactory.class);
 
     @Override
-    public void register(@Nonnull Registrar registrar) {
+    public void register(Registrar registrar) {
         registrar.registerTextEditorHighlightingPass(
             this,
             new int[]{Pass.UPDATE_ALL},
@@ -60,7 +59,7 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
 
     @Override
     @Nullable
-    public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+    public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
         TextRange textRange = calculateRangeToProcess(editor);
         if (textRange == null || !InspectionProjectProfileManager.getInstance(file.getProject()).isProfileLoaded()) {
             return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), editor.getDocument());
@@ -72,9 +71,9 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
     @Override
     @RequiredReadAction
     public TextEditorHighlightingPass createMainHighlightingPass(
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
-        @Nonnull HighlightInfoProcessor highlightInfoProcessor
+        PsiFile file,
+        Document document,
+        HighlightInfoProcessor highlightInfoProcessor
     ) {
         TextRange textRange = file.getTextRange();
         return new MyLocalInspectionsPass(file, document, textRange, LocalInspectionsPass.EMPTY_PRIORITY_RANGE, highlightInfoProcessor);
@@ -88,16 +87,16 @@ public class LocalInspectionsPassFactory implements MainHighlightingPassFactory 
         private MyLocalInspectionsPass(
             PsiFile file,
             Document document,
-            @Nonnull TextRange textRange,
+            TextRange textRange,
             TextRange visibleRange,
-            @Nonnull HighlightInfoProcessor highlightInfoProcessor
+            HighlightInfoProcessor highlightInfoProcessor
         ) {
             super(file, document, textRange.getStartOffset(), textRange.getEndOffset(), visibleRange, true, highlightInfoProcessor);
         }
 
-        @Nonnull
+        
         @Override
-        List<LocalInspectionToolWrapper> getInspectionTools(@Nonnull InspectionProfileWrapper profile) {
+        List<LocalInspectionToolWrapper> getInspectionTools(InspectionProfileWrapper profile) {
             List<LocalInspectionToolWrapper> tools = super.getInspectionTools(profile);
             List<LocalInspectionToolWrapper> result = new ArrayList<>(tools.size());
             for (LocalInspectionToolWrapper tool : tools) {

@@ -22,7 +22,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public class WebIntentionsUIImpl extends IntentionsUI {
   }
 
   @Override
-  public void update(@Nonnull CachedIntentions cachedIntentions, boolean actionsChanged) {
+  public void update(CachedIntentions cachedIntentions, boolean actionsChanged) {
 
   }
 

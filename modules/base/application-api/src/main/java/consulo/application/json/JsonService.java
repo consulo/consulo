@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,9 +30,9 @@ public interface JsonService {
     return Application.get().getInstance(JsonService.class);
   }
 
-  @Nonnull
-  String toJson(@Nonnull Object value);
+  
+  String toJson(Object value);
 
-  @Nonnull
-  <T> T fromJson(@Nonnull String json, @Nonnull Class<T> clazz);
+  
+  <T> T fromJson(String json, Class<T> clazz);
 }

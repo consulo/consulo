@@ -17,8 +17,7 @@ package consulo.index.io;
 
 import consulo.index.io.data.DataEnumerator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,27 +26,27 @@ public class PersistentStringEnumerator extends PersistentEnumeratorDelegate<Str
   @Nullable
   private final CachingEnumerator<String> myCache;
 
-  public PersistentStringEnumerator(@Nonnull File file) throws IOException {
+  public PersistentStringEnumerator(File file) throws IOException {
     this(file, null);
   }
 
-  public PersistentStringEnumerator(@Nonnull File file, @Nullable PagedFileStorage.StorageLockContext storageLockContext) throws IOException {
+  public PersistentStringEnumerator(File file, PagedFileStorage.@Nullable StorageLockContext storageLockContext) throws IOException {
     this(file, 1024 * 4, storageLockContext);
   }
 
-  public PersistentStringEnumerator(@Nonnull File file, boolean cacheLastMappings) throws IOException {
+  public PersistentStringEnumerator(File file, boolean cacheLastMappings) throws IOException {
     this(file, 1024 * 4, cacheLastMappings, null);
   }
 
-  public PersistentStringEnumerator(@Nonnull File file, int initialSize) throws IOException {
+  public PersistentStringEnumerator(File file, int initialSize) throws IOException {
     this(file, initialSize, null);
   }
 
-  public PersistentStringEnumerator(@Nonnull File file, int initialSize, @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
+  public PersistentStringEnumerator(File file, int initialSize, PagedFileStorage.@Nullable StorageLockContext lockContext) throws IOException {
     this(file, initialSize, false, lockContext);
   }
 
-  private PersistentStringEnumerator(@Nonnull File file, int initialSize, boolean cacheLastMappings, @Nullable PagedFileStorage.StorageLockContext lockContext) throws IOException {
+  private PersistentStringEnumerator(File file, int initialSize, boolean cacheLastMappings, PagedFileStorage.@Nullable StorageLockContext lockContext) throws IOException {
     super(file, EnumeratorStringDescriptor.INSTANCE, initialSize, lockContext);
     myCache = cacheLastMappings ? new CachingEnumerator<>(new DataEnumerator<String>() {
       @Override

@@ -17,7 +17,6 @@ package consulo.sandboxPlugin;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.view.tree.ProjectViewNestingRulesProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class SandProjectViewNestingRulesProvider implements ProjectViewNestingRulesProvider {
     @Override
-    public void addFileNestingRules(@Nonnull Consumer consumer) {
+    public void addFileNestingRules(Consumer consumer) {
         consumer.addNestingRule(".sand", ".min.sand");
     }
 }

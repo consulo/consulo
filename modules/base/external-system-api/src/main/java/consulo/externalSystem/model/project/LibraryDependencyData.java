@@ -2,7 +2,6 @@ package consulo.externalSystem.model.project;
 
 import consulo.externalSystem.service.project.Named;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Not thread-safe.
@@ -12,15 +11,15 @@ import jakarta.annotation.Nonnull;
  */
 public class LibraryDependencyData extends AbstractDependencyData<LibraryData> implements Named {
   
-  @Nonnull
+  
   private final LibraryLevel myLevel;
   
-  public LibraryDependencyData(@Nonnull ModuleData ownerModule, @Nonnull LibraryData library, @Nonnull LibraryLevel level) {
+  public LibraryDependencyData(ModuleData ownerModule, LibraryData library, LibraryLevel level) {
     super(ownerModule, library);
     myLevel = level;
   }
 
-  @Nonnull
+  
   public LibraryLevel getLevel() {
     return myLevel;
   }

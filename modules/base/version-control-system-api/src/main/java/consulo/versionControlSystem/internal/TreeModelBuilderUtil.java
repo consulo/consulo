@@ -21,15 +21,14 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-08-30
  */
 public class TreeModelBuilderUtil {
-    @Nonnull
-    public static FilePath getPathForObject(@Nonnull Object o) {
+    
+    public static FilePath getPathForObject(Object o) {
         if (o instanceof Change change) {
             return ChangesUtil.getFilePath(change);
         }

@@ -19,11 +19,10 @@ import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 
 public interface MergeProvider extends VcsProviderMarker {
-  @Nonnull
+  
   MergeData loadRevisions(VirtualFile file) throws VcsException;
 
   /**
@@ -31,5 +30,5 @@ public interface MergeProvider extends VcsProviderMarker {
    */
   void conflictResolvedForFile(VirtualFile file);
 
-  boolean isBinary(@Nonnull VirtualFile file);
+  boolean isBinary(VirtualFile file);
 }

@@ -2,11 +2,10 @@
 package consulo.execution.debug.attach;
 
 import consulo.platform.ProcessInfo;
-import jakarta.annotation.Nonnull;
 
 public interface XAttachProcessPresentationGroup extends XAttachPresentationGroup<ProcessInfo> {
   @Override
-  default int compare(@Nonnull ProcessInfo a, @Nonnull ProcessInfo b) {
+  default int compare(ProcessInfo a, ProcessInfo b) {
     return a.getPid() - b.getPid();
   }
 }

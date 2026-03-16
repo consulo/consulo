@@ -24,8 +24,7 @@ import consulo.language.editor.FileColorManager;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -39,7 +38,7 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
     private FileColorsConfigurablePanel myPanel;
 
     @Inject
-    public FileColorsConfigurable(@Nonnull Project project) {
+    public FileColorsConfigurable(Project project) {
         myProject = project;
     }
 
@@ -49,7 +48,7 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("File Colors");
@@ -95,7 +94,7 @@ public class FileColorsConfigurable implements SearchableConfigurable, Configura
         myPanel = null;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "fileColors";

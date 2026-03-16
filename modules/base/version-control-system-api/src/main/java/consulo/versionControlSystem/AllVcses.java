@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -28,7 +27,7 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface AllVcses {
-  static AllVcses getInstance(@Nonnull Project project) {
+  static AllVcses getInstance(Project project) {
     return project.getInstance(AllVcses.class);
   }
 
@@ -40,7 +39,7 @@ public interface AllVcses {
 
   VcsDescriptor[] getAll();
 
-  @Nonnull
+  
   Collection<AbstractVcs> getSupportedVcses();
 
   boolean isEmpty();

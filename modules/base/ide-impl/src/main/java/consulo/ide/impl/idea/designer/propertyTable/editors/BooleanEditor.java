@@ -20,8 +20,7 @@ import consulo.ide.impl.idea.designer.model.PropertyContext;
 import consulo.ide.impl.idea.designer.propertyTable.InplaceContext;
 import consulo.ide.impl.idea.designer.propertyTable.PropertyEditor;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -59,7 +58,7 @@ public class BooleanEditor extends PropertyEditor {
     return myCheckBox;
   }
 
-  @Nonnull
+  
   public JComponent getComponent(@Nullable PropertiesContainer container,
                                  @Nullable PropertyContext context, Object value,
                                  @Nullable InplaceContext inplaceContext) {

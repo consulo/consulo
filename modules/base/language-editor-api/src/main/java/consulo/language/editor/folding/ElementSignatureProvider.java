@@ -21,8 +21,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -32,8 +31,8 @@ public interface ElementSignatureProvider {
   ExtensionPointName<ElementSignatureProvider> EP_NAME = ExtensionPointName.create(ElementSignatureProvider.class);
 
   @Nullable
-  String getSignature(@Nonnull PsiElement element);
+  String getSignature(PsiElement element);
 
   @Nullable
-  PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature, @Nullable StringBuilder processingInfoStorage);
+  PsiElement restoreBySignature(PsiFile file, String signature, @Nullable StringBuilder processingInfoStorage);
 }

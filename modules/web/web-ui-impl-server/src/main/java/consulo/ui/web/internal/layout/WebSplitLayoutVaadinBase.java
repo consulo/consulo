@@ -20,7 +20,6 @@ import consulo.ui.layout.Layout;
 import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.web.gwt.shared.ui.state.layout.SplitLayoutState;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +42,7 @@ class WebSplitLayoutVaadinBase<T extends Layout> extends VaadinComponentContaine
     return (SplitLayoutState)super.getState();
   }
 
-  public void setFirstComponent(@Nonnull Component component) {
+  public void setFirstComponent(Component component) {
     Component old = myFirstComponent;
     if (old != null) {
       removeComponent(old);
@@ -53,7 +52,7 @@ class WebSplitLayoutVaadinBase<T extends Layout> extends VaadinComponentContaine
     addComponent(component);
   }
 
-  public void setSecondComponent(@Nonnull Component component) {
+  public void setSecondComponent(Component component) {
     Component old = mySecondComponent;
     if (old != null) {
       removeComponent(old);

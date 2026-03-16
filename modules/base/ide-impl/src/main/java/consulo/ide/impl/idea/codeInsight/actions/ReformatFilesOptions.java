@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.actions;
 
 import consulo.content.scope.SearchScope;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ReformatFilesOptions extends LayoutCodeOptions {
 

@@ -19,8 +19,7 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionFilter;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class DiffFileIntentionFilter implements IntentionActionFilter {
   @Override
-  public boolean accept(@Nonnull IntentionAction intentionAction, @Nullable PsiFile file) {
+  public boolean accept(IntentionAction intentionAction, @Nullable PsiFile file) {
     return !DiffPsiFileSupport.isDiffFile(file);
   }
 }

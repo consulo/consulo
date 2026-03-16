@@ -23,7 +23,6 @@ import consulo.task.Task;
 import consulo.task.TaskManager;
 import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class TaskSearchSupport {
         return ContainerUtil.mapNotNull(tasks, task -> matcher.matches(task.getId()) || matcher.matches(task.getSummary()) ? task : null);
     }
 
-    @Nonnull
+    
     public static List<Task> getRepositoriesTasks(
         TaskManager manager,
         String pattern,
@@ -61,7 +60,7 @@ public class TaskSearchSupport {
         int since,
         boolean forceRequest,
         boolean withClosed,
-        @Nonnull ProgressIndicator cancelled
+        ProgressIndicator cancelled
     ) {
         List<Task> tasks = new ArrayList<>(manager.getIssues(pattern, since, max, withClosed, cancelled, forceRequest));
         tasks.sort(TaskManagerImpl.TASK_UPDATE_COMPARATOR);

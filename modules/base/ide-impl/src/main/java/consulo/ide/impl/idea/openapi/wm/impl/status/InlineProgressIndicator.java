@@ -16,7 +16,6 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -38,12 +37,12 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             cancelRequest();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myInfo != null && myInfo.isCancellable());
         }
     }
@@ -62,7 +61,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
     private boolean myDisposed;
 
     @RequiredUIAccess
-    public InlineProgressIndicator(boolean compact, @Nonnull TaskInfo processInfo) {
+    public InlineProgressIndicator(boolean compact, TaskInfo processInfo) {
         myCompact = compact;
         myInfo = processInfo;
 
@@ -210,7 +209,7 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
         updateAndRepaint();
     }
 
-    protected void queueRunningUpdate(@Nonnull Runnable update) {
+    protected void queueRunningUpdate(Runnable update) {
         update.run();
     }
 

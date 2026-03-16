@@ -17,16 +17,15 @@ package consulo.execution.debug.impl.internal.action.handler;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class DebuggerToggleActionHandler {
 
-  public abstract boolean isEnabled(@Nonnull Project project, AnActionEvent event);
+  public abstract boolean isEnabled(Project project, AnActionEvent event);
 
-  public abstract boolean isSelected(@Nonnull Project project, AnActionEvent event);
+  public abstract boolean isSelected(Project project, AnActionEvent event);
 
-  public abstract void setSelected(@Nonnull Project project, AnActionEvent event, boolean state);
+  public abstract void setSelected(Project project, AnActionEvent event, boolean state);
 }

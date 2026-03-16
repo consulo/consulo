@@ -22,8 +22,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.StringTokenizer;
 
@@ -41,10 +40,10 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
 
     @Override
     @RequiredReadAction
-    protected PsiElement restoreBySignatureTokens(@Nonnull PsiFile file,
-                                                  @Nonnull PsiElement parent,
-                                                  @Nonnull String type,
-                                                  @Nonnull StringTokenizer tokenizer,
+    protected PsiElement restoreBySignatureTokens(PsiFile file,
+                                                  PsiElement parent,
+                                                  String type,
+                                                  StringTokenizer tokenizer,
                                                   @Nullable StringBuilder processingInfoStorage) {
         if (!TYPE_MARKER.equals(type)) {
             if (processingInfoStorage != null) {
@@ -110,7 +109,7 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
 
     @Nullable
     @RequiredReadAction
-    private PsiElement findElement(int start, int end, int index, @Nonnull PsiElement element, @Nullable StringBuilder processingInfoStorage) {
+    private PsiElement findElement(int start, int end, int index, PsiElement element, @Nullable StringBuilder processingInfoStorage) {
         TextRange range = element.getTextRange();
         if (processingInfoStorage != null) {
             processingInfoStorage.append(String.format("Starting processing from element '%s'. It's range is %s%n", element, range));
@@ -170,7 +169,7 @@ public class OffsetsElementSignatureProvider extends AbstractElementSignaturePro
     }
 
     @Override
-    public String getSignature(@Nonnull PsiElement element) {
+    public String getSignature(PsiElement element) {
         TextRange range = element.getTextRange();
         if (range.isEmpty()) {
             return null;

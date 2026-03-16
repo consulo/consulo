@@ -20,15 +20,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataValidator;
 import consulo.module.Module;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 @ExtensionImpl
 public class ModuleDataValidator implements DataValidator<Module> {
-  @Nonnull
+  
   @Override
   public Key<Module> getKey() {
     return Module.KEY;

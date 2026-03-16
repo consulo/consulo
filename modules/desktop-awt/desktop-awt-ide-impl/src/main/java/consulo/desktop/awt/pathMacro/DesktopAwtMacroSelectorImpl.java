@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 /**
@@ -38,7 +37,7 @@ import java.util.function.Consumer;
 public class DesktopAwtMacroSelectorImpl implements MacroSelector {
   @RequiredUIAccess
   @Override
-  public void select(@Nullable Project project, @Nullable Module module, @Nonnull Consumer<Macro> macroConsumer) {
+  public void select(@Nullable Project project, @Nullable Module module, Consumer<Macro> macroConsumer) {
     MacrosDialog dialog = new MacrosDialog(project, module);
     AsyncResult<Void> result = dialog.showAsync();
 

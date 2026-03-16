@@ -22,7 +22,6 @@ import consulo.versionControlSystem.change.IgnoredFileProvider;
 import consulo.project.impl.internal.store.IProjectStore;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -39,7 +38,7 @@ public class StoreIgnoredFileProvider implements IgnoredFileProvider {
   }
 
   @Override
-  public boolean isIgnoredFilePath(@Nonnull FilePath filePath) {
+  public boolean isIgnoredFilePath(FilePath filePath) {
     IProjectStore stateStore = myProject.getInstance(IProjectStore.class);
     return Comparing.equal(filePath.getVirtualFile(), stateStore.getWorkspaceFile());
   }

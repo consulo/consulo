@@ -10,8 +10,7 @@ import consulo.ide.impl.idea.ui.popup.NothingHereAction;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +28,19 @@ class ActionStepBuilder {
     private int myCurrentNumber;
     private final boolean myHonorActionMnemonics;
     private final String myActionPlace;
-    @Nonnull
     private final ProgressIndicator myIndicator;
 
     private int myMaxIconWidth = -1;
     private int myMaxIconHeight = -1;
 
-    ActionStepBuilder(@Nonnull DataContext dataContext,
+    ActionStepBuilder(DataContext dataContext,
                       boolean showNumbers,
                       boolean useAlphaAsNumbers,
                       boolean showDisabled,
                       boolean honorActionMnemonics,
                       @Nullable String actionPlace,
-                      @Nonnull PresentationFactory presentationFactory,
-                      @Nonnull ProgressIndicator indicator) {
+                      PresentationFactory presentationFactory,
+                      ProgressIndicator indicator) {
         myUseAlphaAsNumbers = useAlphaAsNumbers;
         myPresentationFactory = presentationFactory;
         myListModel = new ArrayList<>();
@@ -55,13 +53,11 @@ class ActionStepBuilder {
         myIndicator = indicator;
     }
 
-    @Nonnull
     public List<ActionPopupItem> getItems() {
         return myListModel;
     }
 
-    @Nonnull
-    public CompletableFuture<List<ActionPopupItem>> buildGroup(@Nonnull ActionGroup actionGroup) {
+    public CompletableFuture<List<ActionPopupItem>> buildGroup(ActionGroup actionGroup) {
         return appendActionsFromGroup(actionGroup).thenApply(v -> {
             if (myListModel.isEmpty()) {
                 myListModel.add(new ActionPopupItem(NothingHereAction.INSTANCE, ApplicationLocalize.nothingHere()));
@@ -101,8 +97,7 @@ class ActionStepBuilder {
         }
     }
 
-    @Nonnull
-    private CompletableFuture<Void> appendActionsFromGroup(@Nonnull ActionGroup actionGroup) {
+    private CompletableFuture<Void> appendActionsFromGroup(ActionGroup actionGroup) {
         Predicate<AnAction> filter = action -> {
             if (myShowDisabled) {
                 return true;

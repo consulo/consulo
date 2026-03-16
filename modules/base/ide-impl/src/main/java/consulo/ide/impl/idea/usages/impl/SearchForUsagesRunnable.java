@@ -57,8 +57,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -80,29 +79,29 @@ class SearchForUsagesRunnable implements Runnable {
 
     private final AtomicInteger myUsageCountWithoutDefinition = new AtomicInteger(0);
     private final AtomicReference<Usage> myFirstUsage = new AtomicReference<>();
-    @Nonnull
+   
     private final Project myProject;
     private final AtomicReference<UsageViewImpl> myUsageViewRef;
     private final UsageViewPresentation myPresentation;
     private final UsageTarget[] mySearchFor;
     private final Supplier<UsageSearcher> mySearcherFactory;
     private final FindUsagesProcessPresentation myProcessPresentation;
-    @Nonnull
+   
     private final SearchScope mySearchScopeToWarnOfFallingOutOf;
     private final UsageViewManager.UsageViewStateListener myListener;
     private final UsageViewManagerImpl myUsageViewManager;
     private final AtomicInteger myOutOfScopeUsages = new AtomicInteger();
 
     SearchForUsagesRunnable(
-        @Nonnull UsageViewManagerImpl usageViewManager,
-        @Nonnull Project project,
-        @Nonnull AtomicReference<UsageViewImpl> usageViewRef,
-        @Nonnull UsageViewPresentation presentation,
-        @Nonnull UsageTarget[] searchFor,
-        @Nonnull Supplier<UsageSearcher> searcherFactory,
-        @Nonnull FindUsagesProcessPresentation processPresentation,
-        @Nonnull SearchScope searchScopeToWarnOfFallingOutOf,
-        @Nullable UsageViewManager.UsageViewStateListener listener
+        UsageViewManagerImpl usageViewManager,
+        Project project,
+        AtomicReference<UsageViewImpl> usageViewRef,
+        UsageViewPresentation presentation,
+        UsageTarget[] searchFor,
+        Supplier<UsageSearcher> searcherFactory,
+        FindUsagesProcessPresentation processPresentation,
+        SearchScope searchScopeToWarnOfFallingOutOf,
+        UsageViewManager.@Nullable UsageViewStateListener listener
     ) {
         myProject = project;
         myUsageViewRef = usageViewRef;
@@ -115,7 +114,7 @@ class SearchForUsagesRunnable implements Runnable {
         myUsageViewManager = usageViewManager;
     }
 
-    @Nonnull
+   
     private static String createOptionsHtml(UsageTarget[] searchFor) {
         KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut(searchFor);
         String shortcutText = "";
@@ -125,17 +124,17 @@ class SearchForUsagesRunnable implements Runnable {
         return "<a href='" + FIND_OPTIONS_HREF_TARGET + "'>" + UsageLocalize.linkDisplayNameFindOptions() + "</a>" + shortcutText;
     }
 
-    @Nonnull
+   
     private static String createSearchInProjectHtml() {
         return "<a href='" + SEARCH_IN_PROJECT_HREF_TARGET + "'>" + UsageLocalize.linkDisplayNameSearchInProject() + "</a>";
     }
 
     private static void notifyByFindBalloon(
         @Nullable HyperlinkListener listener,
-        @Nonnull NotificationType info,
-        @Nonnull FindUsagesProcessPresentation processPresentation,
-        @Nonnull Project project,
-        @Nonnull List<String> lines
+        NotificationType info,
+        FindUsagesProcessPresentation processPresentation,
+        Project project,
+        List<String> lines
     ) {
         UsageViewContentManager.getInstance(project); // in case tool window not registered
 
@@ -174,8 +173,8 @@ class SearchForUsagesRunnable implements Runnable {
 
     private static HyperlinkListener addHrefHandling(
         @Nullable final HyperlinkListener listener,
-        @Nonnull final String hrefTarget,
-        @Nonnull final Runnable handler
+        final String hrefTarget,
+        final Runnable handler
     ) {
         return new HyperlinkAdapter() {
             @Override
@@ -190,13 +189,13 @@ class SearchForUsagesRunnable implements Runnable {
         };
     }
 
-    @Nonnull
-    private static String wrapInHtml(@Nonnull List<String> strings) {
+   
+    private static String wrapInHtml(List<String> strings) {
         return XmlStringUtil.wrapInHtml(StringUtil.join(strings, "<br>"));
     }
 
-    @Nonnull
-    private static LocalizeValue detailedLargeFilesMessage(@Nonnull Collection<VirtualFile> largeFiles) {
+   
+    private static LocalizeValue detailedLargeFilesMessage(Collection<VirtualFile> largeFiles) {
         return UsageLocalize.filesAreTooLargeLargeAndCannotBeScanned(
             largeFiles.size(),
             "<br> " + StringUtil.join(
@@ -207,18 +206,18 @@ class SearchForUsagesRunnable implements Runnable {
         );
     }
 
-    @Nonnull
-    private static String presentableFileInfo(@Nonnull VirtualFile vFile) {
+   
+    private static String presentableFileInfo(VirtualFile vFile) {
         return getPresentablePath(vFile) + "&nbsp;(" + UsageViewManagerImpl.presentableSize(UsageViewManagerImpl.getFileLength(vFile)) + ")";
     }
 
-    @Nonnull
-    private static String getPresentablePath(@Nonnull VirtualFile virtualFile) {
+   
+    private static String getPresentablePath(VirtualFile virtualFile) {
         return "'" + ReadAction.compute(virtualFile::getPresentableUrl) + "'";
     }
 
-    @Nonnull
-    private HyperlinkListener createGotToOptionsListener(@Nonnull final UsageTarget[] targets) {
+   
+    private HyperlinkListener createGotToOptionsListener(final UsageTarget[] targets) {
         return new HyperlinkAdapter() {
             @Override
             protected void hyperlinkActivated(HyperlinkEvent e) {
@@ -229,7 +228,7 @@ class SearchForUsagesRunnable implements Runnable {
         };
     }
 
-    @Nonnull
+   
     private HyperlinkListener createSearchInProjectListener() {
         return new HyperlinkAdapter() {
             @Override
@@ -244,13 +243,13 @@ class SearchForUsagesRunnable implements Runnable {
         };
     }
 
-    private static PsiElement getPsiElement(@Nonnull UsageTarget[] searchFor) {
+    private static PsiElement getPsiElement(UsageTarget[] searchFor) {
         return searchFor[0] instanceof PsiElementUsageTarget elementUsageTarget
             ? ReadAction.compute(elementUsageTarget::getElement) : null;
     }
 
     @RequiredReadAction
-    private static void flashUsageScriptaculously(@Nonnull Usage usage) {
+    private static void flashUsageScriptaculously(Usage usage) {
         if (!(usage instanceof UsageInfo2UsageAdapter usageInfo)) {
             return;
         }
@@ -269,7 +268,7 @@ class SearchForUsagesRunnable implements Runnable {
         rangeBlinker.startBlinking();
     }
 
-    private UsageViewImpl getUsageView(@Nonnull ProgressIndicator indicator) {
+    private UsageViewImpl getUsageView(ProgressIndicator indicator) {
         UsageViewImpl usageView = myUsageViewRef.get();
         if (usageView != null) {
             return usageView;
@@ -296,7 +295,7 @@ class SearchForUsagesRunnable implements Runnable {
         return null;
     }
 
-    private void openView(@Nonnull UsageViewImpl usageView) {
+    private void openView(UsageViewImpl usageView) {
         SwingUtilities.invokeLater(() -> {
             if (myProject.isDisposed()) {
                 return;
@@ -320,7 +319,7 @@ class SearchForUsagesRunnable implements Runnable {
         snapshot.logResponsivenessSinceCreation("Find Usages");
     }
 
-    private void searchUsages(@Nonnull AtomicBoolean findStartedBalloonShown) {
+    private void searchUsages(AtomicBoolean findStartedBalloonShown) {
         ProgressIndicator indicator = ProgressWrapper.unwrap(ProgressManager.getInstance().getProgressIndicator());
         assert indicator != null : "must run find usages under progress";
         TooManyUsagesStatus.createFor(indicator);
@@ -395,7 +394,7 @@ class SearchForUsagesRunnable implements Runnable {
         );
     }
 
-    private void endSearchForUsages(@Nonnull final AtomicBoolean findStartedBalloonShown) {
+    private void endSearchForUsages(final AtomicBoolean findStartedBalloonShown) {
         Application application = myProject.getApplication();
         assert !application.isDispatchThread() : Thread.currentThread();
         int usageCount = myUsageCountWithoutDefinition.get();

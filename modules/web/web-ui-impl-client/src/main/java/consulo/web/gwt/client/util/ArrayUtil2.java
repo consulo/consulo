@@ -15,7 +15,7 @@
  */
 package consulo.web.gwt.client.util;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**

@@ -19,8 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.extension.ModuleExtensionBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.LinkedHashMap;
@@ -33,23 +32,23 @@ import java.util.Map;
 public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<ExternalSystemModuleExtensionImpl>
     implements ExternalSystemModuleExtension<ExternalSystemModuleExtensionImpl> {
     protected final Map<String, String> myOptions = new LinkedHashMap<>();
-    @Nonnull
+    
     private final ProjectSystemId myProjectSystemId;
 
-    public ExternalSystemModuleExtensionImpl(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer, @Nonnull ProjectSystemId projectSystemId) {
+    public ExternalSystemModuleExtensionImpl(String id, ModuleRootLayer moduleRootLayer, ProjectSystemId projectSystemId) {
         super(id, moduleRootLayer);
         myProjectSystemId = projectSystemId;
     }
 
     @Override
-    @Nonnull
+    
     public ProjectSystemId getProjectSystemId() {
         return myProjectSystemId;
     }
 
     @RequiredReadAction
     @Override
-    public void commit(@Nonnull ExternalSystemModuleExtensionImpl mutableModuleExtension) {
+    public void commit(ExternalSystemModuleExtensionImpl mutableModuleExtension) {
         super.commit(mutableModuleExtension);
         myOptions.clear();
         myOptions.putAll(mutableModuleExtension.myOptions);
@@ -57,7 +56,7 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<Exter
 
     @RequiredReadAction
     @Override
-    protected void loadStateImpl(@Nonnull Element element) {
+    protected void loadStateImpl(Element element) {
         for (Element option : element.getChildren("option")) {
             String name = option.getAttributeValue("name");
             if (name == null) {
@@ -68,7 +67,7 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<Exter
     }
 
     @Override
-    protected void getStateImpl(@Nonnull Element element) {
+    protected void getStateImpl(Element element) {
         for (Map.Entry<String, String> entry : myOptions.entrySet()) {
             Element option = new Element("option");
             option.setAttribute("name", entry.getKey());
@@ -80,7 +79,7 @@ public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<Exter
 
     @Nullable
     @Override
-    public String getOption(@Nonnull String key) {
+    public String getOption(String key) {
         return myOptions.get(key);
     }
 }

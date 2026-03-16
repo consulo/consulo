@@ -27,17 +27,15 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 /**
  * @author nik
  */
 public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElement<FileCopyPackagingElement> implements RenameablePackagingElement {
-  @NonNls public static final String OUTPUT_FILE_NAME_ATTRIBUTE = "output-file-name";
+  public static final String OUTPUT_FILE_NAME_ATTRIBUTE = "output-file-name";
   private String myRenamedOutputFileName;
 
   public FileCopyPackagingElement() {
@@ -55,7 +53,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new FileCopyPresentation(myFilePath, getOutputFileName());
   }
 
@@ -64,16 +62,16 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext, @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext, ArtifactType artifactType) {
     VirtualFile file = findFile();
     if (file != null && file.isValid() && !file.isDirectory()) {
       creator.addFileCopyInstruction(file, getOutputFileName());
     }
   }
 
-  @NonNls @Override
+  @Override
   public String toString() {
     return "file:" + myFilePath + (myRenamedOutputFileName != null ? ",rename to:" + myRenamedOutputFileName : "");
   }
@@ -84,7 +82,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
 
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof FileCopyPackagingElement && super.isEqualTo(element)
            && Comparing.equal(myRenamedOutputFileName, ((FileCopyPackagingElement)element).getRenamedOutputFileName());
   }
@@ -100,7 +98,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
     setRenamedOutputFileName(state.getRenamedOutputFileName());
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Attribute(OUTPUT_FILE_NAME_ATTRIBUTE)
   public String getRenamedOutputFileName() {
     return myRenamedOutputFileName;
@@ -121,7 +119,7 @@ public class FileCopyPackagingElement extends FileOrDirectoryCopyPackagingElemen
   }
 
   @Override
-  public void rename(@Nonnull String newName) {
+  public void rename(String newName) {
     myRenamedOutputFileName = newName.equals(PathUtil.getFileName(myFilePath)) ? null : newName;
   }
 

@@ -22,7 +22,6 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 public class MoveDownWithSelectionAndScrollAction extends EditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretRelativelyAndScroll(editor, 0, 1, true);
         }
     }

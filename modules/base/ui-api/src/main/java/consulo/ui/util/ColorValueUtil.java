@@ -5,8 +5,6 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2018-06-12
@@ -23,8 +21,7 @@ public class ColorValueUtil {
    * @param str hex string
    * @return RGBColor object
    */
-  @Nonnull
-  public static RGBColor fromHex(@Nonnull String str) {
+  public static RGBColor fromHex(String str) {
     str = StringUtil.trimStart(str, "#");
     if (str.length() == 3) {
       return new RGBColor(17 * Integer.valueOf(String.valueOf(str.charAt(0)), 16), 17 * Integer.valueOf(String.valueOf(str.charAt(1)), 16), 17 * Integer.valueOf(String.valueOf(str.charAt(2)), 16));
@@ -36,13 +33,11 @@ public class ColorValueUtil {
       throw new IllegalArgumentException("Should be String of 3 or 6 chars length.");
     }
   }
-
-  @Nonnull
-  public static String toHtmlColor(@Nonnull ColorValue c) {
+  public static String toHtmlColor(ColorValue c) {
     return "#" + toHex(c);
   }
 
-  public static String toHex(@Nonnull ColorValue c) {
+  public static String toHex(ColorValue c) {
     RGBColor rgb = c.toRGB();
 
     String R = Integer.toHexString(rgb.getRed());
@@ -58,7 +53,7 @@ public class ColorValueUtil {
    * @param c color to check
    * @return dark or not
    */
-  public static boolean isDark(@Nonnull ColorValue c) {
+  public static boolean isDark(ColorValue c) {
     RGBColor color = c.toRGB();
     // based on perceptional luminosity, see
     return (1 - (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue()) / 255) >= 0.5;
@@ -84,7 +79,7 @@ public class ColorValueUtil {
    * with the same {@code alpha} value.
    * @see #darker
    */
-  public static RGBColor brighter(@Nonnull ColorValue colorValue) {
+  public static RGBColor brighter(ColorValue colorValue) {
     RGBColor rgb = colorValue.toRGB();
 
     int r = rgb.getRed();
@@ -126,7 +121,7 @@ public class ColorValueUtil {
    * with the same {@code alpha} value.
    * @see #brighter
    */
-  public static RGBColor darker(@Nonnull ColorValue colorValue) {
+  public static RGBColor darker(ColorValue colorValue) {
     RGBColor rgb = colorValue.toRGB();
     return new RGBColor(Math.max((int)(rgb.getRed() * FACTOR), 0), Math.max((int)(rgb.getGreen() * FACTOR), 0), Math.max((int)(rgb.getBlue() * FACTOR), 0), rgb.getAlpha());
   }
@@ -140,9 +135,7 @@ public class ColorValueUtil {
     RGBColor rgb = c.toRGB();
     return new RGBColor(shift(rgb.getRed(), d), shift(rgb.getGreen(), d), shift(rgb.getBlue(), d), rgb.getAlpha());
   }
-
-  @Nonnull
-  public static ColorValue mix(@Nonnull ColorValue v1, @Nonnull ColorValue v2, double balance) {
+  public static ColorValue mix(ColorValue v1, ColorValue v2, double balance) {
     RGBColor c1 = v1.toRGB();
     RGBColor c2 = v2.toRGB();
 

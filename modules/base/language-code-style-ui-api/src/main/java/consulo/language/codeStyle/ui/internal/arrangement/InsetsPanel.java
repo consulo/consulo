@@ -16,7 +16,6 @@
 package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.ui.ex.awt.GridBag;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,10 +28,10 @@ import java.awt.*;
  */
 public class InsetsPanel extends JPanel {
 
-  @Nonnull
+  
   private final JComponent myContent;
 
-  public InsetsPanel(@Nonnull JComponent content) {
+  public InsetsPanel(JComponent content) {
     super(new GridBagLayout());
     setOpaque(false);
     myContent = content;

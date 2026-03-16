@@ -17,8 +17,7 @@ package consulo.component.util.localize;
 
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -33,9 +32,9 @@ public abstract class BundleBase {
   public static boolean assertKeyIsFound = false;
 
   public static String messageOrDefault(@Nullable ResourceBundle bundle,
-                                        @Nonnull String key,
+                                        String key,
                                         @Nullable String defaultValue,
-                                        @Nonnull Object... params) {
+                                        Object... params) {
     if (bundle == null) return defaultValue;
 
     String value;
@@ -59,8 +58,8 @@ public abstract class BundleBase {
     return format(value, params);
   }
 
-  @Nonnull
-  public static String format(@Nonnull String value, @Nonnull Object... params) {
+  
+  public static String format(String value, Object... params) {
     if (params.length > 0 && value.indexOf('{') >= 0) {
       return MessageFormat.format(value, params);
     }
@@ -68,8 +67,8 @@ public abstract class BundleBase {
     return value;
   }
 
-  @Nonnull
-  public static String message(@Nonnull ResourceBundle bundle, @Nonnull String key, @Nonnull Object... params) {
+  
+  public static String message(ResourceBundle bundle, String key, Object... params) {
     return messageOrDefault(bundle, key, null, params);
   }
 

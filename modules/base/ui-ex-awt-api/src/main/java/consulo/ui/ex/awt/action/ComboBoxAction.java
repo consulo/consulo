@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(CustomComponentAction.COMPONENT_KEY);
         if (button == null) {
             Component contextComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -63,9 +62,9 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         button.showPopup();
     }
 
-    @Nonnull
+    
     @Override
-    public JComponent createCustomComponent(@Nonnull Presentation presentation, @Nonnull String place) {
+    public JComponent createCustomComponent(Presentation presentation, String place) {
         NonOpaquePanel panel = new NonOpaquePanel(new BorderLayout());
         panel.setBorder(JBUI.Borders.empty(0, 4));
         ComboBoxButton button = createComboBoxButton(presentation);
@@ -73,18 +72,18 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         return panel;
     }
 
-    @Nonnull
+    
     public JBPopup createPopup(
-        @Nonnull JComponent component,
-        @Nonnull DataContext context,
-        @Nonnull Presentation presentation,
-        @Nonnull Runnable onDispose
+        JComponent component,
+        DataContext context,
+        Presentation presentation,
+        Runnable onDispose
     ) {
         return createPopup(component, context, onDispose);
     }
 
-    @Nonnull
-    public JBPopup createPopup(@Nonnull JComponent component, @Nonnull DataContext context, @Nonnull Runnable onDispose) {
+    
+    public JBPopup createPopup(JComponent component, DataContext context, Runnable onDispose) {
         ActionGroup group = createPopupActionGroup(component, context);
 
         ListPopup popup = JBPopupFactory.getInstance().createActionGroupPopup(
@@ -101,13 +100,13 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         return popup;
     }
 
-    @Nonnull
+    
     protected ComboBoxButton createComboBoxButton(Presentation presentation) {
         return new ComboBoxButtonImpl(this, presentation);
     }
 
     @Nullable
-    public String getTooltipText(@Nonnull ComboBoxButton button) {
+    public String getTooltipText(ComboBoxButton button) {
         return null;
     }
 
@@ -120,18 +119,18 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
     }
 
     public boolean shouldShowDisabledActions() {
         return false;
     }
 
-    @Nonnull
+    
     protected abstract ActionGroup createPopupActionGroup(JComponent button);
 
-    @Nonnull
-    protected ActionGroup createPopupActionGroup(JComponent button, @Nonnull DataContext dataContext) {
+    
+    protected ActionGroup createPopupActionGroup(JComponent button, DataContext dataContext) {
         return createPopupActionGroup(button);
     }
 
@@ -139,7 +138,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
         return 30;
     }
 
-    @Nonnull
+    
     public String getPopupActionPlace() {
         return ActionPlaces.UNKNOWN;
     }

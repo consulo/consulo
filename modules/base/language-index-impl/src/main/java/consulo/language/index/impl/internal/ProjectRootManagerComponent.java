@@ -54,8 +54,7 @@ import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -92,13 +91,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
             @RequiredWriteAction
-            public void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
+            public void beforeFileTypesChanged(FileTypeEvent event) {
                 beforeRootsChange(true);
             }
 
             @Override
             @RequiredWriteAction
-            public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+            public void fileTypesChanged(FileTypeEvent event) {
                 rootsChanged(true);
             }
         });
@@ -313,13 +312,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     private class AppListener implements ApplicationListener {
         @Override
-        public void beforeWriteActionStart(@Nonnull Object action) {
+        public void beforeWriteActionStart(Object action) {
             myInsideWriteAction++;
         }
 
         @Override
         @RequiredWriteAction
-        public void writeActionFinished(@Nonnull Object action) {
+        public void writeActionFinished(Object action) {
             if (--myInsideWriteAction == 0 && myPointerChangesDetected) {
                 myPointerChangesDetected = false;
                 myRootsChanged.levelDown();
@@ -330,7 +329,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     private final VirtualFilePointerListener myRootsChangedListener = new VirtualFilePointerListener() {
         @Override
         @RequiredWriteAction
-        public void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
+        public void beforeValidityChanged(VirtualFilePointer[] pointers) {
             if (myProject.isDisposed()) {
                 return;
             }
@@ -349,7 +348,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
         @Override
         @RequiredWriteAction
-        public void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
+        public void validityChanged(VirtualFilePointer[] pointers) {
             if (myProject.isDisposed()) {
                 return;
             }
@@ -367,7 +366,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         }
     };
     
-    @Nonnull
+    
     @Override
     public VirtualFilePointerListener getRootsValidityChangedListener() {
         return myRootsChangedListener;

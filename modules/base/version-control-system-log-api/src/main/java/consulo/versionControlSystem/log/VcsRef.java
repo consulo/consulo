@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A special reference to a commit, such as a branch or a tag.
@@ -29,24 +28,24 @@ public interface VcsRef {
   /**
    * Returns the hash of the commit which this reference points to.
    */
-  @Nonnull
+  
   Hash getCommitHash();
 
   /**
    * Returns the display name of the reference.
    */
-  @Nonnull
+  
   String getName();
 
   /**
    * Returns the type of this reference. There can be different types across different VCS.
    */
-  @Nonnull
+  
   VcsRefType getType();
 
   /**
    * Returns the VCS root this reference belongs to.
    */
-  @Nonnull
+  
   VirtualFile getRoot();
 }

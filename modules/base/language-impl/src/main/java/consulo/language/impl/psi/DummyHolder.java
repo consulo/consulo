@@ -34,8 +34,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class DummyHolder extends PsiFileImpl {
     protected final PsiElement myContext;
@@ -50,22 +49,22 @@ public class DummyHolder extends PsiFileImpl {
     private final DummyHolderTreeLock myTreeElementLock = new DummyHolderTreeLock();
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context) {
+    public DummyHolder(PsiManager manager, TreeElement contentElement, PsiElement context) {
         this(manager, contentElement, context, SharedImplUtil.findCharTableByTree(contentElement));
     }
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, CharTable table, boolean validity) {
+    public DummyHolder(PsiManager manager, CharTable table, boolean validity) {
         this(manager, null, null, table, validity, PlainTextLanguage.INSTANCE);
     }
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, PsiElement context) {
+    public DummyHolder(PsiManager manager, PsiElement context) {
         this(manager, null, context, null);
     }
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, @Nullable TreeElement contentElement, PsiElement context, @Nullable CharTable table) {
+    public DummyHolder(PsiManager manager, @Nullable TreeElement contentElement, PsiElement context, @Nullable CharTable table) {
         this(manager, contentElement, context, table, null, language(context, PlainTextLanguage.INSTANCE));
     }
 
@@ -88,7 +87,7 @@ public class DummyHolder extends PsiFileImpl {
 
     @RequiredReadAction
     public DummyHolder(
-        @Nonnull PsiManager manager,
+        PsiManager manager,
         @Nullable TreeElement contentElement,
         @Nullable PsiElement context,
         @Nullable CharTable table,
@@ -113,17 +112,17 @@ public class DummyHolder extends PsiFileImpl {
     }
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table) {
+    public DummyHolder(PsiManager manager, PsiElement context, CharTable table) {
         this(manager, null, context, table);
     }
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, CharTable table, Language language) {
+    public DummyHolder(PsiManager manager, CharTable table, Language language) {
         this(manager, null, null, table, null, language);
     }
 
     @RequiredReadAction
-    public DummyHolder(@Nonnull PsiManager manager, Language language, PsiElement context) {
+    public DummyHolder(PsiManager manager, Language language, PsiElement context) {
         this(manager, null, context, null, null, language);
     }
 
@@ -143,7 +142,7 @@ public class DummyHolder extends PsiFileImpl {
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         visitor.visitFile(this);
     }
 
@@ -153,7 +152,7 @@ public class DummyHolder extends PsiFileImpl {
         return "DummyHolder";
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public FileType getFileType() {
@@ -168,7 +167,7 @@ public class DummyHolder extends PsiFileImpl {
         return fileType != null ? fileType : PlainTextFileType.INSTANCE;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public FileElement getTreeElement() {
@@ -192,7 +191,7 @@ public class DummyHolder extends PsiFileImpl {
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Language getLanguage() {
@@ -216,7 +215,7 @@ public class DummyHolder extends PsiFileImpl {
 
     private FileViewProvider myViewProvider;
 
-    @Nonnull
+    
     @Override
     public FileViewProvider getViewProvider() {
         if (myViewProvider != null) {

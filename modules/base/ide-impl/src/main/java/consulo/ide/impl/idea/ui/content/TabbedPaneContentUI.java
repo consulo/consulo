@@ -39,7 +39,6 @@ import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -87,7 +86,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
   @Override
-  public void setManager(@Nonnull ContentManager manager) {
+  public void setManager(ContentManager manager) {
     if (myManager != null) {
       throw new IllegalStateException();
     }
@@ -293,7 +292,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
       }
 
       @Override
-      public void uiDataSnapshot(@Nonnull DataSink sink) {
+      public void uiDataSnapshot(DataSink sink) {
         sink.set(PlatformDataKeys.CONTENT_MANAGER, myManager);
         if (myManager.getContentCount() > 1) {
           sink.set(PlatformDataKeys.NONEMPTY_CONTENT_MANAGER, myManager);
@@ -345,29 +344,25 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
   @Override
-  public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
+  public boolean canChangeSelectionTo(Content content, boolean implicit) {
     return true;
   }
 
-  @Nonnull
   @Override
   public String getCloseActionName() {
     return UILocalize.tabbedPaneCloseTabActionName().get();
   }
 
-  @Nonnull
   @Override
   public String getCloseAllButThisActionName() {
     return UILocalize.tabbedPaneCloseAllTabsButThisActionName().get();
   }
 
-  @Nonnull
   @Override
   public String getPreviousContentActionName() {
     return "Select Previous Tab";
   }
 
-  @Nonnull
   @Override
   public String getNextContentActionName() {
     return "Select Next Tab";

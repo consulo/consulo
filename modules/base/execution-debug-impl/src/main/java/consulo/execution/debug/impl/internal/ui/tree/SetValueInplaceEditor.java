@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -43,7 +42,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
   private final XValueNodeImpl myValueNode;
   private final int myNameOffset;
 
-  private SetValueInplaceEditor(XValueNodeImpl node, @Nonnull String nodeName) {
+  private SetValueInplaceEditor(XValueNodeImpl node, String nodeName) {
     super(node, "setValue");
     myValueNode = node;
     myModifier = myValueNode.getValueContainer().getModifier();
@@ -73,7 +72,7 @@ public class SetValueInplaceEditor extends XDebuggerTreeInplaceEditor {
     return bounds;
   }
 
-  public static void show(XValueNodeImpl node, @Nonnull String nodeName) {
+  public static void show(XValueNodeImpl node, String nodeName) {
     SetValueInplaceEditor editor = new SetValueInplaceEditor(node, nodeName);
 
     if (editor.myModifier != null) {

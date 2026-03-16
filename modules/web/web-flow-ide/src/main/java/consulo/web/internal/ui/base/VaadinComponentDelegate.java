@@ -37,8 +37,7 @@ import consulo.ui.impl.UIDataObject;
 import consulo.util.dataholder.Key;
 import consulo.web.internal.ui.WebFontImpl;
 import consulo.web.internal.ui.vaadin.InitiableComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -79,16 +78,15 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         return myClassNamePrefix;
     }
 
-    @Nonnull
     public abstract T createVaadinComponent();
 
     @Override
-    public void setToolTipText(@Nonnull LocalizeValue value) {
+    public void setToolTipText(LocalizeValue value) {
         Tooltip.forComponent(toVaadinComponent()).setText(value.get());
     }
 
     @Override
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
         if (!(font instanceof WebFontImpl)) {
             throw new IllegalArgumentException("not web font");
         }
@@ -96,25 +94,21 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
         myFont = font;
     }
 
-    @Nonnull
     @Override
     public Font getFont() {
         return myFont;
     }
 
-    @Nonnull
     protected T getVaadinComponent() {
         return myVaadinComponent;
     }
 
-    @Nonnull
     @Override
     public T toVaadinComponent() {
         return myVaadinComponent;
     }
 
     @Override
-    @Nonnull
     public UIDataObject dataObject() {
         UIDataObject data = ComponentUtil.getData(myVaadinComponent, UIDataObject.class);
         if (data == null) {
@@ -145,7 +139,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size2D size) {
+    public void setSize(Size2D size) {
         HasSize vaadinComponent = (HasSize) getVaadinComponent();
         if (size.height() == -1) {
             vaadinComponent.setHeight(null);
@@ -164,32 +158,30 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         dataObject().putUserData(key, value);
     }
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return dataObject().getUserData(key);
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass,
-                                                                                     @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass,
+                                                                                     ComponentEventListener<C, E> listener) {
         return dataObject().addListener(eventClass, listener);
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         return dataObject().getDispatcher(eventClass);
     }
 
     @RequiredUIAccess
     @Override
-    public void addBorder(@Nonnull BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
+    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
         dataObject().addBorder(borderPosition, borderStyle, colorValue, width);
 
         bordersChanged();
@@ -197,7 +189,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    public void removeBorder(BorderPosition borderPosition) {
         dataObject().removeBorder(borderPosition);
 
         bordersChanged();
@@ -205,7 +197,7 @@ public abstract class VaadinComponentDelegate<T extends com.vaadin.flow.componen
 
     @RequiredUIAccess
     @Override
-    public void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
+    public void addBorders(BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
         for (BorderPosition position : BorderPosition.values()) {
             dataObject().addBorder(position, borderStyle, colorKey, width);
         }

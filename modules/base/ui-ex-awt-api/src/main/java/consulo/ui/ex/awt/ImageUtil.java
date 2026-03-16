@@ -19,8 +19,7 @@ import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awt.paint.PaintUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.imgscalr.Scalr;
 import org.jetbrains.annotations.Contract;
 
@@ -42,7 +41,7 @@ public class ImageUtil {
      * @return a HiDPI-aware BufferedImage in device scale
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
-    @Nonnull
+    
     public static BufferedImage createImage(int width, int height, int type) {
         if (JreHiDpiUtil.isJreHiDPIEnabled()) {
             return RetinaImage.create(width, height, type);
@@ -61,7 +60,7 @@ public class ImageUtil {
      * @return a HiDPI-aware BufferedImage in the graphics scale
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
-    @Nonnull
+    
     public static BufferedImage createImage(GraphicsConfiguration gc, int width, int height, int type) {
         if (UIUtil.isJreHiDPI(gc)) {
             return RetinaImage.create(gc, width, height, type);
@@ -80,7 +79,7 @@ public class ImageUtil {
      * @return a HiDPI-aware BufferedImage in the graphics scale
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      */
-    @Nonnull
+    
     public static BufferedImage createImage(Graphics g, int width, int height, int type) {
         return createImage(g, width, height, type, PaintUtil.RoundingMode.FLOOR);
     }
@@ -89,8 +88,8 @@ public class ImageUtil {
      * @throws IllegalArgumentException if {@code width} or {@code height} is not greater than 0
      * @see #createImage(GraphicsConfiguration, double, double, int, PaintUtil.RoundingMode)
      */
-    @Nonnull
-    public static BufferedImage createImage(Graphics g, double width, double height, int type, @Nonnull PaintUtil.RoundingMode rm) {
+    
+    public static BufferedImage createImage(Graphics g, double width, double height, int type, PaintUtil.RoundingMode rm) {
         if (g instanceof Graphics2D g2d) {
             if (UIUtil.isJreHiDPI(g2d)) {
                 return RetinaImage.create(g2d, width, height, type, rm);
@@ -101,11 +100,11 @@ public class ImageUtil {
         return createImage(rm.round(width), rm.round(height), type);
     }
 
-    public static BufferedImage toBufferedImage(@Nonnull Image image) {
+    public static BufferedImage toBufferedImage(Image image) {
         return toBufferedImage(image, false);
     }
 
-    public static BufferedImage toBufferedImage(@Nonnull Image image, boolean inUserSize) {
+    public static BufferedImage toBufferedImage(Image image, boolean inUserSize) {
         if (image instanceof JBHiDPIScaledImage scaledImage) {
             Image img = scaledImage.getDelegate();
             if (img != null) {
@@ -162,7 +161,7 @@ public class ImageUtil {
         return 1;
     }
 
-    public static int getRealWidth(@Nonnull Image image) {
+    public static int getRealWidth(Image image) {
         if (image instanceof JBHiDPIScaledImage scaledImage) {
             Image img = scaledImage.getDelegate();
             if (img != null) {
@@ -172,7 +171,7 @@ public class ImageUtil {
         return image.getWidth(null);
     }
 
-    public static int getRealHeight(@Nonnull Image image) {
+    public static int getRealHeight(Image image) {
         if (image instanceof JBHiDPIScaledImage scaledImage) {
             Image img = scaledImage.getDelegate();
             if (img != null) {
@@ -182,14 +181,14 @@ public class ImageUtil {
         return image.getHeight(null);
     }
 
-    public static int getUserWidth(@Nonnull Image image) {
+    public static int getUserWidth(Image image) {
         if (image instanceof JBHiDPIScaledImage scaledImage) {
             return scaledImage.getUserWidth(null);
         }
         return image.getWidth(null);
     }
 
-    public static int getUserHeight(@Nonnull Image image) {
+    public static int getUserHeight(Image image) {
         if (image instanceof JBHiDPIScaledImage scaledImage) {
             return scaledImage.getUserHeight(null);
         }
@@ -238,7 +237,7 @@ public class ImageUtil {
      * Wraps the {@code image} with {@link JBHiDPIScaledImage} according to {@code ctx} when applicable.
      */
     @Contract("null, _ -> null; !null, _ -> !null")
-    public static Image ensureHiDPI(@Nullable Image image, @Nonnull JBUI.ScaleContext ctx) {
+    public static Image ensureHiDPI(@Nullable Image image, JBUI.ScaleContext ctx) {
         if (image == null) {
             return null;
         }

@@ -23,8 +23,7 @@ import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for global inspections. Global inspections work only in batch mode
@@ -41,7 +40,7 @@ import jakarta.annotation.Nullable;
  * @since 6.0
  */
 public abstract class GlobalInspectionTool extends InspectionTool {
-  @Nonnull
+  
   @Override
   protected final String getSuppressId() {
     return super.getSuppressId();
@@ -59,7 +58,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    */
   @Nullable
   @Deprecated
-  public RefGraphAnnotator getAnnotator(@Nonnull RefManager refManager) {
+  public RefGraphAnnotator getAnnotator(RefManager refManager) {
     return null;
   }
 
@@ -74,7 +73,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @see #isGraphNeeded
    */
   @Nullable
-  public RefGraphAnnotator getAnnotator(@Nonnull RefManager refManager, @Nonnull Object state) {
+  public RefGraphAnnotator getAnnotator(RefManager refManager, Object state) {
     return getAnnotator(refManager);
   }
 
@@ -89,14 +88,14 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param globalContext                the context for the current global inspection run.
    * @param problemDescriptionsProcessor the collector for problems reported by the inspection
    */
-  public void runInspection(@Nonnull final AnalysisScope scope,
-                            @Nonnull final InspectionManager manager,
-                            @Nonnull final GlobalInspectionContext globalContext,
-                            @Nonnull final ProblemDescriptionsProcessor problemDescriptionsProcessor,
-                            @Nonnull Object state) {
+  public void runInspection(final AnalysisScope scope,
+                            final InspectionManager manager,
+                            final GlobalInspectionContext globalContext,
+                            final ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                            Object state) {
     globalContext.getRefManager().iterate(new RefVisitor() {
       @Override
-      public void visitElement(@Nonnull RefEntity refEntity) {
+      public void visitElement(RefEntity refEntity) {
         if (!globalContext.shouldCheck(refEntity, GlobalInspectionTool.this)) return;
         CommonProblemDescriptor[] descriptors = checkElement(refEntity, scope, manager, globalContext, problemDescriptionsProcessor, state);
         if (descriptors != null) {
@@ -116,11 +115,11 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @return the problems found for the element, or null if no problems were found.
    */
   @Nullable
-  public CommonProblemDescriptor[] checkElement(@Nonnull RefEntity refEntity,
-                                                @Nonnull AnalysisScope scope,
-                                                @Nonnull InspectionManager manager,
-                                                @Nonnull GlobalInspectionContext globalContext,
-                                                @Nonnull Object state) {
+  public CommonProblemDescriptor[] checkElement(RefEntity refEntity,
+                                                AnalysisScope scope,
+                                                InspectionManager manager,
+                                                GlobalInspectionContext globalContext,
+                                                Object state) {
     return null;
   }
 
@@ -135,12 +134,12 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @return the problems found for the element, or null if no problems were found.
    */
   @Nullable
-  public CommonProblemDescriptor[] checkElement(@Nonnull RefEntity refEntity,
-                                                @Nonnull AnalysisScope scope,
-                                                @Nonnull InspectionManager manager,
-                                                @Nonnull GlobalInspectionContext globalContext,
-                                                @Nonnull ProblemDescriptionsProcessor processor,
-                                                @Nonnull Object state) {
+  public CommonProblemDescriptor[] checkElement(RefEntity refEntity,
+                                                AnalysisScope scope,
+                                                InspectionManager manager,
+                                                GlobalInspectionContext globalContext,
+                                                ProblemDescriptionsProcessor processor,
+                                                Object state) {
     return checkElement(refEntity, scope, manager, globalContext, state);
   }
 
@@ -190,10 +189,10 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @return true if a repeated call to this method is required after the queued usage processors
    * have completed work, false otherwise.
    */
-  public boolean queryExternalUsagesRequests(@Nonnull InspectionManager manager,
-                                             @Nonnull GlobalInspectionContext globalContext,
-                                             @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
-                                             @Nonnull Object state) {
+  public boolean queryExternalUsagesRequests(InspectionManager manager,
+                                             GlobalInspectionContext globalContext,
+                                             ProblemDescriptionsProcessor problemDescriptionsProcessor,
+                                             Object state) {
     return false;
   }
 
@@ -215,7 +214,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @return hint to be stored on server
    */
   @Nullable
-  public String getHint(@Nonnull QuickFix fix) {
+  public String getHint(QuickFix fix) {
     return null;
   }
 
@@ -226,7 +225,7 @@ public abstract class GlobalInspectionTool extends InspectionTool {
    * @param refEntity entity to describe
    * @param composer  provides sample api to compose html
    */
-  public void compose(@Nonnull StringBuffer buf, @Nonnull RefEntity refEntity, @Nonnull HTMLComposer composer) {
+  public void compose(StringBuffer buf, RefEntity refEntity, HTMLComposer composer) {
   }
 
   /**
@@ -259,11 +258,11 @@ public abstract class GlobalInspectionTool extends InspectionTool {
     return null;
   }
 
-  public void initialize(@Nonnull GlobalInspectionContext context, @Nonnull Object state) {
+  public void initialize(GlobalInspectionContext context, Object state) {
     initialize(context);
   }
 
   @Deprecated
-  public void initialize(@Nonnull GlobalInspectionContext context) {
+  public void initialize(GlobalInspectionContext context) {
   }
 }

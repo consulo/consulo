@@ -24,8 +24,7 @@ import consulo.ui.ex.keymap.KeymapGroupFactory;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,79 +38,79 @@ import java.util.function.Predicate;
  */
 public class KeymapGroupImpl implements KeymapGroup {
     private static class BuilderBase {
-        @Nonnull
+        
         protected final KeymapGroupFactory myKeymapGroupFactory;
-        @Nonnull
+        
         protected final ActionManager myActionManager;
 
-        private BuilderBase(@Nonnull KeymapGroupFactory keymapGroupFactory, @Nonnull ActionManager actionManager) {
+        private BuilderBase(KeymapGroupFactory keymapGroupFactory, ActionManager actionManager) {
             myKeymapGroupFactory = keymapGroupFactory;
             myActionManager = actionManager;
         }
     }
 
     public static class BuilderImpl extends BuilderBase implements Builder {
-        public BuilderImpl(@Nonnull KeymapGroupFactory keymapGroupFactory, @Nonnull ActionManager actionManager) {
+        public BuilderImpl(KeymapGroupFactory keymapGroupFactory, ActionManager actionManager) {
             super(keymapGroupFactory, actionManager);
         }
 
-        @Nonnull
+        
         @Override
-        public CreatingBuilder root(@Nonnull LocalizeValue name) {
+        public CreatingBuilder root(LocalizeValue name) {
             return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name));
         }
 
-        @Nonnull
+        
         @Override
-        public CreatingBuilder root(@Nonnull LocalizeValue name, @Nonnull Image icon) {
+        public CreatingBuilder root(LocalizeValue name, Image icon) {
             return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name, icon));
         }
 
-        @Nonnull
+        
         @Override
-        public CreatingBuilder root(@Nonnull LocalizeValue name, @Nonnull String id, @Nonnull Image icon) {
+        public CreatingBuilder root(LocalizeValue name, String id, Image icon) {
             return new CreatingBuilderImpl(myKeymapGroupFactory, myActionManager, myKeymapGroupFactory.createGroup(name, id, icon));
         }
     }
 
     public static class CreatingBuilderImpl extends BuilderBase implements CreatingBuilder {
-        @Nonnull
+        
         private final KeymapGroup myKeymapGroup;
-        @Nonnull
+        
         private Predicate<AnAction> myFilter = action -> true;
 
         public CreatingBuilderImpl(
-            @Nonnull KeymapGroupFactory keymapGroupFactory,
-            @Nonnull ActionManager actionManager,
-            @Nonnull KeymapGroup keymapGroup
+            KeymapGroupFactory keymapGroupFactory,
+            ActionManager actionManager,
+            KeymapGroup keymapGroup
         ) {
             super(keymapGroupFactory, actionManager);
             myKeymapGroup = keymapGroup;
         }
 
-        @Nonnull
+        
         @Override
         public CreatingBuilder filter(@Nullable Predicate<AnAction> filter) {
             myFilter = filter != null ? filter : action -> true;
             return this;
         }
 
-        @Nonnull
+        
         @Override
-        public CreatingBuilder addGroup(@Nonnull String groupId) {
+        public CreatingBuilder addGroup(String groupId) {
             return addGroup(groupId, false);
         }
 
-        @Nonnull
+        
         @Override
-        public CreatingBuilder addGroup(@Nonnull String groupId, boolean forceNonPopup) {
+        public CreatingBuilder addGroup(String groupId, boolean forceNonPopup) {
             for (AnAction action : getActions(groupId)) {
                 addAction(action, forceNonPopup);
             }
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public CreatingBuilder addAction(AnAction action, boolean forceNonPopup) {
             if (action instanceof ActionGroup group) {
@@ -139,7 +138,7 @@ public class KeymapGroupImpl implements KeymapGroup {
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public KeymapGroup build() {
             myKeymapGroup.normalizeSeparators();
@@ -158,7 +157,7 @@ public class KeymapGroupImpl implements KeymapGroup {
     }
 
     private KeymapGroupImpl myParent;
-    @Nonnull
+    
     private final LocalizeValue myName;
     private String myId;
     private final Image myIcon;
@@ -169,15 +168,15 @@ public class KeymapGroupImpl implements KeymapGroup {
 
     private final Set<String> myIds = new HashSet<>();
 
-    public KeymapGroupImpl(@Nonnull LocalizeValue name) {
+    public KeymapGroupImpl(LocalizeValue name) {
         this(name, null);
     }
 
-    public KeymapGroupImpl(@Nonnull LocalizeValue name, Image icon) {
+    public KeymapGroupImpl(LocalizeValue name, Image icon) {
         this(name, null, icon);
     }
 
-    public KeymapGroupImpl(@Nonnull LocalizeValue name, String id, Image icon) {
+    public KeymapGroupImpl(LocalizeValue name, String id, Image icon) {
         myName = name;
         myId = id;
         myIcon = icon;
@@ -278,12 +277,13 @@ public class KeymapGroupImpl implements KeymapGroup {
         }
     }
 
-    public String getActionQualifiedPath(String id) {
+    @Override
+    public String getActionQualifiedPath(String id, boolean presentable) {
         KeymapGroupImpl cur = myParent;
         StringBuilder answer = new StringBuilder();
 
         while (cur != null && !cur.isRoot()) {
-            answer.insert(0, cur.getName() + " | ");
+            answer.insert(0, (presentable ? cur.getName() : cur.getId()) + " | ");
 
             cur = cur.myParent;
         }

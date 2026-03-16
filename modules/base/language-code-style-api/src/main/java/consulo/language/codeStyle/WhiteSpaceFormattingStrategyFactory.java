@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ref.PatchedWeakReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -43,9 +42,9 @@ public class WhiteSpaceFormattingStrategyFactory {
     private WhiteSpaceFormattingStrategyFactory() {
     }
 
-    private static List<WhiteSpaceFormattingStrategy> getSharedStrategies(@Nonnull Language language) {
+    private static List<WhiteSpaceFormattingStrategy> getSharedStrategies(Language language) {
         return List.of(new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
-            @Nonnull
+            
             @Override
             public Language getLanguage() {
                 return language;
@@ -67,7 +66,7 @@ public class WhiteSpaceFormattingStrategyFactory {
      * @return white space strategy to use for the given language
      * @throws IllegalStateException if white space strategies configuration is invalid
      */
-    public static WhiteSpaceFormattingStrategy getStrategy(@Nonnull Language language) throws IllegalStateException {
+    public static WhiteSpaceFormattingStrategy getStrategy(Language language) throws IllegalStateException {
         CompositeWhiteSpaceFormattingStrategy result = new CompositeWhiteSpaceFormattingStrategy(language, getSharedStrategies(language));
         WhiteSpaceFormattingStrategy strategy = WhiteSpaceFormattingStrategy.forLanguage(language);
         if (strategy != null) {
@@ -79,7 +78,7 @@ public class WhiteSpaceFormattingStrategyFactory {
     /**
      * @return collection of all registered white space strategies
      */
-    @Nonnull
+    
     public static Collection<WhiteSpaceFormattingStrategy> getAllStrategies() {
         WeakReference<Collection<WhiteSpaceFormattingStrategy>> reference = myCachedStrategies.get();
         if (reference != null) {

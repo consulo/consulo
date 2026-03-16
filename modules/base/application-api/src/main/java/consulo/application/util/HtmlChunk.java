@@ -6,7 +6,6 @@ import consulo.localize.LocalizeValue;
 import consulo.util.collection.UnmodifiableHashMap;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
@@ -30,51 +29,51 @@ public interface HtmlChunk {
         }
 
         @Override
-        public void appendTo(@Nonnull StringBuilder builder) {
+        public void appendTo(StringBuilder builder) {
         }
 
-        @Nonnull
+        
         @Override
         public String toString() {
             return "";
         }
     }
 
-    static final record LocalizedRaw(@Nonnull LocalizeValue content) implements HtmlChunk {
+    static final record LocalizedRaw(LocalizeValue content) implements HtmlChunk {
         @Override
-        public void appendTo(@Nonnull StringBuilder builder) {
+        public void appendTo(StringBuilder builder) {
             builder.append(content.get());
         }
 
-        @Nonnull
+        
         @Override
         public String toString() {
             return content.get();
         }
     }
 
-    static final record Raw(@Nonnull String content) implements HtmlChunk {
+    static final record Raw(String content) implements HtmlChunk {
         @Override
-        public void appendTo(@Nonnull StringBuilder builder) {
+        public void appendTo(StringBuilder builder) {
             builder.append(content);
         }
 
-        @Nonnull
+        
         @Override
         public String toString() {
             return content;
         }
     }
 
-    static final record Fragment(@Nonnull List<? extends HtmlChunk> content) implements HtmlChunk {
+    static final record Fragment(List<? extends HtmlChunk> content) implements HtmlChunk {
         @Override
-        public void appendTo(@Nonnull StringBuilder builder) {
+        public void appendTo(StringBuilder builder) {
             for (HtmlChunk chunk : content) {
                 chunk.appendTo(builder);
             }
         }
 
-        @Nonnull
+        
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -85,11 +84,11 @@ public interface HtmlChunk {
 
     static final record Nbsp(int count) implements HtmlChunk {
         @Override
-        public void appendTo(@Nonnull StringBuilder builder) {
+        public void appendTo(StringBuilder builder) {
             builder.append(toString());
         }
 
-        @Nonnull
+        
         @Override
         public String toString() {
             return StringUtil.repeat("&nbsp;", count);
@@ -119,7 +118,7 @@ public interface HtmlChunk {
         }
 
         @Override
-        public void appendTo(@Nonnull StringBuilder builder) {
+        public void appendTo(StringBuilder builder) {
             builder.append('<').append(myTagName);
             myAttributes.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(
                 entry -> {
@@ -149,8 +148,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has the specified attribute added or replaced
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element attr(@Nonnull String name, @Nonnull String value) {
+        
+        public Element attr(String name, String value) {
             return new Element(myTagName, myAttributes.with(name, value), myChildren);
         }
 
@@ -160,8 +159,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has the specified attribute added or replaced
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element attr(@Nonnull String name, int value) {
+        
+        public Element attr(String name, int value) {
             return new Element(myTagName, myAttributes.with(name, Integer.toString(value)), myChildren);
         }
 
@@ -172,7 +171,7 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has the specified attribute added or replaced
          */
         @Contract(pure = true)
-        public @Nonnull Element attr(@Nonnull String name) {
+        public Element attr(String name) {
             return new Element(myTagName, myAttributes.with(name, null), myChildren);
         }
 
@@ -181,8 +180,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has the specified style added or replaced
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element style(@Nonnull String style) {
+        
+        public Element style(String style) {
             return attr("style", style);
         }
 
@@ -191,8 +190,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has the specified class name
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element setClass(@Nonnull String className) {
+        
+        public Element setClass(String className) {
             return attr("class", className);
         }
 
@@ -201,8 +200,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has an extra text child
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element addText(@Nonnull LocalizeValue text) {
+        
+        public Element addText(LocalizeValue text) {
             return child(HtmlChunk.text(text));
         }
 
@@ -213,8 +212,8 @@ public interface HtmlChunk {
         @Deprecated
         @DeprecationInfo("Use variant with LocalizeValue")
         @Contract(pure = true)
-        @Nonnull
-        public Element addText(@Nonnull String text) {
+        
+        public Element addText(String text) {
             return child(HtmlChunk.text(text));
         }
 
@@ -223,8 +222,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has an extra text child
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element addRaw(@Nonnull LocalizeValue rawHtml) {
+        
+        public Element addRaw(LocalizeValue rawHtml) {
             return child(HtmlChunk.raw(rawHtml));
         }
 
@@ -233,8 +232,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has an extra text child
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element addRaw(@Nonnull String rawHtml) {
+        
+        public Element addRaw(String rawHtml) {
             return child(HtmlChunk.raw(rawHtml));
         }
 
@@ -243,8 +242,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has extra children
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element children(@Nonnull HtmlChunk... chunks) {
+        
+        public Element children(HtmlChunk... chunks) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, Arrays.asList(chunks));
             }
@@ -259,8 +258,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has extra children
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element children(@Nonnull List<HtmlChunk> chunks) {
+        
+        public Element children(List<HtmlChunk> chunks) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, new ArrayList<>(chunks));
             }
@@ -275,8 +274,8 @@ public interface HtmlChunk {
          * @return a new element that is like this element but has an extra child
          */
         @Contract(pure = true)
-        @Nonnull
-        public Element child(@Nonnull HtmlChunk chunk) {
+        
+        public Element child(HtmlChunk chunk) {
             if (myChildren.isEmpty()) {
                 return new Element(myTagName, myAttributes, Collections.singletonList(chunk));
             }
@@ -310,7 +309,7 @@ public interface HtmlChunk {
 
         @Contract(pure = true)
         @Override
-        @Nonnull
+        
         public String toString() {
             StringBuilder builder = new StringBuilder();
             appendTo(builder);
@@ -325,8 +324,8 @@ public interface HtmlChunk {
      * @return an element that wraps this element
      */
     @Contract(pure = true)
-    @Nonnull
-    default Element wrapWith(@Nonnull String tagName) {
+    
+    default Element wrapWith(String tagName) {
         return new Element(tagName, UnmodifiableHashMap.empty(), Collections.singletonList(this));
     }
 
@@ -335,8 +334,8 @@ public interface HtmlChunk {
      * @return an element that wraps this element
      */
     @Contract(pure = true)
-    @Nonnull
-    default Element wrapWith(@Nonnull Element element) {
+    
+    default Element wrapWith(Element element) {
         return element.child(this);
     }
 
@@ -344,7 +343,7 @@ public interface HtmlChunk {
      * @return a CODE element that wraps this element
      */
     @Contract(pure = true)
-    @Nonnull
+    
     default Element code() {
         return wrapWith("code");
     }
@@ -353,7 +352,7 @@ public interface HtmlChunk {
      * @return a B element that wraps this element
      */
     @Contract(pure = true)
-    @Nonnull
+    
     default Element bold() {
         return wrapWith("b");
     }
@@ -362,7 +361,7 @@ public interface HtmlChunk {
      * @return an I element that wraps this element
      */
     @Contract(pure = true)
-    @Nonnull
+    
     default Element italic() {
         return wrapWith("i");
     }
@@ -371,7 +370,7 @@ public interface HtmlChunk {
      * @return an S element that wraps this element
      */
     @Contract(pure = true)
-    @Nonnull
+    
     default Element strikethrough() {
         return wrapWith("s");
     }
@@ -381,8 +380,8 @@ public interface HtmlChunk {
      * @return an empty tag
      */
     @Contract(pure = true)
-    @Nonnull
-    static Element tag(@Nonnull String tagName) {
+    
+    static Element tag(String tagName) {
         return new Element(tagName, UnmodifiableHashMap.empty(), Collections.emptyList());
     }
 
@@ -390,7 +389,7 @@ public interface HtmlChunk {
      * @return a &lt;div&gt; element
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element div() {
         return Element.DIV;
     }
@@ -399,8 +398,8 @@ public interface HtmlChunk {
      * @return a &lt;div&gt; element with a specified style.
      */
     @Contract(pure = true)
-    @Nonnull
-    static Element div(@Nonnull String style) {
+    
+    static Element div(String style) {
         return Element.DIV.style(style);
     }
 
@@ -408,7 +407,7 @@ public interface HtmlChunk {
      * @return a &lt;span&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element span() {
         return Element.SPAN;
     }
@@ -417,8 +416,8 @@ public interface HtmlChunk {
      * @return a &lt;span&gt; element with a specified style.
      */
     @Contract(pure = true)
-    @Nonnull
-    static Element span(@Nonnull String style) {
+    
+    static Element span(String style) {
         return Element.SPAN.style(style);
     }
 
@@ -426,7 +425,7 @@ public interface HtmlChunk {
      * @return a &lt;br&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element br() {
         return Element.BR;
     }
@@ -435,7 +434,7 @@ public interface HtmlChunk {
      * @return a &lt;li&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element li() {
         return Element.LI;
     }
@@ -444,7 +443,7 @@ public interface HtmlChunk {
      * @return a &lt;ul&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element ul() {
         return Element.UL;
     }
@@ -453,7 +452,7 @@ public interface HtmlChunk {
      * @return a &lt;hr&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element hr() {
         return Element.HR;
     }
@@ -462,7 +461,7 @@ public interface HtmlChunk {
      * @return a &lt;p&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element p() {
         return Element.P;
     }
@@ -471,22 +470,22 @@ public interface HtmlChunk {
      * @return a &lt;body&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element head() {
         return Element.HEAD;
     }
 
-    @Nonnull
-    static Element styleTag(@Nonnull String style) {
+    
+    static Element styleTag(String style) {
         return tag("style").addRaw(style);
     }
 
-    @Nonnull
-    static Element font(@Nonnull String color) {
+    
+    static Element font(String color) {
         return tag("font").attr("color", color);
     }
 
-    @Nonnull
+    
     static Element font(int size) {
         return tag("font").attr("size", String.valueOf(size));
     }
@@ -495,7 +494,7 @@ public interface HtmlChunk {
      * @return a &lt;body&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element body() {
         return Element.BODY;
     }
@@ -504,7 +503,7 @@ public interface HtmlChunk {
      * @return a &lt;html&gt; element.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Element html() {
         return Element.HTML;
     }
@@ -515,7 +514,7 @@ public interface HtmlChunk {
      * @return HtmlChunk that represents a sequence of non-breaking spaces
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static HtmlChunk nbsp() {
         return NBSP;
     }
@@ -527,7 +526,7 @@ public interface HtmlChunk {
      * @return HtmlChunk that represents a sequence of non-breaking spaces
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static HtmlChunk nbsp(int count) {
         if (count <= 0) {
             throw new IllegalArgumentException(count + " is less than 0");
@@ -543,8 +542,8 @@ public interface HtmlChunk {
      * @return HtmlChunk that represents a HTML text node.
      */
     @Contract(pure = true)
-    @Nonnull
-    static HtmlChunk text(@Nonnull LocalizeValue text) {
+    
+    static HtmlChunk text(LocalizeValue text) {
         return text == LocalizeValue.empty() ? empty() : new LocalizedRaw(text.map(HtmlChunk::textToRaw));
     }
 
@@ -556,8 +555,8 @@ public interface HtmlChunk {
      * @return HtmlChunk that represents a HTML text node.
      */
     @Contract(pure = true)
-    @Nonnull
-    static HtmlChunk text(@Nonnull String text) {
+    
+    static HtmlChunk text(String text) {
         return text.isEmpty() ? empty() : new Raw(textToRaw(text));
     }
 
@@ -565,7 +564,7 @@ public interface HtmlChunk {
      * @return an empty HtmlChunk
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static HtmlChunk empty() {
         return Empty.INSTANCE;
     }
@@ -579,8 +578,8 @@ public interface HtmlChunk {
      * @return the HtmlChunk that represents the supplied content.
      */
     @Contract(pure = true)
-    @Nonnull
-    static HtmlChunk raw(@Nonnull LocalizeValue rawHtml) {
+    
+    static HtmlChunk raw(LocalizeValue rawHtml) {
         return rawHtml == LocalizeValue.empty() ? empty() : new LocalizedRaw(rawHtml);
     }
 
@@ -593,8 +592,8 @@ public interface HtmlChunk {
      * @return the HtmlChunk that represents the supplied content.
      */
     @Contract(pure = true)
-    @Nonnull
-    static HtmlChunk raw(@Nonnull String rawHtml) {
+    
+    static HtmlChunk raw(String rawHtml) {
         return rawHtml.isEmpty() ? empty() : new Raw(rawHtml);
     }
 
@@ -606,8 +605,8 @@ public interface HtmlChunk {
      * @return the Element that represents a link
      */
     @Contract(pure = true)
-    @Nonnull
-    static Element link(@Nonnull String target, @Nonnull LocalizeValue text) {
+    
+    static Element link(String target, LocalizeValue text) {
         return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
     }
 
@@ -621,8 +620,8 @@ public interface HtmlChunk {
     @Deprecated
     @DeprecationInfo("Use variant with LocalizeValue")
     @Contract(pure = true)
-    @Nonnull
-    static Element link(@Nonnull String target, @Nonnull String text) {
+    
+    static Element link(String target, String text) {
         return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text(text)));
     }
 
@@ -634,8 +633,8 @@ public interface HtmlChunk {
      * @return the Element that represents a link
      */
     @Contract(pure = true)
-    @Nonnull
-    static Element link(@Nonnull String target, @Nonnull HtmlChunk text) {
+    
+    static Element link(String target, HtmlChunk text) {
         return new Element("a", UnmodifiableHashMap.<String, String>empty().with("href", target), Collections.singletonList(text));
     }
 
@@ -646,8 +645,8 @@ public interface HtmlChunk {
      * @return the HtmlChunk that represents the html entity
      */
     @Contract(pure = true)
-    @Nonnull
-    static HtmlChunk htmlEntity(@Nonnull String htmlEntity) {
+    
+    static HtmlChunk htmlEntity(String htmlEntity) {
         if (!htmlEntity.startsWith("&") && !htmlEntity.endsWith(";")) {
             throw new IllegalArgumentException("Not an entity: " + htmlEntity);
         }
@@ -667,14 +666,14 @@ public interface HtmlChunk {
      *
      * @param builder builder to append to.
      */
-    void appendTo(@Nonnull StringBuilder builder);
+    void appendTo(StringBuilder builder);
 
     /**
      * @return the HtmlChunk that represents the fragment chunk
      */
     @Contract(pure = true)
-    @Nonnull
-    public static HtmlChunk fragment(@Nonnull HtmlChunk... chunks) {
+    
+    public static HtmlChunk fragment(HtmlChunk... chunks) {
         if (chunks.length == 0) {
             return empty();
         }
@@ -685,7 +684,7 @@ public interface HtmlChunk {
      * @return the collector that collects a stream of HtmlChunks to the fragment chunk.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Collector<HtmlChunk, ?, HtmlChunk> toFragment() {
         return FRAGMENT_COLLECTOR;
     }
@@ -695,7 +694,7 @@ public interface HtmlChunk {
      * @return the collector that collects a stream of HtmlChunks to the fragment chunk.
      */
     @Contract(pure = true)
-    @Nonnull
+    
     static Collector<HtmlChunk, ?, HtmlChunk> toFragment(HtmlChunk separator) {
         return Collector.of(
             HtmlBuilder::new,
@@ -715,7 +714,7 @@ public interface HtmlChunk {
         );
     }
 
-    private static String textToRaw(@Nonnull String text) {
+    private static String textToRaw(String text) {
         return XmlStringUtil.escapeText(text).replaceAll("\n", "<br/>");
     }
 }

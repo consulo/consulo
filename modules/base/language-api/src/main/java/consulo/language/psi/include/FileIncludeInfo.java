@@ -16,7 +16,6 @@
 
 package consulo.language.psi.include;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -29,18 +28,18 @@ public class FileIncludeInfo {
   public final boolean runtimeOnly;
   public static final FileIncludeInfo[] EMPTY = new FileIncludeInfo[0];
 
-  public FileIncludeInfo(@Nonnull String fileName, @Nonnull String path, int offset, boolean runtimeOnly) {
+  public FileIncludeInfo(String fileName, String path, int offset, boolean runtimeOnly) {
     this.fileName = fileName;
     this.path = path;
     this.offset = offset;
     this.runtimeOnly = runtimeOnly;
   }
 
-  public FileIncludeInfo(@Nonnull String path, int offset) {
+  public FileIncludeInfo(String path, int offset) {
     this(getFileName(path), path, offset, false);
   }
 
-  public FileIncludeInfo(@Nonnull String path) {
+  public FileIncludeInfo(String path) {
     this(path, -1);
   }
 

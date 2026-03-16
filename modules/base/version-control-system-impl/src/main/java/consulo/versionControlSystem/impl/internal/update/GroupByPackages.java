@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.impl.internal.update;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.*;
@@ -27,7 +26,7 @@ public class GroupByPackages {
   private final Map<File, Collection<File>> myParentToChildrenMap = new HashMap<File, Collection<File>>();
   private final Collection<File> myRoots = new HashSet<File>();
 
-  public GroupByPackages(@Nonnull Collection<File> files) {
+  public GroupByPackages(Collection<File> files) {
     for (File file : files) {
       process(file);
     }
@@ -46,7 +45,7 @@ public class GroupByPackages {
     myRoots.add(newRoot);
   }
 
-  private File splitRoot(@Nonnull File oldRoot) {
+  private File splitRoot(File oldRoot) {
     List<File> children = getChildren(oldRoot);
     if (children.size() == 1) {
       return splitRoot(children.get(0));
@@ -54,7 +53,7 @@ public class GroupByPackages {
     return oldRoot;
   }
 
-  private void process(@Nonnull File file) {
+  private void process(File file) {
     File f;
     File parent = file.getParentFile();
     for (f = file; parent != null; f = parent, parent = parent.getParentFile()) {
@@ -67,12 +66,12 @@ public class GroupByPackages {
     myRoots.add(f);
   }
 
-  @Nonnull
+  
   public List<File> getRoots() {
     return new ArrayList<File>(myRoots);
   }
 
-  @Nonnull
+  
   public List<File> getChildren(File file) {
     Collection<File> collection = myParentToChildrenMap.get(file);
     if (collection == null) {

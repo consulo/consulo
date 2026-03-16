@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -26,11 +25,11 @@ import jakarta.annotation.Nonnull;
 public class ConstantFunction<Param, Result> implements NotNullFunction<Param, Result> {
   private final Result value;
 
-  public ConstantFunction(@Nonnull Result value) {
+  public ConstantFunction(Result value) {
     this.value = value;
   }
 
-  @Nonnull
+  
   @Override
   public Result apply(Param param) {
     return value;

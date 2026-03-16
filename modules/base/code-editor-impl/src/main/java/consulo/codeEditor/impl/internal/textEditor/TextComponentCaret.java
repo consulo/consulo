@@ -17,8 +17,7 @@ package consulo.codeEditor.impl.internal.textEditor;
 
 import consulo.codeEditor.*;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TextComponentCaret extends UserDataHolderBase implements Caret {
   private final Editor myEditor;
@@ -27,13 +26,13 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     myEditor = editor;
   }
 
-  @Nonnull
+  
   @Override
   public Editor getEditor() {
     return myEditor;
   }
 
-  @Nonnull
+  
   @Override
   public CaretModel getCaretModel() {
     return myEditor.getCaretModel();
@@ -50,12 +49,12 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
   }
 
   @Override
-  public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+  public void moveToLogicalPosition(LogicalPosition pos) {
     getCaretModel().moveToLogicalPosition(pos);
   }
 
   @Override
-  public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+  public void moveToVisualPosition(VisualPosition pos) {
     getCaretModel().moveToVisualPosition(pos);
   }
 
@@ -74,13 +73,13 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     return getCaretModel().isUpToDate();
   }
 
-  @Nonnull
+  
   @Override
   public LogicalPosition getLogicalPosition() {
     return getCaretModel().getLogicalPosition();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getVisualPosition() {
     return getCaretModel().getVisualPosition();
@@ -106,7 +105,7 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     return getSelectionModel().getSelectionStart();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getSelectionStartPosition() {
     return myEditor.offsetToVisualPosition(getSelectionModel().getSelectionStart());
@@ -117,7 +116,7 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     return getSelectionModel().getSelectionEnd();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getSelectionEndPosition() {
     return myEditor.offsetToVisualPosition(getSelectionModel().getSelectionEnd());
@@ -134,7 +133,7 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     return getSelectionModel().getLeadSelectionOffset();
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition getLeadSelectionPosition() {
     return myEditor.offsetToVisualPosition(getSelectionModel().getLeadSelectionOffset());
@@ -208,14 +207,14 @@ public class TextComponentCaret extends UserDataHolderBase implements Caret {
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public CaretVisualAttributes getVisualAttributes() {
     return CaretVisualAttributes.DEFAULT;
   }
 
   @Override
-  public void setVisualAttributes(@Nonnull CaretVisualAttributes attributes) {
+  public void setVisualAttributes(CaretVisualAttributes attributes) {
   }
 
   private SelectionModel getSelectionModel() {

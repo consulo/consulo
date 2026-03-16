@@ -26,9 +26,8 @@ import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.application.ApplicationProperties;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   private final Disposable myParent;
   private final T myChild;
 
-  public LazyUiDisposable(@Nullable Disposable parent, @Nonnull JComponent ui, @Nonnull T child) {
+  public LazyUiDisposable(@Nullable Disposable parent, JComponent ui, T child) {
     if (ApplicationProperties.isInSandbox()) {
       myAllocation = new Exception();
     }
@@ -75,9 +74,9 @@ public abstract class LazyUiDisposable<T extends Disposable> implements Activata
   public final void hideNotify() {
   }
 
-  protected abstract void initialize(@Nonnull Disposable parent, @Nonnull T child, @Nullable Project project);
+  protected abstract void initialize(Disposable parent, T child, @Nullable Project project);
 
-  @Nonnull
+  
   private AsyncResult<Disposable> findParentDisposable() {
     return findDisposable(myParent, PlatformDataKeys.UI_DISPOSABLE);
   }

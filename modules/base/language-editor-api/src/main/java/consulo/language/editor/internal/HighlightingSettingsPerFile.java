@@ -39,7 +39,6 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -66,12 +65,12 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
     private final MessageBus myBus;
 
     @Inject
-    public HighlightingSettingsPerFile(@Nonnull Project project) {
+    public HighlightingSettingsPerFile(Project project) {
         myBus = project.getMessageBus();
     }
 
-    @Nonnull
-    public FileHighlightingSetting getHighlightingSettingForRoot(@Nonnull PsiElement root) {
+    
+    public FileHighlightingSetting getHighlightingSettingForRoot(PsiElement root) {
         PsiFile containingFile = root.getContainingFile();
         VirtualFile virtualFile = containingFile.getVirtualFile();
         FileHighlightingSetting[] fileHighlightingSettings = myHighlightSettings.get(virtualFile);
@@ -83,8 +82,8 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
         return fileHighlightingSettings[index];
     }
 
-    @Nonnull
-    private static FileHighlightingSetting getDefaultHighlightingSetting(@Nonnull Project project, VirtualFile virtualFile) {
+    
+    private static FileHighlightingSetting getDefaultHighlightingSetting(Project project, VirtualFile virtualFile) {
         if (virtualFile != null) {
             List<DefaultHighlightingSettingProvider> filtered =
                 DumbService.getInstance(project).filterByDumbAwareness(DefaultHighlightingSettingProvider.EP_NAME.getExtensionList());
@@ -98,8 +97,8 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
         return FileHighlightingSetting.FORCE_HIGHLIGHTING;
     }
 
-    @Nonnull
-    private static FileHighlightingSetting[] getDefaults(@Nonnull PsiFile file) {
+    
+    private static FileHighlightingSetting[] getDefaults(PsiFile file) {
         int rootsCount = file.getViewProvider().getLanguages().size();
         FileHighlightingSetting[] fileHighlightingSettings = new FileHighlightingSetting[rootsCount];
         for (int i = 0; i < fileHighlightingSettings.length; i++) {
@@ -108,7 +107,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
         return fileHighlightingSettings;
     }
 
-    public void setHighlightingSettingForRoot(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting setting) {
+    public void setHighlightingSettingForRoot(PsiElement root, FileHighlightingSetting setting) {
         PsiFile containingFile = root.getContainingFile();
         VirtualFile virtualFile = containingFile.getVirtualFile();
         if (virtualFile == null) {
@@ -182,13 +181,13 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
     }
 
     @Override
-    public boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
+    public boolean shouldHighlight(PsiElement psiRoot) {
         FileHighlightingSetting settingForRoot = getHighlightingSettingForRoot(psiRoot);
         return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
     }
 
     @Override
-    public boolean shouldInspect(@Nonnull PsiElement psiRoot) {
+    public boolean shouldInspect(PsiElement psiRoot) {
         if (Application.get().isUnitTestMode()) {
             return true;
         }

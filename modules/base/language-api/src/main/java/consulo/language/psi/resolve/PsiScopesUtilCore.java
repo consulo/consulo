@@ -20,8 +20,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiInvalidElementAccessException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Some base methods for scopes
@@ -29,14 +28,14 @@ import jakarta.annotation.Nullable;
 public class PsiScopesUtilCore {
   public static final Logger LOGGER = Logger.getInstance(PsiScopesUtilCore.class);
 
-  public static boolean treeWalkUp(@Nonnull PsiScopeProcessor processor, @Nonnull PsiElement entrance, @Nullable PsiElement maxScope) {
+  public static boolean treeWalkUp(PsiScopeProcessor processor, PsiElement entrance, @Nullable PsiElement maxScope) {
     return treeWalkUp(processor, entrance, maxScope, ResolveState.initial());
   }
 
-  public static boolean treeWalkUp(@Nonnull PsiScopeProcessor processor,
-                                   @Nonnull PsiElement entrance,
+  public static boolean treeWalkUp(PsiScopeProcessor processor,
+                                   PsiElement entrance,
                                    @Nullable PsiElement maxScope,
-                                   @Nonnull ResolveState state) {
+                                   ResolveState state) {
     if (!entrance.isValid()) {
       LOGGER.error(new PsiInvalidElementAccessException(entrance));
     }
@@ -63,9 +62,9 @@ public class PsiScopesUtilCore {
     return true;
   }
 
-  public static boolean walkChildrenScopes(@Nonnull PsiElement thisElement,
-                                           @Nonnull PsiScopeProcessor processor,
-                                           @Nonnull ResolveState state,
+  public static boolean walkChildrenScopes(PsiElement thisElement,
+                                           PsiScopeProcessor processor,
+                                           ResolveState state,
                                            PsiElement lastParent,
                                            PsiElement place) {
     PsiElement child = null;

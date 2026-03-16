@@ -21,7 +21,6 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "todo", order = "after code-analysis")
 public class TodoCheckinHandlerFactory extends CheckinHandlerFactory {
-  @Nonnull
+  
   @Override
   public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new TodoCheckinHandler(panel);

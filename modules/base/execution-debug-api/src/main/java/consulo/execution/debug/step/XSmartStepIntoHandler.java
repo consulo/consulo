@@ -20,8 +20,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XSuspendContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -36,19 +35,19 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
    * @param position current position
    * @return list of function/method calls containing in the current line
    */
-  @Nonnull
-  public abstract List<Variant> computeSmartStepVariants(@Nonnull XSourcePosition position);
+  
+  public abstract List<Variant> computeSmartStepVariants(XSourcePosition position);
 
   /**
    * Resume execution and call {@link XDebugSession#positionReached(XSuspendContext)}
    * when {@code variant} function/method is reached
    * @param variant selected variant
    */
-  public void startStepInto(@Nonnull Variant variant) {
+  public void startStepInto(Variant variant) {
     throw new AbstractMethodError();
   }
 
-  public void startStepInto(@Nonnull Variant variant, @Nullable XSuspendContext context) {
+  public void startStepInto(Variant variant, @Nullable XSuspendContext context) {
     startStepInto(variant);
   }
 
@@ -56,5 +55,5 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
    * @return title for popup which will be shown to select method/function
    * @param position current position
    */
-  public abstract String getPopupTitle(@Nonnull XSourcePosition position);
+  public abstract String getPopupTitle(XSourcePosition position);
 }

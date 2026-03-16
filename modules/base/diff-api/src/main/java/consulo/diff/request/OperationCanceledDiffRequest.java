@@ -15,8 +15,10 @@
  */
 package consulo.diff.request;
 
+import org.jspecify.annotations.Nullable;
+
 public class OperationCanceledDiffRequest extends MessageDiffRequest {
-  public OperationCanceledDiffRequest(@jakarta.annotation.Nullable String title) {
+  public OperationCanceledDiffRequest(@Nullable String title) {
     super(title, "Operation canceled");
   }
 

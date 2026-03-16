@@ -31,7 +31,6 @@ import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     myId = id;
     project.getMessageBus().connect().subscribe(ArtifactListener.class, new ArtifactListener() {
       @Override
-      public void artifactRemoved(@Nonnull Artifact artifact) {
+      public void artifactRemoved(Artifact artifact) {
         RunManager runManager = RunManager.getInstance(myProject);
         for (RunConfiguration configuration : runManager.getAllConfigurationsList()) {
           List<T> tasks = runManager.getBeforeRunTasks(configuration, getId());
@@ -70,7 +69,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
     });
   }
 
-  @Nonnull
+  
   @Override
   public Key<T> getId() {
     return myId;
@@ -98,7 +97,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task) {
     Artifact[] artifacts = ArtifactManager.getInstance(myProject).getArtifacts();

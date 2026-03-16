@@ -36,8 +36,7 @@ import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.ui.ex.awt.tab.JBTabs;
 import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import javax.swing.*;
@@ -104,9 +103,8 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
         return root != null ? new RelativeRectangle(root) : new RelativeRectangle(mySplitters.getComponent());
     }
 
-    @Nonnull
     @Override
-    public ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point) {
+    public ContentResponse getContentResponse(DockableContent content, RelativePoint point) {
         return getTabsAt(content, point) != null ? ContentResponse.ACCEPT_MOVE : ContentResponse.DENY;
     }
 
@@ -140,7 +138,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
     }
 
     @Override
-    public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
+    public void add(DockableContent content, RelativePoint dropTarget) {
         FileEditorWindow window = null;
         if (myCurrentOver != null) {
             window = DataManager.getInstance().getDataContext(myCurrentOver.getComponent()).getData(FileEditorWindow.DATA_KEY);
@@ -165,12 +163,12 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
     }
 
     @Override
-    public Image startDropOver(@Nonnull DockableContent content, RelativePoint point) {
+    public Image startDropOver(DockableContent content, RelativePoint point) {
         return null;
     }
 
     @Override
-    public Image processDropOver(@Nonnull DockableContent content, RelativePoint point) {
+    public Image processDropOver(DockableContent content, RelativePoint point) {
         JBTabs current = getTabsAt(content, point);
 
         if (myCurrentOver != null && myCurrentOver != current) {
@@ -192,7 +190,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
     }
 
     @Override
-    public void resetDropOver(@Nonnull DockableContent content) {
+    public void resetDropOver(DockableContent content) {
         if (myCurrentOver != null) {
             myCurrentOver.resetDropOver(myCurrentOverInfo);
             myCurrentOver = null;

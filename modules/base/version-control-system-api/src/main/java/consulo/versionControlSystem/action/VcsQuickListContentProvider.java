@@ -6,8 +6,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.versionControlSystem.AbstractVcs;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -43,5 +42,5 @@ public interface VcsQuickListContentProvider {
      * @return True if replace general actions with actions specified in getVcsActions() method. Otherwise
      * custom actions will be inserted in general popup. Usually should be false.
      */
-    boolean replaceVcsActionsFor(@Nonnull AbstractVcs activeVcs, @Nullable DataContext dataContext);
+    boolean replaceVcsActionsFor(AbstractVcs activeVcs, @Nullable DataContext dataContext);
 }

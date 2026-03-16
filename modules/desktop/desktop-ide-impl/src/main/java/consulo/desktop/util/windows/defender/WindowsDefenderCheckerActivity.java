@@ -29,7 +29,6 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -43,19 +42,19 @@ import java.util.stream.Collectors;
  */
 @ExtensionImpl
 public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity, DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
     private final Provider<WindowsDefenderChecker> myWindowsDefenderChecker;
     private final Provider<EarlyAccessProgramManager> myEarlyAccessProgramManager;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     @Inject
     public WindowsDefenderCheckerActivity(
-        @Nonnull Application application,
+        Application application,
         Provider<WindowsDefenderChecker> windowsDefenderChecker,
         Provider<EarlyAccessProgramManager> earlyAccessProgramManager,
-        @Nonnull NotificationService notificationService
+        NotificationService notificationService
     ) {
         myApplication = application;
         myWindowsDefenderChecker = windowsDefenderChecker;
@@ -64,7 +63,7 @@ public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity
     }
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         Platform platform = Platform.current();
         if (!platform.os().isWindows()) {
             return;

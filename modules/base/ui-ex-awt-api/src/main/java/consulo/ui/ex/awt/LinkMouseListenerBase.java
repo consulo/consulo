@@ -15,25 +15,24 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.function.Consumer;
 
 public abstract class LinkMouseListenerBase<T> extends ClickListener implements MouseMotionListener {
-  public static void installSingleTagOn(@Nonnull SimpleColoredComponent component) {
+  public static void installSingleTagOn(SimpleColoredComponent component) {
     new LinkMouseListenerBase<Consumer<MouseEvent>>() {
       @Nullable
       @Override
-      protected Consumer<MouseEvent> getTagAt(@Nonnull MouseEvent e) {
+      protected Consumer<MouseEvent> getTagAt(MouseEvent e) {
         //noinspection unchecked
         return (Consumer<MouseEvent>)((SimpleColoredComponent)e.getSource()).getFragmentTagAt(e.getX());
       }
 
       @Override
-      protected void handleTagClick(@Nullable Consumer<MouseEvent> tag, @Nonnull MouseEvent event) {
+      protected void handleTagClick(@Nullable Consumer<MouseEvent> tag, MouseEvent event) {
         if (tag != null) {
           tag.accept(event);
         }
@@ -42,17 +41,17 @@ public abstract class LinkMouseListenerBase<T> extends ClickListener implements 
   }
 
   @Nullable
-  protected abstract T getTagAt(@Nonnull MouseEvent e);
+  protected abstract T getTagAt(MouseEvent e);
 
   @Override
-  public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+  public boolean onClick(MouseEvent e, int clickCount) {
     if (e.getButton() == MouseEvent.BUTTON1) {
       handleTagClick(getTagAt(e), e);
     }
     return false;
   }
 
-  protected void handleTagClick(@Nullable T tag, @Nonnull MouseEvent event) {
+  protected void handleTagClick(@Nullable T tag, MouseEvent event) {
     if (tag instanceof Runnable) {
       ((Runnable)tag).run();
     }
@@ -75,7 +74,7 @@ public abstract class LinkMouseListenerBase<T> extends ClickListener implements 
   }
 
   @Override
-  public void installOn(@Nonnull Component component) {
+  public void installOn(Component component) {
     super.installOn(component);
 
     component.addMouseMotionListener(this);

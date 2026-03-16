@@ -25,8 +25,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +56,7 @@ public class RunContentExecutor implements Disposable {
      */
     private ConsoleView myUserProvidedConsole;
 
-    public RunContentExecutor(@Nonnull Project project, @Nonnull ProcessHandler process) {
+    public RunContentExecutor(Project project, ProcessHandler process) {
         myProject = project;
         myProcess = process;
     }
@@ -72,7 +71,7 @@ public class RunContentExecutor implements Disposable {
         return this;
     }
 
-    public RunContentExecutor withIcon(@Nonnull Image icon) {
+    public RunContentExecutor withIcon(Image icon) {
         myIcon = icon;
         return this;
     }
@@ -82,7 +81,7 @@ public class RunContentExecutor implements Disposable {
         return this;
     }
 
-    public RunContentExecutor withStop(@Nonnull Runnable stop, @Nonnull BooleanSupplier stopEnabled) {
+    public RunContentExecutor withStop(Runnable stop, BooleanSupplier stopEnabled) {
         myStopAction = stop;
         myStopEnabled = stopEnabled;
         return this;
@@ -103,7 +102,7 @@ public class RunContentExecutor implements Disposable {
         return this;
     }
 
-    private ConsoleView createConsole(@Nonnull Project project) {
+    private ConsoleView createConsole(Project project) {
         TextConsoleBuilder consoleBuilder = TextConsoleBuilderFactory.getInstance().createBuilder(project);
         consoleBuilder.filters(myFilterList);
         ConsoleView console = consoleBuilder.getConsole();
@@ -176,7 +175,7 @@ public class RunContentExecutor implements Disposable {
     /**
      * @param console console to use instead of new one. Pass null to always create new
      */
-    @Nonnull
+    
     public RunContentExecutor withConsole(@Nullable ConsoleView console) {
         myUserProvidedConsole = console;
         return this;
@@ -190,12 +189,12 @@ public class RunContentExecutor implements Disposable {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myRerunAction.run();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabledAndVisible(myRerunAction != null);
         }
 
@@ -212,12 +211,12 @@ public class RunContentExecutor implements Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myStopAction.run();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setVisible(myStopAction != null);
             e.getPresentation().setEnabled(myStopEnabled != null && myStopEnabled.getAsBoolean());
         }

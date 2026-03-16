@@ -17,7 +17,7 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Iterator;

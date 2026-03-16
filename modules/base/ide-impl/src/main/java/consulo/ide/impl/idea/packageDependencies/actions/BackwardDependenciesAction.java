@@ -31,7 +31,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -51,7 +50,7 @@ public class BackwardDependenciesAction extends BaseAnalysisAction {
     }
 
     @Override
-    protected void analyze(@Nonnull Project project, AnalysisScope scope) {
+    protected void analyze(Project project, AnalysisScope scope) {
         scope.setSearchInLibraries(true); //find library usages in project
         SearchScope selectedScope = myScopeChooserCombo.getSelectedScope();
         new BackwardDependenciesHandler(

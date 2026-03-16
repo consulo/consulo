@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.http.HttpFileSystem;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 
@@ -33,7 +32,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
   protected final String myUrl;
   private final OrderRootType myRootType;
 
-  public ItemElement(@Nonnull OrderRootTypeElement parent, @Nonnull String url, @Nonnull OrderRootType rootType, boolean isJarDirectory,
+  public ItemElement(OrderRootTypeElement parent, String url, OrderRootType rootType, boolean isJarDirectory,
                      boolean isValid) {
     super(parent);
     myUrl = url;
@@ -97,7 +96,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return (OrderRootTypeElement)getParentDescriptor();
   }
 
-  @Nonnull
+  
   public OrderRootType getRootType() {
     return myRootType;
   }
@@ -116,7 +115,7 @@ class ItemElement extends LibraryTableTreeContentElement<ItemElement> {
     return true;
   }
 
-  @Nonnull
+  
   public String getUrl() {
     return myUrl;
   }

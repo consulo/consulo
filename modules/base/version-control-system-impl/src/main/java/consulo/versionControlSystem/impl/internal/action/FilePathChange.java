@@ -17,7 +17,7 @@ package consulo.versionControlSystem.impl.internal.action;
 
 import consulo.versionControlSystem.FilePath;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

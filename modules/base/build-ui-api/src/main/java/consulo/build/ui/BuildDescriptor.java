@@ -17,20 +17,19 @@ package consulo.build.ui;
 
 import consulo.build.ui.event.BuildEventsNls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface BuildDescriptor {
-  @Nonnull
+  
   Object getId();
 
-  @Nonnull
+  
   @BuildEventsNls.Title
   String getTitle();
 
-  @Nonnull
+  
   String getWorkingDir();
 
   long getStartTime();

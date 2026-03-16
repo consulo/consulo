@@ -5,7 +5,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,32 +15,32 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class HoverListener {
   private static final Key<List<HoverListener>> HOVER_LISTENER_LIST_KEY = Key.create("HoverListenerList");
 
-  public abstract void mouseEntered(@Nonnull Component component, int x, int y);
+  public abstract void mouseEntered(Component component, int x, int y);
 
-  public abstract void mouseMoved(@Nonnull Component component, int x, int y);
+  public abstract void mouseMoved(Component component, int x, int y);
 
-  public abstract void mouseExited(@Nonnull Component component);
+  public abstract void mouseExited(Component component);
 
 
-  public final void addTo(@Nonnull JComponent component, @Nonnull Disposable parent) {
+  public final void addTo(JComponent component, Disposable parent) {
     addTo(component);
     Disposer.register(parent, () -> removeFrom(component));
   }
 
-  public final void addTo(@Nonnull JComponent component) {
+  public final void addTo(JComponent component) {
     List<HoverListener> list = UIUtil.getClientProperty(component, HOVER_LISTENER_LIST_KEY);
     if (list == null) component.putClientProperty(HOVER_LISTENER_LIST_KEY, list = new CopyOnWriteArrayList<>());
     list.add(0, this);
   }
 
-  public final void removeFrom(@Nonnull JComponent component) {
+  public final void removeFrom(JComponent component) {
     List<HoverListener> list = UIUtil.getClientProperty(component, HOVER_LISTENER_LIST_KEY);
     if (list != null) list.remove(this);
   }
 
   public static
-  @Nonnull
-  List<HoverListener> getAll(@Nonnull Component component) {
+  
+  List<HoverListener> getAll(Component component) {
     List<HoverListener> list = UIUtil.getClientProperty(component, HOVER_LISTENER_LIST_KEY);
     return list != null ? list : Collections.emptyList();
   }

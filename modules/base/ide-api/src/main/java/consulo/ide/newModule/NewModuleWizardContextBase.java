@@ -15,7 +15,6 @@
  */
 package consulo.ide.newModule;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,22 +31,22 @@ public class NewModuleWizardContextBase implements NewModuleWizardContext {
   }
 
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
   @Override
-  public void setPath(@Nonnull String path) {
+  public void setPath(String path) {
     myPath = path;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   @Override
   public String getPath() {
     return myPath;

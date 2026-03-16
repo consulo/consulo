@@ -23,9 +23,9 @@ import consulo.externalSystem.service.project.manage.ProjectDataService;
 import consulo.externalSystem.ui.awt.ExternalSystemTasksTreeModel;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -34,7 +34,7 @@ import java.util.Collection;
 public abstract class AbstractToolWindowService<T extends ExternalEntityData> implements ProjectDataService<T, Void> {
 
     @Override
-    public void importData(@Nonnull final Collection<DataNode<T>> toImport, @Nonnull final Project project, boolean synchronous) {
+    public void importData(final Collection<DataNode<T>> toImport, final Project project, boolean synchronous) {
         if (toImport.isEmpty()) {
             return;
         }
@@ -50,11 +50,11 @@ public abstract class AbstractToolWindowService<T extends ExternalEntityData> im
         });
     }
 
-    protected abstract void processData(@Nonnull Collection<DataNode<T>> nodes,
-                                        @Nonnull Project project,
-                                        @jakarta.annotation.Nullable ExternalSystemTasksTreeModel model);
+    protected abstract void processData(Collection<DataNode<T>> nodes,
+                                        Project project,
+                                        @Nullable ExternalSystemTasksTreeModel model);
 
     @Override
-    public void removeData(@Nonnull Collection<? extends Void> toRemove, @Nonnull Project project, boolean synchronous) {
+    public void removeData(Collection<? extends Void> toRemove, Project project, boolean synchronous) {
     }
 }

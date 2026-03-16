@@ -24,8 +24,7 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -48,14 +47,14 @@ public class WebVerticalLayoutImpl extends VaadinComponentDelegate<WebVerticalLa
     public void addStyle(LayoutStyle style) {
     }
 
-    @Nonnull
+    
     @Override
-    public Layout<LayoutConstraint> add(@Nonnull Component component, @Nonnull LayoutConstraint constraint) {
+    public Layout<LayoutConstraint> add(Component component, LayoutConstraint constraint) {
         toVaadinComponent().add(TargetVaddin.to(component));
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public WebVerticalLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

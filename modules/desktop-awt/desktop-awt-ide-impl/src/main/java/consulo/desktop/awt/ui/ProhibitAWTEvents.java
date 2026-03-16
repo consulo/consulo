@@ -17,7 +17,6 @@ package consulo.desktop.awt.ui;
 
 import consulo.application.AccessToken;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,12 +33,12 @@ public class ProhibitAWTEvents implements Predicate<AWTEvent> {
   private final String myActivityName;
   private boolean myReported;
 
-  private ProhibitAWTEvents(@Nonnull String activityName) {
+  private ProhibitAWTEvents(String activityName) {
     myActivityName = activityName;
   }
 
   @Override
-  public boolean test(@Nonnull AWTEvent e) {
+  public boolean test(AWTEvent e) {
     if (!myReported) {
       myReported = true;
       LOG.error("AWT events are prohibited inside " + myActivityName + "; got " + e);
@@ -47,8 +46,8 @@ public class ProhibitAWTEvents implements Predicate<AWTEvent> {
     return true;
   }
 
-  @Nonnull
-  public static AccessToken start(@Nonnull String activityName) {
+  
+  public static AccessToken start(String activityName) {
     if (!SwingUtilities.isEventDispatchThread()) {
       // some crazy highlighting queries getData outside EDT: https://youtrack.jetbrains.com/issue/IDEA-162970
       return AccessToken.EMPTY_ACCESS_TOKEN;

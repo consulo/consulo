@@ -19,7 +19,6 @@ import consulo.ui.image.Image;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public class DesktopSwtLayeredImageImpl implements Image, DesktopSwtImage{
     return myImages[0].getWidth();
   }
 
-  @Nonnull
+  
   @Override
   public org.eclipse.swt.graphics.Image toSWTImage() {
     org.eclipse.swt.graphics.Image swtImage = new org.eclipse.swt.graphics.Image(null, getWidth(), getHeight());

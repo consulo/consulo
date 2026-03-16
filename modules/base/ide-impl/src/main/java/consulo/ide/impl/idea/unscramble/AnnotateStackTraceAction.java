@@ -43,8 +43,7 @@ import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.*;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -58,21 +57,21 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
 
     private boolean myIsLoading = false;
 
-    public AnnotateStackTraceAction(@Nonnull ConsoleView consoleView) {
+    public AnnotateStackTraceAction(ConsoleView consoleView) {
         super("Show files modification info", null, PlatformIconGroup.actionsAnnotate());
         myHyperlinks = ((ConsoleViewImpl) consoleView).getHyperlinks();
         myEditor = consoleView.getEditor();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean isShown = myEditor.getGutter().isAnnotationsShown();
         e.getPresentation().setEnabled(!isShown && !myIsLoading);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myIsLoading = true;
 
         ProgressManager.getInstance().run(new Task.Backgroundable(myEditor.getProject(), "Getting File History", true) {
@@ -95,7 +94,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             }
 
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 MultiMap<VirtualFile, Integer> files2lines = new MultiMap<>();
                 Map<Integer, LastRevision> revisions = new HashMap<>();
 
@@ -141,7 +140,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             }
 
             @RequiredUIAccess
-            private void updateGutter(@Nonnull ProgressIndicator indicator, @Nonnull Map<Integer, LastRevision> revisions) {
+            private void updateGutter(ProgressIndicator indicator, Map<Integer, LastRevision> revisions) {
                 if (indicator.isCanceled()) {
                     return;
                 }
@@ -161,7 +160,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             }
 
             @Nullable
-            private LastRevision getLastRevision(@Nonnull VirtualFile file) {
+            private LastRevision getLastRevision(VirtualFile file) {
                 try {
                     AbstractVcs vcs = VcsUtil.getVcsFor(myEditor.getProject(), file);
                     if (vcs == null) {
@@ -206,7 +205,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
 
     @Nullable
     @RequiredReadAction
-    private static VirtualFile getHyperlinkVirtualFile(@Nonnull List<RangeHighlighter> links) {
+    private static VirtualFile getHyperlinkVirtualFile(List<RangeHighlighter> links) {
         RangeHighlighter key = ContainerUtil.getLastItem(links);
         if (key == null) {
             return null;
@@ -220,24 +219,24 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
     }
 
     private static class LastRevision {
-        @Nonnull
+        
         private final VcsRevisionNumber myNumber;
-        @Nonnull
+        
         private final String myAuthor;
-        @Nonnull
+        
         private final Date myDate;
-        @Nonnull
+        
         private final String myMessage;
 
-        LastRevision(@Nonnull VcsRevisionNumber number, @Nonnull String author, @Nonnull Date date, @Nonnull String message) {
+        LastRevision(VcsRevisionNumber number, String author, Date date, String message) {
             myNumber = number;
             myAuthor = author;
             myDate = date;
             myMessage = message;
         }
 
-        @Nonnull
-        public static LastRevision create(@Nonnull VcsFileRevision revision) {
+        
+        public static LastRevision create(VcsFileRevision revision) {
             VcsRevisionNumber number = revision.getRevisionNumber();
             String author = StringUtil.notNullize(revision.getAuthor(), "Unknown");
             Date date = revision.getRevisionDate();
@@ -245,44 +244,44 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             return new LastRevision(number, author, date, message);
         }
 
-        @Nonnull
+        
         public VcsRevisionNumber getNumber() {
             return myNumber;
         }
 
-        @Nonnull
+        
         public String getAuthor() {
             return myAuthor;
         }
 
-        @Nonnull
+        
         public Date getDate() {
             return myDate;
         }
 
-        @Nonnull
+        
         public String getMessage() {
             return myMessage;
         }
     }
 
     private static class MyActiveAnnotationGutter implements TextAnnotationGutterProvider, EditorGutterAction {
-        @Nonnull
+        
         private final Project myProject;
-        @Nonnull
+        
         private final EditorHyperlinkSupport myHyperlinks;
-        @Nonnull
+        
         private final ProgressIndicator myIndicator;
 
-        @Nonnull
+        
         private Map<Integer, LastRevision> myRevisions = Collections.emptyMap();
         private Date myNewestDate = null;
         private int myMaxDateLength = 0;
 
         MyActiveAnnotationGutter(
-            @Nonnull Project project,
-            @Nonnull EditorHyperlinkSupport hyperlinks,
-            @Nonnull ProgressIndicator indicator
+            Project project,
+            EditorHyperlinkSupport hyperlinks,
+            ProgressIndicator indicator
         ) {
             myProject = project;
             myHyperlinks = hyperlinks;
@@ -326,7 +325,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
             return "";
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getToolTipValue(int line, Editor editor) {
             LastRevision revision = myRevisions.get(line);
@@ -366,7 +365,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
         }
 
         @RequiredUIAccess
-        public void updateData(@Nonnull Map<Integer, LastRevision> revisions) {
+        public void updateData(Map<Integer, LastRevision> revisions) {
             myRevisions = revisions;
 
             Date newestDate = null;

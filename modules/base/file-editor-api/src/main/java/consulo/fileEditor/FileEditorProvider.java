@@ -26,7 +26,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Should be registered via {@link #EP_FILE_EDITOR_PROVIDER}.
@@ -47,7 +46,7 @@ public interface FileEditorProvider {
    * @return whether the provider can create valid editor for the specified
    * {@code file} or not
    */
-  boolean accept(@Nonnull Project project, @Nonnull VirtualFile file);
+  boolean accept(Project project, VirtualFile file);
 
   /**
    * Creates editor for the specified file. This method
@@ -57,9 +56,9 @@ public interface FileEditorProvider {
    *
    * @return created editor for specified file. This method should never return {@code null}.
    */
-  @Nonnull
+  
   @RequiredUIAccess
-  FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file);
+  FileEditor createEditor(Project project, VirtualFile file);
 
   /**
    * Disposes the specified {@code editor}. It is guaranteed that this method is invoked only for editors
@@ -67,7 +66,7 @@ public interface FileEditorProvider {
    *
    * @param editor editor to be disposed. This parameter is always not {@code null}.
    */
-  default void disposeEditor(@Nonnull FileEditor editor) {
+  default void disposeEditor(FileEditor editor) {
     Disposer.dispose(editor);
   }
 
@@ -75,22 +74,22 @@ public interface FileEditorProvider {
    * Deserialize state from the specified {@code sourceElement}
    * Use {@link FileEditorState#INSTANCE} as default implementation
    */
-  @Nonnull
-  default FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  default FileEditorState readState(Element sourceElement, Project project, VirtualFile file) {
     return FileEditorState.INSTANCE;
   }
 
   /**
    * Serializes state into the specified {@code targetElement}
    */
-  default void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
+  default void writeState(FileEditorState state, Project project, Element targetElement) {
   }
 
   /**
    * @return id of type of the editors that are created with this FileEditorProvider. Each FileEditorProvider should have
    * unique non null id. The id is used for saving/loading of EditorStates.
    */
-  @Nonnull
+  
   String getEditorTypeId();
 
   /**
@@ -99,7 +98,7 @@ public interface FileEditorProvider {
    * @see FileEditorPolicy#HIDE_DEFAULT_EDITOR
    * @see FileEditorPolicy#PLACE_BEFORE_DEFAULT_EDITOR
    */
-  @Nonnull
+  
   default FileEditorPolicy getPolicy() {
     return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
   }

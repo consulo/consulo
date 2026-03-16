@@ -17,8 +17,7 @@ package consulo.localize;
 
 import consulo.disposer.Disposable;
 import consulo.localize.internal.LocalizeManagerHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
@@ -29,7 +28,6 @@ import java.util.Set;
  * @since 2019-04-11
  */
 public abstract class LocalizeManager {
-    @Nonnull
     public static LocalizeManager get() {
         return LocalizeManagerHolder.get();
     }
@@ -40,41 +38,29 @@ public abstract class LocalizeManager {
      * @param localizeKeyInfo string like 'consulo.platform.base.IdeLocalize@text.some.value'
      * @return localize value, if key not found, or parsing error return localize value like parameter
      */
-    @Nonnull
-    public abstract LocalizeValue fromStringKey(@Nonnull String localizeKeyInfo);
+    public abstract LocalizeValue fromStringKey(String localizeKeyInfo);
 
     /**
      * Return unformatted localize text
      *
      * @throws IllegalArgumentException if key is invalid
      */
-    @Nonnull
-    public abstract Map.Entry<Locale, String> getUnformattedText(@Nonnull LocalizeKey key);
-
-    @Nonnull
-    public abstract Locale parseLocale(@Nonnull String localeText);
+    public abstract Map.Entry<Locale, String> getUnformattedText(LocalizeKey key);
+    public abstract Locale parseLocale(String localeText);
 
     public void setLocale(@Nullable Locale locale) {
         setLocale(locale, true);
     }
 
     public abstract void setLocale(@Nullable Locale locale, boolean fireEvents);
-
-    @Nonnull
     public abstract Locale getLocale();
-
-    @Nonnull
     public abstract Locale getAutoDetectedLocale();
 
     public abstract boolean isDefaultLocale();
-
-    @Nonnull
     public abstract Set<Locale> getAvaliableLocales();
 
-    public abstract void addListener(@Nonnull LocalizeManagerListener listener, @Nonnull Disposable disposable);
+    public abstract void addListener(LocalizeManagerListener listener, Disposable disposable);
 
     public abstract byte getModificationCount();
-
-    @Nonnull
     public abstract String formatText(String unformattedText, Locale locale, Object... args);
 }

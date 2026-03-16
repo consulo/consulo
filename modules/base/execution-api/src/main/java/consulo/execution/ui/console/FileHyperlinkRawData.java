@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-import jakarta.annotation.Nonnull;
 
 public class FileHyperlinkRawData {
 
@@ -25,7 +24,7 @@ public class FileHyperlinkRawData {
   private final int myHyperlinkStartInd;
   private final int myHyperlinkEndInd;
 
-  public FileHyperlinkRawData(@Nonnull String filePath, int documentLine, int documentColumn, int hyperlinkStartInd, int hyperlinkEndInd) {
+  public FileHyperlinkRawData(String filePath, int documentLine, int documentColumn, int hyperlinkStartInd, int hyperlinkEndInd) {
     myFilePath = filePath;
     myDocumentLine = documentLine;
     myDocumentColumn = documentColumn;
@@ -33,7 +32,7 @@ public class FileHyperlinkRawData {
     myHyperlinkEndInd = hyperlinkEndInd;
   }
 
-  @Nonnull
+  
   public String getFilePath() {
     return myFilePath;
   }

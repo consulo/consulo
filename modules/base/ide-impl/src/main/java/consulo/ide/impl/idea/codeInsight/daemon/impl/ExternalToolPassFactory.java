@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -51,13 +50,13 @@ public class ExternalToolPassFactory implements TextEditorHighlightingPassFactor
   }
 
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, new int[]{Pass.UPDATE_ALL}, null, true, Pass.EXTERNAL_TOOLS);
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     TextRange textRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.EXTERNAL_TOOLS) == null ? null : file.getTextRange();
     if (textRange == null || !externalAnnotatorsDefined(file)) {
       return null;
@@ -65,7 +64,7 @@ public class ExternalToolPassFactory implements TextEditorHighlightingPassFactor
     return new ExternalToolPass(this, file, editor, textRange.getStartOffset(), textRange.getEndOffset());
   }
 
-  private static boolean externalAnnotatorsDefined(@Nonnull PsiFile file) {
+  private static boolean externalAnnotatorsDefined(PsiFile file) {
     for (Language language : file.getViewProvider().getLanguages()) {
       List<ExternalAnnotator> externalAnnotators = ExternalLanguageAnnotators.allForFile(language, file);
       if (!externalAnnotators.isEmpty()) {
@@ -75,7 +74,7 @@ public class ExternalToolPassFactory implements TextEditorHighlightingPassFactor
     return false;
   }
 
-  void scheduleExternalActivity(@Nonnull Update update) {
+  void scheduleExternalActivity(Update update) {
     myExternalActivitiesQueue.queue(update);
   }
 }

@@ -19,8 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.ui.event.GlobalFocusListener;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2020-11-21
@@ -31,6 +29,5 @@ public interface FocusManager {
   }
 
   // add global listener for focus change
-  @Nonnull
-  Disposable addListener(@Nonnull GlobalFocusListener listener);
+  Disposable addListener(GlobalFocusListener listener);
 }

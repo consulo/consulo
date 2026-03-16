@@ -18,7 +18,6 @@ package consulo.ui.ex.awt.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,5 +26,5 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 @DeprecationInfo("Do not depend to Swing classes")
 public interface AWTPopupChooserBuilder<T> extends IPopupChooserBuilder<T> {
-  AWTPopupChooserBuilder<T> setItemChoosenCallback(@Nonnull Runnable runnable);
+  AWTPopupChooserBuilder<T> setItemChoosenCallback(Runnable runnable);
 }

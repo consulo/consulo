@@ -20,8 +20,7 @@ import consulo.application.util.TempFileService;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -42,8 +41,8 @@ public class DesktopTempFileServiceImpl implements TempFileService {
   private Path myCanonicalTempPathCache;
 
   @Override
-  @Nonnull
-  public Path createTempDirectory(@Nonnull Path dir, @Nonnull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
+  
+  public Path createTempDirectory(Path dir, String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
     File file = doCreateTempFile(dir.toFile(), prefix, suffix, true);
     if (deleteOnExit) {
       // default deleteOnExit does not remove dirs if they are not empty
@@ -74,8 +73,8 @@ public class DesktopTempFileServiceImpl implements TempFileService {
   }
 
   @Override
-  @Nonnull
-  public Path createTempFile(Path dir, @Nonnull String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException {
+  
+  public Path createTempFile(Path dir, String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException {
     File file = doCreateTempFile(dir.toFile(), prefix, suffix, false);
     if (deleteOnExit) {
       //noinspection SSBasedInspection
@@ -91,8 +90,8 @@ public class DesktopTempFileServiceImpl implements TempFileService {
 
   private static final Random RANDOM = new Random();
 
-  @Nonnull
-  private static File doCreateTempFile(@Nonnull File dir, @Nonnull String prefix, @Nullable String suffix, boolean isDirectory) throws IOException {
+  
+  private static File doCreateTempFile(File dir, String prefix, @Nullable String suffix, boolean isDirectory) throws IOException {
     //noinspection ResultOfMethodCallIgnored
     dir.mkdirs();
 
@@ -140,8 +139,8 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     }
   }
 
-  @Nonnull
-  private static File calcName(@Nonnull File dir, @Nonnull String prefix, @Nonnull String suffix, int i) throws IOException {
+  
+  private static File calcName(File dir, String prefix, String suffix, int i) throws IOException {
     prefix = i == 0 ? prefix : prefix + i;
     if (prefix.endsWith(".") && suffix.startsWith(".")) {
       prefix = prefix.substring(0, prefix.length() - 1);
@@ -154,14 +153,14 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     return f;
   }
 
-  @Nonnull
-  private static File normalizeFile(@Nonnull File temp) throws IOException {
+  
+  private static File normalizeFile(File temp) throws IOException {
     File canonical = temp.getCanonicalFile();
     return Platform.current().os().isWindows() && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
   }
 
   @Override
-  @Nonnull
+  
   public Path getTempDirectory() {
     if (myCanonicalTempPathCache == null) {
       myCanonicalTempPathCache = calcCanonicalTempPath();
@@ -169,7 +168,7 @@ public class DesktopTempFileServiceImpl implements TempFileService {
     return myCanonicalTempPathCache;
   }
 
-  @Nonnull
+  
   private static Path calcCanonicalTempPath() {
     File file = new File(ContainerPathManager.get().getTempPath());
     try {

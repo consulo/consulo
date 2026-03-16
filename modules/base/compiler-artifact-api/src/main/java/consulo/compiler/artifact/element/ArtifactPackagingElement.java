@@ -25,10 +25,8 @@ import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,24 +36,24 @@ import java.util.List;
 public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPackagingElement.ArtifactPackagingElementState> {
   private static final Logger LOG = Logger.getInstance(ArtifactPackagingElement.class);
 
-  @NonNls
+  
   public static final String ARTIFACT_NAME_ATTRIBUTE = "artifact-name";
 
   private final ArtifactPointerManager myArtifactPointerManager;
   private ArtifactPointer myArtifactPointer;
 
-  public ArtifactPackagingElement(@Nonnull ArtifactPointerManager artifactPointerManager) {
+  public ArtifactPackagingElement(ArtifactPointerManager artifactPointerManager) {
     super(ArtifactElementType.getInstance());
     myArtifactPointerManager = artifactPointerManager;
   }
 
-  public ArtifactPackagingElement(@Nonnull ArtifactPointerManager artifactPointerManager, @Nonnull ArtifactPointer artifactPointer) {
+  public ArtifactPackagingElement(ArtifactPointerManager artifactPointerManager, ArtifactPointer artifactPointer) {
     this(artifactPointerManager);
     myArtifactPointer = artifactPointer;
   }
 
   @Override
-  public List<? extends PackagingElement<?>> getSubstitution(@Nonnull PackagingElementResolvingContext context, @Nonnull ArtifactType artifactType) {
+  public List<? extends PackagingElement<?>> getSubstitution(PackagingElementResolvingContext context, ArtifactType artifactType) {
     Artifact artifact = findArtifact(context);
     if (artifact != null) {
       ArtifactType type = artifact.getArtifactType();
@@ -78,10 +76,10 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public void computeIncrementalCompilerInstructions(@Nonnull IncrementalCompilerInstructionCreator creator,
-                                                     @Nonnull PackagingElementResolvingContext resolvingContext,
-                                                     @Nonnull ArtifactIncrementalCompilerContext compilerContext,
-                                                     @Nonnull ArtifactType artifactType) {
+  public void computeIncrementalCompilerInstructions(IncrementalCompilerInstructionCreator creator,
+                                                     PackagingElementResolvingContext resolvingContext,
+                                                     ArtifactIncrementalCompilerContext compilerContext,
+                                                     ArtifactType artifactType) {
     Artifact artifact = findArtifact(resolvingContext);
     if (artifact == null) return;
 
@@ -118,7 +116,7 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public PackagingElementPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public PackagingElementPresentation createPresentation(ArtifactEditorContext context) {
     return new DelegatedPackagingElementPresentation(new ArtifactElementPresentation(myArtifactPointer, context));
   }
 
@@ -143,12 +141,12 @@ public class ArtifactPackagingElement extends ComplexPackagingElement<ArtifactPa
   }
 
   @Override
-  public boolean isEqualTo(@Nonnull PackagingElement<?> element) {
+  public boolean isEqualTo(PackagingElement<?> element) {
     return element instanceof ArtifactPackagingElement && myArtifactPointer != null && myArtifactPointer.equals(((ArtifactPackagingElement)element).myArtifactPointer);
   }
 
   @Nullable
-  public Artifact findArtifact(@Nonnull PackagingElementResolvingContext context) {
+  public Artifact findArtifact(PackagingElementResolvingContext context) {
     return myArtifactPointer != null ? myArtifactPointer.findArtifact(context.getArtifactModel()) : null;
   }
 

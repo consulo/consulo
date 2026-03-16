@@ -20,8 +20,7 @@ import consulo.execution.impl.internal.service.ServiceViewActionProvider;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
 * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nullable;
 @ActionImpl(id = "ServiceViewItemToolbarGroup")
 public final class ItemToolbarActionGroup extends ActionGroup {
   @Override
-  @Nonnull
+  
   public AnAction[] getChildren(@Nullable AnActionEvent e) {
     return ServiceViewActionProvider.doGetActions(e, true);
   }

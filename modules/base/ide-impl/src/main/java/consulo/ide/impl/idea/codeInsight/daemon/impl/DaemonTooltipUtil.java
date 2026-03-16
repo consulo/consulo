@@ -22,7 +22,6 @@ import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import consulo.language.editor.impl.internal.hint.TooltipGroup;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -38,12 +37,12 @@ public class DaemonTooltipUtil {
     TooltipController.getInstance().cancelTooltip(DAEMON_INFO_GROUP, null, true);
   }
 
-  private static void showInfoTooltip(@Nonnull HighlightInfoImpl info, @Nonnull Editor editor, int defaultOffset, int currentWidth) {
+  private static void showInfoTooltip(HighlightInfoImpl info, Editor editor, int defaultOffset, int currentWidth) {
     showInfoTooltip(info, editor, defaultOffset, currentWidth, false, false);
   }
 
-  static void showInfoTooltip(@Nonnull HighlightInfoImpl info,
-                              @Nonnull Editor editor,
+  static void showInfoTooltip(HighlightInfoImpl info,
+                              Editor editor,
                               int defaultOffset,
                               int currentWidth,
                               boolean requestFocus,

@@ -18,8 +18,7 @@ package consulo.execution.test.sm.runner.event;
 import consulo.util.lang.StringUtil;
 import jetbrains.buildServer.messages.serviceMessages.MessageWithAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     private final String myParentId;
@@ -81,7 +80,7 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     }
 
     @Override
-    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    protected void appendToStringInfo(StringBuilder buf) {
         append(buf, "parentId", myParentId);
         append(buf, "locationUrl", myLocationUrl);
         append(buf, "metainfo", myMetainfo);
@@ -89,26 +88,26 @@ public abstract class BaseStartedNodeEvent extends TreeNodeEvent {
     }
 
     @Nullable
-    public static String getParentNodeId(@Nonnull MessageWithAttributes message) {
+    public static String getParentNodeId(MessageWithAttributes message) {
         return TreeNodeEvent.getNodeId(message, "parentNodeId");
     }
 
     @Nullable
-    public static String getNodeType(@Nonnull MessageWithAttributes message) {
+    public static String getNodeType(MessageWithAttributes message) {
         return message.getAttributes().get("nodeType");
     }
 
     @Nullable
-    public static String getMetainfo(@Nonnull MessageWithAttributes message) {
+    public static String getMetainfo(MessageWithAttributes message) {
         return message.getAttributes().get("metainfo");
     }
 
     @Nullable
-    public static String getNodeArgs(@Nonnull MessageWithAttributes message) {
+    public static String getNodeArgs(MessageWithAttributes message) {
         return message.getAttributes().get("nodeArgs");
     }
 
-    public static boolean isRunning(@Nonnull MessageWithAttributes message) {
+    public static boolean isRunning(MessageWithAttributes message) {
         String runningStr = message.getAttributes().get("running");
         if (StringUtil.isEmpty(runningStr)) {
             // old behavior preserved

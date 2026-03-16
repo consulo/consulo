@@ -7,12 +7,11 @@ import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class ModuleRule {
     @Nullable
-    static Module getData(@Nonnull DataSnapshot dataProvider) {
+    static Module getData(DataSnapshot dataProvider) {
         Module moduleContext = dataProvider.get(LangDataKeys.MODULE_CONTEXT);
         if (moduleContext != null) {
             return moduleContext;

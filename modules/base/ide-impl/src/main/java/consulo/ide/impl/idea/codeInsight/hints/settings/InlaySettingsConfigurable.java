@@ -13,8 +13,7 @@ import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable disposable) {
+    public JComponent createComponent(Disposable disposable) {
         if (panel == null) {
             panel = new InlaySettingsPanel(project);
         }
@@ -73,13 +72,13 @@ public class InlaySettingsConfigurable implements Configurable, SearchableConfig
         panel.selectModel(language, selector);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LanguageEditorLocalize.settingsInlayHintsPanelName();
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return INLAY_ID;

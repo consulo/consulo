@@ -18,8 +18,7 @@ package consulo.content.bundle;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.EventListener;
 
 /**
@@ -72,7 +71,7 @@ public interface SdkModel extends BundleHolder {
     }
   }
 
-  @Nonnull
+  
   @Override
   default Sdk[] getBundles() {
     return getSdks();

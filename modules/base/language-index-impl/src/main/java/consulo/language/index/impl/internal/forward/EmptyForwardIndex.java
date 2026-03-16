@@ -4,18 +4,17 @@ package consulo.language.index.impl.internal.forward;
 import consulo.index.io.forward.ForwardIndex;
 import consulo.util.io.ByteArraySequence;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EmptyForwardIndex implements ForwardIndex {
   @Nullable
   @Override
-  public ByteArraySequence get(@Nonnull Integer key) {
+  public ByteArraySequence get(Integer key) {
     return null;
   }
 
   @Override
-  public void put(@Nonnull Integer key, @Nullable ByteArraySequence value) {
+  public void put(Integer key, @Nullable ByteArraySequence value) {
   }
 
   @Override

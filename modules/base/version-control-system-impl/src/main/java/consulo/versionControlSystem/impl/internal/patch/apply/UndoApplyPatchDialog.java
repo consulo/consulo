@@ -25,11 +25,11 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.FilePathChangesTreeListImpl;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 class UndoApplyPatchDialog extends DialogWrapper {
 
@@ -38,8 +38,8 @@ class UndoApplyPatchDialog extends DialogWrapper {
   private final Project myProject;
   private final boolean myShouldInformAboutBinaries;
 
-  UndoApplyPatchDialog(@Nonnull Project project,
-                       @Nonnull List<FilePath> filePaths,
+  UndoApplyPatchDialog(Project project,
+                       List<FilePath> filePaths,
                        boolean shouldInformAboutBinaries) {
     super(project, true);
     myProject = project;
@@ -50,7 +50,7 @@ class UndoApplyPatchDialog extends DialogWrapper {
     init();
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   protected JComponent createCenterPanel() {
     JPanel panel = new JPanel(new BorderLayout());

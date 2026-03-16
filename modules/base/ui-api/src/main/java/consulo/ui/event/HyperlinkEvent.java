@@ -17,29 +17,25 @@ package consulo.ui.event;
 
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 24/11/2021
  */
 public final class HyperlinkEvent extends ComponentEvent<Component> {
-  @Nonnull
   private final String myDescription;
 
   @Deprecated
-  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description) {
+  public HyperlinkEvent(Component component, String description) {
     super(component);
     myDescription = description;
   }
 
-  public HyperlinkEvent(@Nonnull Component component, @Nonnull String description, @Nullable InputDetails details) {
+  public HyperlinkEvent(Component component, String description, @Nullable InputDetails details) {
     super(component, details);
     myDescription = description;
   }
-
-  @Nonnull
   public String getDescription() {
     return myDescription;
   }

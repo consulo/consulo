@@ -15,8 +15,7 @@
  */
 package consulo.component.util.pointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -24,7 +23,7 @@ import java.util.function.Supplier;
  * @since 17:17/15.06.13
  */
 public interface NamedPointer<T> extends Supplier<T> {
-  @Nonnull
+  
   String getName();
 
   @Nullable

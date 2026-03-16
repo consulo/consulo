@@ -42,7 +42,6 @@ import consulo.process.event.ProcessEvent;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -82,13 +81,13 @@ public class ToolRunProfile implements ModuleRunProfile {
     }
 
     @Override
-    @Nonnull
+    
     public Module[] getModules() {
         return Module.EMPTY_ARRAY;
     }
 
     @Override
-    public RunProfileState getState(@Nonnull Executor executor, @Nonnull final ExecutionEnvironment env) {
+    public RunProfileState getState(Executor executor, final ExecutionEnvironment env) {
         final Project project = env.getProject();
         if (myCommandLine == null) {
             // can return null if creation of cmd line has been cancelled
@@ -101,7 +100,7 @@ public class ToolRunProfile implements ModuleRunProfile {
             }
 
             @Override
-            @Nonnull
+            
             protected ProcessHandler startProcess() throws ExecutionException {
                 GeneralCommandLine commandLine = createCommandLine();
                 ProcessHandler processHandler = ProcessHandlerBuilder.create(commandLine)
@@ -112,8 +111,8 @@ public class ToolRunProfile implements ModuleRunProfile {
             }
 
             @Override
-            @Nonnull
-            public ExecutionResult execute(@Nonnull final Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+            
+            public ExecutionResult execute(final Executor executor, ProgramRunner runner) throws ExecutionException {
                 ExecutionResult result = super.execute(executor, runner);
                 final ProcessHandler processHandler = result.getProcessHandler();
                 if (processHandler != null) {

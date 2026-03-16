@@ -8,7 +8,6 @@ import consulo.language.duplicateAnalysis.util.PsiFragment;
 import consulo.language.psi.LeafPsiElement;
 import consulo.language.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -22,17 +21,17 @@ public abstract class AbstractTreeHasher implements TreeHasher {
   }
 
   @Override
-  public final void hash(@Nonnull PsiElement root, @Nonnull NodeSpecificHasher hasher) {
+  public final void hash(PsiElement root, NodeSpecificHasher hasher) {
     hash(root, null, hasher);
   }
 
-  protected abstract TreeHashResult hash(@Nonnull PsiElement root, PsiFragment upper, @Nonnull NodeSpecificHasher hasher);
+  protected abstract TreeHashResult hash(PsiElement root, PsiFragment upper, NodeSpecificHasher hasher);
 
   /**
    * Computes element hash using children hashes.
    * Creates only single PsiFragment.
    */
-  protected TreeHashResult computeElementHash(@Nonnull PsiElement root, PsiFragment upper, NodeSpecificHasher hasher) {
+  protected TreeHashResult computeElementHash(PsiElement root, PsiFragment upper, NodeSpecificHasher hasher) {
     if (myForIndexing) {
       return TreeHashingUtils.computeElementHashForIndexing(this, myCallBack, root, upper, hasher);
     }

@@ -2,8 +2,7 @@
 package consulo.desktop.awt.ui.animation;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,10 +29,10 @@ import java.util.function.DoubleFunction;
 public final class Animation {
 
   private
-  @Nonnull
+  
   final DoubleConsumer myConsumer;
   private
-  @Nonnull
+  
   Easing myEasing = Easing.EASE;
   private int myDelay = 0;
   private int myDuration = 500;
@@ -41,11 +40,11 @@ public final class Animation {
   @Nullable
   List<Listener> myListeners;
 
-  public Animation(@Nonnull DoubleConsumer consumer) {
+  public Animation(DoubleConsumer consumer) {
     myConsumer = consumer;
   }
 
-  public Animation(@Nonnull DoubleConsumer... consumers) {
+  public Animation(DoubleConsumer... consumers) {
     myConsumer = value -> {
       for (DoubleConsumer consumer : consumers) {
         consumer.accept(value);
@@ -53,11 +52,11 @@ public final class Animation {
     };
   }
 
-  public <T> Animation(@Nonnull DoubleFunction<? extends T> function, @Nonnull Consumer<? super T> consumer) {
+  public <T> Animation(DoubleFunction<? extends T> function, Consumer<? super T> consumer) {
     myConsumer = value -> consumer.accept(function.apply(value));
   }
 
-  public static <T> Animation withContext(@Nonnull AnimationContext<T> context, @Nonnull DoubleFunction<? extends T> function) {
+  public static <T> Animation withContext(AnimationContext<T> context, DoubleFunction<? extends T> function) {
     return new Animation(function, context);
   }
 
@@ -71,7 +70,7 @@ public final class Animation {
   /**
    * @param delay in milliseconds.
    */
-  @Nonnull
+  
   public Animation setDelay(int delay) {
     myDelay = Math.max(delay, 0);
     return this;
@@ -87,7 +86,7 @@ public final class Animation {
   /**
    * @param duration in milliseconds.
    */
-  @Nonnull
+  
   public Animation setDuration(int duration) {
     myDuration = Math.max(duration, 0);
     return this;
@@ -104,19 +103,19 @@ public final class Animation {
     myConsumer.accept(myEasing.calc(timeline));
   }
 
-  @Nonnull
+  
   public Easing getEasing() {
     return myEasing;
   }
 
-  @Nonnull
-  public Animation setEasing(@Nonnull Easing easing) {
+  
+  public Animation setEasing(Easing easing) {
     myEasing = easing;
     return this;
   }
 
-  @Nonnull
-  public Animation addListener(@Nonnull Listener listener) {
+  
+  public Animation addListener(Listener listener) {
     if (myListeners == null) {
       myListeners = new ArrayList<>();
     }
@@ -128,49 +127,49 @@ public final class Animation {
    * Runnable is called before first {@link Animation#update(double)} is called.
    * The time between animation is scheduled and updated can differ.
    */
-  @Nonnull
-  public Animation runWhenScheduled(@Nonnull Runnable runnable) {
+  
+  public Animation runWhenScheduled(Runnable runnable) {
     return addListener(Phase.SCHEDULED, runnable);
   }
 
   /**
    * Runnable is called right after {@link Animation#update(double)} is called.
    */
-  @Nonnull
-  public Animation runWhenUpdated(@Nonnull Runnable runnable) {
+  
+  public Animation runWhenUpdated(Runnable runnable) {
     return addListener(Phase.UPDATED, runnable);
   }
 
   /**
    * Runnable is called if animation is expired.
    */
-  @Nonnull
-  public Animation runWhenExpired(@Nonnull Runnable runnable) {
+  
+  public Animation runWhenExpired(Runnable runnable) {
     return addListener(Phase.EXPIRED, runnable);
   }
 
   /**
    * Runnable is called if animation is cancelled but not expired.
    */
-  @Nonnull
-  public Animation runWhenCancelled(@Nonnull Runnable runnable) {
+  
+  public Animation runWhenCancelled(Runnable runnable) {
     return addListener(Phase.CANCELLED, runnable);
   }
 
-  public Animation runWhenExpiredOrCancelled(@Nonnull Runnable runnable) {
+  public Animation runWhenExpiredOrCancelled(Runnable runnable) {
     return addListener(p -> {
       if (p == Phase.EXPIRED || p == Phase.CANCELLED) runnable.run();
     });
   }
 
-  @Nonnull
-  private Animation addListener(@Nonnull Phase phase, @Nonnull Runnable runnable) {
+  
+  private Animation addListener(Phase phase, Runnable runnable) {
     return addListener(p -> {
       if (p == phase) runnable.run();
     });
   }
 
-  public void fireEvent(@Nonnull Phase phase) {
+  public void fireEvent(Phase phase) {
     if (myListeners == null) {
       return;
     }
@@ -188,7 +187,7 @@ public final class Animation {
 
   @FunctionalInterface
   public interface Listener {
-    void update(@Nonnull Phase phase);
+    void update(Phase phase);
   }
 
   /**

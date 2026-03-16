@@ -33,7 +33,6 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +42,7 @@ import java.util.Set;
 public class ForwardDependenciesBuilder extends DependenciesBuilder {
   private final Map<PsiFile, Set<PsiFile>> myDirectDependencies = new HashMap<PsiFile, Set<PsiFile>>();
 
-  public ForwardDependenciesBuilder(@Nonnull Project project, @Nonnull AnalysisScope scope) {
+  public ForwardDependenciesBuilder(Project project, AnalysisScope scope) {
     super(project, scope);
   }
 

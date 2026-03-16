@@ -56,7 +56,6 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -86,7 +85,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ListPopup popup = JBPopupFactory.getInstance().createListPopup(
             new BaseListPopupStep<String>(InspectionLocalize.inspectionActionExportPopupTitle().get(), new String[]{HTML, XML}) {
                 @Override
@@ -201,8 +200,8 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nonnull
-    private Set<InspectionToolWrapper> getWorkedTools(@Nonnull InspectionNode node) {
+    
+    private Set<InspectionToolWrapper> getWorkedTools(InspectionNode node) {
         Set<InspectionToolWrapper> result = new HashSet<>();
         InspectionToolWrapper wrapper = node.getToolWrapper();
         if (myView.getCurrentProfileName() != null) {
@@ -244,7 +243,7 @@ public class ExportHTMLAction extends AnAction implements DumbAware {
 
     @SuppressWarnings({"HardCodedStringLiteral"})
     @RequiredReadAction
-    private void exportHTML(@Nonnull Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
+    private void exportHTML(Set<InspectionToolWrapper> toolWrappers, HTMLExporter exporter) throws IOException {
         StringBuffer packageIndex = new StringBuffer();
         packageIndex.append("<html><body>");
 

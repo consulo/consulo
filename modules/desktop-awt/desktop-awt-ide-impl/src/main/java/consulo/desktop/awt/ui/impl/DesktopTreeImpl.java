@@ -33,8 +33,7 @@ import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
         }
 
         @Override
-        public void setRenderer(@Nonnull BiConsumer<K, TextItemPresentation> renderer) {
+        public void setRenderer(BiConsumer<K, TextItemPresentation> renderer) {
             myRenderer = renderer;
         }
 
@@ -107,7 +106,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                     presentation.clearText();
                 }
 
-                @Nonnull
+                
                 @Override
                 public TextItemPresentation withIcon(@Nullable Image image) {
                     presentation.setIcon(image);
@@ -115,7 +114,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
                 }
 
                 @Override
-                public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+                public void append(LocalizeValue text, TextAttribute textAttribute) {
                     presentation.addText(text.getValue(), DesktopAWTTargetAWTImpl.from(textAttribute));
                 }
             });
@@ -144,16 +143,16 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             myRootValue = rootValue == null ? ObjectUtil.NULL : rootValue;
         }
 
-        @Nonnull
+        
         @Override
         public Object getRootElement() {
             return myRootValue;
         }
 
-        @Nonnull
+        
         @Override
         @SuppressWarnings("unchecked")
-        public Object[] getChildElements(@Nonnull Object element) {
+        public Object[] getChildElements(Object element) {
             K targetParent = null;
             if (element == myRootValue) {
                 targetParent = null;
@@ -178,14 +177,14 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
         @Nullable
         @Override
-        public Object getParentElement(@Nonnull Object element) {
+        public Object getParentElement(Object element) {
             return null;
         }
 
-        @Nonnull
+        
         @Override
         @SuppressWarnings("unchecked")
-        public NodeDescriptor createDescriptor(@Nonnull Object element, @Nullable NodeDescriptor parentDescriptor) {
+        public NodeDescriptor createDescriptor(Object element, @Nullable NodeDescriptor parentDescriptor) {
             return new MyNodeDescriptor(myRootValue, element, parentDescriptor);
         }
 
@@ -205,7 +204,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
             super(new AsyncTreeModel(new StructureTreeModel<>(new MyStructureWrapper<>(rootValue, model), disposable), disposable));
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTreeImpl.this;
@@ -263,6 +262,6 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
     }
 
     @Override
-    public void expand(@Nonnull TreeNode<E> node) {
+    public void expand(TreeNode<E> node) {
     }
 }

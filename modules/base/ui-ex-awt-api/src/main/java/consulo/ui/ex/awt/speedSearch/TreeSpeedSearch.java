@@ -14,7 +14,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -27,15 +26,15 @@ import java.util.function.Function;
 import static javax.swing.tree.TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION;
 
 public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
-    @Nonnull
-    public static TreeSpeedSearch installOn(@Nonnull JTree tree,
+    
+    public static TreeSpeedSearch installOn(JTree tree,
                                             boolean canExpand,
-                                            @Nonnull Function<? super TreePath, String> presentableStringFunction) {
+                                            Function<? super TreePath, String> presentableStringFunction) {
         return new TreeSpeedSearch(tree, presentableStringFunction, canExpand);
     }
 
-    @Nonnull
-    public static TreeSpeedSearch installOn(@Nonnull JTree tree) {
+    
+    public static TreeSpeedSearch installOn(JTree tree) {
         return installOn(tree, false, TO_STRING);
     }
 
@@ -91,7 +90,7 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
         return selectionRows == null || selectionRows.length == 0 ? -1 : selectionRows[0];
     }
 
-    @Nonnull
+    
     @Override
     protected Object[] getAllElements() {
         JBIterable<TreePath> paths;
@@ -119,7 +118,7 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
         return string;
     }
 
-    @Nonnull
+    
     private List<TreePath> findAllFilteredElements(String s) {
         List<TreePath> paths = new ArrayList<>();
         String _s = s.trim();
@@ -135,12 +134,12 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
     }
 
     private static class MySelectAllAction extends DumbAwareAction {
-        @Nonnull
+        
         private final JTree myTree;
-        @Nonnull
+        
         private final TreeSpeedSearch mySearch;
 
-        MySelectAllAction(@Nonnull JTree tree, @Nonnull TreeSpeedSearch search) {
+        MySelectAllAction(JTree tree, TreeSpeedSearch search) {
             myTree = tree;
             mySearch = search;
             copyShortcutFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_SELECT_ALL));
@@ -148,14 +147,14 @@ public class TreeSpeedSearch extends SpeedSearchBase<JTree> {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation()
                 .setEnabled(mySearch.isPopupActive() && myTree.getSelectionModel().getSelectionMode() == DISCONTIGUOUS_TREE_SELECTION);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeSelectionModel sm = myTree.getSelectionModel();
 
             String query = mySearch.getEnteredPrefix();

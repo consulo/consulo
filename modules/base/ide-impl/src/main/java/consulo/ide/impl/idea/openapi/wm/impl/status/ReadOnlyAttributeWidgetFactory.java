@@ -6,11 +6,10 @@ import consulo.fileEditor.statusBar.StatusBarEditorBasedWidgetFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "readOnlyWidget", order = "after codeStyleWidget")
 public class ReadOnlyAttributeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return UILocalize.statusBarReadOnlyWidgetName().get();
@@ -18,8 +17,8 @@ public class ReadOnlyAttributeWidgetFactory extends StatusBarEditorBasedWidgetFa
 
     @Override
     public
-    @Nonnull
-    StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    StatusBarWidget createWidget(Project project) {
         return new ToggleReadOnlyAttributePanel(this);
     }
 }

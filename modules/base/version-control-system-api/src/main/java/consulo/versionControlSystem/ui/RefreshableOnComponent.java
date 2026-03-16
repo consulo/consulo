@@ -18,7 +18,6 @@ package consulo.versionControlSystem.ui;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,13 +25,13 @@ import javax.swing.*;
  * @author lesya
  */
 public interface RefreshableOnComponent extends Refreshable {
-    @Nonnull
+    
     @RequiredUIAccess
     default JComponent getComponent() {
       return (JComponent) TargetAWT.to(getUIComponent());
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     default Component getUIComponent() {
       throw new AbstractMethodError();

@@ -18,7 +18,7 @@ package consulo.language.editor.colorScheme.setting;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.Language;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface RainbowColorSettingsPage extends ColorSettingsPage {
   boolean isRainbowType(TextAttributesKey type);

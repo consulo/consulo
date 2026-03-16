@@ -50,8 +50,7 @@ import consulo.util.collection.Lists;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -191,28 +190,28 @@ public abstract class JBTabsImpl extends JComponent
     @Deprecated
     @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
     @SuppressWarnings("deprecation")
-    public JBTabsImpl(@Nonnull Project project) {
+    public JBTabsImpl(Project project) {
         this(project, project);
     }
 
     @Deprecated
     @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
     @SuppressWarnings("deprecation")
-    private JBTabsImpl(@Nonnull Project project, @Nonnull Disposable parent) {
+    private JBTabsImpl(Project project, Disposable parent) {
         this(project, ActionManager.getInstance(), ProjectIdeFocusManager.getInstance(project), parent);
     }
 
     @Deprecated
     @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
     @SuppressWarnings("deprecation")
-    public JBTabsImpl(@Nullable Project project, IdeFocusManager focusManager, @Nonnull Disposable parent) {
+    public JBTabsImpl(@Nullable Project project, IdeFocusManager focusManager, Disposable parent) {
         this(project, ActionManager.getInstance(), focusManager, parent);
     }
 
     @Deprecated
     @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
     @SuppressWarnings("deprecation")
-    public JBTabsImpl(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nonnull Disposable parent) {
+    public JBTabsImpl(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, Disposable parent) {
         this(project, actionManager, focusManager, parent, false);
     }
 
@@ -296,7 +295,7 @@ public abstract class JBTabsImpl extends JComponent
 
             new LazyUiDisposable<JBTabsImpl>(parent, this, this) {
                 @Override
-                protected void initialize(@Nonnull Disposable parent, @Nonnull JBTabsImpl child, @Nullable Project project) {
+                protected void initialize(Disposable parent, JBTabsImpl child, @Nullable Project project) {
                     if (project != null) {
                         myProject = project;
                     }
@@ -548,8 +547,7 @@ public abstract class JBTabsImpl extends JComponent
         updateTabActionsAsync(Application.get().getLastUIAccess(), false);
     }
 
-    @Nonnull
-    public CompletableFuture<?> updateTabActionsAsync(@Nonnull UIAccess uiAccess, boolean validateNow) {
+    public CompletableFuture<?> updateTabActionsAsync(UIAccess uiAccess, boolean validateNow) {
         List<CompletableFuture<Boolean>> changedFutures = new ArrayList<>();
 
         AtomicBoolean changedRef = new AtomicBoolean(false);
@@ -570,10 +568,9 @@ public abstract class JBTabsImpl extends JComponent
         return res;
     }
 
-    @Nonnull
-    private CompletableFuture<Boolean> updateTabAsync(@Nonnull CompletableFuture<Boolean> future,
-                                                      @Nonnull TabInfo info,
-                                                      @Nonnull AtomicBoolean changedRef) {
+    private CompletableFuture<Boolean> updateTabAsync(CompletableFuture<Boolean> future,
+                                                      TabInfo info,
+                                                      AtomicBoolean changedRef) {
         return future.whenComplete((changed, throwable) -> {
             if (Boolean.TRUE.equals(changed)) {
                 changedRef.set(true);
@@ -685,7 +682,6 @@ public abstract class JBTabsImpl extends JComponent
 
 
     @Override
-    @Nonnull
     public TabInfo addTab(TabInfo info, int index) {
         return addTab(info, index, false, true);
     }
@@ -747,7 +743,6 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public TabInfo addTab(TabInfo info) {
         return addTab(info, -1);
     }
@@ -762,13 +757,11 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
-    public JBTabs setPopupGroup(@Nonnull ActionGroup popupGroup, @Nonnull String place, boolean addNavigationGroup) {
+    public JBTabs setPopupGroup(ActionGroup popupGroup, String place, boolean addNavigationGroup) {
         return setPopupGroup(() -> popupGroup, place, addNavigationGroup);
     }
 
-    @Nonnull
-    public JBTabs setPopupGroup(@Nonnull Getter<ActionGroup> popupGroup, @Nonnull String place, boolean addNavigationGroup) {
+    public JBTabs setPopupGroup(Getter<ActionGroup> popupGroup, String place, boolean addNavigationGroup) {
         myPopupGroup = popupGroup;
         myPopupPlace = place;
         myAddNavigationGroup = addNavigationGroup;
@@ -807,16 +800,13 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
-    public ActionCallback select(@Nonnull TabInfo info, boolean requestFocus) {
+    public ActionCallback select(TabInfo info, boolean requestFocus) {
         return _setSelected(info, requestFocus);
     }
 
-    @Nonnull
     private ActionCallback _setSelected(final TabInfo info, final boolean requestFocus) {
         if (mySelectionChangeHandler != null) {
             return mySelectionChangeHandler.execute(info, requestFocus, new ActiveRunnable() {
-                @Nonnull
                 @Override
                 public AsyncResult<Void> run() {
                     return executeSelectionChange(info, requestFocus);
@@ -828,7 +818,6 @@ public abstract class JBTabsImpl extends JComponent
         }
     }
 
-    @Nonnull
     private AsyncResult<Void> executeSelectionChange(TabInfo info, boolean requestFocus) {
         if (mySelectedInfo != null && mySelectedInfo.equals(info)) {
             if (!requestFocus) {
@@ -941,7 +930,6 @@ public abstract class JBTabsImpl extends JComponent
         }
     }
 
-    @Nonnull
     private AsyncResult<Void> requestFocus(JComponent toFocus) {
         if (toFocus == null) {
             return AsyncResult.resolved();
@@ -955,7 +943,6 @@ public abstract class JBTabsImpl extends JComponent
         }
     }
 
-    @Nonnull
     private AsyncResult<Void> removeDeferred() {
         AsyncResult<Void> callback = AsyncResult.undefined();
 
@@ -1307,12 +1294,10 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public TabInfo getTabAt(int tabIndex) {
         return getTabs().get(tabIndex);
     }
 
-    @Nonnull
     public List<TabInfo> getTabs() {
         if (myAllTabs != null) {
             return myAllTabs;
@@ -1391,14 +1376,12 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public JBTabsPresentation setToDrawBorderIfTabsHidden(boolean toDrawBorderIfTabsHidden) {
         myToDrawBorderIfTabsHidden = toDrawBorderIfTabsHidden;
         return this;
     }
 
     @Override
-    @Nonnull
     public JBTabs getJBTabs() {
         return this;
     }
@@ -1662,23 +1645,19 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public JBTabsPresentation getPresentation() {
         return this;
     }
 
     @Override
-    @Nonnull
     public ActionCallback removeTab(TabInfo info) {
         return removeTab(info, null, true);
     }
 
-    @Nonnull
     public ActionCallback removeTab(TabInfo info, @Nullable TabInfo forcedSelectionTransfer, boolean transferFocus) {
         return removeTab(info, forcedSelectionTransfer, transferFocus, false);
     }
 
-    @Nonnull
     private ActionCallback removeTab(TabInfo info, @Nullable TabInfo forcedSelectionTransfer, boolean transferFocus, boolean isDropTarget) {
         if (!isDropTarget) {
             if (info == null || !getTabs().contains(info)) {
@@ -1885,8 +1864,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
-    public JBTabs addTabMouseListener(@Nonnull MouseListener listener) {
+    public JBTabs addTabMouseListener(MouseListener listener) {
         removeListeners();
         myTabMouseListeners.add(listener);
         addListeners();
@@ -1894,7 +1872,6 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public JComponent getComponent() {
         return this;
     }
@@ -1944,7 +1921,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    public JBTabs addListener(@Nonnull TabsListener listener) {
+    public JBTabs addListener(TabsListener listener) {
         myTabListeners.add(listener);
         return this;
     }
@@ -1993,7 +1970,6 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public JBTabsPresentation setActiveTabFillIn(@Nullable Color color) {
         if (!isChanged(myActiveTabFillIn, color)) {
             return this;
@@ -2044,7 +2020,7 @@ public abstract class JBTabsImpl extends JComponent
         }
 
         @Override
-        public final void update(@Nonnull AnActionEvent e) {
+        public final void update(AnActionEvent e) {
             JBTabsImpl tabs = e.getData(NAVIGATION_ACTIONS_KEY);
             e.getPresentation().setVisible(tabs != null);
             if (tabs == null) {
@@ -2091,7 +2067,7 @@ public abstract class JBTabsImpl extends JComponent
 
         @Override
         @RequiredUIAccess
-        public final void actionPerformed(@Nonnull AnActionEvent e) {
+        public final void actionPerformed(AnActionEvent e) {
             JBTabsImpl tabs = e.getData(NAVIGATION_ACTIONS_KEY);
             tabs = findNavigatableTabs(tabs);
             if (tabs == null) {
@@ -2294,7 +2270,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myDataProvider != null) {
             myDataProvider.uiDataSnapshot(sink);
         }
@@ -2318,7 +2294,7 @@ public abstract class JBTabsImpl extends JComponent
         return result;
     }
 
-    public JBTabsImpl setDataProvider(@Nonnull UiDataProvider dataProvider) {
+    public JBTabsImpl setDataProvider(UiDataProvider dataProvider) {
         myDataProvider = dataProvider;
         return this;
     }
@@ -2336,7 +2312,6 @@ public abstract class JBTabsImpl extends JComponent
 
     private static class DefaultDecorator implements UiDecorator {
         @Override
-        @Nonnull
         public UiDecoration getDecoration() {
             return new UiDecoration(null, JBUI.insets(0, 4, 0, 5));
         }
@@ -2380,7 +2355,6 @@ public abstract class JBTabsImpl extends JComponent
 
 
     @Override
-    @Nonnull
     public JBTabsPresentation setTabLabelActionsMouseDeadzone(TimedDeadzone.Length length) {
         myTabActionsMouseDeadzone = length;
         List<TabInfo> all = getTabs();
@@ -2392,7 +2366,6 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    @Nonnull
     public JBTabsPresentation setTabsPosition(JBTabsPosition position) {
         myPosition = position;
         relayout(true, false);
@@ -2437,7 +2410,7 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         TabInfo selected = getSelectedInfo();
         if (selected != null) {
             selected.putInfo(info);

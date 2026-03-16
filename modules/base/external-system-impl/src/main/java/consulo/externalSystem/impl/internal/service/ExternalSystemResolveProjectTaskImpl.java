@@ -11,8 +11,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskType;
 import consulo.externalSystem.service.project.ProjectData;
 import consulo.externalSystem.util.ExternalSystemApiUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -26,13 +25,13 @@ public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystem
 
   private final AtomicReference<DataNode<ProjectData>> myExternalProject = new AtomicReference<DataNode<ProjectData>>();
 
-  @Nonnull
+  
   private final String myProjectPath;
   private final boolean myIsPreviewMode;
 
-  public ExternalSystemResolveProjectTaskImpl(@Nonnull ProjectSystemId externalSystemId,
-                                              @Nonnull Project project,
-                                              @Nonnull String projectPath,
+  public ExternalSystemResolveProjectTaskImpl(ProjectSystemId externalSystemId,
+                                              Project project,
+                                              String projectPath,
                                               boolean isPreviewMode) {
     super(externalSystemId, ExternalSystemTaskType.RESOLVE_PROJECT, project, projectPath);
     myProjectPath = projectPath;
@@ -68,8 +67,8 @@ public class ExternalSystemResolveProjectTaskImpl extends AbstractExternalSystem
   }
 
   @Override
-  @Nonnull
-  protected String wrapProgressText(@Nonnull String text) {
+  
+  protected String wrapProgressText(String text) {
     return ExternalSystemBundle.message("progress.update.text", getExternalSystemId().getReadableName(), text);
   }
 }

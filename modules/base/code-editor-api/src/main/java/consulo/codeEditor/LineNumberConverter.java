@@ -1,8 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines a mapping between document line numbers and the numbers displayed in the gutter.
@@ -18,7 +17,7 @@ public interface LineNumberConverter {
    * @return number to be displayed in gutter, {@code null} means no number is displayed
    */
   @Nullable
-  Integer convert(@Nonnull Editor editor, int lineNumber);
+  Integer convert(Editor editor, int lineNumber);
 
   /**
    * Number which should be used to calculate the width of the line number area in the gutter.
@@ -26,13 +25,13 @@ public interface LineNumberConverter {
    * {@code null} means no width will be allocated to the line number area.
    */
   @Nullable
-  Integer getMaxLineNumber(@Nonnull Editor editor);
+  Integer getMaxLineNumber(Editor editor);
 
   /**
    * Returns text to be displayed in the gutter for the given document line.
    */
   @Nullable
-  default String convertLineNumberToString(@Nonnull Editor editor, int lineNumber) {
+  default String convertLineNumberToString(Editor editor, int lineNumber) {
     Integer converted = convert(editor, lineNumber);
     return converted == null ? null : String.valueOf(converted);
   }
@@ -42,19 +41,19 @@ public interface LineNumberConverter {
    * to calculate the width of the line number area in the gutter.
    */
   @Nullable
-  default String getMaxLineNumberString(@Nonnull Editor editor) {
+  default String getMaxLineNumberString(Editor editor) {
     Integer maxLineNumber = getMaxLineNumber(editor);
     return maxLineNumber == null ? null : String.valueOf(maxLineNumber);
   }
 
   LineNumberConverter DEFAULT = new LineNumberConverter() {
     @Override
-    public Integer convert(@Nonnull Editor editor, int lineNumber) {
+    public Integer convert(Editor editor, int lineNumber) {
       return lineNumber;
     }
 
     @Override
-    public Integer getMaxLineNumber(@Nonnull Editor editor) {
+    public Integer getMaxLineNumber(Editor editor) {
       return editor.getDocument().getLineCount();
     }
   };
@@ -66,7 +65,7 @@ public interface LineNumberConverter {
   interface Increasing extends LineNumberConverter {
     @Nullable
     @Override
-    default Integer getMaxLineNumber(@Nonnull Editor editor) {
+    default Integer getMaxLineNumber(Editor editor) {
       for (int i = editor.getDocument().getLineCount(); i > 0; i--) {
         Integer number = convert(editor, i);
         if (number != null) return number;

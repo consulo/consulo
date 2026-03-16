@@ -14,8 +14,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
@@ -43,7 +42,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
 
     if (filter instanceof ElementFilter.Active) {
       ((ElementFilter.Active)filter).addListener(new ElementFilter.Listener() {
-        @Nonnull
+        
         @Override
         public Promise<?> update(Object preferredSelection, boolean adjustSelection, boolean now) {
           return refilter(preferredSelection, adjustSelection, now);
@@ -100,7 +99,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
     return true;
   }
 
-  @Nonnull
+  
   @Deprecated
   public ActionCallback refilter() {
     //noinspection unchecked
@@ -108,12 +107,12 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
   }
 
   @SuppressWarnings("UnusedReturnValue")
-  @Nonnull
+  
   public Promise<?> refilterAsync() {
     return refilter(null, true, false);
   }
 
-  @Nonnull
+  
   public Promise<?> refilter(@Nullable final Object preferredSelection, final boolean adjustSelection, final boolean now) {
     if (myRefilterQueue != null) {
       myRefilterQueue.cancelAllUpdates();
@@ -156,7 +155,7 @@ public class FilteringTreeBuilder extends AbstractTreeBuilder {
   }
 
 
-  @Nonnull
+  
   protected Promise<?> refilterNow(Object preferredSelection, boolean adjustSelection) {
     ActionCallback selectionDone = new ActionCallback();
 

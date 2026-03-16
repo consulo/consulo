@@ -17,9 +17,8 @@ package consulo.ide.setting.module;
 
 import consulo.content.library.LibraryTable;
 
-import jakarta.annotation.Nonnull;
 
 public interface LibraryTableModifiableModelProvider {
-  @Nonnull
+  
   LibraryTable.ModifiableModel getModifiableModel();
 }

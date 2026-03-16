@@ -22,8 +22,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -37,14 +36,14 @@ import java.util.function.Predicate;
 public interface StatusBar extends Disposable {
     Key<StatusBar> KEY = Key.create(StatusBar.class);
 
-    void updateWidget(@Nonnull String id);
+    void updateWidget(String id);
 
-    void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate);
+    void updateWidget(Predicate<StatusBarWidget> widgetPredicate);
 
-    @Nonnull
-    <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate);
+    
+    <W extends StatusBarWidget> Optional<W> findWidget(Predicate<StatusBarWidget> predicate);
 
-    void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor);
+    void fireNotificationPopup(JComponent content, Color backgroundColor);
 
     StatusBar createChild();
 
@@ -57,7 +56,7 @@ public interface StatusBar extends Disposable {
     @Nullable
     Project getProject();
 
-    @Nonnull
+    
     default consulo.ui.Component getUIComponent() {
         throw new AbstractMethodError();
     }
@@ -73,13 +72,13 @@ public interface StatusBar extends Disposable {
         return false;
     }
 
-    default BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody) {
+    default BalloonHandler notifyProgressByBalloon(NotificationType type, String htmlBody) {
         return notifyProgressByBalloon(type, htmlBody, null, null);
     }
 
     BalloonHandler notifyProgressByBalloon(
-        @Nonnull NotificationType type,
-        @Nonnull String htmlBody,
+        NotificationType type,
+        String htmlBody,
         @Nullable Image icon,
         @Nullable HyperlinkListener listener
     );

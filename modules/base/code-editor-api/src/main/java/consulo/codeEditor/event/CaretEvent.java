@@ -19,8 +19,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.EventObject;
 
 public class CaretEvent extends EventObject {
@@ -32,7 +31,7 @@ public class CaretEvent extends EventObject {
    * @deprecated Use {@link #CaretEvent(Caret, LogicalPosition, LogicalPosition)} instead.
    */
   @Deprecated
-  public CaretEvent(@Nonnull Editor editor, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
+  public CaretEvent(Editor editor, LogicalPosition oldPosition, LogicalPosition newPosition) {
     this(editor, null, oldPosition, newPosition);
   }
 
@@ -40,21 +39,21 @@ public class CaretEvent extends EventObject {
    * @deprecated Use {@link #CaretEvent(Caret, LogicalPosition, LogicalPosition)} instead.
    */
   @Deprecated
-  public CaretEvent(@Nonnull Editor editor, @Nullable Caret caret, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
+  public CaretEvent(Editor editor, @Nullable Caret caret, LogicalPosition oldPosition, LogicalPosition newPosition) {
     super(editor);
     myCaret = caret;
     myOldPosition = oldPosition;
     myNewPosition = newPosition;
   }
 
-  public CaretEvent(@Nonnull Caret caret, @Nonnull LogicalPosition oldPosition, @Nonnull LogicalPosition newPosition) {
+  public CaretEvent(Caret caret, LogicalPosition oldPosition, LogicalPosition newPosition) {
     super(caret.getEditor());
     myCaret = caret;
     myOldPosition = oldPosition;
     myNewPosition = newPosition;
   }
 
-  @Nonnull
+  
   public Editor getEditor() {
     return (Editor)getSource();
   }
@@ -64,12 +63,12 @@ public class CaretEvent extends EventObject {
     return myCaret;
   }
 
-  @Nonnull
+  
   public LogicalPosition getOldPosition() {
     return myOldPosition;
   }
 
-  @Nonnull
+  
   public LogicalPosition getNewPosition() {
     return myNewPosition;
   }

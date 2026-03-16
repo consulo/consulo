@@ -15,8 +15,7 @@
  */
 package consulo.execution.debug.frame;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -29,5 +28,5 @@ public interface XStackFrameContainerEx extends XExecutionStack.XStackFrameConta
    * @param toSelect stack frame to select in the frames list automatically.
    * @param last <code>true</code> if all frames are added
    */
-  void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last);
+  void addStackFrames(List<? extends XStackFrame> stackFrames, @Nullable XStackFrame toSelect, boolean last);
 }

@@ -35,8 +35,7 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,7 +50,7 @@ public class FoldingUpdate {
     }
 
     @Nullable
-    static Runnable updateFoldRegions(@Nonnull Editor editor, @Nonnull PsiFile file, boolean applyDefaultState, boolean quick) {
+    static Runnable updateFoldRegions(Editor editor, PsiFile file, boolean applyDefaultState, boolean quick) {
         ApplicationManager.getApplication().assertReadAccessAllowed();
 
         Project project = file.getProject();
@@ -78,7 +77,7 @@ public class FoldingUpdate {
 
     private static CachedValueProvider.Result<Runnable> getUpdateResult(
         PsiFile file,
-        @Nonnull Document document,
+        Document document,
         boolean quick,
         Project project,
         Editor editor,
@@ -116,7 +115,7 @@ public class FoldingUpdate {
         return CachedValueProvider.Result.create(runnable, ArrayUtil.toObjectArray(dependencies));
     }
 
-    @Nonnull
+    
     private static UpdateFoldRegionsOperation.ApplyDefaultStateMode applyDefaultStateMode(boolean applyDefaultState) {
         return applyDefaultState ? UpdateFoldRegionsOperation.ApplyDefaultStateMode.EXCEPT_CARET_REGION : UpdateFoldRegionsOperation.ApplyDefaultStateMode.NO;
     }
@@ -125,7 +124,7 @@ public class FoldingUpdate {
 
     @Nullable
     @RequiredReadAction
-    public static Runnable updateInjectedFoldRegions(@Nonnull Editor editor, @Nonnull PsiFile file, boolean applyDefaultState) {
+    public static Runnable updateInjectedFoldRegions(Editor editor, PsiFile file, boolean applyDefaultState) {
         if (file instanceof PsiCompiledElement) {
             return null;
         }
@@ -212,7 +211,7 @@ public class FoldingUpdate {
      * @param editor the editor that holds file view
      * @return true  if folding initialization available in the Dumb Mode
      */
-    public static boolean supportsDumbModeFolding(@Nonnull Editor editor) {
+    public static boolean supportsDumbModeFolding(Editor editor) {
         Project project = editor.getProject();
         if (project != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -229,7 +228,7 @@ public class FoldingUpdate {
      * @param file the file to test
      * @return true  if folding initialization available in the Dumb Mode
      */
-    private static boolean supportsDumbModeFolding(@Nonnull PsiFile file) {
+    private static boolean supportsDumbModeFolding(PsiFile file) {
         FileViewProvider viewProvider = file.getViewProvider();
         for (Language language : viewProvider.getLanguages()) {
             FoldingBuilder foldingBuilder = FoldingBuilder.forLanguageComposite(language);
@@ -240,7 +239,7 @@ public class FoldingUpdate {
         return true;
     }
 
-    static List<RegionInfo> getFoldingsFor(@Nonnull PsiFile file, @Nonnull Document document, boolean quick) {
+    static List<RegionInfo> getFoldingsFor(PsiFile file, Document document, boolean quick) {
         if (file instanceof PsiCompiledFile) {
             file = ((PsiCompiledFile) file).getDecompiledPsiFile();
         }
@@ -250,9 +249,9 @@ public class FoldingUpdate {
     }
 
     private static void getFoldingsFor(
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
-        @Nonnull List<? super RegionInfo> elementsToFold,
+        PsiFile file,
+        Document document,
+        List<? super RegionInfo> elementsToFold,
         boolean quick
     ) {
         FileViewProvider viewProvider = file.getViewProvider();
@@ -314,8 +313,8 @@ public class FoldingUpdate {
     }
 
     private static void diagnoseIncorrectRange(
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
+        PsiFile file,
+        Document document,
         Language language,
         FoldingBuilder foldingBuilder,
         FoldingDescriptor descriptor,
@@ -344,18 +343,18 @@ public class FoldingUpdate {
         );
     }
 
-    static void clearFoldingCache(@Nonnull Editor editor) {
+    static void clearFoldingCache(Editor editor) {
         editor.putUserData(CODE_FOLDING_KEY, null);
     }
 
     static class RegionInfo {
-        @Nonnull
+        
         final FoldingDescriptor descriptor;
         final PsiElement element;
         final String signature;
         final boolean collapsedByDefault;
 
-        private RegionInfo(@Nonnull FoldingDescriptor descriptor, @Nonnull PsiElement psiElement, @Nonnull FoldingBuilder foldingBuilder) {
+        private RegionInfo(FoldingDescriptor descriptor, PsiElement psiElement, FoldingBuilder foldingBuilder) {
             this.descriptor = descriptor;
             element = psiElement;
             Boolean hardCoded = descriptor.isCollapsedByDefault();
@@ -363,7 +362,7 @@ public class FoldingUpdate {
             signature = createSignature(psiElement);
         }
 
-        private static String createSignature(@Nonnull PsiElement element) {
+        private static String createSignature(PsiElement element) {
             String signature = FoldingPolicy.getSignature(element);
             if (signature != null && Registry.is("folding.signature.validation")) {
                 PsiFile containingFile = element.getContainingFile();

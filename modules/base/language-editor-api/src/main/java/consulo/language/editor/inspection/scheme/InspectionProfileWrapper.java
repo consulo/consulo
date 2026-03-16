@@ -24,7 +24,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -46,11 +45,11 @@ public class InspectionProfileWrapper {
 
   protected final InspectionProfile myProfile;
 
-  public InspectionProfileWrapper(@Nonnull InspectionProfile profile) {
+  public InspectionProfileWrapper(InspectionProfile profile) {
     myProfile = profile;
   }
 
-  @Nonnull
+  
   public InspectionToolWrapper[] getInspectionTools(PsiElement element) {
     return myProfile.getInspectionTools(element);
   }
@@ -58,7 +57,7 @@ public class InspectionProfileWrapper {
   // check whether some inspection got registered twice by accident. 've bit once.
   private static boolean alreadyChecked;
 
-  public static void checkInspectionsDuplicates(@Nonnull InspectionToolWrapper[] toolWrappers) {
+  public static void checkInspectionsDuplicates(InspectionToolWrapper[] toolWrappers) {
     if (alreadyChecked) return;
     alreadyChecked = true;
     Set<InspectionTool> uniqTools = new HashSet<>(toolWrappers.length);
@@ -82,11 +81,11 @@ public class InspectionProfileWrapper {
     return myProfile.getInspectionTool(shortName, element);
   }
 
-  public void cleanup(@Nonnull Project project) {
+  public void cleanup(Project project) {
     myProfile.cleanup(project);
   }
 
-  @Nonnull
+  
   public InspectionProfile getInspectionProfile() {
     return myProfile;
   }

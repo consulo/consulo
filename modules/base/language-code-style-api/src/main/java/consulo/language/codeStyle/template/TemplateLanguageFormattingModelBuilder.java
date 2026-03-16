@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +38,7 @@ import static consulo.language.codeStyle.template.BlockUtil.filterBlocksByRange;
 public abstract class TemplateLanguageFormattingModelBuilder implements DelegatingFormattingModelBuilder, TemplateLanguageBlockFactory {
 
   @Override
-  @Nonnull
+  
   public FormattingModel createModel(FormattingContext context) {
     PsiFile file = context.getContainingFile();
     CodeStyleSettings settings = context.getCodeStyleSettings();
@@ -79,7 +78,7 @@ public abstract class TemplateLanguageFormattingModelBuilder implements Delegati
       }
 
       @Override
-      public Spacing getSpacing(Block child1, @Nonnull Block child2) {
+      public Spacing getSpacing(Block child1, Block child2) {
         return Spacing.getReadOnlySpacing();
       }
 

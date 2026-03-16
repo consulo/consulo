@@ -15,8 +15,7 @@
  */
 package consulo.build.ui.output;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -30,7 +29,7 @@ public class BuildOutputCollector implements BuildOutputInstantReader {
     myReader = reader;
   }
 
-  @Nonnull
+  
   @Override
   public Object getParentEventId() {
     return myReader.getParentEventId();
@@ -63,7 +62,7 @@ public class BuildOutputCollector implements BuildOutputInstantReader {
     }
   }
 
-  @Nonnull
+  
   public String getOutput() {
     return String.join("\n", myReadLines);
   }

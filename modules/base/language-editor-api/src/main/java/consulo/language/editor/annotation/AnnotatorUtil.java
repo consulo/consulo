@@ -20,7 +20,6 @@ import consulo.language.Language;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +32,9 @@ public final class AnnotatorUtil {
     private AnnotatorUtil() {
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static List<Annotation> runAnnotators(@Nonnull PsiFile psiFile, @Nonnull PsiElement contextElement) {
+    public static List<Annotation> runAnnotators(PsiFile psiFile, PsiElement contextElement) {
         List<AnnotatorFactory> annotatorFactories = AnnotatorFactory.forLanguage(psiFile.getProject(), psiFile.getLanguage());
 
         LanguageEditorInternalHelper helper = LanguageEditorInternalHelper.getInstance();

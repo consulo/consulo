@@ -2,8 +2,7 @@
 package consulo.codeEditor;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -17,7 +16,7 @@ public interface CustomFoldRegion extends FoldRegion {
   /**
    * Renderer for this fold region (specified at creation time).
    */
-  @Nonnull
+  
   CustomFoldRegionRenderer getRenderer();
 
   /**

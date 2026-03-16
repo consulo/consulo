@@ -31,21 +31,20 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FormattingDocumentModelImpl implements FormattingDocumentModel {
 
     private final WhiteSpaceFormattingStrategy myWhiteSpaceStrategy;
     //private final CharBuffer myBuffer = CharBuffer.allocate(1);
-    @Nonnull
+    
     private final Document myDocument;
     private final PsiFile myFile;
 
     private static final Logger LOG = Logger.getInstance(FormattingDocumentModelImpl.class);
     private final CodeStyleSettings mySettings;
 
-    public FormattingDocumentModelImpl(@Nonnull Document document, @Nullable PsiFile file) {
+    public FormattingDocumentModelImpl(Document document, @Nullable PsiFile file) {
         myDocument = document;
         myFile = file;
         if (file != null) {
@@ -121,7 +120,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
         return myDocument.getTextLength();
     }
 
-    @Nonnull
+    
     @Override
     public Document getDocument() {
         return myDocument;
@@ -152,9 +151,9 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, int startOffset, int endOffset, ASTNode nodeAfter, boolean changedViaPsi) {
+    public CharSequence adjustWhiteSpaceIfNecessary(CharSequence whiteSpaceText, int startOffset, int endOffset, ASTNode nodeAfter, boolean changedViaPsi) {
         if (!changedViaPsi) {
             return myWhiteSpaceStrategy.adjustWhiteSpaceIfNecessary(whiteSpaceText, myDocument.getCharsSequence(), startOffset, endOffset, mySettings, nodeAfter);
         }
@@ -175,7 +174,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
     //}
 
     @RequiredReadAction
-    public static boolean canUseDocumentModel(@Nonnull Document document, @Nonnull PsiFile file) {
+    public static boolean canUseDocumentModel(Document document, PsiFile file) {
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(file.getProject());
         return !psiDocumentManager.isUncommited(document)
             && !psiDocumentManager.isDocumentBlockedByPsi(document)

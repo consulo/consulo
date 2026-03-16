@@ -49,8 +49,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -63,27 +62,27 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @since 2013-06-07
  */
 public class ExternalSystemAutoImporter implements BulkFileListener, DocumentListener {
-    @Nonnull
+    
     private final ConcurrentMap<ProjectSystemId, Set<String /* external project path */>> myFilesToRefresh =
         ContainerUtil.newConcurrentMap();
 
-    @Nonnull
+    
     private final Alarm myVfsAlarm;
-    @Nonnull
+    
     private final ReadWriteLock myVfsLock = new ReentrantReadWriteLock();
 
-    @Nonnull
+    
     private final Set<Document> myDocumentsToSave = new HashSet<>();
-    @Nonnull
+    
     private final Alarm myDocumentAlarm;
-    @Nonnull
+    
     private final ReadWriteLock myDocumentLock = new ReentrantReadWriteLock();
 
-    @Nonnull
+    
     private final Runnable myFilesRequest = this::refreshFilesIfNecessary;
-    @Nonnull
+    
     private final Runnable myDocumentsSaveRequest = this::saveDocumentsIfNecessary;
-    @Nonnull
+    
     private final ExternalProjectRefreshCallback myRefreshCallback = new ExternalProjectRefreshCallback() {
         @Override
         @RequiredUIAccess
@@ -105,23 +104,23 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
         }
 
         @Override
-        public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
+        public void onFailure(String errorMessage, @Nullable String errorDetails) {
             // Do nothing.
         }
     };
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ProjectDataManager myProjectDataManager;
 
-    @Nonnull
+    
     private final MyEntry[] myAutoImportAware;
 
     public ExternalSystemAutoImporter(
-        @Nonnull Project project,
-        @Nonnull ProjectDataManager projectDataManager,
-        @Nonnull MyEntry[] autoImportAware
+        Project project,
+        ProjectDataManager projectDataManager,
+        MyEntry[] autoImportAware
     ) {
         myProject = project;
         myProjectDataManager = projectDataManager;
@@ -131,7 +130,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     }
 
     @SuppressWarnings("unchecked")
-    public static void letTheMagicBegin(@Nonnull Project project) {
+    public static void letTheMagicBegin(Project project) {
         List<MyEntry> autoImportAware = new ArrayList<>();
         project.getApplication().getExtensionPoint(ExternalSystemManager.class).forEach(manager -> {
             AbstractExternalSystemSettings<?, ?, ?> systemSettings =
@@ -152,27 +151,27 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(autoImporter, project);
     }
 
-    @Nonnull
+    
     private static ExternalSystemAutoImportAware combine(
-        @Nonnull ExternalSystemAutoImportAware aware1,
-        @Nonnull ExternalSystemAutoImportAware aware2
+        ExternalSystemAutoImportAware aware1,
+        ExternalSystemAutoImportAware aware2
     ) {
         return new ExternalSystemAutoImportAware() {
             @Nullable
             @Override
-            public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
+            public String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
                 String projectPath = aware1.getAffectedExternalProjectPath(changedFileOrDirPath, project);
                 return projectPath == null ? aware2.getAffectedExternalProjectPath(changedFileOrDirPath, project) : projectPath;
             }
         };
     }
 
-    @Nonnull
-    private static ExternalSystemAutoImportAware createDefault(@Nonnull AbstractExternalSystemSettings<?, ?, ?> systemSettings) {
+    
+    private static ExternalSystemAutoImportAware createDefault(AbstractExternalSystemSettings<?, ?, ?> systemSettings) {
         return new ExternalSystemAutoImportAware() {
             @Nullable
             @Override
-            public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
+            public String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
                 return systemSettings.getLinkedProjectSettings(changedFileOrDirPath) == null ? null : changedFileOrDirPath;
             }
         };
@@ -202,7 +201,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
         }
     }
 
-    private void scheduleDocumentSave(@Nonnull Document document) {
+    private void scheduleDocumentSave(Document document) {
         Lock lock = myDocumentLock.readLock();
         lock.lock();
         try {
@@ -251,11 +250,11 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
     }
 
     @Override
-    public void before(@Nonnull List<? extends VFileEvent> events) {
+    public void before(List<? extends VFileEvent> events) {
     }
 
     @Override
-    public void after(@Nonnull List<? extends VFileEvent> events) {
+    public void after(List<? extends VFileEvent> events) {
         boolean scheduleRefresh = false;
         for (VFileEvent event : events) {
             String changedPath = event.getPath();
@@ -278,7 +277,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
         }
     }
 
-    private void addPath(@Nonnull ProjectSystemId externalSystemId, @Nonnull String path) {
+    private void addPath(ProjectSystemId externalSystemId, String path) {
         Lock lock = myVfsLock.readLock();
         lock.lock();
         try {
@@ -365,17 +364,17 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
 
     private static class MyEntry {
 
-        @Nonnull
+        
         public final ProjectSystemId externalSystemId;
-        @Nonnull
+        
         public final AbstractExternalSystemSettings<?, ?, ?> systemSettings;
-        @Nonnull
+        
         public final ExternalSystemAutoImportAware aware;
 
         MyEntry(
-            @Nonnull ProjectSystemId externalSystemId,
-            @Nonnull AbstractExternalSystemSettings<?, ?, ?> systemSettings,
-            @Nonnull ExternalSystemAutoImportAware aware
+            ProjectSystemId externalSystemId,
+            AbstractExternalSystemSettings<?, ?, ?> systemSettings,
+            ExternalSystemAutoImportAware aware
         ) {
             this.externalSystemId = externalSystemId;
             this.systemSettings = systemSettings;

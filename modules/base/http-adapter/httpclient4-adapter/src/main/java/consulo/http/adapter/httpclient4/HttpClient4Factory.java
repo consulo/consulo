@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.http.HttpCertificateManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -40,7 +39,7 @@ public class HttpClient4Factory {
         myHttpCertificateManager = httpCertificateManager;
     }
 
-    @Nonnull
+    
     public HttpClientBuilder createBuilder() {
         return HttpClients.custom()
             .setSSLContext(myHttpCertificateManager.getSslContext())

@@ -26,7 +26,6 @@ import consulo.module.content.ProjectRootManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
  */
 public class PsiPackageSupportProviders {
     @RequiredReadAction
-    public static boolean isPackageSupported(@Nonnull Project project) {
+    public static boolean isPackageSupported(Project project) {
         return CachedValuesManager.getManager(project).getCachedValue(
             project,
             () -> {

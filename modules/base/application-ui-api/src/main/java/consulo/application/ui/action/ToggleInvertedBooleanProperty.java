@@ -21,12 +21,11 @@ import consulo.component.util.config.BooleanProperty;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {
     public ToggleInvertedBooleanProperty(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         Image icon,
         AbstractProperty.AbstractPropertyContainer properties, BooleanProperty property
     ) {
@@ -46,12 +45,12 @@ public class ToggleInvertedBooleanProperty extends ToggleBooleanProperty {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return !getProperty().get(getProperties());
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         getProperty().set(getProperties(), !state);
     }
 }

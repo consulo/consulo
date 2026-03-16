@@ -18,7 +18,6 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 
 
 import consulo.versionControlSystem.log.graph.GraphCommit;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -39,24 +38,24 @@ public class DuplicateParentFixer {
   }
 
   private static class DelegateGraphCommit<CommitId> implements GraphCommit<CommitId> {
-    @Nonnull
+    
     private final GraphCommit<CommitId> myDelegate;
 
-    @Nonnull
+    
     private final List<CommitId> myParents;
 
-    private DelegateGraphCommit(@Nonnull GraphCommit<CommitId> delegate, @Nonnull List<CommitId> parents) {
+    private DelegateGraphCommit(GraphCommit<CommitId> delegate, List<CommitId> parents) {
       myDelegate = delegate;
       myParents = parents;
     }
 
-    @Nonnull
+    
     @Override
     public CommitId getId() {
       return myDelegate.getId();
     }
 
-    @Nonnull
+    
     @Override
     public List<CommitId> getParents() {
       return myParents;
@@ -68,8 +67,8 @@ public class DuplicateParentFixer {
     }
   }
 
-  @Nonnull
-  private static <CommitId> GraphCommit<CommitId> fixParentsDuplicate(@Nonnull GraphCommit<CommitId> commit) {
+  
+  private static <CommitId> GraphCommit<CommitId> fixParentsDuplicate(GraphCommit<CommitId> commit) {
     List<CommitId> parents = commit.getParents();
     if (parents.size() <= 1) return commit;
 

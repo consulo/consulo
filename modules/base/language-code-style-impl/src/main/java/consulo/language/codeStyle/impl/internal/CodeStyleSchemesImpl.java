@@ -25,14 +25,12 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
-  @NonNls
+  
   public static final String DEFAULT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
 
   @SuppressWarnings("SpellCheckingInspection")
@@ -44,30 +42,30 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
   public CodeStyleSchemesImpl(SchemeManagerFactory schemeManagerFactory) {
     SchemeProcessor<CodeStyleScheme, CodeStyleSchemeImpl> processor = new BaseSchemeProcessor<>() {
-      @Nonnull
+      
       @Override
-      public CodeStyleSchemeImpl readScheme(@Nonnull Element element) {
+      public CodeStyleSchemeImpl readScheme(Element element) {
         return CodeStyleSchemeImpl.readScheme(element);
       }
 
       @Override
-      public Element writeScheme(@Nonnull CodeStyleSchemeImpl scheme) throws WriteExternalException {
+      public Element writeScheme(CodeStyleSchemeImpl scheme) throws WriteExternalException {
         return scheme.saveToDocument();
       }
 
       @Override
-      public boolean shouldBeSaved(@Nonnull CodeStyleSchemeImpl scheme) {
+      public boolean shouldBeSaved(CodeStyleSchemeImpl scheme) {
         return !scheme.isDefault();
       }
 
       @Override
-      public void initScheme(@Nonnull CodeStyleSchemeImpl scheme) {
+      public void initScheme(CodeStyleSchemeImpl scheme) {
         scheme.init(CodeStyleSchemesImpl.this);
       }
 
-      @Nonnull
+      
       @Override
-      public String getName(@Nonnull CodeStyleScheme immutableElement) {
+      public String getName(CodeStyleScheme immutableElement) {
         return immutableElement.getName();
       }
     };
@@ -146,7 +144,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
 
   @Nullable
   @Override
-  public CodeStyleScheme findSchemeByName(@Nonnull String name) {
+  public CodeStyleScheme findSchemeByName(String name) {
     return mySchemeManager.findSchemeByName(name);
   }
 

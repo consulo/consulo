@@ -15,7 +15,6 @@ import consulo.util.collection.Sets;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import consulo.util.concurrent.Obsolescent;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     private final String description;
     private volatile boolean disposed;
 
-    private InvokerImpl(@Nonnull String prefix, @Nonnull Disposable parent) {
+    private InvokerImpl(String prefix, Disposable parent) {
         description = "Invoker." + UID.getAndIncrement() + "." + prefix + ": " + parent;
         register(parent, this);
     }
@@ -62,8 +61,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute on the valid thread
      * @return an object to control task processing
      */
-    @Nonnull
-    public final <T> CancellablePromise<T> compute(@Nonnull Supplier<? extends T> task) {
+    public final <T> CancellablePromise<T> compute(Supplier<? extends T> task) {
         return promise(new Task<>(task));
     }
 
@@ -76,8 +74,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute asynchronously on the valid thread
      * @return an object to control task processing
      */
-    @Nonnull
-    public final <T> CancellablePromise<T> computeLater(@Nonnull Supplier<? extends T> task) {
+    public final <T> CancellablePromise<T> computeLater(Supplier<? extends T> task) {
         return computeLater(task, 0);
     }
 
@@ -88,8 +85,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param delay milliseconds for the initial delay
      * @return an object to control task processing
      */
-    @Nonnull
-    public final <T> CancellablePromise<T> computeLater(@Nonnull Supplier<? extends T> task, int delay) {
+    public final <T> CancellablePromise<T> computeLater(Supplier<? extends T> task, int delay) {
         return promise(new Task<>(task), delay);
     }
 
@@ -100,9 +96,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute on the valid thread
      * @return an object to control task processing
      */
-    @Nonnull
     @Override
-    public final CancellablePromise<?> invoke(@Nonnull Runnable task) {
+    public final CancellablePromise<?> invoke(Runnable task) {
         return compute(new Wrapper(task));
     }
 
@@ -115,9 +110,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute asynchronously on the valid thread
      * @return an object to control task processing
      */
-    @Nonnull
     @Override
-    public final CancellablePromise<?> invokeLater(@Nonnull Runnable task) {
+    public final CancellablePromise<?> invokeLater(Runnable task) {
         return invokeLater(task, 0);
     }
 
@@ -128,9 +122,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param delay milliseconds for the initial delay
      * @return an object to control task processing
      */
-    @Nonnull
     @Override
-    public final CancellablePromise<?> invokeLater(@Nonnull Runnable task, int delay) {
+    public final CancellablePromise<?> invokeLater(Runnable task, int delay) {
         return computeLater(new Wrapper(task), delay);
     }
 
@@ -143,9 +136,8 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @deprecated use {@link #invoke(Runnable)} or {@link #compute(Supplier)} instead
      */
     @Deprecated
-    @Nonnull
     @Override
-    public final CancellablePromise<?> runOrInvokeLater(@Nonnull Runnable task) {
+    public final CancellablePromise<?> runOrInvokeLater(Runnable task) {
         return invoke(task);
     }
 
@@ -159,14 +151,14 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         return disposed ? 0 : count.get();
     }
 
-    abstract void offer(@Nonnull Runnable runnable, int delay);
+    abstract void offer(Runnable runnable, int delay);
 
     /**
      * @param task    a task to execute on the valid thread
      * @param attempt an attempt to run the specified task
      * @param delay   milliseconds for the initial delay
      */
-    private void offerSafely(@Nonnull Task<?> task, int attempt, int delay) {
+    private void offerSafely(Task<?> task, int attempt, int delay) {
         try {
             count.incrementAndGet();
             offer(() -> invokeSafely(task, attempt), delay);
@@ -184,7 +176,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task    a task to execute on the valid thread
      * @param attempt an attempt to run the specified task
      */
-    private void invokeSafely(@Nonnull Task<?> task, int attempt) {
+    private void invokeSafely(Task<?> task, int attempt) {
         try {
             if (task.canInvoke(disposed)) {
                 ProgressManager.getInstance().runProcess(task, indicator(task.promise));
@@ -212,7 +204,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task    a task to execute on the valid thread
      * @param attempt an attempt to run the specified task
      */
-    private void offerRestart(@Nonnull Task<?> task, int attempt) {
+    private void offerRestart(Task<?> task, int attempt) {
         if (task.canRestart(disposed, attempt)) {
             offerSafely(task, attempt + 1, 10);
             if (LOG.isTraceEnabled()) {
@@ -228,8 +220,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param task a task to execute on the valid thread
      * @return an object to control task processing
      */
-    @Nonnull
-    private <T> CancellablePromise<T> promise(@Nonnull Task<T> task) {
+    private <T> CancellablePromise<T> promise(Task<T> task) {
         if (!isValidThread()) {
             return promise(task, 0);
         }
@@ -245,8 +236,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * @param delay milliseconds for the initial delay
      * @return an object to control task processing
      */
-    @Nonnull
-    private <T> CancellablePromise<T> promise(@Nonnull Task<T> task, int delay) {
+    private <T> CancellablePromise<T> promise(Task<T> task, int delay) {
         if (delay < 0) {
             throw new IllegalArgumentException("delay must be non-negative: " + delay);
         }
@@ -265,7 +255,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         private final Supplier<? extends T> supplier;
         private volatile T result;
 
-        Task(@Nonnull Supplier<? extends T> supplier) {
+        Task(Supplier<? extends T> supplier) {
             this.supplier = supplier;
         }
 
@@ -329,7 +319,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     private static final class Wrapper implements Obsolescent, Supplier<Void> {
         private final Runnable task;
 
-        Wrapper(@Nonnull Runnable task) {
+        Wrapper(Runnable task) {
             this.task = task;
         }
 
@@ -351,8 +341,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     }
 
 
-    @Nonnull
-    private ProgressIndicatorBase indicator(@Nonnull AsyncPromise<?> promise) {
+    private ProgressIndicatorBase indicator(AsyncPromise<?> promise) {
         ProgressIndicatorBase indicator = indicators.get(promise);
         if (indicator == null) {
             indicator = new ProgressIndicatorBase(true, false);
@@ -370,7 +359,6 @@ public abstract class InvokerImpl implements Disposable, Invoker {
      * which is the only one valid thread for this invoker.
      */
     public static final class UIAccessInvoker extends InvokerImpl {
-        @Nonnull
         private final UIAccess myUiAccess;
 
         /**
@@ -378,7 +366,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
          *
          * @param parent a disposable parent object
          */
-        public UIAccessInvoker(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+        public UIAccessInvoker(UIAccess uiAccess, Disposable parent) {
             super("UI", parent);
             myUiAccess = uiAccess;
         }
@@ -389,7 +377,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
 
         @Override
-        void offer(@Nonnull Runnable runnable, int delay) {
+        void offer(Runnable runnable, int delay) {
             if (delay > 0) {
                 myUiAccess.getScheduler().schedule(runnable, delay, MILLISECONDS);
             }
@@ -408,7 +396,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         private final Set<Thread> threads = Sets.newConcurrentHashSet();
         private final ScheduledExecutorService myExecutor;
 
-        public Background(@Nonnull Disposable parent) {
+        public Background(Disposable parent) {
             super("Background", parent);
             myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService(toString(), 1);
         }
@@ -425,7 +413,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
 
         @Override
-        void offer(@Nonnull Runnable runnable, int delay) {
+        void offer(Runnable runnable, int delay) {
             schedule(myExecutor, () -> {
                 Thread thread = Thread.currentThread();
                 if (!threads.add(thread)) {
@@ -448,10 +436,9 @@ public abstract class InvokerImpl implements Disposable, Invoker {
     public static final class BackgroundRead extends InvokerImpl {
         private final Set<Thread> threads = Sets.newConcurrentHashSet();
         private final ScheduledExecutorService myExecutor;
-        @Nonnull
         private final Application myApplication;
 
-        public BackgroundRead(@Nonnull Application application, @Nonnull Disposable parent) {
+        public BackgroundRead(Application application, Disposable parent) {
             super("Read", parent);
             myApplication = application;
             myExecutor = AppExecutorUtil.createBoundedScheduledExecutorService(toString(), 1);
@@ -469,7 +456,7 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
 
         @Override
-        void offer(@Nonnull Runnable runnable, int delay) {
+        void offer(Runnable runnable, int delay) {
             schedule(myExecutor, () -> {
                 Thread thread = Thread.currentThread();
                 if (!threads.add(thread)) {
@@ -498,18 +485,15 @@ public abstract class InvokerImpl implements Disposable, Invoker {
         }
     }
 
-    @Nonnull
-    public static InvokerImpl forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent) {
+    public static InvokerImpl forEventDispatchThread(UIAccess uiAccess, Disposable parent) {
         return new UIAccessInvoker(uiAccess, parent);
     }
 
-    @Nonnull
-    public static InvokerImpl forBackgroundThreadWithReadAction(@Nonnull Disposable parent) {
+    public static InvokerImpl forBackgroundThreadWithReadAction(Disposable parent) {
         return new BackgroundRead(Application.get(), parent);
     }
 
-    @Nonnull
-    public static InvokerImpl forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent) {
+    public static InvokerImpl forBackgroundThreadWithoutReadAction(Disposable parent) {
         return new Background(parent);
     }
 }

@@ -34,8 +34,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import javax.swing.*;
@@ -261,14 +260,14 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
             return myNamer.getName(myItem);
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
-        public Component createOptionsPanel(@Nonnull Disposable uiDisposable) {
+        public Component createOptionsPanel(Disposable uiDisposable) {
             return TargetAWT.wrap(myConfigurable.createComponent(uiDisposable));
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             return LocalizeValue.ofNullable(myNamer.getName(myItem));
@@ -350,7 +349,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         @Override
         @RequiredUIAccess
         @SuppressWarnings("unchecked")
-        public void actionPerformed(@Nonnull AnActionEvent event) {
+        public void actionPerformed(AnActionEvent event) {
             String profileName = askForProfileName("Copy {0}");
             if (profileName == null) {
                 return;
@@ -364,7 +363,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent event) {
+        public void update(AnActionEvent event) {
             super.update(event);
             event.getPresentation().setEnabled(getSelectedObject() != null);
         }
@@ -381,7 +380,7 @@ public abstract class NamedItemsListEditor<T> extends MasterDetailsComponent {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent event) {
+        public void actionPerformed(AnActionEvent event) {
             T newItem = createItem();
             if (newItem != null) {
                 onItemCreated(newItem);

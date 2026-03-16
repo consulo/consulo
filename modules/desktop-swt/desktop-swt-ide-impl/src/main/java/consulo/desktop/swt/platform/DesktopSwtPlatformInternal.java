@@ -18,14 +18,13 @@ package consulo.desktop.swt.platform;
 import consulo.platform.Platform;
 import consulo.platform.internal.PlatformInternal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
 public class DesktopSwtPlatformInternal extends PlatformInternal {
-  @Nonnull
+  
   @Override
   public Platform createCurrent() {
     return new DesktopSwtPlatformImpl();

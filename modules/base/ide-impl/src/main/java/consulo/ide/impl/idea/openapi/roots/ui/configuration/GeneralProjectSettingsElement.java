@@ -27,7 +27,6 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.util.collection.Chunk;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.*;
 
@@ -70,7 +69,7 @@ public class GeneralProjectSettingsElement extends ProjectStructureElement {
       LocalizeValue description;
       if (cycles.size() > 1) {
         message = LocalizeValue.localizeTODO("Circular dependencies");
-        @NonNls String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+        String br = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
         StringBuilder cyclesString = new StringBuilder();
         for (int i = 0; i < cycles.size(); i++) {
           cyclesString.append(br).append(i + 1).append(". ").append(cycles.get(i));

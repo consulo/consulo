@@ -2,18 +2,17 @@
 package consulo.execution.debug.stream.lib;
 
 import consulo.execution.debug.stream.trace.dsl.Dsl;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface LibrarySupport {
-  @Nonnull
-  HandlerFactory createHandlerFactory(@Nonnull Dsl dsl);
+  
+  HandlerFactory createHandlerFactory(Dsl dsl);
 
-  @Nonnull
+  
   InterpreterFactory getInterpreterFactory();
 
-  @Nonnull
+  
   ResolverFactory getResolverFactory();
 }

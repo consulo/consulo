@@ -24,8 +24,7 @@ import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -65,7 +64,6 @@ public interface ApplicationEx extends Application {
      */
     boolean isWriteActionPending();
 
-    @Nonnull
     default AccessToken startSaveBlock() {
         doNotSave();
 
@@ -103,8 +101,8 @@ public interface ApplicationEx extends Application {
      * Runs modal process. For internal use only, see {@link Task}
      */
     default boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull String progressTitle,
+        Runnable process,
+        String progressTitle,
         boolean canBeCanceled,
         @Nullable ComponentManager project,
         JComponent parentComponent
@@ -116,8 +114,8 @@ public interface ApplicationEx extends Application {
      * Runs modal process. For internal use only, see {@link Task}
      */
     default boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull String progressTitle,
+        Runnable process,
+        String progressTitle,
         boolean canBeCanceled,
         ComponentManager project
     ) {
@@ -129,13 +127,13 @@ public interface ApplicationEx extends Application {
      * For internal use only, see {@link Task}
      */
     boolean runProcessWithProgressSynchronously(
-        @Nonnull Runnable process,
-        @Nonnull String progressTitle,
+        Runnable process,
+        String progressTitle,
         boolean canBeCanceled,
         boolean shouldShowModalWindow,
         @Nullable ComponentManager project,
         @Nullable JComponent parentComponent,
-        @Nonnull LocalizeValue cancelText
+        LocalizeValue cancelText
     );
 
     @RequiredUIAccess
@@ -148,22 +146,22 @@ public interface ApplicationEx extends Application {
 
     boolean isInImpatientReader();
 
-    default void executeByImpatientReader(@RequiredReadAction @Nonnull Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
+    default void executeByImpatientReader(@RequiredReadAction Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
         throw new UnsupportedOperationException();
     }
 
     default boolean runWriteActionWithCancellableProgress(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable ComponentManager project,
-        @Nonnull Consumer<? super ProgressIndicator> action
+        Consumer<? super ProgressIndicator> action
     ) {
         throw new UnsupportedOperationException();
     }
 
     default boolean runWriteActionWithNonCancellableProgress(
-        @Nonnull LocalizeValue title,
+        LocalizeValue title,
         @Nullable ComponentManager project,
-        @Nonnull Consumer<? super ProgressIndicator> action
+        Consumer<? super ProgressIndicator> action
     ) {
         throw new UnsupportedOperationException();
     }

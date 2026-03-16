@@ -15,8 +15,11 @@
  */
 package consulo.container.internal.plugin;
 
+import org.jspecify.annotations.Nullable;
+
 public class PluginDependency {
   public boolean optional;
 
+  @Nullable
   public String pluginId;
 }

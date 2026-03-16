@@ -10,8 +10,6 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -121,7 +119,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
      * It guaranties readability of selected text in any LAF.
      */
     @Override
-    public void append(@Nonnull @Nls String fragment, @Nonnull SimpleTextAttributes attributes, boolean isMainText) {
+    public void append(String fragment, SimpleTextAttributes attributes, boolean isMainText) {
         if (mySelected && myFocused) {
             super.append(fragment, new SimpleTextAttributes(attributes.getStyle(), UIUtil.getTreeSelectionForeground(true)), isMainText);
         }
@@ -139,7 +137,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
      * This method is invoked only for customization of component.
      * All component attributes are cleared when this method is being invoked.
      */
-    public abstract void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus);
+    public abstract void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus);
 
     @Override
     public AccessibleContext getAccessibleContext() {

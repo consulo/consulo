@@ -55,8 +55,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -77,19 +76,19 @@ public class ExecutionHelper {
     }
 
     public static void showErrors(
-        @Nonnull Project myProject,
-        @Nonnull List<? extends Exception> errors,
-        @Nonnull String tabDisplayName,
+        Project myProject,
+        List<? extends Exception> errors,
+        String tabDisplayName,
         @Nullable VirtualFile file
     ) {
         showExceptions(myProject, errors, Collections.<Exception>emptyList(), tabDisplayName, file);
     }
 
     public static void showExceptions(
-        @Nonnull Project myProject,
-        @Nonnull List<? extends Exception> errors,
-        @Nonnull List<? extends Exception> warnings,
-        @Nonnull String tabDisplayName,
+        Project myProject,
+        List<? extends Exception> errors,
+        List<? extends Exception> warnings,
+        String tabDisplayName,
         @Nullable VirtualFile file
     ) {
         if (Application.get().isUnitTestMode() && !errors.isEmpty()) {
@@ -136,10 +135,10 @@ public class ExecutionHelper {
 
     private static void addMessages(
         int messageCategory,
-        @Nonnull List<? extends Exception> exceptions,
-        @Nonnull NewErrorTreeViewPanel errorTreeView,
+        List<? extends Exception> exceptions,
+        NewErrorTreeViewPanel errorTreeView,
         @Nullable VirtualFile file,
-        @Nonnull String defaultMessage
+        String defaultMessage
     ) {
         for (Exception exception : exceptions) {
             String[] messages = StringUtil.splitByLines(exception.getMessage());
@@ -151,9 +150,9 @@ public class ExecutionHelper {
     }
 
     public static void showOutput(
-        @Nonnull Project project,
-        @Nonnull ProcessOutput output,
-        @Nonnull String tabDisplayName,
+        Project project,
+        ProcessOutput output,
+        String tabDisplayName,
         @Nullable VirtualFile file,
         boolean activateWindow
     ) {
@@ -251,9 +250,9 @@ public class ExecutionHelper {
 
     @RequiredUIAccess
     private static void openMessagesView(
-        @Nonnull NewErrorTreeViewPanel errorTreeView,
-        @Nonnull Project project,
-        @Nonnull String tabDisplayName
+        NewErrorTreeViewPanel errorTreeView,
+        Project project,
+        String tabDisplayName
     ) {
         CommandProcessor commandProcessor = CommandProcessor.getInstance();
         commandProcessor.newCommand()
@@ -271,8 +270,8 @@ public class ExecutionHelper {
 
     private static void removeContents(
         @Nullable Content notToRemove,
-        @Nonnull Project project,
-        @Nonnull String tabDisplayName
+        Project project,
+        String tabDisplayName
     ) {
         MessageView messageView = MessageView.getInstance(project);
         Content[] contents = messageView.getContentManager().getContents();
@@ -294,14 +293,14 @@ public class ExecutionHelper {
 
     public static Collection<RunContentDescriptor> findRunningConsoleByTitle(
         Project project,
-        @Nonnull Function<String, Boolean> titleMatcher
+        Function<String, Boolean> titleMatcher
     ) {
         return findRunningConsole(project, selectedContent -> titleMatcher.apply(selectedContent.getDisplayName()));
     }
 
     public static Collection<RunContentDescriptor> findRunningConsole(
         Project project,
-        @Nonnull Function<RunContentDescriptor, Boolean> descriptorMatcher
+        Function<RunContentDescriptor, Boolean> descriptorMatcher
     ) {
         ExecutionManager executionManager = ExecutionManager.getInstance(project);
 
@@ -327,7 +326,7 @@ public class ExecutionHelper {
 
     public static List<RunContentDescriptor> collectConsolesByDisplayName(
         Project project,
-        @Nonnull Function<String, Boolean> titleMatcher
+        Function<String, Boolean> titleMatcher
     ) {
         List<RunContentDescriptor> result = new ArrayList<>();
         ExecutionManager executionManager = ExecutionManager.getInstance(project);
@@ -340,9 +339,9 @@ public class ExecutionHelper {
     }
 
     public static void selectContentDescriptor(
-        @Nonnull DataContext dataContext,
-        @Nonnull Project project,
-        @Nonnull Collection<RunContentDescriptor> consoles,
+        DataContext dataContext,
+        Project project,
+        Collection<RunContentDescriptor> consoles,
         String selectDialogTitle,
         Consumer<RunContentDescriptor> descriptorConsumer
     ) {
@@ -360,7 +359,7 @@ public class ExecutionHelper {
             builder = builder.setRenderer(new ColoredListCellRenderer<RunContentDescriptor>() {
                 @Override
                 protected void customizeCellRenderer(
-                    @Nonnull JList list,
+                    JList list,
                     RunContentDescriptor value,
                     int index,
                     boolean selected,
@@ -395,18 +394,18 @@ public class ExecutionHelper {
 
     public static void executeExternalProcess(
         @Nullable Project myProject,
-        @Nonnull ProcessHandler processHandler,
-        @Nonnull ExecutionMode mode,
-        @Nonnull GeneralCommandLine cmdline
+        ProcessHandler processHandler,
+        ExecutionMode mode,
+        GeneralCommandLine cmdline
     ) {
         executeExternalProcess(myProject, processHandler, mode, cmdline.getCommandLineString());
     }
 
     public static void executeExternalProcess(
         @Nullable final Project myProject,
-        @Nonnull ProcessHandler processHandler,
-        @Nonnull final ExecutionMode mode,
-        @Nonnull String presentableCmdline
+        ProcessHandler processHandler,
+        final ExecutionMode mode,
+        String presentableCmdline
     ) {
         final String title = mode.getTitle() != null ? mode.getTitle() : "Please wait...";
         assert title != null;
@@ -430,7 +429,7 @@ public class ExecutionHelper {
         else if (mode.inBackGround()) {
             Task task = new Task.Backgroundable(myProject, title, mode.cancelable()) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     process.run();
                 }
             };
@@ -516,7 +515,7 @@ public class ExecutionHelper {
     private static Runnable createTimelimitedExecutionProcess(
         final ProcessHandler processHandler,
         final int timeout,
-        @Nonnull final String presentableCmdline
+        final String presentableCmdline
     ) {
         return new Runnable() {
             private final Semaphore mySemaphore = new Semaphore();

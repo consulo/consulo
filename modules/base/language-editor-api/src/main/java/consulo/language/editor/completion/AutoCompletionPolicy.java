@@ -18,8 +18,7 @@ package consulo.language.editor.completion;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementDecorator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * What to do if there's only one element in completion lookup? Should IDEA show lookup or just insert this element? Call
@@ -52,8 +51,8 @@ public enum AutoCompletionPolicy {
    */
   ALWAYS_AUTOCOMPLETE;
 
-  @Nonnull
-  public LookupElement applyPolicy(@Nonnull LookupElement element) {
+  
+  public LookupElement applyPolicy(LookupElement element) {
     return new PolicyDecorator(element, this);
   }
 

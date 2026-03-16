@@ -3,22 +3,21 @@ package consulo.fileEditor.internal.largeFileEditor;
 
 import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.nio.charset.Charset;
 
 public interface LargeFileEditorAccess {
 
-    @Nonnull
+    
     VirtualFile getVirtualFile();
 
-    @Nonnull
+    
     Editor getEditor();
 
     /**
      * @return true - if success, false - otherwise
      */
-    boolean tryChangeEncoding(@Nonnull Charset charset);
+    boolean tryChangeEncoding(Charset charset);
 
     String getCharsetName();
 }

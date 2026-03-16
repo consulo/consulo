@@ -21,7 +21,6 @@ import consulo.project.ui.view.ProjectViewPaneOptionProvider;
 import consulo.project.ui.view.internal.ProjectViewSharedSettings;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.dataholder.KeyWithDefaultValue;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -40,14 +39,14 @@ public class ShowNestedProjectViewPaneOptionProvider extends ProjectViewPaneOpti
         myProjectViewSharedSettings = projectViewSharedSettings;
     }
 
-    @Nonnull
+    
     @Override
     public KeyWithDefaultValue<Boolean> getKey() {
         return SHOW_NESTED_FILES_KEY;
     }
 
     @Override
-    public void addToolbarActions(@Nonnull ProjectViewPane pane, @Nonnull DefaultActionGroup actionGroup) {
+    public void addToolbarActions(ProjectViewPane pane, DefaultActionGroup actionGroup) {
         actionGroup.add(new ConfigureFilesNestingAction(myProjectViewSharedSettings));
     }
 }

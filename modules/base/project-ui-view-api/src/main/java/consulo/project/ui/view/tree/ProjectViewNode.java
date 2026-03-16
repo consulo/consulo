@@ -27,8 +27,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -57,7 +56,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
      * @param value        the object (for example, a PSI element) represented by the project view node
      * @param viewSettings the settings of the project view.
      */
-    protected ProjectViewNode(Project project, @Nonnull Value value, ViewSettings viewSettings) {
+    protected ProjectViewNode(Project project, Value value, ViewSettings viewSettings) {
         super(project, value);
         mySettings = viewSettings;
     }
@@ -68,7 +67,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
      * @param file the file to check for.
      * @return true if the file is found in the subtree, false otherwise.
      */
-    public abstract boolean contains(@Nonnull VirtualFile file);
+    public abstract boolean contains(VirtualFile file);
 
     /**
      * Returns the virtual file represented by this node or one of its children.
@@ -86,7 +85,6 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
     }
 
     @Deprecated
-    @Nonnull
     @SuppressWarnings("deprecation")
     public static List<AbstractTreeNode> wrap(Collection objects, Project project, Class<? extends AbstractTreeNode> nodeClass, ViewSettings settings) {
         try {

@@ -26,8 +26,7 @@ import consulo.project.DumbModeTask;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -55,7 +54,7 @@ public class FileBasedIndexProjectHandler {
 
         return new DumbModeTask(project) {
             @Override
-            public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
+            public void performInDumbMode(ProgressIndicator indicator, Exception trace) {
                 long start = System.currentTimeMillis();
                 Collection<VirtualFile> files = index.getFilesToUpdate(project);
                 long calcDuration = System.currentTimeMillis() - start;

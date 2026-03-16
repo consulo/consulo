@@ -16,7 +16,7 @@
 package consulo.index.io;
 
 import consulo.util.collection.LimitedPool;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.BitSet;

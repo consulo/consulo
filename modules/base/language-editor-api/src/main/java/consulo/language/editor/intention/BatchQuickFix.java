@@ -18,7 +18,6 @@ package consulo.language.editor.intention;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -35,8 +34,8 @@ public interface BatchQuickFix<D extends CommonProblemDescriptor> {
    * @param psiElementsToIgnore elements to be excluded from view during post-refresh
    * @param refreshViews post-refresh inspection results view; would remove collected elements from the view
    */
-  void applyFix(@Nonnull Project project,
-                @Nonnull D[] descriptors,
+  void applyFix(Project project,
+                D[] descriptors,
                 List<PsiElement> psiElementsToIgnore,
                 Runnable refreshViews);
 }

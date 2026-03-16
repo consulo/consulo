@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * Handles tooltip links in format <code>#inspection/inspection_short_name</code>.
@@ -38,14 +37,14 @@ import jakarta.annotation.Nonnull;
 public class InspectionDescriptionLinkHandler extends TooltipLinkHandler {
   private static final Logger LOG = Logger.getInstance(InspectionDescriptionLinkHandler.class);
 
-  @Nonnull
+  
   @Override
   public String getPrefix() {
     return "#inspection/";
   }
 
   @Override
-  public String getDescription(@Nonnull String refSuffix, @Nonnull Editor editor) {
+  public String getDescription(String refSuffix, Editor editor) {
     Project project = editor.getProject();
     if (project == null) {
       LOG.error(editor);

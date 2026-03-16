@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -65,7 +64,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
     private boolean myIsToolWindowContextMenu;
 
     public DesktopActionPopupMenuImpl(String place,
-                                      @Nonnull ActionGroup group,
+                                      ActionGroup group,
                                       ActionManagerEx actionManager,
                                       @Nullable PresentationFactory factory) {
         myManager = actionManager;
@@ -89,31 +88,28 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
         myMenu.setVisible(false);
     }
 
-    @Nonnull
     @Override
     public JPopupMenu getComponent() {
         return myMenu;
     }
 
     @Override
-    @Nonnull
     public String getPlace() {
         return myMenu.myPlace;
     }
 
-    @Nonnull
     @Override
     public ActionGroup getActionGroup() {
         return myMenu.myGroup;
     }
 
     @Override
-    public void setTargetComponent(@Nonnull consulo.ui.Component component) {
+    public void setTargetComponent(consulo.ui.Component component) {
         setTargetComponent((JComponent) TargetAWT.to(component));
     }
 
     @Override
-    public void setTargetComponent(@Nonnull JComponent component) {
+    public void setTargetComponent(JComponent component) {
         myDataContextProvider = () -> DataManager.getInstance().getDataContext(component);
         myIsToolWindowContextMenu = ComponentUtil.getParentOfType(ToolWindowInternalDecorator.class, (Component) component) != null;
     }
@@ -134,7 +130,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
         private ProgressIndicator myExpansionIndicator;
         private boolean myAsyncShowFilled;
 
-        public MyMenu(String place, @Nonnull ActionGroup group, @Nullable PresentationFactory factory) {
+        public MyMenu(String place, ActionGroup group, @Nullable PresentationFactory factory) {
             myPlace = place;
             myGroup = group;
             myPresentationFactory = factory != null ? factory : new MenuItemPresentationFactory();

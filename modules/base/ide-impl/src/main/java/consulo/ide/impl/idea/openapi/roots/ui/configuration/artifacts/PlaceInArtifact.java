@@ -24,8 +24,7 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -44,7 +43,7 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
     myPackagingElement = packagingElement;
   }
 
-  @Nonnull
+  
   @Override
   public ProjectStructureElement getContainingElement() {
     return myContext.getOrCreateArtifactElement(myArtifact);
@@ -59,10 +58,10 @@ public class PlaceInArtifact extends PlaceInProjectStructure {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   @RequiredUIAccess
-  public AsyncResult<Void> navigate(@Nonnull Project project) {
+  public AsyncResult<Void> navigate(Project project) {
     Artifact artifact = myContext.getArtifactModel().getArtifactByOriginal(myArtifact);
     return ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> {
       projectStructureSelector.select(artifact, true).doWhenDone(() -> {

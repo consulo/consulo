@@ -22,8 +22,7 @@ import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ChangeInfoImpl implements ChangeInfo {
   @Nullable
@@ -89,7 +88,7 @@ public class ChangeInfoImpl implements ChangeInfo {
     }
   }
 
-  @Nonnull
+  
   static PsiTreeChangeEventImpl createEvent(PsiFile file, int offset) {
     PsiTreeChangeEventImpl e = new PsiTreeChangeEventImpl(file.getManager());
     e.setFile(file);

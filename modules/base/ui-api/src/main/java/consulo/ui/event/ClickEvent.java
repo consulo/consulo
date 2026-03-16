@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.ui.Component;
 import consulo.ui.event.details.InputDetails;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,11 +28,11 @@ import jakarta.annotation.Nullable;
 public final class ClickEvent extends ComponentEvent<Component> {
   @Deprecated
   @DeprecationInfo("Use constructor with InputDetails")
-  public ClickEvent(@Nonnull Component component) {
+  public ClickEvent(Component component) {
     super(component);
   }
 
-  public ClickEvent(@Nonnull Component component, @Nullable InputDetails inputDetails) {
+  public ClickEvent(Component component, @Nullable InputDetails inputDetails) {
     super(component, inputDetails);
   }
 }

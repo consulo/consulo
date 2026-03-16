@@ -4,8 +4,7 @@ package consulo.execution.debug.stream.ui;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.Value;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public interface TraceController extends ValuesHighlightingListener {
   @Nullable
   Value getStreamResult();
 
-  @Nonnull
+  
   List<TraceElement> getTrace();
 
   @Nullable
@@ -25,17 +24,17 @@ public interface TraceController extends ValuesHighlightingListener {
   @Nullable
   StreamCall getPrevCall();
 
-  @Nonnull
-  List<TraceElement> getNextValues(@Nonnull TraceElement element);
+  
+  List<TraceElement> getNextValues(TraceElement element);
 
-  @Nonnull
-  List<TraceElement> getPrevValues(@Nonnull TraceElement element);
+  
+  List<TraceElement> getPrevValues(TraceElement element);
 
   default boolean isSelectionExists() {
     return isSelectionExists(PropagationDirection.BACKWARD) || isSelectionExists(PropagationDirection.FORWARD);
   }
 
-  boolean isSelectionExists(@Nonnull PropagationDirection direction);
+  boolean isSelectionExists(PropagationDirection direction);
 
-  void register(@Nonnull TraceContainer listener);
+  void register(TraceContainer listener);
 }

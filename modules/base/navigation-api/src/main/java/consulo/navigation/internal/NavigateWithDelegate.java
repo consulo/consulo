@@ -16,14 +16,13 @@
 package consulo.navigation.internal;
 
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-09-04
  */
 public interface NavigateWithDelegate extends Navigatable {
-    @Nonnull
+    
     default Navigatable getDelegate() {
         return this;
     }

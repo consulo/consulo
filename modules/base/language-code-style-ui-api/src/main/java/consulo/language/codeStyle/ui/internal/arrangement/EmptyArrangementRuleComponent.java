@@ -19,7 +19,6 @@ import consulo.application.ApplicationBundle;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
@@ -38,7 +37,7 @@ public class EmptyArrangementRuleComponent extends JPanel implements Arrangement
     setBackground(UIUtil.getDecoratedRowColor());
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return this;

@@ -19,18 +19,17 @@ import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.image.Image;
 import consulo.versionControlSystem.log.impl.internal.VcsLogIcons;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class TableWithProgress extends JBTable {
-  public TableWithProgress(@Nonnull TableModel model) {
+  public TableWithProgress(TableModel model) {
     super(model);
   }
 
-  @Nonnull
+  
   @Override
   protected AsyncProcessIcon createBusyIcon() {
     return new LastRowLoadingIcon();
@@ -50,7 +49,7 @@ public class TableWithProgress extends JBTable {
   }
 
   @Override
-  protected void paintComponent(@Nonnull Graphics g) {
+  protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (isBusy()) {
       int preferredHeight = super.getPreferredSize().height;
@@ -58,7 +57,7 @@ public class TableWithProgress extends JBTable {
     }
   }
 
-  protected void paintFooter(@Nonnull Graphics g, int x, int y, int width, int height) {
+  protected void paintFooter(Graphics g, int x, int y, int width, int height) {
     g.setColor(getBackground());
     g.fillRect(x, y, width, height);
   }
@@ -70,9 +69,9 @@ public class TableWithProgress extends JBTable {
             VcsLogIcons.Process.Dots_1);
     }
 
-    @Nonnull
+    
     @Override
-    protected Rectangle calculateBounds(@Nonnull JComponent container) {
+    protected Rectangle calculateBounds(JComponent container) {
       Dimension iconSize = getPreferredSize();
       return new Rectangle((container.getWidth() - iconSize.width) / 2, container.getPreferredSize().height - iconSize.height, iconSize.width,
                            iconSize.height);

@@ -30,8 +30,7 @@ import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "templateEscape", order = "before hide-hints")
 public class EscapeHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -39,7 +38,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
 
     @Override
     @RequiredUIAccess
-    public void execute(@Nonnull Editor editor, DataContext dataContext) {
+    public void execute(Editor editor, DataContext dataContext) {
         TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
         if (templateState != null && !templateState.isFinished()) {
             SelectionModel selectionModel = editor.getSelectionModel();
@@ -73,7 +72,7 @@ public class EscapeHandler extends EditorActionHandler implements ExtensionEdito
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ESCAPE;

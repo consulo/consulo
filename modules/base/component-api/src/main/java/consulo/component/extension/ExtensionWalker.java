@@ -15,7 +15,6 @@
  */
 package consulo.component.extension;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -26,11 +25,11 @@ import java.util.function.Function;
  * @since 2023-04-20
  */
 public interface ExtensionWalker<E> {
-    void walk(@Nonnull Consumer<E> consumer);
+    void walk(Consumer<E> consumer);
 
     /**
      * @see ExtensionPoint#sort(List)
      */
-    @Nonnull
+    
     Function<List<E>, List<E>> sorter();
 }

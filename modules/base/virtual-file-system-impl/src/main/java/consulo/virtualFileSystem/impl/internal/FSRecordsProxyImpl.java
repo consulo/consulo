@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.internal.FSRecordsProxy;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.io.DataInputStream;
@@ -37,15 +36,15 @@ public class FSRecordsProxyImpl implements FSRecordsProxy {
         FSRecords.handleError(e);
     }
 
-    @Nonnull
+    
     @Override
-    public DataOutputStream writeAttribute(int fileId, @Nonnull FileAttribute att) {
+    public DataOutputStream writeAttribute(int fileId, FileAttribute att) {
         return FSRecords.writeAttribute(fileId, att);
     }
 
     @Nullable
     @Override
-    public DataInputStream readAttributeWithLock(int fileId, @Nonnull FileAttribute att) {
+    public DataInputStream readAttributeWithLock(int fileId, FileAttribute att) {
         return FSRecords.readAttributeWithLock(fileId, att);
     }
 }

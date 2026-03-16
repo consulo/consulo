@@ -19,14 +19,13 @@ package consulo.language.editor.hint;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class DeclarationRangeUtil {
   private DeclarationRangeUtil() {
   }
 
-  @Nonnull
+  
   public static TextRange getDeclarationRange(PsiElement container) {
     TextRange textRange = getPossibleDeclarationAtRange(container);
     assert textRange != null : "Declaration range is invalid for " + container.getClass();

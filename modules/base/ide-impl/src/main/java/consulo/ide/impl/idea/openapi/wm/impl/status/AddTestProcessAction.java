@@ -31,7 +31,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,7 +88,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
         final Project project = e.getData(Project.KEY);
         new Task.Backgroundable(project, "Test Process", true, PerformInBackgroundOption.DEAF) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     indicator.setText("welcome!");
 
@@ -140,7 +139,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
     private void createAnotherProgress(final Project project) {
         Task.Modal task = new Task.Modal(project, "Test2", true/*, PerformInBackgroundOption.DEAF*/) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     countTo(1000, each -> {
                         indicator.setText("Found: " + each / 20 + 1);

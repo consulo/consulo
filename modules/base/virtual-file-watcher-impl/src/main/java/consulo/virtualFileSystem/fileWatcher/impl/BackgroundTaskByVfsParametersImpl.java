@@ -20,8 +20,7 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,11 +75,11 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   }
 
   @Override
-  public void setEnvs(@Nonnull Map<String, String> envs) {
+  public void setEnvs(Map<String, String> envs) {
     myEnvs = envs;
   }
 
-  @Nonnull
+  
   @Override
   public Map<String, String> getEnvs() {
     return myEnvs;
@@ -97,11 +96,11 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   }
 
   @Override
-  public void setExePath(@Nonnull String path) {
+  public void setExePath(String path) {
     myExePath = path;
   }
 
-  @Nonnull
+  
   @Override
   public String getExePath() {
     return myExePath;
@@ -119,7 +118,7 @@ public class BackgroundTaskByVfsParametersImpl implements BackgroundTaskByVfsPar
   }
 
   @Override
-  public void set(@Nonnull BackgroundTaskByVfsParameters parameters) {
+  public void set(BackgroundTaskByVfsParameters parameters) {
     setEnvs(parameters.getEnvs());
     setExePath(parameters.getExePath());
     setOutPath(parameters.getOutPath());

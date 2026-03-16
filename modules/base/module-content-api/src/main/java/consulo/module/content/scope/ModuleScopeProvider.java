@@ -21,15 +21,14 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.module.Module;
 
 import consulo.module.content.internal.ModuleScopeProviderInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dmitrylomov
  */
 @ServiceAPI(ComponentScope.MODULE)
 public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal {
-  @Nonnull
-  static ModuleScopeProvider getInstance(@Nonnull Module module) {
+  
+  static ModuleScopeProvider getInstance(Module module) {
     return module.getInstance(ModuleScopeProvider.class);
   }
 
@@ -38,10 +37,10 @@ public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal 
    *
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleScope();
 
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleScope(boolean includeTests);
 
   /**
@@ -49,7 +48,7 @@ public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal 
    *
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleWithLibrariesScope();
 
   /**
@@ -57,24 +56,24 @@ public sealed interface ModuleScopeProvider permits ModuleScopeProviderInternal 
    *
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleWithDependenciesScope();
 
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleContentScope();
 
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleContentWithDependenciesScope();
 
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleWithDependenciesAndLibrariesScope(boolean includeTests);
 
-  @Nonnull
+  
   ModuleAwareSearchScope getModuleWithDependentsScope();
 
-  @Nonnull
+  
   ModuleAwareSearchScope getModuleTestsWithDependentsScope();
 
-  @Nonnull
+  
   ModuleWithDependenciesScope getModuleRuntimeScope(boolean includeTests);
 }

@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 
@@ -37,7 +36,7 @@ public abstract class LanguageFileType implements FileType {
      *
      * @param language The language used in the files of the type.
      */
-    protected LanguageFileType(@Nonnull Language language) {
+    protected LanguageFileType(Language language) {
         this(language, false);
     }
 
@@ -48,7 +47,7 @@ public abstract class LanguageFileType implements FileType {
      * @param secondary If true, this language file type will never be returned as the associated file type for the language.
      *                  (Used when a file type is reusing the language of another file type, e.g. XML).
      */
-    protected LanguageFileType(@Nonnull Language language, boolean secondary) {
+    protected LanguageFileType(Language language, boolean secondary) {
         // passing Language instead of lazy resolve on getLanguage call (like LazyRunConfigurationProducer), is ok because:
         // 1. Usage of FileType nearly always requires Language
         // 2. FileType is created only on demand (if deprecated FileTypeFactory is not used).
@@ -62,12 +61,12 @@ public abstract class LanguageFileType implements FileType {
      * @return The language instance.
      */
 
-    @Nonnull
+    
     public final Language getLanguage() {
         return myLanguage;
     }
 
-    public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, @Nonnull CharSequence content) {
+    public Charset extractCharsetFromFileContent(@Nullable Project project, @Nullable VirtualFile file, CharSequence content) {
         return null;
     }
 
@@ -79,7 +78,7 @@ public abstract class LanguageFileType implements FileType {
         return mySecondary;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return myLanguage.getDisplayName();

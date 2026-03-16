@@ -15,7 +15,6 @@
  */
 package consulo.externalService.impl.internal;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Locale;
 
@@ -39,17 +38,17 @@ public enum WebServiceApi {
   private String myDefaultUrl;
   private String myOverrideProperty;
 
-  WebServiceApi(@Nonnull String defaultUrl) {
+  WebServiceApi(String defaultUrl) {
     myDefaultUrl = defaultUrl;
     myOverrideProperty = "consulo." + name().toLowerCase(Locale.US).replace("_", ".");
   }
 
-  @Nonnull
-  public String buildUrl(@Nonnull String urlPart) {
+  
+  public String buildUrl(String urlPart) {
     return buildUrl() + urlPart;
   }
 
-  @Nonnull
+  
   public String buildUrl() {
     return System.getProperty(myOverrideProperty, myDefaultUrl);
   }

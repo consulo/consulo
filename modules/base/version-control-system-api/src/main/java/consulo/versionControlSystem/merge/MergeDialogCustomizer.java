@@ -20,8 +20,7 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -93,7 +92,7 @@ public class MergeDialogCustomizer {
    * displayed for a single file.
    */
   public
-  @Nonnull
+  
   String getMultipleFileDialogTitle() {
     return VcsBundle.message("multiple.file.merge.title");
   }

@@ -25,43 +25,42 @@ import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AnnotateRevisionActionBase extends AnAction {
-    public AnnotateRevisionActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public AnnotateRevisionActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Nullable
-    protected abstract AbstractVcs getVcs(@Nonnull AnActionEvent e);
+    protected abstract AbstractVcs getVcs(AnActionEvent e);
 
     @Nullable
-    protected abstract VirtualFile getFile(@Nonnull AnActionEvent e);
+    protected abstract VirtualFile getFile(AnActionEvent e);
 
     @Nullable
-    protected abstract VcsFileRevision getFileRevision(@Nonnull AnActionEvent e);
+    protected abstract VcsFileRevision getFileRevision(AnActionEvent e);
 
     @Nullable
-    protected Editor getEditor(@Nonnull AnActionEvent e) {
+    protected Editor getEditor(AnActionEvent e) {
         return null;
     }
 
-    protected int getAnnotatedLine(@Nonnull AnActionEvent e) {
+    protected int getAnnotatedLine(AnActionEvent e) {
         Editor editor = getEditor(e);
         return editor == null ? 0 : editor.getCaretModel().getLogicalPosition().line;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled(e));
     }
 
-    public boolean isEnabled(@Nonnull AnActionEvent e) {
+    public boolean isEnabled(AnActionEvent e) {
         if (!e.hasData(Project.KEY)) {
             return false;
         }
@@ -91,7 +90,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         final VcsFileRevision fileRevision = getFileRevision(e);
         final VirtualFile file = getFile(e);
         final AbstractVcs vcs = getVcs(e);
@@ -117,7 +116,7 @@ public abstract class AnnotateRevisionActionBase extends AnAction {
 
         ProgressManager.getInstance().run(new Task.Backgroundable(vcs.getProject(), VcsLocalize.retrievingAnnotations().get(), true) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     FileAnnotation fileAnnotation = annotationProvider.annotate(file, fileRevision);
 

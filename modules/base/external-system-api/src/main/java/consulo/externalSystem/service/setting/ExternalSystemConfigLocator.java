@@ -6,8 +6,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.setting.ExternalProjectSettings;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public interface ExternalSystemConfigLocator {
     ExtensionPointName<ExternalSystemConfigLocator> EP_NAME = ExtensionPointName.create(ExternalSystemConfigLocator.class);
 
-    @Nonnull
+    
     ProjectSystemId getTargetExternalSystemId();
 
     /**
@@ -32,7 +31,7 @@ public interface ExternalSystemConfigLocator {
      * @return config file to use (if any)
      */
     @Nullable
-    VirtualFile adjust(@Nonnull VirtualFile configPath);
+    VirtualFile adjust(VirtualFile configPath);
 
     /**
      * Returns all configuration files used by external system to build the project.
@@ -40,6 +39,6 @@ public interface ExternalSystemConfigLocator {
      * @param externalProjectSettings external system project settings
      * @return external system project config files
      */
-    @Nonnull
-    List<VirtualFile> findAll(@Nonnull ExternalProjectSettings externalProjectSettings);
+    
+    List<VirtualFile> findAll(ExternalProjectSettings externalProjectSettings);
 }

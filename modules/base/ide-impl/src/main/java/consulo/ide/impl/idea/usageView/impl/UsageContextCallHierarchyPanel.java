@@ -32,8 +32,7 @@ import consulo.usage.UsageInfo;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewPresentation;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +41,7 @@ import java.util.List;
 public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
     private HierarchyBrowser myBrowser;
 
-    public UsageContextCallHierarchyPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
+    public UsageContextCallHierarchyPanel(Project project, UsageViewPresentation presentation) {
         super(project, presentation);
     }
 
@@ -87,7 +86,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
 
     @Nullable
     @RequiredReadAction
-    private static HierarchyBrowser createCallHierarchyPanel(@Nonnull PsiElement element) {
+    private static HierarchyBrowser createCallHierarchyPanel(PsiElement element) {
         DataContext context =
             SimpleDataContext.getSimpleContext(PsiElement.KEY, element, SimpleDataContext.getProjectContext(element.getProject()));
         CallHierarchyProvider provider = BrowseHierarchyActionBase.findBestHierarchyProvider(CallHierarchyProvider.class, element, context);
@@ -108,7 +107,7 @@ public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
     }
 
     @RequiredReadAction
-    private static PsiElement getElementToSliceOn(@Nonnull List<? extends UsageInfo> infos) {
+    private static PsiElement getElementToSliceOn(List<? extends UsageInfo> infos) {
         UsageInfo info = infos.get(0);
         return info.getElement();
     }

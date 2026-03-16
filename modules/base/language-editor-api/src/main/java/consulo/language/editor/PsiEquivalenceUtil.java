@@ -23,8 +23,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,12 +36,12 @@ import java.util.function.Predicate;
 public class PsiEquivalenceUtil {
   private static final Logger LOG = Logger.getInstance(PsiEquivalenceUtil.class);
 
-  public static boolean areElementsEquivalent(@Nonnull PsiElement element1, @Nonnull PsiElement element2, @Nullable Comparator<PsiElement> resolvedElementsComparator, boolean areCommentsSignificant) {
+  public static boolean areElementsEquivalent(PsiElement element1, PsiElement element2, @Nullable Comparator<PsiElement> resolvedElementsComparator, boolean areCommentsSignificant) {
     return areElementsEquivalent(element1, element2, resolvedElementsComparator, null, null, areCommentsSignificant);
   }
 
-  public static boolean areElementsEquivalent(@Nonnull PsiElement element1,
-                                              @Nonnull PsiElement element2,
+  public static boolean areElementsEquivalent(PsiElement element1,
+                                              PsiElement element2,
                                               @Nullable Comparator<PsiElement> resolvedElementsComparator,
                                               @Nullable Comparator<PsiElement> leafElementsComparator,
                                               @Nullable Predicate<PsiElement> isElementSignificantCondition,
@@ -84,11 +83,11 @@ public class PsiEquivalenceUtil {
 
   }
 
-  public static boolean areElementsEquivalent(@Nonnull PsiElement element1, @Nonnull PsiElement element2) {
+  public static boolean areElementsEquivalent(PsiElement element1, PsiElement element2) {
     return areElementsEquivalent(element1, element2, null, false);
   }
 
-  public static PsiElement[] getFilteredChildren(@Nonnull PsiElement element, @Nullable Predicate<PsiElement> isElementSignificantCondition, boolean areCommentsSignificant) {
+  public static PsiElement[] getFilteredChildren(PsiElement element, @Nullable Predicate<PsiElement> isElementSignificantCondition, boolean areCommentsSignificant) {
     ASTNode[] children1 = element.getNode().getChildren(null);
     ArrayList<PsiElement> array = new ArrayList<>();
     for (ASTNode node : children1) {

@@ -17,7 +17,6 @@ package consulo.document.util;
 
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
-import jakarta.annotation.Nonnull;
 
 /**
  * Is intended to hold utility methods to use during {@link Document} processing.
@@ -34,7 +33,7 @@ public final class DocumentUtil {
      *                      {@code false} to force given document to be <b>not</b> in bulk mode when given task is executed
      * @param task          task to execute
      */
-    public static void executeInBulk(@Nonnull Document document, boolean executeInBulk, @Nonnull Runnable task) {
+    public static void executeInBulk(Document document, boolean executeInBulk, Runnable task) {
         if (!(document instanceof DocumentEx)) {
             task.run();
             return;
@@ -55,13 +54,13 @@ public final class DocumentUtil {
         }
     }
 
-    public static int getFirstNonSpaceCharOffset(@Nonnull Document document, int line) {
+    public static int getFirstNonSpaceCharOffset(Document document, int line) {
         int startOffset = document.getLineStartOffset(line);
         int endOffset = document.getLineEndOffset(line);
         return getFirstNonSpaceCharOffset(document, startOffset, endOffset);
     }
 
-    public static int getFirstNonSpaceCharOffset(@Nonnull Document document, int startOffset, int endOffset) {
+    public static int getFirstNonSpaceCharOffset(Document document, int startOffset, int endOffset) {
         CharSequence text = document.getImmutableCharSequence();
         for (int i = startOffset; i < endOffset; i++) {
             char c = text.charAt(i);
@@ -72,11 +71,11 @@ public final class DocumentUtil {
         return startOffset;
     }
 
-    public static boolean isValidOffset(int offset, @Nonnull Document document) {
+    public static boolean isValidOffset(int offset, Document document) {
         return offset >= 0 && offset <= document.getTextLength();
     }
 
-    public static int getLineStartOffset(int offset, @Nonnull Document document) {
+    public static int getLineStartOffset(int offset, Document document) {
         if (offset < 0 || offset > document.getTextLength()) {
             return offset;
         }
@@ -84,7 +83,7 @@ public final class DocumentUtil {
         return document.getLineStartOffset(lineNumber);
     }
 
-    public static int getLineEndOffset(int offset, @Nonnull Document document) {
+    public static int getLineEndOffset(int offset, Document document) {
         if (offset < 0 || offset > document.getTextLength()) {
             return offset;
         }
@@ -92,24 +91,24 @@ public final class DocumentUtil {
         return document.getLineEndOffset(lineNumber);
     }
 
-    @Nonnull
-    public static TextRange getLineTextRange(@Nonnull Document document, int line) {
+    
+    public static TextRange getLineTextRange(Document document, int line) {
         return TextRange.create(document.getLineStartOffset(line), document.getLineEndOffset(line));
     }
 
-    public static boolean isAtLineStart(int offset, @Nonnull Document document) {
+    public static boolean isAtLineStart(int offset, Document document) {
         return offset >= 0 && offset <= document.getTextLength() && offset == document.getLineStartOffset(document.getLineNumber(offset));
     }
 
-    public static boolean isAtLineEnd(int offset, @Nonnull Document document) {
+    public static boolean isAtLineEnd(int offset, Document document) {
         return offset >= 0 && offset <= document.getTextLength() && offset == document.getLineEndOffset(document.getLineNumber(offset));
     }
 
-    public static int alignToCodePointBoundary(@Nonnull Document document, int offset) {
+    public static int alignToCodePointBoundary(Document document, int offset) {
         return isInsideSurrogatePair(document, offset) ? offset - 1 : offset;
     }
 
-    public static boolean isSurrogatePair(@Nonnull Document document, int offset) {
+    public static boolean isSurrogatePair(Document document, int offset) {
         CharSequence text = document.getImmutableCharSequence();
         if (offset < 0 || (offset + 1) >= text.length()) {
             return false;
@@ -117,19 +116,19 @@ public final class DocumentUtil {
         return Character.isSurrogatePair(text.charAt(offset), text.charAt(offset + 1));
     }
 
-    public static boolean isInsideSurrogatePair(@Nonnull Document document, int offset) {
+    public static boolean isInsideSurrogatePair(Document document, int offset) {
         return isSurrogatePair(document, offset - 1);
     }
 
-    public static int getPreviousCodePointOffset(@Nonnull Document document, int offset) {
+    public static int getPreviousCodePointOffset(Document document, int offset) {
         return offset - (isSurrogatePair(document, offset - 2) ? 2 : 1);
     }
 
-    public static int getNextCodePointOffset(@Nonnull Document document, int offset) {
+    public static int getNextCodePointOffset(Document document, int offset) {
         return offset + (isSurrogatePair(document, offset) ? 2 : 1);
     }
 
-    public static boolean isLineEmpty(@Nonnull Document document, int line) {
+    public static boolean isLineEmpty(Document document, int line) {
         CharSequence chars = document.getCharsSequence();
         int start = document.getLineStartOffset(line);
         int end = Math.min(document.getLineEndOffset(line), document.getTextLength() - 1);
@@ -141,7 +140,7 @@ public final class DocumentUtil {
         return true;
     }
 
-    public static boolean isValidLine(int line, @Nonnull Document document) {
+    public static boolean isValidLine(int line, Document document) {
         if (line < 0) {
             return false;
         }
@@ -155,12 +154,12 @@ public final class DocumentUtil {
      *
      * @see #getFirstNonSpaceCharOffset(Document, int)
      */
-    public static int getLineStartIndentedOffset(@Nonnull Document document, int line) {
+    public static int getLineStartIndentedOffset(Document document, int line) {
         int lineStartOffset = document.getLineStartOffset(line);
         return lineStartOffset + getIndentLengthAtLineStart(document, lineStartOffset);
     }
 
-    private static int getIndentLengthAtLineStart(@Nonnull Document document, int lineOffset) {
+    private static int getIndentLengthAtLineStart(Document document, int lineOffset) {
         CharSequence content = document.getImmutableCharSequence();
         int result = 0;
         while (lineOffset + result < content.length()) {
@@ -178,12 +177,12 @@ public final class DocumentUtil {
      *
      * @return Whitespaces at the beginning of the line
      */
-    public static CharSequence getIndent(@Nonnull Document document, int offset) {
+    public static CharSequence getIndent(Document document, int offset) {
         int lineOffset = getLineStartOffset(offset, document);
         return document.getCharsSequence().subSequence(lineOffset, lineOffset + getIndentLengthAtLineStart(document, lineOffset));
     }
 
-    public static int calculateOffset(@Nonnull Document document, int line, int column, int tabSize) {
+    public static int calculateOffset(Document document, int line, int column, int tabSize) {
         int offset;
         if (0 <= line && line < document.getLineCount()) {
             int lineStart = document.getLineStartOffset(line);
@@ -206,7 +205,7 @@ public final class DocumentUtil {
     /**
      * Tells whether given offset lies between surrogate pair characters or between characters of Windows-style line break (\r\n).
      */
-    public static boolean isInsideCharacterPair(@Nonnull Document document, int offset) {
+    public static boolean isInsideCharacterPair(Document document, int offset) {
         if (offset <= 0 || offset >= document.getTextLength()) return false;
         CharSequence text = document.getImmutableCharSequence();
         char prev = text.charAt(offset - 1);

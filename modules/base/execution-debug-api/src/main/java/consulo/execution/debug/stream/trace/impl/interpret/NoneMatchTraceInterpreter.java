@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.trace.impl.interpret;
 
 import consulo.execution.debug.stream.trace.TraceElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -13,12 +12,12 @@ import java.util.Collection;
  */
 public class NoneMatchTraceInterpreter extends MatchInterpreterBase {
   @Override
-  protected boolean getResult(@Nonnull Collection<TraceElement> traceBeforeFilter, @Nonnull Collection<TraceElement> traceAfterFilter) {
+  protected boolean getResult(Collection<TraceElement> traceBeforeFilter, Collection<TraceElement> traceAfterFilter) {
     return traceAfterFilter.isEmpty();
   }
 
   @Override
-  protected @Nonnull Action getAction(boolean result) {
+  protected Action getAction(boolean result) {
     if (result) {
       return Action.CONNECT_DIFFERENCE;
     }

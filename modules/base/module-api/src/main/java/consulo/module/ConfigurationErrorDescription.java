@@ -18,18 +18,17 @@ package consulo.module;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class ConfigurationErrorDescription {
     private final String myElementName;
-    @Nonnull
+    
     private final LocalizeValue myDescription;
     private final ConfigurationErrorType myErrorType;
 
-    protected ConfigurationErrorDescription(String elementName, @Nonnull LocalizeValue description, ConfigurationErrorType errorType) {
+    protected ConfigurationErrorDescription(String elementName, LocalizeValue description, ConfigurationErrorType errorType) {
         myElementName = elementName;
         myErrorType = errorType;
         myDescription = description;
@@ -49,7 +48,7 @@ public abstract class ConfigurationErrorDescription {
         return myErrorType;
     }
 
-    @Nonnull
+    
     public LocalizeValue getDescription() {
         return myDescription;
     }
@@ -57,7 +56,7 @@ public abstract class ConfigurationErrorDescription {
     @RequiredUIAccess
     public abstract void ignoreInvalidElement();
 
-    @Nonnull
+    
     public abstract LocalizeValue getIgnoreConfirmationMessage();
 
     public boolean isValid() {

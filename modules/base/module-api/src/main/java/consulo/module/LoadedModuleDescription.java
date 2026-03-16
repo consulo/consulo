@@ -15,12 +15,11 @@
  */
 package consulo.module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface LoadedModuleDescription extends ModuleDescription {
-  @Nonnull
+  
   Module getModule();
 }

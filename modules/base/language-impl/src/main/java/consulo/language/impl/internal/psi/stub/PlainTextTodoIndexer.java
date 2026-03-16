@@ -20,11 +20,10 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.stub.todo.PlainTextTodoIndexerBase;
 import consulo.language.psi.stub.todo.VersionedTodoIndexer;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PlainTextTodoIndexer extends PlainTextTodoIndexerBase implements VersionedTodoIndexer {
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return PlainTextFileType.INSTANCE;

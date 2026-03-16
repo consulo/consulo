@@ -24,7 +24,6 @@ import consulo.fileEditor.FileEditorProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,20 +32,20 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class ConfigurationFileEditorProviderImpl implements FileEditorProvider, DumbAware {
     @Override
-    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public boolean accept(Project project, VirtualFile file) {
         return file instanceof ConfigurationEditorFileImpl;
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public FileEditor createEditor(Project project, VirtualFile file) {
         ConfigurationEditorFileImpl configurationEditorFile = (ConfigurationEditorFileImpl) file;
         ConfigurationFileEditorProvider provider = configurationEditorFile.getProvider();
         return provider.createEditor(project, file);
     }
 
-    @Nonnull
+    
     @Override
     public String getEditorTypeId() {
         return "CONFIGURATION_EDITOR";

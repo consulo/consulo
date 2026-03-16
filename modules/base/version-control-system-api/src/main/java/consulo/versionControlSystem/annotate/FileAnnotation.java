@@ -27,8 +27,7 @@ import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -41,17 +40,17 @@ import java.util.function.Consumer;
 public abstract class FileAnnotation {
     private static final Logger LOG = Logger.getInstance(FileAnnotation.class);
 
-    @Nonnull
+    
     private final Project myProject;
 
     private Runnable myCloser;
     private Consumer<FileAnnotation> myReloader;
 
-    protected FileAnnotation(@Nonnull Project project) {
+    protected FileAnnotation(Project project) {
         myProject = project;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -95,7 +94,7 @@ public abstract class FileAnnotation {
      * @param number current revision number {@link DiffProvider#getCurrentRevision}
      * @return whether annotations should be updated
      */
-    public boolean isBaseRevisionChanged(@Nonnull VcsRevisionNumber number) {
+    public boolean isBaseRevisionChanged(VcsRevisionNumber number) {
         VcsRevisionNumber currentRevision = getCurrentRevision();
         return currentRevision != null && !currentRevision.equals(number);
     }
@@ -111,7 +110,7 @@ public abstract class FileAnnotation {
      * The typical aspects are revision number, date, author.
      * The aspects are displayed each in own column in the returned order.
      */
-    @Nonnull
+    
     public abstract LineAnnotationAspect[] getAspects();
 
     /**
@@ -124,7 +123,7 @@ public abstract class FileAnnotation {
      * Typically, this is a detailed info about related revision. ex: long revision number, commit message
      */
     //TODO: rename into getToolTip() after deprecation deletion
-    @Nonnull
+    
     public LocalizeValue getToolTipValue(int lineNumber) {
         return LocalizeValue.ofNullable(getToolTip(lineNumber));
     }
@@ -198,7 +197,7 @@ public abstract class FileAnnotation {
      *
      * @param newFileAnnotation annotations to be shown
      */
-    public final void reload(@Nonnull FileAnnotation newFileAnnotation) {
+    public final void reload(FileAnnotation newFileAnnotation) {
         if (myReloader != null) {
             myReloader.accept(newFileAnnotation);
         }
@@ -207,7 +206,7 @@ public abstract class FileAnnotation {
     /**
      * @see #close()
      */
-    public final void setCloser(@Nonnull Runnable closer) {
+    public final void setCloser(Runnable closer) {
         myCloser = closer;
     }
 
@@ -258,22 +257,22 @@ public abstract class FileAnnotation {
     }
 
     public interface AuthorsMappingProvider {
-        @Nonnull
+        
         Map<VcsRevisionNumber, String> getAuthors();
     }
 
     public interface RevisionsOrderProvider {
-        @Nonnull
+        
         List<List<VcsRevisionNumber>> getOrderedRevisions();
     }
 
-    @Nonnull
-    public static String formatDate(@Nonnull Date date) {
+    
+    public static String formatDate(Date date) {
         return JBDateFormat.getFormatter().formatPrettyDate(date);
     }
 
     @Nullable
-    private static CurrentFileRevisionProvider createDefaultCurrentFileRevisionProvider(@Nonnull FileAnnotation annotation) {
+    private static CurrentFileRevisionProvider createDefaultCurrentFileRevisionProvider(FileAnnotation annotation) {
         List<VcsFileRevision> revisions = annotation.getRevisions();
         if (revisions == null) {
             return null;
@@ -296,7 +295,7 @@ public abstract class FileAnnotation {
     }
 
     @Nullable
-    private static PreviousFileRevisionProvider createDefaultPreviousFileRevisionProvider(@Nonnull FileAnnotation annotation) {
+    private static PreviousFileRevisionProvider createDefaultPreviousFileRevisionProvider(FileAnnotation annotation) {
         List<VcsFileRevision> revisions = annotation.getRevisions();
         if (revisions == null) {
             return null;
@@ -333,7 +332,7 @@ public abstract class FileAnnotation {
     }
 
     @Nullable
-    private static AuthorsMappingProvider createDefaultAuthorsMappingProvider(@Nonnull FileAnnotation annotation) {
+    private static AuthorsMappingProvider createDefaultAuthorsMappingProvider(FileAnnotation annotation) {
         List<VcsFileRevision> revisions = annotation.getRevisions();
         if (revisions == null) {
             return null;
@@ -351,7 +350,7 @@ public abstract class FileAnnotation {
     }
 
     @Nullable
-    private static RevisionsOrderProvider createDefaultRevisionsOrderProvider(@Nonnull FileAnnotation annotation) {
+    private static RevisionsOrderProvider createDefaultRevisionsOrderProvider(FileAnnotation annotation) {
         List<VcsFileRevision> revisions = annotation.getRevisions();
         if (revisions == null) {
             return null;

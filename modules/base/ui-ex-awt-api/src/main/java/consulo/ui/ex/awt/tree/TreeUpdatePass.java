@@ -16,8 +16,6 @@
 package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.tree.NodeDescriptor;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.HashSet;
@@ -37,7 +35,7 @@ public class TreeUpdatePass {
   private boolean myUpdateStructure = true;
   private final Set<NodeDescriptor> myUpdatedDescriptors = new HashSet<NodeDescriptor>();
 
-  public TreeUpdatePass(@Nonnull DefaultMutableTreeNode node) {
+  public TreeUpdatePass(DefaultMutableTreeNode node) {
     myNode = node;
     myAllocation = System.currentTimeMillis();
   }
@@ -51,7 +49,7 @@ public class TreeUpdatePass {
     return myUpdateChildren;
   }
 
-  @Nonnull
+  
   public DefaultMutableTreeNode getNode() {
     return myNode;
   }
@@ -81,14 +79,14 @@ public class TreeUpdatePass {
     myCurrentNode = currentNode;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "TreUpdatePass node=" + myNode + " structure=" + myUpdateStructure + " stamp=" + myUpdateStamp + " expired=" + myExpired + " currentNode=" + myCurrentNode + " allocation=" + myAllocation;
   }
 
-  public boolean willUpdate(@Nonnull DefaultMutableTreeNode node) {
-    @Nonnull DefaultMutableTreeNode currentNode = myCurrentNode != null ? myCurrentNode : myNode;
+  public boolean willUpdate(DefaultMutableTreeNode node) {
+    DefaultMutableTreeNode currentNode = myCurrentNode != null ? myCurrentNode : myNode;
     return node.isNodeAncestor(currentNode);
   }
 

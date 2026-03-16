@@ -21,15 +21,14 @@ import consulo.versionControlSystem.log.graph.TimestampGetter;
 import consulo.versionControlSystem.log.impl.internal.graph.GraphLayoutImpl;
 import consulo.versionControlSystem.log.impl.internal.util.CompressedIntList;
 import consulo.versionControlSystem.log.impl.internal.util.IntList;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class BekSorter {
-  @Nonnull
-  public static BekIntMap createBekMap(@Nonnull LinearGraph permanentGraph,
-                                       @Nonnull GraphLayoutImpl graphLayout,
-                                       @Nonnull TimestampGetter timestampGetter) {
+  
+  public static BekIntMap createBekMap(LinearGraph permanentGraph,
+                                       GraphLayoutImpl graphLayout,
+                                       TimestampGetter timestampGetter) {
     BekSorter bekSorter = new BekSorter(permanentGraph, graphLayout, timestampGetter);
 
     List<Integer> result = bekSorter.getResult();
@@ -75,16 +74,16 @@ public class BekSorter {
     };
   }
 
-  @Nonnull
+  
   private final LinearGraph myPermanentGraph;
 
-  @Nonnull
+  
   private final GraphLayoutImpl myGraphLayout;
 
-  @Nonnull
+  
   private final TimestampGetter myTimestampGetter;
 
-  private BekSorter(@Nonnull LinearGraph permanentGraph, @Nonnull GraphLayoutImpl graphLayout, @Nonnull TimestampGetter timestampGetter) {
+  private BekSorter(LinearGraph permanentGraph, GraphLayoutImpl graphLayout, TimestampGetter timestampGetter) {
     myPermanentGraph = permanentGraph;
     myGraphLayout = graphLayout;
     myTimestampGetter = timestampGetter;

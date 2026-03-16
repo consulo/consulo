@@ -33,8 +33,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -48,9 +47,9 @@ import java.util.concurrent.ConcurrentMap;
 @Singleton
 @ServiceImpl
 public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
-  @Nonnull
+  
   @Override
-  public String getUniqueVirtualFilePath(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull SearchScope scope) {
+  public String getUniqueVirtualFilePath(Project project, VirtualFile file, SearchScope scope) {
     return getUniqueVirtualFilePath(project, file, false, scope);
   }
 
@@ -59,7 +58,7 @@ public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
     return getUniqueVirtualFilePath(project, vFile, GlobalSearchScope.projectScope(project));
   }
 
-  @Nonnull
+  
   @Override
   public String getUniqueVirtualFilePathWithinOpenedFileEditors(Project project, VirtualFile vFile) {
     return getUniqueVirtualFilePath(project, vFile, true, GlobalSearchScope.projectScope(project));

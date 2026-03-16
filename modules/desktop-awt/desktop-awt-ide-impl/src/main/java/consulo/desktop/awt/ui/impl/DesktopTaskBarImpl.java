@@ -25,7 +25,6 @@ import consulo.ui.TaskBar;
 import consulo.ui.Window;
 import consulo.ui.impl.DummyTaskBarImpl;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -57,37 +56,37 @@ public class DesktopTaskBarImpl implements TaskBar {
   }
 
   @Override
-  public void requestFocus(@Nonnull Window window) {
+  public void requestFocus(Window window) {
     myDelegate.requestFocus(window);
   }
 
   @Override
-  public boolean setProgress(@Nonnull Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
+  public boolean setProgress(Window window, Object processId, ProgressScheme scheme, double value, boolean isOk) {
     return myDelegate.setProgress(window, processId, scheme, value, isOk);
   }
 
   @Override
-  public boolean hideProgress(@Nonnull Window window, Object processId) {
+  public boolean hideProgress(Window window, Object processId) {
     return myDelegate.hideProgress(window, processId);
   }
 
   @Override
-  public void setTextBadge(@Nonnull Window window, String text) {
+  public void setTextBadge(Window window, String text) {
     myDelegate.setTextBadge(window, text);
   }
 
   @Override
-  public void setErrorBadge(@Nonnull Window window, String text) {
+  public void setErrorBadge(Window window, String text) {
     myDelegate.setErrorBadge(window, text);
   }
 
   @Override
-  public void setOkBadge(@Nonnull Window window, boolean visible) {
+  public void setOkBadge(Window window, boolean visible) {
     myDelegate.setOkBadge(window, visible);
   }
 
   @Override
-  public void requestAttention(@Nonnull Window window, boolean critical) {
+  public void requestAttention(Window window, boolean critical) {
     myDelegate.requestAttention(window, critical);
   }
 }

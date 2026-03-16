@@ -27,7 +27,6 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -42,14 +41,14 @@ public class AnalyzeDependenciesOnSpecifiedTargetAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Module module = e.getRequiredData(LangDataKeys.MODULE_CONTEXT);
         GlobalSearchScope targetScope = e.getRequiredData(TARGET_SCOPE_KEY);
         new AnalyzeDependenciesOnSpecifiedTargetHandler(module.getProject(), new AnalysisScope(module), targetScope).analyze();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Module module = e.getData(LangDataKeys.MODULE_CONTEXT);
         GlobalSearchScope scope = e.getData(TARGET_SCOPE_KEY);
         Presentation presentation = e.getPresentation();

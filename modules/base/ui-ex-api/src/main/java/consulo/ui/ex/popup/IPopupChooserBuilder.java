@@ -4,9 +4,7 @@ package consulo.ui.ex.popup;
 import consulo.application.util.function.Processor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.event.JBPopupListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,18 +19,18 @@ public interface IPopupChooserBuilder<T> {
 
     IPopupChooserBuilder<T> setRenderer(ListCellRenderer renderer);
 
-    @Nonnull
-    IPopupChooserBuilder<T> setItemChosenCallback(@Nonnull Consumer<? super T> callback);
+    
+    IPopupChooserBuilder<T> setItemChosenCallback(Consumer<? super T> callback);
 
-    @Nonnull
-    IPopupChooserBuilder<T> setItemsChosenCallback(@Nonnull Consumer<? super Set<T>> callback);
+    
+    IPopupChooserBuilder<T> setItemsChosenCallback(Consumer<? super Set<T>> callback);
 
     IPopupChooserBuilder<T> setCancelOnClickOutside(boolean cancelOnClickOutside);
 
-    @Nonnull
-    IPopupChooserBuilder<T> setTitle(@Nonnull @Nls(capitalization = Nls.Capitalization.Title) String title);
+    
+    IPopupChooserBuilder<T> setTitle(String title);
 
-    @Nonnull
+    
     IPopupChooserBuilder<T> setCouldPin(@Nullable Processor<? super JBPopup> callback);
 
     IPopupChooserBuilder<T> setRequestFocus(boolean requestFocus);
@@ -57,7 +55,7 @@ public interface IPopupChooserBuilder<T> {
 
     IPopupChooserBuilder<T> setModalContext(boolean modalContext);
 
-    @Nonnull
+    
     JBPopup createPopup();
 
     IPopupChooserBuilder<T> setMinSize(Dimension dimension);
@@ -74,7 +72,7 @@ public interface IPopupChooserBuilder<T> {
 
     IPopupChooserBuilder<T> setCloseOnEnter(boolean closeOnEnter);
 
-    @Nonnull
+    
     IPopupChooserBuilder<T> setAdText(String ad);
 
     IPopupChooserBuilder<T> setAdText(String ad, int alignment);
@@ -95,16 +93,16 @@ public interface IPopupChooserBuilder<T> {
 
     IPopupChooserBuilder<T> setVisibleRowCount(int visibleRowCount);
 
-    @Nonnull
-    IPopupChooserBuilder<T> setHeaderLeftActions(@Nonnull List<? extends AnAction> actions);
+    
+    IPopupChooserBuilder<T> setHeaderLeftActions(List<? extends AnAction> actions);
 
-    @Nonnull
-    IPopupChooserBuilder<T> setHeaderRightActions(@Nonnull List<? extends AnAction> actions);
+    
+    IPopupChooserBuilder<T> setHeaderRightActions(List<? extends AnAction> actions);
 
     ListComponentUpdater<T> getBackgroundUpdater();
 
-    @Nonnull
-    default IPopupChooserBuilder<T> setSouthComponent(@Nonnull JComponent cmp) {
+    
+    default IPopupChooserBuilder<T> setSouthComponent(JComponent cmp) {
         return this;
     }
 }

@@ -36,7 +36,6 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 @Singleton
@@ -168,7 +167,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     XmlSerializerUtil.copyBean(state, this);
   }
 
-  public static VcsConfiguration getInstance(@Nonnull Project project) {
+  public static VcsConfiguration getInstance(Project project) {
     return project.getInstance(VcsConfiguration.class);
   }
 
@@ -191,7 +190,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     }
   }
 
-  @Nonnull
+  
   public ArrayList<String> getRecentMessages() {
     return new ArrayList<>(myLastCommitMessages);
   }
@@ -300,7 +299,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     return CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND;
   }
 
-  public void addIgnoredUnregisteredRoots(@Nonnull Collection<String> roots) {
+  public void addIgnoredUnregisteredRoots(Collection<String> roots) {
     List<String> unregisteredRoots = new ArrayList<>(IGNORED_UNREGISTERED_ROOTS);
     for (String root : roots) {
       if (!unregisteredRoots.contains(root)) {
@@ -310,7 +309,7 @@ public final class VcsConfiguration implements PersistentStateComponent<VcsConfi
     IGNORED_UNREGISTERED_ROOTS = unregisteredRoots;
   }
 
-  public boolean isIgnoredUnregisteredRoot(@Nonnull String root) {
+  public boolean isIgnoredUnregisteredRoot(String root) {
     return IGNORED_UNREGISTERED_ROOTS.contains(root);
   }
 }

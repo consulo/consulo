@@ -24,7 +24,6 @@ import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.psi.SandTokens;
 import consulo.sandboxPlugin.lang.version.BaseSandLanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class SandHighlighter extends LanguageVersionableSyntaxHighlighter {
     return sandLanguageVersion.createLexer();
   }
 
-  @Nonnull
+  
   @Override
   public TextAttributesKey[] getTokenHighlights(LanguageVersion languageVersion, IElementType tokenType) {
     BaseSandLanguageVersion sandLanguageVersion = (BaseSandLanguageVersion) languageVersion;

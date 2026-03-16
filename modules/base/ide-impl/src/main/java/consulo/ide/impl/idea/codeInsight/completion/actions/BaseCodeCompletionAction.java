@@ -12,7 +12,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.InputEvent;
 
@@ -25,7 +24,7 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
         setInjectedContext(true);
     }
 
-    protected BaseCodeCompletionAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BaseCodeCompletionAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
         setEnabledInModalContext(true);
         setInjectedContext(true);
@@ -41,9 +40,9 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
             .invokeCompletion(project, editor, time, inputEvent != null && inputEvent.getModifiers() != 0);
     }
 
-    @Nonnull
+    
     public CodeCompletionHandlerBase createHandler(
-        @Nonnull CompletionType completionType,
+        CompletionType completionType,
         boolean invokedExplicitly,
         boolean autopopup,
         boolean synchronous
@@ -52,7 +51,7 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction implement
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(false);
 
         Editor editor = e.getData(Editor.KEY);

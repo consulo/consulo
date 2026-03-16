@@ -25,6 +25,8 @@
 
 package consulo.util.nodep.classloader;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -46,23 +48,22 @@ import java.util.zip.ZipFile;
  * @since 1.3
  */
 public class JarIndex {
-
   /**
    * The hash map that maintains mappings from
    * package/class/resource to jar file list(s)
    */
-  private final HashMap<String, List<String>> indexMap;
+  private final Map<String, List<String>> indexMap;
 
   /**
    * The hash map that maintains mappings from
    * jar file to package/class/resource lists
    */
-  private final HashMap<String, List<String>> jarMap;
+  private final Map<String, List<String>> jarMap;
 
   /*
    * An ordered list of jar file names.
    */
-  private String[] jarFiles;
+  private String @Nullable [] jarFiles;
 
   /**
    * The index file name.
@@ -111,29 +112,21 @@ public class JarIndex {
    * @param jar the JAR file to get the index from.
    * @throws IOException if an I/O error has occurred.
    */
+  @Nullable
   public static JarIndex getJarIndex(JarFile jar) throws IOException {
-    JarIndex index = null;
     JarEntry e = jar.getJarEntry(INDEX_NAME);
     // if found, then load the index
     if (e != null) {
-      index = new JarIndex(jar.getInputStream(e));
+      return new JarIndex(jar.getInputStream(e));
     }
-    return index;
+    return null;
   }
 
   /**
-   * Returns the jar files that are defined in this index.
-   */
-  public String[] getJarFiles() {
-    return jarFiles;
-  }
-
-  /*
-   * Add the key, value pair to the hashmap, the value will
+   * Add the key/value pair to the map, the value will
    * be put in a list which is created if necessary.
    */
-  private void addToList(String key, String value,
-                         HashMap<String, List<String>> t) {
+  private void addToList(String key, String value, Map<String, List<String>> t) {
     List<String> list = t.get(key);
     if (list == null) {
       list = new ArrayList<>(1);
@@ -150,6 +143,7 @@ public class JarIndex {
    *
    * @param fileName the key of the mapping
    */
+  @Nullable
   public List<String> get(String fileName) {
     List<String> jarFiles;
     if ((jarFiles = indexMap.get(fileName)) == null) {
@@ -167,7 +161,7 @@ public class JarIndex {
    * jar file. If there were no mapping for the package of the
    * specified file before, a new list will be created,
    * the jar file is added to the list and a new mapping from
-   * the package to the jar file list is added to the hashmap.
+   * the package to the jar file list is added to the hash map.
    * Otherwise, the jar file will be added to the end of the
    * existing list.
    *
@@ -204,17 +198,14 @@ public class JarIndex {
    * Go through all the jar files and construct the
    * index table.
    */
-  private void parseJars(String[] files) throws IOException {
+  private void parseJars(String @Nullable [] files) throws IOException {
     if (files == null) {
       return;
     }
 
-    String currentJar = null;
-
-    for (int i = 0; i < files.length; i++) {
-      currentJar = files[i];
-      ZipFile zrf = new ZipFile(currentJar.replace
-        ('/', File.separatorChar));
+    for (String file : files) {
+      String currentJar = file;
+      ZipFile zrf = new ZipFile(currentJar.replace('/', File.separatorChar));
 
       Enumeration<? extends ZipEntry> entries = zrf.entries();
       while (entries.hasMoreElements()) {
@@ -224,10 +215,11 @@ public class JarIndex {
         // Skip the META-INF directory, the index, and manifest.
         // Any files in META-INF/ will be indexed explicitly
         if (fileName.equals("META-INF/") ||
-          fileName.equals(INDEX_NAME) ||
-          fileName.equals(JarFile.MANIFEST_NAME) ||
-          fileName.startsWith("META-INF/versions/"))
+            fileName.equals(INDEX_NAME) ||
+            fileName.equals(JarFile.MANIFEST_NAME) ||
+            fileName.startsWith("META-INF/versions/")) {
           continue;
+        }
 
         if (!metaInfFilenames || !fileName.startsWith("META-INF/")) {
           add(fileName, currentJar);
@@ -257,13 +249,12 @@ public class JarIndex {
     bw.write("JarIndex-Version: 1.0\n\n");
 
     if (jarFiles != null) {
-      for (int i = 0; i < jarFiles.length; i++) {
+      for (String jar : jarFiles) {
         /* print out the jar file name */
-        String jar = jarFiles[i];
         bw.write(jar + "\n");
-        List<String> jarlist = jarMap.get(jar);
-        if (jarlist != null) {
-          for (String s : jarlist) {
+        List<String> jarList = jarMap.get(jar);
+        if (jarList != null) {
+          for (String s : jarList) {
             bw.write(s + "\n");
           }
         }
@@ -273,7 +264,6 @@ public class JarIndex {
     }
   }
 
-
   /**
    * Reads the index from the specified InputStream.
    *
@@ -281,28 +271,34 @@ public class JarIndex {
    * @throws IOException if an I/O error has occurred
    */
   public void read(InputStream is) throws IOException {
-    BufferedReader br = new BufferedReader
-      (new InputStreamReader(is, StandardCharsets.UTF_8));
+    BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
     String line;
-    String currentJar = null;
 
     /* an ordered list of jar file names */
-    ArrayList<String> jars = new ArrayList<>();
+    List<String> jars = new ArrayList<>();
 
     /* read until we see a .jar line */
-    while ((line = br.readLine()) != null && !line.endsWith(".jar")) ;
+    do {
+      line = br.readLine();
+    }
+    while (line != null && !line.endsWith(".jar"));
 
-    for (; line != null; line = br.readLine()) {
-      if (line.isEmpty())
-        continue;
+    if (line != null) {
+      String currentJar = line;
+      jars.add(currentJar);
 
-      if (line.endsWith(".jar")) {
-        currentJar = line;
-        jars.add(currentJar);
-      }
-      else {
-        String name = line;
-        addMapping(name, currentJar);
+      for (; line != null; line = br.readLine()) {
+        if (line.isEmpty())
+          continue;
+
+        if (line.endsWith(".jar")) {
+          currentJar = line;
+          jars.add(currentJar);
+        }
+        else {
+          String name = line;
+          addMapping(name, currentJar);
+        }
       }
     }
 

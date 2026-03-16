@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.status.FileStatusOwner;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -47,7 +46,7 @@ public class NavigationItemFileStatus {
     return FileStatus.NOT_CHANGED;
   }
 
-  @Nonnull
+  
   private static FileStatus getPsiElementFileStatus(PsiElement psiElement) {
     if (!psiElement.isPhysical()) return FileStatus.NOT_CHANGED;
     PsiFile contFile = psiElement.getContainingFile();

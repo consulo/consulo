@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * Please do not use this class outside impl package!!!
@@ -33,7 +32,7 @@ final class ProxyShortcutSet implements ShortcutSet {
     myActionId = actionId;
   }
 
-  @Nonnull
+  
   public Shortcut[] getShortcuts() {
     return KeymapManager.getInstance().getActiveKeymap().getShortcuts(myActionId);
   }

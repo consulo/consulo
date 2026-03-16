@@ -18,21 +18,20 @@ package consulo.language.codeStyle.arrangement.match;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Svetlana.Zemlyanskaya
  */
 public class ByTextArrangementEntryMatcher implements ArrangementEntryMatcher {
-  @Nonnull
+  
   private final String myText;
 
-  public ByTextArrangementEntryMatcher(@Nonnull String text) {
+  public ByTextArrangementEntryMatcher(String text) {
     myText = text;
   }
 
   @Override
-  public boolean isMatched(@Nonnull ArrangementEntry entry) {
+  public boolean isMatched(ArrangementEntry entry) {
     if (entry instanceof TextAwareArrangementEntry) {
       return StringUtil.equals(((TextAwareArrangementEntry)entry).getText(), myText);
     }

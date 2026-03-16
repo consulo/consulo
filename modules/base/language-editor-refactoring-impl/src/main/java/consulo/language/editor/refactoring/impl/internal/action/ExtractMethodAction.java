@@ -22,7 +22,6 @@ import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ExtractMethod")
 public class ExtractMethodAction extends BasePlatformRefactoringAction {
@@ -38,12 +37,12 @@ public class ExtractMethodAction extends BasePlatformRefactoringAction {
 
     @Override
     @RequiredReadAction
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         return false;
     }
 
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return provider.getExtractMethodHandler();
     }
 }

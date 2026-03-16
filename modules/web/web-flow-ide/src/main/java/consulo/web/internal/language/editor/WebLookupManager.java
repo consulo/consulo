@@ -19,8 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
 import consulo.language.editor.completion.lookup.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 
@@ -33,10 +32,10 @@ import kava.beans.PropertyChangeListener;
 public class WebLookupManager extends LookupManager {
   @Nullable
   @Override
-  public LookupEx showLookup(@Nonnull Editor editor,
-                             @Nonnull LookupElement[] items,
-                             @Nonnull String prefix,
-                             @Nonnull LookupArranger arranger) {
+  public LookupEx showLookup(Editor editor,
+                             LookupElement[] items,
+                             String prefix,
+                             LookupArranger arranger) {
     return null;
   }
 
@@ -52,26 +51,26 @@ public class WebLookupManager extends LookupManager {
   }
 
   @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
 
   }
 
   @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable disposable) {
+  public void addPropertyChangeListener(PropertyChangeListener listener, Disposable disposable) {
 
   }
 
   @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
 
   }
 
-  @Nonnull
+  
   @Override
-  public Lookup createLookup(@Nonnull Editor editor,
-                             @Nonnull LookupElement[] items,
-                             @Nonnull String prefix,
-                             @Nonnull LookupArranger arranger) {
+  public Lookup createLookup(Editor editor,
+                             LookupElement[] items,
+                             String prefix,
+                             LookupArranger arranger) {
     throw new UnsupportedOperationException();
   }
 }

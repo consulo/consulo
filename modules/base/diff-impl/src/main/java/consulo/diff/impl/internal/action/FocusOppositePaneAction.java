@@ -20,7 +20,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.util.ActionUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -38,15 +37,15 @@ public class FocusOppositePaneAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         throw new UnsupportedOperationException();
     }
 
-    public void install(@Nonnull JComponent component) {
+    public void install(JComponent component) {
         registerCustomShortcutSet(getShortcutSet(), component);
     }
 
-    @Nonnull
+    
     private String getActionId() {
         return myScrollToPosition ? "Diff.FocusOppositePaneAndScroll" : "Diff.FocusOppositePane";
     }

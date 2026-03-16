@@ -18,11 +18,10 @@ package consulo.process.impl.internal.local;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import jakarta.annotation.Nonnull;
 
 public class RunnerWinProcess extends ProcessWrapper {
 
-  private RunnerWinProcess(@Nonnull Process originalProcess) {
+  private RunnerWinProcess(Process originalProcess) {
     super(originalProcess);
   }
 
@@ -34,8 +33,8 @@ public class RunnerWinProcess extends ProcessWrapper {
     RunnerMediator.destroyProcess(this, softKill);
   }
 
-  @Nonnull
-  public static RunnerWinProcess create(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  
+  public static RunnerWinProcess create(GeneralCommandLine commandLine) throws ExecutionException {
     if (!Platform.current().os().isWindows()) {
       throw new RuntimeException(RunnerWinProcess.class.getSimpleName() + " works on Windows only!");
     }

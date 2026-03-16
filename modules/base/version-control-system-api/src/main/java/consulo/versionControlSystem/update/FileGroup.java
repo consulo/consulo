@@ -31,8 +31,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -96,20 +95,20 @@ public class FileGroup implements JDOMExternalizable {
     return mySupportsDeletion;
   }
 
-  public void addError(@Nonnull String path, @Nonnull String error) {
+  public void addError(String path, String error) {
     myErrorsMap.put(path, error);
   }
 
-  @Nonnull
+  
   public Map<String, String> getErrorsMap() {
     return myErrorsMap;
   }
 
-  public void add(@Nonnull String path, @Nonnull String vcsName, @Nullable VcsRevisionNumber revision) {
+  public void add(String path, String vcsName, @Nullable VcsRevisionNumber revision) {
     myFiles.add(new UpdatedFile(path, vcsName, revision == null ? "" : revision.asString()));
   }
 
-  public void add(@Nonnull String path, @Nonnull VcsKey vcsKey, @Nullable VcsRevisionNumber revision) {
+  public void add(String path, VcsKey vcsKey, @Nullable VcsRevisionNumber revision) {
     myFiles.add(new UpdatedFile(path, vcsKey, revision == null ? "" : revision.asString()));
   }
 
@@ -285,13 +284,13 @@ public class FileGroup implements JDOMExternalizable {
       myPath = path;
     }
 
-    public UpdatedFile(String path, @Nonnull VcsKey vcsKey, String revision) {
+    public UpdatedFile(String path, VcsKey vcsKey, String revision) {
       myPath = path;
       myVcsName = vcsKey.getName();
       myRevision = revision;
     }
 
-    private UpdatedFile(String path, @Nonnull String vcsName, String revision) {
+    private UpdatedFile(String path, String vcsName, String revision) {
       myPath = path;
       myVcsName = vcsName;
       myRevision = revision;

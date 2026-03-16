@@ -4,14 +4,13 @@ package consulo.language.controlFlow.base;
 import consulo.language.controlFlow.ConditionalInstruction;
 import consulo.language.controlFlow.ControlFlowBuilder;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ConditionalInstructionImpl extends InstructionImpl implements ConditionalInstruction {
     private final @Nullable PsiElement myCondition;
     private final boolean myResult;
 
-    public ConditionalInstructionImpl(@Nonnull ControlFlowBuilder builder,
+    public ConditionalInstructionImpl(ControlFlowBuilder builder,
                                       @Nullable PsiElement element,
                                       @Nullable PsiElement condition,
                                       boolean result) {
@@ -32,7 +31,7 @@ public class ConditionalInstructionImpl extends InstructionImpl implements Condi
     }
 
     @Override
-    public @Nonnull String toString() {
+    public String toString() {
         return super.toString() + ". Condition: " + (myCondition != null ? myCondition.getText() : null) + ":" + myResult;
     }
 }

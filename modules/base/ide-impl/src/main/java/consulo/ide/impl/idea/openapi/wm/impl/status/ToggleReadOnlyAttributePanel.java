@@ -21,8 +21,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         myFactory = factory;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myFactory.getId();
@@ -68,7 +67,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         myStatusBar = statusBar;
         Project project = statusBar.getProject();
         if (project == null) {
@@ -77,7 +76,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
 
         project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+            public void selectionChanged(FileEditorManagerEvent event) {
                 if (myStatusBar != null) {
                     myStatusBar.updateWidget(getId());
                 }
@@ -85,7 +84,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
         });
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipText() {
         VirtualFile virtualFile = getCurrentFile();

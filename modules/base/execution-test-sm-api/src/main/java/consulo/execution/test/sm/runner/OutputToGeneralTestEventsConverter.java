@@ -10,8 +10,7 @@ import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jetbrains.buildServer.messages.serviceMessages.*;
 
 import java.text.ParseException;
@@ -38,16 +37,16 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     private Runnable myTestingStartedHandler;
     private boolean myFirstTestingStartedEvent = true;
 
-    public OutputToGeneralTestEventsConverter(@Nonnull String testFrameworkName, @Nonnull TestConsoleProperties consoleProperties) {
+    public OutputToGeneralTestEventsConverter(String testFrameworkName, TestConsoleProperties consoleProperties) {
         this(testFrameworkName, consoleProperties.isEditable());
     }
 
-    public OutputToGeneralTestEventsConverter(@Nonnull String testFrameworkName, boolean stdinEnabled) {
+    public OutputToGeneralTestEventsConverter(String testFrameworkName, boolean stdinEnabled) {
         myTestFrameworkName = testFrameworkName;
         myServiceMessageVisitor = new MyServiceMessageVisitor();
         mySplitter = new OutputLineSplitter(stdinEnabled) {
             @Override
-            protected void onLineAvailable(@Nonnull String text, @Nonnull Key outputType, boolean tcLikeFakeOutput) {
+            protected void onLineAvailable(String text, Key outputType, boolean tcLikeFakeOutput) {
                 processConsistentText(text, outputType, tcLikeFakeOutput);
             }
         };
@@ -147,7 +146,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
     }
 
 
-    private void fireOnTestStarted(@Nonnull TestStartedEvent testStartedEvent) {
+    private void fireOnTestStarted(TestStartedEvent testStartedEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
@@ -155,7 +154,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    private void fireOnTestFailure(@Nonnull TestFailedEvent testFailedEvent) {
+    private void fireOnTestFailure(TestFailedEvent testFailedEvent) {
         assertNotNull(testFailedEvent.getLocalizedFailureMessage());
 
         // local variable is used to prevent concurrent modification
@@ -165,7 +164,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    private void fireOnTestIgnored(@Nonnull TestIgnoredEvent testIgnoredEvent) {
+    private void fireOnTestIgnored(TestIgnoredEvent testIgnoredEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
@@ -173,7 +172,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    private void fireOnTestFinished(@Nonnull TestFinishedEvent testFinishedEvent) {
+    private void fireOnTestFinished(TestFinishedEvent testFinishedEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
@@ -258,7 +257,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    private void fireOnTestOutput(@Nonnull TestOutputEvent testOutputEvent) {
+    private void fireOnTestOutput(TestOutputEvent testOutputEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
@@ -288,7 +287,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    private void fireOnSuiteStarted(@Nonnull TestSuiteStartedEvent suiteStartedEvent) {
+    private void fireOnSuiteStarted(TestSuiteStartedEvent suiteStartedEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
@@ -296,7 +295,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    private void fireOnSuiteFinished(@Nonnull TestSuiteFinishedEvent suiteFinishedEvent) {
+    private void fireOnSuiteFinished(TestSuiteFinishedEvent suiteFinishedEvent) {
         // local variable is used to prevent concurrent modification
         GeneralTestEventsProcessor processor = myProcessor;
         if (processor != null) {
@@ -324,7 +323,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
     }
 
-    public void setTestingStartedHandler(@Nonnull Runnable testingStartedHandler) {
+    public void setTestingStartedHandler(Runnable testingStartedHandler) {
         myTestingStartedHandler = testingStartedHandler;
     }
 
@@ -386,7 +385,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         private static final String ATTR_VAL_TEST_FAILED = "testFailed";
 
         @Override
-        public void visitTestSuiteStarted(@Nonnull TestSuiteStarted suiteStarted) {
+        public void visitTestSuiteStarted(TestSuiteStarted suiteStarted) {
             String locationUrl = fetchTestLocation(suiteStarted);
             TestSuiteStartedEvent suiteStartedEvent = new TestSuiteStartedEvent(suiteStarted, locationUrl);
             fireOnSuiteStarted(suiteStartedEvent);
@@ -413,13 +412,13 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
 
         @Override
-        public void visitTestSuiteFinished(@Nonnull TestSuiteFinished suiteFinished) {
+        public void visitTestSuiteFinished(TestSuiteFinished suiteFinished) {
             TestSuiteFinishedEvent finishedEvent = new TestSuiteFinishedEvent(suiteFinished);
             fireOnSuiteFinished(finishedEvent);
         }
 
         @Override
-        public void visitTestStarted(@Nonnull TestStarted testStarted) {
+        public void visitTestStarted(TestStarted testStarted) {
             // TODO
             // final String locationUrl = testStarted.getLocationHint();
 
@@ -431,7 +430,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
 
         @Override
-        public void visitTestFinished(@Nonnull TestFinished testFinished) {
+        public void visitTestFinished(TestFinished testFinished) {
             //TODO
             //final Integer duration = testFinished.getTestDuration();
             //fireOnTestFinished(testFinished.getTestName(), duration != null ? duration.intValue() : 0);
@@ -452,23 +451,23 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
 
         @Override
-        public void visitTestIgnored(@Nonnull TestIgnored testIgnored) {
+        public void visitTestIgnored(TestIgnored testIgnored) {
             String stacktrace = testIgnored.getAttributes().get(ATTR_KEY_STACKTRACE_DETAILS);
             fireOnTestIgnored(new TestIgnoredEvent(testIgnored, stacktrace));
         }
 
         @Override
-        public void visitTestStdOut(@Nonnull TestStdOut testStdOut) {
+        public void visitTestStdOut(TestStdOut testStdOut) {
             fireOnTestOutput(new TestOutputEvent(testStdOut, testStdOut.getStdOut(), true));
         }
 
         @Override
-        public void visitTestStdErr(@Nonnull TestStdErr testStdErr) {
+        public void visitTestStdErr(TestStdErr testStdErr) {
             fireOnTestOutput(new TestOutputEvent(testStdErr, testStdErr.getStdErr(), false));
         }
 
         @Override
-        public void visitTestFailed(@Nonnull TestFailed testFailed) {
+        public void visitTestFailed(TestFailed testFailed) {
             Map<String, String> attributes = testFailed.getAttributes();
             LOG.assertTrue(testFailed.getFailureMessage() != null, "No failure message for: " + myTestFrameworkName);
             boolean testError = attributes.get(ATTR_KEY_TEST_ERROR) != null;
@@ -480,41 +479,41 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
 
         @Override
-        public void visitPublishArtifacts(@Nonnull PublishArtifacts publishArtifacts) {
+        public void visitPublishArtifacts(PublishArtifacts publishArtifacts) {
             //Do nothing
         }
 
         @Override
-        public void visitProgressMessage(@Nonnull ProgressMessage progressMessage) {
+        public void visitProgressMessage(ProgressMessage progressMessage) {
             //Do nothing
         }
 
         @Override
-        public void visitProgressStart(@Nonnull ProgressStart progressStart) {
+        public void visitProgressStart(ProgressStart progressStart) {
             //Do nothing
         }
 
         @Override
-        public void visitProgressFinish(@Nonnull ProgressFinish progressFinish) {
+        public void visitProgressFinish(ProgressFinish progressFinish) {
             //Do nothing
         }
 
         @Override
-        public void visitBuildStatus(@Nonnull BuildStatus buildStatus) {
+        public void visitBuildStatus(BuildStatus buildStatus) {
             //Do nothing
         }
 
-        public void visitBuildNumber(@Nonnull BuildNumber buildNumber) {
-            //Do nothing
-        }
-
-        @Override
-        public void visitBuildStatisticValue(@Nonnull BuildStatisticValue buildStatsValue) {
+        public void visitBuildNumber(BuildNumber buildNumber) {
             //Do nothing
         }
 
         @Override
-        public void visitMessageWithStatus(@Nonnull Message msg) {
+        public void visitBuildStatisticValue(BuildStatisticValue buildStatsValue) {
+            //Do nothing
+        }
+
+        @Override
+        public void visitMessageWithStatus(Message msg) {
             Map<String, String> msgAttrs = msg.getAttributes();
 
             String text = msgAttrs.get(ATTR_KEY_TEXT);
@@ -545,7 +544,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
         }
 
         @Override
-        public void visitServiceMessage(@Nonnull ServiceMessage msg) {
+        public void visitServiceMessage(ServiceMessage msg) {
             String name = msg.getMessageName();
 
             if (LOG.isDebugEnabled()) {
@@ -636,7 +635,7 @@ public class OutputToGeneralTestEventsConverter implements ProcessOutputConsumer
             return count;
         }
 
-        private long convertToLong(String countStr, @Nonnull ServiceMessage msg) {
+        private long convertToLong(String countStr, ServiceMessage msg) {
             long count = 0;
             try {
                 count = Long.parseLong(countStr);

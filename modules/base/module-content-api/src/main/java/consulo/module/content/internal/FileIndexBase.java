@@ -28,8 +28,7 @@ import consulo.virtualFileSystem.VirtualFileDelegate;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 /**
@@ -43,7 +42,7 @@ public abstract class FileIndexBase implements FileIndex {
     return ObjectUtil.assertNotNull(AccessRule.<Boolean, RuntimeException>read(() -> !isScopeDisposed() && isInContent(file)));
   };
 
-  public FileIndexBase(@Nonnull Provider<DirectoryIndex> directoryIndexProvider, @Nonnull FileTypeRegistry fileTypeManager) {
+  public FileIndexBase(Provider<DirectoryIndex> directoryIndexProvider, FileTypeRegistry fileTypeManager) {
     myDirectoryIndexProvider = directoryIndexProvider;
     myFileTypeManager = fileTypeManager;
   }
@@ -51,27 +50,27 @@ public abstract class FileIndexBase implements FileIndex {
   protected abstract boolean isScopeDisposed();
 
   @Override
-  public boolean iterateContent(@Nonnull ContentIterator processor) {
+  public boolean iterateContent(ContentIterator processor) {
     return iterateContent(processor, null);
   }
 
   @Override
-  public boolean iterateContentUnderDirectory(@Nonnull VirtualFile dir, @Nonnull ContentIterator processor, @Nullable VirtualFileFilter customFilter) {
+  public boolean iterateContentUnderDirectory(VirtualFile dir, ContentIterator processor, @Nullable VirtualFileFilter customFilter) {
     VirtualFileFilter filter = customFilter != null ? file -> myContentFilter.accept(file) && customFilter.accept(file) : myContentFilter;
     return iterateContentUnderDirectoryWithFilter(dir, processor, filter);
   }
 
   @Override
-  public boolean iterateContentUnderDirectory(@Nonnull VirtualFile dir, @Nonnull ContentIterator processor) {
+  public boolean iterateContentUnderDirectory(VirtualFile dir, ContentIterator processor) {
     return iterateContentUnderDirectory(dir, processor, null);
   }
 
-  private static boolean iterateContentUnderDirectoryWithFilter(@Nonnull VirtualFile dir, @Nonnull ContentIterator iterator, @Nonnull VirtualFileFilter filter) {
+  private static boolean iterateContentUnderDirectoryWithFilter(VirtualFile dir, ContentIterator iterator, VirtualFileFilter filter) {
     return VirtualFileUtil.iterateChildrenRecursively(dir, filter, iterator);
   }
 
-  @Nonnull
-  public DirectoryInfo getInfoForFileOrDirectory(@Nonnull VirtualFile file) {
+  
+  public DirectoryInfo getInfoForFileOrDirectory(VirtualFile file) {
     if (file instanceof VirtualFileDelegate) {
       file = ((VirtualFileDelegate)file).getDelegate();
     }
@@ -79,11 +78,11 @@ public abstract class FileIndexBase implements FileIndex {
   }
 
   @Override
-  public boolean isContentSourceFile(@Nonnull VirtualFile file) {
+  public boolean isContentSourceFile(VirtualFile file) {
     return !file.isDirectory() && !myFileTypeManager.isFileIgnored(file) && isInSourceContent(file);
   }
 
-  @Nonnull
+  
   protected static VirtualFile[][] getModuleContentAndSourceRoots(Module module) {
     return new VirtualFile[][]{ModuleRootManager.getInstance(module).getContentRoots(), ModuleRootManager.getInstance(module).getSourceRoots()};
   }

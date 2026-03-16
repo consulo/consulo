@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.model.ListModel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
  */
 public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboBoxImpl.MyComboBox> implements ComboBox<E> {
     class MyComboBox<T> extends consulo.ui.ex.awt.ComboBox<T> implements FromSwingComponentWrapper {
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopComboBoxImpl.this;
@@ -54,14 +53,14 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
         return myComponent;
     }
 
-    @Nonnull
+    
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(@Nonnull TextItemRenderer<E> renderer) {
+    public void setRenderer(TextItemRenderer<E> renderer) {
         myRenderer = renderer;
     }
 
@@ -76,9 +75,9 @@ public class DesktopComboBoxImpl<E> extends SwingComponentDelegate<DesktopComboB
         toAWTComponent().setSelectedItem(value);
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+    public Disposable addValueListener(ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
         DesktopValueListenerAsItemListenerImpl<E> listener = new DesktopValueListenerAsItemListenerImpl<>(this, valueListener, true);
         toAWTComponent().addItemListener(listener);
         return () -> toAWTComponent().removeItemListener(listener);

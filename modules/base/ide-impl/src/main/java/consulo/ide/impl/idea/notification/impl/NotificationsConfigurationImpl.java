@@ -25,8 +25,7 @@ import consulo.logging.Logger;
 import consulo.project.ui.internal.NotificationsConfiguration;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -57,12 +56,12 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
     return (NotificationsConfigurationImpl)NotificationsConfiguration.getNotificationsConfiguration();
   }
 
-  public synchronized boolean hasToolWindowCapability(@Nonnull String groupId) {
+  public synchronized boolean hasToolWindowCapability(String groupId) {
     return getToolWindowId(groupId) != null || myToolWindowCapable.containsKey(groupId);
   }
 
   @Nullable
-  public String getToolWindowId(@Nonnull String groupId) {
+  public String getToolWindowId(String groupId) {
     NotificationGroup group = NotificationGroupRegistrator.last().get(groupId);
     return group == null ? null : group.getToolWindowId();
   }
@@ -89,8 +88,8 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
   }
 
   @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-  @Nonnull
-  public static NotificationSettings getSettings(@Nonnull String groupId) {
+  
+  public static NotificationSettings getSettings(String groupId) {
     NotificationSettings settings;
     NotificationsConfigurationImpl impl = getInstanceImpl();
     synchronized (impl) {
@@ -99,7 +98,7 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
     return settings == null ? getDefaultSettings(groupId) : settings;
   }
 
-  @Nonnull
+  
   private static NotificationSettings getDefaultSettings(String groupId) {
     NotificationGroup group = NotificationGroupRegistrator.last().get(groupId);
     if (group != null) {
@@ -128,7 +127,7 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
     }
   }
 
-  public synchronized boolean isRegistered(@Nonnull String id) {
+  public synchronized boolean isRegistered(String id) {
     return myIdToSettingsMap.containsKey(id) || NotificationGroupRegistrator.last().get(id) != null;
   }
 

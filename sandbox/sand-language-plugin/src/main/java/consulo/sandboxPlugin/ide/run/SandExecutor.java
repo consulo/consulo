@@ -24,7 +24,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public class SandExecutor extends Executor {
         return PlatformIconGroup.ideHectoroff();
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return AllIcons.Ide.HectorOn;
@@ -53,38 +52,38 @@ public class SandExecutor extends Executor {
         return AllIcons.Ide.HectorOff;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Sand executor");
     }
 
     @Override
-    public boolean isApplicable(@Nonnull Project project) {
+    public boolean isApplicable(Project project) {
         return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionName() {
         return LocalizeValue.localizeTODO("Sand");
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "SandExecutor";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getStartActionText() {
         return LocalizeValue.localizeTODO("Start Sand");
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+    public LocalizeValue getStartActiveText(String configurationName) {
         return LocalizeValue.localizeTODO("Start Sand " + configurationName);
     }
 }

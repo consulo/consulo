@@ -20,8 +20,7 @@ import consulo.application.Application;
 import consulo.application.util.AsyncFileService;
 import consulo.platform.Platform;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -51,8 +50,8 @@ public class AsyncFileServiceImpl implements AsyncFileService {
   }
 
   @Override
-  @Nonnull
-  public Future<Void> asyncDelete(@Nonnull Collection<File> files) {
+  
+  public Future<Void> asyncDelete(Collection<File> files) {
     List<File> tempFiles = new ArrayList<>();
     for (File file : files) {
       File tempFile = renameToTempFileOrDelete(file);
@@ -66,7 +65,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
     return CompletableFuture.completedFuture(null);
   }
 
-  private Future<Void> startDeletionThread(@Nonnull final File... tempFiles) {
+  private Future<Void> startDeletionThread(final File... tempFiles) {
     RunnableFuture<Void> deleteFilesTask = new FutureTask<>(new Runnable() {
       @Override
       public void run() {
@@ -90,7 +89,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
   }
 
   @Nullable
-  private static File renameToTempFileOrDelete(@Nonnull File file) {
+  private static File renameToTempFileOrDelete(File file) {
     String tempDir = FileUtil.getTempDirectory();
     boolean isSameDrive = true;
     if (Platform.current().os().isWindows()) {
@@ -113,7 +112,7 @@ public class AsyncFileServiceImpl implements AsyncFileService {
     return null;
   }
 
-  private static File getTempFile(@Nonnull String originalFileName, @Nonnull String parent) {
+  private static File getTempFile(String originalFileName, String parent) {
     int randomSuffix = (int)(System.currentTimeMillis() % 1000);
     for (int i = randomSuffix; ; i++) {
       String name = "___" + originalFileName + i + ASYNC_DELETE_EXTENSION;

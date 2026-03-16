@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.GlobalUndoableAction;
 import consulo.undoRedo.UnexpectedUndoException;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -36,7 +35,7 @@ public class ClearContextAction extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         GlobalUndoableAction action = new GlobalUndoableAction() {
             @Override

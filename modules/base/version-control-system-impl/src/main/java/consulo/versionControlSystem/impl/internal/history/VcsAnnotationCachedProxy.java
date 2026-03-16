@@ -33,8 +33,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -46,7 +46,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   private final static Logger LOG = Logger.getInstance(VcsAnnotationCachedProxy.class);
   private final AnnotationProvider myAnnotationProvider;
 
-  public VcsAnnotationCachedProxy(@Nonnull AbstractVcs vcs, @Nonnull AnnotationProvider provider) {
+  public VcsAnnotationCachedProxy(AbstractVcs vcs, AnnotationProvider provider) {
     assert provider instanceof VcsCacheableAnnotationProvider;
     myVcs = vcs;
     myCache = ProjectLevelVcsManager.getInstance(vcs.getProject()).getVcsHistoryCache();
@@ -144,7 +144,7 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   }
 
   private VcsAbstractHistorySession getHistory(VcsRevisionNumber revision, FilePath filePath, VcsHistoryProvider historyProvider,
-                                               @jakarta.annotation.Nullable VcsRevisionNumber firstRevision) throws VcsException {
+                                               @Nullable VcsRevisionNumber firstRevision) throws VcsException {
     boolean historyCacheSupported = historyProvider instanceof VcsCacheableHistorySessionFactory;
     if (historyCacheSupported) {
       VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;
@@ -173,11 +173,11 @@ public class VcsAnnotationCachedProxy implements AnnotationProvider {
   }
 
   @Override
-  public boolean isAnnotationValid(@Nonnull VcsFileRevision rev) {
+  public boolean isAnnotationValid(VcsFileRevision rev) {
     return myAnnotationProvider.isAnnotationValid(rev);
   }
 
-  private VcsAbstractHistorySession limitedHistory(FilePath filePath, @Nonnull final VcsRevisionNumber firstNumber) throws VcsException {
+  private VcsAbstractHistorySession limitedHistory(FilePath filePath, final VcsRevisionNumber firstNumber) throws VcsException {
     final VcsAbstractHistorySession[] result = new VcsAbstractHistorySession[1];
     final VcsException[] exc = new VcsException[1];
 

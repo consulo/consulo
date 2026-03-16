@@ -21,14 +21,13 @@ import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public class ManipulatableTarget extends DelegatePsiTarget implements PsiDeclaredTarget, PomRenameableTarget<Object> {
-  public ManipulatableTarget(@Nonnull PsiElement element) {
+  public ManipulatableTarget(PsiElement element) {
     super(element);
   }
 
@@ -44,7 +43,7 @@ public class ManipulatableTarget extends DelegatePsiTarget implements PsiDeclare
 
   @Override
   @Nullable
-  public Object setName(@Nonnull String newName) {
+  public Object setName(String newName) {
     ElementManipulators.getManipulator(getNavigationElement()).handleContentChange(getNavigationElement(), newName);
     return null;
   }

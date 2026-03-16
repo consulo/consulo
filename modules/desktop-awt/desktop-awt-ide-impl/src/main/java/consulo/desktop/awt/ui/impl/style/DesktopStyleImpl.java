@@ -32,7 +32,6 @@ import consulo.ui.impl.style.StyleImpl;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.ui.style.StyleColorValue;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -52,9 +51,9 @@ public class DesktopStyleImpl extends StyleImpl {
         myLookAndFeelInfo = lookAndFeelInfo;
     }
 
-    @Nonnull
+    
     @Override
-    public ColorValue getColorValue(@Nonnull StyleColorValue colorValue) {
+    public ColorValue getColorValue(StyleColorValue colorValue) {
         // maybe time for map?
         if (colorValue == ComponentColors.TEXT || colorValue == ComponentColors.TEXT_FOREGROUND) {
             return TargetAWT.from(UIUtil.getLabelForeground());
@@ -114,26 +113,26 @@ public class DesktopStyleImpl extends StyleImpl {
         return TargetAWT.from(JBColor.WHITE);
     }
 
-    @Nonnull
+    
     @Override
-    public Image getImage(@Nonnull Image image) {
+    public Image getImage(Image image) {
         if (image instanceof DesktopAWTImage awtImage) {
             return ((DesktopAWTImage) image).copyWithForceLibraryId(getIconLibraryId());
         }
         return image;
     }
 
-    @Nonnull
+    
     public UIManager.LookAndFeelInfo getLookAndFeelInfo() {
         return myLookAndFeelInfo;
     }
 
-    @Nonnull
+    
     public String getClassName() {
         return myLookAndFeelInfo.getClassName();
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         if (myLookAndFeelInfo instanceof IdeLookAndFeelInfo ideLookAndFeelInfo) {
@@ -142,13 +141,13 @@ public class DesktopStyleImpl extends StyleImpl {
         return getClassName();
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myLookAndFeelInfo.getName();
     }
 
-    @Nonnull
+    
     @Override
     public String getIconLibraryId() {
         if (myLookAndFeelInfo instanceof LafWithIconLibrary) {

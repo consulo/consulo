@@ -15,7 +15,6 @@
  */
 package consulo.usage;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -25,7 +24,7 @@ public interface MergeableUsage {
      * @param mergeableUsage
      * @return true if merge succeeded
      */
-    boolean merge(@Nonnull MergeableUsage mergeableUsage);
+    boolean merge(MergeableUsage mergeableUsage);
 
     /**
      * Revert to original status prior any merges

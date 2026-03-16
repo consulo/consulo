@@ -16,19 +16,18 @@
 
 package consulo.ide.impl.idea.codeInspection;
 
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author max
  */
 @Deprecated
 public class InspectionApplication {
-  @NonNls
+  
   public static final String DESCRIPTIONS = ".descriptions";
-  @NonNls
+  
   public static final String PROFILE = "profile";
-  @NonNls
+  
   public static final String INSPECTIONS_NODE = "inspections";
-  @NonNls
+  
   public static final String XML_EXTENSION = ".xml";
 }

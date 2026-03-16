@@ -8,7 +8,6 @@ import consulo.execution.debug.stream.trace.TerminatorCallHandler;
 import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -19,43 +18,43 @@ public abstract class TerminalOperationBase implements TerminalOperation {
   private final CallTraceInterpreter traceInterpreter;
   private final ValuesOrderResolver valuesOrderResolver;
 
-  protected TerminalOperationBase(@Nonnull String name,
-                                  @Nonnull HandlerFactory handlerFactory,
-                                  @Nonnull CallTraceInterpreter traceInterpreter,
-                                  @Nonnull ValuesOrderResolver valuesOrderResolver) {
+  protected TerminalOperationBase(String name,
+                                  HandlerFactory handlerFactory,
+                                  CallTraceInterpreter traceInterpreter,
+                                  ValuesOrderResolver valuesOrderResolver) {
     this.name = name;
     this.handlerFactory = handlerFactory;
     this.traceInterpreter = traceInterpreter;
     this.valuesOrderResolver = valuesOrderResolver;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return name;
   }
 
-  @Nonnull
+  
   @Override
   public CallTraceInterpreter getTraceInterpreter() {
     return traceInterpreter;
   }
 
-  @Nonnull
+  
   @Override
   public ValuesOrderResolver getValuesOrderResolver() {
     return valuesOrderResolver;
   }
 
-  @Nonnull
+  
   @Override
-  public TerminatorCallHandler getTraceHandler(@Nonnull TerminatorStreamCall call, @Nonnull String resultExpression, @Nonnull Dsl dsl) {
+  public TerminatorCallHandler getTraceHandler(TerminatorStreamCall call, String resultExpression, Dsl dsl) {
     return handlerFactory.create(call, resultExpression, dsl);
   }
 
   @FunctionalInterface
   protected interface HandlerFactory {
-    @Nonnull
-    TerminatorCallHandler create(@Nonnull TerminatorStreamCall call, @Nonnull String resultExpression, @Nonnull Dsl dsl);
+    
+    TerminatorCallHandler create(TerminatorStreamCall call, String resultExpression, Dsl dsl);
   }
 }

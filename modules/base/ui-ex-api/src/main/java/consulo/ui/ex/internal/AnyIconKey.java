@@ -16,7 +16,6 @@
 package consulo.ui.ex.internal;
 
 import consulo.component.ComponentManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -26,7 +25,7 @@ public class AnyIconKey<T> {
     private final ComponentManager myProject;
     private final int myFlags;
 
-    public AnyIconKey(@Nonnull T object, ComponentManager project, int flags) {
+    public AnyIconKey(T object, ComponentManager project, int flags) {
         myObject = object;
         myProject = project;
         myFlags = flags;

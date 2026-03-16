@@ -22,8 +22,7 @@ import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -32,27 +31,27 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class DesktopSwtSystemFileChooseDialogProvider implements FileChooseDialogProvider {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "system";
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "system";
   }
 
-  @Nonnull
+  
   @Override
-  public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileChooserDialog createFileChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new DesktopSwtFileChooserDialog(descriptor);
   }
 
-  @Nonnull
+  
   @Override
-  public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public PathChooserDialog createPathChooser(FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     return new DesktopSwtFileChooserDialog(descriptor);
   }
 }

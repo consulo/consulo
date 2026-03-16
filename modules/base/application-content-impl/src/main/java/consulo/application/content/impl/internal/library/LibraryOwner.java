@@ -20,8 +20,7 @@ import consulo.component.ComponentManager;
 import consulo.content.internal.GlobalLibraryRootListenerProvider;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,14 +28,14 @@ import jakarta.annotation.Nullable;
  */
 public interface LibraryOwner {
   static LibraryOwner APPLICATION = new LibraryOwner() {
-    @Nonnull
+    
     @Override
     public VirtualFilePointerListener getListener() {
       return Application.get().getInstance(GlobalLibraryRootListenerProvider.class).getListener();
     }
   };
 
-  @Nonnull
+  
   VirtualFilePointerListener getListener();
 
   @Nullable

@@ -28,8 +28,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,12 +42,12 @@ import java.util.Set;
 public interface ImportOptimizer extends LanguageExtension {
   ExtensionPointCacheKey<ImportOptimizer, ByLanguageValue<List<ImportOptimizer>>> KEY = ExtensionPointCacheKey.create("ImportOptimizer", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<ImportOptimizer> forLanguage(@Nonnull Language language) {
+  
+  public static List<ImportOptimizer> forLanguage(Language language) {
     return Application.get().getExtensionPoint(ImportOptimizer.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public static Set<ImportOptimizer> forFile(PsiFile file) {
     Set<ImportOptimizer> optimizers = new HashSet<>();
@@ -85,13 +84,13 @@ public interface ImportOptimizer extends LanguageExtension {
    *             issued from.
    * @return a <code>java.lang.Runnable</code> object, which being called will replace original file imports with optimized version.
    */
-  @Nonnull
+  
   Runnable processFile(PsiFile file);
 
   /**
    * @return action text, it will be displayed for user, default 'Optimize Imports...'
    */
-  @Nonnull
+  
   default String getActionName() {
     return CodeInsightBundle.message("not.action.OptimizeImports.text");
   }
@@ -99,7 +98,7 @@ public interface ImportOptimizer extends LanguageExtension {
   /**
    * @return action description, it will be displayed for user, default 'Remove unused imports and reorder/reorganize imports.'
    */
-  @Nonnull
+  
   default String getActionDescription() {
     return CodeInsightBundle.message("not.action.OptimizeImports.description");
   }

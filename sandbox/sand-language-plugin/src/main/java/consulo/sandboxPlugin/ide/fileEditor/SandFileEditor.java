@@ -23,34 +23,34 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import kava.beans.PropertyChangeListener;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30.05.14
  */
 public class SandFileEditor extends UserDataHolderBase implements FileEditor {
-  @Nonnull
+  
   @Override
   public Component getUIComponent() {
     return Label.create("Hello World");
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "Sand";
   }
 
-  @Nonnull
+  
   @Override
-  public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+  public FileEditorState getState(FileEditorStateLevel level) {
     return FileEditorState.INSTANCE;
   }
 
   @Override
-  public void setState(@Nonnull FileEditorState state) {
+  public void setState(FileEditorState state) {
 
   }
 
@@ -75,16 +75,16 @@ public class SandFileEditor extends UserDataHolderBase implements FileEditor {
   }
 
   @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
 
   }
 
   @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
 
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public FileEditorLocation getCurrentLocation() {
     return null;

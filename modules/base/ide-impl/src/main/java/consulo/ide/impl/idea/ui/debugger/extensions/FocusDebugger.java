@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -97,7 +96,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myLogModel.clear();
         }
     }
@@ -168,7 +167,7 @@ public class FocusDebugger implements UiDebuggerExtension, PropertyChangeListene
 
     static class FocusElementRenderer extends ColoredListCellRenderer<FocusElement> {
         @Override
-        protected void customizeCellRenderer(@Nonnull JList list, FocusElement value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(JList list, FocusElement value, int index, boolean selected, boolean hasFocus) {
             clear();
             SimpleColoredText text = value.getText();
             List<String> strings = text.getTexts();

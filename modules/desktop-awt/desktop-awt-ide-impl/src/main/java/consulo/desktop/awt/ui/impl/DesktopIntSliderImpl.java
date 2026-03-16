@@ -21,8 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.IntSlider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -36,7 +35,7 @@ public class DesktopIntSliderImpl extends SwingComponentDelegate<DesktopIntSlide
             super(min, max, value);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopIntSliderImpl.this;

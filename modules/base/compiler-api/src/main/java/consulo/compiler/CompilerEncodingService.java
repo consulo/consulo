@@ -21,8 +21,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.Collection;
@@ -32,7 +31,7 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class CompilerEncodingService {
-    public static CompilerEncodingService getInstance(@Nonnull Project project) {
+    public static CompilerEncodingService getInstance(Project project) {
         return project.getInstance(CompilerEncodingService.class);
     }
 
@@ -52,8 +51,8 @@ public abstract class CompilerEncodingService {
     }
 
     @Nullable
-    public abstract Charset getPreferredModuleEncoding(@Nonnull Module module);
+    public abstract Charset getPreferredModuleEncoding(Module module);
 
-    @Nonnull
-    public abstract Collection<Charset> getAllModuleEncodings(@Nonnull Module module);
+    
+    public abstract Collection<Charset> getAllModuleEncodings(Module module);
 }

@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -42,7 +41,7 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (Platform.current().os().isMac() && e.getPlace().equals(ActionPlaces.MAIN_MENU)) {
             // It's called from Preferences in App menu.
             e.getPresentation().setVisible(false);

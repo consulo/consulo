@@ -32,8 +32,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -294,7 +293,7 @@ class DesktopColorPicker extends JPanel implements DocumentListener {
         Color preselectedColor,
         boolean enableOpacity,
         boolean opacityInPercent,
-        @Nonnull Consumer<Color> colorConsumer
+        Consumer<Color> colorConsumer
     ) {
         ColorPickerDialog dialog = new ColorPickerDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent);
         SwingUtilities.invokeLater(() -> {

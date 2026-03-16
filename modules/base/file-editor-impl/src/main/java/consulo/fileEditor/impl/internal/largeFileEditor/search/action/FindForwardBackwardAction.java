@@ -10,7 +10,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 public final class FindForwardBackwardAction extends AnAction implements DumbAware {
 
@@ -32,7 +31,7 @@ public final class FindForwardBackwardAction extends AnAction implements DumbAwa
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (StringUtil.isEmpty(searchManager.getSearchReplaceComponent().getSearchTextComponent().getText())) {
             return;
         }

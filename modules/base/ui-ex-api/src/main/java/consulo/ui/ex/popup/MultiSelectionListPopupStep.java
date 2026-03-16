@@ -16,7 +16,7 @@
 package consulo.ui.ex.popup;
 
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;

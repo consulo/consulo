@@ -4,7 +4,6 @@ package consulo.execution.dashboard;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -13,6 +12,6 @@ import java.util.Collection;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RunDashboardDefaultTypesProvider {
-  @Nonnull
-  Collection<String> getDefaultTypeIds(@Nonnull Project project);
+  
+  Collection<String> getDefaultTypeIds(Project project);
 }

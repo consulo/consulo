@@ -15,7 +15,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -29,14 +28,14 @@ final class CachedValueLeakChecker {
   private static final boolean DO_CHECKS = ApplicationManager.getApplication().isUnitTestMode();
   private static final Set<String> ourCheckedKeys = ContainerUtil.newConcurrentSet();
 
-  static void checkProvider(@Nonnull CachedValueProvider<?> provider, @Nonnull Key<?> key, @Nonnull UserDataHolder userDataHolder) {
+  static void checkProvider(CachedValueProvider<?> provider, Key<?> key, UserDataHolder userDataHolder) {
     if (!DO_CHECKS) return;
     if (!ourCheckedKeys.add(key.toString())) return; // store strings because keys are created afresh in each (test) project
 
     findReferencedPsi(provider, key, userDataHolder);
   }
 
-  private static synchronized void findReferencedPsi(@Nonnull Object root, @Nonnull Key<?> key, @Nonnull UserDataHolder toIgnore) {
+  private static synchronized void findReferencedPsi(Object root, Key<?> key, UserDataHolder toIgnore) {
     Predicate<Object> shouldExamineValue = value -> {
       if (value == toIgnore) return false;
       if (value instanceof ASTNode) {

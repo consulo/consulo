@@ -11,8 +11,7 @@ import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
@@ -37,8 +36,8 @@ public final class DebugReflectionUtil {
 
   private static final Field[] EMPTY_FIELD_ARRAY = new Field[0];
 
-  @Nonnull
-  private static Field[] getAllFields(@Nonnull Class<?> aClass) {
+  
+  private static Field[] getAllFields(Class<?> aClass) {
     Field[] cached = allFields.get(aClass);
     if (cached == null) {
       try {
@@ -71,21 +70,21 @@ public final class DebugReflectionUtil {
     return cached;
   }
 
-  private static boolean isTrivial(@Nonnull Class<?> type) {
+  private static boolean isTrivial(Class<?> type) {
     return type.isPrimitive() || type == String.class || type == Class.class || type.isArray() && isTrivial(type.getComponentType());
   }
 
-  private static boolean isInitialized(@Nonnull Class<?> root) {
+  private static boolean isInitialized(Class<?> root) {
     return !UnsafeDelegate.get().shouldBeInitialized(root);
   }
 
   private static final Key<Boolean> REPORTED_LEAKED = Key.create("REPORTED_LEAKED");
 
   public static boolean walkObjects(int maxDepth,
-                                    @Nonnull Map<Object, String> startRoots,
-                                    @Nonnull Class<?> lookFor,
-                                    @Nonnull Predicate<Object> shouldExamineValue,
-                                    @Nonnull BiPredicate<Object, ? super BackLink> leakProcessor) {
+                                    Map<Object, String> startRoots,
+                                    Class<?> lookFor,
+                                    Predicate<Object> shouldExamineValue,
+                                    BiPredicate<Object, ? super BackLink> leakProcessor) {
     IntSet visited = IntSets.newHashSet(100);
     Deque<BackLink> toVisit = new ArrayDeque<>(100);
 
@@ -94,7 +93,7 @@ public final class DebugReflectionUtil {
       String description = entry.getValue();
       toVisit.addLast(new BackLink(startRoot, null, null) {
         @Override
-        void print(@Nonnull StringBuilder result) {
+        void print(StringBuilder result) {
           super.print(result);
           result.append(" (from ").append(description).append(")");
         }
@@ -122,7 +121,7 @@ public final class DebugReflectionUtil {
     }
   }
 
-  private static void queueStronglyReferencedValues(@Nonnull Deque<? super BackLink> queue, @Nonnull Object root, @Nonnull Predicate<Object> shouldExamineValue, @Nonnull BackLink backLink) {
+  private static void queueStronglyReferencedValues(Deque<? super BackLink> queue, Object root, Predicate<Object> shouldExamineValue, BackLink backLink) {
     Class<?> rootClass = root.getClass();
     for (Field field : getAllFields(rootClass)) {
       String fieldName = field.getName();
@@ -164,7 +163,7 @@ public final class DebugReflectionUtil {
     }
   }
 
-  private static void queue(Object value, Field field, @Nonnull BackLink backLink, @Nonnull Deque<? super BackLink> queue, @Nonnull Predicate<Object> shouldExamineValue) {
+  private static void queue(Object value, Field field, BackLink backLink, Deque<? super BackLink> queue, Predicate<Object> shouldExamineValue) {
     if (value == null || isTrivial(value.getClass())) {
       return;
     }
@@ -178,13 +177,13 @@ public final class DebugReflectionUtil {
   }
 
   public static class BackLink {
-    @Nonnull
+    
     private final Object value;
     private final Field field;
     private final BackLink backLink;
     private final int depth;
 
-    BackLink(@Nonnull Object value, @Nullable Field field, @Nullable BackLink backLink) {
+    BackLink(Object value, @Nullable Field field, @Nullable BackLink backLink) {
       this.value = value;
       this.field = field;
       this.backLink = backLink;
@@ -202,7 +201,7 @@ public final class DebugReflectionUtil {
       return result.toString();
     }
 
-    void print(@Nonnull StringBuilder result) {
+    void print(StringBuilder result) {
       String valueStr;
       Object value = this.value;
       try {

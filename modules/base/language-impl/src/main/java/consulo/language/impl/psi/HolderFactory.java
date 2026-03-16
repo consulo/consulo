@@ -21,17 +21,16 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.CharTable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface HolderFactory {
-  DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context);
-  DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, boolean validity);
-  DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context);
-  DummyHolder createHolder(@Nonnull PsiManager manager, Language language, PsiElement context);
-  DummyHolder createHolder(@Nonnull PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table);
-  DummyHolder createHolder(@Nonnull PsiManager manager, PsiElement context, CharTable table);
-  DummyHolder createHolder(@Nonnull PsiManager manager, CharTable table, Language language);
+  DummyHolder createHolder(PsiManager manager, TreeElement contentElement, PsiElement context);
+  DummyHolder createHolder(PsiManager manager, CharTable table, boolean validity);
+  DummyHolder createHolder(PsiManager manager, PsiElement context);
+  DummyHolder createHolder(PsiManager manager, Language language, PsiElement context);
+  DummyHolder createHolder(PsiManager manager, TreeElement contentElement, PsiElement context, CharTable table);
+  DummyHolder createHolder(PsiManager manager, PsiElement context, CharTable table);
+  DummyHolder createHolder(PsiManager manager, CharTable table, Language language);
 }

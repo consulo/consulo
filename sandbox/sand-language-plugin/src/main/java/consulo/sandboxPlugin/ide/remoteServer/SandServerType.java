@@ -33,8 +33,7 @@ import consulo.remoteServer.runtime.ServerTaskExecutor;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,14 +49,14 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
         super("sand", "SandDeployment", LocalizeValue.localizeTODO("Sand"), PlatformIconGroup.actionsHelp());
     }
 
-    @Nonnull
+    
     @Override
     public SandServerConfiguration createDefaultConfiguration() {
         return new SandServerConfiguration();
     }
 
     @Override
-    @Nonnull
+    
     public RemoteServerConfigurable createServerConfigurable(SandServerConfiguration configuration) {
         return new RemoteServerConfigurable() {
             @RequiredUIAccess
@@ -88,9 +87,9 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
     }
 
     @Override
-    public @Nonnull DeploymentConfigurator<?, SandServerConfiguration> createDeploymentConfigurator(Project project) {
+    public DeploymentConfigurator<?, SandServerConfiguration> createDeploymentConfigurator(Project project) {
         return new DeploymentConfigurator<>() {
-            @Nonnull
+            
             @Override
             public List<DeploymentSource> getAvailableDeploymentSources() {
                 Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -100,7 +99,7 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
                     .collect(Collectors.toList());
             }
 
-            @Nonnull
+            
             @Override
             public DeploymentConfiguration createDefaultConfiguration(DeploymentSource source) {
                 return new DummyDeploymentConfiguration();
@@ -114,12 +113,12 @@ public class SandServerType extends ServerType<SandServerConfiguration> {
         };
     }
 
-    @Nonnull
+    
     @Override
-    public ServerConnector<?> createConnector(@Nonnull SandServerConfiguration configuration, @Nonnull ServerTaskExecutor asyncTasksExecutor) {
+    public ServerConnector<?> createConnector(SandServerConfiguration configuration, ServerTaskExecutor asyncTasksExecutor) {
         return new ServerConnector<>() {
             @Override
-            public void connect(@Nonnull ConnectionCallback<DeploymentConfiguration> callback) {
+            public void connect(ConnectionCallback<DeploymentConfiguration> callback) {
                 callback.errorOccurred("error");
             }
         };

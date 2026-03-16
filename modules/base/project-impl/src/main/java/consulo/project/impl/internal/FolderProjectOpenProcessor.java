@@ -36,8 +36,7 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,20 +64,19 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
 
     @Nullable
     @Override
-    public Image getIcon(@Nonnull VirtualFile file) {
+    public Image getIcon(VirtualFile file) {
         return PlatformIconGroup.nodesFolder();
     }
 
     @Override
-    public boolean canOpenProject(@Nonnull File file) {
+    public boolean canOpenProject(File file) {
         return true;
     }
 
-    @Nonnull
     @Override
-    public <I> Coroutine<I, VirtualFile> prepareSteps(@Nonnull UIAccess uiAccess,
-                                                       @Nonnull ProjectOpenContext context,
-                                                       @Nonnull Coroutine<I, VirtualFile> in) {
+    public <I> Coroutine<I, VirtualFile> prepareSteps(UIAccess uiAccess,
+                                                       ProjectOpenContext context,
+                                                       Coroutine<I, VirtualFile> in) {
         return in
             // Create directories + temp project
             .then(CodeExecution.<VirtualFile, ProjectContext>apply(virtualFile -> {

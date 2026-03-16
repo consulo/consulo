@@ -5,17 +5,16 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.virtualFileSystem.LocalFileSystem;
-import jakarta.annotation.Nonnull;
 
 public class FileWatchRequestsManager {
   private final FileWatchRequestModifier myModifier;
   private final Alarm myAlarm;
 
-  public FileWatchRequestsManager(@Nonnull Project project, @Nonnull NewMappings newMappings) {
+  public FileWatchRequestsManager(Project project, NewMappings newMappings) {
     this(project, newMappings, LocalFileSystem.getInstance());
   }
 
-  public FileWatchRequestsManager(@Nonnull Project project, @Nonnull NewMappings newMappings, @Nonnull LocalFileSystem localFileSystem) {
+  public FileWatchRequestsManager(Project project, NewMappings newMappings, LocalFileSystem localFileSystem) {
     myModifier = new FileWatchRequestModifier(project, newMappings, localFileSystem);
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, newMappings);
   }

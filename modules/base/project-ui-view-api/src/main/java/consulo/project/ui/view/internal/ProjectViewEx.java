@@ -18,7 +18,6 @@ package consulo.project.ui.view.internal;
 import consulo.project.ui.view.ProjectView;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,5 +25,5 @@ import jakarta.annotation.Nonnull;
  */
 public interface ProjectViewEx extends ProjectView {
   @RequiredUIAccess
-  void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions);
+  void setupToolWindow(ToolWindow toolWindow, boolean loadPaneExtensions);
 }

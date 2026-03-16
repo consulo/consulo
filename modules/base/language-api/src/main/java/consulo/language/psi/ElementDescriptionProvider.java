@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides location-dependent element description.
@@ -32,5 +31,5 @@ public interface ElementDescriptionProvider {
     ExtensionPointName<ElementDescriptionProvider> EP_NAME = ExtensionPointName.create(ElementDescriptionProvider.class);
 
     @Nullable
-    String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location);
+    String getElementDescription(PsiElement element, ElementDescriptionLocation location);
 }

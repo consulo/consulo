@@ -41,8 +41,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,25 +57,19 @@ import static consulo.externalSystem.util.ExternalSystemConstants.*;
  */
 public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements UiDataProvider {
 
-  @Nonnull
   private final ExternalSystemRecentTasksList myRecentTasksList;
-  @Nonnull
   private final ExternalSystemTasksTreeModel myAllTasksModel;
-  @Nonnull
   private final ExternalSystemTasksTree myAllTasksTree;
-  @Nonnull
   private final ProjectSystemId               myExternalSystemId;
-  @Nonnull
   private final NotificationGroup             myNotificationGroup;
-  @Nonnull
   private final Project                       myProject;
 
   @Nullable
   private Supplier<ExternalTaskExecutionInfo> mySelectedTaskProvider;
 
-  public ExternalSystemTasksPanel(@Nonnull Project project,
-                                  @Nonnull ProjectSystemId externalSystemId,
-                                  @Nonnull NotificationGroup notificationGroup)
+  public ExternalSystemTasksPanel(Project project,
+                                  ProjectSystemId externalSystemId,
+                                  NotificationGroup notificationGroup)
   {
     super(true);
     myExternalSystemId = externalSystemId;
@@ -141,7 +134,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements U
     setContent(content);
   }
 
-  private static JComponent wrap(@Nonnull JComponent content, @Nonnull String title) {
+  private static JComponent wrap(JComponent content, String title) {
     JPanel result = new JPanel(new BorderLayout());
     result.setOpaque(false);
     result.setBorder(IdeBorderFactory.createTitledBorder(title, false));
@@ -150,7 +143,7 @@ public class ExternalSystemTasksPanel extends SimpleToolWindowPanel implements U
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     super.uiDataSnapshot(sink);
     sink.set(ExternalSystemDataKeys.RECENT_TASKS_LIST, myRecentTasksList);
     sink.set(ExternalSystemDataKeys.ALL_TASKS_MODEL, myAllTasksModel);

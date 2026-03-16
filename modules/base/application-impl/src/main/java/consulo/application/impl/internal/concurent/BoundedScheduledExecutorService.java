@@ -2,7 +2,6 @@
 package consulo.application.impl.internal.concurent;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -15,8 +14,8 @@ import java.util.concurrent.TimeUnit;
  * and execute them in parallel in the {@code backendExecutor} with not more than at {@code maxSimultaneousTasks} at a time.
  */
 class BoundedScheduledExecutorService extends SchedulingWrapper {
-  BoundedScheduledExecutorService(@Nonnull String name,
-                                  @Nonnull ExecutorService backendExecutor,
+  BoundedScheduledExecutorService(String name,
+                                  ExecutorService backendExecutor,
                                   int maxThreads,
                                   AppDelayQueue appDelayQueue) {
     super(new BoundedTaskExecutor(name, backendExecutor, maxThreads, true), appDelayQueue);
@@ -30,7 +29,7 @@ class BoundedScheduledExecutorService extends SchedulingWrapper {
     backendExecutorService.shutdown();
   }
 
-  @Nonnull
+  
   @Override
   public List<Runnable> shutdownNow() {
     return ContainerUtil.concat(super.shutdownNow(), backendExecutorService.shutdownNow());

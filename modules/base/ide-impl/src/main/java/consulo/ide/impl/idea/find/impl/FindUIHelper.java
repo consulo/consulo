@@ -30,23 +30,22 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 @SuppressWarnings("WeakerAccess")
 public class FindUIHelper implements Disposable {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private FindModel myModel;
     public FindModel myPreviousModel;
-    @Nonnull
+    
     private Runnable myOkHandler;
 
     FindUI myUI;
 
-    FindUIHelper(@Nonnull Project project, @Nonnull FindModel model, @Nonnull Runnable okHandler) {
+    FindUIHelper(Project project, FindModel model, Runnable okHandler) {
         myProject = project;
         myModel = model;
         myOkHandler = okHandler;
@@ -82,7 +81,7 @@ public class FindUIHelper implements Disposable {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 ui.saveSettings();
                 myModel.copyFrom(FindManager.getInstance(myProject).getFindInProjectModel());
                 FindUtil.initStringToFindWithSelection(myModel, e.getData(Editor.KEY));
@@ -114,22 +113,22 @@ public class FindUIHelper implements Disposable {
         return myUI != null && (!StringUtil.isEmpty(myUI.getStringToFind()) || !myModel.isReplaceState() && !myModel.isFindAllEnabled() && myUI.getFileTypeMask() != null);
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
 
-    @Nonnull
+    
     public FindModel getModel() {
         return myModel;
     }
 
-    public void setModel(@Nonnull FindModel model) {
+    public void setModel(FindModel model) {
         myModel = model;
         myUI.initByModel();
     }
 
-    public void setOkHandler(@Nonnull Runnable okHandler) {
+    public void setOkHandler(Runnable okHandler) {
         myOkHandler = okHandler;
     }
 
@@ -199,7 +198,7 @@ public class FindUIHelper implements Disposable {
         return myModel.isReplaceState();
     }
 
-    @Nonnull
+    
     public Runnable getOkHandler() {
         return myOkHandler;
     }

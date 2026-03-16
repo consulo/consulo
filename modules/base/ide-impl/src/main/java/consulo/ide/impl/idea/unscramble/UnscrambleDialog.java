@@ -42,8 +42,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +86,7 @@ public class UnscrambleDialog extends DialogWrapper {
         myAnalyzerBox = new ComboBox<>(new CollectionComboBoxModel<>(analyzers));
         myAnalyzerBox.setRenderer(new ColoredListCellRenderer<StacktraceAnalyzer>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, StacktraceAnalyzer value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, StacktraceAnalyzer value, int index, boolean selected, boolean hasFocus) {
                 append(value == null ? "" : value.getName().get());
             }
         });
@@ -256,7 +255,7 @@ public class UnscrambleDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{createNormalizeTextAction(), getOKAction(), getCancelAction(), getHelpAction()};
     }
@@ -287,13 +286,13 @@ public class UnscrambleDialog extends DialogWrapper {
         }
         myUnscrambleChooser.setRenderer(new ColoredListCellRenderer<UnscrambleSupport>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList<? extends UnscrambleSupport> list, UnscrambleSupport value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList<? extends UnscrambleSupport> list, UnscrambleSupport value, int index, boolean selected, boolean hasFocus) {
                 append(value == null ? IdeLocalize.unscrambleNoUnscramblerItem().get() : value.getName().get());
             }
         });
     }
 
-    @Nonnull
+    
     private List<UnscrambleSupport> getRegisteredUnscramblers() {
         StacktraceAnalyzer analyzer = getAnalyzer();
         List<UnscrambleSupport> unscrambleSupports = new ArrayList<>();

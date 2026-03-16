@@ -32,8 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -42,12 +41,12 @@ import java.util.function.Predicate;
 
 @ExtensionImpl
 public class PostfixLiveTemplate extends CustomLiveTemplateBase {
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Collection<? extends CustomLiveTemplateLookupElement> getLookupElements(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
+        PsiFile file,
+        Editor editor,
         int offset
     ) {
         Collection<CustomLiveTemplateLookupElement> result = new HashSet<>();
@@ -86,7 +85,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     private static final Logger LOG = Logger.getInstance(PostfixLiveTemplate.class);
 
-    @Nonnull
+    
     public Set<String> getAllTemplateKeys(PsiFile file, int offset) {
         Set<String> keys = new HashSet<>();
         Language language = PsiUtilCore.getLanguageAtOffset(file, offset);
@@ -99,8 +98,8 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @Nullable
     private static String computeTemplateKeyWithoutContextChecking(
-        @Nonnull PostfixTemplateProvider provider,
-        @Nonnull CharSequence documentContent,
+        PostfixTemplateProvider provider,
+        CharSequence documentContent,
         int currentOffset
     ) {
         int startOffset = currentOffset;
@@ -126,7 +125,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     @Nullable
     @Override
     @RequiredReadAction
-    public String computeTemplateKey(@Nonnull CustomTemplateCallback callback) {
+    public String computeTemplateKey(CustomTemplateCallback callback) {
         Editor editor = callback.getEditor();
         CharSequence charsSequence = editor.getDocument().getCharsSequence();
         int offset = editor.getCaretModel().getOffset();
@@ -141,7 +140,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @Nullable
     @Override
-    public String computeTemplateKeyWithoutContextChecking(@Nonnull CustomTemplateCallback callback) {
+    public String computeTemplateKeyWithoutContextChecking(CustomTemplateCallback callback) {
         Editor editor = callback.getEditor();
         int currentOffset = editor.getCaretModel().getOffset();
         for (PostfixTemplateProvider provider : PostfixTemplateProvider.forLanguage(getLanguage(callback))) {
@@ -165,7 +164,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @Override
     @RequiredUIAccess
-    public void expand(@Nonnull String key, @Nonnull CustomTemplateCallback callback) {
+    public void expand(String key, CustomTemplateCallback callback) {
         UIAccess.assertIsUIThread();
 
         Editor editor = callback.getEditor();
@@ -189,11 +188,11 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @RequiredUIAccess
     public static void expandTemplate(
-        @Nonnull String key,
-        @Nonnull CustomTemplateCallback callback,
-        @Nonnull Editor editor,
-        @Nonnull PostfixTemplateProvider provider,
-        @Nonnull PostfixTemplate postfixTemplate
+        String key,
+        CustomTemplateCallback callback,
+        Editor editor,
+        PostfixTemplateProvider provider,
+        PostfixTemplate postfixTemplate
     ) {
         UIAccess.assertIsUIThread();
         FeatureUsageTracker.getInstance().triggerFeatureUsed("editing.completion.postfix");
@@ -219,7 +218,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     }
 
     @Override
-    public boolean isApplicable(@Nonnull CustomTemplateCallback callback, int offset, boolean wrapping) {
+    public boolean isApplicable(CustomTemplateCallback callback, int offset, boolean wrapping) {
         PostfixTemplatesSettings settings = PostfixTemplatesSettings.getInstance();
         if (wrapping || !settings.isPostfixTemplatesEnabled()) {
             return false;
@@ -241,11 +240,11 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     }
 
     @Override
-    public void wrap(@Nonnull String selection, @Nonnull CustomTemplateCallback callback) {
+    public void wrap(String selection, CustomTemplateCallback callback) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public String getTitle() {
         return CodeInsightLocalize.postfixLiveTemplateTitle().get();
@@ -257,15 +256,15 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     }
 
     @Override
-    public boolean hasCompletionItem(@Nonnull CustomTemplateCallback callback, int offset) {
+    public boolean hasCompletionItem(CustomTemplateCallback callback, int offset) {
         return true;
     }
 
     @RequiredUIAccess
     private static void expandTemplate(
-        @Nonnull PostfixTemplate template,
-        @Nonnull Editor editor,
-        @Nonnull PsiElement context
+        PostfixTemplate template,
+        Editor editor,
+        PsiElement context
     ) {
         if (template.startInWriteAction()) {
             CommandProcessor.getInstance().newCommand()
@@ -282,9 +281,9 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @RequiredUIAccess
     private static int deleteTemplateKey(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull String key
+        PsiFile file,
+        Editor editor,
+        String key
     ) {
         UIAccess.assertIsUIThread();
 
@@ -305,11 +304,11 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
 
     @RequiredReadAction
     private static Predicate<PostfixTemplate> createIsApplicationTemplateFunction(
-        @Nonnull PostfixTemplateProvider provider,
-        @Nonnull String key,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull Disposable parentDisposable
+        PostfixTemplateProvider provider,
+        String key,
+        PsiFile file,
+        Editor editor,
+        Disposable parentDisposable
     ) {
         if (file.getFileType().isBinary()) {
             return Predicates.alwaysFalse();
@@ -356,27 +355,27 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
             && template.isApplicable(context, finalCopyDocument, newOffset);
     }
 
-    private static boolean isDumbEnough(@Nonnull PostfixTemplate template, @Nonnull PsiElement context) {
+    private static boolean isDumbEnough(PostfixTemplate template, PsiElement context) {
         DumbService dumbService = DumbService.getInstance(context.getProject());
         return !dumbService.isDumb() || DumbService.isDumbAware(template);
     }
 
     @RequiredReadAction
     public static boolean isApplicableTemplate(
-        @Nonnull PostfixTemplateProvider provider,
-        @Nonnull String key,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor
+        PostfixTemplateProvider provider,
+        String key,
+        PsiFile file,
+        Editor editor
     ) {
         return findApplicableTemplate(provider, key, editor, file) != null;
     }
 
     @RequiredReadAction
     private static boolean isApplicableTemplate(
-        @Nonnull PostfixTemplateProvider provider,
-        @Nonnull String key,
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
+        PostfixTemplateProvider provider,
+        String key,
+        PsiFile file,
+        Editor editor,
         @Nullable PostfixTemplate template
     ) {
         Disposable parentDisposable = Disposable.newDisposable();
@@ -388,8 +387,8 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         }
     }
 
-    @Nonnull
-    private static Set<String> getKeys(@Nonnull PostfixTemplateProvider provider) {
+    
+    private static Set<String> getKeys(PostfixTemplateProvider provider) {
         Set<String> result = new HashSet<>();
         for (PostfixTemplate template : PostfixTemplatesUtils.getAvailableTemplates(provider)) {
             result.add(template.getKey());
@@ -400,10 +399,10 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
     @Nullable
     @RequiredReadAction
     private static PostfixTemplate findApplicableTemplate(
-        @Nonnull PostfixTemplateProvider provider,
+        PostfixTemplateProvider provider,
         @Nullable String key,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file
+        Editor editor,
+        PsiFile file
     ) {
         for (PostfixTemplate template : PostfixTemplatesUtils.getAvailableTemplates(provider)) {
             if (template.getKey().equals(key) && isApplicableTemplate(provider, key, file, editor, template)) {
@@ -413,7 +412,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
         return null;
     }
 
-    private static Language getLanguage(@Nonnull CustomTemplateCallback callback) {
+    private static Language getLanguage(CustomTemplateCallback callback) {
         return PsiUtilCore.getLanguageAtOffset(callback.getFile(), callback.getOffset());
     }
 

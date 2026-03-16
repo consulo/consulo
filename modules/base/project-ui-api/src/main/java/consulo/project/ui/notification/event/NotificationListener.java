@@ -19,23 +19,22 @@ import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.net.URL;
 
 public interface NotificationListener {
   @RequiredUIAccess
-  void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event);
+  void hyperlinkUpdate(Notification notification, HyperlinkEvent event);
 
   abstract class Adapter implements NotificationListener {
     @Override
-    public final void hyperlinkUpdate(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+    public final void hyperlinkUpdate(Notification notification, HyperlinkEvent event) {
       if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         hyperlinkActivated(notification, event);
       }
     }
 
-    protected abstract void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e);
+    protected abstract void hyperlinkActivated(Notification notification, HyperlinkEvent e);
   }
 
   NotificationListener URL_OPENING_LISTENER = new UrlOpeningListener(false);
@@ -48,7 +47,7 @@ public interface NotificationListener {
     }
 
     @Override
-    protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+    protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
       URL url = event.getURL();
       if (url == null) {
         Platform.current().openInBrowser(event.getDescription());

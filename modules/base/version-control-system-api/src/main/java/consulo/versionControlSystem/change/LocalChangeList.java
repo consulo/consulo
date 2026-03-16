@@ -19,20 +19,18 @@ package consulo.versionControlSystem.change;
 import consulo.project.Project;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.action.VcsContextFactory;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
  * @author max
  */
 public abstract class LocalChangeList implements Cloneable, ChangeList {
-  @NonNls
+  
   public static final String DEFAULT_NAME = VcsBundle.message("changes.default.changelist.name");
 
-  public static LocalChangeList createEmptyChangeList(Project project, @Nonnull String name) {
+  public static LocalChangeList createEmptyChangeList(Project project, String name) {
     return VcsContextFactory.getInstance().createLocalChangeList(project, name);
   }
 
@@ -42,15 +40,15 @@ public abstract class LocalChangeList implements Cloneable, ChangeList {
    * Logical id that identifies the changelist and should survive name changing.
    * @return changelist id
    */
-  @Nonnull
+  
   public String getId() {
     return getName();
   }
 
-  @Nonnull
+  
   public abstract String getName();
 
-  public abstract void setName(@Nonnull String name);
+  public abstract void setName(String name);
 
   @Nullable
   public abstract String getComment();

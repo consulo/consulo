@@ -7,25 +7,24 @@ import consulo.execution.executor.Executor;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "coverage", order = "after debug")
 public class CoverageExecutor extends Executor {
     public static final String EXECUTOR_ID = "Coverage";
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getStartActionText() {
         return ExecutionCoverageLocalize.runWithCoverage();
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+    public LocalizeValue getStartActiveText(String configurationName) {
         return ExecutionCoverageLocalize.runWithCoverageMnemonic(configurationName);
     }
 
-    @Nonnull
+    
     @Override
     public String getToolWindowId() {
         return ToolWindowId.RUN;
@@ -37,30 +36,30 @@ public class CoverageExecutor extends Executor {
     }
 
     @Override
-    @Nonnull
+    
     public Image getIcon() {
         return ExecutionCoverageIconGroup.runwithcoverage();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return ExecutionCoverageLocalize.runSelectedConfigurationWithCoverageEnabled();
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getActionName() {
         return ExecutionCoverageLocalize.actionNameCover();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return EXECUTOR_ID;
     }
 
-    @Nonnull
+    
     @Override
     public String getContextActionId() {
         return "RunCoverage";

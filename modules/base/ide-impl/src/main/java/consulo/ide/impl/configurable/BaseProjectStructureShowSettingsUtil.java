@@ -22,8 +22,7 @@ import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.project.Project;
 import consulo.ide.impl.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -48,7 +47,7 @@ public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSetti
 
   @Nullable
   @Override
-  public ModulesConfigurator getModulesModel(@Nonnull Project project) {
+  public ModulesConfigurator getModulesModel(Project project) {
     if(myModulesConfigurator == null) {
       myModulesConfigurator = new ModulesConfiguratorImpl(project, () -> getLibrariesModel(project));
       myModulesConfigurator.reset();
@@ -58,7 +57,7 @@ public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSetti
 
   @Nullable
   @Override
-  public LibrariesConfigurator getLibrariesModel(@Nonnull Project project) {
+  public LibrariesConfigurator getLibrariesModel(Project project) {
     if(myLibrariesConfigurator == null) {
       myLibrariesConfigurator = new DefaultLibrariesConfigurator(project);
       myLibrariesConfigurator.reset();

@@ -22,7 +22,6 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -68,7 +67,7 @@ class NavBarListWrapper extends JBScrollPane implements UiDataProvider {
 
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.lazy(PlatformDataKeys.SELECTED_ITEM, () -> myList.getSelectedValue());
     sink.lazy(PlatformDataKeys.SELECTED_ITEMS, () -> myList.getSelectedValues());
   }

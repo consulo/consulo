@@ -33,8 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -96,7 +95,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         AppExecutorUtil.getAppScheduledExecutorService().schedule(restartApplicationOrReloadProjectTask, 1, TimeUnit.SECONDS);
     }
 
-    public void projectStorageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage, @Nonnull Project project) {
+    public void projectStorageFileChanged(VirtualFileEvent event, StateStorage storage, Project project) {
         VirtualFile file = event.getFile();
 
         if (!StorageUtil.isChangedByStorageOrSaveSession(event) && !(event.getRequestor() instanceof ProjectManager)) {
@@ -120,7 +119,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         }
     }
 
-    private CompletableFuture<Boolean> shouldReloadProject(@Nonnull Project project) {
+    private CompletableFuture<Boolean> shouldReloadProject(Project project) {
         if (project.isDisposed() || myChangedProjectFiles.isEmpty()) {
             return CompletableFuture.completedFuture(false);
         }
@@ -135,7 +134,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     }
 
     private static CompletableFuture<Boolean> askToRestart(
-        @Nonnull Project project,
+        Project project,
         @Nullable Collection<? extends StateStorage> changedStorages
     ) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
@@ -162,7 +161,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         return future;
     }
 
-    private void registerProjectToReload(@Nonnull VirtualFile file, @Nonnull StateStorage storage) {
+    private void registerProjectToReload(VirtualFile file, StateStorage storage) {
         LOG.info("[RELOAD] Registering project to reload: " + file + ", project: " + myProject.getBasePath());
 
         myChangedProjectFiles.add(storage);
@@ -210,7 +209,7 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         }
     }
 
-    @Nonnull
+    
     @Override
     public AccessToken blockReloadingOnExternalChanges() {
         blockReloadingProjectOnExternalChanges();

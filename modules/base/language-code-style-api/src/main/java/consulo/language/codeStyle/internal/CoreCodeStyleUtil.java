@@ -22,8 +22,7 @@ import consulo.language.Language;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,8 @@ public class CoreCodeStyleUtil {
     private static final ThreadLocal<ProcessingUnderProgressInfo> SEQUENTIAL_PROCESSING_ALLOWED =
         ThreadLocal.withInitial(ProcessingUnderProgressInfo::new);
 
-    @Nonnull
-    public static TextRange[] getIndents(@Nonnull CharSequence charsSequence, int shift) {
+    
+    public static TextRange[] getIndents(CharSequence charsSequence, int shift) {
         List<TextRange> result = new ArrayList<>();
         int whitespaceEnd = -1;
         int lastTextFound = 0;

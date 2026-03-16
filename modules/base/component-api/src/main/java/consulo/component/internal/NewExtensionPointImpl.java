@@ -36,8 +36,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.*;
@@ -118,7 +117,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         myApiClass = apiClass;
     }
 
-    public void reset(@Nonnull List<InjectingBinding> newBindings) {
+    public void reset(List<InjectingBinding> newBindings) {
         // reset instanceOf cache
         myInstanceOfCacheValue = null;
         // reset other caches
@@ -131,13 +130,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         myHasAnyExtension = null;
     }
 
-    @Nonnull
+    
     @Override
     public List<T> sort(List<T> extensionsList) {
         return sortImpl(extensionsList);
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     private static <K> List<K> sortImpl(List<K> extensionsList) {
         List<LoadingOrder.Orderable> orders = new ArrayList<>(extensionsList.size());
@@ -171,10 +170,10 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return result == ObjectUtil.NULL ? null : (K)result;
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
-    public <K> K getOrBuildCache(@Nonnull ExtensionPointCacheKey<T, K> key) {
+    public <K> K getOrBuildCache(ExtensionPointCacheKey<T, K> key) {
         Map<ExtensionPointCacheKey, Object> caches = myCaches;
         if (caches == null) {
             caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
@@ -182,11 +181,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(new ExtensionWalker<>() {
             @Override
-            public void walk(@Nonnull Consumer<T> consumer) {
+            public void walk(Consumer<T> consumer) {
                 forEachExtensionSafe(consumer);
             }
 
-            @Nonnull
+            
             @Override
             public Function<List<T>, List<T>> sorter() {
                 return NewExtensionPointImpl::sortImpl;
@@ -302,7 +301,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return List.of(array);
     }
 
-    @Nonnull
+    
     private List<Pair<T, PluginDescriptor>> buildOrGet() {
         CacheValue<T> cacheValue = myCacheValue;
 
@@ -317,7 +316,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nullable
     @Override
-    public T findFirstSafe(@Nonnull @InheritCallerContext Predicate<T> predicate) {
+    public T findFirstSafe(@InheritCallerContext Predicate<T> predicate) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -337,7 +336,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Nullable
     @Override
-    public <R> R computeSafeIfAny(@Nonnull @InheritCallerContext Function<? super T, ? extends R> processor) {
+    public <R> R computeSafeIfAny(@InheritCallerContext Function<? super T, ? extends R> processor) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -356,11 +355,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public <R, CR extends Collection<? super R>> CR collectMapped(
-        @Nonnull CR results,
-        @InheritCallerContext @Nonnull Function<? super T, ? extends R> processor
+        CR results,
+        @InheritCallerContext Function<? super T, ? extends R> processor
     ) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
@@ -380,12 +379,12 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return results;
     }
 
-    @Nonnull
+    
     @Override
     public <K, V, M extends Map<? super K, ? super V>> M collectMapped(
-        @Nonnull M results,
-        @Nonnull @InheritCallerContext Function<? super T, ? extends K> keyMapper,
-        @Nonnull @InheritCallerContext Function<? super T, ? extends V> valueMapper
+        M results,
+        @InheritCallerContext Function<? super T, ? extends K> keyMapper,
+        @InheritCallerContext Function<? super T, ? extends V> valueMapper
     ) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
@@ -406,11 +405,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return results;
     }
 
-    @Nonnull
+    
     @Override
     public <CE extends Collection<T>> CE collectFiltered(
-        @Nonnull CE results,
-        @Nonnull @InheritCallerContext Predicate<? super T> predicate
+        CE results,
+        @InheritCallerContext Predicate<? super T> predicate
     ) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
@@ -430,7 +429,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public void forEachExtensionSafe(@Nonnull @InheritCallerContext Consumer<? super T> consumer) {
+    public void forEachExtensionSafe(@InheritCallerContext Consumer<? super T> consumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -446,7 +445,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @Override
-    public void forEachBreakable(@Nonnull @InheritCallerContext Function<? super T, Flow> breakableConsumer) {
+    public void forEachBreakable(@InheritCallerContext Function<? super T, Flow> breakableConsumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -465,7 +464,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void processWithPluginDescriptor(@Nonnull @InheritCallerContext BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+    public void processWithPluginDescriptor(@InheritCallerContext BiConsumer<? super T, ? super PluginDescriptor> consumer) {
         List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
@@ -480,7 +479,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         }
     }
 
-    public CacheValue<T> set(@Nonnull List<Pair<T, PluginDescriptor>> list) {
+    public CacheValue<T> set(List<Pair<T, PluginDescriptor>> list) {
         CacheValue<T> value = new CacheValue<>(list, null);
         myCacheValue = value;
 
@@ -522,7 +521,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return myModificationCount;
     }
 
-    @Nonnull
+    
     @Override
     public List<T> getExtensionList() {
         CacheValue<T> cacheValue = myCacheValue;
@@ -537,13 +536,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return value.myUnwrapExtensionCache;
     }
 
-    @Nonnull
+    
     @Override
     public String getClassName() {
         return myApiClassName;
     }
 
-    @Nonnull
+    
     @Override
     public Class<T> getExtensionClass() {
         return Objects.requireNonNull(myApiClass, "apiClass not initialized");

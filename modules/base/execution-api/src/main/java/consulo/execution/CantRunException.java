@@ -22,7 +22,6 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
 import consulo.process.ExecutionException;
 
-import jakarta.annotation.Nonnull;
 
 public class CantRunException extends ExecutionException {
   public CantRunException(String message) {
@@ -41,25 +40,25 @@ public class CantRunException extends ExecutionException {
   }
 
   @Deprecated
-  public static CantRunException noJdkForModule(@Nonnull Module module) {
+  public static CantRunException noJdkForModule(Module module) {
     return new CantRunException(ExecutionLocalize.noJdkForModuleErrorMessage(module.getName()).get());
   }
 
-  public static CantRunException noModuleExtension(@Nonnull Module module, @Nonnull Class<? extends ModuleExtension> extensionName) {
+  public static CantRunException noModuleExtension(Module module, Class<? extends ModuleExtension> extensionName) {
 
     return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(extensionName.getName(), module.getName()).get());
   }
 
-  public static CantRunException noSdkForModuleExtension(@Nonnull ModuleExtension e) {
+  public static CantRunException noSdkForModuleExtension(ModuleExtension e) {
     String moduleExtensionName = ModuleExtensionHelper.getInstance(e.getProject()).getModuleExtensionName(e);
     return new CantRunException(ExecutionLocalize.noSdkForModuleExtensionErrorMessage(moduleExtensionName, e.getModule().getName()).get());
   }
 
-  public static CantRunException jdkMisconfigured(@Nonnull Sdk jdk, @Nonnull Module module) {
+  public static CantRunException jdkMisconfigured(Sdk jdk, Module module) {
     return new CantRunException(ExecutionLocalize.jdkIsBadConfiguredErrorMessage(jdk.getName()).get());
   }
 
-  public static CantRunException classNotFound(@Nonnull String className, @Nonnull Module module) {
+  public static CantRunException classNotFound(String className, Module module) {
     return new CantRunException(ExecutionLocalize.classNotFoundInModuleErrorMessage(className, module.getName()).get());
   }
 

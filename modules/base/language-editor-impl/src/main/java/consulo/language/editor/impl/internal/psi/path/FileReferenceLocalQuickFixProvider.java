@@ -21,7 +21,6 @@ import consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider;
 import consulo.language.psi.path.FileReference;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -32,7 +31,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class FileReferenceLocalQuickFixProvider implements PsiReferenceLocalQuickFixProvider {
   @Override
-  public void addQuickFixes(@Nonnull PsiReference reference, @Nonnull Consumer<LocalQuickFix> consumer) {
+  public void addQuickFixes(PsiReference reference, Consumer<LocalQuickFix> consumer) {
     if (reference instanceof FileReference fileReference) {
       List<? extends LocalQuickFix> fixes = FileReferenceQuickFixProvider.registerQuickFix(fileReference);
       for (LocalQuickFix fix : fixes) {

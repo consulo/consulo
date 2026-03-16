@@ -39,8 +39,7 @@ import consulo.ui.ex.action.CustomActionsSchema;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -50,7 +49,7 @@ import java.util.Collection;
 public abstract class DebuggerSessionTabBase extends RunTab {
   protected ExecutionConsole myConsole;
 
-  public DebuggerSessionTabBase(@Nonnull Project project, @Nonnull String runnerId, @Nonnull String sessionName, @Nonnull GlobalSearchScope searchScope) {
+  public DebuggerSessionTabBase(Project project, String runnerId, String sessionName, GlobalSearchScope searchScope) {
     super(project, searchScope, runnerId, XDebuggerBundle.message("xdebugger.default.content.title"), sessionName);
 
     myUi.getDefaults().initTabDefaults(0, XDebuggerBundle.message("xdebugger.debugger.tab.title"), ExecutionDebugIconGroup.actionStartdebugger())

@@ -17,12 +17,11 @@ package consulo.language.editor.internal;
 
 import consulo.language.editor.inspection.reference.RefGraphAnnotator;
 import consulo.language.editor.inspection.reference.RefManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-08-09
  */
 public interface RefManagerInternal extends RefManager {
-    void registerGraphAnnotator(@Nonnull RefGraphAnnotator annotator);
+    void registerGraphAnnotator(RefGraphAnnotator annotator);
 }

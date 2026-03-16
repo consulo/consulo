@@ -29,9 +29,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -51,24 +49,24 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
     @Override
     @Nullable
-    public NewVirtualFile findChild(@Nonnull @NonNls String name) {
+    public NewVirtualFile findChild(String name) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<VirtualFile> getCachedChildren() {
         return Collections.emptyList();
     }
 
-    @Nonnull
+    
     @Override
     public Iterable<VirtualFile> iterInDbChildren() {
         return List.of();
     }
 
     @Override
-    @Nonnull
+    
     public NewVirtualFileSystem getFileSystem() {
         VirtualFileSystemEntry parent = getParent();
         assert parent != null;
@@ -77,13 +75,13 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
     @Override
     @Nullable
-    public NewVirtualFile refreshAndFindChild(@Nonnull String name) {
+    public NewVirtualFile refreshAndFindChild(String name) {
         return null;
     }
 
     @Override
     @Nullable
-    public NewVirtualFile findChildIfCached(@Nonnull String name) {
+    public NewVirtualFile findChildIfCached(String name) {
         return null;
     }
 
@@ -105,7 +103,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    @Nonnull
+    
     public InputStream getInputStream() throws IOException {
         byte[] preloadedContent = getUserData(ourPreloadedContentKey);
 
@@ -113,12 +111,12 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    @Nonnull
+    
     public byte[] contentsToByteArray() throws IOException {
         return contentsToByteArray(true);
     }
 
-    @Nonnull
+    
     @Override
     public byte[] contentsToByteArray(boolean cacheContent) throws IOException {
         checkNotTooLarge(null);
@@ -151,14 +149,14 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
         return bytes;
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence loadText() {
         return LoadTextUtil.loadText(this);
     }
 
     @Override
-    @Nonnull
+    
     public OutputStream getOutputStream(Object requestor, long modStamp, long timeStamp) throws IOException {
         return VirtualFileUtil.outputStreamAddingBOM(ourPersistence.getOutputStream(this, requestor, modStamp, timeStamp), this);
     }
@@ -179,11 +177,11 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
     }
 
     @Override
-    protected void setUserMap(@Nonnull KeyFMap map) {
+    protected void setUserMap(KeyFMap map) {
         mySegment.setUserMap(myId, map);
     }
 
-    @Nonnull
+    
     @Override
     protected KeyFMap getUserMap() {
         return mySegment.getUserMap(this, myId);

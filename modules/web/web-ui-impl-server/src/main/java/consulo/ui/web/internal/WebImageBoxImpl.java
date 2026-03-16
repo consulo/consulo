@@ -21,7 +21,6 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.state.ImageBoxState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -47,13 +46,13 @@ public class WebImageBoxImpl extends VaadinComponentDelegate<WebImageBoxImpl.Vaa
     getVaadinComponent().set(image);
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 
-  @Nonnull
+  
   @Override
   public Image getImage() {
     return myImage;

@@ -18,8 +18,7 @@ package consulo.ui.style;
 import consulo.disposer.Disposable;
 import consulo.ui.AntialiasingType;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,16 +28,13 @@ import java.util.Objects;
  * @since 22-Jun-16
  */
 public interface StyleManager {
-    @Nonnull
     static StyleManager get() {
         return UIInternal.get()._StyleManager_get();
     }
-
-    @Nonnull
     List<Style> getStyles();
 
     @Nullable
-    default Style getStyle(@Nonnull String styleId) {
+    default Style getStyle(String styleId) {
         for (Style style : getStyles()) {
             if (Objects.equals(style.getId(), styleId)) {
                 return style;
@@ -46,16 +42,12 @@ public interface StyleManager {
         }
         return null;
     }
-
-    @Nonnull
     Style getCurrentStyle();
 
-    void setCurrentStyle(@Nonnull Style newStyle);
+    void setCurrentStyle(Style newStyle);
+    Disposable addChangeListener(StyleChangeListener listener);
 
-    @Nonnull
-    Disposable addChangeListener(@Nonnull StyleChangeListener listener);
-
-    default void refreshAntialiasingType(@Nonnull AntialiasingType antialiasingType) {
+    default void refreshAntialiasingType(AntialiasingType antialiasingType) {
     }
 
     default void refreshUI() {

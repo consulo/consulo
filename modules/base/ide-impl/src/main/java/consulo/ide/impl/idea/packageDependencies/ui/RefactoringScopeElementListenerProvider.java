@@ -29,7 +29,6 @@ import consulo.language.editor.refactoring.event.RefactoringElementAdapter;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringElementListenerComposite;
 import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -89,7 +88,7 @@ public class RefactoringScopeElementListenerProvider implements RefactoringEleme
       }
       composite.addListener(new RefactoringElementAdapter() {
         @Override
-        public void elementRenamedOrMoved(@Nonnull PsiElement newElement) {
+        public void elementRenamedOrMoved(PsiElement newElement) {
           LOG.assertTrue(newElement instanceof PsiQualifiedNamedElement);
           try {
             String newPattern = text.replace(descriptor.getOldQName(), ((PsiQualifiedNamedElement)newElement).getQualifiedName());
@@ -104,7 +103,7 @@ public class RefactoringScopeElementListenerProvider implements RefactoringEleme
         }
 
         @Override
-        public void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName) {
+        public void undoElementMovedOrRenamed(PsiElement newElement, String oldQualifiedName) {
           LOG.assertTrue(newElement instanceof PsiQualifiedNamedElement);
           try {
             NamedScope[] currentScopes = descriptor.getHolder().getEditableScopes();

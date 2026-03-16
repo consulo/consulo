@@ -19,8 +19,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.psi.PsiElement;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.Objects;
@@ -31,23 +30,23 @@ public class HighlightInfoTypeImpl implements HighlightInfoType, HighlightInfoTy
     private boolean myNeedsUpdateOnTyping;
 
     //read external only
-    public HighlightInfoTypeImpl(@Nonnull Element element) {
+    public HighlightInfoTypeImpl(Element element) {
         mySeverity = new HighlightSeverity(element);
         myAttributesKey = new TextAttributesKey(element);
     }
 
-    public HighlightInfoTypeImpl(@Nonnull HighlightSeverity severity, TextAttributesKey attributesKey) {
+    public HighlightInfoTypeImpl(HighlightSeverity severity, TextAttributesKey attributesKey) {
         this(severity, attributesKey, true);
     }
 
-    public HighlightInfoTypeImpl(@Nonnull HighlightSeverity severity, TextAttributesKey attributesKey, boolean needsUpdateOnTyping) {
+    public HighlightInfoTypeImpl(HighlightSeverity severity, TextAttributesKey attributesKey, boolean needsUpdateOnTyping) {
         mySeverity = severity;
         myAttributesKey = attributesKey;
         myNeedsUpdateOnTyping = needsUpdateOnTyping;
     }
 
     @Override
-    @Nonnull
+    
     public HighlightSeverity getSeverity(@Nullable PsiElement psiElement) {
         return mySeverity;
     }

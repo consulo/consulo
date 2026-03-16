@@ -2,7 +2,6 @@
 package consulo.document.util;
 
 import consulo.util.lang.MathUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * This class contains utility methods working with the alternative representation of {@link TextRange} as a {@code long} value,
@@ -10,7 +9,7 @@ import jakarta.annotation.Nonnull;
  * It might be useful to address atomicity or memory concerns.
  */
 public final class TextRangeScalarUtil {
-    public static long toScalarRange(@Nonnull Segment range) {
+    public static long toScalarRange(Segment range) {
         return toScalarRange(range.getStartOffset(), range.getEndOffset());
     }
 
@@ -55,11 +54,11 @@ public final class TextRangeScalarUtil {
         return startOffset(range) <= offset && offset <= endOffset(range);
     }
 
-    public static boolean intersects(@Nonnull TextRange thisRange, long otherRange) {
+    public static boolean intersects(TextRange thisRange, long otherRange) {
         return thisRange.intersects(startOffset(otherRange), endOffset(otherRange));
     }
 
-    public static @Nonnull TextRange create(long range) {
+    public static TextRange create(long range) {
         return TextRange.create(startOffset(range), endOffset(range));
     }
 

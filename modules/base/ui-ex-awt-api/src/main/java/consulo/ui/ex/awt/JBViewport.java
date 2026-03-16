@@ -9,8 +9,7 @@ import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
@@ -393,14 +392,14 @@ public class JBViewport extends JViewport implements ZoomableViewport {
     return view == null ? null : view.getPreferredSize();
   }
 
-  private static Dimension getPreferredSizeWithoutScrollBars(@Nonnull JComponent view) {
+  private static Dimension getPreferredSizeWithoutScrollBars(JComponent view) {
     Dimension size = view.getPreferredSize();
     if (size == null) return new Dimension();
     JBInsets.removeFrom(size, getViewInsets(view));
     return size;
   }
 
-  private static Class<?> getPreferredScrollableViewportSizeDeclaringClass(@Nonnull Scrollable scrollable) {
+  private static Class<?> getPreferredScrollableViewportSizeDeclaringClass(Scrollable scrollable) {
     try {
       return scrollable.getClass().getMethod("getPreferredScrollableViewportSize").getDeclaringClass();
     }
@@ -409,7 +408,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
     }
   }
 
-  private static Dimension getPreferredScrollableViewportSize(@Nonnull JList<?> list) {
+  private static Dimension getPreferredScrollableViewportSize(JList<?> list) {
     if (JList.class != getPreferredScrollableViewportSizeDeclaringClass(list)) {
       return list.getPreferredScrollableViewportSize(); // may be null
     }
@@ -469,7 +468,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
     return size;
   }
 
-  private static Dimension getPreferredScrollableViewportSize(@Nonnull JTree tree) {
+  private static Dimension getPreferredScrollableViewportSize(JTree tree) {
     if (JTree.class != getPreferredScrollableViewportSizeDeclaringClass(tree)) {
       return tree.getPreferredScrollableViewportSize(); // may be null
     }

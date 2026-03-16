@@ -19,13 +19,12 @@ import consulo.execution.internal.layout.ViewContext;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Toggleable;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 
 public class AbstractFocusOnAction extends BaseViewAction implements Toggleable {
-    @Nonnull
+    
     private final String myCondition;
 
-    public AbstractFocusOnAction(@Nonnull String condition) {
+    public AbstractFocusOnAction(String condition) {
         myCondition = condition;
     }
 

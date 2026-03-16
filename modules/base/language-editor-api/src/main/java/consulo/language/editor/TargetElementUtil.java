@@ -39,8 +39,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -50,21 +49,21 @@ import java.util.function.Consumer;
  * @since 2015-04-20
  */
 public class TargetElementUtil {
-    @Nonnull
+    
     public static Set<String> getAllAccepted() {
         Set<String> flags = new LinkedHashSet<>();
         TargetElementUtilExtender.EP.forEachExtensionSafe(Application.get(), it -> it.collectAllAccepted(flags));
         return flags;
     }
 
-    @Nonnull
+    
     public static Set<String> getDefinitionSearchFlags() {
         Set<String> flags = new LinkedHashSet<>();
         TargetElementUtilExtender.EP.forEachExtensionSafe(Application.get(), it -> it.collectDefinitionSearchFlags(flags));
         return flags;
     }
 
-    @Nonnull
+    
     public static Set<String> getReferenceSearchFlags() {
         Set<String> flags = new LinkedHashSet<>();
         TargetElementUtilExtender.EP.forEachExtensionSafe(Application.get(), it -> it.collectReferenceSearchFlags(flags));
@@ -112,7 +111,7 @@ public class TargetElementUtil {
     }
 
     @Nullable
-    public static PsiElement adjustReference(@Nonnull PsiReference ref) {
+    public static PsiElement adjustReference(PsiReference ref) {
         return TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.adjustReference(ref));
     }
 
@@ -139,7 +138,7 @@ public class TargetElementUtil {
 
     @Nullable
     @RequiredReadAction
-    public static PsiElement findTargetElement(Editor editor, @Nonnull Set<String> flags) {
+    public static PsiElement findTargetElement(Editor editor, Set<String> flags) {
         int offset = editor.getCaretModel().getOffset();
         PsiElement result = findTargetElement(editor, flags, offset);
         if (result != null) {
@@ -155,7 +154,7 @@ public class TargetElementUtil {
 
     @Nullable
     @RequiredReadAction
-    public static PsiElement findTargetElement(@Nonnull Editor editor, @Nonnull Set<String> flags, int offset) {
+    public static PsiElement findTargetElement(Editor editor, Set<String> flags, int offset) {
         PsiElement targetElement = findTargetElementImpl(editor, flags, offset);
         if (targetElement == null) {
             return null;
@@ -171,7 +170,7 @@ public class TargetElementUtil {
 
     @Nullable
     @RequiredReadAction
-    private static PsiElement findTargetElementImpl(@Nonnull Editor editor, @Nonnull Set<String> flags, int offset) {
+    private static PsiElement findTargetElementImpl(Editor editor, Set<String> flags, int offset) {
         Project project = editor.getProject();
         if (project == null) {
             return null;
@@ -342,7 +341,7 @@ public class TargetElementUtil {
         );
     }
 
-    public static boolean inVirtualSpace(@Nonnull Editor editor, int offset) {
+    public static boolean inVirtualSpace(Editor editor, int offset) {
         return offset == editor.getCaretModel().getOffset()
             && EditorUtil.inVirtualSpace(editor, editor.getCaretModel().getLogicalPosition());
     }
@@ -365,7 +364,7 @@ public class TargetElementUtil {
         return true;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static Collection<PsiElement> getTargetCandidates(PsiReference reference) {
         if (reference instanceof PsiPolyVariantReference polyVariantReference) {

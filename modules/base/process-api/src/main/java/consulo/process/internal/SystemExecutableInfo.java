@@ -21,8 +21,7 @@ import consulo.platform.PlatformOperatingSystem;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.lazy.LazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -80,8 +79,8 @@ public class SystemExecutableInfo {
     };
   }
 
-  @Nonnull
-  public List<String> getTerminalCommand(@Nullable String title, @Nonnull String command) {
+  
+  public List<String> getTerminalCommand(@Nullable String title, String command) {
     PlatformOperatingSystem os = myPlatform.os();
 
     if (os.isWindows()) {
@@ -106,17 +105,17 @@ public class SystemExecutableInfo {
     throw new UnsupportedSystemException(Platform.current());
   }
 
-  @Nonnull
+  
   public String getOsascriptPath() {
     return "/usr/bin/osascript";
   }
 
-  @Nonnull
+  
   public String getOpenCommandPath() {
     return "/usr/bin/open";
   }
 
-  @Nonnull
+  
   public static String getWindowsShellName() {
     return "cmd.exe";
   }

@@ -13,19 +13,17 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 @ExtensionImpl(id = LargeFileEditorProvider.PROVIDER_ID)
 public final class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
     public static final String PROVIDER_ID = "LargeFileEditorProvider";
 
-    private static final @NonNls String CARET_PAGE_NUMBER_ATTR = "caret-page-number";
-    private static final @NonNls String CARET_PAGE_SYMBOL_OFFSET_ATTR = "caret-page-symbol-offset";
+    private static final String CARET_PAGE_NUMBER_ATTR = "caret-page-number";
+    private static final String CARET_PAGE_SYMBOL_OFFSET_ATTR = "caret-page-symbol-offset";
 
     @Override
-    public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public boolean accept(Project project, VirtualFile file) {
         return TextEditorProvider.isTextFile(file)
             && RawFileLoaderHelper.isTooLargeForContentLoading(file)
             && !file.getFileType().isBinary()
@@ -33,22 +31,22 @@ public final class LargeFileEditorProvider implements FileEditorProvider, DumbAw
     }
 
     @Override
-    public @Nonnull FileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public FileEditor createEditor(Project project, VirtualFile file) {
         return new LargeFileEditorImpl(project, file);
     }
 
     @Override
-    public @Nonnull String getEditorTypeId() {
+    public String getEditorTypeId() {
         return PROVIDER_ID;
     }
 
     @Override
-    public @Nonnull FileEditorPolicy getPolicy() {
+    public FileEditorPolicy getPolicy() {
         return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
     }
 
     @Override
-    public void writeState(@Nonnull FileEditorState state, @Nonnull Project project, @Nonnull Element targetElement) {
+    public void writeState(FileEditorState state, Project project, Element targetElement) {
         if (state instanceof LargeFileEditorState) {
             targetElement.setAttribute(CARET_PAGE_NUMBER_ATTR,
                 Long.toString(((LargeFileEditorState) state).caretPageNumber));
@@ -58,7 +56,7 @@ public final class LargeFileEditorProvider implements FileEditorProvider, DumbAw
     }
 
     @Override
-    public @Nonnull FileEditorState readState(@Nonnull Element sourceElement, @Nonnull Project project, @Nonnull VirtualFile file) {
+    public FileEditorState readState(Element sourceElement, Project project, VirtualFile file) {
         LargeFileEditorState state = new LargeFileEditorState();
         if (JDOMUtil.isEmpty(sourceElement)) {
             return state;

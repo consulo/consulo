@@ -16,16 +16,15 @@
 
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
 public interface PrintElementManager {
 
-  boolean isSelected(@Nonnull PrintElementWithGraphElement printElement);
+  boolean isSelected(PrintElementWithGraphElement printElement);
 
-  int getColorId(@Nonnull GraphElement element);
+  int getColorId(GraphElement element);
 
-  @Nonnull
+  
   Comparator<GraphElement> getGraphElementComparator();
 }

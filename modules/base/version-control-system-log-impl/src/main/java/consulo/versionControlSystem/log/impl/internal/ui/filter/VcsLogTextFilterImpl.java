@@ -20,27 +20,26 @@ import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
 import consulo.versionControlSystem.log.VcsLogTextFilter;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilter {
 
-  @Nonnull
+  
   private final String myText;
   private final boolean myMatchCase;
   @Nullable private final Pattern myPattern;
 
-  public VcsLogTextFilterImpl(@Nonnull String text, boolean isRegexAllowed, boolean matchCase) {
+  public VcsLogTextFilterImpl(String text, boolean isRegexAllowed, boolean matchCase) {
     myText = text;
     myMatchCase = matchCase;
     myPattern = createPattern(myText, isRegexAllowed, myMatchCase);
   }
 
   @Nullable
-  private static Pattern createPattern(@Nonnull String text, boolean isRegexAllowed, boolean matchCase) {
+  private static Pattern createPattern(String text, boolean isRegexAllowed, boolean matchCase) {
     if (isRegexAllowed && VcsLogUtil.maybeRegexp(text)) {
       try {
         return matchCase ? Pattern.compile(text) : Pattern.compile(text, Pattern.CASE_INSENSITIVE);
@@ -53,17 +52,17 @@ public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilt
 
   // used in upsource
   @SuppressWarnings("unused")
-  public VcsLogTextFilterImpl(@Nonnull String text) {
+  public VcsLogTextFilterImpl(String text) {
     this(text, false, false);
   }
 
   @Override
-  public boolean matches(@Nonnull VcsCommitMetadata details) {
+  public boolean matches(VcsCommitMetadata details) {
     return matches(this, details.getFullMessage());
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
     return myText;
   }
@@ -83,7 +82,7 @@ public class VcsLogTextFilterImpl implements VcsLogDetailsFilter, VcsLogTextFilt
     return (isRegex() ? "matching " : "containing ") + myText + " (case " + (myMatchCase ? "sensitive" : "insensitive") + ")";
   }
 
-  public static boolean matches(@Nonnull VcsLogTextFilter filter, @Nonnull String message) {
+  public static boolean matches(VcsLogTextFilter filter, String message) {
     Pattern pattern;
     if (filter instanceof VcsLogTextFilterImpl) {
       pattern = ((VcsLogTextFilterImpl)filter).myPattern;

@@ -19,7 +19,6 @@ import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,10 +26,10 @@ import jakarta.annotation.Nonnull;
  * @since 19-Feb-22
  */
 public interface OpenFileDescriptor extends Disposable, UserDataHolder, Navigatable, Comparable<OpenFileDescriptor> {
-    @Nonnull
+    
     VirtualFile getFile();
 
-    @Nonnull
+    
     ComponentManager getProject();
 
     int getOffset();

@@ -24,19 +24,18 @@ import consulo.versionControlSystem.internal.VcsBackgroundableActions;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class VcsAnnotateUtil {
-  @Nonnull
-  public static List<Editor> getEditors(@Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  public static List<Editor> getEditors(Project project, VirtualFile file) {
     FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(file);
     return ContainerUtil.mapNotNull(editors, fileEditor -> fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null);
   }
 
-  @Nonnull
-  public static BackgroundableActionLock getBackgroundableLock(@Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  public static BackgroundableActionLock getBackgroundableLock(Project project, VirtualFile file) {
     return BackgroundableActionLock.getLock(project, VcsBackgroundableActions.ANNOTATE, file.getPath());
   }
 }

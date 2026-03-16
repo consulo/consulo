@@ -5,7 +5,6 @@ import com.sun.jna.Memory;
 import com.sun.jna.platform.win32.Crypt32;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinCrypt;
-import jakarta.annotation.Nonnull;
 
 /**
  * Windows Utilities for the Password Safe
@@ -20,8 +19,8 @@ public final class WindowsCryptUtils {
      * @param data the data to protect
      * @return the protected form of the data
      */
-    @Nonnull
-    public static byte[] protect(@Nonnull byte[] data) {
+    
+    public static byte[] protect(byte[] data) {
         if (data.length == 0) {
             return data;
         }
@@ -37,7 +36,7 @@ public final class WindowsCryptUtils {
      * @param data the data to protect
      * @return the unprotected form of the data
      */
-    @Nonnull
+    
     public static byte[] unprotect(byte[] data) {
         if (data.length == 0) {
             return data;

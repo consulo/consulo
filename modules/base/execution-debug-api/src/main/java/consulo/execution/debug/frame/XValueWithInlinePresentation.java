@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.frame;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface XValueWithInlinePresentation {
   /**

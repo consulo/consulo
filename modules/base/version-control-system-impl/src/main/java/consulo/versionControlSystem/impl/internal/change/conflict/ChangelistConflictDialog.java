@@ -26,7 +26,6 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -101,7 +100,7 @@ public class ChangelistConflictDialog extends DialogWrapper {
     return ChangelistConflictResolution.IGNORE;
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createLeftSideActions() {
     return new Action[] { new AbstractAction("&Configure...") {

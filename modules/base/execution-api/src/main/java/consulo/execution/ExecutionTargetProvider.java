@@ -22,13 +22,12 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class ExecutionTargetProvider {
   public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME = ExtensionPointName.create(ExecutionTargetProvider.class);
 
-  @Nonnull
-  public abstract List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunConfiguration configuration);
+  
+  public abstract List<ExecutionTarget> getTargets(Project project, RunConfiguration configuration);
 }

@@ -26,7 +26,7 @@ import consulo.versionControlSystem.contentAnnotation.ContentAnnotationCache;
 import consulo.versionControlSystem.history.HistoryCacheWithRevisionKey;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Date;

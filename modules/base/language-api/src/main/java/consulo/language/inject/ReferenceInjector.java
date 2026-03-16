@@ -25,7 +25,6 @@ import consulo.language.psi.PsiReference;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -44,8 +43,8 @@ public abstract class ReferenceInjector extends Injectable {
   /**
    * Generated references should be soft ({@link PsiReference#isSoft()})
    */
-  @Nonnull
-  public abstract PsiReference[] getReferences(@Nonnull PsiElement element, @Nonnull ProcessingContext context, @Nonnull TextRange range);
+  
+  public abstract PsiReference[] getReferences(PsiElement element, ProcessingContext context, TextRange range);
 
   public static ReferenceInjector findById(String id) {
     return ContainerUtil.find(EXTENSION_POINT_NAME.getExtensionList(), injector -> id.equals(injector.getId()));

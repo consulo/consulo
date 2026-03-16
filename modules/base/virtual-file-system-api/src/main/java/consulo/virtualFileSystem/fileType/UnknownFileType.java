@@ -19,7 +19,6 @@ import consulo.application.AllIcons;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.localize.FileTypeLocalize;
-import jakarta.annotation.Nonnull;
 
 public class UnknownFileType implements FileType {
   public static final FileType INSTANCE = new UnknownFileType();
@@ -27,18 +26,18 @@ public class UnknownFileType implements FileType {
   private UnknownFileType() {}
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "UNKNOWN";
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getDescription() {
     return FileTypeLocalize.unknownFileTypeDescription();
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.FileTypes.Unknown;

@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -83,7 +82,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return myConfigurable;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return myConfigurable.getDisplayName();
@@ -98,7 +97,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+  public JComponent createComponent(Disposable parentUIDisposable) {
     return getConfigurable().createComponent(parentUIDisposable);
   }
 
@@ -119,7 +118,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent(@Nonnull Disposable parentUIDisposable) {
+  public Component createUIComponent(Disposable parentUIDisposable) {
     return getConfigurable().createUIComponent(parentUIDisposable);
   }
 
@@ -153,7 +152,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     getConfigurable().disposeUIResources();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myConfigurable.getId();
@@ -168,7 +167,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
     return new CompositeWrapper(myConfigurable, configurable);
   }
 
-  @Nonnull
+  
   @Override
   public Class<?> getOriginalClass() {
     UnnamedConfigurable configurable = getConfigurable();
@@ -198,7 +197,7 @@ public class ConfigurableWrapper implements SearchableConfigurable {
       myKids = kids;
     }
 
-    @Nonnull
+    
     @Override
     public Configurable[] getConfigurables() {
       return myKids;

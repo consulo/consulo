@@ -22,7 +22,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -48,15 +47,15 @@ public interface EditorPopupHelper {
    * @param editor the editor over which the popup is shown.
    * @return location as close as possible to the action origin.
    */
-  @Nonnull
-  RelativePoint guessBestPopupLocation(@Nonnull Editor editor);
+  
+  RelativePoint guessBestPopupLocation(Editor editor);
 
   /**
    * @param editor the editor over which the popup is shown.
    * @return true if popup location is located in visible area
    * false if center would be suggested instead
    */
-  boolean isBestPopupLocationVisible(@Nonnull Editor editor);
+  boolean isBestPopupLocationVisible(Editor editor);
 
-  void showPopupInBestPositionFor(@Nonnull Editor editor, @Nonnull JBPopup popup);
+  void showPopupInBestPositionFor(Editor editor, JBPopup popup);
 }

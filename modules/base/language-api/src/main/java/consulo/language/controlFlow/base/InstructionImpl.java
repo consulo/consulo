@@ -3,14 +3,13 @@ package consulo.language.controlFlow.base;
 
 import consulo.language.controlFlow.ControlFlowBuilder;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class InstructionImpl extends InstructionBaseImpl {
 
     private final int myNumber;
 
-    public InstructionImpl(@Nonnull ControlFlowBuilder builder, @Nullable PsiElement element) {
+    public InstructionImpl(ControlFlowBuilder builder, @Nullable PsiElement element) {
         super(element);
         myNumber = builder.instructionCount++;
     }

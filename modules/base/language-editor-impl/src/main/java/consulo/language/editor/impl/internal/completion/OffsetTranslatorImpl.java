@@ -10,8 +10,7 @@ import consulo.document.impl.event.DocumentEventImpl;
 import consulo.language.editor.internal.OffsetTranslator;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiModificationTrackerListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,7 +35,7 @@ public class OffsetTranslatorImpl implements Disposable, OffsetTranslator {
         List<DocumentEvent> sinceCommit = new ArrayList<>();
         originalDocument.addDocumentListener(new DocumentListener() {
             @Override
-            public void documentChanged(@Nonnull DocumentEvent e) {
+            public void documentChanged(DocumentEvent e) {
                 if (isUpToDate()) {
                     DocumentEventImpl inverse =
                         new DocumentEventImpl(originalDocument, e.getOffset(), e.getNewFragment(), e.getOldFragment(), 0, false, e.getOffset(), e.getNewFragment().length(), e.getOffset());

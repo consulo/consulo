@@ -25,8 +25,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,22 +41,22 @@ public class ZipArchiveElementType extends CompositePackagingElementType<ZipArch
     super("zip-archive", CompilerLocalize.elementTypeNameZipArchive());
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.PpJar;
   }
 
-  @Nonnull
+  
   @Override
-  public ZipArchivePackagingElement createEmpty(@Nonnull Project project) {
+  public ZipArchivePackagingElement createEmpty(Project project) {
     return new ZipArchivePackagingElement();
   }
 
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       @Nullable String baseName,
-                                                      @Nonnull ArtifactEditorContext context) {
+                                                      ArtifactEditorContext context) {
     String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "archive", ".zip");
     String path =
       Messages.showInputDialog(context.getProject(), "Enter archive name: ", "New Archive", null, initialValue, new FilePathValidator());

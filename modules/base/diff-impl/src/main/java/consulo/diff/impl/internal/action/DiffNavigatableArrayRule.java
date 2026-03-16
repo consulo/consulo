@@ -18,12 +18,11 @@ package consulo.diff.impl.internal.action;
 import consulo.dataContext.DataSnapshot;
 import consulo.diff.DiffDataKeys;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class DiffNavigatableArrayRule {
     @Nullable
-    static Navigatable[] getData(@Nonnull DataSnapshot dataProvider) {
+    static Navigatable[] getData(DataSnapshot dataProvider) {
         Navigatable element = dataProvider.get(DiffDataKeys.NAVIGATABLE);
         if (element == null) return null;
         return new Navigatable[]{element};

@@ -24,8 +24,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "HelpTopics")
 public class HelpTopicsAction extends DumbAwareAction {
@@ -35,7 +34,7 @@ public class HelpTopicsAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         HelpManager.getInstance().invokeHelp("");
     }
 }

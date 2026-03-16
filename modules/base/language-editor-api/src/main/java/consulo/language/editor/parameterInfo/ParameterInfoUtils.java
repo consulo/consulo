@@ -25,8 +25,7 @@ import consulo.language.psi.SyntaxTraverser;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -39,7 +38,7 @@ public class ParameterInfoUtils {
   @Nullable
   @RequiredReadAction
   @SafeVarargs
-  public static <T extends PsiElement> T findParentOfTypeWithStopElements(PsiFile file, int offset, Class<T> parentClass, @Nonnull Class<? extends PsiElement>... stopAt) {
+  public static <T extends PsiElement> T findParentOfTypeWithStopElements(PsiFile file, int offset, Class<T> parentClass, Class<? extends PsiElement>... stopAt) {
     PsiElement element = file.findElementAt(offset);
     if (element == null) return null;
 
@@ -80,7 +79,7 @@ public class ParameterInfoUtils {
 
   @Nullable
   @RequiredReadAction
-  public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, @Nonnull ParameterInfoHandlerWithTabActionSupport findArgumentListHelper) {
+  public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, ParameterInfoHandlerWithTabActionSupport findArgumentListHelper) {
     return findArgumentList(file, offset, lbraceOffset, findArgumentListHelper, true);
   }
 
@@ -90,7 +89,7 @@ public class ParameterInfoUtils {
    */
   @Nullable
   @RequiredReadAction
-  public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, @Nonnull ParameterInfoHandlerWithTabActionSupport findArgumentListHelper, boolean allowOuter) {
+  public static <E extends PsiElement> E findArgumentList(PsiFile file, int offset, int lbraceOffset, ParameterInfoHandlerWithTabActionSupport findArgumentListHelper, boolean allowOuter) {
     if (file == null) return null;
 
     CharSequence chars = file.getViewProvider().getContents();

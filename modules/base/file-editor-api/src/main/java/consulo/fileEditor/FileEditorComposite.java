@@ -20,7 +20,6 @@ import consulo.ui.Component;
 import consulo.ui.ex.ComponentContainer;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -29,23 +28,23 @@ import java.util.List;
  * @since 2018-05-09
  */
 public interface FileEditorComposite extends Disposable {
-  @Nonnull
+  
   FileEditorWithProvider getSelectedEditorWithProvider();
 
   VirtualFile getFile();
 
-  @Nonnull
+  
   FileEditor[] getEditors();
 
-  @Nonnull
+  
   FileEditor getSelectedEditor();
 
   void setSelectedEditor(int index);
 
-  List<JComponent> getTopComponents(@Nonnull FileEditor editor);
+  List<JComponent> getTopComponents(FileEditor editor);
 
-  @Nonnull
-  Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component);
+  
+  Disposable addTopComponent(FileEditor editor, ComponentContainer component);
 
   @Deprecated
   default void addTopComponent(FileEditor editor, JComponent component) {

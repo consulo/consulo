@@ -21,8 +21,7 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
 import consulo.ui.ex.awt.IntegerField;
 import consulo.ui.ex.awt.OptionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -183,7 +182,7 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
         options.USE_TAB_CHARACTER = myCbUseTab.isSelected();
     }
 
-    public void reset(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
+    public void reset(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
         ((IntegerField) myTabSizeField).setValue(options.TAB_SIZE);
         myCbUseTab.setSelected(options.USE_TAB_CHARACTER);
 

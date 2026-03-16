@@ -20,10 +20,9 @@ import consulo.codeEditor.internal.InternalEditorKeys;
 import consulo.dataContext.DataSnapshot;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.text.TextEditorProvider;
-import jakarta.annotation.Nonnull;
 
 public final class FileEditorRule {
-  static FileEditor getData(@Nonnull DataSnapshot dataProvider) {
+  static FileEditor getData(DataSnapshot dataProvider) {
     Editor editor = dataProvider.get(Editor.KEY);
     if (editor == null) {
       return null;

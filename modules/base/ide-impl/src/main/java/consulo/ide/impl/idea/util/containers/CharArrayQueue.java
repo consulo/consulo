@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A single threaded, resizable, circular char queue backed by an array.
@@ -48,7 +47,7 @@ public class CharArrayQueue {
     }
   }
 
-  public void add(@Nonnull String str) {
+  public void add(String str) {
     resizeIfNeeded(mySize + str.length());
     for (int i = 0; i < str.length(); i++) {
       doAdd(str.charAt(i));

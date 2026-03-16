@@ -6,16 +6,15 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.FileNodeWithNestedFileNodes;
 import consulo.project.ui.view.tree.PsiFileNode;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
 public final class NestingTreeNode extends PsiFileNode implements FileNodeWithNestedFileNodes {
-    private final @Nonnull Collection<? extends PsiFileNode> myNestedFileNodes;
+    private final Collection<? extends PsiFileNode> myNestedFileNodes;
 
-    public NestingTreeNode(@Nonnull PsiFileNode originalNode, @Nonnull Collection<? extends PsiFileNode> nestedFileNodes) {
+    public NestingTreeNode(PsiFileNode originalNode, Collection<? extends PsiFileNode> nestedFileNodes) {
         super(originalNode.getProject(), Objects.requireNonNull(originalNode.getValue()), originalNode.getSettings());
         myNestedFileNodes = nestedFileNodes;
     }
@@ -31,7 +30,7 @@ public final class NestingTreeNode extends PsiFileNode implements FileNodeWithNe
     }
 
     @Override
-    public @Nonnull Collection<AbstractTreeNode<?>> getNestedFileNodes() {
+    public Collection<AbstractTreeNode<?>> getNestedFileNodes() {
         ArrayList<AbstractTreeNode<?>> result = new ArrayList<>(myNestedFileNodes.size());
         for (PsiFileNode node : myNestedFileNodes) {
             PsiFile value = node.getValue();
@@ -53,7 +52,7 @@ public final class NestingTreeNode extends PsiFileNode implements FileNodeWithNe
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         if (super.contains(file)) return true;
 
         for (PsiFileNode node : myNestedFileNodes) {

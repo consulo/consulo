@@ -17,10 +17,9 @@ package consulo.execution.impl.internal;
 
 import consulo.execution.configuration.RunConfiguration;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 public interface RunConfigurationSelector {
   Key<RunConfigurationSelector> KEY = Key.create("RunConfigurationSelector.Key");
 
-  void select(@Nonnull RunConfiguration configuration);
+  void select(RunConfiguration configuration);
 }

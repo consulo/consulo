@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.model.MutableListModelListener;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +38,7 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
 
   @RequiredUIAccess
   @Override
-  public void add(@Nonnull E item, int index) {
+  public void add(E item, int index) {
     myItems.add(index, item);
 
     myDispatcher.getMulticaster().itemAdded(item);
@@ -47,7 +46,7 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
 
   @RequiredUIAccess
   @Override
-  public void remove(@Nonnull E item) {
+  public void remove(E item) {
     myItems.remove(item);
 
     myDispatcher.getMulticaster().itemRemoved(item);
@@ -67,7 +66,7 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
 
   @RequiredUIAccess
   @Override
-  public List<E> replaceAll(@Nonnull Iterable<E> newItems) {
+  public List<E> replaceAll(Iterable<E> newItems) {
     List<E> oldItems = new ArrayList<>(myItems);
 
     myItems.clear();
@@ -88,7 +87,7 @@ public class MutableListModelImpl<E> extends ImmutableListModelImpl<E> implement
   }
 
   @Override
-  public Disposable adddListener(@Nonnull MutableListModelListener<E> modelListener) {
+  public Disposable adddListener(MutableListModelListener<E> modelListener) {
     myDispatcher.addListener(modelListener);
     return () -> myDispatcher.removeListener(modelListener);
   }

@@ -34,8 +34,7 @@ import consulo.versionControlSystem.impl.internal.action.DescindingFilesFilter;
 import consulo.versionControlSystem.impl.internal.commit.CommitChangeListDialog;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -44,8 +43,8 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     private static final Logger LOG = Logger.getInstance(AbstractCommonCheckinAction.class);
 
     protected AbstractCommonCheckinAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
@@ -53,7 +52,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull VcsContext context) {
+    public void actionPerformed(VcsContext context) {
         LOG.debug("actionPerformed. ");
         Project project = ObjectUtil.notNull(context.getProject());
 
@@ -75,7 +74,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
     }
 
     @RequiredUIAccess
-    protected void performCheckIn(@Nonnull VcsContext context, @Nonnull Project project, @Nonnull FilePath[] roots) {
+    protected void performCheckIn(VcsContext context, Project project, FilePath[] roots) {
         LOG.debug("invoking commit dialog after update");
         LocalChangeList initialSelection = getInitiallySelectedChangeList(context, project);
         Change[] changes = context.getSelectedChanges();
@@ -88,26 +87,24 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         }
     }
 
-    @Nonnull
     @RequiredUIAccess
-    protected FilePath[] prepareRootsForCommit(@Nonnull FilePath[] roots, @Nonnull Project project) {
+    protected FilePath[] prepareRootsForCommit(FilePath[] roots, Project project) {
         Application.get().saveAllWithProgress(UIAccess.current());
 
         return DescindingFilesFilter.filterDescindingFiles(roots, project);
     }
 
-    @Nonnull
-    protected LocalizeValue getMnemonicsFreeActionName(@Nonnull VcsContext context) {
+    protected LocalizeValue getMnemonicsFreeActionName(VcsContext context) {
         return getActionName(context);
     }
 
     @Nullable
-    protected CommitExecutor getExecutor(@Nonnull Project project) {
+    protected CommitExecutor getExecutor(Project project) {
         return null;
     }
 
     @Nullable
-    protected LocalChangeList getInitiallySelectedChangeList(@Nonnull VcsContext context, @Nonnull Project project) {
+    protected LocalChangeList getInitiallySelectedChangeList(VcsContext context, Project project) {
         LocalChangeList result;
         ChangeListManager manager = ChangeListManager.getInstance(project);
         ChangeList[] changeLists = context.getSelectedChangeLists();
@@ -124,16 +121,14 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         return result;
     }
 
-    @Nonnull
-    protected abstract LocalizeValue getActionName(@Nonnull VcsContext dataContext);
+    protected abstract LocalizeValue getActionName(VcsContext dataContext);
 
-    @Nonnull
-    protected abstract FilePath[] getRoots(@Nonnull VcsContext dataContext);
+    protected abstract FilePath[] getRoots(VcsContext dataContext);
 
-    protected abstract boolean approximatelyHasRoots(@Nonnull VcsContext dataContext);
+    protected abstract boolean approximatelyHasRoots(VcsContext dataContext);
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         Project project = vcsContext.getProject();
 
         if (project == null || !ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) {
@@ -149,8 +144,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
         }
     }
 
-    @Nonnull
-    protected static FilePath[] getAllContentRoots(@Nonnull VcsContext context) {
+    protected static FilePath[] getAllContentRoots(VcsContext context) {
         return Stream.of(ProjectLevelVcsManager.getInstance(context.getProject()).getAllVersionedRoots())
             .map(VcsUtil::getFilePath)
             .toArray(FilePath[]::new);

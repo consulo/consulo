@@ -1,7 +1,6 @@
 package consulo.language.dataFlow;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +16,7 @@ public class SetUtil {
   /**
    * Intersects two sets
    */
-  @Nonnull
+  
   public static <T> Set<T> intersect(@Nullable Set<T> set1, @Nullable Set<T> set2) {
     if (set1 == null && set2 == null) {
       return Collections.emptySet();

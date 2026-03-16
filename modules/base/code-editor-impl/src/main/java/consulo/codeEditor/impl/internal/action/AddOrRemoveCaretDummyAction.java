@@ -21,7 +21,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_EDITOR_ADD_OR_REMOVE_CARET)
 public class AddOrRemoveCaretDummyAction extends AnAction {
@@ -31,12 +30,12 @@ public class AddOrRemoveCaretDummyAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         // actual logic is implemented in EditorImpl
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(false);
     }
 }

@@ -55,8 +55,7 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ComparatorUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
@@ -245,12 +244,12 @@ public class ContentEntryTreeEditor {
 
     private class MyContentEntryEditorListener implements ContentEntryEditor.ContentEntryEditorListener {
         @Override
-        public void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder folder) {
+        public void folderAdded(ContentEntryEditor editor, ContentFolder folder) {
             update();
         }
 
         @Override
-        public void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder file) {
+        public void folderRemoved(ContentEntryEditor editor, ContentFolder file) {
             update();
         }
     }
@@ -271,7 +270,7 @@ public class ContentEntryTreeEditor {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(FileSystemTree.DATA_KEY, myFileSystemTree);
         }
     }

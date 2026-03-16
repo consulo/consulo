@@ -25,8 +25,7 @@ import consulo.language.duplicateAnalysis.treeHash.FragmentsCollector;
 import consulo.language.duplicateAnalysis.util.PsiFragment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.FileContent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,25 +33,25 @@ import java.util.List;
 public abstract class DuplicatesProfile {
     public static final ExtensionPointName<DuplicatesProfile> EP_NAME = ExtensionPointName.create(DuplicatesProfile.class);
 
-    @Nonnull
-    public abstract DuplocateVisitor createVisitor(@Nonnull FragmentsCollector collector);
+    
+    public abstract DuplocateVisitor createVisitor(FragmentsCollector collector);
 
-    @Nonnull
-    public DuplocateVisitor createVisitor(@Nonnull FragmentsCollector collector, boolean forIndexing) {
+    
+    public DuplocateVisitor createVisitor(FragmentsCollector collector, boolean forIndexing) {
         return createVisitor(collector);
     }
 
-    public abstract boolean isMyLanguage(@Nonnull Language language);
+    public abstract boolean isMyLanguage(Language language);
 
-    @Nonnull
-    public abstract DuplocatorState getDuplocatorState(@Nonnull Language language);
+    
+    public abstract DuplocatorState getDuplocatorState(Language language);
 
     @Nullable
-    public String getComment(@Nonnull DupInfo info, int index) {
+    public String getComment(DupInfo info, int index) {
         return null;
     }
 
-    public abstract boolean isMyDuplicate(@Nonnull DupInfo info, int index);
+    public abstract boolean isMyDuplicate(DupInfo info, int index);
 
     public boolean supportIndex() {
         return true;
@@ -75,17 +74,17 @@ public abstract class DuplicatesProfile {
     }
 
     @Nullable
-    public static DuplicatesProfile findProfileForLanguage(@Nonnull Language language) {
+    public static DuplicatesProfile findProfileForLanguage(Language language) {
         return findProfileForLanguage(EP_NAME.getExtensionList(), language);
     }
 
-    @Nonnull
+    
     public static List<DuplicatesProfile> getAllProfiles() {
         return EP_NAME.getExtensionList();
     }
 
     @Nullable
-    public static DuplicatesProfile findProfileForLanguage(List<? extends DuplicatesProfile> profiles, @Nonnull Language language) {
+    public static DuplicatesProfile findProfileForLanguage(List<? extends DuplicatesProfile> profiles, Language language) {
         for (DuplicatesProfile profile : profiles) {
             if (profile.isMyLanguage(language)) {
                 return profile;
@@ -95,14 +94,14 @@ public abstract class DuplicatesProfile {
         return null;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public Language getLanguage(@Nonnull PsiElement element) {
+    public Language getLanguage(PsiElement element) {
         return element.getLanguage();
     }
 
     @Nullable
-    public PsiElementRole getRole(@Nonnull PsiElement element) {
+    public PsiElementRole getRole(PsiElement element) {
         return null;
     }
 }

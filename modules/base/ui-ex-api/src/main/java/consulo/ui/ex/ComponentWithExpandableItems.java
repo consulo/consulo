@@ -15,10 +15,9 @@
  */
 package consulo.ui.ex;
 
-import jakarta.annotation.Nonnull;
 
 public interface ComponentWithExpandableItems<T> {
-  @Nonnull
+  
   ExpandableItemsHandler<T> getExpandableItemsHandler();
 
   void setExpandableItemsEnabled(boolean enabled);

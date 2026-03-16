@@ -44,8 +44,7 @@ import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -67,7 +66,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -82,7 +81,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         }
     }
 
-    static void invokeGoToFile(@Nonnull Project project, @Nonnull AnActionEvent e) {
+    static void invokeGoToFile(Project project, AnActionEvent e) {
         String actionTitle =
             StringUtil.trimEnd(ObjectUtil.notNull(e.getPresentation().getText(), GotoClassPresentationUpdater.getActionTitle()), "...");
         DumbService.getInstance(project).showDumbModeNotification(IdeLocalize.goToClassDumbModeMessage(actionTitle));
@@ -93,7 +92,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
     }
 
     @Override
-    public void gotoActionPerformed(@Nonnull AnActionEvent e) {
+    public void gotoActionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -112,7 +111,7 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
             model,
             new GotoActionCallback<Language>() {
                 @Override
-                protected ChooseByNameFilter<Language> createFilter(@Nonnull ChooseByNamePopup popup) {
+                protected ChooseByNameFilter<Language> createFilter(ChooseByNamePopup popup) {
                     return new ChooseByNameLanguageFilter(popup, model, GotoClassSymbolConfiguration.getInstance(project), project);
                 }
 
@@ -224,8 +223,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         return null;
     }
 
-    @Nonnull
-    private static PsiElement getElement(@Nonnull PsiElement element, ChooseByNamePopup popup) {
+    
+    private static PsiElement getElement(PsiElement element, ChooseByNamePopup popup) {
         String path = popup.getPathToAnonymous();
         if (path != null) {
             return getElement(element, path);
@@ -233,8 +232,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         return element;
     }
 
-    @Nonnull
-    public static PsiElement getElement(@Nonnull PsiElement element, @Nonnull String path) {
+    
+    public static PsiElement getElement(PsiElement element, String path) {
         String[] classes = path.split("\\$");
         List<Integer> indexes = new ArrayList<>();
         for (String cls : classes) {
@@ -261,8 +260,8 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
         return current;
     }
 
-    @Nonnull
-    private static PsiElement[] getAnonymousClasses(@Nonnull PsiElement element) {
+    
+    private static PsiElement[] getAnonymousClasses(PsiElement element) {
         return element.getApplication().getExtensionPoint(AnonymousElementProvider.class).computeSafeIfAny(
             provider -> {
                 PsiElement[] elems = provider.getAnonymousElements(element);

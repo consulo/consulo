@@ -20,14 +20,13 @@ import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripTooltipRendererProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.PopupHandler;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 06/12/2020
  */
 public class WebEditorMarkupModelImpl extends EditorMarkupModelImpl<WebEditorImpl> implements EditorMarkupModel {
-  public WebEditorMarkupModelImpl(@Nonnull WebEditorImpl webEditor) {
+  public WebEditorMarkupModelImpl(WebEditorImpl webEditor) {
     super(webEditor);
   }
 
@@ -38,16 +37,15 @@ public class WebEditorMarkupModelImpl extends EditorMarkupModelImpl<WebEditorImp
 
   @RequiredUIAccess
   @Override
-  public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
+  public void setErrorPanelPopupHandler(PopupHandler handler) {
 
   }
 
   @Override
-  public void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider) {
+  public void setErrorStripTooltipRendererProvider(ErrorStripTooltipRendererProvider provider) {
 
   }
 
-  @Nonnull
   @Override
   public ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider() {
     return null;

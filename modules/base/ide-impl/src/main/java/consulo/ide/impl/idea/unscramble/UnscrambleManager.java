@@ -26,8 +26,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,7 +38,7 @@ import jakarta.annotation.Nullable;
 public class UnscrambleManager {
   private static final String KEY = "analyze.exceptions.on.the.fly";
 
-  @Nonnull
+  
   public static UnscrambleManager getInstance() {
     return ApplicationManager.getApplication().getComponent(UnscrambleManager.class);
   }

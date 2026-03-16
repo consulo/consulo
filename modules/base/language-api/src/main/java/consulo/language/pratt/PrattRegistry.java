@@ -19,8 +19,7 @@ import consulo.language.ast.IElementType;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Trinity;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -29,15 +28,15 @@ import java.util.Collection;
 public class PrattRegistry {
   private final MultiMap<IElementType, Trinity<Integer, PathPattern, TokenParser>> myMap = new MultiMap<IElementType, Trinity<Integer, PathPattern, TokenParser>>();
 
-  public void registerParser(@Nonnull IElementType type, int priority, TokenParser parser) {
+  public void registerParser(IElementType type, int priority, TokenParser parser) {
     registerParser(type, priority, PathPattern.path(), parser);
   }
 
-  public void registerParser(@Nonnull IElementType type, int priority, PathPattern pattern, TokenParser parser) {
+  public void registerParser(IElementType type, int priority, PathPattern pattern, TokenParser parser) {
     myMap.putValue(type, new Trinity<Integer, PathPattern, TokenParser>(priority, pattern, parser));
   }
 
-  @Nonnull
+  
   public Collection<Trinity<Integer, PathPattern, TokenParser>> getParsers(@Nullable IElementType type) {
     return myMap.get(type);
   }

@@ -30,10 +30,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -48,9 +46,9 @@ import java.lang.ref.WeakReference;
 public class DnDManagerImpl extends DnDManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(DnDManagerImpl.class);
 
-  @NonNls
+  
   private static final String SOURCE_KEY = "DnD Source";
-  @NonNls
+  
   private static final String TARGET_KEY = "DnD Target";
 
   public static final Key<Pair<Image, Point>> DRAGGED_IMAGE_KEY = new Key<>("draggedImage");
@@ -97,7 +95,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   }
 
   @Override
-  public void registerSource(@Nonnull AdvancedDnDSource source) {
+  public void registerSource(AdvancedDnDSource source) {
     if (!getApplication().isHeadlessEnvironment()) {
       JComponent c = source.getComponent();
       registerSource(source, c);
@@ -538,7 +536,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     myLastHighlightedRec = aRectangle;
   }
 
-  private void resetEvents(@NonNls String s) {
+  private void resetEvents(String s) {
     myCurrentEvent = resetEvent(myCurrentEvent);
     myLastProcessedEvent = resetEvent(myLastProcessedEvent);
     myLastHighlightedEvent = resetEvent(myLastHighlightedEvent);

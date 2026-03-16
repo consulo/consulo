@@ -3,35 +3,34 @@ package consulo.application.util.matcher;
 
 import consulo.util.collection.FList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class MatcherWithFallback extends MinusculeMatcher {
-  @Nonnull
+  
   private final MinusculeMatcher myMainMatcher;
 
   @Nullable
   private final MinusculeMatcher myFallbackMatcher;
 
-  MatcherWithFallback(@Nonnull MinusculeMatcher mainMatcher, @Nullable MinusculeMatcher fallbackMatcher) {
+  MatcherWithFallback(MinusculeMatcher mainMatcher, @Nullable MinusculeMatcher fallbackMatcher) {
     myMainMatcher = mainMatcher;
     myFallbackMatcher = fallbackMatcher;
   }
 
-  @Nonnull
+  
   @Override
   public String getPattern() {
     return myMainMatcher.getPattern();
   }
 
   @Override
-  public boolean matches(@Nonnull String name) {
+  public boolean matches(String name) {
     return myMainMatcher.matches(name) || myFallbackMatcher != null && myFallbackMatcher.matches(name);
   }
 
   @Nullable
   @Override
-  public FList<MatcherTextRange> matchingFragments(@Nonnull String name) {
+  public FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> mainRanges = myMainMatcher.matchingFragments(name);
     boolean useMainRanges = mainRanges != null && !mainRanges.isEmpty() || myFallbackMatcher == null;
 
@@ -39,7 +38,7 @@ class MatcherWithFallback extends MinusculeMatcher {
   }
 
   @Override
-  public int matchingDegree(@Nonnull String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
+  public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
     FList<MatcherTextRange> mainRanges = myMainMatcher.matchingFragments(name);
     boolean useMainRanges = mainRanges != null && !mainRanges.isEmpty() || myFallbackMatcher == null;
 

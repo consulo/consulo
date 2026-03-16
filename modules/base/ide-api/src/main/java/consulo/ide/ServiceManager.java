@@ -22,7 +22,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.NotNullLazyKey;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use ComponentManager#getInstance() method")
@@ -30,23 +29,23 @@ public class ServiceManager {
   private ServiceManager() {
   }
 
-  @Nonnull
-  public static <T> T getService(@Nonnull Class<T> serviceClass) {
+  
+  public static <T> T getService(Class<T> serviceClass) {
     return getService(Application.get(), serviceClass);
   }
 
-  @Nonnull
-  public static <T> T getService(@Nonnull Project project, @Nonnull Class<T> serviceClass) {
+  
+  public static <T> T getService(Project project, Class<T> serviceClass) {
     return getService((ComponentManager)project, serviceClass);
   }
 
-  @Nonnull
-  public static <T> T getService(@Nonnull Module module, @Nonnull Class<T> serviceClass) {
+  
+  public static <T> T getService(Module module, Class<T> serviceClass) {
     return getService((ComponentManager)module, serviceClass);
   }
 
-  @Nonnull
-  public static <T> T getService(@Nonnull ComponentManager manager, @Nonnull Class<T> serviceClass) {
+  
+  public static <T> T getService(ComponentManager manager, Class<T> serviceClass) {
     return manager.getInstance(serviceClass);
   }
 
@@ -57,10 +56,10 @@ public class ServiceManager {
    * @param <T>          Service class type.
    * @return Key instance.
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use ComponentUtil.createLazyInject")
-  public static <T> NotNullLazyKey<T, Project> createLazyKey(@Nonnull Class<T> serviceClass) {
+  public static <T> NotNullLazyKey<T, Project> createLazyKey(Class<T> serviceClass) {
     return NotNullLazyKey.create("Service: " + serviceClass.getName(), project -> getService(project, serviceClass));
   }
 }

@@ -6,7 +6,6 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
 import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 public class OtherFileTypesCodeStyleConfigurable extends CodeStyleAbstractConfigurable {
   private final OtherFileTypesCodeStyleOptionsForm myOptionsForm;
@@ -21,7 +20,7 @@ public class OtherFileTypesCodeStyleConfigurable extends CodeStyleAbstractConfig
     return myOptionsForm;
   }
 
-  @Nonnull
+  
   public static LocalizeValue getDisplayNameText() {
     return ApplicationLocalize.codeStyleOtherFileTypes();
   }

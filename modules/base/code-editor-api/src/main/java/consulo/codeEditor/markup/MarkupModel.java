@@ -21,8 +21,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides services for highlighting ranges of text in a document, painting markers on the
@@ -37,7 +36,7 @@ public interface MarkupModel extends UserDataHolder {
      *
      * @return the document instance.
      */
-    @Nonnull
+    
     Document getDocument();
 
     /**
@@ -57,12 +56,12 @@ public interface MarkupModel extends UserDataHolder {
      * @param targetArea        type of highlighting (specific range or all full lines covered by the range).
      * @return the highlighter instance.
      */
-    @Nonnull
+    
     RangeHighlighter addRangeHighlighter(@Nullable TextAttributesKey textAttributesKey,
                                          int startOffset,
                                          int endOffset,
                                          int layer,
-                                         @Nonnull HighlighterTargetArea targetArea);
+                                         HighlighterTargetArea targetArea);
 
     /**
      * Consider using {@link #addRangeHighlighter(TextAttributesKey, int, int, int, HighlighterTargetArea)} unless it's really necessary.
@@ -71,12 +70,12 @@ public interface MarkupModel extends UserDataHolder {
      * An editor can provide a custom scheme different from the global one, also a user can change the global scheme explicitly.
      * Using the overload taking a {@link TextAttributesKey} will make the platform take care of all these cases.
      */
-    @Nonnull
+    
     RangeHighlighter addRangeHighlighter(int startOffset,
                                          int endOffset,
                                          int layer,
                                          @Nullable TextAttributes textAttributes,
-                                         @Nonnull HighlighterTargetArea targetArea);
+                                         HighlighterTargetArea targetArea);
 
     /**
      * Adds a highlighter covering the specified line in the document.
@@ -90,7 +89,7 @@ public interface MarkupModel extends UserDataHolder {
      *                       does not modify the text attributes.
      * @return the highlighter instance.
      */
-    @Nonnull
+    
     RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes);
 
     /**
@@ -105,7 +104,7 @@ public interface MarkupModel extends UserDataHolder {
      *                          {@link HighlighterLayer})
      * @return the highlighter instance.
      */
-    @Nonnull
+    
     RangeHighlighter addLineHighlighter(@Nullable TextAttributesKey textAttributesKey, int line, int layer);
 
     /**
@@ -113,7 +112,7 @@ public interface MarkupModel extends UserDataHolder {
      *
      * @param rangeHighlighter the highlighter to remove.
      */
-    void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter);
+    void removeHighlighter(RangeHighlighter rangeHighlighter);
 
     /**
      * Removes all highlighter instances.
@@ -125,6 +124,6 @@ public interface MarkupModel extends UserDataHolder {
      *
      * @return the array of highlighter instances.
      */
-    @Nonnull
+    
     RangeHighlighter[] getAllHighlighters();
 }

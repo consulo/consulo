@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,22 +32,22 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class HyperlinkInfoFactoryImpl extends HyperlinkInfoFactory {
-  @Nonnull
+  
   @Override
-  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> files, int line, @Nonnull Project project) {
+  public HyperlinkInfo createMultipleFilesHyperlinkInfo(List<? extends VirtualFile> files, int line, Project project) {
     return new MultipleFilesHyperlinkInfo(files, line, project);
   }
 
-  @Nonnull
+  
   @Override
-  public HyperlinkInfo createMultipleFilesHyperlinkInfo(@Nonnull List<? extends VirtualFile> files, int line, @Nonnull Project project, HyperlinkInfoFactory.HyperlinkHandler action) {
+  public HyperlinkInfo createMultipleFilesHyperlinkInfo(List<? extends VirtualFile> files, int line, Project project, HyperlinkInfoFactory.HyperlinkHandler action) {
     return new MultipleFilesHyperlinkInfo(files, line, project, action);
   }
 
   @Override
   public
-  @Nonnull
-  HyperlinkInfo createMultiplePsiElementHyperlinkInfo(@Nonnull Collection<? extends PsiElement> elements) {
+  
+  HyperlinkInfo createMultiplePsiElementHyperlinkInfo(Collection<? extends PsiElement> elements) {
     return new MultiPsiElementHyperlinkInfo(elements);
   }
 }

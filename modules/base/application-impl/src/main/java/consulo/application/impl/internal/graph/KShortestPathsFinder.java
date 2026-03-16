@@ -24,7 +24,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -45,7 +44,7 @@ public class KShortestPathsFinder<Node> {
   private Map<Node, HeapNode<Node>> myOutRoots;
   private Map<Node,Heap<Node>> myHeaps;
 
-  public KShortestPathsFinder(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish, @Nonnull ProgressIndicator progressIndicator) {
+  public KShortestPathsFinder(Graph<Node> graph, Node start, Node finish, ProgressIndicator progressIndicator) {
     myGraph = graph;
     myStart = start;
     myFinish = finish;

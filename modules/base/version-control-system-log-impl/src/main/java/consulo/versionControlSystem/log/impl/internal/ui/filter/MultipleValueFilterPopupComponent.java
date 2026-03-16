@@ -24,8 +24,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,25 +34,25 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
   private static final int MAX_FILTER_VALUE_LENGTH = 30;
 
-  @Nonnull
+  
   protected final MainVcsLogUiProperties myUiProperties;
 
-  MultipleValueFilterPopupComponent(@Nonnull String filterName,
-                                    @Nonnull MainVcsLogUiProperties uiProperties,
-                                    @Nonnull FilterModel<Filter> filterModel) {
+  MultipleValueFilterPopupComponent(String filterName,
+                                    MainVcsLogUiProperties uiProperties,
+                                    FilterModel<Filter> filterModel) {
     super(filterName, filterModel);
     myUiProperties = uiProperties;
   }
 
-  @Nonnull
+  
   protected abstract List<List<String>> getRecentValuesFromSettings();
 
-  protected abstract void rememberValuesInSettings(@Nonnull Collection<String> values);
+  protected abstract void rememberValuesInSettings(Collection<String> values);
 
-  @Nonnull
+  
   protected abstract List<String> getAllValues();
 
-  @Nonnull
+  
   protected ActionGroup createRecentItemsActionGroup() {
     DefaultActionGroup group = new DefaultActionGroup();
     List<List<String>> recentlyFiltered = getRecentValuesFromSettings();
@@ -69,20 +68,20 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
     return group;
   }
 
-  @Nonnull
-  static String displayableText(@Nonnull Collection<String> values) {
+  
+  static String displayableText(Collection<String> values) {
     if (values.size() == 1) {
       return values.iterator().next();
     }
     return StringUtil.shortenTextWithEllipsis(StringUtil.join(values, "|"), MAX_FILTER_VALUE_LENGTH, 0, true);
   }
 
-  @Nonnull
-  static String tooltip(@Nonnull Collection<String> values) {
+  
+  static String tooltip(Collection<String> values) {
     return StringUtil.join(values, ", ");
   }
 
-  @Nonnull
+  
   protected AnAction createSelectMultipleValuesAction() {
     return new SelectMultipleValuesAction();
   }
@@ -96,21 +95,21 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
   protected class PredefinedValueAction extends DumbAwareAction {
 
-    @Nonnull
+    
     protected final List<String> myValues;
 
-    public PredefinedValueAction(@Nonnull String value) {
+    public PredefinedValueAction(String value) {
       this(Collections.singletonList(value));
     }
 
-    public PredefinedValueAction(@Nonnull List<String> values) {
+    public PredefinedValueAction(List<String> values) {
       super(null, tooltip(values), null);
       getTemplatePresentation().setText(displayableText(values), false);
       myValues = values;
     }
 
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       myFilterModel.setFilter(myFilterModel.createFilter(myValues));
       rememberValuesInSettings(myValues);
     }
@@ -118,7 +117,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
   private class SelectMultipleValuesAction extends DumbAwareAction {
 
-    @Nonnull
+    
     private final Collection<String> myVariants;
 
     SelectMultipleValuesAction() {
@@ -128,7 +127,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       if (project == null) {
         return;
@@ -160,7 +159,7 @@ abstract class MultipleValueFilterPopupComponent<Filter extends VcsLogFilter> ex
       popup.showUnderneathOf(MultipleValueFilterPopupComponent.this);
     }
 
-    @Nonnull
+    
     private String getPopupText(@Nullable Collection<String> selectedValues) {
       return selectedValues == null || selectedValues.isEmpty() ? "" : StringUtil.join(selectedValues, "\n");
     }

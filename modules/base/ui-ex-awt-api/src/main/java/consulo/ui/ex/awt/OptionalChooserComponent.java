@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
   private List<Pair<T, Boolean>> myInitialList;
   private ArrayList<Pair<T, Boolean>> myWorkingList;
 
-  public OptionalChooserComponent(@Nonnull List<Pair<T, Boolean>> list) {
+  public OptionalChooserComponent(List<Pair<T, Boolean>> list) {
     setInitialList(list);
     myWorkingList = new ArrayList<>(myInitialList);
 
@@ -45,7 +44,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     reset();
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myList.getEmptyText();
@@ -104,7 +103,7 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     return !myWorkingList.equals(myInitialList);
   }
 
-  public void setInitialList(@Nonnull List<Pair<T, Boolean>> list) {
+  public void setInitialList(List<Pair<T, Boolean>> list) {
     myInitialList = list;
   }
 

@@ -18,8 +18,7 @@ package consulo.language.editor.completion;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -55,8 +54,8 @@ public class CompletionResult {
     return myLookupElement;
   }
 
-  @Nonnull
-  public CompletionResult withLookupElement(@Nonnull LookupElement element) {
+  
+  public CompletionResult withLookupElement(LookupElement element) {
     if (!myMatcher.prefixMatches(element)) {
       throw new AssertionError("The new element doesn't match the prefix");
     }

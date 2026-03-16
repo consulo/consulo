@@ -15,7 +15,6 @@
  */
 package consulo.module.content.layer.orderEntry;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -25,8 +24,8 @@ public interface ExportableOrderEntry extends OrderEntry {
 
   void setExported(boolean value);
 
-  @Nonnull
+  
   DependencyScope getScope();
 
-  void setScope(@Nonnull DependencyScope scope);
+  void setScope(DependencyScope scope);
 }

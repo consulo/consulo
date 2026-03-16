@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class Sand3EapDescriptor extends EarlyAccessProgramDescriptor {
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("C");
@@ -38,7 +37,7 @@ public class Sand3EapDescriptor extends EarlyAccessProgramDescriptor {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return LocalizeValue.localizeTODO("test");

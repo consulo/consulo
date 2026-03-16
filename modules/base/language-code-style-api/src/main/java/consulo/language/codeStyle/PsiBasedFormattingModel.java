@@ -26,8 +26,7 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,11 +36,11 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     private final Project myProject;
     private final ASTNode myASTNode;
     private final FormattingDocumentModel myDocumentModel;
-    @Nonnull
+    
     private final Block myRootBlock;
     protected boolean myCanModifyAllWhiteSpaces = false;
 
-    public PsiBasedFormattingModel(PsiFile file, @Nonnull Block rootBlock, FormattingDocumentModel documentModel) {
+    public PsiBasedFormattingModel(PsiFile file, Block rootBlock, FormattingDocumentModel documentModel) {
         myASTNode = file.getNode();
         myDocumentModel = documentModel;
         myRootBlock = rootBlock;
@@ -174,13 +173,13 @@ public class PsiBasedFormattingModel implements FormattingModelEx {
     }
 
     @Override
-    @Nonnull
+    
     public FormattingDocumentModel getDocumentModel() {
         return myDocumentModel;
     }
 
     @Override
-    @Nonnull
+    
     public Block getRootBlock() {
         return myRootBlock;
     }

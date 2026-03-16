@@ -19,18 +19,17 @@ import consulo.proxy.EventDispatcher;
 import consulo.versionControlSystem.change.ChangeListListener;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.impl.internal.change.ChangeListWorker;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class AddList implements ChangeListCommand {
-  @Nonnull
+  
   private final String myName;
   @Nullable private final String myComment;
   @Nullable private final Object myData;
 
   private LocalChangeList myNewListCopy;
 
-  public AddList(@Nonnull String name, @Nullable String comment, @Nullable Object data) {
+  public AddList(String name, @Nullable String comment, @Nullable Object data) {
     myName = name;
     myComment = comment;
     myData = data;

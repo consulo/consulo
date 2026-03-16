@@ -22,7 +22,6 @@ import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         EditorEx editor = getEditor(e);
         SelectionModel selectionModel = editor.getSelectionModel();
         CaretModel caretModel = editor.getCaretModel();
@@ -104,17 +103,17 @@ public class ToggleColumnModeAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         EditorEx ex = getEditor(e);
         return ex != null && ex.isColumnMode();
     }
 
-    private static EditorEx getEditor(@Nonnull AnActionEvent e) {
+    private static EditorEx getEditor(AnActionEvent e) {
         return (EditorEx) e.getData(Editor.KEY);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         EditorEx editor = getEditor(e);
         if (editor == null || editor.isOneLineMode()) {
             e.getPresentation().setEnabledAndVisible(false);

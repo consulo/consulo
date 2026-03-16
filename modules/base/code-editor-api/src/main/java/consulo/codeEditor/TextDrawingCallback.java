@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -45,5 +44,5 @@ public interface TextDrawingCallback {
    * @param fontInfo  font info to use during drawing target text at the given graphics buffer
    * @param color     color to use during drawing target text at the given graphics buffer
    */
-  void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, Object fontInfo);
+  void drawChars(Graphics g, char[] data, int start, int end, int x, int y, Color color, Object fontInfo);
 }

@@ -37,8 +37,7 @@ import consulo.versionControlSystem.impl.internal.diff.ChangeDiffRequestChain;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +57,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Change[] changes = e.getData(VcsDataKeys.CHANGES);
         Project project = e.getData(Project.KEY);
         if (ActionPlaces.MAIN_MENU.equals(e.getPlace())) {
@@ -87,7 +86,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Change[] changes = e.getData(VcsDataKeys.CHANGES);
         if (project == null || !canShowDiff(project, changes)) {
@@ -151,7 +150,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
         }
     }
 
-    private static boolean checkIfThereAreFakeRevisions(@Nonnull Project project, @Nonnull Change[] changes) {
+    private static boolean checkIfThereAreFakeRevisions(Project project, Change[] changes) {
         boolean needsConversion = false;
         for (Change change : changes) {
             if (change.getBeforeRevision() instanceof FakeRevision beforeRevision) {
@@ -166,8 +165,8 @@ public class ShowDiffAction extends AnAction implements DumbAware {
         return needsConversion;
     }
 
-    @Nonnull
-    private static Change[] loadFakeRevisions(@Nonnull Project project, @Nonnull Change[] changes) {
+    
+    private static Change[] loadFakeRevisions(Project project, Change[] changes) {
         List<Change> matchingChanges = new ArrayList<>();
         for (Change change : changes) {
             matchingChanges.addAll(ChangeListManager.getInstance(project).getChangesIn(ChangesUtil.getFilePath(change)));
@@ -180,21 +179,21 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     //
 
     @RequiredUIAccess
-    public static void showDiffForChange(@Nullable Project project, @Nonnull Iterable<Change> changes) {
+    public static void showDiffForChange(@Nullable Project project, Iterable<Change> changes) {
         showDiffForChange(project, changes, 0);
     }
 
     @RequiredUIAccess
-    public static void showDiffForChange(@Nullable Project project, @Nonnull Iterable<Change> changes, int index) {
+    public static void showDiffForChange(@Nullable Project project, Iterable<Change> changes, int index) {
         showDiffForChange(project, changes, index, new ShowDiffContext());
     }
 
     @RequiredUIAccess
     public static void showDiffForChange(
         @Nullable Project project,
-        @Nonnull Iterable<Change> changes,
-        @Nonnull Predicate<Change> condition,
-        @Nonnull ShowDiffContext context
+        Iterable<Change> changes,
+        Predicate<Change> condition,
+        ShowDiffContext context
     ) {
         int index = 0;
         List<ChangeDiffRequestProducer> presentables = new ArrayList<>();
@@ -214,9 +213,9 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     public static void showDiffForChange(
         @Nullable Project project,
-        @Nonnull Iterable<Change> changes,
+        Iterable<Change> changes,
         int index,
-        @Nonnull ShowDiffContext context
+        ShowDiffContext context
     ) {
         int i = 0;
         int newIndex = 0;
@@ -238,9 +237,9 @@ public class ShowDiffAction extends AnAction implements DumbAware {
     @RequiredUIAccess
     private static void showDiffForChange(
         @Nullable Project project,
-        @Nonnull List<ChangeDiffRequestProducer> presentables,
+        List<ChangeDiffRequestProducer> presentables,
         int index,
-        @Nonnull ShowDiffContext context
+        ShowDiffContext context
     ) {
         if (presentables.isEmpty()) {
             return;

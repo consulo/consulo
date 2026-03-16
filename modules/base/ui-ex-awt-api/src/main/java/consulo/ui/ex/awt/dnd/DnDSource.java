@@ -17,8 +17,7 @@ package consulo.ui.ex.awt.dnd;
 
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -40,7 +39,7 @@ public interface DnDSource extends DnDDropActionHandler {
    * @return Pair of image and cursor offset at the image
    */
   @Nullable
-  default Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
+  default Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
     return createDraggedImage(action, dragOrigin);
   }
 

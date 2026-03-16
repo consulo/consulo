@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.JBListTable;
 import consulo.ui.ex.awt.table.JBTableRowEditor;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,7 @@ import java.util.List;
  * @since 2025-08-09
  */
 public abstract class JBListTableWitEditors extends JBListTable {
-    public JBListTableWitEditors(@Nonnull JTable t) {
+    public JBListTableWitEditors(JTable t) {
         super(t);
     }
 

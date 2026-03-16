@@ -6,9 +6,7 @@ import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +30,7 @@ public class CodeStyleStatusBarPanel extends JPanel {
     setBorder(JBUI.Borders.empty(0));
   }
 
-  public void setText(@Nonnull @Nls String text) {
+  public void setText(String text) {
     myLabel.setText(text);
   }
 

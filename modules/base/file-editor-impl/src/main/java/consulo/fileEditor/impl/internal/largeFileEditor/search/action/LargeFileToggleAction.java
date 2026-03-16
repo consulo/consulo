@@ -6,7 +6,6 @@ import consulo.fileEditor.internal.largeFileEditor.LfeSearchManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.action.CheckboxAction;
-import jakarta.annotation.Nonnull;
 
 public class LargeFileToggleAction extends CheckboxAction implements DumbAware {
     private final LfeSearchManager searchManager;
@@ -30,12 +29,12 @@ public class LargeFileToggleAction extends CheckboxAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return isSelected;
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         setSelected(state);
     }
 }

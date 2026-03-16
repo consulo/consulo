@@ -48,7 +48,6 @@ import consulo.usage.*;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,13 +57,13 @@ import java.util.Collection;
  */
 public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiDataProvider, PsiElementNavigationItem, ItemPresentation, ConfigurableUsageTarget {
     private final SmartPsiElementPointer myPointer;
-    @Nonnull
+    
     protected final FindUsagesOptions myOptions;
 
     private String myPresentableText;
     private Image myIcon;
 
-    public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element, @Nonnull FindUsagesOptions options) {
+    public PsiElement2UsageTargetAdapter(PsiElement element, FindUsagesOptions options) {
         myOptions = options;
         myPointer = SmartPointerManager.getInstance(element.getProject()).createSmartPsiElementPointer(element);
 
@@ -75,7 +74,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     }
 
     @RequiredReadAction
-    public PsiElement2UsageTargetAdapter(@Nonnull PsiElement element) {
+    public PsiElement2UsageTargetAdapter(PsiElement element) {
         this(element, new FindUsagesOptions(element.getProject()));
     }
 
@@ -87,7 +86,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     }
 
     @Override
-    @Nonnull
+    
     public ItemPresentation getPresentation() {
         return this;
     }
@@ -138,14 +137,14 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
 
     @Override
     @RequiredUIAccess
-    public void findUsagesInEditor(@Nonnull FileEditor editor) {
+    public void findUsagesInEditor(FileEditor editor) {
         PsiElement element = getElement();
         FindManager.getInstance(element.getProject()).findUsagesInEditor(element, editor);
     }
 
     @Override
     @RequiredUIAccess
-    public void highlightUsages(@Nonnull PsiFile file, @Nonnull Editor editor, boolean clearHighlights) {
+    public void highlightUsages(PsiFile file, Editor editor, boolean clearHighlights) {
         PsiElement target = getElement();
 
         if (file instanceof PsiCompiledFile compiledFile) {
@@ -194,9 +193,9 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return virtualFile == null ? null : new VirtualFile[]{virtualFile};
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static PsiElement2UsageTargetAdapter[] convert(@Nonnull PsiElement[] psiElements) {
+    public static PsiElement2UsageTargetAdapter[] convert(PsiElement[] psiElements) {
         PsiElement2UsageTargetAdapter[] targets = new PsiElement2UsageTargetAdapter[psiElements.length];
         for (int i = 0; i < targets.length; i++) {
             targets[i] = new PsiElement2UsageTargetAdapter(psiElements[i]);
@@ -205,7 +204,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return targets;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public static PsiElement[] convertToPsiElements(PsiElement2UsageTargetAdapter[] adapters) {
         PsiElement[] targets = new PsiElement[adapters.length];
@@ -217,7 +216,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.lazy(UsageView.USAGE_INFO_KEY, () -> {
             PsiElement element = getElement();
             return element != null && element.getTextRange() != null ? new UsageInfo(element) : null;
@@ -230,7 +229,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return UsageViewUtil.getShowUsagesWithSettingsShortcut();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getLongDescriptiveName() {
@@ -301,7 +300,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, UiD
         return myIcon;
     }
 
-    @Nonnull
+    
     public FindUsagesOptions getOptions() {
         return myOptions;
     }

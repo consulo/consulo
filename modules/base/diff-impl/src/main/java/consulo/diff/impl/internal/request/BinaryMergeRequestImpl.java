@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,19 +39,19 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
 
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final FileContent myFile;
-    @Nonnull
+    
     private final List<DiffContent> myContents;
 
-    @Nonnull
+    
     private final List<byte[]> myByteContents;
-    @Nonnull
+    
     private final byte[] myOriginalContent;
 
     @Nullable
     private final String myTitle;
-    @Nonnull
+    
     private final List<String> myTitles;
 
     @Nullable
@@ -60,12 +59,12 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
 
     public BinaryMergeRequestImpl(
         @Nullable Project project,
-        @Nonnull FileContent file,
-        @Nonnull byte[] originalContent,
-        @Nonnull List<DiffContent> contents,
-        @Nonnull List<byte[]> byteContents,
+        FileContent file,
+        byte[] originalContent,
+        List<DiffContent> contents,
+        List<byte[]> byteContents,
         @Nullable String title,
-        @Nonnull List<String> contentTitles,
+        List<String> contentTitles,
         @Nullable Consumer<MergeResult> applyCallback
     ) {
         assert byteContents.size() == 3;
@@ -84,19 +83,19 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
         myApplyCallback = applyCallback;
     }
 
-    @Nonnull
+    
     @Override
     public FileContent getOutputContent() {
         return myFile;
     }
 
-    @Nonnull
+    
     @Override
     public List<DiffContent> getContents() {
         return myContents;
     }
 
-    @Nonnull
+    
     @Override
     public List<byte[]> getByteContents() {
         return myByteContents;
@@ -108,7 +107,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
         return myTitle;
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getContentTitles() {
         return myTitles;
@@ -116,7 +115,7 @@ public class BinaryMergeRequestImpl extends BinaryMergeRequest {
 
     @Override
     @RequiredUIAccess
-    public void applyResult(@Nonnull MergeResult result) {
+    public void applyResult(MergeResult result) {
         byte[] applyContent = switch (result) {
             case CANCEL -> myOriginalContent;
             case LEFT -> ThreeSide.LEFT.select(myByteContents);

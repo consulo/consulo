@@ -31,8 +31,7 @@ import consulo.versionControlSystem.change.ChangesViewContentProvider;
 import consulo.versionControlSystem.log.VcsLogFilter;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogPanel;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,15 +45,15 @@ import java.util.List;
 public class VcsLogContentProvider implements ChangesViewContentProvider {
     public static final String TAB_NAME = "Log";
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final VcsProjectLog myProjectLog;
-    @Nonnull
+    
     private final JPanel myContainer = new JBPanel(new BorderLayout());
 
     @RequiredUIAccess
-    public VcsLogContentProvider(@Nonnull Project project, @Nonnull VcsProjectLog projectLog) {
+    public VcsLogContentProvider(Project project, VcsProjectLog projectLog) {
         myProject = project;
         myProjectLog = projectLog;
 
@@ -98,16 +97,16 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
     }
 
     @RequiredUIAccess
-    public static void openAnotherLogTab(@Nonnull VcsLogManager logManager, @Nonnull Project project) {
+    public static void openAnotherLogTab(VcsLogManager logManager, Project project) {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
         openLogTab(logManager, project, generateShortName(toolWindow), null);
     }
 
     @RequiredUIAccess
     public static VcsLogUiImpl openLogTab(
-        @Nonnull VcsLogManager logManager,
-        @Nonnull Project project,
-        @Nonnull String shortName,
+        VcsLogManager logManager,
+        Project project,
+        String shortName,
         @Nullable VcsLogFilter filter
     ) {
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.VCS);
@@ -124,8 +123,8 @@ public class VcsLogContentProvider implements ChangesViewContentProvider {
         return logUi;
     }
 
-    @Nonnull
-    private static String generateShortName(@Nonnull ToolWindow toolWindow) {
+    
+    private static String generateShortName(ToolWindow toolWindow) {
         TabbedContent tabbedContent = ContentUtilEx.findTabbedContent(toolWindow.getContentManager(), TAB_NAME);
         if (tabbedContent != null) {
             return String.valueOf(tabbedContent.getTabs().size() + 1);

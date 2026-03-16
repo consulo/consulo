@@ -18,8 +18,7 @@ package consulo.fileEditor.internal;
 import consulo.dataContext.UiDataProvider;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -44,8 +43,8 @@ public interface SearchReplaceComponent extends UiDataProvider {
         }
     }
 
-    @Nonnull
-    public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, @Nonnull JComponent component) {
+    
+    public static SearchReplaceComponentBuilder buildFor(@Nullable Project project, JComponent component) {
         return new SearchReplaceComponentBuilder(project, component);
     }
 
@@ -55,10 +54,10 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     JComponent getComponent();
 
-    @Nonnull
+    
     JTextComponent getSearchTextComponent();
 
-    void setStatusText(@Nonnull String status);
+    void setStatusText(String status);
 
     void resetUndoRedoActions();
 
@@ -66,7 +65,7 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     boolean isMultiline();
 
-    void addListener(@Nonnull Listener listener);
+    void addListener(Listener listener);
 
     Project getProject();
 
@@ -78,7 +77,7 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     void setReplaceText(String text);
 
-    void update(@Nonnull String findText, @Nonnull String replaceText, boolean replaceMode, boolean multiline);
+    void update(String findText, String replaceText, boolean replaceMode, boolean multiline);
 
     void selectSearchAll();
 
@@ -86,16 +85,16 @@ public interface SearchReplaceComponent extends UiDataProvider {
 
     String getStatusText();
 
-    @Nonnull
+    
     Color getStatusColor();
 
-    void addTextToRecent(@Nonnull String text, boolean search);
+    void addTextToRecent(String text, boolean search);
 
     void updateEmptyText(Supplier<String> textSupplier);
 
     boolean isJustClearedSearch();
 
-    @Nonnull
+    
     @RequiredUIAccess
     CompletableFuture<?> prepareAsync();
 }

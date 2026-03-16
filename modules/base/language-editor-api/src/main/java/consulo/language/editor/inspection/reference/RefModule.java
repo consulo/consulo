@@ -17,7 +17,6 @@ package consulo.language.editor.inspection.reference;
 
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A node in the reference graph corresponding to a module.
@@ -32,6 +31,6 @@ public interface RefModule extends RefEntity {
    *
    * @return the module for the node.
    */
-  @Nonnull
+  
   Module getModule();
 }

@@ -32,7 +32,7 @@ import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.statistician.StatisticsInfo;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

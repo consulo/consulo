@@ -15,8 +15,7 @@ import consulo.language.editor.problemView.ProblemsProvider;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -35,12 +34,12 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
     private final Map<Object, Set<FileBuildProblem>> myBuildIdToFileProblems = new HashMap<>();
 
     @Inject
-    public BuildViewProblemsServiceImpl(@Nonnull Project project) {
+    public BuildViewProblemsServiceImpl(Project project) {
         myProject = project;
     }
 
     @Override
-    public @Nonnull Project getProject() {
+    public Project getProject() {
         return myProject;
     }
 
@@ -50,7 +49,7 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         myWorkingDirToBuildId.clear();
     }
 
-    public void listenToBuildView(@Nonnull BuildProgressObservable buildProgressObservable) {
+    public void listenToBuildView(BuildProgressObservable buildProgressObservable) {
         ProblemsCollector collector = myProject.getInstance(ProblemsCollector.class);
 
         buildProgressObservable.addListener((buildId, event) -> {
@@ -92,23 +91,23 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         private final VirtualFile myVirtualFile;
         private final ProblemsProvider myProblemsProvider;
 
-        public FileBuildProblem(@Nonnull FileMessageEvent event,
-                                @Nonnull VirtualFile virtualFile,
-                                @Nonnull ProblemsProvider problemsProvider) {
+        public FileBuildProblem(FileMessageEvent event,
+                                VirtualFile virtualFile,
+                                ProblemsProvider problemsProvider) {
             myEvent = event;
             myVirtualFile = virtualFile;
             myProblemsProvider = problemsProvider;
         }
 
-        public @Nonnull FileMessageEvent getEvent() {
+        public FileMessageEvent getEvent() {
             return myEvent;
         }
 
-        public @Nonnull VirtualFile getVirtualFile() {
+        public VirtualFile getVirtualFile() {
             return myVirtualFile;
         }
 
-        public @Nonnull ProblemsProvider getProblemsProvider() {
+        public ProblemsProvider getProblemsProvider() {
             return myProblemsProvider;
         }
 
@@ -118,7 +117,7 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         }
 
         @Override
-        public @Nonnull VirtualFile getFile() {
+        public VirtualFile getFile() {
             return myVirtualFile;
         }
 
@@ -133,12 +132,12 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
         }
 
         @Override
-        public @Nonnull ProblemsProvider getProvider() {
+        public ProblemsProvider getProvider() {
             return myProblemsProvider;
         }
 
         @Override
-        public @Nonnull String getText() {
+        public String getText() {
             return myEvent.getMessage();
         }
 

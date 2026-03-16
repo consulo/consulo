@@ -22,22 +22,21 @@ import consulo.component.util.pointer.NamedPointer;
 import consulo.component.util.pointer.NamedPointerManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ModulePointerManager extends NamedPointerManager<Module> {
-  @Nonnull
-  static ModulePointerManager getInstance(@Nonnull Project project) {
+  
+  static ModulePointerManager getInstance(Project project) {
     return project.getInstance(ModulePointerManager.class);
   }
 
-  @Nonnull
+  
   @Override
   @RequiredReadAction
-  NamedPointer<Module> create(@Nonnull String name);
+  NamedPointer<Module> create(String name);
 
-  @Nonnull
+  
   @Override
   @RequiredReadAction
-  NamedPointer<Module> create(@Nonnull Module value);
+  NamedPointer<Module> create(Module value);
 }

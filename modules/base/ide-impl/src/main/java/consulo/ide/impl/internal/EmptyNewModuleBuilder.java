@@ -24,7 +24,6 @@ import consulo.ide.newModule.NewModuleWizardContext;
 import consulo.ide.newModule.NewModuleWizardContextBase;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,9 +32,9 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class EmptyNewModuleBuilder implements NewModuleBuilder {
   @Override
-  public void setupContext(@Nonnull NewModuleContext context) {
+  public void setupContext(NewModuleContext context) {
     context.add(LocalizeValue.localizeTODO("Empty"), AllIcons.FileTypes.Any_type, new NewModuleBuilderProcessor<NewModuleWizardContext>() {
-      @Nonnull
+      
       @Override
       public NewModuleWizardContext createContext(boolean isNewProject) {
         return new NewModuleWizardContextBase(isNewProject);

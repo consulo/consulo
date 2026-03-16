@@ -37,7 +37,6 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 public class GotoNextErrorHandler implements CodeInsightActionHandler {
     private final boolean myGoForward;
@@ -48,7 +47,7 @@ public class GotoNextErrorHandler implements CodeInsightActionHandler {
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         int caretOffset = editor.getCaretModel().getOffset();
         gotoNextError(project, editor, file, caretOffset);
     }

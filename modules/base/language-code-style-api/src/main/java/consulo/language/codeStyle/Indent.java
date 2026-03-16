@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * The indent setting for a formatting model block. Indicates how the block is indented
@@ -239,7 +238,7 @@ public abstract class Indent {
      *                                (feel free to get more information about that at class-level javadoc)
      * @return newly created indent configured in accordance with the given arguments
      */
-    public static Indent getIndent(@Nonnull Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+    public static Indent getIndent(Type type, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
         return Formatter.getInstance().getIndent(type, relativeToDirectParent, enforceIndentToChildren);
     }
 
@@ -254,7 +253,7 @@ public abstract class Indent {
      *                                (feel free to get more information about that at class-level javadoc)
      * @return newly created indent configured in accordance with the given arguments
      */
-    public static Indent getIndent(@Nonnull Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
+    public static Indent getIndent(Type type, int spaces, boolean relativeToDirectParent, boolean enforceIndentToChildren) {
         return Formatter.getInstance().getIndent(type, spaces, relativeToDirectParent, enforceIndentToChildren);
     }
 

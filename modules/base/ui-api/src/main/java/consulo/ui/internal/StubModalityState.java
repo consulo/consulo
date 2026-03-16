@@ -16,7 +16,6 @@
 package consulo.ui.internal;
 
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 /**
  * Single stub implementation of {@link ModalityState}.
@@ -32,7 +31,7 @@ public final class StubModalityState implements ModalityState {
     }
 
     @Override
-    public boolean dominates(@Nonnull ModalityState anotherState) {
+    public boolean dominates(ModalityState anotherState) {
         return false;
     }
 

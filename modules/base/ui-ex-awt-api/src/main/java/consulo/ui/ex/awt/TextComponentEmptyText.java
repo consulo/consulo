@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -48,11 +47,11 @@ public class TextComponentEmptyText extends StatusText {
     });
   }
 
-  public void setTextToTriggerStatus(@Nonnull String defaultText) {
+  public void setTextToTriggerStatus(String defaultText) {
     myStatusTriggerText = defaultText;
   }
 
-  @Nonnull
+  
   public String getStatusTriggerText() {
     return myStatusTriggerText;
   }
@@ -83,9 +82,9 @@ public class TextComponentEmptyText extends StatusText {
     return new Rectangle(left, top, b.width - left - right, b.height - top - bottom);
   }
 
-  @Nonnull
+  
   @Override
-  protected Rectangle adjustComponentBounds(@Nonnull JComponent component, @Nonnull Rectangle bounds) {
+  protected Rectangle adjustComponentBounds(JComponent component, Rectangle bounds) {
     if (isVerticalFlow()) {
       return super.adjustComponentBounds(component, bounds);
     }

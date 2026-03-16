@@ -6,8 +6,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.ui.ex.awt.DialogWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -18,8 +17,8 @@ public abstract class InstancesWindowBase extends DialogWrapper {
 
     protected final String className;
 
-    public InstancesWindowBase(@Nonnull XDebugSession session,
-                               @Nonnull String className) {
+    public InstancesWindowBase(XDebugSession session,
+                               String className) {
         super(session.getProject(), false);
         this.className = className;
 
@@ -39,14 +38,14 @@ public abstract class InstancesWindowBase extends DialogWrapper {
             XDebuggerBundle.message("memory.view.instances.dialog.title.warning", className, message));
     }
 
-    @Nonnull
+    
     @Override
     protected String getDimensionServiceKey() {
         return "#org.jetbrains.debugger.memory.view.InstancesWindow";
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{new DialogWrapperExitAction(XDebuggerBundle.message("memory.instances.close.text"), CLOSE_EXIT_CODE)};
     }

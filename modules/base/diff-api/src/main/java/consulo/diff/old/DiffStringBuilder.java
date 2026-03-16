@@ -16,14 +16,13 @@
 package consulo.diff.old;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 
 @Deprecated
 @DeprecationInfo("Old diff-impl")
 public class DiffStringBuilder implements CharSequence {
-  @Nonnull
+  
   private char[] myData;
   private int myLength;
 
@@ -50,19 +49,19 @@ public class DiffStringBuilder implements CharSequence {
   }
 
   @Override
-  @Nonnull
+  
   public CharSequence subSequence(int start, int end) {
     DiffString.checkBounds(start, end, myLength);
     return DiffString.create(myData, start, end - start);
   }
 
-  @Nonnull
+  
   public DiffString toDiffString() {
     return DiffString.create(myData, 0, myLength);
   }
 
   @Override
-  @Nonnull
+  
   public String toString() {
     return toDiffString().toString();
   }
@@ -76,7 +75,7 @@ public class DiffStringBuilder implements CharSequence {
     }
   }
 
-  public void append(@Nonnull DiffString s) {
+  public void append(DiffString s) {
     if (s.isEmpty()) return;
     ensureCapacityInternal(myLength + s.length());
     s.copyData(myData, myLength);

@@ -9,7 +9,6 @@ import consulo.project.Project;
 import consulo.task.impl.internal.setting.TaskRepositoriesConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -17,18 +16,18 @@ import jakarta.inject.Inject;
  */
 @ActionImpl(id = "tasks.configure.servers")
 public class ConfigureServersAction extends BaseTaskAction {
-    @Nonnull
+    
     private final Application myApplication;
 
     @Inject
-    public ConfigureServersAction(@Nonnull Application application) {
+    public ConfigureServersAction(Application application) {
         super(LocalizeValue.localizeTODO("Configure Servers..."), LocalizeValue.empty(), PlatformIconGroup.generalSettings());
         myApplication = application;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         myApplication.getInstance(ShowConfigurableService.class)

@@ -11,8 +11,7 @@ import consulo.ui.ex.awt.internal.MnemonicWrapper;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -215,7 +214,7 @@ public class MnemonicHelper extends ComponentTreeWatcher {
     return Platform.current().os().isMac() ? ActionEvent.ALT_MASK | ActionEvent.CTRL_MASK : ActionEvent.ALT_MASK;
   }
 
-  public static void registerMnemonicAction(@Nonnull JComponent component, int mnemonic) {
+  public static void registerMnemonicAction(JComponent component, int mnemonic) {
     InputMap map = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     int mask = getFocusAcceleratorKeyMask();
     if (component instanceof AbstractButton) {

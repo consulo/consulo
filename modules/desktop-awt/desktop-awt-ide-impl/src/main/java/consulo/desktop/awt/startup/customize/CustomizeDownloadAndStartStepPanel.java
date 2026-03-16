@@ -29,9 +29,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -138,13 +136,13 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
     }
 
     @Override
-    @NonNls
+    
     protected String getTitle() {
         return myPluginsStepPanel == null ? getStartName() : "Download plugins";
     }
 
     @Override
-    @NonNls
+    
     protected String getHTMLHeader() {
         Set<PluginDescriptor> pluginsForDownload =
             myPluginsStepPanel == null ? Collections.<PluginDescriptor>emptySet() : myPluginsStepPanel.getPluginsForDownload();
@@ -156,8 +154,8 @@ public class CustomizeDownloadAndStartStepPanel extends AbstractCustomizeWizardS
         return null;
     }
 
-    @Nonnull
-    @NonNls
+    
+    
     private static String getStartName() {
         boolean supported = Restarter.isSupported();
         if (supported) {

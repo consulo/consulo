@@ -19,7 +19,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.IOUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -39,11 +38,11 @@ public class VirtualFileWithDependenciesState {
         mySourceTimestamp = sourceTimestamp;
     }
 
-    public void addDependency(@Nonnull VirtualFile file) {
+    public void addDependency(VirtualFile file) {
         myDependencies.put(file.getUrl(), file.getTimeStamp());
     }
 
-    public boolean isUpToDate(@Nonnull VirtualFile sourceFile) {
+    public boolean isUpToDate(VirtualFile sourceFile) {
         if (sourceFile.getTimeStamp() != mySourceTimestamp) {
             return false;
         }
@@ -61,7 +60,7 @@ public class VirtualFileWithDependenciesState {
 
     private static class VirtualFileWithDependenciesExternalizer implements DataExternalizer<VirtualFileWithDependenciesState> {
         @Override
-        public void save(@Nonnull DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
+        public void save(DataOutput out, VirtualFileWithDependenciesState value) throws IOException {
             out.writeLong(value.mySourceTimestamp);
             Map<String, Long> dependencies = value.myDependencies;
             out.writeInt(dependencies.size());
@@ -72,7 +71,7 @@ public class VirtualFileWithDependenciesState {
         }
 
         @Override
-        public VirtualFileWithDependenciesState read(@Nonnull DataInput in) throws IOException {
+        public VirtualFileWithDependenciesState read(DataInput in) throws IOException {
             VirtualFileWithDependenciesState state = new VirtualFileWithDependenciesState(in.readLong());
             int size = in.readInt();
             while (size-- > 0) {

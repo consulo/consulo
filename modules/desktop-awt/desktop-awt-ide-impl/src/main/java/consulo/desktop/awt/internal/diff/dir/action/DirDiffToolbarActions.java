@@ -18,12 +18,12 @@ package consulo.desktop.awt.internal.diff.dir.action;
 import consulo.desktop.awt.internal.diff.dir.DirDiffTableModel;
 import consulo.diff.dir.DirDiffModelHolder;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -68,9 +68,9 @@ public class DirDiffToolbarActions extends ActionGroup {
         myActions = actions.toArray(new AnAction[actions.size()]);
     }
 
-    @Nonnull
+    
     @Override
-    public AnAction[] getChildren(@jakarta.annotation.Nullable AnActionEvent e) {
+    public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return myActions;
     }
 }

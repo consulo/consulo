@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.ThreeStateCheckBox;
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.*;

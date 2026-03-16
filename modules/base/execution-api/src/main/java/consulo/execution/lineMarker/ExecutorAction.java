@@ -37,8 +37,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +49,7 @@ import java.util.function.Function;
 public class ExecutorAction extends AnAction {
     private static final Key<List<ConfigurationFromContext>> CONFIGURATION_CACHE = Key.create("ConfigurationFromContext");
 
-    @Nonnull
+    
     public static AnAction[] getActions(int order) {
         return ContainerUtil.map2Array(ExecutorRegistry.getInstance().getRegisteredExecutors(), AnAction.class,
             (Function<Executor, AnAction>) executor ->
@@ -62,7 +61,7 @@ public class ExecutorAction extends AnAction {
     private final Executor myExecutor;
     private final int myOrder;
 
-    private ExecutorAction(@Nonnull AnAction origin, @Nonnull Executor executor, int order) {
+    private ExecutorAction(AnAction origin, Executor executor, int order) {
         myOrigin = origin;
         myExecutor = executor;
         myOrder = order;
@@ -70,7 +69,7 @@ public class ExecutorAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
         e.getPresentation().setVisible(activeText.isNotEmpty());
         e.getPresentation().setTextValue(activeText);
@@ -78,11 +77,11 @@ public class ExecutorAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myOrigin.actionPerformed(e);
     }
 
-    @Nonnull
+    
     private static List<ConfigurationFromContext> getConfigurations(DataContext dataContext) {
         List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
         if (result == null) {
@@ -91,7 +90,7 @@ public class ExecutorAction extends AnAction {
         return result;
     }
 
-    @Nonnull
+    
     private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
         ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
         if (context.getLocation() == null) {
@@ -101,8 +100,8 @@ public class ExecutorAction extends AnAction {
             .collectMapped(producer -> createConfiguration(producer, context));
     }
 
-    @Nonnull
-    private LocalizeValue getActionText(DataContext dataContext, @Nonnull Executor executor) {
+    
+    private LocalizeValue getActionText(DataContext dataContext, Executor executor) {
         List<ConfigurationFromContext> list = getConfigurations(dataContext);
         if (list.isEmpty()) {
             return LocalizeValue.empty();

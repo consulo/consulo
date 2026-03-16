@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.distributed.branch;
 
-import jakarta.annotation.Nonnull;
 
 public interface DvcsSyncSettings {
 
@@ -25,9 +24,9 @@ public interface DvcsSyncSettings {
     NOT_DECIDED
   }
 
-  @Nonnull
+  
   Value getSyncSetting();
 
-  void setSyncSetting(@Nonnull Value syncSetting);
+  void setSyncSetting(Value syncSetting);
 
 }

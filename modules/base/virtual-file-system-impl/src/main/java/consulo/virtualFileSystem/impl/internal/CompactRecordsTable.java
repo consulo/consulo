@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.index.io.PagePool;
 import consulo.index.io.storage.AbstractRecordsTable;
 import consulo.index.io.storage.RecordIdIterator;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -237,7 +236,7 @@ public class CompactRecordsTable extends AbstractRecordsTable {
     };
   }
 
-  @Nonnull
+  
   private BitSet buildIdSetOfExtraRecords() throws IOException {
     BitSet extraRecords = new BitSet();
 

@@ -15,7 +15,7 @@
  */
 package consulo.diff.request;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class LoadingDiffRequest extends MessageDiffRequest {
   public LoadingDiffRequest(@Nullable String title) {

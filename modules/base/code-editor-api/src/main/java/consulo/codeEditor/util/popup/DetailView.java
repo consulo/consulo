@@ -20,7 +20,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.colorScheme.TextAttributes;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 

@@ -23,7 +23,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.TitlelessDecorator;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -46,12 +45,11 @@ public class WelcomeNewProjectAction extends NewProjectAction {
         return true;
     }
 
-    @Nonnull
     @RequiredUIAccess
     public JComponent createSlide(
-        @Nonnull Disposable parentDisposable,
-        @Nonnull WelcomeScreenSlider owner,
-        @Nonnull TitlelessDecorator titlelessDecorator
+        Disposable parentDisposable,
+        WelcomeScreenSlider owner,
+        TitlelessDecorator titlelessDecorator
     ) {
         owner.setTitle(IdeLocalize.titleNewProject().get());
 

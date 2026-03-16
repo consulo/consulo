@@ -19,18 +19,17 @@ package consulo.diff.impl.internal.action;
 import consulo.diff.DiffNavigationContext;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 
 public class NavigationContextChecker {
-  @Nonnull
+  
   private final Iterator<Pair<Integer, CharSequence>> myChangedLinesIterator;
-  @Nonnull
+  
   private final DiffNavigationContext myContext;
 
-  public NavigationContextChecker(@Nonnull Iterator<Pair<Integer, CharSequence>> changedLinesIterator,
-                                  @Nonnull DiffNavigationContext context) {
+  public NavigationContextChecker(Iterator<Pair<Integer, CharSequence>> changedLinesIterator,
+                                  DiffNavigationContext context) {
     myChangedLinesIterator = changedLinesIterator;
     myContext = context;
   }

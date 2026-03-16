@@ -18,15 +18,14 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.module.Module;
-import consulo.platform.base.localize.ActionLocalize;
-import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
-
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 // from kotlin
 @ActionImpl(id = "CopyContentRootPath")
@@ -46,7 +45,7 @@ public class CopyContentRootPathProvider extends DumbAwareCopyPathProvider {
                     VirtualFile[] contentRoots = ModuleRootManager.getInstance(moduleForFile).getContentRoots();
 
                     for (VirtualFile contentRoot : contentRoots) {
-                        String relativePath = VfsUtilCore.getRelativePath(file, contentRoot);
+                        String relativePath = VirtualFileUtil.getRelativePath(file, contentRoot);
                         if (relativePath != null) {
                             return relativePath;
                         }

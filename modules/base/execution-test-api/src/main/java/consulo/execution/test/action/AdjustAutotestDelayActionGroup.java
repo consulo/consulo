@@ -26,8 +26,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -38,13 +37,13 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
     public static final int MAX_DELAY = 10;
     private final DataContext myDataContext;
 
-    public AdjustAutotestDelayActionGroup(@Nonnull JComponent parent) {
+    public AdjustAutotestDelayActionGroup(JComponent parent) {
         super(LocalizeValue.localizeTODO("Set AutoTest Delay"), true);
         myDataContext = DataManager.getInstance().getDataContext(parent);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         RunContentDescriptor descriptor = myDataContext.getData(RunContentDescriptor.KEY);
         boolean visible = false;
         if (descriptor != null) {
@@ -58,7 +57,7 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
         e.getPresentation().setVisible(visible);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         AnAction[] actions = new AnAction[MAX_DELAY];
@@ -77,13 +76,13 @@ public class AdjustAutotestDelayActionGroup extends ActionGroup {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             Project project = e.getData(Project.KEY);
             return project != null && AutoTestManager.getInstance(project).getDelay() == myDelay;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             Project project = e.getRequiredData(Project.KEY);
             AutoTestManager.getInstance(project).setDelay(myDelay);
         }

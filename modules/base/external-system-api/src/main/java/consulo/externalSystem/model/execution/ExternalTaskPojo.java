@@ -17,8 +17,7 @@ package consulo.externalSystem.model.execution;
 
 import consulo.externalSystem.model.task.TaskData;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents {@link TaskData} at the ide side. Is required purely for IJ serialization because {@link TaskData} has only final
@@ -29,9 +28,9 @@ import jakarta.annotation.Nullable;
  */
 public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
   
-  @Nonnull
+  
   private String myName;
-  @Nonnull
+  
   private String myLinkedExternalProjectPath;
   
   @Nullable private String myDescription;
@@ -42,23 +41,23 @@ public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
     this("___DUMMY___", "___DUMMY___", null);
   }
 
-  public ExternalTaskPojo(@Nonnull String name, @Nonnull String linkedExternalProjectPath, @Nullable String description) {
+  public ExternalTaskPojo(String name, String linkedExternalProjectPath, @Nullable String description) {
     myName = name;
     myLinkedExternalProjectPath = linkedExternalProjectPath;
     myDescription = description;
   }
 
-  @Nonnull
-  public static ExternalTaskPojo from(@Nonnull TaskData data) {
+  
+  public static ExternalTaskPojo from(TaskData data) {
     return new ExternalTaskPojo(data.getName(), data.getLinkedExternalProjectPath(), data.getDescription());
   }
   
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myName = name;
   }
 
@@ -71,13 +70,13 @@ public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
     myDescription = description;
   }
 
-  @Nonnull
+  
   public String getLinkedExternalProjectPath() {
     return myLinkedExternalProjectPath;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setLinkedExternalProjectPath(@Nonnull String linkedExternalProjectPath) {
+  public void setLinkedExternalProjectPath(String linkedExternalProjectPath) {
     // Required for IJ serialization.
     myLinkedExternalProjectPath = linkedExternalProjectPath;
   }
@@ -103,7 +102,7 @@ public class ExternalTaskPojo implements Comparable<ExternalTaskPojo> {
   }
 
   @Override
-  public int compareTo(@Nonnull ExternalTaskPojo that) {
+  public int compareTo(ExternalTaskPojo that) {
     return myName.compareTo(that.getName());
   }
 

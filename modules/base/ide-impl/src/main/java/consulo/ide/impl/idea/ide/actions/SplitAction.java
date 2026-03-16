@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -44,10 +43,10 @@ public abstract class SplitAction extends AnAction implements DumbAware {
         }
     }
 
-    @Nonnull
+    
     private final Orientation myOrientation;
 
-    protected SplitAction(@Nonnull LocalizeValue text, @Nonnull Image icon, @Nonnull Orientation orientation) {
+    protected SplitAction(LocalizeValue text, Image icon, Orientation orientation) {
         super(text, LocalizeValue.empty(), icon);
         myOrientation = orientation;
     }

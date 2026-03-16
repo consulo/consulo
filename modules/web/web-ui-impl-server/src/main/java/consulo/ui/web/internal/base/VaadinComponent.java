@@ -17,7 +17,6 @@ package consulo.web.internal.ui.base;
 
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public abstract class VaadinComponent extends AbstractComponent implements FromV
     myComponent = component;
   }
 
-  @Nonnull
+  
   @Override
   public Component toUIComponent() {
     return myComponent;

@@ -35,8 +35,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -101,13 +100,13 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         private final String myModuleName;
         private final ItemMatchers myMatchers;
 
-        LeftRenderer(String moduleName, @Nonnull ItemMatchers matchers) {
+        LeftRenderer(String moduleName, ItemMatchers matchers) {
             myModuleName = moduleName;
             myMatchers = matchers;
         }
 
         @Override
-        protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+        protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
             Color bgColor = UIUtil.getListBackground();
             Color color = list.getForeground();
 
@@ -274,8 +273,8 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         return this;
     }
 
-    @Nonnull
-    protected ItemMatchers getItemMatchers(@Nonnull JList list, @Nonnull Object value) {
+    
+    protected ItemMatchers getItemMatchers(JList list, Object value) {
         return new ItemMatchers(MatcherHolder.getAssociatedMatcher(list), null);
     }
 
@@ -320,7 +319,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         return Comparator.comparing(this::getComparingObject);
     }
 
-    @Nonnull
+    
     public Comparable getComparingObject(T element) {
         return ReadAction.compute(() -> {
             String elementText = getElementText(element);

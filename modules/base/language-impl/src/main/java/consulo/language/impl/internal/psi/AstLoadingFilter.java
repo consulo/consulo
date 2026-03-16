@@ -8,8 +8,7 @@ import consulo.logging.Logger;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -78,7 +77,7 @@ public class AstLoadingFilter {
   private AstLoadingFilter() {
   }
 
-  public static void assertTreeLoadingAllowed(@Nonnull VirtualFile file) {
+  public static void assertTreeLoadingAllowed(VirtualFile file) {
     if (!AST_LOADING_FILTER) return;
     if (file instanceof VirtualFileWindow) return;
     Supplier<String> disallowedInfo = myDisallowedInfo.get();
@@ -94,8 +93,8 @@ public class AstLoadingFilter {
     }
   }
 
-  @Nonnull
-  private static String buildDebugInfo(@Nonnull VirtualFile file, @Nonnull Supplier<String> disabledInfo) {
+  
+  private static String buildDebugInfo(VirtualFile file, Supplier<String> disabledInfo) {
     StringBuilder debugInfo = new StringBuilder();
     debugInfo.append("Accessed file path: ").append(file.getPath());
     String additionalInfo = disabledInfo.get();
@@ -105,15 +104,15 @@ public class AstLoadingFilter {
     return debugInfo.toString();
   }
 
-  public static <E extends Throwable> void disallowTreeLoading(@Nonnull ThrowableRunnable<E> runnable) throws E {
+  public static <E extends Throwable> void disallowTreeLoading(ThrowableRunnable<E> runnable) throws E {
     disallowTreeLoading(toComputable(runnable));
   }
 
-  public static <T, E extends Throwable> T disallowTreeLoading(@Nonnull ThrowableComputable<? extends T, E> computable) throws E {
+  public static <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable) throws E {
     return disallowTreeLoading(computable, () -> null);
   }
 
-  public static <T, E extends Throwable> T disallowTreeLoading(@Nonnull ThrowableComputable<? extends T, E> computable, @Nonnull Supplier<String> debugInfo) throws E {
+  public static <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable, Supplier<String> debugInfo) throws E {
     if (myDisallowedInfo.get() != null) {
       return computable.compute();
     }
@@ -128,20 +127,20 @@ public class AstLoadingFilter {
     }
   }
 
-  public static <E extends Throwable> void forceAllowTreeLoading(@Nullable PsiFile psiFile, @Nonnull ThrowableRunnable<E> runnable) throws E {
+  public static <E extends Throwable> void forceAllowTreeLoading(@Nullable PsiFile psiFile, ThrowableRunnable<E> runnable) throws E {
     forceAllowTreeLoading(psiFile, toComputable(runnable));
   }
 
-  public static <E extends Throwable> void forceAllowTreeLoading(@Nonnull VirtualFile virtualFile, @Nonnull ThrowableRunnable<E> runnable) throws E {
+  public static <E extends Throwable> void forceAllowTreeLoading(VirtualFile virtualFile, ThrowableRunnable<E> runnable) throws E {
     forceAllowTreeLoading(virtualFile, toComputable(runnable));
   }
 
-  public static <T, E extends Throwable> T forceAllowTreeLoading(@Nullable PsiFile psiFile, @Nonnull ThrowableComputable<? extends T, E> computable) throws E {
+  public static <T, E extends Throwable> T forceAllowTreeLoading(@Nullable PsiFile psiFile, ThrowableComputable<? extends T, E> computable) throws E {
     VirtualFile virtualFile = psiFile == null ? null : psiFile.getVirtualFile();
     return virtualFile == null ? computable.compute() : forceAllowTreeLoading(virtualFile, computable);
   }
 
-  public static <T, E extends Throwable> T forceAllowTreeLoading(@Nonnull VirtualFile virtualFile, @Nonnull ThrowableComputable<? extends T, E> computable) throws E {
+  public static <T, E extends Throwable> T forceAllowTreeLoading(VirtualFile virtualFile, ThrowableComputable<? extends T, E> computable) throws E {
     Set<VirtualFile> enabledFiles = myForcedAllowedFiles.get();
     if (enabledFiles.add(virtualFile)) {
       try {

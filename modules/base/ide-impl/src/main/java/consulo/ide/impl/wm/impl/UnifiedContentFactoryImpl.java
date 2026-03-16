@@ -27,8 +27,7 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -37,19 +36,19 @@ import jakarta.annotation.Nullable;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedContentFactoryImpl implements ContentFactory {
-  @Nonnull
+  
   @Override
-  public ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project) {
+  public ContentManager createContentManager(ContentUI contentUI, boolean canCloseContents, ComponentManager project) {
     return new UnifiedContentManager(contentUI, canCloseContents, (Project)project);
   }
 
-  @Nonnull
+  
   @Override
-  public ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project) {
+  public ContentManager createContentManager(boolean canCloseContents, ComponentManager project) {
     return createContentManager(new TabbedPaneContentUI(), canCloseContents, project);
   }
 
-  @Nonnull
+  
   @Override
   public Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
     return new UnifiedContentImpl(component, displayName, isLockable);

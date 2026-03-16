@@ -28,7 +28,6 @@ import consulo.language.editor.impl.internal.markup.DummyUIController;
 import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Nls;
 
 import java.awt.*;
@@ -66,16 +65,15 @@ public class FontEditorPreview implements PreviewPanel {
             "\n";
     }
 
-    static void installTrafficLights(@Nonnull EditorEx editor) {
+    static void installTrafficLights(EditorEx editor) {
         ((EditorMarkupModel) editor.getMarkupModel()).setErrorStripeRenderer(new DumbTrafficLightRenderer());
         ((EditorMarkupModel) editor.getMarkupModel()).setErrorStripeVisible(true);
     }
 
     private static class DumbTrafficLightRenderer implements ErrorStripeRenderer {
         @RequiredReadAction
-        @Nonnull
         @Override
-        public AnalyzerStatus getStatus(@Nonnull Editor editor) {
+        public AnalyzerStatus getStatus(Editor editor) {
             return new AnalyzerStatus(PlatformIconGroup.generalInspectionsok(), null, null, DummyUIController.INSTANCE);
         }
     }
@@ -141,7 +139,7 @@ public class FontEditorPreview implements PreviewPanel {
     }
 
     @Override
-    public void addListener(@Nonnull ColorAndFontSettingsListener listener) {
+    public void addListener(ColorAndFontSettingsListener listener) {
         myDispatcher.addListener(listener);
     }
 

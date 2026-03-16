@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,17 +29,17 @@ public abstract class IdeScriptEngineManager {
     return ServiceManager.getService(IdeScriptEngineManager.class);
   }
 
-  @Nonnull
+  
   public abstract List<String> getLanguages();
 
-  @Nonnull
+  
   public abstract List<String> getFileExtensions(@Nullable String language);
 
   @Nullable
-  public abstract IdeScriptEngine getEngineForLanguage(@Nonnull String language, @Nullable ClassLoader loader);
+  public abstract IdeScriptEngine getEngineForLanguage(String language, @Nullable ClassLoader loader);
 
   @Nullable
-  public abstract IdeScriptEngine getEngineForFileExtension(@Nonnull String extension, @Nullable ClassLoader loader);
+  public abstract IdeScriptEngine getEngineForFileExtension(String extension, @Nullable ClassLoader loader);
 
   public abstract boolean isInitialized();
 }

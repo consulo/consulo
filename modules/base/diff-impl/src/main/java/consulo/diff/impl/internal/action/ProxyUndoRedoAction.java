@@ -27,25 +27,24 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
 public class ProxyUndoRedoAction extends DumbAwareAction {
-  @Nonnull
+  
   private final UndoManager myUndoManager;
-  @Nonnull
+  
   private final TextEditor myEditor;
   private final boolean myUndo;
 
-  private ProxyUndoRedoAction(@Nonnull UndoManager manager, @Nonnull TextEditor editor, boolean undo) {
+  private ProxyUndoRedoAction(UndoManager manager, TextEditor editor, boolean undo) {
     myUndoManager = manager;
     myEditor = editor;
     myUndo = undo;
   }
 
-  public static void register(@Nullable Project project, @Nonnull Editor editor, @Nonnull JComponent component) {
+  public static void register(@Nullable Project project, Editor editor, JComponent component) {
     UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getInstance();
     TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
     if (undoManager != null) {
@@ -55,13 +54,13 @@ public class ProxyUndoRedoAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(myUndo ? myUndoManager.isUndoAvailable(myEditor) : myUndoManager.isRedoAvailable(myEditor));
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     if (myUndo) {
       myUndoManager.undo(myEditor);
     }

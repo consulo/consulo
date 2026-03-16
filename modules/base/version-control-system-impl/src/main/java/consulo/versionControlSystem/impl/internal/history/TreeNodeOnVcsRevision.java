@@ -22,8 +22,7 @@ import consulo.util.lang.TreeItem;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.IOException;
@@ -32,10 +31,10 @@ import java.util.List;
 
 // TODO this class should not implements VcsFileRevision (this is too confusing)
 public class TreeNodeOnVcsRevision extends DefaultMutableTreeNode implements VcsFileRevision, DualTreeElement {
-  @Nonnull
+  
   private final VcsFileRevision myRevision;
 
-  public TreeNodeOnVcsRevision(@Nullable VcsFileRevision revision, @Nonnull List<TreeItem<VcsFileRevision>> roots) {
+  public TreeNodeOnVcsRevision(@Nullable VcsFileRevision revision, List<TreeItem<VcsFileRevision>> roots) {
     myRevision = revision == null ? VcsFileRevision.NULL : revision;
     for (TreeItem<VcsFileRevision> root : roots) {
       add(new TreeNodeOnVcsRevision(root.getData(), root.getChildren()));
@@ -48,7 +47,7 @@ public class TreeNodeOnVcsRevision extends DefaultMutableTreeNode implements Vcs
     return myRevision.getChangedRepositoryPath();
   }
 
-  @Nonnull
+  
   public VcsFileRevision getRevision() {
     return myRevision;
   }

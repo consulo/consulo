@@ -4,9 +4,8 @@ package consulo.ide.impl.idea.execution.wsl;
 import consulo.application.util.AtomicNullableLazyValue;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -46,11 +45,11 @@ public class WSLDistributionLegacy extends WSLDistribution {
     return null;
   }
 
-  private WSLDistributionLegacy(@Nonnull Path executablePath) {
+  private WSLDistributionLegacy(Path executablePath) {
     super(LEGACY_WSL, executablePath);
   }
 
-  @Nonnull
+  
   @Override
   protected String getRunCommandLineParameter() {
     return "-c";
@@ -58,7 +57,7 @@ public class WSLDistributionLegacy extends WSLDistribution {
 
   @Nullable
   @Override
-  public String getWslPath(@Nonnull String windowsPath) {
+  public String getWslPath(String windowsPath) {
     String wslRootInHost = WSL_ROOT_IN_WINDOWS_PROVIDER.getValue();
     if (wslRootInHost == null) {
       return null;
@@ -73,7 +72,7 @@ public class WSLDistributionLegacy extends WSLDistribution {
 
   @Nullable
   @Override
-  public String getWindowsPath(@Nonnull String wslPath) {
+  public String getWindowsPath(String wslPath) {
     String windowsPath = super.getWindowsPath(wslPath);
     if (windowsPath != null) {
       return windowsPath;

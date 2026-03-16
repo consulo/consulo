@@ -22,7 +22,6 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.version.LanguageVersion;
 import consulo.sandboxPlugin.lang.SandLanguage;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,13 +29,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandHighlighterFactory extends LanguageVersionableSyntaxHighlighterFactory {
-  @Nonnull
+  
   @Override
-  public SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion) {
+  public SyntaxHighlighter getSyntaxHighlighter(LanguageVersion languageVersion) {
     return new SandHighlighter(languageVersion);
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

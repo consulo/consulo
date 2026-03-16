@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ final class GistManagerBulkFileListener implements BulkFileListener {
   }
 
   @Override
-  public void after(@Nonnull List<? extends VFileEvent> events) {
+  public void after(List<? extends VFileEvent> events) {
     if (events.stream().anyMatch(GistManagerBulkFileListener::shouldDropCache)) {
       ((GistManagerImpl)myGistManager.get()).invalidateGists();
     }

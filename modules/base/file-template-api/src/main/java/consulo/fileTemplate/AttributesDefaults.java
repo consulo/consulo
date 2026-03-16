@@ -18,10 +18,8 @@ package consulo.fileTemplate;
 
 import consulo.document.util.TextRange;
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,15 +56,15 @@ public class AttributesDefaults {
     return myDefaultRange;
   }
 
-  public void add(@NonNls @Nonnull String attributeKey, @NonNls @Nonnull String value, @Nullable TextRange selectionRange) {
+  public void add(String attributeKey, String value, @Nullable TextRange selectionRange) {
     myNamesToValueAndRangeMap.put(attributeKey, new Pair<>(value, selectionRange));
   }
 
-  public void add(@NonNls @Nonnull String attributeKey, @NonNls @Nonnull String value) {
+  public void add(String attributeKey, String value) {
     add(attributeKey, value, null);
   }
 
-  public void addPredefined(@Nonnull String key, @Nonnull String value) {
+  public void addPredefined(String key, String value) {
     if (myDefaultProperties == null) {
       myDefaultProperties = new HashMap<>();
     }
@@ -79,13 +77,13 @@ public class AttributesDefaults {
   }
 
   @Nullable
-  public TextRange getRangeFor(@NonNls @Nonnull String attributeKey) {
+  public TextRange getRangeFor(String attributeKey) {
     Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.second;
   }
 
   @Nullable
-  public String getDefaultValueFor(@NonNls @Nonnull String attributeKey) {
+  public String getDefaultValueFor(String attributeKey) {
     Pair<String, TextRange> valueAndRange = myNamesToValueAndRangeMap.get(attributeKey);
     return valueAndRange == null ? null : valueAndRange.first;
   }

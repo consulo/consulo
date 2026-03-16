@@ -23,23 +23,22 @@ import consulo.externalSystem.ui.awt.PaintAwarePanel;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
 public class ExternalSystemEditTaskDialog extends DialogWrapper {
 
-    @Nonnull
+    
     private final ExternalSystemTaskExecutionSettings myTaskExecutionSettings;
-    @Nonnull
+    
     private final ExternalSystemTaskSettingsControl myControl;
     @Nullable
     private JComponent contentPane;
 
-    public ExternalSystemEditTaskDialog(@Nonnull Project project,
-                                        @Nonnull ExternalSystemTaskExecutionSettings taskExecutionSettings,
-                                        @Nonnull ProjectSystemId externalSystemId) {
+    public ExternalSystemEditTaskDialog(Project project,
+                                        ExternalSystemTaskExecutionSettings taskExecutionSettings,
+                                        ProjectSystemId externalSystemId) {
         super(project, true);
         myTaskExecutionSettings = taskExecutionSettings;
 

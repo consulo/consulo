@@ -18,7 +18,6 @@ package consulo.execution.internal;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -30,28 +29,28 @@ import java.util.function.Function;
 public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     private static final String REPLACEMENT_CHAR = "⊹";
 
-    @Nonnull
-    public static LocalizeValue buildWithConfiguration(@Nonnull Function<String, LocalizeValue> function, String configurationName) {
+    
+    public static LocalizeValue buildWithConfiguration(Function<String, LocalizeValue> function, String configurationName) {
         String dummyStr = REPLACEMENT_CHAR.repeat(configurationName.length());
 
         LocalizeValue dummyValue = function.apply(dummyStr);
         return new ExecutionActionValue(dummyValue, dummyStr, configurationName);
     }
 
-    @Nonnull
+    
     private final LocalizeValue myOriginal;
-    @Nonnull
+    
     private final String myParamValue;
-    @Nonnull
+    
     private final String myConfigurationName;
 
-    public ExecutionActionValue(@Nonnull LocalizeValue original, @Nonnull String paramValue, @Nonnull String configurationName) {
+    public ExecutionActionValue(LocalizeValue original, String paramValue, String configurationName) {
         myOriginal = original;
         myParamValue = paramValue;
         myConfigurationName = configurationName;
     }
 
-    @Nonnull
+    
     @Override
     public TextWithMnemonic mnemonic() {
         TextWithMnemonic text = TextWithMnemonic.parse(myOriginal.getValue());
@@ -62,13 +61,13 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
         return text.replaceFirst(myParamValue, myConfigurationName);
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myOriginal.getKey() + "->executionAction";
     }
 
-    @Nonnull
+    
     @Override
     public String getValue() {
         return myOriginal.getValue().replace(myParamValue, myConfigurationName);
@@ -80,7 +79,7 @@ public final class ExecutionActionValue implements LocalizeValueWithMnemonic {
     }
 
     @Override
-    public int compareTo(@Nonnull LocalizeValue that) {
+    public int compareTo(LocalizeValue that) {
         return myOriginal.compareTo(that);
     }
 

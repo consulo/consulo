@@ -22,8 +22,7 @@ import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,13 +35,13 @@ public class HighlightInfoHolder {
     private int myErrorCount;
     private final List<HighlightInfo> myInfos = new ArrayList<>(5);
 
-    public HighlightInfoHolder(@Nonnull PsiFile contextFile, @Nonnull List<HighlightInfoFilter> filters) {
+    public HighlightInfoHolder(PsiFile contextFile, List<HighlightInfoFilter> filters) {
         myContextFile = contextFile;
         myAnnotationSession = new AnnotationSession(contextFile);
         myFilters = filters;
     }
 
-    @Nonnull
+    
     public AnnotationSession getAnnotationSession() {
         return myAnnotationSession;
     }
@@ -69,7 +68,7 @@ public class HighlightInfoHolder {
         return myErrorCount != 0;
     }
 
-    public boolean addAll(@Nonnull Collection<? extends HighlightInfo> highlightInfos) {
+    public boolean addAll(Collection<? extends HighlightInfo> highlightInfos) {
         boolean added = false;
         for (HighlightInfo highlightInfo : highlightInfos) {
             added |= add(highlightInfo);
@@ -81,22 +80,22 @@ public class HighlightInfoHolder {
         return myInfos.size();
     }
 
-    @Nonnull
+    
     public HighlightInfo get(int i) {
         return myInfos.get(i);
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myContextFile.getProject();
     }
 
-    @Nonnull
+    
     public PsiFile getContextFile() {
         return myContextFile;
     }
 
-    private boolean accepted(@Nonnull HighlightInfo info) {
+    private boolean accepted(HighlightInfo info) {
         for (HighlightInfoFilter filter : myFilters) {
             if (!filter.accept(info, getContextFile())) {
                 return false;
@@ -105,7 +104,7 @@ public class HighlightInfoHolder {
         return true;
     }
 
-    @Nonnull
+    
     public TextAttributesScheme getColorsScheme() {
         return TextAttributesKey::getDefaultAttributes;
     }

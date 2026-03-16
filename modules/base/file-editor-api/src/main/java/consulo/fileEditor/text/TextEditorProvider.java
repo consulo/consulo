@@ -32,11 +32,9 @@ import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -46,7 +44,7 @@ import java.util.List;
  * Extracted part from {@link TextEditorProviderImpl}
  */
 public abstract class TextEditorProvider implements FileEditorProvider, DumbAware {
-  @Nonnull
+  
   public static TextEditorProvider getInstance() {
     return EP_FILE_EDITOR_PROVIDER.findExtensionOrFail(TextEditorProvider.class);
   }
@@ -56,39 +54,39 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
 
   protected static final Key<TextEditor> TEXT_EDITOR_KEY = Key.create("textEditor");
 
-  @NonNls
+  
   private static final String TYPE_ID = "text-editor";
-  @NonNls
+  
   private static final String LINE_ATTR = "line";
-  @NonNls
+  
   private static final String COLUMN_ATTR = "column";
-  @NonNls
+  
   private static final String LEAN_FORWARD_ATTR = "lean-forward";
-  @NonNls
+  
   private static final String SELECTION_START_LINE_ATTR = "selection-start-line";
-  @NonNls
+  
   private static final String SELECTION_START_COLUMN_ATTR = "selection-start-column";
-  @NonNls
+  
   private static final String SELECTION_END_LINE_ATTR = "selection-end-line";
-  @NonNls
+  
   private static final String SELECTION_END_COLUMN_ATTR = "selection-end-column";
-  @NonNls
+  
   private static final String RELATIVE_CARET_POSITION_ATTR = "relative-caret-position";
-  @NonNls
+  
   private static final String CARET_ELEMENT = "caret";
 
-  @Nonnull
-  public abstract TextEditor getTextEditor(@Nonnull Editor editor);
+  
+  public abstract TextEditor getTextEditor(Editor editor);
 
 
   @Override
-  public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public boolean accept(Project project, VirtualFile file) {
     return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
   }
 
   @Override
-  @Nonnull
-  public FileEditorState readState(@Nonnull Element element, @Nonnull Project project, @Nonnull VirtualFile file) {
+  
+  public FileEditorState readState(Element element, Project project, VirtualFile file) {
     TextEditorState state = new TextEditorState();
 
     try {
@@ -135,7 +133,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
   }
 
   @Override
-  public void writeState(@Nonnull FileEditorState _state, @Nonnull Project project, @Nonnull Element element) {
+  public void writeState(FileEditorState _state, Project project, Element element) {
     TextEditorState state = (TextEditorState)_state;
 
     element.setAttribute(RELATIVE_CARET_POSITION_ATTR, Integer.toString(state.RELATIVE_CARET_POSITION));
@@ -155,19 +153,19 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
   }
 
   @Override
-  @Nonnull
+  
   public String getEditorTypeId() {
     return TYPE_ID;
   }
 
   @Override
-  @Nonnull
+  
   public FileEditorPolicy getPolicy() {
     return FileEditorPolicy.NONE;
   }
 
   @Nullable
-  public static Document[] getDocuments(@Nonnull FileEditor editor) {
+  public static Document[] getDocuments(FileEditor editor) {
     if (editor instanceof DocumentsEditor) {
       DocumentsEditor documentsEditor = (DocumentsEditor)editor;
       Document[] documents = documentsEditor.getDocuments();
@@ -197,8 +195,8 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
     editor.putUserData(TEXT_EDITOR_KEY, textEditor);
   }
 
-  @Nonnull
-  public TextEditorState getStateImpl(Project project, @Nonnull Editor editor, @Nonnull FileEditorStateLevel level) {
+  
+  public TextEditorState getStateImpl(Project project, Editor editor, FileEditorStateLevel level) {
     TextEditorState state = new TextEditorState();
     CaretModel caretModel = editor.getCaretModel();
     if (caretModel.supportsMultipleCarets()) {
@@ -227,7 +225,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
     return state;
   }
 
-  public static boolean isTextFile(@Nonnull VirtualFile file) {
+  public static boolean isTextFile(VirtualFile file) {
     if (file.isDirectory() || !file.isValid()) {
       return false;
     }

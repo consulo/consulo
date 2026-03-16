@@ -16,7 +16,6 @@
 package consulo.language.impl.internal.ast;
 
 import consulo.language.util.CharTable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,15 +26,15 @@ public class IdentityCharTable implements CharTable {
 
   public static final IdentityCharTable INSTANCE = new IdentityCharTable();
 
-  @Nonnull
+  
   @Override
-  public CharSequence intern(@Nonnull CharSequence text) {
+  public CharSequence intern(CharSequence text) {
     return text;
   }
 
-  @Nonnull
+  
   @Override
-  public CharSequence intern(@Nonnull CharSequence baseText, int startOffset, int endOffset) {
+  public CharSequence intern(CharSequence baseText, int startOffset, int endOffset) {
     if (endOffset - startOffset == baseText.length()) return baseText.toString();
     return baseText.subSequence(startOffset, endOffset);
   }

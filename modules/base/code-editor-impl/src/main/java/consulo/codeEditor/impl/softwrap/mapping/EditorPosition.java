@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
 
-import jakarta.annotation.Nonnull;
 
 public class EditorPosition implements Cloneable {
   public int logicalLine;
@@ -29,11 +28,11 @@ public class EditorPosition implements Cloneable {
 
   private final Editor myEditor;
 
-  public EditorPosition(@Nonnull Editor editor) {
+  public EditorPosition(Editor editor) {
     myEditor = editor;
   }
 
-  public EditorPosition(@Nonnull LogicalPosition logical, int offset, @Nonnull Editor editor) {
+  public EditorPosition(LogicalPosition logical, int offset, Editor editor) {
     myEditor = editor;
     logicalLine = logical.line;
     this.offset = offset;
@@ -50,7 +49,7 @@ public class EditorPosition implements Cloneable {
    *
    * @param foldRegion                        fold region which end offset should be pointed by the current position
    */
-  public void advance(@Nonnull FoldRegion foldRegion) {
+  public void advance(FoldRegion foldRegion) {
     offset = foldRegion.getEndOffset();
 
     Document document = myEditor.getDocument();
@@ -61,7 +60,7 @@ public class EditorPosition implements Cloneable {
     }
   }
 
-  public void from(@Nonnull EditorPosition position) {
+  public void from(EditorPosition position) {
     logicalLine = position.logicalLine;
     offset = position.offset;
     x = position.x;

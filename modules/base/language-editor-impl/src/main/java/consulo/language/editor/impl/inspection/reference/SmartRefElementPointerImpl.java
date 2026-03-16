@@ -25,8 +25,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class SmartRefElementPointerImpl implements SmartRefElementPointer {
   public static final String FQNAME_ATTR = "FQNAME";
@@ -92,7 +91,7 @@ public class SmartRefElementPointerImpl implements SmartRefElementPointer {
   }
 
   @Override
-  public boolean resolve(@Nonnull RefManager manager) {
+  public boolean resolve(RefManager manager) {
     if (myRefElement != null) {
       return myRefElement instanceof RefElement && myRefElement.isValid();
     }

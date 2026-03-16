@@ -17,13 +17,12 @@ package consulo.desktop.awt.internal.diff.dir.action.popup;
 
 import consulo.diff.dir.DirDiffElement;
 import consulo.diff.dir.DirDiffOperation;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class SetDefault extends SetOperationToBase {
-  @Nonnull
+  
   @Override
   protected DirDiffOperation getOperation() {
     return DirDiffOperation.NONE;

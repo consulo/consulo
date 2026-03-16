@@ -18,8 +18,7 @@ package consulo.application.internal;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +28,7 @@ public class TooManyUsagesStatus {
   private static final Key<TooManyUsagesStatus> KEY = Key.create("TooManyUsagesStatus");
   private static final Null NULL = new Null();
 
-  @Nonnull
+  
   public static TooManyUsagesStatus getFrom(@Nullable ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
     if (indicator instanceof UserDataHolder) {
@@ -38,7 +37,7 @@ public class TooManyUsagesStatus {
     if (data == null) data = NULL;
     return data;
   }
-  public static TooManyUsagesStatus createFor(@Nonnull ProgressIndicator indicator) {
+  public static TooManyUsagesStatus createFor(ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
     if (indicator instanceof UserDataHolder) {
       data = new TooManyUsagesStatus();

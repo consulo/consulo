@@ -18,8 +18,7 @@ package consulo.fileEditor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ui.ex.action.ActionToolbar;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -27,16 +26,16 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TextEditorWithPreviewFactory {
-    @Nonnull
-    TextEditorWithPreview create(@Nonnull TextEditor editor,
-                                 @Nonnull FileEditor preview,
+    
+    TextEditorWithPreview create(TextEditor editor,
+                                 FileEditor preview,
                                  @Nullable ActionToolbar leftToolbarActionToolbar,
-                                 @Nonnull String editorName);
+                                 String editorName);
 
-    @Nonnull
-    default TextEditorWithPreview create(@Nonnull TextEditor editor,
-                                 @Nonnull FileEditor preview,
-                                 @Nonnull String editorName) {
+    
+    default TextEditorWithPreview create(TextEditor editor,
+                                 FileEditor preview,
+                                 String editorName) {
         return create(editor, preview, null, editorName);
     }
 }

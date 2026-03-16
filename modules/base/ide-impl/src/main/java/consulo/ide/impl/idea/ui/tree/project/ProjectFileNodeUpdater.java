@@ -17,8 +17,7 @@ import consulo.util.collection.SmartHashSet;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -33,18 +32,18 @@ public abstract class ProjectFileNodeUpdater {
   private volatile long time;
   private volatile int size;
 
-  public ProjectFileNodeUpdater(@Nonnull Project project, @Nonnull Invoker invoker) {
+  public ProjectFileNodeUpdater(Project project, Invoker invoker) {
     this.invoker = invoker;
     MessageBusConnection connection = project.getMessageBus().connect(invoker);
     connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
-      public void rootsChanged(@Nonnull ModuleRootEvent event) {
+      public void rootsChanged(ModuleRootEvent event) {
         updateFromRoot();
       }
     });
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
-      public void after(@Nonnull List<? extends VFileEvent> events) {
+      public void after(List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {
           if (event instanceof VFileCreateEvent) {
             VFileCreateEvent create = (VFileCreateEvent)event;
@@ -75,36 +74,36 @@ public abstract class ProjectFileNodeUpdater {
     });
     PsiManager.getInstance(project).addPsiTreeChangeListener(new PsiTreeChangeAdapter() {
       @Override
-      public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+      public void childAdded(PsiTreeChangeEvent event) {
         if (event.getNewChild() instanceof PsiWhiteSpace) return; // optimization
         childrenChanged(event);
       }
 
       @Override
-      public void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+      public void childRemoved(PsiTreeChangeEvent event) {
         if (event.getOldChild() instanceof PsiWhiteSpace) return; // optimization
         childrenChanged(event);
       }
 
       @Override
-      public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+      public void childReplaced(PsiTreeChangeEvent event) {
         if (event.getOldChild() instanceof PsiWhiteSpace && event.getNewChild() instanceof PsiWhiteSpace) return; // optimization
         childrenChanged(event);
       }
 
       @Override
-      public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+      public void childrenChanged(PsiTreeChangeEvent event) {
         updateFromElement(event.getParent());
       }
 
       @Override
-      public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+      public void childMoved(PsiTreeChangeEvent event) {
         updateFromElement(event.getOldParent());
         updateFromElement(event.getNewParent());
       }
 
       @Override
-      public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+      public void propertyChanged(PsiTreeChangeEvent event) {
       }
     }, invoker);
   }
@@ -149,7 +148,7 @@ public abstract class ProjectFileNodeUpdater {
    * Notifies that all collected files should be reported as soon as possible.
    * Usually, it is needed to find an added file in a tree right after adding.
    */
-  public void updateImmediately(@Nonnull Runnable onDone) {
+  public void updateImmediately(Runnable onDone) {
     invoker.runOrInvokeLater(() -> onInvokerThread(true)).onProcessed(o -> Application.get().invokeLater(onDone));
   }
 
@@ -226,5 +225,5 @@ public abstract class ProjectFileNodeUpdater {
    * @param fromRoot     {@code true} if roots are changed
    * @param updatedFiles a set of modified files
    */
-  protected abstract void updateStructure(boolean fromRoot, @Nonnull Set<? extends VirtualFile> updatedFiles);
+  protected abstract void updateStructure(boolean fromRoot, Set<? extends VirtualFile> updatedFiles);
 }

@@ -29,8 +29,7 @@ import consulo.versionControlSystem.distributed.push.VcsPushOptionsPanel;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -52,8 +51,8 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
     private ForcePushAction myForcePushAction;
 
     public VcsPushDialog(
-        @Nonnull Project project,
-        @Nonnull List<? extends Repository> selectedRepositories,
+        Project project,
+        List<? extends Repository> selectedRepositories,
         @Nullable Repository currentRepo
     ) {
         super(project);
@@ -98,7 +97,7 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
         myForcePushAction = new ForcePushAction();
@@ -126,7 +125,7 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
         return myListPanel.getPreferredFocusedComponent();
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeAction getOKAction() {
         return myPushAction;
@@ -157,7 +156,7 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
     }
 
     @Nullable
-    public VcsPushOptionValue getAdditionalOptionValue(@Nonnull PushSupport support) {
+    public VcsPushOptionValue getAdditionalOptionValue(PushSupport support) {
         VcsPushOptionsPanel panel = myAdditionalPanels.get(support);
         return panel == null ? null : panel.getValue();
     }
@@ -199,7 +198,7 @@ public class VcsPushDialog extends DialogWrapper implements LegacyDialog {
             }
         }
 
-        @Nonnull
+        
         @Override
         public Action[] getOptions() {
             return myOptions;

@@ -34,7 +34,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -74,7 +73,7 @@ public class ToolEditorDialog extends DialogWrapper {
     private final Project myProject;
 
     @Override
-    @Nonnull
+    
     protected JPanel createCenterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constr;
@@ -164,7 +163,7 @@ public class ToolEditorDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }

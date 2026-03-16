@@ -19,8 +19,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.style.StyleManager;
 import consulo.ui.util.ColorValueUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -34,13 +33,13 @@ public class EditorColorsUtil {
      * @return the appropriate color scheme for UI other than text editor (QuickDoc, UsagesView, etc.)
      * depending on the current LAF and current editor color scheme.
      */
-    @Nonnull
+    
     public static EditorColorsScheme getGlobalOrDefaultColorScheme() {
         return getColorSchemeForBackground(null);
     }
 
     @Nullable
-    public static ColorValue getGlobalOrDefaultColor(@Nonnull EditorColorKey colorKey) {
+    public static ColorValue getGlobalOrDefaultColor(EditorColorKey colorKey) {
         return getColorSchemeForBackground(null).getColor(colorKey);
     }
 

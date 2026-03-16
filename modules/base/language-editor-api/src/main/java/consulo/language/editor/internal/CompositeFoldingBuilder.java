@@ -29,7 +29,6 @@ import consulo.language.editor.folding.LanguageFolding;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,15 +48,15 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
     myBuilders = builders;
   }
 
-  @Nonnull
+  
   public List<FoldingBuilder> getAllBuilders() {
     return Collections.unmodifiableList(myBuilders);
   }
 
   @Override
   @RequiredReadAction
-  @Nonnull
-  public FoldingDescriptor[] buildFoldRegions(@Nonnull PsiElement root, @Nonnull Document document, boolean quick) {
+  
+  public FoldingDescriptor[] buildFoldRegions(PsiElement root, Document document, boolean quick) {
     List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
 
     for (FoldingBuilder builder : myBuilders) {
@@ -72,26 +71,26 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
 
   @RequiredReadAction
   @Override
-  public String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range) {
+  public String getPlaceholderText(ASTNode node, TextRange range) {
     FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null ? node.getText() : builder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)builder).getPlaceholderText(node, range) : builder.getPlaceholderText(node);
   }
 
   @RequiredReadAction
   @Override
-  public String getPlaceholderText(@Nonnull ASTNode node) {
+  public String getPlaceholderText(ASTNode node) {
     FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder == null ? node.getText() : builder.getPlaceholderText(node);
   }
 
   @Override
   @RequiredReadAction
-  public boolean isCollapsedByDefault(@Nonnull ASTNode node) {
+  public boolean isCollapsedByDefault(ASTNode node) {
     FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
     return builder != null && builder.isCollapsedByDefault(node);
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     throw new UnsupportedOperationException();

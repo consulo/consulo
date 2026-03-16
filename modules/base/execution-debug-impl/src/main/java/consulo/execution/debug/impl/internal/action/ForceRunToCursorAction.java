@@ -20,7 +20,6 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerRunToCursorActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,7 +37,7 @@ public class ForceRunToCursorAction extends XDebuggerActionBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

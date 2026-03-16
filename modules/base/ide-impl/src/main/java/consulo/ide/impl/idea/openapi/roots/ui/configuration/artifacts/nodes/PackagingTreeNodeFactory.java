@@ -23,8 +23,7 @@ import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,10 +37,10 @@ public class PackagingTreeNodeFactory {
   private PackagingTreeNodeFactory() {
   }
 
-  public static void addNodes(@Nonnull List<? extends PackagingElement<?>> elements, @Nonnull CompositePackagingElementNode parentNode,
-                              @Nonnull CompositePackagingElement parentElement, @Nonnull ArtifactEditorContext context,
-                              @Nonnull ComplexElementSubstitutionParameters substitutionParameters, @Nonnull Collection<PackagingNodeSource> nodeSources,
-                              @Nonnull List<PackagingElementNode<?>> nodes,
+  public static void addNodes(List<? extends PackagingElement<?>> elements, CompositePackagingElementNode parentNode,
+                              CompositePackagingElement parentElement, ArtifactEditorContext context,
+                              ComplexElementSubstitutionParameters substitutionParameters, Collection<PackagingNodeSource> nodeSources,
+                              List<PackagingElementNode<?>> nodes,
                               ArtifactType artifactType,
                               Set<PackagingElement<?>> processed) {
     for (PackagingElement<?> element : elements) {
@@ -87,7 +86,7 @@ public class PackagingTreeNodeFactory {
     return null;
   }
 
-  @Nonnull
+  
   public static ArtifactRootNode createRootNode(ArtifactEditorImpl artifactsEditor, ArtifactEditorContext context,
                                                 ComplexElementSubstitutionParameters substitutionParameters, ArtifactType artifactType) {
     return new ArtifactRootNode(artifactsEditor, context, substitutionParameters, artifactType);

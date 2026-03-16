@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -32,11 +31,11 @@ import java.util.function.Supplier;
  * @since 2026-02-01
  */
 public final class WriteLock<I, O> extends CoroutineStep<I, O> {
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction @Nonnull Function<I, O> function) {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction Function<I, O> function) {
         return new WriteLock<>((i, c) -> function.apply(i));
     }
 
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction @Nonnull BiFunction<I, Continuation<?>, O> function) {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction BiFunction<I, Continuation<?>, O> function) {
         return new WriteLock<>(function);
     }
 

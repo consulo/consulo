@@ -15,7 +15,6 @@
  */
 package consulo.platform;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -31,13 +30,13 @@ public final class CpuArchitecture {
     public static final CpuArchitecture LOONG64 = new CpuArchitecture("LOONG64", 64, "-loong64");
     public static final CpuArchitecture E2K = new CpuArchitecture("E2K", 64, "-e2k");
 
-    @Nonnull
+    
     private final String myName;
     private final int myWidth;
-    @Nonnull
+    
     private final String mySuffix;
 
-    public CpuArchitecture(@Nonnull String name, int width, @Nonnull String suffix) {
+    public CpuArchitecture(String name, int width, String suffix) {
         myName = name;
         myWidth = width;
         mySuffix = suffix;
@@ -51,7 +50,7 @@ public final class CpuArchitecture {
         return myWidth;
     }
 
-    @Nonnull
+    
     public String fileNameSuffix() {
         return mySuffix;
     }

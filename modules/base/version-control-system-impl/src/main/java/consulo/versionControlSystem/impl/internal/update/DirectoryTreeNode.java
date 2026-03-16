@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class DirectoryTreeNode extends FileOrDirectoryTreeNode {
     return AllIcons.Nodes.Folder;
   }
 
-  @Nonnull
+  
   public Collection<VirtualFile> getVirtualFiles() {
     Collection<VirtualFile> result = new ArrayList<VirtualFile>();
     for (int i = 0;  i < getChildCount(); i++){
@@ -60,7 +59,7 @@ public class DirectoryTreeNode extends FileOrDirectoryTreeNode {
     return result;
   }
 
-  @Nonnull
+  
   public Collection<File> getFiles() {
     Collection<File> result = new ArrayList<File>();
     for (int i = 0;  i < getChildCount(); i++){

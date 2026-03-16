@@ -23,8 +23,7 @@ import consulo.component.macro.CompositePathMacroFilter;
 import consulo.component.macro.PathMacroFilter;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -37,8 +36,8 @@ import java.util.regex.Pattern;
 public abstract class PathMacrosService {
     public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 
-    @Nonnull
-    public Set<String> getMacroNames(@Nonnull Element e) {
+    
+    public Set<String> getMacroNames(Element e) {
         return getMacroNames(
             e,
             new CompositePathMacroFilter(Application.get().getExtensionList(PathMacroFilter.class)),
@@ -46,5 +45,5 @@ public abstract class PathMacrosService {
         );
     }
 
-    public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros);
+    public abstract Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros);
 }

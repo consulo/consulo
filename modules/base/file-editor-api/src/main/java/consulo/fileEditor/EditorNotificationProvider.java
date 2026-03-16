@@ -19,8 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -30,12 +29,12 @@ import java.util.function.Supplier;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface EditorNotificationProvider {
-    @Nonnull
+    
     String getId();
 
     @Nullable
     @RequiredReadAction
-    EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file,
-                                                @Nonnull FileEditor fileEditor,
-                                                @Nonnull Supplier<EditorNotificationBuilder> builderFactory);
+    EditorNotificationBuilder buildNotification(VirtualFile file,
+                                                FileEditor fileEditor,
+                                                Supplier<EditorNotificationBuilder> builderFactory);
 }

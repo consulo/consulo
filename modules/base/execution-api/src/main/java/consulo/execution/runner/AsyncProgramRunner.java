@@ -23,8 +23,7 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,14 +34,14 @@ import java.util.concurrent.CompletableFuture;
 public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
     @RequiredUIAccess
     @Override
-    protected final void execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException {
+    protected final void execute(ExecutionEnvironment environment, RunProfileState state) throws ExecutionException {
         startRunProfile(environment, state, this::executeImpl);
     }
 
-    @Nonnull
+    
     protected abstract CompletableFuture<RunContentDescriptor> executeImpl(
-        @Nonnull RunProfileState state,
-        @Nonnull ExecutionEnvironment environment
+        RunProfileState state,
+        ExecutionEnvironment environment
     ) throws ExecutionException;
 
     @RequiredUIAccess

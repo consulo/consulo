@@ -18,7 +18,7 @@ package consulo.versionControlSystem.internal;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.versionControlSystem.UpToDateLineNumberProvider;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class UpToDateLineNumberProviderImpl implements UpToDateLineNumberProvider {
     private final Document myDocument;

@@ -25,8 +25,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.vaadin.VaadinLabelComponentBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
         getVaadinComponent().setForegroundColor(foreground);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return getVaadinComponent().getTextValue();
@@ -57,7 +56,7 @@ public abstract class WebLabelBase<V extends VaadinLabelComponentBase> extends V
 
     @RequiredUIAccess
     @Override
-    public void setText(@Nonnull LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         getVaadinComponent().setTextValue(text);
     }
 

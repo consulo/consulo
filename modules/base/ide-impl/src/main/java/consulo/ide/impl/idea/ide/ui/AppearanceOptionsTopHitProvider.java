@@ -25,8 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.OptionsTopHitProvider;
 import consulo.ui.ex.action.PublicFieldBasedOptionDescription;
 import consulo.ui.ex.keymap.localize.KeyMapLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,7 +63,7 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
     appearance(IdeLocalize.labelOptionView(IdeLocalize.showNavigationBar()), "SHOW_NAVIGATION_BAR")
   );
 
-  @Nonnull
+  
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;
@@ -75,11 +74,11 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
     return ID;
   }
 
-  static BooleanOptionDescription appearance(@Nonnull LocalizeValue option, String field) {
+  static BooleanOptionDescription appearance(LocalizeValue option, String field) {
     return option(option, field, "preferences.lookFeel");
   }
 
-  static BooleanOptionDescription option(@Nonnull LocalizeValue option, String field, String configurableId) {
+  static BooleanOptionDescription option(LocalizeValue option, String field, String configurableId) {
     return new PublicFieldBasedOptionDescription(option.map(HTML_STRIP).get(), configurableId, field) {
       @Override
       public Object getInstance() {

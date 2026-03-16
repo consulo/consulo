@@ -19,8 +19,7 @@ package consulo.execution.configuration.log.ui;
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.ComponentWithActions;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -44,7 +43,7 @@ public abstract class AdditionalTabComponent extends JPanel implements Component
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getComponent() {
     return this;
   }

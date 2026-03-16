@@ -15,13 +15,12 @@
  */
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2025-09-19
  */
 public interface CaretDelegate extends Caret {
-    @Nonnull
+    
     Caret getDelegate();
 }

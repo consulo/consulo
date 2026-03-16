@@ -17,7 +17,6 @@
 package consulo.language.psi;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Implement this in your {@link PsiReference} to provide custom error message.
@@ -29,6 +28,6 @@ public interface EmptyResolveMessageProvider {
    * If the call fails, returned value is used as is.
    * @return pattern or message
    */
-  @Nonnull
-  LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText);
+  
+  LocalizeValue buildUnresolvedMessage(String referenceText);
 }

@@ -30,8 +30,7 @@ import consulo.language.editor.impl.internal.highlight.HighlightingSessionImpl;
 import consulo.language.editor.impl.internal.highlight.ProgressableTextEditorHighlightingPass;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cdr
@@ -39,13 +38,13 @@ import jakarta.annotation.Nullable;
 @ExtensionImpl
 public class LineMarkersPassFactory implements TextEditorHighlightingPassFactory {
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.UPDATE_ALL}, false, Pass.LINE_MARKERS);
   }
 
   @Override
   @Nullable
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     TextRange restrictRange = FileStatusMapImpl.getDirtyTextRange(editor, Pass.LINE_MARKERS);
     Document document = editor.getDocument();
     if (restrictRange == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(file.getProject(), document);
@@ -53,7 +52,7 @@ public class LineMarkersPassFactory implements TextEditorHighlightingPassFactory
     return new LineMarkersPass(file.getProject(), file, document, expandRangeToCoverWholeLines(document, visibleRange), expandRangeToCoverWholeLines(document, restrictRange));
   }
 
-  private static TextRange expandRangeToCoverWholeLines(@Nonnull Document document, TextRange textRange) {
+  private static TextRange expandRangeToCoverWholeLines(Document document, TextRange textRange) {
     if (textRange == null) return null;
     return MarkupModelImpl.roundToLineBoundaries(document, textRange.getStartOffset(), textRange.getEndOffset());
   }

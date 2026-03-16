@@ -16,7 +16,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -43,26 +42,26 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         myProject = project;
     }
 
-    @Nonnull
+    
     public abstract JBList<Object> createList();
 
-    @Nonnull
+    
     protected abstract ListCellRenderer<Object> createCellRenderer();
 
-    @Nonnull
+    
     protected abstract JPanel createTopLeftPanel();
 
-    @Nonnull
+    
     protected abstract JComponent createSettingsPanel();
 
-    @Nonnull
+    
     protected abstract String getInitialHint();
 
     protected void installScrollingActions() {
         ScrollingUtil.installActions(myResultsList, (JComponent)TargetAWT.to(getSearchField()));
     }
 
-    @Nonnull
+    
     protected TextBoxWithExtensions createSearchField() {
         return TextBoxWithExtensions.create();
     }
@@ -112,7 +111,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         MnemonicHelper.init(this);
     }
 
-    protected void addListDataListener(@Nonnull AbstractListModel<Object> model) {
+    protected void addListDataListener(AbstractListModel<Object> model) {
         model.addListDataListener(new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
@@ -133,12 +132,12 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         });
     }
 
-    @Nonnull
+    
     protected String getSearchPattern() {
         return Optional.ofNullable(mySearchField).map(TextBoxWithExtensions::getValue).orElse("");
     }
 
-    protected void updateViewType(@Nonnull ViewType viewType) {
+    protected void updateViewType(ViewType viewType) {
         if (myViewType != viewType) {
             myViewType = viewType;
             myViewTypeListeners.forEach(listener -> listener.suggestionsShown(viewType));
@@ -164,7 +163,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         return pnl;
     }
 
-    @Nonnull
+    
     private JLabel createHint() {
         String hint = getInitialHint();
         JLabel hintLabel = HintUtil.createAdComponent(hint, JBCurrentTheme.BigPopup.advertiserBorder(), SwingConstants.LEFT);
@@ -177,7 +176,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         return hintLabel;
     }
 
-    @Nonnull
+    
     public TextBoxWithExtensions getSearchField() {
         return mySearchField;
     }
@@ -208,7 +207,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
         return size;
     }
 
-    public void setSearchFinishedHandler(@Nonnull Runnable searchFinishedHandler) {
+    public void setSearchFinishedHandler(Runnable searchFinishedHandler) {
         this.searchFinishedHandler = searchFinishedHandler;
     }
 
@@ -222,7 +221,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     }
 
     public interface ViewTypeListener {
-        void suggestionsShown(@Nonnull ViewType viewType);
+        void suggestionsShown(ViewType viewType);
     }
 
     public void addViewTypeListener(ViewTypeListener listener) {

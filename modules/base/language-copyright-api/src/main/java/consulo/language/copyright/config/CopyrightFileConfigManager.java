@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -73,7 +72,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
   public class ValidLoadedOption extends LoadedOption {
     private CopyrightFileConfig myCopyrightFileConfig;
 
-    protected ValidLoadedOption(@Nonnull CopyrightFileConfig options) {
+    protected ValidLoadedOption(CopyrightFileConfig options) {
       myCopyrightFileConfig = options;
     }
 
@@ -116,8 +115,8 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
 
   private Map<String, LoadedOption> myConfigs = new TreeMap<String, LoadedOption>();
 
-  @Nonnull
-  public CopyrightFileConfig getOptions(@Nonnull FileType type) {
+  
+  public CopyrightFileConfig getOptions(FileType type) {
     LoadedOption copyrightFileConfig = myConfigs.get(type.getId());
     if (copyrightFileConfig == null) {
       UpdateCopyrightsProvider updateCopyrightsProvider = UpdateCopyrightsProvider.forFileType(type);
@@ -129,7 +128,7 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
     return copyrightFileConfig.getConfig();
   }
 
-  @Nonnull
+  
   public CopyrightFileConfig getTemplateOptions() {
     LoadedOption copyrightFileConfig = myConfigs.get(LANG_TEMPLATE);
     if (copyrightFileConfig == null) {
@@ -138,16 +137,16 @@ public class CopyrightFileConfigManager implements JDOMExternalizable, Cloneable
     return copyrightFileConfig.getConfig();
   }
 
-  public void setTemplateOptions(@Nonnull CopyrightFileConfig options) {
+  public void setTemplateOptions(CopyrightFileConfig options) {
     myConfigs.put(LANG_TEMPLATE, new TemplateLoadedOption(options));
   }
 
-  public void setOptions(@Nonnull FileType fileType, @Nonnull CopyrightFileConfig options) {
+  public void setOptions(FileType fileType, CopyrightFileConfig options) {
     myConfigs.put(fileType.getId(), new ValidLoadedOption(options));
   }
 
-  @Nonnull
-  public CopyrightFileConfig getMergedOptions(@Nonnull FileType fileType) {
+  
+  public CopyrightFileConfig getMergedOptions(FileType fileType) {
     try {
       CopyrightFileConfig lang = getOptions(fileType).clone();
       CopyrightFileConfig temp = getTemplateOptions().clone();

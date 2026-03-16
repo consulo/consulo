@@ -10,22 +10,21 @@ import consulo.index.io.forward.AbstractForwardIndexAccessor;
 import consulo.index.io.forward.InputDataDiffBuilder;
 import consulo.language.index.impl.internal.CollectionInputDataDiffBuilder;
 import consulo.language.index.impl.internal.InputIndexDataExternalizer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
 
 public class KeyCollectionForwardIndexAccessor<Key, Value> extends AbstractForwardIndexAccessor<Key, Value, Collection<Key>> {
-  public KeyCollectionForwardIndexAccessor(@Nonnull DataExternalizer<Collection<Key>> externalizer) {
+  public KeyCollectionForwardIndexAccessor(DataExternalizer<Collection<Key>> externalizer) {
     super(externalizer);
   }
 
-  public KeyCollectionForwardIndexAccessor(@Nonnull IndexExtension<Key, Value, ?> extension) {
+  public KeyCollectionForwardIndexAccessor(IndexExtension<Key, Value, ?> extension) {
     this(extension.getKeyDescriptor(), extension.getName());
   }
 
-  public KeyCollectionForwardIndexAccessor(@Nonnull KeyDescriptor<Key> externalizer, @Nonnull IndexId<Key, Value> indexId) {
+  public KeyCollectionForwardIndexAccessor(KeyDescriptor<Key> externalizer, IndexId<Key, Value> indexId) {
     super(new InputIndexDataExternalizer<>(externalizer, indexId));
   }
 
@@ -36,13 +35,13 @@ public class KeyCollectionForwardIndexAccessor<Key, Value> extends AbstractForwa
 
   @Nullable
   @Override
-  public Collection<Key> convertToDataType(@Nonnull InputData<Key, Value> data) {
+  public Collection<Key> convertToDataType(InputData<Key, Value> data) {
     Set<Key> keys = data.getKeyValues().keySet();
     return keys.isEmpty() ? null : keys;
   }
 
   @Override
-  protected int getBufferInitialSize(@Nonnull Collection<Key> keys) {
+  protected int getBufferInitialSize(Collection<Key> keys) {
     return 4 * keys.size();
   }
 }

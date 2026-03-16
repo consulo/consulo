@@ -25,8 +25,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.LocalFileSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -39,19 +38,19 @@ public class CopyPasteDelegator implements CopyPasteSupport {
     private final JComponent myKeyReceiver;
     private final MyEditable myEditable;
 
-    public CopyPasteDelegator(@Nonnull Project project, @Nonnull JComponent keyReceiver) {
+    public CopyPasteDelegator(Project project, JComponent keyReceiver) {
         myProject = project;
         myKeyReceiver = keyReceiver;
         myEditable = new MyEditable();
     }
 
-    @Nonnull
+    
     protected PsiElement[] getSelectedElements() {
         DataContext dataContext = DataManager.getInstance().getDataContext(myKeyReceiver);
         return ObjectUtil.notNull(dataContext.getData(PsiElement.KEY_OF_ARRAY), PsiElement.EMPTY_ARRAY);
     }
 
-    @Nonnull
+    
     private PsiElement[] getValidSelectedElements() {
         PsiElement[] selectedElements = getSelectedElements();
         for (PsiElement element : selectedElements) {
@@ -83,26 +82,26 @@ public class CopyPasteDelegator implements CopyPasteSupport {
 
     private class MyEditable implements CutProvider, CopyProvider, PasteProvider {
         @Override
-        public void performCopy(@Nonnull DataContext dataContext) {
+        public void performCopy(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             PsiCopyPasteManager.getInstance().setElements(elements, true);
             updateView();
         }
 
         @Override
-        public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+        public boolean isCopyEnabled(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             return CopyHandler.canCopy(elements)
                 || JBIterable.of(elements).filter(Predicates.instanceOf(PsiNamedElement.class)).isNotEmpty();
         }
 
         @Override
-        public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+        public boolean isCopyVisible(DataContext dataContext) {
             return true;
         }
 
         @Override
-        public void performCut(@Nonnull DataContext dataContext) {
+        public void performCut(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             if (MoveHandler.adjustForMove(myProject, elements, null) == null) {
                 return;
@@ -114,18 +113,18 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         }
 
         @Override
-        public boolean isCutEnabled(@Nonnull DataContext dataContext) {
+        public boolean isCutEnabled(DataContext dataContext) {
             PsiElement[] elements = getValidSelectedElements();
             return elements.length != 0 && MoveHandler.canMove(elements, null);
         }
 
         @Override
-        public boolean isCutVisible(@Nonnull DataContext dataContext) {
+        public boolean isCutVisible(DataContext dataContext) {
             return true;
         }
 
         @Override
-        public void performPaste(@Nonnull DataContext dataContext) {
+        public void performPaste(DataContext dataContext) {
             if (!performDefaultPaste(dataContext)) {
                 for (PasteProvider provider : Application.get().getExtensionList(FilePasteProvider.class)) {
                     if (provider.isPasteEnabled(dataContext)) {
@@ -164,7 +163,7 @@ public class CopyPasteDelegator implements CopyPasteSupport {
             return true;
         }
 
-        private PsiElement getPasteTarget(@Nonnull DataContext dataContext, @Nullable Module module) {
+        private PsiElement getPasteTarget(DataContext dataContext, @Nullable Module module) {
             PsiElement target = dataContext.getData(LangDataKeys.PASTE_TARGET_PSI_ELEMENT);
             if (module != null && target instanceof PsiDirectoryContainer directoryContainer) {
                 PsiDirectory[] directories = directoryContainer.getDirectories(GlobalSearchScope.moduleScope(module));
@@ -232,12 +231,12 @@ public class CopyPasteDelegator implements CopyPasteSupport {
         }
 
         @Override
-        public boolean isPastePossible(@Nonnull DataContext dataContext) {
+        public boolean isPastePossible(DataContext dataContext) {
             return true;
         }
 
         @Override
-        public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
+        public boolean isPasteEnabled(DataContext dataContext) {
             if (isDefaultPasteEnabled(dataContext)) {
                 return true;
             }

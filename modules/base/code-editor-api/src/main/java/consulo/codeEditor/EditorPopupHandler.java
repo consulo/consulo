@@ -3,7 +3,6 @@ package consulo.codeEditor;
 
 import consulo.codeEditor.event.EditorMouseEvent;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Handler of popup trigger mouse events in editor
@@ -20,5 +19,5 @@ public interface EditorPopupHandler {
    * @return {@code true} if this handler has processed the event, {@code false} if previously installed (or the default one if there are
    * none) handler should be invoked.
    */
-  boolean handlePopup(@Nonnull EditorMouseEvent event);
+  boolean handlePopup(EditorMouseEvent event);
 }

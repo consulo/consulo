@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.ui.WindowStateService;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public interface ProjectWindowStateService extends WindowStateService {
    * @param project the project to use by the service
    * @return an instance of the service for the specified project
    */
-  public static WindowStateService getInstance(@Nonnull Project project) {
+  public static WindowStateService getInstance(Project project) {
     return project.getInstance(ProjectWindowStateService.class);
   }
 }

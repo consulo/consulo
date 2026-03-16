@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.IdeaTitledBorder;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -47,12 +46,12 @@ public class DataViewsConfigurableUi {
            StringUtil.parseInt((String)value, XDebuggerDataViewSettings.DEFAULT_VALUE_TOOLTIP_DELAY);
   }
 
-  @Nonnull
+  
   public JComponent getComponent() {
     return panel;
   }
 
-  public boolean isModified(@Nonnull XDebuggerDataViewSettings settings) {
+  public boolean isModified(XDebuggerDataViewSettings settings) {
     return getValueTooltipDelay() != settings.getValueLookupDelay() ||
            sortAlphabeticallyCheckBox.isSelected() != settings.isSortValues() ||
            enableAutoExpressionsCheckBox.isSelected() != settings.isAutoExpressions() ||
@@ -61,7 +60,7 @@ public class DataViewsConfigurableUi {
            myShowValueTooltipOnCheckBox.isSelected() != settings.isValueTooltipAutoShowOnSelection();
   }
 
-  public void reset(@Nonnull XDebuggerDataViewSettings settings) {
+  public void reset(XDebuggerDataViewSettings settings) {
     valueTooltipDelayTextField.setValue(settings.getValueLookupDelay());
     sortAlphabeticallyCheckBox.setSelected(settings.isSortValues());
     enableAutoExpressionsCheckBox.setSelected(settings.isAutoExpressions());
@@ -71,7 +70,7 @@ public class DataViewsConfigurableUi {
     myTooltipLabel.setText(XDebuggerBundle.message("settings.tooltip.label", Registry.stringValue("ide.forcedShowTooltip")));
   }
 
-  public void apply(@Nonnull XDebuggerDataViewSettings settings) {
+  public void apply(XDebuggerDataViewSettings settings) {
     settings.setValueLookupDelay(getValueTooltipDelay());
     settings.setSortValues(sortAlphabeticallyCheckBox.isSelected());
     settings.setAutoExpressions(enableAutoExpressionsCheckBox.isSelected());

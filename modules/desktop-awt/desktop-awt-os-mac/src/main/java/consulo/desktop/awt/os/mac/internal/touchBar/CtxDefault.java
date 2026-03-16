@@ -17,8 +17,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Map;
@@ -37,12 +36,12 @@ final class CtxDefault {
         ourConnection = ApplicationManager.getApplication().getMessageBus().connect();
         ourConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectOpened(@Nonnull Project project) {
+            public void projectOpened(Project project) {
                 registerTouchbarActions(project);
             }
 
             @Override
-            public void projectClosed(@Nonnull Project project) {
+            public void projectClosed(Project project) {
                 LOG.debug("closed project: %s", project);
 
                 JFrame frame = WindowManager.getInstance().getFrame(project);
@@ -69,7 +68,7 @@ final class CtxDefault {
         // no necessity to do it here
     }
 
-    private static void registerTouchbarActionsImpl(@Nonnull Project project) {
+    private static void registerTouchbarActionsImpl(Project project) {
         if (project.isDisposed()) {
             return;
         }
@@ -91,7 +90,7 @@ final class CtxDefault {
         TouchBarsManager.registerAndShow(frame, defaultGroup.first, defaultGroup.second);
     }
 
-    private static void registerTouchbarActions(@Nonnull Project project) {
+    private static void registerTouchbarActions(Project project) {
         StartupManager.getInstance(project).runAfterOpened(() -> {
             if (project.isDisposed()) {
                 return;

@@ -23,7 +23,6 @@ import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsShowConfirmationOption;
 import consulo.versionControlSystem.VcsShowSettingOption;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -82,7 +81,7 @@ public class OptionsAndConfirmations {
     }
   }
 
-  @Nonnull
+  
   public VcsShowConfirmationOptionImpl getConfirmation(VcsConfiguration.StandardConfirmation option) {
     return myConfirmations.get(option.getId());
   }
@@ -93,7 +92,7 @@ public class OptionsAndConfirmations {
     }
   }
 
-  @Nonnull
+  
   public VcsShowSettingOption getOptions(VcsConfiguration.StandardOption option) {
     return myOptions.get(option.getId());
   }
@@ -106,8 +105,8 @@ public class OptionsAndConfirmations {
     return new ArrayList<>(myConfirmations.values());
   }
 
-  @Nonnull
-  public VcsShowSettingOption getOrCreateCustomOption(@Nonnull String vcsActionName, @Nonnull AbstractVcs vcs) {
+  
+  public VcsShowSettingOption getOrCreateCustomOption(String vcsActionName, AbstractVcs vcs) {
     VcsShowOptionsSettingImpl option = getOrCreateOption(vcsActionName);
     option.addApplicableVcs(vcs);
     return option;

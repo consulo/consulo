@@ -66,8 +66,7 @@ import consulo.ui.layout.WrappedLayout;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -98,7 +97,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             AbstractProjectViewPane currentProjectViewPane = getCurrentProjectViewPane();
             if (currentProjectViewPane != null) {
                 currentProjectViewPane.uiDataSnapshot(sink);
@@ -199,7 +198,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         }
 
         @RequiredUIAccess
-        private void detachLibrary(@Nonnull LibraryOrderEntry orderEntry, @Nonnull Project project) {
+        private void detachLibrary(LibraryOrderEntry orderEntry, Project project) {
             Module module = orderEntry.getOwnerModule();
             LocalizeValue message = IdeLocalize.detachLibraryFromModule(orderEntry.getPresentableName(), module.getName());
             LocalizeValue title = IdeLocalize.detachLibrary();
@@ -289,7 +288,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
      * otherwise VirtualFileArrayRule will return all module's content roots when just one of them is selected
      */
     @Nullable
-    private Module moduleBySingleContentRoot(@Nonnull VirtualFile file) {
+    private Module moduleBySingleContentRoot(VirtualFile file) {
         if (ProjectRootsUtil.isModuleContentRoot(file, myProject)) {
             Module module = ProjectRootManager.getInstance(myProject).getFileIndex().getModuleForFile(file);
             if (module != null && !module.isDisposed() && ModuleRootManager.getInstance(module).getContentRoots().length == 1) {
@@ -300,7 +299,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return null;
     }
 
-    @Nonnull
     @Override
     public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
         return AsyncResult.resolved(null);
@@ -308,7 +306,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
     @RequiredUIAccess
     @Override
-    public void setupToolWindow(@Nonnull ToolWindow toolWindow, boolean loadPaneExtensions) {
+    public void setupToolWindow(ToolWindow toolWindow, boolean loadPaneExtensions) {
         ProjectViewPaneImpl projectViewPane = null;
         for (AbstractProjectViewPane pane : AbstractProjectViewPane.EP_NAME.getExtensions(myProject)) {
             if (pane instanceof ProjectViewPaneImpl projectViewPaneImpl) {
@@ -329,7 +327,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
 
         TreeStructureWrappenModel<AbstractTreeNode> model = new TreeStructureWrappenModel<>(structure) {
             @Override
-            public boolean onDoubleClick(@Nonnull Tree tree, @Nonnull TreeNode node) {
+            public boolean onDoubleClick(Tree tree, TreeNode node) {
                 if (node.isLeaf()) {
                     AbstractTreeNode value = (AbstractTreeNode)node.getValue();
 
@@ -351,9 +349,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         toolWindow.getContentManager().addContent(content);
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
-    private <T> List<T> getSelectedElements(@Nonnull Class<T> klass) {
+    private <T> List<T> getSelectedElements(Class<T> klass) {
         List<T> result = new ArrayList<>();
         AbstractProjectViewPane viewPane = getCurrentProjectViewPane();
         if (viewPane == null) {
@@ -369,9 +366,8 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return result;
     }
 
-    @Nonnull
     @Override
-    public AsyncResult<Void> changeViewCB(@Nonnull String viewId, String subId) {
+    public AsyncResult<Void> changeViewCB(String viewId, String subId) {
         return AsyncResult.done(null);
     }
 
@@ -477,7 +473,7 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
     }
 
     @Override
-    public void setManualOrder(@Nonnull String paneId, boolean enabled) {
+    public void setManualOrder(String paneId, boolean enabled) {
     }
 
     @Override
@@ -503,7 +499,6 @@ public class UnifiedProjectViewImpl implements ProjectViewEx, Disposable {
         return null;
     }
 
-    @Nonnull
     @Override
     public Collection<SelectInTarget> getSelectInTargets() {
         return mySelectInTargets.values();

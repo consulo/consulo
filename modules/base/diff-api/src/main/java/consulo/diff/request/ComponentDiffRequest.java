@@ -16,11 +16,10 @@
 package consulo.diff.request;
 
 import consulo.diff.DiffContext;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 public abstract class ComponentDiffRequest extends DiffRequest {
-  @Nonnull
-  public abstract JComponent getComponent(@Nonnull DiffContext context);
+  
+  public abstract JComponent getComponent(DiffContext context);
 }

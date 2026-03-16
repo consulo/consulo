@@ -9,8 +9,7 @@ import consulo.undoRedo.CommandDescriptor;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -25,7 +24,7 @@ public abstract class CommandProcessorEx extends CommandProcessor {
 
     public abstract void leaveModal();
 
-    @Nonnull
+    
     @Override
     public abstract <T> StartableCommandBuilder<T, ? extends StartableCommandBuilder<T, ?>> newCommand();
 
@@ -41,7 +40,7 @@ public abstract class CommandProcessorEx extends CommandProcessor {
         @Nullable Project project,
         String name,
         @Nullable Object groupId,
-        @Nonnull UndoConfirmationPolicy undoConfirmationPolicy
+        UndoConfirmationPolicy undoConfirmationPolicy
     ) {
         return newCommand()
             .project(project)

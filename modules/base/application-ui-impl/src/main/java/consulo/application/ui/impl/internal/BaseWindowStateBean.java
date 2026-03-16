@@ -5,8 +5,7 @@ import consulo.application.ui.WindowState;
 import consulo.component.util.ModificationTracker;
 import consulo.ui.Point2D;
 import consulo.ui.Size2D;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -73,7 +72,7 @@ public abstract class BaseWindowStateBean implements ModificationTracker, Window
   }
 
   @Nullable
-  private static <T, R> R apply(@Nonnull Function<T, R> function, @Nullable T value) {
+  private static <T, R> R apply(Function<T, R> function, @Nullable T value) {
     return value == null ? null : function.apply(value);
   }
 }

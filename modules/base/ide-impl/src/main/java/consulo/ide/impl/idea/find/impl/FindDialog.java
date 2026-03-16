@@ -3,7 +3,6 @@
 package consulo.ide.impl.idea.find.impl;
 
 import consulo.find.FindSearchContext;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -12,7 +11,7 @@ public class FindDialog {
      * @deprecated use {@link FindInProjectUtil#initFileFilter(JComboBox, JCheckBox)}
      */
     @Deprecated
-    public static void initFileFilter(@Nonnull JComboBox<? super String> fileFilter, @Nonnull JCheckBox useFileFilter) {
+    public static void initFileFilter(JComboBox<? super String> fileFilter, JCheckBox useFileFilter) {
         FindInProjectUtil.initFileFilter(fileFilter, useFileFilter);
     }
 
@@ -20,7 +19,7 @@ public class FindDialog {
      * @deprecated use {@link FindSearchContext#getName()}
      */
     @Deprecated
-    public static String getPresentableName(@Nonnull FindSearchContext searchContext) {
+    public static String getPresentableName(FindSearchContext searchContext) {
         return searchContext.getName().get();
     }
 }

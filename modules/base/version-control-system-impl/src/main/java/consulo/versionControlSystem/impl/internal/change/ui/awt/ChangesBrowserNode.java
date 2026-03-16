@@ -24,7 +24,6 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocallyDeletedChange;
 import consulo.versionControlSystem.impl.internal.change.ChangeListOwner;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
@@ -71,13 +70,13 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     myAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
   }
 
-  @Nonnull
-  public static ChangesBrowserNode create(@Nonnull LocallyDeletedChange change) {
+  
+  public static ChangesBrowserNode create(LocallyDeletedChange change) {
     return new ChangesBrowserLocallyDeletedNode(change);
   }
 
-  @Nonnull
-  public static ChangesBrowserNode create(@Nonnull Project project, @Nonnull Object userObject) {
+  
+  public static ChangesBrowserNode create(Project project, Object userObject) {
     if (userObject instanceof Change) {
       return new ChangesBrowserChangeNode(project, (Change)userObject, null);
     }
@@ -135,30 +134,30 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     myDirectoryCount = -1;
   }
 
-  @Nonnull
+  
   public List<Change> getAllChangesUnder() {
     return getAllObjectsUnder(Change.class);
   }
 
-  @Nonnull
-  public <U> List<U> getAllObjectsUnder(@Nonnull Class<U> clazz) {
+  
+  public <U> List<U> getAllObjectsUnder(Class<U> clazz) {
     return getObjectsUnderStream(clazz).collect(Collectors.toList());
   }
 
-  @Nonnull
-  public <U> Stream<U> getObjectsUnderStream(@Nonnull Class<U> clazz) {
+  
+  public <U> Stream<U> getObjectsUnderStream(Class<U> clazz) {
     return toStream(preorderEnumeration())
       .map(ChangesBrowserNode::getUserObject)
       .filter(userObject -> clazz.isAssignableFrom(userObject.getClass()))
       .map(clazz::cast);
   }
 
-  @Nonnull
+  
   public List<VirtualFile> getAllFilesUnder() {
     return getFilesUnderStream().collect(Collectors.toList());
   }
 
-  @Nonnull
+  
   public Stream<VirtualFile> getFilesUnderStream() {
     return toStream(breadthFirstEnumeration())
       .map(ChangesBrowserNode::getUserObject)
@@ -167,12 +166,12 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
       .filter(VirtualFile::isValid);
   }
 
-  @Nonnull
+  
   public List<FilePath> getAllFilePathsUnder() {
     return getFilePathsUnderStream().collect(Collectors.toList());
   }
 
-  @Nonnull
+  
   public Stream<FilePath> getFilePathsUnderStream() {
     return toStream(breadthFirstEnumeration())
       .filter(ChangesBrowserNode::isLeaf)
@@ -181,8 +180,8 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
       .map(FilePath.class::cast);
   }
 
-  @Nonnull
-  private static Stream<ChangesBrowserNode> toStream(@Nonnull Enumeration enumeration) {
+  
+  private static Stream<ChangesBrowserNode> toStream(Enumeration enumeration) {
     //noinspection unchecked
     Iterator<ChangesBrowserNode> iterator = ((Enumeration<ChangesBrowserNode>)enumeration).asIterator();
     Spliterator<ChangesBrowserNode> spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED | Spliterator.NONNULL);
@@ -190,12 +189,12 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     return StreamSupport.stream(spliterator, false);
   }
 
-  public void render(@Nonnull ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void render(ChangesBrowserNodeRenderer renderer, boolean selected, boolean expanded, boolean hasFocus) {
     renderer.append(userObject.toString(), myAttributes);
     appendCount(renderer);
   }
 
-  @Nonnull
+  
   protected String getCountText() {
     int count = getFileCount();
     int dirCount = getDirectoryCount();
@@ -213,7 +212,7 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     return result;
   }
 
-  protected void appendCount(@Nonnull ColoredTreeCellRenderer renderer) {
+  protected void appendCount(ColoredTreeCellRenderer renderer) {
     renderer.append(getCountText(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
   }
 
@@ -249,11 +248,11 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
     return 0;
   }
 
-  public void setAttributes(@Nonnull SimpleTextAttributes attributes) {
+  public void setAttributes(SimpleTextAttributes attributes) {
     myAttributes = attributes;
   }
 
-  protected void appendUpdatingState(@Nonnull ChangesBrowserNodeRenderer renderer) {
+  protected void appendUpdatingState(ChangesBrowserNodeRenderer renderer) {
     renderer.append((getCountText().isEmpty() ? spaceAndThinSpace() : ", ") + VcsBundle.message("changes.nodetitle.updating"),
                     SimpleTextAttributes.GRAYED_ATTRIBUTES);
   }
@@ -264,10 +263,10 @@ public class ChangesBrowserNode<T> extends DefaultMutableTreeNode {
   }
 
   private static class Tag {
-    @Nonnull
+    
     private final String myKey;
 
-    public Tag(@Nonnull String key) {
+    public Tag(String key) {
       myKey = key;
     }
 

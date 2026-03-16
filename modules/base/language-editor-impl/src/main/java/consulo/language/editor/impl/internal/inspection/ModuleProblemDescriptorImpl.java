@@ -21,17 +21,16 @@ import consulo.language.editor.inspection.QuickFix;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 public class ModuleProblemDescriptorImpl extends CommonProblemDescriptorBase implements ModuleProblemDescriptor {
     private final Module myModule;
 
-    public ModuleProblemDescriptorImpl(@Nonnull Module module, @Nonnull LocalizeValue descriptionTemplate, QuickFix<?>[] fixes) {
+    public ModuleProblemDescriptorImpl(Module module, LocalizeValue descriptionTemplate, QuickFix<?>[] fixes) {
         super(fixes, descriptionTemplate);
         myModule = module;
     }
 
-    @Nonnull
+    
     @Override
     public Module getModule() {
         return myModule;

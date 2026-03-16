@@ -27,7 +27,6 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "GotoPreviousError")
 public class GotoPreviousErrorAction extends BaseCodeInsightAction implements DumbAware {
@@ -40,14 +39,14 @@ public class GotoPreviousErrorAction extends BaseCodeInsightAction implements Du
         );
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new GotoNextErrorHandler(false);
     }
 
     @Override
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return DaemonCodeAnalyzer.getInstance(project).isHighlightingAvailable(file);
     }
 }

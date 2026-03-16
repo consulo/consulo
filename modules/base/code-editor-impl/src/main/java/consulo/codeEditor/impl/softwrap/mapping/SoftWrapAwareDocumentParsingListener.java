@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.impl.softwrap.mapping;
 
-import jakarta.annotation.Nonnull;
 
 public interface SoftWrapAwareDocumentParsingListener {
 
@@ -24,14 +23,14 @@ public interface SoftWrapAwareDocumentParsingListener {
    *
    * @param event   object that contains information about re-parsed document region
    */
-  void onCacheUpdateStart(@Nonnull IncrementalCacheUpdateEvent event);
+  void onCacheUpdateStart(IncrementalCacheUpdateEvent event);
 
   /**
    * Notifies current listener that particular document region re-parsing has just finished.
    *
    * @param event   object that contains information about re-parsed document region
    */
-  void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event);
+  void onRecalculationEnd(IncrementalCacheUpdateEvent event);
 
   /**
    * Notifies current listener that all dirty regions for the current editor have been recalculated.

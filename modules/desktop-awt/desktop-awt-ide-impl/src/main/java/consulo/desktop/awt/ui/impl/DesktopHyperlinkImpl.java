@@ -25,8 +25,7 @@ import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdesktop.swingx.JXHyperlink;
 
 import java.awt.event.ActionEvent;
@@ -49,7 +48,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
             setIcon(TargetAWT.to(icon));
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopHyperlinkImpl.this;
@@ -67,7 +66,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
         return new MyLinkLabel(myText.get(), null);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return myText;
@@ -75,7 +74,7 @@ public class DesktopHyperlinkImpl extends SwingComponentDelegate<DesktopHyperlin
 
     @RequiredUIAccess
     @Override
-    public void setText(@Nonnull LocalizeValue text) {
+    public void setText(LocalizeValue text) {
         myText = text;
 
         toAWTComponent().setText(text.get());

@@ -26,7 +26,6 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +40,8 @@ public class ExecutionDataContextCacherImpl implements ExecutionDataContextCache
     private static final Key[] keys = {Project.KEY, Project.PROJECT_FILE_DIRECTORY, Editor.KEY, VirtualFile.KEY, Module.KEY, PsiFile.KEY};
     private final Map<Key, Object> values = new HashMap<>();
 
-    @Nonnull
-    static CachingDataContext cacheIfNeed(@Nonnull DataContext context) {
+    
+    static CachingDataContext cacheIfNeed(DataContext context) {
       if (context instanceof CachingDataContext) return (CachingDataContext)context;
       return new CachingDataContext(context);
     }
@@ -56,14 +55,14 @@ public class ExecutionDataContextCacherImpl implements ExecutionDataContextCache
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getData(@Nonnull Key<T> dataId) {
+    public <T> T getData(Key<T> dataId) {
       return (T)values.get(dataId);
     }
   }
 
-  @Nonnull
+  
   @Override
-  public DataContext getCachedContext(@Nonnull DataContext dataContext) {
+  public DataContext getCachedContext(DataContext dataContext) {
     return CachingDataContext.cacheIfNeed(dataContext);
   }
 }

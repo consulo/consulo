@@ -18,8 +18,7 @@ package consulo.language.controlFlow.base;
 import consulo.language.controlFlow.ControlFlowBuilder;
 import consulo.language.controlFlow.TransparentInstruction;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,19 +35,19 @@ public class DetachedInstructionImpl extends InstructionBaseImpl {
         return myNum.get();
     }
 
-    public final void addToInstructions(@Nonnull ControlFlowBuilder builder) {
+    public final void addToInstructions(ControlFlowBuilder builder) {
         assert !(this instanceof TransparentInstruction);
         builder.instructions.add(this);
         updateNum(builder.instructionCount++);
     }
 
-    public final void addTransparentNode(@Nonnull ControlFlowBuilder builder) {
+    public final void addTransparentNode(ControlFlowBuilder builder) {
         assert this instanceof TransparentInstruction;
         updateNum(builder.transparentInstructionCount++);
         builder.addNodeAndCheckPending(this);
     }
 
-    public final void addNode(@Nonnull ControlFlowBuilder builder) {
+    public final void addNode(ControlFlowBuilder builder) {
         assert !(this instanceof TransparentInstruction);
         updateNum(builder.instructionCount++);
         builder.addNodeAndCheckPending(this);

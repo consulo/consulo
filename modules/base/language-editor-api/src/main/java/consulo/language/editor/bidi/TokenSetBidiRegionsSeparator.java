@@ -18,7 +18,6 @@ package consulo.language.editor.bidi;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implementation of {@link BidiRegionsSeparator} allowing to define a number of token sets, tokens within each set will be processed
@@ -32,7 +31,7 @@ public abstract class TokenSetBidiRegionsSeparator extends BidiRegionsSeparator 
   }
 
   @Override
-  public boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
+  public boolean createBorderBetweenTokens(IElementType previousTokenType, IElementType tokenType) {
     for (TokenSet set : myTokenSets) {
       if (set.contains(previousTokenType) && set.contains(tokenType)) {
         return false;

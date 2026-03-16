@@ -20,8 +20,7 @@ import consulo.ui.Hyperlink;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.HyperlinkEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -56,7 +55,7 @@ public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implemen
     });
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myText;
@@ -64,7 +63,7 @@ public class DesktopSwtHyperlinkImpl extends SWTComponentDelegate<Link> implemen
 
   @RequiredUIAccess
   @Override
-  public void setText(@Nonnull LocalizeValue text) {
+  public void setText(LocalizeValue text) {
     myText = text;
   }
 

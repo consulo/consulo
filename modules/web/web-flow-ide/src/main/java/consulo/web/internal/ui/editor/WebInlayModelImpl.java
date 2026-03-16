@@ -18,14 +18,13 @@ package consulo.web.internal.ui.editor;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorInlayModelBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 04/08/2021
  */
 public class WebInlayModelImpl extends CodeEditorInlayModelBase {
-  public WebInlayModelImpl(@Nonnull CodeEditorBase editor) {
+  public WebInlayModelImpl(CodeEditorBase editor) {
     super(editor);
   }
 }

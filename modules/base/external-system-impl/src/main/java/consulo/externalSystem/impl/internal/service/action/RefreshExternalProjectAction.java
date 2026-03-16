@@ -23,8 +23,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 
@@ -46,7 +45,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware 
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
         e.getPresentation().setEnabled(info.externalProject != null);
         if (info.externalSystemId != null) {
@@ -62,7 +61,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware 
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ExternalActionUtil.MyInfo info = ExternalActionUtil.getProcessingInfo(e.getDataContext());
         if (info.settings == null
             || info.localSettings == null
@@ -113,7 +112,7 @@ public class RefreshExternalProjectAction extends AnAction implements DumbAware 
                 }
 
                 @Override
-                public void onFailure(@Nonnull String errorMessage, @Nullable String errorDetails) {
+                public void onFailure(String errorMessage, @Nullable String errorDetails) {
                 }
             },
             false,

@@ -19,8 +19,7 @@ import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.Failure;
 import consulo.project.ui.notification.Notification;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,13 +56,13 @@ public class FailureImpl implements Failure {
 
   public FailureImpl(@BuildEventsNls.Message String message,
                      @BuildEventsNls.Description String description,
-                     @Nonnull List<? extends Failure> causes) {
+                     List<? extends Failure> causes) {
     this(message, description, causes, null, null, null);
   }
 
   public FailureImpl(@BuildEventsNls.Message String message,
                       @BuildEventsNls.Description String description,
-                      @Nonnull List<? extends Failure> causes,
+                      List<? extends Failure> causes,
                       @Nullable Throwable error,
                       @Nullable Notification notification,
                       @Nullable Navigatable navigatable) {

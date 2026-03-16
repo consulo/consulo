@@ -11,7 +11,6 @@ import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListener;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * The general idea of soft wraps processing is to build a cache to use for quick document dimensions mapping
@@ -29,12 +28,12 @@ public class DesktopSoftWrapApplianceManager extends SoftWrapApplianceManager {
 
   private static final Logger LOG = Logger.getInstance(DesktopSoftWrapApplianceManager.class);
 
-  public DesktopSoftWrapApplianceManager(@Nonnull SoftWrapsStorage storage, @Nonnull CodeEditorBase editor, @Nonnull SoftWrapPainter painter, CachingSoftWrapDataMapper dataMapper) {
+  public DesktopSoftWrapApplianceManager(SoftWrapsStorage storage, CodeEditorBase editor, SoftWrapPainter painter, CachingSoftWrapDataMapper dataMapper) {
     super(storage, editor, painter, dataMapper);
   }
 
   @Override
-  protected void doRecalculateSoftWraps0(@Nonnull IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
+  protected void doRecalculateSoftWraps0(IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
     if (myVisibleAreaWidth == QUICK_DUMMY_WRAPPING) {
       doRecalculateSoftWrapsRoughly(event);
     }

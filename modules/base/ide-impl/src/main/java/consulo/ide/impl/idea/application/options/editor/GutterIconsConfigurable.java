@@ -44,8 +44,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -65,7 +64,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   private CheckBox myShowGutterIconsJBCheckBox;
   private List<GutterIconDescriptor> myDescriptors;
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Gutter Icons");
@@ -80,7 +79,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     myShowGutterIconsJBCheckBox = CheckBox.create(ApplicationLocalize.checkboxShowGutterIcons());
 
     JPanel panel = new JPanel(new BorderLayout());
@@ -128,7 +127,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
 
       @Nullable
       @Override
-      protected Point findPointRelativeToCheckBox(int x, int y, @Nonnull JCheckBox checkBox, int index) {
+      protected Point findPointRelativeToCheckBox(int x, int y, JCheckBox checkBox, int index) {
         return super.findPointRelativeToCheckBoxWithAdjustedRendering(x, y, checkBox, index);
       }
     };
@@ -225,7 +224,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     myList.setEnabled(gutterIconsShown);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return ID;

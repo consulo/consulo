@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -28,6 +27,6 @@ public interface VcsLogRootFilter extends VcsLogFilter {
   /**
    * Returns vcs roots that are visible.
    */
-  @Nonnull
+  
   Collection<VirtualFile> getRoots();
 }

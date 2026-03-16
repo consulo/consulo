@@ -18,7 +18,6 @@ package consulo.project.ui.view.internal.node;
 
 import consulo.module.Module;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -29,7 +28,7 @@ public final class LibraryGroupElement {
   
   private final Module myModule;
 
-  public LibraryGroupElement(@Nonnull Module module) {
+  public LibraryGroupElement(Module module) {
     myModule = module;
   }
 

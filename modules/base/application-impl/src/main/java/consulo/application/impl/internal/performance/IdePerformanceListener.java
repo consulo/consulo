@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.application.util.concurrent.ThreadDump;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 @TopicAPI(ComponentScope.APPLICATION)
@@ -13,7 +12,7 @@ public interface IdePerformanceListener {
   /**
    * Invoked after thread state has been dumped to a file.
    */
-  default void dumpedThreads(@Nonnull File toFile, @Nonnull ThreadDump dump) {
+  default void dumpedThreads(File toFile, ThreadDump dump) {
   }
 
   /**

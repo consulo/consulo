@@ -16,8 +16,7 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class ChangedRangesInfo {
     public final List<TextRange> insertedRanges;
     public final List<TextRange> allChangedRanges;
 
-    public ChangedRangesInfo(@Nonnull List<TextRange> allChangedRanges, @Nullable List<TextRange> insertedRanges) {
+    public ChangedRangesInfo(List<TextRange> allChangedRanges, @Nullable List<TextRange> insertedRanges) {
         this.insertedRanges = insertedRanges;
         this.allChangedRanges = allChangedRanges;
     }

@@ -3,7 +3,6 @@ package consulo.language.editor.inspection;
 
 import consulo.language.editor.intention.IntentionAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Interface for {@link IntentionAction intentions} and {@link LocalQuickFix quick fixes}.
@@ -18,6 +17,6 @@ public interface PriorityAction {
     BOTTOM
   }
 
-  @Nonnull
+  
   Priority getPriority();
 }

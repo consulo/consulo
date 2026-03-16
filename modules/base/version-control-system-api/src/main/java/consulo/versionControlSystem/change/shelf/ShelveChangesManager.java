@@ -21,8 +21,7 @@ import consulo.project.Project;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -34,11 +33,11 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ShelveChangesManager {
-    static ShelveChangesManager getInstance(@Nonnull Project project) {
+    static ShelveChangesManager getInstance(Project project) {
         return project.getInstance(ShelveChangesManager.class);
     }
 
-    @Nonnull
+    
     List<? extends ShelvedChangeList> getShelvedChangeLists();
 
     default ShelvedChangeList shelveChanges(Collection<Change> changes, String commitMessage, boolean rollback) throws IOException, VcsException {

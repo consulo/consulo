@@ -5,7 +5,6 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.log.Hash;
 import consulo.versionControlSystem.log.TimedVcsCommit;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -20,26 +19,26 @@ import java.util.List;
  */
 public class TimedVcsCommitImpl implements TimedVcsCommit {
 
-  @Nonnull
+  
   private final Hash myHash;
-  @Nonnull
+  
   private final List<Hash> myParents;
   private final long myTime;
 
-  public TimedVcsCommitImpl(@Nonnull Hash hash, @Nonnull List<Hash> parents, long timeStamp) {
+  public TimedVcsCommitImpl(Hash hash, List<Hash> parents, long timeStamp) {
     myHash = hash;
     myParents = parents;
     myTime = timeStamp;
   }
 
   @Override
-  @Nonnull
+  
   public final Hash getId() {
     return myHash;
   }
 
   @Override
-  @Nonnull
+  
   public final List<Hash> getParents() {
     return myParents;
   }

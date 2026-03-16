@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class SpeedSearchUtilBase {
   private SpeedSearchUtilBase() {
   }
 
-  public static void applySpeedSearchHighlighting(@Nonnull JComponent speedSearchEnabledComponent, @Nonnull ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
+  public static void applySpeedSearchHighlighting(JComponent speedSearchEnabledComponent, ColoredTextContainer coloredComponent, boolean mainTextOnly, boolean selected) {
     SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
     // The bad thing is that SpeedSearch model is decoupled from UI presentation so we don't know the real matched text.
     // Our best guess is to get strgin from the ColoredComponent. We can only provide main-text-only option.
@@ -78,11 +77,11 @@ public class SpeedSearchUtilBase {
     }
   }
 
-  public static void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
-                                                   @Nonnull String text,
-                                                   @Nonnull SimpleTextAttributes attributes,
+  public static void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,
+                                                   String text,
+                                                   SimpleTextAttributes attributes,
                                                    boolean selected,
-                                                   @Nonnull ColoredTextContainer simpleColoredComponent) {
+                                                   ColoredTextContainer simpleColoredComponent) {
     SpeedSearchSupply speedSearch = SpeedSearchSupply.getSupply(speedSearchEnabledComponent);
     if (speedSearch != null) {
       Iterable<MatcherTextRange> fragments = speedSearch.matchingFragments(text);

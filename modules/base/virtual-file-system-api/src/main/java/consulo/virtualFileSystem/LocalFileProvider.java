@@ -15,8 +15,7 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * To be used for those non-LocalFileSystems which can provide corresponding
@@ -28,5 +27,5 @@ public interface LocalFileProvider {
   VirtualFile getLocalVirtualFileFor(@Nullable VirtualFile entryVFile);
 
   @Nullable
-  VirtualFile findLocalVirtualFileByPath(@Nonnull String path);
+  VirtualFile findLocalVirtualFileByPath(String path);
 }

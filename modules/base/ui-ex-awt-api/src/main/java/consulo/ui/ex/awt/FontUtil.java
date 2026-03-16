@@ -15,37 +15,36 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class FontUtil {
-    @Nonnull
-    public static String rightArrow(@Nonnull Font font) {
+    
+    public static String rightArrow(Font font) {
         return canDisplay(font, '→', "->");
     }
 
-    @Nonnull
-    public static String upArrow(@Nonnull Font font, @Nonnull String defaultValue) {
+    
+    public static String upArrow(Font font, String defaultValue) {
         return canDisplay(font, '↑', defaultValue);
     }
 
-    @Nonnull
-    public static String canDisplay(@Nonnull Font font, char value, @Nonnull String defaultValue) {
+    
+    public static String canDisplay(Font font, char value, String defaultValue) {
         return font.canDisplay(value) ? String.valueOf(value) : defaultValue;
     }
 
-    @Nonnull
-    public static Font minusOne(@Nonnull Font font) {
+    
+    public static Font minusOne(Font font) {
         return font.deriveFont(font.getSize() - 1f);
     }
 
-    @Nonnull
+    
     public static String spaceAndThinSpace() {
         return " " + thinSpace();
     }
 
-    @Nonnull
+    
     public static String thinSpace() {
         return canDisplay(UIUtil.getLabelFont(), ' ', " ");
     }

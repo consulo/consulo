@@ -30,8 +30,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -58,7 +57,7 @@ public final class CompletionServiceImpl extends CompletionService {
             new ProjectManagerListener() {
                 @Override
                 @RequiredUIAccess
-                public void projectClosing(@Nonnull Project project) {
+                public void projectClosing(Project project) {
                     CompletionProgressIndicator indicator = getCurrentCompletionProgressIndicator();
                     if (indicator != null && indicator.getProject() == project) {
                         indicator.closeAndFinish(true);
@@ -110,13 +109,13 @@ public final class CompletionServiceImpl extends CompletionService {
         return CompletionData.findPrefixStatic(position, offset);
     }
 
-    @Nonnull
+    
     @Override
     protected PrefixMatcher createMatcher(String prefix, boolean typoTolerant) {
         return createMatcher(prefix, true, typoTolerant);
     }
 
-    @Nonnull
+    
     private static CamelHumpMatcher createMatcher(String prefix, boolean caseSensitive, boolean typoTolerant) {
         return new CamelHumpMatcher(prefix, caseSensitive, typoTolerant);
     }
@@ -125,7 +124,7 @@ public final class CompletionServiceImpl extends CompletionService {
     protected CompletionResultSet createResultSet(
         CompletionParameters parameters,
         Consumer<? super CompletionResult> consumer,
-        @Nonnull CompletionContributor contributor,
+        CompletionContributor contributor,
         PrefixMatcher matcher
     ) {
         return new CompletionResultSetImpl(consumer, matcher, contributor, parameters, defaultSorter(parameters, matcher), null);
@@ -158,7 +157,7 @@ public final class CompletionServiceImpl extends CompletionService {
         CompletionResultSetImpl(
             Consumer<? super CompletionResult> consumer, PrefixMatcher prefixMatcher,
             CompletionContributor contributor, CompletionParameters parameters,
-            @Nonnull CompletionSorterImpl sorter, @Nullable CompletionResultSetImpl original
+            CompletionSorterImpl sorter, @Nullable CompletionResultSetImpl original
         ) {
             super(prefixMatcher, consumer, contributor);
             myParameters = parameters;
@@ -167,12 +166,12 @@ public final class CompletionServiceImpl extends CompletionService {
         }
 
         @Override
-        public void addAllElements(@Nonnull Iterable<? extends LookupElement> elements) {
+        public void addAllElements(Iterable<? extends LookupElement> elements) {
             CompletionThreadingBase.withBatchUpdate(() -> super.addAllElements(elements), myParameters.getProcess());
         }
 
         @Override
-        public void addElement(@Nonnull LookupElement element) {
+        public void addElement(LookupElement element) {
             ProgressManager.checkCanceled();
             if (!element.isValid()) {
                 LOG.error("Invalid lookup element: " + element + " of " + element.getClass() + " in " + myParameters.getOriginalFile() + " of " + myParameters.getOriginalFile()
@@ -187,8 +186,8 @@ public final class CompletionServiceImpl extends CompletionService {
         }
 
         @Override
-        @Nonnull
-        public CompletionResultSet withPrefixMatcher(@Nonnull PrefixMatcher matcher) {
+        
+        public CompletionResultSet withPrefixMatcher(PrefixMatcher matcher) {
             if (matcher.equals(getPrefixMatcher())) {
                 return this;
             }
@@ -208,14 +207,14 @@ public final class CompletionServiceImpl extends CompletionService {
         }
 
         @Override
-        @Nonnull
-        public CompletionResultSet withPrefixMatcher(@Nonnull String prefix) {
+        
+        public CompletionResultSet withPrefixMatcher(String prefix) {
             return withPrefixMatcher(getPrefixMatcher().cloneWithPrefix(prefix));
         }
 
-        @Nonnull
+        
         @Override
-        public CompletionResultSet withRelevanceSorter(@Nonnull CompletionSorter sorter) {
+        public CompletionResultSet withRelevanceSorter(CompletionSorter sorter) {
             return new CompletionResultSetImpl(
                 getConsumer(),
                 getPrefixMatcher(),
@@ -227,11 +226,11 @@ public final class CompletionServiceImpl extends CompletionService {
         }
 
         @Override
-        public void addLookupAdvertisement(@Nonnull String text) {
+        public void addLookupAdvertisement(String text) {
             getCompletionService().setAdvertisementText(text);
         }
 
-        @Nonnull
+        
         @Override
         public CompletionResultSet caseInsensitive() {
             PrefixMatcher matcher = getPrefixMatcher();
@@ -260,14 +259,14 @@ public final class CompletionServiceImpl extends CompletionService {
     }
 
     @SafeVarargs
-    public static void assertPhase(@Nonnull Class<? extends CompletionPhase>... possibilities) {
+    public static void assertPhase(Class<? extends CompletionPhase>... possibilities) {
         if (!isPhase(possibilities)) {
             LOG.error(ourPhase + "; set at " + ExceptionUtil.getThrowableText(ourPhaseTrace));
         }
     }
 
     @SafeVarargs
-    public static boolean isPhase(@Nonnull Class<? extends CompletionPhase>... possibilities) {
+    public static boolean isPhase(Class<? extends CompletionPhase>... possibilities) {
         CompletionPhase phase = getCompletionPhase();
         for (Class<? extends CompletionPhase> possibility : possibilities) {
             if (possibility.isInstance(phase)) {
@@ -278,7 +277,7 @@ public final class CompletionServiceImpl extends CompletionService {
     }
 
     @RequiredUIAccess
-    public static void setCompletionPhase(@Nonnull CompletionPhase phase) {
+    public static void setCompletionPhase(CompletionPhase phase) {
         UIAccess.assertIsUIThread();
         CompletionPhase oldPhase = getCompletionPhase();
         CompletionProgressIndicator oldIndicator = oldPhase.indicator;
@@ -302,7 +301,7 @@ public final class CompletionServiceImpl extends CompletionService {
         ourPhaseTrace = new Throwable();
     }
 
-    private static boolean isRunningPhase(@Nonnull CompletionPhase phase) {
+    private static boolean isRunningPhase(CompletionPhase phase) {
         return phase != CompletionPhase.NoCompletion && !(phase instanceof CompletionPhase.ZombiePhase) && !(phase instanceof CompletionPhase.ItemsCalculated);
     }
 
@@ -335,7 +334,7 @@ public final class CompletionServiceImpl extends CompletionService {
             else {
                 sorter = sorter.weigh(new LookupElementWeigher(id, true, false) {
                     @Override
-                    public Comparable weigh(@Nonnull LookupElement element) {
+                    public Comparable weigh(LookupElement element) {
                         //noinspection unchecked
                         return weigher.weigh(element, location);
                     }

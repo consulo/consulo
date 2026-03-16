@@ -34,8 +34,7 @@ import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,12 +54,12 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
 
   private T myConsoleView;
 
-  @Nonnull
+  
   private final Project myProject;
 
   private ProcessBackedConsoleExecuteActionHandler myConsoleExecuteActionHandler;
 
-  public AbstractConsoleRunnerWithHistory(@Nonnull Project project, @Nonnull String consoleTitle, @Nullable String workingDir) {
+  public AbstractConsoleRunnerWithHistory(Project project, String consoleTitle, @Nullable String workingDir) {
     myProject = project;
     myConsoleTitle = consoleTitle;
     myWorkingDir = workingDir;
@@ -137,7 +136,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return null;
   }
 
-  protected String constructConsoleTitle(@Nonnull String consoleTitle) {
+  protected String constructConsoleTitle(String consoleTitle) {
     return new ConsoleTitleGen(myProject, consoleTitle, shouldAddNumberToTitle()).makeTitle();
   }
 
@@ -149,7 +148,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return false;
   }
 
-  protected void showConsole(Executor defaultExecutor, @Nonnull RunContentDescriptor contentDescriptor) {
+  protected void showConsole(Executor defaultExecutor, RunContentDescriptor contentDescriptor) {
     // Show in run toolwindow
     ExecutionManager.getInstance(myProject).getContentManager().showRunContent(defaultExecutor, contentDescriptor);
   }
@@ -160,7 +159,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
 
   protected abstract T createConsoleView();
 
-  @Nonnull
+  
   protected abstract ProcessHandler createProcessHandler() throws ExecutionException;
 
   public static void registerActionShortcuts(List<AnAction> actions, JComponent component) {
@@ -200,19 +199,19 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
     return ActionManager.getInstance().getAction(IdeActions.ACTION_STOP_PROGRAM);
   }
 
-  protected AnAction createConsoleExecAction(@Nonnull ProcessBackedConsoleExecuteActionHandler consoleExecuteActionHandler) {
+  protected AnAction createConsoleExecAction(ProcessBackedConsoleExecuteActionHandler consoleExecuteActionHandler) {
     String emptyAction = consoleExecuteActionHandler.getEmptyExecuteAction();
     return new ConsoleExecuteAction(myConsoleView, consoleExecuteActionHandler, emptyAction, consoleExecuteActionHandler);
   }
 
-  @Nonnull
+  
   protected abstract ProcessBackedConsoleExecuteActionHandler createExecuteActionHandler();
 
   public T getConsoleView() {
     return myConsoleView;
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }

@@ -28,7 +28,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -51,7 +50,7 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
     public List<String> myArtifactsToBuild = new ArrayList<>();
   }
 
-  public static ArtifactsWorkspaceSettings getInstance(@Nonnull Project project) {
+  public static ArtifactsWorkspaceSettings getInstance(Project project) {
     return project.getInstance(ArtifactsWorkspaceSettings.class);
   }
 
@@ -71,7 +70,7 @@ public class ArtifactsWorkspaceSettings implements PersistentStateComponent<Arti
     return result;
   }
 
-  public void setArtifactsToBuild(@Nonnull Collection<? extends Artifact> artifacts) {
+  public void setArtifactsToBuild(Collection<? extends Artifact> artifacts) {
     myState.myArtifactsToBuild.clear();
     for (Artifact artifact : artifacts) {
       myState.myArtifactsToBuild.add(artifact.getName());

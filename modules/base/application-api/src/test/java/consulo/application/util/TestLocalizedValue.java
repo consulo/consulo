@@ -16,7 +16,6 @@
 package consulo.application.util;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -26,26 +25,26 @@ import java.util.function.Function;
  * @since 2026-02-19
  */
 class TestLocalizedValue implements LocalizeValue {
-    @Nonnull
+    
     private final String myValue;
 
-    TestLocalizedValue(@Nonnull String value) {
+    TestLocalizedValue(String value) {
         myValue = value;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "";
     }
 
-    @Nonnull
+    
     @Override
     public String get() {
         return myValue;
     }
 
-    @Nonnull
+    
     @Override
     public String getValue() {
         return myValue;
@@ -56,9 +55,9 @@ class TestLocalizedValue implements LocalizeValue {
         return 0;
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue map(@Nonnull Function<String, String> mapper) {
+    public LocalizeValue map(Function<String, String> mapper) {
         return new TestLocalizedValue(mapper.apply(myValue));
     }
 

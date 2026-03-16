@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -50,7 +49,7 @@ public abstract class OptionsDialog extends DialogWrapper {
             return OptionsDialog.this.shouldSaveOptionsOnCancel();
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getDoNotShowMessage() {
             return OptionsDialog.this.getDoNotShowMessage();

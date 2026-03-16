@@ -20,9 +20,7 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurableAdapter;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.localize.LocalizeValue;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,14 +28,14 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class EditorConfigurable extends ConfigurableAdapter implements ApplicationConfigurable {
-  @Nonnull
+  
   @Override
   public String getId() {
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
-  @Nonnull
-  @Nls
+  
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Editor");

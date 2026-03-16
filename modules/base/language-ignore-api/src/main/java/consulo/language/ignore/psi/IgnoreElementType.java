@@ -26,7 +26,6 @@ package consulo.language.ignore.psi;
 
 import consulo.language.ast.IElementType;
 import consulo.language.ignore.IgnoreLanguage;
-import jakarta.annotation.Nonnull;
 
 /**
  * Custom element type.
@@ -37,7 +36,7 @@ public class IgnoreElementType extends IElementType {
     /**
      * Build a new instance of @{link IgnoreElementType}
      */
-    public IgnoreElementType(@Nonnull String debugName) {
+    public IgnoreElementType(String debugName) {
         super(debugName, IgnoreLanguage.INSTANCE);
     }
 }

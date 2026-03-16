@@ -17,7 +17,6 @@ package consulo.platform.impl;
 
 import consulo.platform.*;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -38,7 +37,7 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
     private final String myId;
     private final String myName;
 
-    protected PlatformBase(@Nonnull String id, @Nonnull String name, @Nonnull Map<String, String> jvmProperties) {
+    protected PlatformBase(String id, String name, Map<String, String> jvmProperties) {
         myId = id;
         myName = name;
         myOperatingSystem = createOS(jvmProperties);
@@ -58,12 +57,12 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
         return map;
     }
 
-    @Nonnull
+    
     protected PlatformFileSystem createFS(Map<String, String> jvmProperties) {
         return new PlatformFileSystemImpl(this, jvmProperties);
     }
 
-    @Nonnull
+    
     protected PlatformOperatingSystem createOS(Map<String, String> jvmProperties) {
         String osNameLowered = jvmProperties.get("os.name").toLowerCase(Locale.ROOT);
         if (osNameLowered.startsWith("windows")) {
@@ -77,61 +76,61 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
         return new UnixOperationSystemImpl(jvmProperties, System::getenv, System::getenv);
     }
 
-    @Nonnull
+    
     protected MacOperatingSystemImpl createMacOperatingSystem(Map<String, String> jvmProperties,
                                                                       Function<String, String> getEnvFunc,
                                                                       Supplier<Map<String, String>> getEnvsSup) {
         return new LocalMacOperatingSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
     }
 
-    @Nonnull
+    
     protected WindowsOperatingSystemImpl createWindowsOperatingSystem(Map<String, String> jvmProperties,
                                                                       Function<String, String> getEnvFunc,
                                                                       Supplier<Map<String, String>> getEnvsSup) {
         return new LocalWindowsOperationSystemImpl(jvmProperties, getEnvFunc, getEnvsSup);
     }
 
-    @Nonnull
-    protected PlatformJvm createJVM(@Nonnull Map<String, String> jvmProperties) {
+    
+    protected PlatformJvm createJVM(Map<String, String> jvmProperties) {
         return new PlatformJvmImpl(jvmProperties);
     }
 
-    @Nonnull
+    
     protected PlatformUser createUser(Map<String, String> jvmProperties) {
         return new PlatformUserImpl(jvmProperties);
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myId;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return myName;
     }
 
-    @Nonnull
+    
     @Override
     public PlatformJvm jvm() {
         return myJvm;
     }
 
-    @Nonnull
+    
     @Override
     public PlatformFileSystem fs() {
         return myFileSystem;
     }
 
-    @Nonnull
+    
     @Override
     public PlatformOperatingSystem os() {
         return myOperatingSystem;
     }
 
-    @Nonnull
+    
     @Override
     public PlatformUser user() {
         return myUser;

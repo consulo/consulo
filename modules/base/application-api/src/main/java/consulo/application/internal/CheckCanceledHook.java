@@ -17,7 +17,7 @@ package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface CheckCanceledHook {

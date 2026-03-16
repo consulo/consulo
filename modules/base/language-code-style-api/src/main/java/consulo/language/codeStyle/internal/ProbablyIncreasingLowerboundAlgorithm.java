@@ -15,8 +15,7 @@
  */
 package consulo.language.codeStyle.internal;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
@@ -25,7 +24,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
   private int myLastCalculatedOffset = -1;
   private int myLastCalculatedAnswerIndex = -1;
 
-  public ProbablyIncreasingLowerboundAlgorithm(@Nonnull List<T> blocks) {
+  public ProbablyIncreasingLowerboundAlgorithm(List<T> blocks) {
     myBlocks = blocks;
   }
 
@@ -44,7 +43,7 @@ class ProbablyIncreasingLowerboundAlgorithm<T extends AbstractBlockWrapper> {
   }
 
   @Nullable
-  public AbstractBlockWrapper getLeftRespNeighbor(@Nonnull AbstractBlockWrapper block) {
+  public AbstractBlockWrapper getLeftRespNeighbor(AbstractBlockWrapper block) {
     int index = getLeftRespNeighborIndex(block);
     if (index == -1) {
       return null;

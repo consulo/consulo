@@ -5,8 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatePsiInfo;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ParenthesizedPostfixTemplate extends PostfixTemplateWithExpressionSelector {
 
@@ -17,19 +16,19 @@ public class ParenthesizedPostfixTemplate extends PostfixTemplateWithExpressionS
    */
   @Deprecated(forRemoval = true)
   public ParenthesizedPostfixTemplate(PostfixTemplatePsiInfo psiInfo,
-                                      @Nonnull PostfixTemplateExpressionSelector selector) {
+                                      PostfixTemplateExpressionSelector selector) {
     this(psiInfo, selector, null);
   }
 
   public ParenthesizedPostfixTemplate(PostfixTemplatePsiInfo psiInfo,
-                                      @Nonnull PostfixTemplateExpressionSelector selector,
+                                      PostfixTemplateExpressionSelector selector,
                                       @Nullable PostfixTemplateProvider provider) {
     super(null, "par", "(expr)", selector, provider);
     myPsiInfo = psiInfo;
   }
 
   @Override
-  protected void expandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
+  protected void expandForChooseExpression(PsiElement expression, Editor editor) {
     expression.replace(myPsiInfo.createExpression(expression, "(", ")"));
   }
 }

@@ -26,8 +26,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines common contract for strategy that determines if particular symbol or sequence of symbols may be treated as
@@ -45,7 +44,7 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
         ExtensionPointCacheKey.create("WhiteSpaceFormattingStrategy", LanguageOneToOne.build());
 
     @Nullable
-    static WhiteSpaceFormattingStrategy forLanguage(@Nonnull Language language) {
+    static WhiteSpaceFormattingStrategy forLanguage(Language language) {
         return Application.get().getExtensionPoint(WhiteSpaceFormattingStrategy.class).getOrBuildCache(KEY).get(language);
     }
 
@@ -60,7 +59,7 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
      * or equal to the given <code>'end'</code> parameter if all target sub-sequence symbols
      * can be treated as white spaces
      */
-    int check(@Nonnull CharSequence text, int start, int end);
+    int check(CharSequence text, int start, int end);
 
     /**
      * Allows to answer if given node should be treated as white space node.
@@ -68,7 +67,7 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
      * @param node node to check
      * @return <code>true</code> if given node should be treated as white space; <code>false</code> otherwise
      */
-    boolean containsWhitespacesOnly(@Nonnull ASTNode node);
+    boolean containsWhitespacesOnly(ASTNode node);
 
     /**
      * @return <code>true</code> if default white space strategy used by formatter should be replaced by the current one;
@@ -94,10 +93,10 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
      * @param nodeAfter         the AST node following the whitespace, if known
      * @return symbols to use for replacing <code>[startOffset; endOffset)</code> sub-sequence of the given text
      */
-    @Nonnull
+    
     CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
-        @Nonnull CharSequence text,
+        CharSequence whiteSpaceText,
+        CharSequence text,
         int startOffset,
         int endOffset,
         CodeStyleSettings codeStyleSettings,
@@ -120,8 +119,8 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
      * @return symbols to use for replacing <code>[startOffset; endOffset)</code> sub-sequence of the given text
      */
     CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
-        @Nonnull PsiElement startElement,
+        CharSequence whiteSpaceText,
+        PsiElement startElement,
         int startOffset,
         int endOffset,
         CodeStyleSettings codeStyleSettings
@@ -137,5 +136,5 @@ public interface WhiteSpaceFormattingStrategy extends LanguageExtension {
      * <code>false</code> as an indicator that given white space element has not been inserted during the
      * current method call
      */
-    boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement);
+    boolean addWhitespace(ASTNode treePrev, ASTNode whiteSpaceElement);
 }

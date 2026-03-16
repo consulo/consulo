@@ -1,8 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.concurrent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.management.ThreadInfo;
 
@@ -14,7 +13,7 @@ public class ThreadDump {
   private final StackTraceElement[] myEdtStack;
   private final ThreadInfo[] myThreadInfos;
 
-  ThreadDump(@Nonnull String rawDump, @Nullable StackTraceElement[] edtStack, @Nonnull ThreadInfo[] threadInfos) {
+  ThreadDump(String rawDump, @Nullable StackTraceElement[] edtStack, ThreadInfo[] threadInfos) {
     myRawDump = rawDump;
     myEdtStack = edtStack;
     myThreadInfos = threadInfos;
@@ -23,7 +22,7 @@ public class ThreadDump {
   /**
    * @return full thread dump as a string
    */
-  @Nonnull
+  
   public String getRawDump() {
     return myRawDump;
   }
@@ -36,7 +35,7 @@ public class ThreadDump {
     return myEdtStack;
   }
 
-  @Nonnull
+  
   ThreadInfo[] getThreadInfos() {
     return myThreadInfos;
   }

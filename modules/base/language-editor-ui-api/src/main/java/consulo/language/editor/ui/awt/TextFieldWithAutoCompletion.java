@@ -32,8 +32,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -58,7 +57,7 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
 
 
   public TextFieldWithAutoCompletion(Project project,
-                                     @Nonnull TextFieldWithAutoCompletionListProvider<T> provider,
+                                     TextFieldWithAutoCompletionListProvider<T> provider,
                                      boolean showAutocompletionIsAvailableHint, @Nullable String text) {
     super(PlainTextLanguage.INSTANCE, project, text == null ? "" : text);
 
@@ -69,14 +68,14 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
   }
 
   public static TextFieldWithAutoCompletion<String> create(Project project,
-                                                           @Nonnull Collection<String> items,
+                                                           Collection<String> items,
                                                            boolean showAutocompletionIsAvailableHint,
                                                            @Nullable String text) {
     return create(project, items, null, showAutocompletionIsAvailableHint, text);
   }
 
   public static TextFieldWithAutoCompletion<String> create(Project project,
-                                                           @Nonnull Collection<String> items,
+                                                           Collection<String> items,
                                                            @Nullable Image icon,
                                                            boolean showAutocompletionIsAvailableHint,
                                                            @Nullable String text) {
@@ -84,11 +83,11 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
                                                    text);
   }
 
-  public void setVariants(@Nonnull Collection<T> variants) {
+  public void setVariants(Collection<T> variants) {
     myProvider.setItems(variants);
   }
 
-  public <T> void installProvider(@Nonnull TextFieldWithAutoCompletionListProvider<T> provider) {
+  public <T> void installProvider(TextFieldWithAutoCompletionListProvider<T> provider) {
     TextFieldWithAutoCompletionContributor.installCompletion(getDocument(), getProject(), provider, true);
   }
 
@@ -150,23 +149,23 @@ public class TextFieldWithAutoCompletion<T> extends LanguageTextField {
     }
 
     @Override
-    protected Image getIcon(@Nonnull String item) {
+    protected Image getIcon(String item) {
       return myIcon;
     }
 
-    @Nonnull
+    
     @Override
-    protected String getLookupString(@Nonnull String item) {
+    protected String getLookupString(String item) {
       return item;
     }
 
     @Override
-    protected String getTailText(@Nonnull String item) {
+    protected String getTailText(String item) {
       return null;
     }
 
     @Override
-    protected String getTypeText(@Nonnull String item) {
+    protected String getTypeText(String item) {
       return null;
     }
   }

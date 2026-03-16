@@ -39,8 +39,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -78,7 +77,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
 
   protected final Map<AbstractProperty, List<TestFrameworkPropertyListener>> myListeners = new HashMap<>();
 
-  public TestConsoleProperties(@Nonnull Storage storage, Project project, Executor executor) {
+  public TestConsoleProperties(Storage storage, Project project, Executor executor) {
     super(storage);
     myProject = project;
     myExecutor = executor;
@@ -88,7 +87,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return myProject;
   }
 
-  @Nonnull
+  
   public GlobalSearchScope getScope() {
     if (myScope == null) {
       myScope = initScope();
@@ -96,7 +95,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return myScope;
   }
 
-  @Nonnull
+  
   protected GlobalSearchScope initScope() {
     RunProfile configuration = getConfiguration();
     if (!(configuration instanceof ModuleRunProfile)) {
@@ -115,7 +114,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return scope;
   }
 
-  public <T> void addListener(@Nonnull AbstractProperty<T> property, @Nonnull TestFrameworkPropertyListener<T> listener) {
+  public <T> void addListener(AbstractProperty<T> property, TestFrameworkPropertyListener<T> listener) {
     List<TestFrameworkPropertyListener> listeners = myListeners.get(property);
     if (listeners == null) {
       myListeners.put(property, (listeners = new ArrayList<>()));
@@ -123,12 +122,12 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     listeners.add(listener);
   }
 
-  public <T> void addListenerAndSendValue(@Nonnull AbstractProperty<T> property, @Nonnull TestFrameworkPropertyListener<T> listener) {
+  public <T> void addListenerAndSendValue(AbstractProperty<T> property, TestFrameworkPropertyListener<T> listener) {
     addListener(property, listener);
     listener.onChanged(property.get(this));
   }
 
-  public <T> void removeListener(@Nonnull AbstractProperty<T> property, @Nonnull TestFrameworkPropertyListener listener) {
+  public <T> void removeListener(AbstractProperty<T> property, TestFrameworkPropertyListener listener) {
     List<TestFrameworkPropertyListener> listeners = myListeners.get(property);
     if (listeners != null) {
       listeners.remove(listener);
@@ -149,7 +148,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
   }
 
   @Override
-  protected <T> void onPropertyChanged(@Nonnull AbstractProperty<T> property, T value) {
+  protected <T> void onPropertyChanged(AbstractProperty<T> property, T value) {
     List<TestFrameworkPropertyListener> listeners = myListeners.get(property);
     if (listeners != null) {
       for (Object o : listeners.toArray()) {
@@ -206,13 +205,13 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return null;
   }
 
-  @Nonnull
+  
   protected ToggleBooleanProperty createIncludeNonStartedInRerun(TestConsoleProperties target) {
     LocalizeValue text = ExecutionLocalize.junitRuningInfoIncludeNonStartedInRerunFailedActionName();
     return new DumbAwareToggleBooleanProperty(text, LocalizeValue.empty(), null, target, INCLUDE_NON_STARTED_IN_RERUN_FAILED);
   }
 
-  @Nonnull
+  
   protected ToggleBooleanProperty createHideSuccessfulConfig(TestConsoleProperties target) {
     LocalizeValue text = ExecutionLocalize.junitRuningInfoHideSuccessfulConfigActionName();
     setIfUndefined(HIDE_SUCCESSFUL_CONFIG, true);
@@ -224,7 +223,7 @@ public abstract class TestConsoleProperties extends StoringPropertyContainer imp
     return TreeSelectionModel.SINGLE_TREE_SELECTION;
   }
 
-  @Nonnull
+  
   public ExecutionTarget getExecutionTarget() {
     return DefaultExecutionTarget.INSTANCE;
   }

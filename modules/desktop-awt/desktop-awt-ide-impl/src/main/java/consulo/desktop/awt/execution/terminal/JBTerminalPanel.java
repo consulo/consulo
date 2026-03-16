@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,9 +87,9 @@ public class JBTerminalPanel extends TerminalPanel implements FocusListener, Ter
     private List<AnAction> myActionsToSkip;
 
     public JBTerminalPanel(
-        @Nonnull JBTerminalSystemSettingsProvider settingsProvider,
-        @Nonnull TerminalTextBuffer backBuffer,
-        @Nonnull StyleState styleState
+        JBTerminalSystemSettingsProvider settingsProvider,
+        TerminalTextBuffer backBuffer,
+        StyleState styleState
     ) {
         super(settingsProvider, backBuffer, styleState);
 

@@ -24,8 +24,7 @@ import consulo.ui.CheckBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,8 +35,8 @@ import java.awt.*;
 public abstract class RenameWithOptionalReferencesDialog extends RenameDialog {
   private CheckBox myCbSearchForReferences;
 
-  public RenameWithOptionalReferencesDialog(@Nonnull Project project,
-                                            @Nonnull PsiElement psiElement,
+  public RenameWithOptionalReferencesDialog(Project project,
+                                            PsiElement psiElement,
                                             @Nullable PsiElement nameSuggestionContext,
                                             Editor editor) {
     super(project, psiElement, nameSuggestionContext, editor);

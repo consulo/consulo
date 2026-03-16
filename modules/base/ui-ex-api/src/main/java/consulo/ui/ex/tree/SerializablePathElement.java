@@ -1,7 +1,6 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ui.ex.tree;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A pair of ID and type used to serialize tree states
@@ -10,7 +9,7 @@ import jakarta.annotation.Nonnull;
  * @param type the string representing the type of a tree node
  */
 public record SerializablePathElement(
-    @Nonnull String id,
-    @Nonnull String type
+    String id,
+    String type
 ) {
 }

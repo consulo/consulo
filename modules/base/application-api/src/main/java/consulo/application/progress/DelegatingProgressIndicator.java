@@ -18,7 +18,6 @@ package consulo.application.progress;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class DelegatingProgressIndicator implements WrappedProgressIndicator, StandardProgressIndicator {
   private final ProgressIndicator myIndicator;
 
-  public DelegatingProgressIndicator(@Nonnull ProgressIndicator indicator) {
+  public DelegatingProgressIndicator(ProgressIndicator indicator) {
     myIndicator = indicator;
   }
 
@@ -117,7 +116,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
   }
 
   @Override
-  @Nonnull
+  
   public ModalityState getModalityState() {
     return myIndicator.getModalityState();
   }
@@ -146,7 +145,7 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
     return myIndicator;
   }
 
-  @Nonnull
+  
   @Override
   public ProgressIndicator getOriginalProgressIndicator() {
     return myIndicator;

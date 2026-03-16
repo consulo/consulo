@@ -17,12 +17,11 @@ package consulo.application.impl.internal.util;
 
 import consulo.application.internal.util.CachedValueEx;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
  * @since 2025-06-15
  */
 public interface ProjectCachedValueEx<T> extends CachedValueEx<T> {
-    public abstract boolean isFromMyProject(@Nonnull Project project);
+    public abstract boolean isFromMyProject(Project project);
 }

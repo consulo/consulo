@@ -2,8 +2,7 @@
 package consulo.process;
 
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a stream (stdout/stderr/system) output type. It can be a base output type or a colored output type.
@@ -50,17 +49,17 @@ public class ProcessOutputType extends Key<Object> {
 
   private final ProcessOutputType myStreamType;
 
-  public ProcessOutputType(@Nonnull String name, @Nonnull ProcessOutputType streamType) {
+  public ProcessOutputType(String name, ProcessOutputType streamType) {
     super(name);
     myStreamType = streamType.getBaseOutputType();
   }
 
-  private ProcessOutputType(@Nonnull String name) {
+  private ProcessOutputType(String name) {
     super(name);
     myStreamType = null;
   }
 
-  @Nonnull
+  
   public ProcessOutputType getBaseOutputType() {
     return myStreamType != null ? myStreamType : this;
   }
@@ -73,21 +72,21 @@ public class ProcessOutputType extends Key<Object> {
     return getBaseOutputType() == STDERR;
   }
 
-  public static boolean isStderr(@Nonnull Key<?> key) {
+  public static boolean isStderr(Key<?> key) {
     return key instanceof ProcessOutputType && ((ProcessOutputType)key).isStderr();
   }
 
-  public static boolean isStdout(@Nonnull Key<?> key) {
+  public static boolean isStdout(Key<?> key) {
     return key instanceof ProcessOutputType && ((ProcessOutputType)key).isStdout();
   }
 
-  @Nonnull
-  public static String getKeyNameForLogging(@Nonnull Key<?> key) {
+  
+  public static String getKeyNameForLogging(Key<?> key) {
     return key.toString().replace("\u001B", "ESC");
   }
 
   @Nullable
-  public static ProcessOutputType tryCast(@Nonnull Key<?> key) {
+  public static ProcessOutputType tryCast(Key<?> key) {
     return key instanceof ProcessOutputType ? (ProcessOutputType)key : null;
   }
 }

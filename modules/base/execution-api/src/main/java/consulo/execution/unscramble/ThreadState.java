@@ -15,9 +15,8 @@
  */
 package consulo.execution.unscramble;
 
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -78,7 +77,7 @@ public class ThreadState {
     myJavaThreadState = javaThreadState;
   }
 
-  public void setThreadStateDetail(@NonNls String threadStateDetail) {
+  public void setThreadStateDetail(String threadStateDetail) {
     myThreadStateDetail = threadStateDetail;
   }
 

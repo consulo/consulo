@@ -21,8 +21,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.SearchScope;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -32,12 +31,12 @@ public abstract class ResolveScopeEnlarger {
   public static final ExtensionPointName<ResolveScopeEnlarger> EP_NAME = ExtensionPointName.create(ResolveScopeEnlarger.class);
 
   @Nullable
-  public SearchScope getAdditionalResolveScope(@Nonnull VirtualFile file, Project project) {
+  public SearchScope getAdditionalResolveScope(VirtualFile file, Project project) {
     return null;
   }
 
   @Nullable
-  public SearchScope getAdditionalUseScope(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public SearchScope getAdditionalUseScope(VirtualFile file, Project project) {
     return null;
   }
 }

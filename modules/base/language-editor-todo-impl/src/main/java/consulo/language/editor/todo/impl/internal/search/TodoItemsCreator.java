@@ -8,7 +8,6 @@ import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternOccurrence;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.TodoPattern;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author irengrig
@@ -27,8 +26,8 @@ public class TodoItemsCreator {
     return new TodoItemImpl(occurrence.getFile(), occurrenceRange.getStartOffset(), occurrenceRange.getEndOffset(), mapPattern(occurrence.getPattern()), occurrence.getAdditionalTextRanges());
   }
 
-  @Nonnull
-  private TodoPattern mapPattern(@Nonnull IndexPattern pattern) {
+  
+  private TodoPattern mapPattern(IndexPattern pattern) {
     for (TodoPattern todoPattern : myTodoPatterns) {
       if (todoPattern.getIndexPattern() == pattern) {
         return todoPattern;

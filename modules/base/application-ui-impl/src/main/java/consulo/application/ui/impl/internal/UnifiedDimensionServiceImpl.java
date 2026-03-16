@@ -33,8 +33,7 @@ import consulo.ui.Size2D;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -62,14 +61,14 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   private static final String ATTRIBUTE_WIDTH = "width";
   private static final String ATTRIBUTE_HEIGHT = "height";
 
-  @Nonnull
+  
   protected static WindowStateService getWindowStateService(@Nullable Project project) {
     return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
   }
 
   @Override
   @Nullable
-  public synchronized Point2D getLocation(@Nonnull String key, Project project) {
+  public synchronized Point2D getLocation(String key, Project project) {
     Point2D point = project == null ? null : ProjectWindowStateService.getInstance(project).getLocation(key);
     if (point != null) return point;
 
@@ -85,12 +84,12 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
     return point;
   }
 
-  protected boolean isOutVisibleScreenArea(@Nonnull Point2D point2D) {
+  protected boolean isOutVisibleScreenArea(Point2D point2D) {
     return false;
   }
 
   @Override
-  public synchronized void setLocation(@Nonnull String key, Point2D point, Project project) {
+  public synchronized void setLocation(String key, Point2D point, Project project) {
     getWindowStateService(project).putLocation(key, point);
     Pair<String, Float> pair = resolveScale(key, project);
     if (point != null) {
@@ -106,7 +105,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
 
   @Override
   @Nullable
-  public synchronized Size2D getSize(@Nonnull String key, Project project) {
+  public synchronized Size2D getSize(String key, Project project) {
     Size2D size = project == null ? null : ProjectWindowStateService.getInstance(project).getSize(key);
     if (size != null) return size;
 
@@ -120,7 +119,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   }
 
   @Override
-  public synchronized void setSize(@Nonnull String key, Size2D size, Project project) {
+  public synchronized void setSize(String key, Size2D size, Project project) {
     getWindowStateService(project).putSize(key, size);
     Pair<String, Float> pair = resolveScale(key, project);
     if (size != null) {
@@ -153,7 +152,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * key is the HiDPI-aware key,
    * scale is the HiDPI-aware factor to transform size metrics.
    */
-  @Nonnull
+  
   protected Pair<String, Float> resolveScale(String key, @Nullable Project project) {
     return Pair.create(key, 1f);
   }
@@ -166,7 +165,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    */
   @Override
   @Nullable
-  public synchronized Size2D getSize(@Nonnull String key) {
+  public synchronized Size2D getSize(String key) {
     return getSize(key, guessProject());
   }
 
@@ -192,7 +191,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Override
-  public synchronized void setSize(@Nonnull String key, Size2D size) {
+  public synchronized void setSize(String key, Size2D size) {
     setSize(key, size, guessProject());
   }
 
@@ -234,7 +233,7 @@ public class UnifiedDimensionServiceImpl extends SimpleModificationTracker imple
   }
 
   @Override
-  public void loadState(@Nonnull Element element) {
+  public void loadState(Element element) {
     myKey2Location.clear();
     myKey2Size.clear();
     myKey2ExtendedState.clear();

@@ -17,9 +17,7 @@ package consulo.fileEditor.structureView.tree;
 
 import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorBundle;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 
 /**
@@ -39,7 +37,7 @@ public interface Sorter extends TreeAction {
 
   boolean isVisible();
 
-  @NonNls
+  
   String ALPHA_SORTER_ID = "ALPHA_COMPARATOR";
 
   /**
@@ -68,13 +66,13 @@ public interface Sorter extends TreeAction {
     }
 
     @Override
-    @Nonnull
+    
     public ActionPresentation getPresentation() {
       return new ActionPresentationData(FileEditorBundle.message("action.sort.alphabetically"), FileEditorBundle.message("action.sort.alphabetically"), AllIcons.ObjectBrowser.Sorted);
     }
 
     @Override
-    @Nonnull
+    
     public String getName() {
       return ALPHA_SORTER_ID;
     }

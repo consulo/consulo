@@ -20,8 +20,7 @@ import consulo.configurable.Configurable;
 import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.project.Project;
 import consulo.project.ProjectPropertiesComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
   }
 
   @Override
-  public Configurable get(@Nonnull Configurable[] configurables) {
+  public Configurable get(Configurable[] configurables) {
     return findLastSavedConfigurable(configurables, myPropertiesComponent);
   }
 
@@ -94,7 +93,7 @@ public class DefaultConfigurablePreselectStrategy implements ConfigurablePresele
   }
 
   @Override
-  public void save(@Nonnull Configurable configurable) {
+  public void save(Configurable configurable) {
     myPropertiesComponent.setValue(LAST_SELECTED_CONFIGURABLE, configurable.getId());
   }
 }

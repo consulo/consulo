@@ -27,8 +27,7 @@ import consulo.language.editor.internal.EnterHandlerHelper;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -48,7 +47,7 @@ public interface EnterHandlerDelegate {
      */
     @Nullable
     @UsedInPlugin
-    static Language getContextLanguage(@Nonnull DataContext dataContext) {
+    static Language getContextLanguage(DataContext dataContext) {
         return EnterHandlerHelper.getContextLanguage(dataContext);
     }
 
@@ -70,11 +69,11 @@ public interface EnterHandlerDelegate {
      * @return One of <code>{@link Result} values.</code>
      */
     Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffset,
-        @Nonnull SimpleReference<Integer> caretAdvance,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffset,
+        SimpleReference<Integer> caretAdvance,
+        DataContext dataContext,
         @Nullable EditorActionHandler originalHandler
     );
 
@@ -95,5 +94,5 @@ public interface EnterHandlerDelegate {
      * @see DataContext
      * @see PsiDocumentManager
      */
-    Result postProcessEnter(@Nonnull PsiFile file, @Nonnull Editor editor, @Nonnull DataContext dataContext);
+    Result postProcessEnter(PsiFile file, Editor editor, DataContext dataContext);
 }

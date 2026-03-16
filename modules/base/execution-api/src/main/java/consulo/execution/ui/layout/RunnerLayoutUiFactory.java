@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RunnerLayoutUiFactory {
@@ -27,6 +26,6 @@ public interface RunnerLayoutUiFactory {
     return project.getInstance(RunnerLayoutUiFactory.class);
   }
 
-  @Nonnull
-  RunnerLayoutUi create(@Nonnull String runnerId, @Nonnull String runnerTitle, @Nonnull String sessionName, @Nonnull Disposable parent);
+  
+  RunnerLayoutUi create(String runnerId, String runnerTitle, String sessionName, Disposable parent);
 }

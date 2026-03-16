@@ -17,7 +17,6 @@ package consulo.module.content.scope;
 
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,8 +29,8 @@ public class ModuleSearchScopes {
    * @param module the module to get the scope.
    * @return scope including sources and tests, excluding libraries and dependencies.
    */
-  @Nonnull
-  public static ModuleAwareSearchScope moduleScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleScope();
   }
 
@@ -42,13 +41,13 @@ public class ModuleSearchScopes {
    * @param includeTests include tests or not
    * @return scope including sources and tests(if set includeTests), excluding libraries and dependencies.
    */
-  @Nonnull
-  public static ModuleAwareSearchScope moduleScope(@Nonnull Module module, boolean includeTests) {
+  
+  public static ModuleAwareSearchScope moduleScope(Module module, boolean includeTests) {
     return ModuleScopeProvider.getInstance(module).getModuleScope(includeTests);
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleContentScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleContentScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleContentScope();
   }
 
@@ -58,8 +57,8 @@ public class ModuleSearchScopes {
    * @param module the module to get the scope.
    * @return scope including sources, tests, and libraries, excluding dependencies.
    */
-  @Nonnull
-  public static ModuleAwareSearchScope moduleWithLibrariesScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleWithLibrariesScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleWithLibrariesScope();
   }
 
@@ -69,38 +68,38 @@ public class ModuleSearchScopes {
    * @param module the module to get the scope.
    * @return scope including sources, tests, and dependencies, excluding libraries.
    */
-  @Nonnull
-  public static ModuleAwareSearchScope moduleWithDependenciesScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleWithDependenciesScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesScope();
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleRuntimeScope(@Nonnull Module module, boolean includeTests) {
+  
+  public static ModuleAwareSearchScope moduleRuntimeScope(Module module, boolean includeTests) {
     return ModuleScopeProvider.getInstance(module).getModuleRuntimeScope(includeTests);
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleWithDependenciesAndLibrariesScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleWithDependenciesAndLibrariesScope(Module module) {
     return moduleWithDependenciesAndLibrariesScope(module, true);
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleWithDependenciesAndLibrariesScope(@Nonnull Module module, boolean includeTests) {
+  
+  public static ModuleAwareSearchScope moduleWithDependenciesAndLibrariesScope(Module module, boolean includeTests) {
     return ModuleScopeProvider.getInstance(module).getModuleWithDependenciesAndLibrariesScope(includeTests);
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleWithDependentsScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleWithDependentsScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleWithDependentsScope();
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleTestsWithDependentsScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleTestsWithDependentsScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleTestsWithDependentsScope();
   }
 
-  @Nonnull
-  public static ModuleAwareSearchScope moduleContentWithDependenciesScope(@Nonnull Module module) {
+  
+  public static ModuleAwareSearchScope moduleContentWithDependenciesScope(Module module) {
     return ModuleScopeProvider.getInstance(module).getModuleContentWithDependenciesScope();
   }
 

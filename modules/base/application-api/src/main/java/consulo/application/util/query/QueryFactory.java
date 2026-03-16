@@ -18,7 +18,6 @@ package consulo.application.util.query;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 
@@ -28,23 +27,23 @@ import java.util.function.Function;
 public class QueryFactory<Result, Parameters> {
   private final List<QueryExecutor<Result, Parameters>> myExecutors = Lists.newLockFreeCopyOnWriteList();
 
-  public void registerExecutor(@Nonnull QueryExecutor<Result, Parameters> executor) {
+  public void registerExecutor(QueryExecutor<Result, Parameters> executor) {
     myExecutors.add(executor);
   }
 
-  public void unregisterExecutor(@Nonnull QueryExecutor<Result, Parameters> executor) {
+  public void unregisterExecutor(QueryExecutor<Result, Parameters> executor) {
     myExecutors.remove(executor);
   }
 
   /**
    * @return query to perform the search. @param parameters of the search
    */
-  @Nonnull
-  public final Query<Result> createQuery(@Nonnull Parameters parameters) {
+  
+  public final Query<Result> createQuery(Parameters parameters) {
     return new ExecutorsQuery<>(parameters, getExecutors());
   }
 
-  @Nonnull
+  
   protected List<? extends QueryExecutor<Result, Parameters>> getExecutors() {
     return myExecutors;
   }
@@ -57,7 +56,7 @@ public class QueryFactory<Result, Parameters> {
    * @param parameters of the search
    * @return query to perform the search. Obtained results are automatically filtered wrt. equals() relation.
    */
-  public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters) {
+  public final Query<Result> createUniqueResultsQuery(Parameters parameters) {
     return new UniqueResultsQuery<Result, Result>(createQuery(parameters));
   }
 
@@ -66,7 +65,7 @@ public class QueryFactory<Result, Parameters> {
    * @param hashingStrategy strategy to factor results
    * @return query to perform the search. Obtained results are automatically filtered wrt. equals() relation.
    */
-  public final Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters, @Nonnull HashingStrategy<Result> hashingStrategy) {
+  public final Query<Result> createUniqueResultsQuery(Parameters parameters, HashingStrategy<Result> hashingStrategy) {
     return new UniqueResultsQuery<>(createQuery(parameters), hashingStrategy);
   }
 
@@ -77,7 +76,7 @@ public class QueryFactory<Result, Parameters> {
    * @return query to perform the search. Obtained results are mapped to whatever objects that are automatically filtered wrt. equals()
    * relation. Storing mapped objects instead of original elements may be wise wrt to memory consumption.
    */
-  public final <T> Query<Result> createUniqueResultsQuery(@Nonnull Parameters parameters, @Nonnull HashingStrategy<T> hashingStrategy, @Nonnull Function<Result, T> mapper) {
+  public final <T> Query<Result> createUniqueResultsQuery(Parameters parameters, HashingStrategy<T> hashingStrategy, Function<Result, T> mapper) {
     return new UniqueResultsQuery<>(createQuery(parameters), hashingStrategy, mapper);
   }
 }

@@ -24,7 +24,6 @@ import consulo.task.Task;
 import consulo.task.localize.TaskLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -37,7 +36,7 @@ public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         LocalTask activeTask = getActiveTask(e);
         Project project = e.getRequiredData(Project.KEY);
         assert activeTask != null;
@@ -45,7 +44,7 @@ public class AnalyzeTaskStacktraceAction extends BaseTaskAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         if (event.getPresentation().isEnabled()) {
             Task activeTask = getActiveTask(event);

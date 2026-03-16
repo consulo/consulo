@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.template.impl.editorActions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class TemplateLineEndWithSelectionHandler extends TemplateLineStartEndHandler {
@@ -26,7 +25,7 @@ public class TemplateLineEndWithSelectionHandler extends TemplateLineStartEndHan
     super(false, true);
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_LINE_END_WITH_SELECTION;

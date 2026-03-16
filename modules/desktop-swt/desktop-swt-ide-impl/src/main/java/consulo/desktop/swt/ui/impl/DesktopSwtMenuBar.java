@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,9 +40,9 @@ public class DesktopSwtMenuBar extends SWTComponentDelegate<Menu> implements Men
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public MenuBar add(@Nonnull MenuItem menuItem) {
+  public MenuBar add(MenuItem menuItem) {
     return this;
   }
 }

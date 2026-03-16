@@ -15,7 +15,6 @@
  */
 package consulo.execution.ui.console;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -28,7 +27,7 @@ public abstract class TextConsoleBuilder {
 
   public abstract void setViewer(boolean isViewer);
 
-  public abstract void setState(@Nonnull ConsoleState state);
+  public abstract void setState(ConsoleState state);
 
   public abstract void setUsePredefinedMessageFilter(boolean usePredefinedMessageFilter);
 

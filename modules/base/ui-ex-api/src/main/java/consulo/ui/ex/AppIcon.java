@@ -22,11 +22,10 @@ import consulo.component.ComponentManager;
 import consulo.ui.TaskBar;
 import consulo.ui.Window;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AppIcon {
-  @Nonnull
+  
   public static AppIcon getInstance() {
     return Application.get().getInstance(AppIcon.class);
   }

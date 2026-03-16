@@ -32,25 +32,23 @@ import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoManager;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
 
 public abstract class UndoRedoAction extends DumbAwareAction {
-    public UndoRedoAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nonnull Image icon) {
+    public UndoRedoAction(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FileEditor editor = e.getData(FileEditor.KEY);
         UndoManager undoManager = getUndoManager(editor, e.getDataContext());
         perform(editor, undoManager);
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return Coroutine.first(UIAction.apply(o -> {
             Presentation presentation = e.getPresentation();
             FileEditor editor = e.getData(FileEditor.KEY);

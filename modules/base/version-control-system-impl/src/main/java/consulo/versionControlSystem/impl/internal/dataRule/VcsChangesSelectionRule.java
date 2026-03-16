@@ -20,20 +20,19 @@ import consulo.util.collection.ArrayUtil;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesSelection;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 public final class VcsChangesSelectionRule {
   @Nullable
-  public static ChangesSelection getData(@Nonnull DataSnapshot dataProvider) {
+  public static ChangesSelection getData(DataSnapshot dataProvider) {
     return getChangesSelection(dataProvider);
   }
 
   @Nullable
-  public static ChangesSelection getChangesSelection(@Nonnull DataSnapshot dataProvider) {
+  public static ChangesSelection getChangesSelection(DataSnapshot dataProvider) {
     Change currentChange = dataProvider.get(VcsDataKeys.CURRENT_CHANGE);
 
     Change[] selectedChanges = dataProvider.get(VcsDataKeys.SELECTED_CHANGES);

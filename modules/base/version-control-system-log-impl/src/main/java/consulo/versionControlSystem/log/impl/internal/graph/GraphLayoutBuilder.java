@@ -22,7 +22,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.LinearGraphUtils;
 import consulo.versionControlSystem.log.impl.internal.util.DfsUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,8 +31,8 @@ public class GraphLayoutBuilder {
 
   private static final Logger LOG = Logger.getInstance(GraphLayoutBuilder.class);
 
-  @Nonnull
-  public static GraphLayoutImpl build(@Nonnull LinearGraph graph, @Nonnull Comparator<Integer> headNodeIndexComparator) {
+  
+  public static GraphLayoutImpl build(LinearGraph graph, Comparator<Integer> headNodeIndexComparator) {
     List<Integer> heads = new ArrayList<>();
     for (int i = 0; i < graph.nodesCount(); i++) {
       if (LinearGraphUtils.getUpNodes(graph, i).size() == 0) {
@@ -54,22 +53,22 @@ public class GraphLayoutBuilder {
     return builder.build();
   }
 
-  @Nonnull
+  
   private final LinearGraph myGraph;
-  @Nonnull
+  
   private final int[] myLayoutIndex;
 
-  @Nonnull
+  
   private final List<Integer> myHeadNodeIndex;
-  @Nonnull
+  
   private final int[] myStartLayoutIndexForHead;
 
-  @Nonnull
+  
   private final DfsUtil myDfsUtil = new DfsUtil();
 
   private int currentLayoutIndex = 1;
 
-  private GraphLayoutBuilder(@Nonnull LinearGraph graph, @Nonnull List<Integer> headNodeIndex) {
+  private GraphLayoutBuilder(LinearGraph graph, List<Integer> headNodeIndex) {
     myGraph = graph;
     myLayoutIndex = new int[graph.nodesCount()];
 
@@ -101,7 +100,7 @@ public class GraphLayoutBuilder {
     });
   }
 
-  @Nonnull
+  
   private GraphLayoutImpl build() {
     for (int i = 0; i < myHeadNodeIndex.size(); i++) {
       int headNodeIndex = myHeadNodeIndex.get(i);

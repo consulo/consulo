@@ -32,8 +32,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "lookup")
 public class LookupTypedHandler extends TypedActionHandlerBase implements ExtensionTypedActionHandler {
@@ -41,7 +40,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
 
     @Override
     @RequiredUIAccess
-    public void execute(@Nonnull Editor originalEditor, char charTyped, @Nonnull DataContext dataContext) {
+    public void execute(Editor originalEditor, char charTyped, DataContext dataContext) {
         Project project = dataContext.getData(Project.KEY);
         PsiFile file = project == null ? null : PsiUtilBase.getPsiFileInEditor(originalEditor, project);
 
@@ -173,8 +172,7 @@ public class LookupTypedHandler extends TypedActionHandlerBase implements Extens
         return filtersDecision != null ? filtersDecision : CharFilter.Result.HIDE_LOOKUP;
     }
 
-    @Nullable
-    private static CharFilter.Result getFilterDecision(char charTyped, LookupEx lookup) {
+    private static CharFilter.@Nullable Result getFilterDecision(char charTyped, LookupEx lookup) {
         lookup.checkValid();
         LookupElement item = lookup.getCurrentItem();
         int prefixLength = item == null ? lookup.getAdditionalPrefix().length() : lookup.itemPattern(item).length();

@@ -17,8 +17,7 @@ package consulo.language.pattern;
 
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -26,11 +25,11 @@ import jakarta.annotation.Nullable;
 public abstract class InitialPatternCondition<T> {
   private final Class<T> myAcceptedClass;
 
-  protected InitialPatternCondition(@Nonnull Class<T> aAcceptedClass) {
+  protected InitialPatternCondition(Class<T> aAcceptedClass) {
     myAcceptedClass = aAcceptedClass;
   }
 
-  @Nonnull
+  
   public Class<T> getAcceptedClass() {
     return myAcceptedClass;
   }
@@ -46,7 +45,7 @@ public abstract class InitialPatternCondition<T> {
     return builder.toString();
   }
 
-  public void append(@Nonnull StringBuilder builder, String indent) {
+  public void append(StringBuilder builder, String indent) {
     builder.append("instanceOf(").append(myAcceptedClass.getSimpleName()).append(")");
   }
 }

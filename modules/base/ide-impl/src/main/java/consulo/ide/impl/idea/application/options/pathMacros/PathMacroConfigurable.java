@@ -24,8 +24,7 @@ import consulo.project.ProjectManager;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.internal.ProjectEx;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -67,7 +66,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
     myEditor = null;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ApplicationLocalize.titlePathVariables();
@@ -86,7 +85,7 @@ public class PathMacroConfigurable implements SearchableConfigurable, Configurab
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return ID;
   }

@@ -4,7 +4,6 @@ package consulo.execution.debug.impl.internal.stream.trace;
 import consulo.execution.debug.stream.trace.BidirectionalAwareState;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,10 +18,10 @@ final class IntermediateStateImpl extends StateBase implements BidirectionalAwar
     private final StreamCall myNextCall;
     private final StreamCall myPrevCall;
 
-    IntermediateStateImpl(@Nonnull List<TraceElement> elements,
-                          @Nonnull StreamCall prevCall, @Nonnull StreamCall nextCall,
-                          @Nonnull Map<TraceElement, List<TraceElement>> toPrevMapping,
-                          @Nonnull Map<TraceElement, List<TraceElement>> toNextMapping) {
+    IntermediateStateImpl(List<TraceElement> elements,
+                          StreamCall prevCall, StreamCall nextCall,
+                          Map<TraceElement, List<TraceElement>> toPrevMapping,
+                          Map<TraceElement, List<TraceElement>> toNextMapping) {
         super(elements);
         myToPrev = toPrevMapping;
         myToNext = toNextMapping;
@@ -32,22 +31,22 @@ final class IntermediateStateImpl extends StateBase implements BidirectionalAwar
     }
 
     @Override
-    public @Nonnull StreamCall getPrevCall() {
+    public StreamCall getPrevCall() {
         return myPrevCall;
     }
 
     @Override
-    public @Nonnull List<TraceElement> getPrevValues(@Nonnull TraceElement value) {
+    public List<TraceElement> getPrevValues(TraceElement value) {
         return myToPrev.getOrDefault(value, Collections.emptyList());
     }
 
     @Override
-    public @Nonnull StreamCall getNextCall() {
+    public StreamCall getNextCall() {
         return myNextCall;
     }
 
     @Override
-    public @Nonnull List<TraceElement> getNextValues(@Nonnull TraceElement value) {
+    public List<TraceElement> getNextValues(TraceElement value) {
         return myToNext.getOrDefault(value, Collections.emptyList());
     }
 }

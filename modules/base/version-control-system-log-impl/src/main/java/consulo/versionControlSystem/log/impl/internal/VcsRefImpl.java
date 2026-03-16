@@ -6,23 +6,22 @@ import consulo.versionControlSystem.log.VcsRefType;
 import consulo.util.interner.Interner;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author erokhins
  */
 public final class VcsRefImpl implements VcsRef {
   private static final Interner<String> ourNames = Interner.createStringInterner();
-  @Nonnull
+  
   private final Hash myCommitHash;
-  @Nonnull
+  
   private final String myName;
-  @Nonnull
+  
   private final VcsRefType myType;
-  @Nonnull
+  
   private final VirtualFile myRoot;
 
-  public VcsRefImpl(@Nonnull Hash commitHash, @Nonnull String name, @Nonnull VcsRefType type, @Nonnull VirtualFile root) {
+  public VcsRefImpl(Hash commitHash, String name, VcsRefType type, VirtualFile root) {
     myCommitHash = commitHash;
     myType = type;
     myRoot = root;
@@ -32,25 +31,25 @@ public final class VcsRefImpl implements VcsRef {
   }
 
   @Override
-  @Nonnull
+  
   public VcsRefType getType() {
     return myType;
   }
 
   @Override
-  @Nonnull
+  
   public Hash getCommitHash() {
     return myCommitHash;
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getRoot() {
     return myRoot;
   }

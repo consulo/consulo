@@ -15,8 +15,7 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Stands for an atomic settings element. The general idea is to allow third-party plugin developers to use platform
@@ -28,28 +27,28 @@ import jakarta.annotation.Nullable;
  */
 public class ArrangementSettingsToken implements Comparable<ArrangementSettingsToken> {
 
-  @Nonnull
+  
   protected String myId;
-  @Nonnull
+  
   protected String myRepresentationName;
 
-  public ArrangementSettingsToken(@Nonnull String id, @Nonnull String name) {
+  public ArrangementSettingsToken(String id, String name) {
     myId = id;
     myRepresentationName = name;
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
 
-  @Nonnull
+  
   public String getRepresentationValue() {
     return myRepresentationName;
   }
 
   @Override
-  public int compareTo(@Nonnull ArrangementSettingsToken that) {
+  public int compareTo(ArrangementSettingsToken that) {
     return myId.compareTo(that.myId);
   }
 

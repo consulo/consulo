@@ -30,8 +30,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,9 +108,9 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     private int myAvailableWidth = QUICK_DUMMY_WRAPPING;
 
     public SoftWrapApplianceManager(
-        @Nonnull SoftWrapsStorage storage,
-        @Nonnull CodeEditorBase editor,
-        @Nonnull SoftWrapPainter painter,
+        SoftWrapsStorage storage,
+        CodeEditorBase editor,
+        SoftWrapPainter painter,
         CachingSoftWrapDataMapper dataMapper
     ) {
         myStorage = storage;
@@ -154,7 +153,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         onRecalculationEnd();
     }
 
-    public void recalculate(@Nonnull List<? extends Segment> ranges) {
+    public void recalculate(List<? extends Segment> ranges) {
         if (myIsDirty) {
             return;
         }
@@ -173,7 +172,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         final int[] lastRecalculatedOffset = {0};
         SoftWrapAwareDocumentParsingListenerAdapter listener = new SoftWrapAwareDocumentParsingListenerAdapter() {
             @Override
-            public void onRecalculationEnd(@Nonnull IncrementalCacheUpdateEvent event) {
+            public void onRecalculationEnd(IncrementalCacheUpdateEvent event) {
                 lastRecalculatedOffset[0] = event.getActualEndOffset();
             }
         };
@@ -225,7 +224,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         }
     }
 
-    protected void recalculateSoftWraps(@Nonnull IncrementalCacheUpdateEvent event) {
+    protected void recalculateSoftWraps(IncrementalCacheUpdateEvent event) {
         if (myEditor.getDocument() instanceof DocumentImpl document && document.acceptsSlashR()) {
             LOG.error("Soft wrapping is not supported for documents with non-standard line endings. File: " + myEditor.getVirtualFile());
         }
@@ -276,7 +275,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         }
     }
 
-    protected void doRecalculateSoftWraps0(@Nonnull IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
+    protected void doRecalculateSoftWraps0(IncrementalCacheUpdateEvent event, int endOffsetUpperEstimate) {
         if (myVisibleAreaWidth == QUICK_DUMMY_WRAPPING) {
             doRecalculateSoftWrapsRoughly(event);
         }
@@ -785,7 +784,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         return registerSoftWrap(softWrapOffset, spaceSize, lineData);
     }
 
-    @Nonnull
+    
     private SoftWrapImpl registerSoftWrap(int offset, int spaceSize, LogicalLineData lineData) {
         assert !DocumentUtil.isInsideSurrogatePair(myEditor.getDocument(), offset);
         int indentInColumns = 0;
@@ -985,11 +984,11 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
      * @param listener listener to register
      * @return {@code true} if this collection changed as a result of the call; {@code false} otherwise
      */
-    public boolean addListener(@Nonnull SoftWrapAwareDocumentParsingListener listener) {
+    public boolean addListener(SoftWrapAwareDocumentParsingListener listener) {
         return myListeners.add(listener);
     }
 
-    public boolean removeListener(@Nonnull SoftWrapAwareDocumentParsingListener listener) {
+    public boolean removeListener(SoftWrapAwareDocumentParsingListener listener) {
         return myListeners.remove(listener);
     }
 
@@ -1027,12 +1026,12 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         myDocumentChangedEvent = null;
     }
 
-    public void setWidthProvider(@Nonnull VisibleAreaWidthProvider widthProvider) {
+    public void setWidthProvider(VisibleAreaWidthProvider widthProvider) {
         myWidthProvider = widthProvider;
         reset();
     }
 
-    @Nonnull
+    
     @Override
     public String dumpState() {
         return String.format(

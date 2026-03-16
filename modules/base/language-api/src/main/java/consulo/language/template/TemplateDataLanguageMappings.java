@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -34,12 +33,12 @@ import java.util.function.Predicate;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface TemplateDataLanguageMappings extends PerFileMappingsEx<Language> {
-  @Nonnull
-  public static TemplateDataLanguageMappings getInstance(@Nonnull Project project) {
+  
+  public static TemplateDataLanguageMappings getInstance(Project project) {
     return project.getInstance(TemplateDataLanguageMappings.class);
   }
 
-  @Nonnull
+  
   public static List<Language> getTemplateableLanguages() {
     return ContainerUtil.findAll(Language.getRegisteredLanguages(), new Predicate<>() {
       @Override

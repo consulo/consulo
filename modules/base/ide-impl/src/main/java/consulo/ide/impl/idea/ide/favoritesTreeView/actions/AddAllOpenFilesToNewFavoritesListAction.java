@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -38,7 +37,7 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         String newName = AddNewFavoritesListAction.doAddNewFavoritesList(e.getRequiredData(Project.KEY));
         if (newName != null) {
             new AddAllOpenFilesToFavorites(newName).actionPerformed(e);
@@ -46,7 +45,7 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabled(project != null && !AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
     }

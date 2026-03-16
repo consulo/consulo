@@ -36,8 +36,7 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -169,7 +168,7 @@ public class ActionToolbarButtonEngine {
         return ImageEffects.layered(icon, PlatformIconGroup.generalDropdown());
     }
 
-    protected void updateTextAndMnemonic(@Nonnull LocalizeValue localizeValue) {
+    protected void updateTextAndMnemonic(LocalizeValue localizeValue) {
         if (!myDisplayText) {
             myButton.setText("");
             myButton.setDisplayedMnemonicIndex(-1);

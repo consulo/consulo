@@ -26,7 +26,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author oleg
@@ -34,7 +33,7 @@ import jakarta.annotation.Nonnull;
 public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAware {
   private final Editor myEditor;
 
-  public ScrollToTheEndToolbarAction(@Nonnull Editor editor) {
+  public ScrollToTheEndToolbarAction(Editor editor) {
     super();
     myEditor = editor;
     LocalizeValue message = ActionLocalize.actionEditorconsolescrolltotheendText();
@@ -44,7 +43,7 @@ public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAwa
   }
 
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
+  public boolean isSelected(AnActionEvent e) {
     Document document = myEditor.getDocument();
       if (document.getLineCount() == 0) {
           return true;
@@ -59,7 +58,7 @@ public class ScrollToTheEndToolbarAction extends ToggleAction implements DumbAwa
   }
 
   @Override
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+  public void setSelected(AnActionEvent e, boolean state) {
     if (state) {
       EditorUtil.scrollToTheEnd(myEditor);
     }

@@ -15,8 +15,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,9 +34,9 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
     private RemoteServer<S> myLastSelectedServer;
     private D myDeploymentConfiguration;
 
-    public DeployToServerSettingsEditor(@Nonnull ServerType<S> type,
-                                        @Nonnull DeploymentConfigurator<D, S> deploymentConfigurator,
-                                        @Nonnull Project project) {
+    public DeployToServerSettingsEditor(ServerType<S> type,
+                                        DeploymentConfigurator<D, S> deploymentConfigurator,
+                                        Project project) {
 
         myDeploymentConfigurator = deploymentConfigurator;
         myProject = project;
@@ -51,7 +50,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
 
     protected abstract DeploymentSource getSelectedSource();
 
-    protected abstract void resetSelectedSourceFrom(@Nonnull DeployToServerRunConfiguration<S, D> configuration);
+    protected abstract void resetSelectedSourceFrom(DeployToServerRunConfiguration<S, D> configuration);
 
     protected final void updateDeploymentSettingsEditor() {
         RemoteServer<S> selectedServer = myServerCombo.getSelectedServer();
@@ -96,7 +95,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
     }
 
     @Override
-    protected void resetEditorFrom(@Nonnull DeployToServerRunConfiguration<S, D> configuration) {
+    protected void resetEditorFrom(DeployToServerRunConfiguration<S, D> configuration) {
         myServerCombo.selectServerInCombo(configuration.getServerName());
         resetSelectedSourceFrom(configuration);
 
@@ -109,7 +108,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
     }
 
     @Override
-    protected void applyEditorTo(@Nonnull DeployToServerRunConfiguration<S, D> configuration) throws ConfigurationException {
+    protected void applyEditorTo(DeployToServerRunConfiguration<S, D> configuration) throws ConfigurationException {
         updateDeploymentSettingsEditor();
 
         myServerCombo.validateAutoDetectedItem();
@@ -135,7 +134,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
     }
 
     @Override
-    protected @Nonnull JComponent createEditor() {
+    protected JComponent createEditor() {
         FormBuilder builder = FormBuilder.createFormBuilder()
             .addLabeledComponent(CloudBundle.message("label.text.server"), myServerCombo);
 
@@ -178,7 +177,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
         }
 
         @Override
-        protected void resetSelectedSourceFrom(@Nonnull DeployToServerRunConfiguration<S, D> configuration) {
+        protected void resetSelectedSourceFrom(DeployToServerRunConfiguration<S, D> configuration) {
             mySourceComboBox.setSelectedItem(configuration.getDeploymentSource());
         }
 
@@ -193,10 +192,10 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
 
         private final DeploymentSource myLockedSource;
 
-        public LockedSource(@Nonnull ServerType<S> type,
-                            @Nonnull DeploymentConfigurator<D, S> deploymentConfigurator,
-                            @Nonnull Project project,
-                            @Nonnull DeploymentSource lockedSource) {
+        public LockedSource(ServerType<S> type,
+                            DeploymentConfigurator<D, S> deploymentConfigurator,
+                            Project project,
+                            DeploymentSource lockedSource) {
             super(type, deploymentConfigurator, project);
             myLockedSource = lockedSource;
         }
@@ -207,7 +206,7 @@ public abstract class DeployToServerSettingsEditor<S extends ServerConfiguration
         }
 
         @Override
-        protected void resetSelectedSourceFrom(@Nonnull DeployToServerRunConfiguration<S, D> configuration) {
+        protected void resetSelectedSourceFrom(DeployToServerRunConfiguration<S, D> configuration) {
             assert configuration.getDeploymentSource() == myLockedSource;
         }
 

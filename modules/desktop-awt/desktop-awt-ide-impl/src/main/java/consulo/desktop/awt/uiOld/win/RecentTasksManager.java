@@ -20,7 +20,6 @@ import consulo.component.util.NativeFileLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,7 +36,7 @@ public class RecentTasksManager {
 
   private static AtomicInteger ourInitializeState = new AtomicInteger(NOT_INITIALIZED);
 
-  private static void init(@Nonnull Application application) {
+  private static void init(Application application) {
     if (ourInitializeState.compareAndSet(NOT_INITIALIZED, INITIALIZING)) {
       try {
         ContainerPathManager containerPathManager = ContainerPathManager.get();
@@ -56,7 +55,7 @@ public class RecentTasksManager {
     }
   }
 
-  public static void clear(@Nonnull Application application) {
+  public static void clear(Application application) {
     if (ourInitializeState.get() == INITIALIZED) {
       init(application);
 
@@ -69,7 +68,7 @@ public class RecentTasksManager {
    *
    * @param tasks
    */
-  public static void addTasks(@Nonnull Application application, String category, Task[] tasks) {
+  public static void addTasks(Application application, String category, Task[] tasks) {
     if (tasks.length == 0) return;
 
     init(application);
@@ -79,7 +78,7 @@ public class RecentTasksManager {
     }
   }
 
-  public static String getShortenPath(@Nonnull Application application, @Nonnull String path) {
+  public static String getShortenPath(Application application, String path) {
     init(application);
 
     if (ourInitializeState.get() == INITIALIZED) {

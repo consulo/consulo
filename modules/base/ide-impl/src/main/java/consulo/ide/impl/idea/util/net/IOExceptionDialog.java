@@ -24,8 +24,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
@@ -54,13 +53,13 @@ public class IOExceptionDialog extends DialogWrapper {
     return myErrorLabel;
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createLeftSideActions() {
     return new Action[] {
       new AbstractAction(CommonBundle.message("dialog.ioexception.proxy")) {
         @Override
-        public void actionPerformed(@Nonnull ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
           ShowSettingsUtil.getInstance().editConfigurable(ObjectUtil.tryCast(e.getSource(), JComponent.class), new HttpProxyConfigurable());
         }
       }

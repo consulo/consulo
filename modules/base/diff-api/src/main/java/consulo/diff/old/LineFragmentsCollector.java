@@ -18,8 +18,7 @@ package consulo.diff.old;
 import consulo.annotation.DeprecationInfo;
 import consulo.document.util.TextRange;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -32,7 +31,7 @@ class LineFragmentsCollector {
   private int myOffset1 = 0;
   private int myOffset2 = 0;
 
-  @Nonnull
+  
   private LineFragment addFragment(@Nullable TextDiffTypeEnum type, @Nullable DiffString text1, @Nullable DiffString text2) {
     int lines1 = countLines(text1);
     int lines2 = countLines(text2);
@@ -48,8 +47,8 @@ class LineFragmentsCollector {
     return lineFragment;
   }
 
-  @Nonnull
-  public LineFragment addDiffFragment(@Nonnull DiffFragmentOld fragment) {
+  
+  public LineFragment addDiffFragment(DiffFragmentOld fragment) {
     return addFragment(getType(fragment), fragment.getText1(), fragment.getText2());
   }
 
@@ -69,7 +68,7 @@ class LineFragmentsCollector {
   }
 
   @Nullable
-  static TextDiffTypeEnum getType(@Nonnull DiffFragmentOld fragment) {
+  static TextDiffTypeEnum getType(DiffFragmentOld fragment) {
     TextDiffTypeEnum type;
     if (fragment.getText1() == null) type = TextDiffTypeEnum.INSERT;
     else if (fragment.getText2() == null) type = TextDiffTypeEnum.DELETED;

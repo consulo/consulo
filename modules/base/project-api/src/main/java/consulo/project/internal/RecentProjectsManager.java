@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.project.ProjectGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.BitUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public interface RecentProjectsManager {
 
     public static final int DEFAULT_RECENT_PROJECTS_LIMIT = 25;
 
-    @Nonnull
+    
     public static RecentProjectsManager getInstance() {
         return Application.get().getInstance(RecentProjectsManager.class);
     }
@@ -45,7 +44,7 @@ public interface RecentProjectsManager {
 
     void setLastProjectCreationLocation(@Nullable String lastProjectLocation);
 
-    void updateProjectModuleExtensions(@Nonnull Project project);
+    void updateProjectModuleExtensions(Project project);
 
     void updateLastProjectPath();
 
@@ -53,13 +52,13 @@ public interface RecentProjectsManager {
 
     void removePath(@Nullable String path);
 
-    @Nonnull
+    
     @Deprecated
     default AnAction[] getRecentProjectsActions(boolean forMenu) {
         return getRecentProjectsActions(0);
     }
 
-    @Nonnull
+    
     @Deprecated
     default AnAction[] getRecentProjectsActions(boolean forMenu, boolean useGroups) {
         int flags = 0;
@@ -67,7 +66,7 @@ public interface RecentProjectsManager {
         return getRecentProjectsActions(flags);
     }
 
-    @Nonnull
+    
     default AnAction[] getRecentProjectsActions(@MagicConstant(flags = {
         RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU,
         RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU
@@ -75,7 +74,7 @@ public interface RecentProjectsManager {
         return AnAction.EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     List<ProjectGroup> getGroups();
 
     void addGroup(ProjectGroup group) ;

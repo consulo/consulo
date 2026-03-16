@@ -55,8 +55,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -155,7 +154,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         myAdjustBox.setEnabled(show);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.titleEditFileTemplate();
@@ -216,13 +215,13 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
 
         myNameField.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost(@Nonnull FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 onNameChanged();
             }
         });
         myExtensionField.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost(@Nonnull FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 onNameChanged();
             }
         });
@@ -459,15 +458,15 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
             myLexer = createDefaultLexer();
         }
 
-        @Nonnull
+        
         @Override
         public Lexer getHighlightingLexer() {
             return myLexer;
         }
 
         @Override
-        @Nonnull
-        public TextAttributesKey[] getTokenHighlights(@Nonnull IElementType tokenType) {
+        
+        public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
             if (tokenType == FileTemplateTokenType.MACRO || tokenType == FileTemplateTokenType.DIRECTIVE) {
                 return pack(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
             }
@@ -476,7 +475,7 @@ public class FileTemplateConfigurable implements Configurable, Configurable.NoSc
         }
     }
 
-    @Nonnull
+    
     @VisibleForTesting
     static Lexer createDefaultLexer() {
         return new MergingLexerAdapter(new FileTemplateTextLexer(), TokenSet.create(FileTemplateTokenType.TEXT));

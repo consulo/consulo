@@ -30,8 +30,7 @@ import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -42,12 +41,12 @@ import java.util.function.Predicate;
 public abstract class StubProcessingHelperBase {
   private static final Logger LOG = Logger.getInstance(StubProcessingHelperBase.class);
 
-  public <Psi extends PsiElement> boolean processStubsInFile(@Nonnull Project project,
-                                                             @Nonnull VirtualFile file,
-                                                             @Nonnull StubIdList value,
-                                                             @Nonnull Predicate<? super Psi> processor,
+  public <Psi extends PsiElement> boolean processStubsInFile(Project project,
+                                                             VirtualFile file,
+                                                             StubIdList value,
+                                                             Predicate<? super Psi> processor,
                                                              @Nullable ProjectAwareSearchScope scope,
-                                                             @Nonnull Class<Psi> requiredClass) {
+                                                             Class<Psi> requiredClass) {
     PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
     if (psiFile == null) {
       LOG.error("Stub index points to a file without PSI: " + file.getFileType() + ", used scope " + scope);
@@ -74,7 +73,7 @@ public abstract class StubProcessingHelperBase {
     return true;
   }
 
-  @Nonnull
+  
   private static List<StubbedSpine> getAllSpines(PsiFile psiFile) {
     if (!(psiFile instanceof PsiFileImpl) && psiFile instanceof PsiFileWithStubSupport psiFileWithStubSupport) {
       return Collections.singletonList(psiFileWithStubSupport.getStubbedSpine());
@@ -83,7 +82,7 @@ public abstract class StubProcessingHelperBase {
     return ContainerUtil.map(StubTreeBuilder.getStubbedRoots(psiFile.getViewProvider()), t -> ((PsiFileImpl)t.second).getStubbedSpine());
   }
 
-  private <Psi extends PsiElement> boolean checkType(@Nonnull Class<Psi> requiredClass, PsiFile psiFile, PsiElement psiElement) {
+  private <Psi extends PsiElement> boolean checkType(Class<Psi> requiredClass, PsiFile psiFile, PsiElement psiElement) {
     if (requiredClass.isInstance(psiElement)) return true;
 
     StubTree stubTree = ((PsiFileWithStubSupport)psiFile).getStubTree();
@@ -108,7 +107,7 @@ public abstract class StubProcessingHelperBase {
   }
 
   // e.g. DOM indices
-  private <Psi extends PsiElement> boolean handleNonPsiStubs(@Nonnull VirtualFile file, @Nonnull Predicate<? super Psi> processor, @Nonnull Class<Psi> requiredClass, @Nonnull PsiFile psiFile) {
+  private <Psi extends PsiElement> boolean handleNonPsiStubs(VirtualFile file, Predicate<? super Psi> processor, Class<Psi> requiredClass, PsiFile psiFile) {
     if (BinaryFileStubBuilder.forFileType(psiFile.getFileType()) == null) {
       LOG.error("unable to get stub builder for " + psiFile.getFileType() + ", " + StubTreeLoader.getFileViewProviderMismatchDiagnostics(psiFile.getViewProvider()));
       onInternalError(file);
@@ -141,7 +140,7 @@ public abstract class StubProcessingHelperBase {
     return processor.test((Psi)psiFile);
   }
 
-  private void inconsistencyDetected(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile) {
+  private void inconsistencyDetected(@Nullable ObjectStubTree stubTree, PsiFileWithStubSupport psiFile) {
     try {
       StubTextInconsistencyException.checkStubTextConsistency(psiFile);
       LOG.error(StubTreeLoader.getInstance().stubTreeAndIndexDoNotMatch(stubTree, psiFile, null));

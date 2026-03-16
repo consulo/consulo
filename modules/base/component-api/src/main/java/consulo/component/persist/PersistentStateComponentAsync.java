@@ -16,15 +16,13 @@
 package consulo.component.persist;
 
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2026-03-02
  */
 public interface PersistentStateComponentAsync<T> extends PersistentStateComponent<T> {
-    @Nonnull
     Coroutine<?, T> getStateAsync();
 
     @Nullable

@@ -26,8 +26,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -46,13 +45,13 @@ public class DesktopTextBoxWithExpandAction {
 
     private static class SupportedTextBoxWithExpandAction extends DocumentSwingValidator<String, ExpandableTextField> implements TextBoxWithExpandAction, TextBoxWithTextField {
         private class MyExpandableTextField extends ExpandableTextField implements FromSwingComponentWrapper {
-            private MyExpandableTextField(@Nonnull Function<? super String, ? extends List<String>> parser,
-                                          @Nonnull Function<? super List<String>, String> joiner,
+            private MyExpandableTextField(Function<? super String, ? extends List<String>> parser,
+                                          Function<? super List<String>, String> joiner,
                                           SupportTextBoxWithExpandActionExtender lookAndFeel) {
                 super(parser, joiner, lookAndFeel);
             }
 
-            @Nonnull
+            
             @Override
             public Component toUIComponent() {
                 return SupportedTextBoxWithExpandAction.this;
@@ -89,7 +88,7 @@ public class DesktopTextBoxWithExpandAction {
             return field;
         }
 
-        @Nonnull
+        
         @Override
         public JTextField getTextField() {
             return toAWTComponent();
@@ -118,14 +117,14 @@ public class DesktopTextBoxWithExpandAction {
             toAWTComponent().setText(value);
         }
 
-        @Nonnull
+        
         @Override
-        public TextBoxWithExpandAction withDialogTitle(@Nonnull String text) {
+        public TextBoxWithExpandAction withDialogTitle(String text) {
             return this;
         }
 
         @Override
-        public void setPlaceholder(@Nonnull LocalizeValue text) {
+        public void setPlaceholder(LocalizeValue text) {
             JTextField field = toAWTComponent();
             field.putClientProperty("JTextField.placeholderText", text.getNullIfEmpty());
         }

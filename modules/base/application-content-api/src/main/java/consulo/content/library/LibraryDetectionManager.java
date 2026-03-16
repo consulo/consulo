@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -34,12 +33,12 @@ public abstract class LibraryDetectionManager {
     return Application.get().getInstance(LibraryDetectionManager.class);
   }
 
-  public abstract boolean processProperties(@Nonnull List<VirtualFile> files, @Nonnull LibraryPropertiesProcessor processor);
+  public abstract boolean processProperties(List<VirtualFile> files, LibraryPropertiesProcessor processor);
 
   @Nullable
-  public abstract Pair<LibraryType<?>, LibraryProperties<?>> detectType(@Nonnull List<VirtualFile> files);
+  public abstract Pair<LibraryType<?>, LibraryProperties<?>> detectType(List<VirtualFile> files);
 
   public interface LibraryPropertiesProcessor {
-    <P extends LibraryProperties> boolean processProperties(@Nonnull LibraryKind kind, @Nonnull P properties);
+    <P extends LibraryProperties> boolean processProperties(LibraryKind kind, P properties);
   }
 }

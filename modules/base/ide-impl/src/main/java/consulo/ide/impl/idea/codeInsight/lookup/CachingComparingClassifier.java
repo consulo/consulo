@@ -25,8 +25,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,14 +56,14 @@ public class CachingComparingClassifier extends ComparingClassifier<LookupElemen
   }
 
   @Override
-  public void removeElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
+  public void removeElement(LookupElement element, ProcessingContext context) {
     myWeights.remove(element);
     super.removeElement(element, context);
   }
 
-  @Nonnull
+  
   @Override
-  public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
+  public Iterable<LookupElement> classify(Iterable<LookupElement> source, ProcessingContext context) {
     if (!myWeigher.isPrefixDependent() && myPrimitive) {
       return myNext.classify(source, context);
     }
@@ -81,15 +80,15 @@ public class CachingComparingClassifier extends ComparingClassifier<LookupElemen
     }
   }
 
-  @Nonnull
+  
   @Override
-  public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
+  public List<Pair<LookupElement, Object>> getSortingWeights(Iterable<LookupElement> items, ProcessingContext context) {
     checkPrefixChanged(context);
     return super.getSortingWeights(items, context);
   }
 
   @Override
-  public void addElement(@Nonnull LookupElement t, @Nonnull ProcessingContext context) {
+  public void addElement(LookupElement t, ProcessingContext context) {
     Comparable weight = myWeigher.weigh(t, context.get(CompletionLookupArranger.WEIGHING_CONTEXT));
     if (weight instanceof ForceableComparable) {
       ((ForceableComparable)weight).force();

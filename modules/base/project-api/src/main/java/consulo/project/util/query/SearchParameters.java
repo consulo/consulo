@@ -3,7 +3,6 @@ package consulo.project.util.query;
 
 import consulo.project.Project;
 import consulo.application.util.query.Query;
-import jakarta.annotation.Nonnull;
 
 /**
  * Base interface for search parameters.
@@ -12,7 +11,7 @@ import jakarta.annotation.Nonnull;
  */
 public interface SearchParameters<R> {
 
-  @Nonnull
+  
   Project getProject();
 
   boolean areValid();

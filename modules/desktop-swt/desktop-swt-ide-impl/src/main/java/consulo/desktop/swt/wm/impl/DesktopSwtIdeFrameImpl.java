@@ -29,8 +29,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -80,7 +79,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
     return myRootView.getRootPanel();
   }
 
-  @Nonnull
+  
   @Override
   public Window getWindow() {
     return myWindow;
@@ -120,7 +119,7 @@ public class DesktopSwtIdeFrameImpl implements IdeFrameEx, Disposable {
 
     @Nullable
     @Override
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensionClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensionClass) {
         return null;
     }
 

@@ -52,8 +52,7 @@ import consulo.ui.image.Image;
 import consulo.usage.UsageView;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +72,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(getFeatureUsedKey());
 
         try {
@@ -95,10 +94,10 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
 
     @RequiredUIAccess
     private void show(
-        @Nonnull Project project,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull GotoData gotoData
+        Project project,
+        Editor editor,
+        PsiFile file,
+        GotoData gotoData
     ) {
         PsiElement[] targets = gotoData.targets;
         List<AdditionalAction> additionalActions = gotoData.additionalActions;
@@ -231,7 +230,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         }
     }
 
-    @Nonnull
+    
     private PsiElementListCellRenderer getRenderer(
         Object value,
         Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
@@ -244,7 +243,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return renderer != null ? renderer : myDefaultTargetElementRenderer;
     }
 
-    @Nonnull
+    
     protected Comparator<PsiElement> createComparator(
         Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
         GotoData gotoData
@@ -261,7 +260,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         };
     }
 
-    public static PsiElementListCellRenderer createRenderer(@Nonnull GotoData gotoData, @Nonnull PsiElement eachTarget) {
+    public static PsiElementListCellRenderer createRenderer(GotoData gotoData, PsiElement eachTarget) {
         return GotoTargetRendererProvider.EP_NAME.computeSafeIfAny(Application.get(), it -> it.getRenderer(eachTarget, gotoData));
     }
 
@@ -274,7 +273,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return false;
     }
 
-    protected void navigateToElement(@Nonnull Navigatable descriptor) {
+    protected void navigateToElement(Navigatable descriptor) {
         descriptor.navigate(true);
     }
 
@@ -282,25 +281,25 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         return true;
     }
 
-    @Nonnull
+    
     @Deprecated // use getChooserTitle(PsiElement, String, int, boolean) instead
     protected String getChooserTitle(PsiElement sourceElement, String name, int length) {
         LOG.warn("Please override getChooserTitle(PsiElement, String, int, boolean) instead");
         return "";
     }
 
-    @Nonnull
-    protected String getChooserTitle(@Nonnull PsiElement sourceElement, String name, int length, boolean finished) {
+    
+    protected String getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
         return getChooserTitle(sourceElement, name, length);
     }
 
-    @Nonnull
-    protected String getFindUsagesTitle(@Nonnull PsiElement sourceElement, String name, int length) {
+    
+    protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
         return getChooserTitle(sourceElement, name, length, true);
     }
 
-    @Nonnull
-    protected abstract String getNotFoundMessage(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
+    
+    protected abstract String getNotFoundMessage(Project project, Editor editor, PsiFile file);
 
     @Nullable
     protected String getAdText(PsiElement source, int length) {
@@ -308,7 +307,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
 
     public interface AdditionalAction {
-        @Nonnull
+        
         String getText();
 
         Image getIcon();
@@ -317,7 +316,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     }
 
     public static class GotoData implements GotoTargetRendererProvider.Options {
-        @Nonnull
+        
         public final PsiElement source;
         public PsiElement[] targets;
         public final List<AdditionalAction> additionalActions;
@@ -328,7 +327,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
         public Map<Object, PsiElementListCellRenderer> renderers = new HashMap<>();
 
         @RequiredReadAction
-        public GotoData(@Nonnull PsiElement source, @Nonnull PsiElement[] targets, @Nonnull List<AdditionalAction> additionalActions) {
+        public GotoData(PsiElement source, PsiElement[] targets, List<AdditionalAction> additionalActions) {
             this.source = source;
             this.targets = targets;
             this.additionalActions = additionalActions;
@@ -402,7 +401,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
     private static class ActionCellRenderer extends ColoredListCellRenderer<AdditionalAction> {
         @Override
         protected void customizeCellRenderer(
-            @Nonnull JList<? extends AdditionalAction> list,
+            JList<? extends AdditionalAction> list,
             AdditionalAction action,
             int index,
             boolean selected,

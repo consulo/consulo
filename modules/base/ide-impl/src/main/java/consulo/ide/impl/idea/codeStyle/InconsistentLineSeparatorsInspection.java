@@ -28,14 +28,13 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
  */
 @ExtensionImpl
 public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
-    @Nonnull
+    
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
@@ -46,21 +45,21 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getGroupDisplayName() {
         return InspectionLocalize.groupNamesPortabilityIssues();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return InspectionLocalize.inconsistentLineSeparators();
     }
 
-    @Nonnull
+    
     @Override
-    public PsiElementVisitor buildVisitor(@Nonnull final ProblemsHolder holder, boolean isOnTheFly) {
+    public PsiElementVisitor buildVisitor(final ProblemsHolder holder, boolean isOnTheFly) {
         return new PsiElementVisitor() {
             @Override
             public void visitFile(PsiFile file) {
@@ -95,16 +94,16 @@ public class InconsistentLineSeparatorsInspection extends LocalInspectionTool {
         };
     }
 
-    @Nonnull
+    
     private static final LocalQuickFix SET_PROJECT_LINE_SEPARATORS = new LocalQuickFix() {
-        @Nonnull
+        
         @Override
         public LocalizeValue getName() {
             return LocalizeValue.localizeTODO("Convert to project line separators");
         }
 
         @Override
-        public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+        public void applyFix(Project project, ProblemDescriptor descriptor) {
             PsiElement psiElement = descriptor.getPsiElement();
             if (!(psiElement instanceof PsiFile)) {
                 return;

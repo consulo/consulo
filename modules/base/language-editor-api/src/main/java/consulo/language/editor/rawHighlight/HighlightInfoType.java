@@ -22,8 +22,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -92,7 +91,7 @@ public interface HighlightInfoType {
         WRONG_REF
     )));
 
-    @Nonnull
+    
     HighlightSeverity getSeverity(@Nullable PsiElement psiElement);
 
     TextAttributesKey getAttributesKey();

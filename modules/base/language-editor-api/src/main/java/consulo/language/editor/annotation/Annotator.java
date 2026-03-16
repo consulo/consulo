@@ -25,7 +25,6 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -47,5 +46,5 @@ public interface Annotator {
    * @param element to annotate.
    * @param holder  the container which receives annotations created by the plugin.
    */
-  void annotate(@Nonnull PsiElement element, @Nonnull AnnotationHolder holder);
+  void annotate(PsiElement element, AnnotationHolder holder);
 }

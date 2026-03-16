@@ -9,7 +9,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 public final class FindFurtherAction extends AnAction implements DumbAware {
     private final boolean directionForward;
@@ -40,13 +39,13 @@ public final class FindFurtherAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean enabled = myRangeSearch.isButtonFindFurtherEnabled(directionForward);
         e.getPresentation().setEnabled(enabled);
     }
 
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myRangeSearch.onClickSearchFurther(directionForward);
     }
 }

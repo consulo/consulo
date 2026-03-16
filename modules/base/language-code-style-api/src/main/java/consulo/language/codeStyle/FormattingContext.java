@@ -7,7 +7,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -15,20 +14,20 @@ import java.util.Objects;
  * Represents a context of current formatting operation
  */
 public class FormattingContext {
-    @Nonnull
+    
     private final PsiElement myPsiElement;
-    @Nonnull
+    
     private final TextRange myFormattingRange;
-    @Nonnull
+    
     private final CodeStyleSettings myCodeStyleSettings;
-    @Nonnull
+    
     private final FormattingMode myFormattingMode;
 
     private FormattingContext(
-        @Nonnull PsiElement psiElement,
-        @Nonnull TextRange formattingRange,
-        @Nonnull CodeStyleSettings codeStyleSettings,
-        @Nonnull FormattingMode formattingMode
+        PsiElement psiElement,
+        TextRange formattingRange,
+        CodeStyleSettings codeStyleSettings,
+        FormattingMode formattingMode
     ) {
         myPsiElement = psiElement;
         myFormattingRange = formattingRange;
@@ -37,26 +36,26 @@ public class FormattingContext {
     }
 
     public
-    @Nonnull
-    FormattingContext withPsiElement(@Nonnull PsiElement psiElement) {
+    
+    FormattingContext withPsiElement(PsiElement psiElement) {
         // fixme should we overwrite range here?
         return new FormattingContext(psiElement, myFormattingRange, myCodeStyleSettings, myFormattingMode);
     }
 
     public
-    @Nonnull
+    
     PsiFile getContainingFile() {
         return Objects.requireNonNull(myPsiElement.getContainingFile());
     }
 
     public
-    @Nonnull
+    
     ASTNode getNode() {
         return myPsiElement.getNode();
     }
 
     public
-    @Nonnull
+    
     Project getProject() {
         return myPsiElement.getProject();
     }
@@ -65,7 +64,7 @@ public class FormattingContext {
      * @return element being formatted
      */
     public
-    @Nonnull
+    
     PsiElement getPsiElement() {
         return myPsiElement;
     }
@@ -77,13 +76,13 @@ public class FormattingContext {
      * @apiNote returned range is relative to the containing {@link #getContainingFile() file}, not the {@link #getPsiElement() psiElement}
      */
     public
-    @Nonnull
+    
     TextRange getFormattingRange() {
         return myFormattingRange;
     }
 
     public
-    @Nonnull
+    
     CodeStyleSettings getCodeStyleSettings() {
         return myCodeStyleSettings;
     }
@@ -92,7 +91,7 @@ public class FormattingContext {
      * @return {@link FormattingMode type} of formatting operation performed
      */
     public
-    @Nonnull
+    
     FormattingMode getFormattingMode() {
         return myFormattingMode;
     }
@@ -112,12 +111,12 @@ public class FormattingContext {
     }
 
     public static
-    @Nonnull
+    
     FormattingContext create(
-        @Nonnull PsiElement psiElement,
-        @Nonnull TextRange formattingRange,
-        @Nonnull CodeStyleSettings codeStyleSettings,
-        @Nonnull FormattingMode formattingMode
+        PsiElement psiElement,
+        TextRange formattingRange,
+        CodeStyleSettings codeStyleSettings,
+        FormattingMode formattingMode
     ) {
         return new FormattingContext(psiElement, formattingRange, codeStyleSettings, formattingMode);
     }
@@ -126,11 +125,11 @@ public class FormattingContext {
      * @return formatting context for the full-range of {@code psiElement}
      */
     public static
-    @Nonnull
+    
     FormattingContext create(
-        @Nonnull PsiElement psiElement,
-        @Nonnull CodeStyleSettings codeStyleSettings,
-        @Nonnull FormattingMode formattingMode
+        PsiElement psiElement,
+        CodeStyleSettings codeStyleSettings,
+        FormattingMode formattingMode
     ) {
         return new FormattingContext(psiElement, psiElement.getTextRange(), codeStyleSettings, formattingMode);
     }
@@ -139,8 +138,8 @@ public class FormattingContext {
      * @return formatting context for {@link FormattingMode#REFORMAT re-formatting} of the full range of {@code psiElement}
      */
     public static
-    @Nonnull
-    FormattingContext create(@Nonnull PsiElement psiElement, @Nonnull CodeStyleSettings codeStyleSettings) {
+    
+    FormattingContext create(PsiElement psiElement, CodeStyleSettings codeStyleSettings) {
         return new FormattingContext(psiElement, psiElement.getTextRange(), codeStyleSettings, FormattingMode.REFORMAT);
     }
 }

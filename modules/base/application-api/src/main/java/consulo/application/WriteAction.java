@@ -21,7 +21,6 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("View WriteLock")
@@ -30,7 +29,7 @@ public final class WriteAction {
         run(runnable::run);
     }
 
-    public static <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E {
+    public static <E extends Throwable> void run(ThrowableRunnable<E> action) throws E {
         Application application = Application.get();
         application.runWriteAction((ThrowableSupplier<Object, E>) () -> {
             action.run();
@@ -38,7 +37,7 @@ public final class WriteAction {
         });
     }
 
-    public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
+    public static <T, E extends Throwable> T compute(ThrowableComputable<T, E> action) throws E {
         Application application = Application.get();
         return application.runWriteAction(action);
     }

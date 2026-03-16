@@ -24,8 +24,7 @@ import consulo.util.lang.Couple;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,8 @@ public class AnnotateActionGroup extends ActionGroup {
     private final AnAction[] myActions;
 
     public AnnotateActionGroup(
-        @Nonnull List<AnnotationFieldGutter> gutters,
-        @Nonnull EditorGutterComponentEx gutterComponent,
+        List<AnnotationFieldGutter> gutters,
+        EditorGutterComponentEx gutterComponent,
         @Nullable Couple<Map<VcsRevisionNumber, ColorValue>> bgColorMap
     ) {
         super("View", true);
@@ -54,7 +53,7 @@ public class AnnotateActionGroup extends ActionGroup {
         myActions = actions.toArray(new AnAction[actions.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return myActions;

@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationProperties;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -30,7 +29,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class NotificationGroupTestContributor implements NotificationGroupContributor {
   @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+  public void contribute(Consumer<NotificationGroup> registrator) {
       if (!ApplicationProperties.isInSandbox()) {
         return;
       }

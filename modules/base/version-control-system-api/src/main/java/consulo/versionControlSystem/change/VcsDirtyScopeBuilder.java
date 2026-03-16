@@ -3,15 +3,14 @@ package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public interface VcsDirtyScopeBuilder {
-  boolean belongsTo(@Nonnull FilePath path);
+  boolean belongsTo(FilePath path);
 
-  void addDirtyPathFast(@Nonnull VirtualFile vcsRoot, @Nonnull FilePath filePath, boolean recursively);
+  void addDirtyPathFast(VirtualFile vcsRoot, FilePath filePath, boolean recursively);
 
   void markEverythingDirty();
 
-  @Nonnull
+  
   VcsModifiableDirtyScope pack();
 }

@@ -30,7 +30,6 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -259,7 +258,7 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     }
 
     @Override
-    public void initModelBySetings(@Nonnull FindModel model) {
+    public void initModelBySetings(FindModel model) {
         model.setCaseSensitive(isCaseSensitive());
         model.setForward(isForward());
         model.setFromCursor(isFromCursor());
@@ -274,39 +273,39 @@ public class FindSettingsImpl extends FindSettings implements PersistentStateCom
     }
 
     @Override
-    public void addStringToFind(@Nonnull String s) {
+    public void addStringToFind(String s) {
         FindRecents.getInstance().addStringToFind(s);
     }
 
     @Override
-    public void addStringToReplace(@Nonnull String s) {
+    public void addStringToReplace(String s) {
         FindRecents.getInstance().addStringToReplace(s);
     }
 
     @Override
-    public void addDirectory(@Nonnull String s) {
+    public void addDirectory(String s) {
         FindRecents.getInstance().addDirectory(s);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getRecentFindStrings() {
         return FindRecents.getInstance().getRecentFindStrings();
     }
 
-    @Nonnull
+    
     @Override
     public String[] getRecentReplaceStrings() {
         return FindRecents.getInstance().getRecentReplaceStrings();
     }
 
-    @Nonnull
+    
     @Override
     public String[] getRecentFileMasks() {
         return ArrayUtil.toStringArray(recentFileMasks);
     }
 
-    @Nonnull
+    
     @Override
     public List<String> getRecentDirectories() {
         return FindRecents.getInstance().getRecentDirectories();

@@ -45,8 +45,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -69,7 +68,7 @@ public class HectorComponent extends JPanel {
     private final PsiFile myFile;
 
     @RequiredUIAccess
-    public HectorComponent(@Nonnull PsiFile file) {
+    public HectorComponent(PsiFile file) {
         super(new GridBagLayout());
         setBorder(JBUI.Borders.empty(0, 0, 7, 0));
         myFile = file;
@@ -266,11 +265,11 @@ public class HectorComponent extends JPanel {
         }
     }
 
-    public void showComponent(@Nonnull Component component, @Nonnull Function<? super Dimension, ? extends Point> offset) {
+    public void showComponent(Component component, Function<? super Dimension, ? extends Point> offset) {
         showComponent(new RelativePoint(component, offset.apply(getPreferredSize())));
     }
 
-    public void showComponent(@Nonnull RelativePoint point) {
+    public void showComponent(RelativePoint point) {
         JBPopup hector = JBPopupFactory.getInstance()
             .createComponentPopupBuilder(this, this)
             .setRequestFocus(true)

@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -93,7 +92,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
     }
 
     @Override
-    public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, @Nonnull DnDDragStartBean bean) {
+    public Pair<Image, Point> createDraggedImage(DnDAction action, Point dragOrigin, DnDDragStartBean bean) {
         List<PackagingElementNode<?>> nodes = getNodesToDrag();
         if (nodes.size() == 1) {
             return DnDAwareTree.getDragImage(this, getPathFor(nodes.get(0)), dragOrigin);

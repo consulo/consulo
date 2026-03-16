@@ -5,7 +5,6 @@ import consulo.application.ApplicationManager;
 import consulo.execution.debug.stream.ui.PaintingListener;
 import consulo.execution.debug.stream.ui.ValuesPositionsListener;
 import consulo.proxy.EventDispatcher;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.List;
@@ -17,7 +16,7 @@ public class PositionsAwareCollectionView extends CollectionView {
     private final EventDispatcher<ValuesPositionsListener> myDispatcher = EventDispatcher.create(ValuesPositionsListener.class);
     private final List<ValueWithPositionImpl> values;
 
-    public PositionsAwareCollectionView(@Nonnull CollectionTree tree, @Nonnull List<ValueWithPositionImpl> values) {
+    public PositionsAwareCollectionView(CollectionTree tree, List<ValueWithPositionImpl> values) {
         super(tree);
         this.values = values;
 
@@ -29,7 +28,7 @@ public class PositionsAwareCollectionView extends CollectionView {
         });
     }
 
-    public void addValuesPositionsListener(@Nonnull ValuesPositionsListener listener) {
+    public void addValuesPositionsListener(ValuesPositionsListener listener) {
         myDispatcher.addListener(listener);
     }
 

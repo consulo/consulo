@@ -25,7 +25,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.util.LightDarkColorValue;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -57,22 +56,22 @@ public class HintColorUtil {
   private HintColorUtil() {
   }
 
-  @Nonnull
+  
   public static ColorValue getInformationColor() {
     return ObjectUtil.notNull(EditorColorsUtil.getGlobalOrDefaultColor(INFORMATION_COLOR_KEY), INFORMATION_COLOR_KEY.getDefaultColorValue());
   }
 
-  @Nonnull
+  
   public static ColorValue getQuestionColor() {
     return TargetAWT.from(JBColor.namedColor("ToolTip.background", new JBColor(0xf7f7f7, 0x474a4c)));
   }
 
-  @Nonnull
+  
   public static ColorValue getErrorColor() {
     return ObjectUtil.notNull(EditorColorsUtil.getGlobalOrDefaultColor(ERROR_COLOR_KEY), ERROR_COLOR_KEY.getDefaultColorValue());
   }
 
-  @Nonnull
+  
   public static ColorValue getRecentLocationsSelectionColor(EditorColorsScheme colorsScheme) {
     return ObjectUtil.notNull(colorsScheme.getColor(RECENT_LOCATIONS_SELECTION_KEY), RECENT_LOCATIONS_SELECTION_KEY.getDefaultColorValue());
   }

@@ -2,7 +2,6 @@
 package consulo.ui.ex.awt.tree;
 
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -77,7 +76,7 @@ public abstract class AbstractTreeModel implements Disposable, TreeModel {
    * @param listener a listener to add
    */
   @Override
-  public void addTreeModelListener(@Nonnull TreeModelListener listener) {
+  public void addTreeModelListener(TreeModelListener listener) {
     if (!disposed) listeners.add(listener);
   }
 
@@ -87,7 +86,7 @@ public abstract class AbstractTreeModel implements Disposable, TreeModel {
    * @param listener a listener to remove
    */
   @Override
-  public void removeTreeModelListener(@Nonnull TreeModelListener listener) {
+  public void removeTreeModelListener(TreeModelListener listener) {
     if (!disposed) listeners.remove(listener);
   }
 

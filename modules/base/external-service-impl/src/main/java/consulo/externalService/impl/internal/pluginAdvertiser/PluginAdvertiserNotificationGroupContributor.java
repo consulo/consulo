@@ -18,7 +18,6 @@ package consulo.externalService.impl.internal.pluginAdvertiser;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class PluginAdvertiserNotificationGroupContributor implements NotificationGroupContributor {
     @Override
-    public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+    public void contribute(Consumer<NotificationGroup> registrator) {
         registrator.accept(PluginAdvertiserImpl.ourGroup);
     }
 }

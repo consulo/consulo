@@ -26,8 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PsiBuilderAdapter implements PsiBuilder {
     protected final PsiBuilder myDelegate;
@@ -45,7 +44,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.getProject();
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getOriginalText() {
         return myDelegate.getOriginalText();
@@ -73,7 +72,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public boolean isWhitespaceOrCommentType(@Nonnull IElementType elementType) {
+    public boolean isWhitespaceOrCommentType(IElementType elementType) {
         return myDelegate.isWhitespaceOrCommentType(elementType);
     }
 
@@ -125,7 +124,7 @@ public class PsiBuilderAdapter implements PsiBuilder {
     }
 
     @Override
-    public void error(@Nonnull LocalizeValue messageText) {
+    public void error(LocalizeValue messageText) {
         myDelegate.error(messageText);
     }
 
@@ -134,13 +133,13 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.eof();
     }
 
-    @Nonnull
+    
     @Override
     public ASTNode getTreeBuilt() {
         return myDelegate.getTreeBuilt();
     }
 
-    @Nonnull
+    
     @Override
     public FlyweightCapableTreeStructure<LighterASTNode> getLightTree() {
         return myDelegate.getLightTree();
@@ -162,25 +161,25 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.getLatestDoneMarker();
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getErrorMessage(@Nonnull LighterASTNode node) {
+    public LocalizeValue getErrorMessage(LighterASTNode node) {
         return myDelegate.getErrorMessage(node);
     }
 
     @Override
-    public void setReparseMergeCustomComparator(@Nonnull ReparseMergeCustomComparator comparator) {
+    public void setReparseMergeCustomComparator(ReparseMergeCustomComparator comparator) {
         myDelegate.setReparseMergeCustomComparator(comparator);
     }
 
     @Override
     @Nullable
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return myDelegate.getUserData(key);
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         myDelegate.putUserData(key, value);
     }
 
@@ -190,19 +189,19 @@ public class PsiBuilderAdapter implements PsiBuilder {
         return myDelegate.getContainingFile();
     }
 
-    @Nonnull
+    
     @Override
     public Lexer getLexer() {
         return myDelegate.getLexer();
     }
 
     @Override
-    public void registerWhitespaceToken(@Nonnull IElementType type) {
+    public void registerWhitespaceToken(IElementType type) {
         myDelegate.registerWhitespaceToken(type);
     }
 
     @Override
-    public void setContainingFile(@Nonnull PsiFile containingFile) {
+    public void setContainingFile(PsiFile containingFile) {
         myDelegate.setContainingFile(containingFile);
     }
 }

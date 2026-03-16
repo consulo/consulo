@@ -17,8 +17,7 @@ package consulo.ui.ex;
 
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Allows to display error text in an input dialog for input strings that do not match
@@ -28,8 +27,8 @@ import jakarta.annotation.Nullable;
  * @since 9.0
  */
 public interface InputValidatorEx extends InputValidator {
-  @Nonnull
-  static String getErrorText(@Nonnull InputValidator validator, @Nonnull String inputString, @Nonnull String defaultError) {
+  
+  static String getErrorText(InputValidator validator, String inputString, String defaultError) {
     if (validator instanceof InputValidatorEx) {
       return ObjectUtil.notNull(((InputValidatorEx)validator).getErrorText(inputString), defaultError);
     }

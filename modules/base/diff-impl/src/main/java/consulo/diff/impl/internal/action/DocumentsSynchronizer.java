@@ -22,14 +22,13 @@ import consulo.document.event.DocumentEvent;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 public abstract class DocumentsSynchronizer {
-    @Nonnull
+    
     protected final Document myDocument1;
-    @Nonnull
+    
     protected final Document myDocument2;
     @Nullable
     private final Project myProject;
@@ -62,32 +61,32 @@ public abstract class DocumentsSynchronizer {
         }
     };
 
-    protected DocumentsSynchronizer(@Nullable Project project, @Nonnull Document document1, @Nonnull Document document2) {
+    protected DocumentsSynchronizer(@Nullable Project project, Document document1, Document document2) {
         myProject = project;
         myDocument1 = document1;
         myDocument2 = document2;
     }
 
-    @Nonnull
+    
     public Document getDocument1() {
         return myDocument1;
     }
 
-    @Nonnull
+    
     public Document getDocument2() {
         return myDocument2;
     }
 
-    protected abstract void onDocumentChanged1(@Nonnull DocumentEvent event);
+    protected abstract void onDocumentChanged1(DocumentEvent event);
 
-    protected abstract void onDocumentChanged2(@Nonnull DocumentEvent event);
+    protected abstract void onDocumentChanged2(DocumentEvent event);
 
     @RequiredUIAccess
     protected void replaceString(
-        @Nonnull Document document,
+        Document document,
         int startOffset,
         int endOffset,
-        @Nonnull CharSequence newText
+        CharSequence newText
     ) {
         try {
             myDuringModification = true;

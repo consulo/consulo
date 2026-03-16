@@ -18,21 +18,20 @@ package consulo.fileEditor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface NonProjectFileWritingAccessExtension {
     /**
      * @return true if the file should not be protected from accidental writing. false to use default logic.
      */
-    default boolean isWritable(@Nonnull VirtualFile file) {
+    default boolean isWritable(VirtualFile file) {
         return false;
     }
 
     /**
      * @return true if the file should be protected from accidental writing. false to use default logic.
      */
-    default boolean isNotWritable(@Nonnull VirtualFile file) {
+    default boolean isNotWritable(VirtualFile file) {
         return false;
     }
 }

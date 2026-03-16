@@ -18,8 +18,7 @@ package consulo.execution.test.sm.runner.state;
 import consulo.execution.test.Printer;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class TestComparisonFailedStates extends TestFailedState {
         }
     }
 
-    @Nonnull
+    
     public List<DiffHyperlink> getHyperlinks() {
         return ContainerUtil.map(myStates, TestComparisionFailedState::getHyperlink);
     }

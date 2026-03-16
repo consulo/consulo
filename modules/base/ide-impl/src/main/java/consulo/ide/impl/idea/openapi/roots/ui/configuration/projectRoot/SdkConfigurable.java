@@ -31,8 +31,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -45,7 +44,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
   private final BaseSdkEditor mySdkEditor;
   private final SdkProjectStructureElement myProjectStructureElement;
 
-  public SdkConfigurable(@Nonnull SdkImpl sdk, SdkModel sdksModel, Runnable updateTree) {
+  public SdkConfigurable(SdkImpl sdk, SdkModel sdksModel, Runnable updateTree) {
     super(!sdk.isPredefined(), updateTree);
     mySdk = sdk;
     mySdkEditor = createSdkEditor(sdksModel, mySdk);
@@ -94,7 +93,7 @@ public class SdkConfigurable extends ProjectStructureElementConfigurable<Sdk> {
 
   @RequiredUIAccess
   @Override
-  public JComponent createOptionsPanel(@Nonnull Disposable parentDisposable) {
+  public JComponent createOptionsPanel(Disposable parentDisposable) {
     return mySdkEditor.createComponent(parentDisposable);
   }
 

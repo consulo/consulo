@@ -20,7 +20,6 @@ import consulo.component.internal.inject.InjectingPoint;
 import consulo.component.internal.inject.PostInjectListener;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
@@ -41,9 +40,9 @@ class DefaultInjectingPoint<T> implements InjectingPoint<T> {
     myAdapter = new BaseComponentAdapter<>(key);
   }
 
-  @Nonnull
+  
   @Override
-  public InjectingPoint<T> to(@Nonnull T value) {
+  public InjectingPoint<T> to(T value) {
     if (myLocked) {
       throw new IllegalArgumentException("locked");
     }
@@ -53,9 +52,9 @@ class DefaultInjectingPoint<T> implements InjectingPoint<T> {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public InjectingPoint<T> to(@Nonnull InjectingKey<? extends T> key) {
+  public InjectingPoint<T> to(InjectingKey<? extends T> key) {
     if (myLocked) {
       throw new IllegalArgumentException("locked");
     }
@@ -65,9 +64,9 @@ class DefaultInjectingPoint<T> implements InjectingPoint<T> {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public InjectingPoint<T> to(@Nonnull Provider<T> provider) {
+  public InjectingPoint<T> to(Provider<T> provider) {
     if (myLocked) {
       throw new IllegalArgumentException("locked");
     }
@@ -84,28 +83,28 @@ class DefaultInjectingPoint<T> implements InjectingPoint<T> {
   }
 
   @Override
-  public InjectingPoint<T> factory(@Nonnull Function<Provider<T>, T> remap) {
+  public InjectingPoint<T> factory(Function<Provider<T>, T> remap) {
     base().setRemap(remap);
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer) {
+  public InjectingPoint<T> injectListener(PostInjectListener<T> consumer) {
     base().setAfterInjectionListener(consumer);
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public InjectingPoint<T> constructorParameterTypes(@Nonnull Type[] constructorParameterTypes) {
+  public InjectingPoint<T> constructorParameterTypes(Type[] constructorParameterTypes) {
     base().setConstructorParameterTypes(constructorParameterTypes);
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public InjectingPoint<T> constructorFactory(@Nonnull Function<Object[], T> factory) {
+  public InjectingPoint<T> constructorFactory(Function<Object[], T> factory) {
     base().setConstructorFactory(factory);
     return this;
   }

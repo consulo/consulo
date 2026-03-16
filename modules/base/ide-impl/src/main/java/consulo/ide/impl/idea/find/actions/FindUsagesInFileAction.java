@@ -40,7 +40,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "FindUsagesInFile")
 public class FindUsagesInFileAction extends AnAction {
@@ -51,7 +50,7 @@ public class FindUsagesInFileAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -80,7 +79,7 @@ public class FindUsagesInFileAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         updateFindUsagesAction(event);
     }
 
@@ -111,7 +110,7 @@ public class FindUsagesInFileAction extends AnAction {
     }
 
     @RequiredReadAction
-    public static void updateFindUsagesAction(@Nonnull AnActionEvent e) {
+    public static void updateFindUsagesAction(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         boolean enabled = isEnabled(e.getDataContext());
         presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));

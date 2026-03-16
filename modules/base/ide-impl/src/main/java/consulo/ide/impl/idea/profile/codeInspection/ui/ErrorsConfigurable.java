@@ -21,8 +21,7 @@ import consulo.language.Language;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -35,7 +34,7 @@ public interface ErrorsConfigurable extends Configurable {
 
   void selectInspectionTool(String selectedToolShortName);
 
-  void setFilterLanguages(@Nonnull Collection<Language> languages);
+  void setFilterLanguages(Collection<Language> languages);
 
   @Nullable
   Object getSelectedObject();

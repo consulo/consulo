@@ -15,7 +15,6 @@
  */
 package consulo.process.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,12 +24,12 @@ import java.io.InputStream;
  */
 public abstract class BinaryOutputReader extends BaseDataReader {
 
-  @Nonnull
+  
   private final InputStream myStream;
-  @Nonnull
+  
   private final byte[] myBuffer = new byte[8192];
 
-  public BinaryOutputReader(@Nonnull InputStream stream, SleepingPolicy sleepingPolicy) {
+  public BinaryOutputReader(InputStream stream, SleepingPolicy sleepingPolicy) {
     super(sleepingPolicy);
     myStream = stream;
   }
@@ -51,7 +50,7 @@ public abstract class BinaryOutputReader extends BaseDataReader {
     return read;
   }
 
-  protected abstract void onBinaryAvailable(@Nonnull byte[] data, int size);
+  protected abstract void onBinaryAvailable(byte[] data, int size);
 
   @Override
   protected void close() throws IOException {

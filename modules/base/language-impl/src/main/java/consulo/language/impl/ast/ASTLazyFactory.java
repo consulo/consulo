@@ -21,8 +21,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -33,8 +32,8 @@ import java.util.function.Predicate;
 public interface ASTLazyFactory extends Predicate<IElementType> {
   ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create(ASTLazyFactory.class);
 
-  @Nonnull
-  LazyParseableElement createLazy(@Nonnull ILazyParseableElementType type, @Nullable CharSequence text);
+  
+  LazyParseableElement createLazy(ILazyParseableElementType type, @Nullable CharSequence text);
 
   @Override
   boolean test(IElementType elementType);

@@ -37,7 +37,6 @@ import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -160,7 +159,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
             return myRemoved;
         }
 
-        @Nonnull
+        
         private NotificationSettings getOriginalSettings() {
             return NotificationsConfigurationImpl.getSettings(getGroupId());
         }
@@ -231,7 +230,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
                 }
 
                 @Override
-                protected String getTextFor(@Nonnull NotificationDisplayType value) {
+                protected String getTextFor(NotificationDisplayType value) {
                     return value.getTitle();
                 }
             });
@@ -256,7 +255,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
                 }
 
                 @Override
-                protected String getTextFor(@Nonnull NotificationDisplayType value) {
+                protected String getTextFor(NotificationDisplayType value) {
                     return value.getTitle();
                 }
             });
@@ -284,7 +283,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
             return calcSize(super.getPreferredSize());
         }
 
-        private Dimension calcSize(@Nonnull Dimension s) {
+        private Dimension calcSize(Dimension s) {
             Container container = getParent();
             if (container != null) {
                 Dimension size = container.getSize();
@@ -311,7 +310,7 @@ public class NotificationsConfigurablePanel extends JPanel implements Disposable
     private static class TreeColumnCellRenderer extends JLabel implements TreeCellRenderer {
         private final JTable myTable;
 
-        public TreeColumnCellRenderer(@Nonnull JTable table) {
+        public TreeColumnCellRenderer(JTable table) {
             myTable = table;
         }
 

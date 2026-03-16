@@ -18,19 +18,18 @@ package consulo.language.pom;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
 import consulo.navigation.internal.NavigateWithDelegate;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  * @see PomService#convertToPsi(PomTarget)
  */
 public interface PomTargetPsiElement extends PsiElement, NavigateWithDelegate {
-    @Nonnull
+    
     @Override
     default Navigatable getDelegate() {
         return getTarget();
     }
 
-    @Nonnull
+    
     PomTarget getTarget();
 }

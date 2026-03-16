@@ -23,9 +23,7 @@ import consulo.ui.Size2D;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.EmptyImage;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.LinkedHashMap;
@@ -52,8 +50,8 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
 
     public IntentionListStep(@Nullable IntentionHintComponent intentionHintComponent,
                              @Nullable Editor editor,
-                             @Nonnull PsiFile file,
-                             @Nonnull Project project,
+                             PsiFile file,
+                             Project project,
                              CachedIntentions intentions) {
         myIntentionHintComponent = intentionHintComponent;
         myProject = project;
@@ -101,7 +99,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         return myFinalRunnable;
     }
 
-    private void applyAction(@Nonnull IntentionActionWithTextCaching cachedAction) {
+    private void applyAction(IntentionActionWithTextCaching cachedAction) {
         myFinalRunnable = () -> {
             HintManager.getInstance().hideAllHints();
             if (myProject.isDisposed()) {
@@ -128,8 +126,8 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     }
 
 
-    @Nonnull
-    IntentionListStep getSubStep(@Nonnull IntentionActionWithTextCaching action, final LocalizeValue title) {
+    
+    IntentionListStep getSubStep(IntentionActionWithTextCaching action, final LocalizeValue title) {
         IntentionsInfo intentions = new IntentionsInfo();
         for (IntentionAction optionIntention : action.getOptionIntentions()) {
             intentions.intentionsToShow.add(new IntentionActionDescriptor(optionIntention, getIcon(optionIntention)));
@@ -177,13 +175,13 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     }
 
     @Override
-    @Nonnull
+    
     public List<IntentionActionWithTextCaching> getValues() {
         return myCachedIntentions.getAllActions();
     }
 
     @Override
-    @Nonnull
+    
     public String getTextFor(IntentionActionWithTextCaching action) {
         String text = action.getText().get();
         if (LOG.isDebugEnabled() && text.startsWith("<html>")) {
@@ -202,7 +200,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     }
 
     @Nullable
-    public Image getOriginalIconFor(@Nonnull IntentionActionWithTextCaching value) {
+    public Image getOriginalIconFor(IntentionActionWithTextCaching value) {
         if (!value.isShowIcon()) return null;
 
         return myCachedIntentions.getIcon(value);
@@ -266,7 +264,7 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
         return getTextFor(value);
     }
 
-    @NotNull
+    
     private Size2D getMaxIconSize() {
         int maxWidth = -1;
         int maxHeight = -1;

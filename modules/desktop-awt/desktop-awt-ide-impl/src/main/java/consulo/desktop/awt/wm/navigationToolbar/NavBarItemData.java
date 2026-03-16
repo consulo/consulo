@@ -3,8 +3,7 @@ package consulo.desktop.awt.wm.navigationToolbar;
 
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Pre-computed presentation data for a single NavBar item.
@@ -14,10 +13,10 @@ import jakarta.annotation.Nullable;
  * @since 2026-03-02
  */
 public record NavBarItemData(
-    @Nonnull Object element,
-    @Nonnull String text,
+    Object element,
+    String text,
     @Nullable Image icon,
-    @Nonnull SimpleTextAttributes attributes,
+    SimpleTextAttributes attributes,
     boolean needPaintIcon
 ) {
 }

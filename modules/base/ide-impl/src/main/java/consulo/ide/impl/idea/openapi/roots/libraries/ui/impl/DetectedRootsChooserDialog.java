@@ -17,12 +17,10 @@ package consulo.ide.impl.idea.openapi.roots.libraries.ui.impl;
 
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.ui.ex.awt.BorderedTitlePanel;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ui.ex.awt.tree.table.TreeColumnInfo;
 import consulo.ide.impl.idea.util.ui.ComboBoxCellEditor;
 import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.BorderedTitlePanel;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
@@ -31,11 +29,12 @@ import consulo.ui.ex.awt.tree.CheckboxTree;
 import consulo.ui.ex.awt.tree.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.table.TreeColumnInfo;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -122,7 +121,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     init(suggestedRoots);
   }
 
-  @NonNls
+  
   private void init(List<SuggestedChildRootInfo> suggestedRoots) {
     myDescription = "<html><body>" + Application.get().getName().get() +
       " just scanned files and detected the following " +
@@ -157,7 +156,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
         if (leaf) {
           VirtualFile ancestor = ((VirtualFileCheckedTreeNode)node.getParent()).getFile();
           if (ancestor != null) {
-            text = VfsUtilCore.getRelativePath(file, ancestor, File.separatorChar);
+            text = VirtualFileUtil.getRelativePath(file, ancestor, File.separatorChar);
             if (StringUtil.isEmpty(text)) {
               text = File.separator;
             }
@@ -237,7 +236,7 @@ public class DetectedRootsChooserDialog extends DialogWrapper {
     return myTreeTable.getCheckedNodes(SuggestedChildRootInfo.class);
   }
 
-  @NonNls
+  
   @Override
   protected String getDimensionServiceKey() {
     return "DetectedRootsChooserDialog";

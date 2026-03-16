@@ -17,7 +17,6 @@ package consulo.externalSystem.model.execution;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Essentially this class is {@link ExternalSystemTaskExecutionSettings} plus auxiliary information like execution type (run/debug etc).
@@ -27,9 +26,9 @@ import jakarta.annotation.Nonnull;
  */
 public class ExternalTaskExecutionInfo {
   
-  @Nonnull
+  
   private ExternalSystemTaskExecutionSettings mySettings;
-  @Nonnull
+  
   private String myExecutorId;
 
   @SuppressWarnings("UnusedDeclaration")
@@ -37,29 +36,29 @@ public class ExternalTaskExecutionInfo {
     this(new ExternalSystemTaskExecutionSettings(), "___DUMMY___");
   }
 
-  public ExternalTaskExecutionInfo(@Nonnull ExternalSystemTaskExecutionSettings settings, @Nonnull String executorId) {
+  public ExternalTaskExecutionInfo(ExternalSystemTaskExecutionSettings settings, String executorId) {
     mySettings = settings;
     myExecutorId = executorId;
   }
 
-  @Nonnull
+  
   public ExternalSystemTaskExecutionSettings getSettings() {
     return mySettings;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setSettings(@Nonnull ExternalSystemTaskExecutionSettings settings) {
+  public void setSettings(ExternalSystemTaskExecutionSettings settings) {
     // Required by IJ serialization.
     mySettings = settings;
   }
 
-  @Nonnull
+  
   public String getExecutorId() {
     return myExecutorId;
   }
 
   @SuppressWarnings("UnusedDeclaration")
-  public void setExecutorId(@Nonnull String executorId) {
+  public void setExecutorId(String executorId) {
     // Required by IJ serialization.
     myExecutorId = executorId;
   }

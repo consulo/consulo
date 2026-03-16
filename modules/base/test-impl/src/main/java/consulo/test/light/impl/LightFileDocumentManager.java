@@ -27,8 +27,7 @@ import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.function.Function;
@@ -58,7 +57,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  public Document getDocument(@Nonnull VirtualFile file) {
+  public Document getDocument(VirtualFile file) {
     Document document = file.getUserData(MOCK_DOC_KEY);
     if (document == null) {
       if (file.isDirectory() || isBinaryWithoutDecompiler(file)) return null;
@@ -72,7 +71,7 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  public Document getCachedDocument(@Nonnull VirtualFile file) {
+  public Document getCachedDocument(VirtualFile file) {
     if (myCachedDocumentKey != null) {
       return file.getUserData(myCachedDocumentKey);
     }
@@ -80,63 +79,63 @@ public class LightFileDocumentManager implements FileDocumentManager {
   }
 
   @Override
-  public VirtualFile getFile(@Nonnull Document document) {
+  public VirtualFile getFile(Document document) {
     return document.getUserData(MOCK_VIRTUAL_FILE_KEY);
   }
 
   @Override
-  public void saveAllDocuments(@Nonnull UIAccess uiAccess) {
+  public void saveAllDocuments(UIAccess uiAccess) {
   }
 
   @Override
-  public void saveDocument(@Nonnull Document document) {
+  public void saveDocument(Document document) {
   }
 
   @Override
-  public void saveDocument(@Nonnull Document document, boolean isExplicit) {
+  public void saveDocument(Document document, boolean isExplicit) {
   }
 
   @Override
-  public void saveDocumentAsIs(@Nonnull Document document) {
+  public void saveDocumentAsIs(Document document) {
   }
 
   @Override
-  @Nonnull
+  
   public Document[] getUnsavedDocuments() {
     return Document.EMPTY_ARRAY;
   }
 
   @Override
-  public boolean isDocumentUnsaved(@Nonnull Document document) {
+  public boolean isDocumentUnsaved(Document document) {
     return false;
   }
 
   @Override
-  public boolean isFileModified(@Nonnull VirtualFile file) {
+  public boolean isFileModified(VirtualFile file) {
     return false;
   }
 
   @Override
-  public boolean isPartialPreviewOfALargeFile(@Nonnull Document document) {
+  public boolean isPartialPreviewOfALargeFile(Document document) {
     return false;
   }
 
   @Override
-  public void reloadFromDisk(@Nonnull Document document) {
+  public void reloadFromDisk(Document document) {
   }
 
   @Override
-  public void reloadFiles(@Nonnull VirtualFile... files) {
+  public void reloadFiles(VirtualFile... files) {
   }
 
   @Override
-  @Nonnull
+  
   public String getLineSeparator(VirtualFile file, ComponentManager project) {
     return LoadTextUtil.getDetectedLineSeparator(file);
   }
 
   @Override
-  public boolean requestWriting(@Nonnull Document document, @Nullable ComponentManager project) {
+  public boolean requestWriting(Document document, @Nullable ComponentManager project) {
     return true;
   }
 }

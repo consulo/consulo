@@ -40,8 +40,7 @@ import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationHandler;
@@ -74,7 +73,7 @@ public abstract class ModuleEditor implements Disposable {
   private final EventDispatcher<ChangeListener> myEventDispatcher = EventDispatcher.create(ChangeListener.class);
   private static final String METHOD_COMMIT = "commit";
 
-  public ModuleEditor(Project project, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator, @Nonnull Module module) {
+  public ModuleEditor(Project project, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator, Module module) {
     myProject = project;
     myModulesConfigurator = modulesConfigurator;
     myLibrariesConfigurator = librariesConfigurator;
@@ -92,7 +91,7 @@ public abstract class ModuleEditor implements Disposable {
   protected abstract void restoreSelectedEditor();
 
   @Nullable
-  public abstract ModuleConfigurationEditor getEditor(@Nonnull String displayName);
+  public abstract ModuleConfigurationEditor getEditor(String displayName);
 
   protected abstract void disposeCenterPanel();
 
@@ -180,7 +179,7 @@ public abstract class ModuleEditor implements Disposable {
     return new ModuleConfigurationStateImpl(myProject, myModulesConfigurator, myLibrariesConfigurator, this::getModifiableRootModelProxy);
   }
 
-  private JPanel createPanel(@Nonnull Disposable parentUIDisposable) {
+  private JPanel createPanel(Disposable parentUIDisposable) {
     getModifiableRootModel(); //initialize model if needed
     getModifiableRootModelProxy();
 
@@ -488,7 +487,7 @@ public abstract class ModuleEditor implements Disposable {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       sink.set(LangDataKeys.MODULE_CONTEXT, getModule());
     }
 

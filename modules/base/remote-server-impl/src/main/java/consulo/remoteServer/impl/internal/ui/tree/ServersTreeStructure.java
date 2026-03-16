@@ -45,8 +45,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -62,7 +61,7 @@ public final class ServersTreeStructure {
     private ServersTreeStructure() {
     }
 
-    public static Image getServerNodeIcon(@Nonnull Image itemIcon, @Nullable Image statusIcon) {
+    public static Image getServerNodeIcon(Image itemIcon, @Nullable Image statusIcon) {
         if (statusIcon == null) {
             return itemIcon;
         }
@@ -74,24 +73,24 @@ public final class ServersTreeStructure {
         @Nullable
         JComponent getComponent();
 
-        @Nonnull
+        
         String getLogId();
     }
 
     public static class RemoteServerNode extends AbstractTreeNode<RemoteServer<?>> implements ServerNode {
         private final DeploymentNodeProducer myNodeProducer;
 
-        public RemoteServerNode(Project project, @Nonnull RemoteServer<?> server, @Nonnull DeploymentNodeProducer nodeProducer) {
+        public RemoteServerNode(Project project, RemoteServer<?> server, DeploymentNodeProducer nodeProducer) {
             super(project, server);
             myNodeProducer = nodeProducer;
         }
 
-        public @Nonnull RemoteServer<?> getServer() {
+        public RemoteServer<?> getServer() {
             return getValue();
         }
 
         @Override
-        public @Nonnull Collection<? extends AbstractTreeNode<?>> getChildren() {
+        public Collection<? extends AbstractTreeNode<?>> getChildren() {
             ServerConnection<?> connection = getConnection();
             if (connection == null) {
                 return Collections.emptyList();
@@ -107,7 +106,7 @@ public final class ServersTreeStructure {
         }
 
         @Override
-        protected void update(@Nonnull PresentationData presentation) {
+        protected void update(PresentationData presentation) {
             RemoteServer<?> server = getServer();
             ServerConnection<?> connection = getConnection();
             presentation.setPresentableText(server.getName());
@@ -130,17 +129,17 @@ public final class ServersTreeStructure {
             return connection != null && connection.getStatus() == ConnectionStatus.CONNECTED;
         }
 
-        public void deploy(@Nonnull AnActionEvent e) {
+        public void deploy(AnActionEvent e) {
             doDeploy(e, DefaultRunExecutor.getRunExecutorInstance(),
                 CloudBundle.message("ServersTreeStructure.RemoteServerNode.popup.title.deploy.configuration"), true);
         }
 
-        public void deployWithDebug(@Nonnull AnActionEvent e) {
+        public void deployWithDebug(AnActionEvent e) {
             doDeploy(e, DefaultDebugExecutor.getDebugExecutorInstance(),
                 CloudBundle.message("ServersTreeStructure.RemoteServerNode.popup.title.deploy.debug.configuration"), false);
         }
 
-        public void doDeploy(@Nonnull AnActionEvent e, final Executor executor, String popupTitle, boolean canCreate) {
+        public void doDeploy(AnActionEvent e, final Executor executor, String popupTitle, boolean canCreate) {
             RemoteServer<?> server = getServer();
             final ServerType<? extends ServerConfiguration> serverType = server.getType();
             final DeploymentConfigurationManager configurationManager = DeploymentConfigurationManager.getInstance(myProject);
@@ -168,7 +167,7 @@ public final class ServersTreeStructure {
                     }
 
                     @Override
-                    public @Nonnull String getTextFor(Object runConfigOrSourceType) {
+                    public String getTextFor(Object runConfigOrSourceType) {
                         if (runConfigOrSourceType instanceof RunnerAndConfigurationSettings) {
                             return ((RunnerAndConfigurationSettings) runConfigOrSourceType).getName();
                         }
@@ -226,22 +225,22 @@ public final class ServersTreeStructure {
         private final DeploymentNodeProducer myNodeProducer;
 
         public DeploymentNodeImpl(Project project,
-                                  @Nonnull ServerConnection<?> connection,
-                                  @Nonnull RemoteServerNode serverNode,
-                                  @Nonnull Deployment value,
-                                  @Nonnull DeploymentNodeProducer nodeProducer) {
+                                  ServerConnection<?> connection,
+                                  RemoteServerNode serverNode,
+                                  Deployment value,
+                                  DeploymentNodeProducer nodeProducer) {
             super(project, value);
             myConnection = connection;
             myServerNode = serverNode;
             myNodeProducer = nodeProducer;
         }
 
-        public @Nonnull Deployment getDeployment() {
+        public Deployment getDeployment() {
             return getValue();
         }
 
         @Override
-        public @Nonnull RemoteServerNode getServerNode() {
+        public RemoteServerNode getServerNode() {
             return myServerNode;
         }
 
@@ -343,12 +342,12 @@ public final class ServersTreeStructure {
         }
 
         @Override
-        public @Nonnull String getLogId() {
+        public String getLogId() {
             return getId() + ";main-log";
         }
 
         @Override
-        public @Nonnull Collection<? extends AbstractTreeNode<?>> getChildren() {
+        public Collection<? extends AbstractTreeNode<?>> getChildren() {
             List<AbstractTreeNode<?>> result = new ArrayList<>();
             collectDeploymentChildren(result);
             collectLogChildren(result);
@@ -382,7 +381,7 @@ public final class ServersTreeStructure {
         }
 
         @Override
-        protected void update(@Nonnull PresentationData presentation) {
+        protected void update(PresentationData presentation) {
             Deployment deployment = getDeployment();
             presentation.setIcon(deployment.getStatus().getIcon());
             presentation.setPresentableText(deployment.getPresentableName());
@@ -391,20 +390,20 @@ public final class ServersTreeStructure {
     }
 
     public static class DeploymentLogNode extends AbstractTreeNode<LoggingHandlerBase> implements ServersTreeNode, LogProvidingNode {
-        private final @Nonnull DeploymentNodeImpl myDeploymentNode;
+        private final DeploymentNodeImpl myDeploymentNode;
 
-        public DeploymentLogNode(Project project, @Nonnull LoggingHandlerBase value, @Nonnull DeploymentNodeImpl deploymentNode) {
+        public DeploymentLogNode(Project project, LoggingHandlerBase value, DeploymentNodeImpl deploymentNode) {
             super(project, value);
             myDeploymentNode = deploymentNode;
         }
 
         @Override
-        public @Nonnull Collection<? extends AbstractTreeNode<?>> getChildren() {
+        public Collection<? extends AbstractTreeNode<?>> getChildren() {
             return Collections.emptyList();
         }
 
         @Override
-        protected void update(@Nonnull PresentationData presentation) {
+        protected void update(PresentationData presentation) {
             presentation.setIcon(ExecutionIconGroup.console());
             presentation.setPresentableText(getLogName());
         }
@@ -419,7 +418,7 @@ public final class ServersTreeStructure {
         }
 
         @Override
-        public @Nonnull String getLogId() {
+        public String getLogId() {
             return myDeploymentNode.getId() + ";log:" + getLogName();
         }
     }

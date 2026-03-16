@@ -18,8 +18,7 @@ package consulo.language.codeStyle.impl.internal.formatting;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class IndentAdjuster {
     private final AlignmentHelper myAlignmentHelper;
@@ -135,7 +134,7 @@ public class IndentAdjuster {
         return alignRespBlock != null ? getStartColumn(alignRespBlock) : null;
     }
 
-    private static AlignWhiteSpace getStartColumn(@Nonnull LeafBlockWrapper block) {
+    private static AlignWhiteSpace getStartColumn(LeafBlockWrapper block) {
         AlignWhiteSpace alignWhitespace = new AlignWhiteSpace();
         while (true) {
             WhiteSpace whiteSpace = block.getWhiteSpace();

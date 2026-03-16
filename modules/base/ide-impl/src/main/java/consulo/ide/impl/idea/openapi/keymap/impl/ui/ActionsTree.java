@@ -38,8 +38,7 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionListener;
@@ -127,11 +126,11 @@ public class ActionsTree {
     private String myFilter = null;
     private final DefaultTreeModel myModel;
 
-    public ActionsTree(@Nonnull Disposable disposable) {
+    public ActionsTree(Disposable disposable) {
         this(disposable, ShortcutUtil::isUseUnicodeShortcuts);
     }
 
-    public ActionsTree(@Nonnull Disposable disposable, @Nonnull BooleanSupplier useUnicodeCharactersForShortcutsGetter) {
+    public ActionsTree(Disposable disposable, BooleanSupplier useUnicodeCharactersForShortcutsGetter) {
         myRoot = new DefaultMutableTreeNode(ROOT);
 
         myModel = new DefaultTreeModel(myRoot);
@@ -425,7 +424,7 @@ public class ActionsTree {
     private class KeymapsRenderer extends ColoredTreeCellRenderer {
         @Override
         public void customizeCellRenderer(
-            @Nonnull JTree tree,
+            JTree tree,
             Object value,
             boolean selected,
             boolean expanded,

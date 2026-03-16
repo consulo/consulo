@@ -16,7 +16,7 @@
 package consulo.diff.content;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents empty content

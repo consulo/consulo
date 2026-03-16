@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.transferable;
 
-import jakarta.annotation.Nonnull;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -42,7 +41,7 @@ public abstract class TransferableList<T> implements Transferable {
     myList = Collections.unmodifiableList(list);
   }
 
-  @Nonnull
+  
   @Override
   public DataFlavor[] getTransferDataFlavors() {
     return new DataFlavor[]{

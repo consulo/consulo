@@ -27,7 +27,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "GotoTest")
 public class GotoTestOrCodeAction extends BaseCodeInsightAction {
@@ -36,13 +35,13 @@ public class GotoTestOrCodeAction extends BaseCodeInsightAction {
     }
 
     @Override
-    @Nonnull
+    
     protected CodeInsightActionHandler getHandler() {
         return new GotoTestOrCodeHandler();
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation p = event.getPresentation();
         if (TestFinderHelper.getFinders().isEmpty()) {
             p.setVisible(false);

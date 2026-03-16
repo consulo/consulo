@@ -25,7 +25,6 @@ import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.LayoutTree
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 
@@ -42,7 +41,7 @@ public class RenamePackagingElementAction extends DumbAwareAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
     e.getPresentation().setEnabledAndVisible(
         selection.getElementIfSingle() instanceof RenameablePackagingElement renameablePackagingElement
@@ -52,7 +51,7 @@ public class RenamePackagingElementAction extends DumbAwareAction {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     LayoutTreeSelection selection = myArtifactEditor.getLayoutTreeComponent().getSelection();
     PackagingElementNode<?> node = selection.getNodeIfSingle();
     PackagingElement<?> element = selection.getElementIfSingle();

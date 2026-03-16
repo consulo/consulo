@@ -16,7 +16,6 @@
 package consulo.application.util;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -30,10 +29,10 @@ public class SimpleTimer {
 
   // restrict threads running tasks to one since same-delay-tasks must be executed sequentially
   private final ScheduledExecutorService myScheduledExecutorService = AppExecutorUtil.createBoundedScheduledExecutorService("SimpleTimer Pool", 1);
-  @Nonnull
+  
   private final String myName;
 
-  private SimpleTimer(@Nonnull String name) {
+  private SimpleTimer(String name) {
     myName = name;
   }
 
@@ -41,12 +40,12 @@ public class SimpleTimer {
     return ourInstance;
   }
 
-  public static SimpleTimer newInstance(@Nonnull String name) {
+  public static SimpleTimer newInstance(String name) {
     return new SimpleTimer(name);
   }
 
-  @Nonnull
-  public SimpleTimerTask setUp(@Nonnull Runnable runnable, long delay) {
+  
+  public SimpleTimerTask setUp(Runnable runnable, long delay) {
     final ScheduledFuture<?> future = myScheduledExecutorService.schedule(runnable, delay, TimeUnit.MILLISECONDS);
     return new SimpleTimerTask() {
       @Override

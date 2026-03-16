@@ -7,7 +7,6 @@ import consulo.language.editor.template.CustomLiveTemplate;
 import consulo.language.editor.template.Template;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
   //private static final EventLogGroup GROUP = new EventLogGroup("surround.with", 3);
@@ -21,7 +20,7 @@ public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
   //  return GROUP;
   //}
 
-  public static void logSurrounder(Surrounder surrounder, @Nonnull Language language, @Nonnull Project project) {
+  public static void logSurrounder(Surrounder surrounder, Language language, Project project) {
     // SURROUNDER_EXECUTED.log(project, buildEventData(surrounder.getClass(), language));
   }
 
@@ -34,14 +33,14 @@ public final class SurroundWithLogger /*extends CounterUsagesCollector*/ {
   //  return data;
   //}
 
-  static void logTemplate(@Nonnull Template template, @Nonnull Language language, @Nonnull Project project) {
+  static void logTemplate(Template template, Language language, Project project) {
     //final List<EventPair<?>> data = LiveTemplateRunLogger.createTemplateData(template, language);
     //if (data != null) {
     //  LIVE_TEMPLATE_EXECUTED.log(project, data);
     //}
   }
 
-  static void logCustomTemplate(@Nonnull CustomLiveTemplate template, @Nonnull Language language, @Nonnull Project project) {
+  static void logCustomTemplate(CustomLiveTemplate template, Language language, Project project) {
     //CUSTOM_TEMPLATE_EXECUTED.log(project, buildEventData(template.getClass(), language));
   }
 }

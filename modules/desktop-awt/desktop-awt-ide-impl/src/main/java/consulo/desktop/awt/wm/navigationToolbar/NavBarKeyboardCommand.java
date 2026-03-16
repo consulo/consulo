@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.navigationToolbar;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 

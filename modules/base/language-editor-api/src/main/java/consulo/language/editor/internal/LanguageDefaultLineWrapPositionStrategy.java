@@ -19,7 +19,6 @@ import consulo.codeEditor.DefaultLineWrapPositionStrategy;
 import consulo.language.Language;
 import consulo.language.editor.LanguageLineWrapPositionStrategy;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
 public class LanguageDefaultLineWrapPositionStrategy extends DefaultLineWrapPositionStrategy implements LanguageLineWrapPositionStrategy {
   public static final LanguageDefaultLineWrapPositionStrategy INSTANCE = new LanguageDefaultLineWrapPositionStrategy();
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

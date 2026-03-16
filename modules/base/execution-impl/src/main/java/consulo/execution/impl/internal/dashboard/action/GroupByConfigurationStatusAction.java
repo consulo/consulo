@@ -3,13 +3,12 @@ package consulo.execution.impl.internal.dashboard.action;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.execution.impl.internal.dashboard.tree.StatusDashboardGroupingRule;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "RunDashboard.GroupByStatus")
 public final class GroupByConfigurationStatusAction extends RunDashboardGroupingRuleToggleAction {
 
   @Override
-  protected @Nonnull String getRuleName() {
+  protected String getRuleName() {
     return StatusDashboardGroupingRule.NAME;
   }
 

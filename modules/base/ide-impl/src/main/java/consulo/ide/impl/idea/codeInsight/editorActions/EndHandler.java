@@ -34,8 +34,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "first")
 public class EndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -46,7 +45,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
   }
 
   @Override
-  protected void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
+  protected void doExecute(Editor editor, Caret caret, DataContext dataContext) {
     CodeInsightSettings settings = CodeInsightSettings.getInstance();
     if (!settings.SMART_END_ACTION) {
       if (myOriginalHandler != null) {
@@ -142,7 +141,7 @@ public class EndHandler extends EditorActionHandler implements ExtensionEditorAc
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_MOVE_LINE_END;

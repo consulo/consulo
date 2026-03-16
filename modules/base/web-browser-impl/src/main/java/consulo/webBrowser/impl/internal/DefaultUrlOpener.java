@@ -21,8 +21,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.UrlOpener;
 import consulo.webBrowser.WebBrowser;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -36,7 +35,7 @@ public final class DefaultUrlOpener implements UrlOpener {
     }
 
     @Override
-    public boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project) {
+    public boolean openUrl(WebBrowser browser, String url, @Nullable Project project) {
         return myBrowserLauncher.get().browseUsingPath(url, null, browser, project, ArrayUtil.EMPTY_STRING_ARRAY);
     }
 }

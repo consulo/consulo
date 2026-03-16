@@ -23,13 +23,12 @@ import consulo.diff.DiffExtension;
 import consulo.diff.FrameDiffTool;
 import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AnnotateDiffExtension extends DiffExtension {
   @RequiredUIAccess
   @Override
-  public void onViewerCreated(@Nonnull FrameDiffTool.DiffViewer diffViewer, @Nonnull DiffContext context, @Nonnull DiffRequest request) {
+  public void onViewerCreated(FrameDiffTool.DiffViewer diffViewer, DiffContext context, DiffRequest request) {
     if (diffViewer instanceof DiffViewerBase) {
       DiffViewerBase viewer = (DiffViewerBase)diffViewer;
       viewer.addListener(new AnnotateDiffViewerAction.MyDiffViewerListener(viewer));

@@ -29,7 +29,6 @@ import consulo.versionControlSystem.change.commited.CommittedChangesFilterPriori
 import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -38,6 +37,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.util.*;
 import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -96,7 +96,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   }
 
   @Override
-  @jakarta.annotation.Nullable
+  @Nullable
   public JComponent getFilterUI() {
     return myScrollPane;
   }
@@ -151,7 +151,7 @@ public class ColumnFilteringStrategy implements ChangeListFilteringStrategy {
   }
 
   @Override
-  @Nonnull
+  
   public List<CommittedChangeList> filterChangeLists(List<CommittedChangeList> changeLists) {
     Object[] selection = myValueList.getSelectedValues();
     if (myValueList.getSelectedIndex() == 0 || selection.length == 0) {

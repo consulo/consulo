@@ -24,7 +24,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ui.impl.internal.VirtualFileDeleteProvider;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "FileChooser.Delete")
 public class FileDeleteAction extends DeleteAction {
@@ -43,7 +42,7 @@ public class FileDeleteAction extends DeleteAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Boolean available = event.getData(FileChooserKeys.DELETE_ACTION_AVAILABLE);
         if (available != null && !available) {
             event.getPresentation().setEnabledAndVisible(false);

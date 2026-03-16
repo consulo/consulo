@@ -16,7 +16,6 @@
 package consulo.language.editor.inspection;
 
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 
@@ -31,6 +30,6 @@ public interface ProblemHighlightTypeInspectionRuler {
         Map.entry(ProblemHighlightType.LIKE_UNUSED_SYMBOL, HighlightInfoType.RAW_UNUSED_SYMBOL)
     );
 
-    @Nonnull
+    
     ProblemHighlightType getControllableHighlightType();
 }

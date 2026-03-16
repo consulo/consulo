@@ -1,8 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal.perfomance;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +39,7 @@ final class ActivityImpl implements Activity {
         threadName = thread.getName();
     }
 
-    @Nonnull
+    
     public String getThreadName() {
         return threadName;
     }
@@ -66,14 +65,14 @@ final class ActivityImpl implements Activity {
     // and how do we can sort correctly, when parent item equals to child (start and end), also there is another child with start equals to end?
     // so, parent added to API but as it was not enough, decided to measure time in nanoseconds instead of ms to mitigate such situations
     @Override
-    @Nonnull
-    public ActivityImpl startChild(@Nonnull String name) {
+    
+    public ActivityImpl startChild(String name) {
         ActivityImpl activity = new ActivityImpl(name, StartUpMeasurer.getCurrentTime(), this, pluginId);
         activity.category = category;
         return activity;
     }
 
-    @Nonnull
+    
     public String getName() {
         return name;
     }
@@ -109,13 +108,13 @@ final class ActivityImpl implements Activity {
     }
 
     @Override
-    public void setDescription(@Nonnull String value) {
+    public void setDescription(String value) {
         description = value;
     }
 
     @Override
-    @Nonnull
-    public Activity endAndStart(@Nonnull String name) {
+    
+    public Activity endAndStart(String name) {
         end();
         ActivityImpl activity = new ActivityImpl(name, /* start = */end, parent, /* level = */ pluginId);
         activity.setCategory(category);
@@ -133,7 +132,7 @@ final class ActivityImpl implements Activity {
         return builder.toString();
     }
 
-    private static void nanoToString(long start, @Nonnull StringBuilder builder) {
+    private static void nanoToString(long start, StringBuilder builder) {
         builder.append(TimeUnit.NANOSECONDS.toMillis(start - StartUpMeasurer.getStartTime())).append("ms (").append(TimeUnit.NANOSECONDS.toMicros(start - StartUpMeasurer.getStartTime())).append("μs)");
     }
 }

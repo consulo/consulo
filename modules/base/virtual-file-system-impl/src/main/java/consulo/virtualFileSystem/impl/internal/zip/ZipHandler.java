@@ -26,8 +26,7 @@ import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveHandler;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -65,13 +64,13 @@ public abstract class ZipHandler extends ArchiveHandler {
 
   private volatile long myFileLength;
 
-  public ZipHandler(@Nonnull String path) {
+  public ZipHandler(String path) {
     super(path);
   }
 
-  public abstract ArchiveFile createArchiveFile(@Nonnull String path) throws IOException;
+  public abstract ArchiveFile createArchiveFile(String path) throws IOException;
 
-  @Nonnull
+  
   private String getCanonicalPathToZip() throws IOException {
     String value = myCanonicalPathToZip;
     if (value == null) {
@@ -80,7 +79,7 @@ public abstract class ZipHandler extends ArchiveHandler {
     return value;
   }
 
-  @Nonnull
+  
   @Override
   protected Map<String, EntryInfo> createEntriesMap() throws IOException {
     FileAccessorCache.Handle<ArchiveFile> zipRef = getZipFileHandle();
@@ -102,7 +101,7 @@ public abstract class ZipHandler extends ArchiveHandler {
     }
   }
 
-  @Nonnull
+  
   private FileAccessorCache.Handle<ArchiveFile> getZipFileHandle() throws IOException {
     FileAccessorCache.Handle<ArchiveFile> handle = ourZipFileFileAccessorCache.get(this);
 
@@ -129,7 +128,7 @@ public abstract class ZipHandler extends ArchiveHandler {
     ourZipFileFileAccessorCache.remove(this);
   }
 
-  @Nonnull
+  
   protected File getFileToUse() {
     return getFile();
   }
@@ -140,8 +139,8 @@ public abstract class ZipHandler extends ArchiveHandler {
     removeZipHandlerFromCache();
   }
 
-  @Nonnull
-  private EntryInfo getOrCreate(@Nonnull ArchiveEntry entry, @Nonnull Map<String, EntryInfo> map, @Nonnull ArchiveFile zip) {
+  
+  private EntryInfo getOrCreate(ArchiveEntry entry, Map<String, EntryInfo> map, ArchiveFile zip) {
     boolean isDirectory = entry.isDirectory();
     String entryName = entry.getName();
     if (StringUtil.endsWithChar(entryName, '/')) {
@@ -161,22 +160,22 @@ public abstract class ZipHandler extends ArchiveHandler {
     return info;
   }
 
-  @Nonnull
-  private static EntryInfo store(@Nonnull Map<String, EntryInfo> map,
+  
+  private static EntryInfo store(Map<String, EntryInfo> map,
                                  @Nullable EntryInfo parentInfo,
-                                 @Nonnull CharSequence shortName,
+                                 CharSequence shortName,
                                  boolean isDirectory,
                                  long size,
                                  long time,
-                                 @Nonnull String entryName) {
+                                 String entryName) {
     CharSequence sequence = shortName instanceof ByteArrayCharSequence ? shortName : ByteArrayCharSequence.convertToBytesIfPossible(shortName);
     EntryInfo info = new EntryInfo(sequence, isDirectory, size, time, parentInfo);
     map.put(entryName, info);
     return info;
   }
 
-  @Nonnull
-  private EntryInfo getOrCreate(@Nonnull String entryName, Map<String, EntryInfo> map, @Nonnull ArchiveFile zip) {
+  
+  private EntryInfo getOrCreate(String entryName, Map<String, EntryInfo> map, ArchiveFile zip) {
     EntryInfo info = map.get(entryName);
 
     if (info == null) {
@@ -198,9 +197,9 @@ public abstract class ZipHandler extends ArchiveHandler {
     return info;
   }
 
-  @Nonnull
+  
   @Override
-  public byte[] contentsToByteArray(@Nonnull String relativePath) throws IOException {
+  public byte[] contentsToByteArray(String relativePath) throws IOException {
     FileAccessorCache.Handle<ArchiveFile> zipRef;
 
     try {

@@ -24,7 +24,6 @@ import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.internal.RawTypedActionHandlerInternal;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedActionHandlerInternal {
@@ -36,7 +35,7 @@ public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedA
   }
 
   @Override
-  public void execute(@Nonnull Editor editor, char charTyped, @Nonnull DataContext dataContext) {
+  public void execute(Editor editor, char charTyped, DataContext dataContext) {
     editor.putUserData(EditorEx.DISABLE_CARET_SHIFT_ON_WHITESPACE_INSERTION, Boolean.TRUE);
     try {
       myDelegate.execute(editor, charTyped, dataContext);
@@ -47,7 +46,7 @@ public class IdeRawTypedActionHandler implements TypedActionHandlerEx, RawTypedA
   }
 
   @Override
-  public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
+  public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
     if (myDelegate instanceof TypedActionHandlerEx) ((TypedActionHandlerEx)myDelegate).beforeExecute(editor, c, context, plan);
   }
 }

@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.NonTrivialActionGroup;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = "LocalHistory",
@@ -45,7 +44,7 @@ public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAwar
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         VirtualFile file = e.getData(VirtualFile.KEY);
         PsiElement element = e.getData(PsiElement.KEY);

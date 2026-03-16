@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
@@ -41,10 +40,10 @@ import consulo.ui.ex.awt.ReplacePromptDialog;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author Dennis.Ushakov
@@ -52,12 +51,12 @@ import java.util.function.Consumer;
 public class ExtractMethodHelper {
     @RequiredUIAccess
     public static void processDuplicates(
-        @Nonnull final PsiElement callElement,
-        @Nonnull final PsiElement generatedMethod,
-        @Nonnull final List<PsiElement> scope,
-        @Nonnull final SimpleDuplicatesFinder finder,
-        @Nonnull final Editor editor,
-        @Nonnull final Consumer<Pair<SimpleMatch, PsiElement>> replacer
+        final PsiElement callElement,
+        final PsiElement generatedMethod,
+        final List<PsiElement> scope,
+        final SimpleDuplicatesFinder finder,
+        final Editor editor,
+        final Consumer<Pair<SimpleMatch, PsiElement>> replacer
     ) {
         finder.setReplacement(callElement);
         if (Application.get().isUnitTestMode()) {
@@ -67,12 +66,12 @@ public class ExtractMethodHelper {
         final Project project = callElement.getProject();
         ProgressManager.getInstance().run(new Task.Backgroundable(project, RefactoringLocalize.searchingForDuplicates(), true) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 if (myProject == null || myProject.isDisposed()) {
                     return;
                 }
                 List<SimpleMatch> duplicates = project.getApplication()
-                    .runReadAction((Computable<List<SimpleMatch>>)() -> finder.findDuplicates(scope, generatedMethod));
+                    .runReadAction((Supplier<List<SimpleMatch>>) () -> finder.findDuplicates(scope, generatedMethod));
 
                 project.getApplication().invokeLater(() -> replaceDuplicates(callElement, editor, replacer, duplicates));
             }
@@ -91,11 +90,11 @@ public class ExtractMethodHelper {
      * @return list of discovered duplicate code fragments or empty list if user interrupted the search
      * @see #replaceDuplicates(PsiElement, Editor, Consumer, List)
      */
-    @Nonnull
+    
     public static List<SimpleMatch> collectDuplicates(
-        @Nonnull SimpleDuplicatesFinder finder,
-        @Nonnull List<PsiElement> searchScopes,
-        @Nonnull PsiElement generatedMethod
+        SimpleDuplicatesFinder finder,
+        List<PsiElement> searchScopes,
+        PsiElement generatedMethod
     ) {
         Project project = generatedMethod.getProject();
         try {
@@ -129,10 +128,10 @@ public class ExtractMethodHelper {
      */
     @RequiredUIAccess
     public static void replaceDuplicates(
-        @Nonnull PsiElement callElement,
-        @Nonnull Editor editor,
-        @Nonnull Consumer<Pair<SimpleMatch, PsiElement>> replacer,
-        @Nonnull List<SimpleMatch> duplicates
+        PsiElement callElement,
+        Editor editor,
+        Consumer<Pair<SimpleMatch, PsiElement>> replacer,
+        List<SimpleMatch> duplicates
     ) {
         if (!duplicates.isEmpty()) {
             LocalizeValue message =
@@ -211,9 +210,9 @@ public class ExtractMethodHelper {
 
     @RequiredReadAction
     private static void highlightInEditor(
-        @Nonnull Project project,
-        @Nonnull SimpleMatch match,
-        @Nonnull Editor editor,
+        Project project,
+        SimpleMatch match,
+        Editor editor,
         Map<SimpleMatch, RangeHighlighter> highlighterMap
     ) {
         List<RangeHighlighter> highlighters = new ArrayList<>();

@@ -5,8 +5,7 @@ import consulo.codeEditor.internal.CodeEditorInternalHelper;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.document.Document;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -19,35 +18,35 @@ import java.util.function.Predicate;
  */
 public interface StickyLinesModel {
     @Nullable
-    static  StickyLinesModel getModel(@Nonnull Project project, @Nonnull Document document) {
+    static  StickyLinesModel getModel(Project project, Document document) {
         return CodeEditorInternalHelper.getInstance().getStickyLinesModel(project, document);
     }
 
-    static @Nonnull StickyLinesModel getModel(@Nonnull MarkupModel markupModel) {
+    static StickyLinesModel getModel(MarkupModel markupModel) {
         return CodeEditorInternalHelper.getInstance().getStickyLinesModel(markupModel);
     }
 
-    default @Nonnull StickyLine addStickyLine(int startOffset, int endOffset, @Nullable String debugText) {
+    default StickyLine addStickyLine(int startOffset, int endOffset, @Nullable String debugText) {
         return addStickyLine(SourceID.IJ, startOffset, endOffset, debugText);
     }
 
-    @Nonnull
-    StickyLine addStickyLine(@Nonnull SourceID source, int startOffset, int endOffset, @Nullable String debugText);
+    
+    StickyLine addStickyLine(SourceID source, int startOffset, int endOffset, @Nullable String debugText);
 
-    void removeStickyLine(@Nonnull StickyLine stickyLine);
+    void removeStickyLine(StickyLine stickyLine);
 
-    void processStickyLines(int startOffset, int endOffset, @Nonnull Predicate<? super StickyLine> processor);
+    void processStickyLines(int startOffset, int endOffset, Predicate<? super StickyLine> processor);
 
-    void processStickyLines(@Nonnull SourceID source, @Nonnull Predicate<? super StickyLine> processor);
+    void processStickyLines(SourceID source, Predicate<? super StickyLine> processor);
 
-    @Nonnull
+    
     List<StickyLine> getAllStickyLines();
 
     void removeAllStickyLines(@Nullable Project project);
 
-    void addListener(@Nonnull Listener listener);
+    void addListener(Listener listener);
 
-    void removeListener(@Nonnull Listener listener);
+    void removeListener(Listener listener);
 
     void notifyLinesUpdate();
 

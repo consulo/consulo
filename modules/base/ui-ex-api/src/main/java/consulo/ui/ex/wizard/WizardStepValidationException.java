@@ -17,8 +17,7 @@ package consulo.ui.ex.wizard;
 
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,17 +27,17 @@ public class WizardStepValidationException extends Exception {
   private final Object myComponent;
   private final String myMessage;
 
-  public WizardStepValidationException(@Nonnull String message) {
+  public WizardStepValidationException(String message) {
     myComponent = null;
     myMessage = message;
   }
 
-  public WizardStepValidationException(@Nonnull Component component, @Nonnull String message) {
+  public WizardStepValidationException(Component component, String message) {
     myComponent = component;
     myMessage = message;
   }
 
-  public WizardStepValidationException(@Nonnull java.awt.Component component, @Nonnull String message) {
+  public WizardStepValidationException(java.awt.Component component, String message) {
     myComponent = component;
     myMessage = message;
   }

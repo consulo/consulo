@@ -50,8 +50,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -73,7 +72,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     private RefManager myRefManager;
 
     private AnalysisScope myCurrentScope;
-    @Nonnull
+    
     private final Project myProject;
     private final List<JobDescriptor> myJobDescriptors = new ArrayList<>();
 
@@ -88,7 +87,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
 
     public static final String LOCAL_TOOL_ATTRIBUTE = "is_local_tool";
 
-    public GlobalInspectionContextBase(@Nonnull Project project) {
+    public GlobalInspectionContextBase(Project project) {
         myProject = project;
 
         for (InspectionExtensionsFactory factory : InspectionExtensionsFactory.EP_NAME.getExtensionList()) {
@@ -102,13 +101,13 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
 
     @Override
-    public <T> T getExtension(@Nonnull Key<T> key) {
+    public <T> T getExtension(Key<T> key) {
         //noinspection unchecked
         return (T)myExtensions.get(key);
     }
@@ -138,17 +137,17 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     @Override
-    public boolean isSuppressed(@Nonnull RefEntity entity, @Nonnull String id) {
+    public boolean isSuppressed(RefEntity entity, String id) {
         return entity instanceof RefElementImpl refElement && refElement.isSuppressed(id);
     }
 
     @Override
-    public boolean shouldCheck(@Nonnull RefEntity entity, @Nonnull GlobalInspectionTool tool) {
+    public boolean shouldCheck(RefEntity entity, GlobalInspectionTool tool) {
         return !(entity instanceof RefElementImpl refElement && !isToCheckMember(refElement, tool));
     }
 
     @Override
-    public boolean isSuppressed(@Nonnull PsiElement element, @Nonnull String id) {
+    public boolean isSuppressed(PsiElement element, String id) {
         RefManagerImpl refManager = (RefManagerImpl)getRefManager();
         if (refManager.isDeclarationsFound()) {
             RefElement refElement = refManager.getReference(element);
@@ -188,11 +187,11 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         myJobDescriptors.clear();
     }
 
-    public void setCurrentScope(@Nonnull AnalysisScope currentScope) {
+    public void setCurrentScope(AnalysisScope currentScope) {
         myCurrentScope = currentScope;
     }
 
-    public void doInspections(@Nonnull AnalysisScope scope) {
+    public void doInspections(AnalysisScope scope) {
         if (!GlobalInspectionContextUtil.canRunInspections(myProject, true)) {
             return;
         }
@@ -211,7 +210,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
 
 
     @Override
-    @Nonnull
+    
     public RefManager getRefManager() {
         if (myRefManager == null) {
             myRefManager = Application.get().runReadAction((Supplier<RefManagerImpl>)() -> new RefManagerImpl(
@@ -222,12 +221,12 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
 
     @Nullable
     @Override
-    public Tools getTools(@Nonnull String shortName) {
+    public Tools getTools(String shortName) {
         return myTools.get(shortName);
     }
 
     @Override
-    public boolean isToCheckFile(PsiFile file, @Nonnull InspectionTool tool) {
+    public boolean isToCheckFile(PsiFile file, InspectionTool tool) {
         Tools tools = myTools.get(tool.getShortName());
         if (tools != null && file != null) {
             for (ScopeToolState state : tools.getTools()) {
@@ -245,7 +244,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     @RequiredUIAccess
-    protected void launchInspections(@Nonnull AnalysisScope scope) {
+    protected void launchInspections(AnalysisScope scope) {
         UIAccess.assertIsUIThread();
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
 
@@ -253,7 +252,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         ProgressManager.getInstance().run(
             new Task.Backgroundable(getProject(), InspectionLocalize.inspectionProgressTitle(), true, createOption()) {
                 @Override
-                public void run(@Nonnull ProgressIndicator indicator) {
+                public void run(ProgressIndicator indicator) {
                     performInspectionsWithProgress(scope, false, false);
                 }
 
@@ -266,7 +265,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         );
     }
 
-    @Nonnull
+    
     protected PerformInBackgroundOption createOption() {
         return new PerformInBackgroundOption() {
             @Override
@@ -284,7 +283,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     protected void notifyInspectionsFinished() {
     }
 
-    public void performInspectionsWithProgress(@Nonnull AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
+    public void performInspectionsWithProgress(AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
         myProgressIndicator = ProgressManager.getInstance().getProgressIndicator();
         if (myProgressIndicator == null) {
             throw new IllegalStateException("Inspections must be run under progress");
@@ -323,14 +322,14 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         }
     }
 
-    protected void runTools(@Nonnull AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
+    protected void runTools(AnalysisScope scope, boolean runGlobalToolsOnly, boolean isOfflineInspections) {
     }
 
 
     public void initializeTools(
-        @Nonnull List<Tools> outGlobalTools,
-        @Nonnull List<Tools> outLocalTools,
-        @Nonnull List<Tools> outGlobalSimpleTools
+        List<Tools> outGlobalTools,
+        List<Tools> outLocalTools,
+        List<Tools> outGlobalSimpleTools
     ) {
         List<Tools> usedTools = getUsedTools();
         for (Tools currentTools : usedTools) {
@@ -353,7 +352,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         }
     }
 
-    @Nonnull
+    
     protected List<Tools> getUsedTools() {
         InspectionProfileImpl profile = new InspectionProfileImpl((InspectionProfileImpl)getCurrentProfile());
         List<Tools> tools = profile.getAllEnabledInspectionTools(myProject);
@@ -371,11 +370,11 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     private static void classifyTool(
-        @Nonnull List<Tools> outGlobalTools,
-        @Nonnull List<Tools> outLocalTools,
-        @Nonnull List<Tools> outGlobalSimpleTools,
-        @Nonnull Tools currentTools,
-        @Nonnull InspectionToolWrapper toolWrapper
+        List<Tools> outGlobalTools,
+        List<Tools> outLocalTools,
+        List<Tools> outGlobalSimpleTools,
+        Tools currentTools,
+        InspectionToolWrapper toolWrapper
     ) {
         if (toolWrapper instanceof LocalInspectionToolWrapper) {
             outLocalTools.add(currentTools);
@@ -396,12 +395,12 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
         }
     }
 
-    @Nonnull
+    
     public Map<String, Tools> getTools() {
         return myTools;
     }
 
-    private void appendJobDescriptor(@Nonnull JobDescriptor job) {
+    private void appendJobDescriptor(JobDescriptor job) {
         if (!myJobDescriptors.contains(job)) {
             myJobDescriptors.add(job);
             job.setDoneAmount(0);
@@ -409,23 +408,23 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     public void codeCleanup(
-        @Nonnull Project project,
-        @Nonnull AnalysisScope scope,
-        @Nonnull InspectionProfile profile,
+        Project project,
+        AnalysisScope scope,
+        InspectionProfile profile,
         @Nullable String commandName,
         @Nullable Runnable postRunnable,
         boolean modal
     ) {
     }
 
-    public static void codeCleanup(@Nonnull Project project, @Nonnull AnalysisScope scope, @Nullable Runnable runnable) {
+    public static void codeCleanup(Project project, AnalysisScope scope, @Nullable Runnable runnable) {
         GlobalInspectionContextBase globalContext =
             (GlobalInspectionContextBase)InspectionManager.getInstance(project).createNewGlobalContext(false);
         InspectionProfile profile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
         globalContext.codeCleanup(project, scope, profile, null, runnable, false);
     }
 
-    public static void cleanupElements(@Nonnull Project project, @Nullable Runnable runnable, @Nonnull PsiElement... scope) {
+    public static void cleanupElements(Project project, @Nullable Runnable runnable, PsiElement... scope) {
         List<SmartPsiElementPointer<PsiElement>> elements = new ArrayList<>();
         SmartPointerManager manager = SmartPointerManager.getInstance(project);
         for (PsiElement element : scope) {
@@ -470,7 +469,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     @Override
-    public void incrementJobDoneAmount(@Nonnull JobDescriptor job, @Nonnull String message) {
+    public void incrementJobDoneAmount(JobDescriptor job, String message) {
         if (myProgressIndicator == null) {
             return;
         }
@@ -501,7 +500,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     }
 
     @Override
-    @Nonnull
+    
     public StdJobDescriptors getStdJobDescriptors() {
         return myStdJobDescriptors;
     }

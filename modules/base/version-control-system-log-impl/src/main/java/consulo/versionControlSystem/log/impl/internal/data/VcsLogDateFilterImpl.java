@@ -18,8 +18,7 @@ package consulo.versionControlSystem.log.impl.internal.data;
 import consulo.versionControlSystem.log.VcsCommitMetadata;
 import consulo.versionControlSystem.log.VcsLogDateFilter;
 import consulo.versionControlSystem.log.VcsLogDetailsFilter;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Date;
 
@@ -36,7 +35,7 @@ public class VcsLogDateFilterImpl implements VcsLogDateFilter, VcsLogDetailsFilt
   }
 
   @Override
-  public boolean matches(@Nonnull VcsCommitMetadata details) {
+  public boolean matches(VcsCommitMetadata details) {
     Date date = new Date(details.getCommitTime());  // Git itself also filters by commit time, not author time
     boolean matches = true;
     if (myAfter != null) {

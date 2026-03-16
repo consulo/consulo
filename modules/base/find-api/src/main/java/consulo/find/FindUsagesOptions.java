@@ -24,12 +24,11 @@ import consulo.language.psi.search.SearchRequestCollector;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class FindUsagesOptions implements Cloneable {
-  @Nonnull
+  
   public SearchScope searchScope;
 
   public boolean isSearchForTextOccurrences = true;
@@ -38,17 +37,17 @@ public class FindUsagesOptions implements Cloneable {
   public SearchRequestCollector fastTrack;
 
   @RequiredReadAction
-  public FindUsagesOptions(@Nonnull Project project) {
+  public FindUsagesOptions(Project project) {
     this(project, null);
   }
 
   @RequiredReadAction
-  public FindUsagesOptions(@Nonnull Project project, @Nullable DataContext dataContext) {
+  public FindUsagesOptions(Project project, @Nullable DataContext dataContext) {
     this(calcScope(project, dataContext));
   }
 
-  @Nonnull
-  private static SearchScope calcScope(@Nonnull Project project, @Nullable DataContext dataContext) {
+  
+  private static SearchScope calcScope(Project project, @Nullable DataContext dataContext) {
     String defaultScopeName = FindSettings.getInstance().getDefaultScopeName();
     List<SearchScope> predefined = PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(project, dataContext, true, false, false,
                                                                                                    false);
@@ -65,7 +64,7 @@ public class FindUsagesOptions implements Cloneable {
     return resultScope;
   }
 
-  public FindUsagesOptions(@Nonnull SearchScope searchScope) {
+  public FindUsagesOptions(SearchScope searchScope) {
     this.searchScope = searchScope;
   }
 
@@ -108,7 +107,7 @@ public class FindUsagesOptions implements Cloneable {
            '}';
   }
 
-  @Nonnull
+  
   public String generateUsagesString() {
     return "Usages";
   }

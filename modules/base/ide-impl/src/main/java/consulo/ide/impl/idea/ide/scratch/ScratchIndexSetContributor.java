@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public class ScratchIndexSetContributor extends IndexableSetContributor {
     myLocalFileSystem = LocalFileSystem.get(virtualFileManager);
   }
 
-  @Nonnull
+  
   @Override
   public Set<VirtualFile> getAdditionalRootsToIndex() {
     ScratchFileService scratchFileService = myScratchFileServiceProvider.get();

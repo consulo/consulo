@@ -19,7 +19,7 @@ package consulo.language.editor.completion.lookup.event;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.EventObject;
 
 public class LookupEvent extends EventObject {

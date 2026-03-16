@@ -19,7 +19,6 @@ package consulo.language.editor.template.context;
 import consulo.annotation.component.ExtensionImpl;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -31,7 +30,7 @@ public class EverywhereContextType extends BaseTemplateContextType {
   }
 
   @Override
-  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+  public boolean isInContext(TemplateActionContext templateActionContext) {
     return true;
   }
 }

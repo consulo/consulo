@@ -51,8 +51,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class DeleteHandler {
 
     public static class DefaultDeleteProvider implements DeleteProvider {
         @Override
-        public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+        public boolean canDeleteElement(DataContext dataContext) {
             if (!dataContext.hasData(Project.KEY)) {
                 return false;
             }
@@ -93,7 +92,7 @@ public class DeleteHandler {
 
         @Override
         @RequiredUIAccess
-        public void deleteElement(@Nonnull DataContext dataContext) {
+        public void deleteElement(DataContext dataContext) {
             PsiElement[] elements = getPsiElements(dataContext);
             if (elements == null) {
                 return;

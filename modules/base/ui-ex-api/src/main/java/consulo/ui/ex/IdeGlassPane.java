@@ -18,8 +18,7 @@ package consulo.ui.ex;
 
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,7 +37,7 @@ public interface IdeGlassPane {
 
   void removeMouseMotionPreprocessor(MouseMotionListener listener);
 
-  void setCursor(@Nullable Cursor cursor, @Nonnull Object requestor);
+  void setCursor(@Nullable Cursor cursor, Object requestor);
 
   interface TopComponent {
     boolean canBePreprocessed(MouseEvent e);

@@ -30,8 +30,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,19 +50,19 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     private final Supplier<ModifiableRootModel> myModelSupplier;
 
     public interface ContentEntryEditorListener extends EventListener {
-        default void editingStarted(@Nonnull ContentEntryEditor editor) {
+        default void editingStarted(ContentEntryEditor editor) {
         }
 
-        default void beforeEntryDeleted(@Nonnull ContentEntryEditor editor) {
+        default void beforeEntryDeleted(ContentEntryEditor editor) {
         }
 
-        default void folderAdded(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {
+        default void folderAdded(ContentEntryEditor editor, ContentFolder contentFolder) {
         }
 
-        default void folderRemoved(@Nonnull ContentEntryEditor editor, ContentFolder contentFolder) {
+        default void folderRemoved(ContentEntryEditor editor, ContentFolder contentFolder) {
         }
 
-        default void navigationRequested(@Nonnull ContentEntryEditor editor, VirtualFile file) {
+        default void navigationRequested(ContentEntryEditor editor, VirtualFile file) {
         }
     }
 
@@ -89,12 +88,12 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         update();
     }
 
-    @Nonnull
+    
     protected ContentEntry getContentEntry() {
         return myContentEntry;
     }
 
-    @Nonnull
+    
     protected ModifiableRootModel getModel() {
         return myModelSupplier.get();
     }
@@ -175,7 +174,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     }
 
     @Nullable
-    public ContentFolder addFolder(@Nonnull VirtualFile file, ContentFolderTypeProvider contentFolderType) {
+    public ContentFolder addFolder(VirtualFile file, ContentFolderTypeProvider contentFolderType) {
         ContentEntry contentEntry = getContentEntry();
         ContentFolder contentFolder = contentEntry.addFolder(file, contentFolderType);
         try {
@@ -187,7 +186,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
         }
     }
 
-    public void removeFolder(@Nonnull ContentFolder contentFolder) {
+    public void removeFolder(ContentFolder contentFolder) {
         try {
             if (contentFolder.isSynthetic()) {
                 return;
@@ -202,7 +201,7 @@ public class ContentEntryEditor implements ContentRootPanel.ActionCallback {
     }
 
     @Nullable
-    public ContentFolder getFolder(@Nonnull VirtualFile file) {
+    public ContentFolder getFolder(VirtualFile file) {
         ContentEntry contentEntry = getContentEntry();
         for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
             VirtualFile f = contentFolder.getFile();

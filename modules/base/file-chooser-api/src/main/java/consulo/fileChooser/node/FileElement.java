@@ -19,8 +19,7 @@ import consulo.util.lang.Comparing;
 import consulo.fileChooser.util.FileChooserUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 public class FileElement {
@@ -50,7 +49,7 @@ public class FileElement {
     return myName;
   }
 
-  @Nonnull
+  
   public final String getPath() {
     if (myPath == null) {
       StringBuilder sb = new StringBuilder();

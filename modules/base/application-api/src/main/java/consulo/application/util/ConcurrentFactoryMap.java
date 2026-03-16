@@ -5,8 +5,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
@@ -79,7 +78,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     return nullize(v);
   }
 
-  @Nonnull
+  
   @Override
   public Set<K> keySet() {
     return new CollectionWrapper.Set<>(myMap.keySet());
@@ -112,19 +111,19 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   @Override
-  public void putAll(@Nonnull Map<? extends K, ? extends V> m) {
+  public void putAll(Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
   }
 
-  @Nonnull
+  
   @Override
   public Collection<V> values() {
     return new CollectionWrapper<>(myMap.values());
   }
 
-  @Nonnull
+  
   @Override
   public Set<Entry<K, V>> entrySet() {
     return new CollectionWrapper.Set<Entry<K, V>>(myMap.entrySet()) {
@@ -141,33 +140,33 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     };
   }
 
-  @Nonnull
+  
   protected ConcurrentMap<K, V> createMap() {
     return ContainerUtil.newConcurrentMap();
   }
 
   @Override
-  public V putIfAbsent(@Nonnull K key, V value) {
+  public V putIfAbsent(K key, V value) {
     return nullize(myMap.putIfAbsent(notNull(key), notNull(value)));
   }
 
   @Override
-  public boolean remove(@Nonnull Object key, Object value) {
+  public boolean remove(Object key, Object value) {
     return myMap.remove(ConcurrentFactoryMap.<K>notNull(key), ConcurrentFactoryMap.<V>notNull(value));
   }
 
   @Override
-  public boolean replace(@Nonnull K key, @Nonnull V oldValue, @Nonnull V newValue) {
+  public boolean replace(K key, V oldValue, V newValue) {
     return myMap.replace(notNull(key), notNull(oldValue), notNull(newValue));
   }
 
   @Override
-  public V replace(@Nonnull K key, @Nonnull V value) {
+  public V replace(K key, V value) {
     return nullize(myMap.replace(notNull(key), notNull(value)));
   }
 
-  @Nonnull
-  public static <T, V> ConcurrentMap<T, V> createMap(@Nonnull final Function<? super T, ? extends V> computeValue) {
+  
+  public static <T, V> ConcurrentMap<T, V> createMap(final Function<? super T, ? extends V> computeValue) {
     return new ConcurrentFactoryMap<T, V>() {
       @Nullable
       @Override
@@ -177,8 +176,8 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
     };
   }
 
-  @Nonnull
-  public static <K, V> ConcurrentMap<K, V> create(@Nonnull Function<? super K, ? extends V> computeValue, @Nonnull Supplier<? extends ConcurrentMap<K, V>> mapCreator) {
+  
+  public static <K, V> ConcurrentMap<K, V> create(Function<? super K, ? extends V> computeValue, Supplier<? extends ConcurrentMap<K, V>> mapCreator) {
     return new ConcurrentFactoryMap<K, V>() {
       @Nullable
       @Override
@@ -186,7 +185,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
         return computeValue.apply(key);
       }
 
-      @Nonnull
+      
       @Override
       protected ConcurrentMap<K, V> createMap() {
         return mapCreator.get();
@@ -197,8 +196,8 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
   /**
    * @return Concurrent factory map with weak keys, strong values
    */
-  @Nonnull
-  public static <T, V> ConcurrentMap<T, V> createWeakMap(@Nonnull Function<? super T, ? extends V> compute) {
+  
+  public static <T, V> ConcurrentMap<T, V> createWeakMap(Function<? super T, ? extends V> compute) {
     return create(compute, ContainerUtil::createConcurrentWeakMap);
   }
 
@@ -220,7 +219,7 @@ public abstract class ConcurrentFactoryMap<K, V> implements ConcurrentMap<K, V> 
       myDelegate = delegate;
     }
 
-    @Nonnull
+    
     @Override
     public Iterator<K> iterator() {
       return new Iterator<K>() {

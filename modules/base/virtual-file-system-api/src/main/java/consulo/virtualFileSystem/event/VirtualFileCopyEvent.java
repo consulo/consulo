@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides data for event which is fired when a virtual file is copied.
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 public class VirtualFileCopyEvent extends VirtualFileEvent {
   private final VirtualFile myOriginalFile;
 
-  public VirtualFileCopyEvent(@Nullable Object requestor, @Nonnull VirtualFile original, @Nonnull VirtualFile created) {
+  public VirtualFileCopyEvent(@Nullable Object requestor, VirtualFile original, VirtualFile created) {
     super(requestor, created, created.getName(), created.getParent());
     myOriginalFile = original;
   }
@@ -39,7 +38,7 @@ public class VirtualFileCopyEvent extends VirtualFileEvent {
    *
    * @return original file.
    */
-  @Nonnull
+  
   public VirtualFile getOriginalFile() {
     return myOriginalFile;
   }

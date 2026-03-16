@@ -19,8 +19,7 @@ import consulo.application.util.matcher.MatcherTextRange;
 import consulo.util.dataholder.Key;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -37,12 +36,12 @@ public abstract class SpeedSearchSupply {
   public static final String ENTERED_PREFIX_PROPERTY_NAME = "enteredPrefix";
 
   @Nullable
-  public static SpeedSearchSupply getSupply(@Nonnull JComponent component) {
+  public static SpeedSearchSupply getSupply(JComponent component) {
     return getSupply(component, false);
   }
 
   @Nullable
-  public static SpeedSearchSupply getSupply(@Nonnull JComponent component, boolean evenIfInactive) {
+  public static SpeedSearchSupply getSupply(JComponent component, boolean evenIfInactive) {
     SpeedSearchSupply speedSearch = (SpeedSearchSupply)component.getClientProperty(SPEED_SEARCH_COMPONENT_MARKER);
 
     if (evenIfInactive) {
@@ -53,7 +52,7 @@ public abstract class SpeedSearchSupply {
   }
 
   @Nullable
-  public abstract Iterable<MatcherTextRange> matchingFragments(@Nonnull String text);
+  public abstract Iterable<MatcherTextRange> matchingFragments(String text);
 
   /**
    * Selects element according to search criteria changes
@@ -72,16 +71,16 @@ public abstract class SpeedSearchSupply {
     addChangeListener(evt -> component.repaint());
   }
 
-  public abstract void addChangeListener(@Nonnull PropertyChangeListener listener);
+  public abstract void addChangeListener(PropertyChangeListener listener);
 
-  public abstract void removeChangeListener(@Nonnull PropertyChangeListener listener);
+  public abstract void removeChangeListener(PropertyChangeListener listener);
 
   /**
    * Find an element matching the searching query in the underlying component and select it there. Speed-search popup is not affected.
    *
    * @param searchQuery text that the selected element should match
    */
-  public abstract void findAndSelectElement(@Nonnull String searchQuery);
+  public abstract void findAndSelectElement(String searchQuery);
 
   public boolean isObjectFilteredOut(Object o) {
     return false;

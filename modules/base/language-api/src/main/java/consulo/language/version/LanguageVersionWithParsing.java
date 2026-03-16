@@ -18,25 +18,24 @@ package consulo.language.version;
 import consulo.language.parser.PsiParser;
 import consulo.language.lexer.Lexer;
 import consulo.language.ast.TokenSet;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19:51/24.06.13
  */
 public interface LanguageVersionWithParsing {
-  @Nonnull
+  
   Lexer createLexer();
 
-  @Nonnull
+  
   PsiParser createParser();
 
-  @Nonnull
+  
   TokenSet getWhitespaceTokens();
 
-  @Nonnull
+  
   TokenSet getCommentTokens();
 
-  @Nonnull
+  
   TokenSet getStringLiteralElements();
 }

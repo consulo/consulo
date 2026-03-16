@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,10 +44,9 @@ public class DiagramVirtualFile extends LightVirtualFileBase {
         myFileSystem = fileSystem;
     }
 
-    @Nullable
     @RequiredReadAction
     @SuppressWarnings("unchecked")
-    public <V> Map.Entry<GraphProvider<V>, V> resolve(@Nonnull Project project) {
+    public <V> Map.@Nullable Entry<GraphProvider<V>, V> resolve(Project project) {
         String path = getPath();
 
         int i = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
@@ -85,25 +83,25 @@ public class DiagramVirtualFile extends LightVirtualFileBase {
         return Map.entry(provider, (V) restored);
     }
 
-    @Nonnull
+    
     @Override
     public String getPath() {
         return myPath;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFileSystem getFileSystem() {
         return myFileSystem;
     }
 
-    @Nonnull
+    
     @Override
     public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
+    
     @Override
     public byte[] contentsToByteArray() throws IOException {
         return new byte[0];

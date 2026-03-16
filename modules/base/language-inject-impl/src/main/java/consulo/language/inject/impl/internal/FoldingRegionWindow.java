@@ -7,14 +7,13 @@ import consulo.codeEditor.FoldingGroup;
 import consulo.document.internal.RangeMarkerEx;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.document.DocumentWindow;
-import jakarta.annotation.Nonnull;
 
 public class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion {
   private final EditorWindow myEditorWindow;
 
   private final FoldRegion myHostRegion;
 
-  FoldingRegionWindow(@Nonnull DocumentWindow documentWindow, @Nonnull EditorWindow editorWindow, @Nonnull FoldRegion hostRegion, int startShift, int endShift) {
+  FoldingRegionWindow(DocumentWindow documentWindow, EditorWindow editorWindow, FoldRegion hostRegion, int startShift, int endShift) {
     super(documentWindow, (RangeMarkerEx)hostRegion, startShift, endShift);
     myEditorWindow = editorWindow;
     myHostRegion = hostRegion;
@@ -31,7 +30,7 @@ public class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion
   }
 
   @Override
-  @Nonnull
+  
   public String getPlaceholderText() {
     return myHostRegion.getPlaceholderText();
   }
@@ -67,7 +66,7 @@ public class FoldingRegionWindow extends RangeMarkerWindow implements FoldRegion
   }
 
   @Override
-  public void setPlaceholderText(@Nonnull String text) {
+  public void setPlaceholderText(String text) {
     myHostRegion.setPlaceholderText(text);
   }
 }

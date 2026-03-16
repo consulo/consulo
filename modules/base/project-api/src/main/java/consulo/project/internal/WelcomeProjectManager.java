@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
@@ -37,16 +36,13 @@ public interface WelcomeProjectManager {
      */
     Path WELCOME_PATH = Path.of("___WELCOME_STUB___");
 
-    @Nonnull
     static WelcomeProjectManager getInstance() {
         return Application.get().getInstance(WelcomeProjectManager.class);
     }
 
-    @Nonnull
-    CompletableFuture<?> openWelcomeProjectAsync(@Nonnull UIAccess uiAccess);
+    CompletableFuture<?> openWelcomeProjectAsync(UIAccess uiAccess);
 
-    @Nonnull
-    CompletableFuture<Boolean> closeWelcomeProjectAsync(@Nonnull UIAccess uiAccess);
+    CompletableFuture<Boolean> closeWelcomeProjectAsync(UIAccess uiAccess);
 
     boolean isWelcomeProjectOpened();
 

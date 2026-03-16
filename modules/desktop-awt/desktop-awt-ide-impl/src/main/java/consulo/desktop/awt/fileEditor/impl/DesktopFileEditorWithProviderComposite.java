@@ -23,7 +23,6 @@ import consulo.fileEditor.internal.FileEditorManagerEx;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author msk
@@ -32,19 +31,19 @@ public class DesktopFileEditorWithProviderComposite extends DesktopEditorComposi
   private static final Logger LOG = Logger.getInstance(DesktopFileEditorWithProviderComposite.class);
   private FileEditorProvider[] myProviders;
 
-  public DesktopFileEditorWithProviderComposite(@Nonnull VirtualFile file, @Nonnull FileEditor[] editors, @Nonnull FileEditorProvider[] providers, @Nonnull FileEditorManagerEx fileEditorManager) {
+  public DesktopFileEditorWithProviderComposite(VirtualFile file, FileEditor[] editors, FileEditorProvider[] providers, FileEditorManagerEx fileEditorManager) {
     super(file, editors, fileEditorManager);
     myProviders = providers;
   }
 
   @Override
-  @Nonnull
+  
   public FileEditorProvider[] getProviders() {
     return myProviders;
   }
 
   @Override
-  @Nonnull
+  
   public FileEditorWithProvider getSelectedEditorWithProvider() {
     LOG.assertTrue(myEditors.length > 0, myEditors.length);
     if (myEditors.length == 1) {
@@ -64,7 +63,7 @@ public class DesktopFileEditorWithProviderComposite extends DesktopEditorComposi
   }
 
   @Override
-  public void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider) {
+  public void addEditor(FileEditor editor, FileEditorProvider provider) {
     addEditor(editor);
     myProviders = ArrayUtil.append(myProviders, provider);
   }

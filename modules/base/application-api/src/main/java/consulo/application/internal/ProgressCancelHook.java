@@ -16,7 +16,7 @@
 package consulo.application.internal;
 
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

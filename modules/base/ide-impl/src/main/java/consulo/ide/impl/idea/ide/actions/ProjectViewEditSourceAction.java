@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.BaseNavigateToSourceAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -37,7 +36,7 @@ public class ProjectViewEditSourceAction extends BaseNavigateToSourceAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (e.isFromContextMenu()) {
             e.getPresentation().setEnabledAndVisible(false);
             return;

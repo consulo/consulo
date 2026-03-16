@@ -69,10 +69,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
@@ -119,7 +117,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     private boolean myModified = false;
     private InspectionsConfigTreeTable myTreeTable;
     private TreeExpander myTreeExpander;
-    @Nonnull
+    
     private String myCurrentProfileName;
     private boolean myIsInRestore = false;
     private boolean myShareProfile;
@@ -130,9 +128,9 @@ public class SingleInspectionProfilePanel extends JPanel {
     private Disposable myDisposable = Disposable.newDisposable();
 
     public SingleInspectionProfilePanel(
-        @Nonnull InspectionProjectProfileManager projectProfileManager,
-        @Nonnull String inspectionProfileName,
-        @Nonnull ModifiableModel profile
+        InspectionProjectProfileManager projectProfileManager,
+        String inspectionProfileName,
+        ModifiableModel profile
     ) {
         super(new BorderLayout());
         myProjectProfileManager = projectProfileManager;
@@ -151,7 +149,7 @@ public class SingleInspectionProfilePanel extends JPanel {
         }
     }
 
-    @NonNls
+    
     @Nullable
     @RequiredUIAccess
     public static ModifiableModel createNewProfile(
@@ -160,7 +158,7 @@ public class SingleInspectionProfilePanel extends JPanel {
         JPanel parent,
         String profileName,
         Set<String> existingProfileNames,
-        @Nonnull Project project
+        Project project
     ) {
         profileName = Messages.showInputDialog(parent, profileName, "Create New Inspection Profile", UIUtil.getQuestionIcon());
         if (profileName == null) {
@@ -230,7 +228,7 @@ public class SingleInspectionProfilePanel extends JPanel {
 
     private static boolean isDescriptorAccepted(
         Descriptor descriptor,
-        @NonNls String filter,
+        String filter,
         boolean forceInclude,
         List<Set<String>> keySetList, Set<String> quoted
     ) {
@@ -559,14 +557,14 @@ public class SingleInspectionProfilePanel extends JPanel {
             PlatformIconGroup.generalReset()
         ) {
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation()
                     .setEnabled(mySelectedProfile != null && mySelectedProfile.isExecutable(myProjectProfileManager.getProject()));
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 mySelectedProfile.resetToEmpty(e.getData(Project.KEY));
                 loadDescriptorsConfigs(false);
                 postProcessModification();
@@ -767,7 +765,7 @@ public class SingleInspectionProfilePanel extends JPanel {
             group.add(new AnAction(renderSeverity(severity), renderSeverity(severity), level.getIcon()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     setNewHighlightingLevel(level);
                 }
 
@@ -783,7 +781,7 @@ public class SingleInspectionProfilePanel extends JPanel {
         return menu.getComponent();
     }
 
-    @Nonnull
+    
     public InspectionsFilter getInspectionsFilter() {
         return myInspectionsFilter;
     }
@@ -993,7 +991,7 @@ public class SingleInspectionProfilePanel extends JPanel {
                     new ScopesAndSeveritiesTable(new ScopesAndSeveritiesTable.TableSettings(nodes, mySelectedProfile, project) {
                         @Override
                         @RequiredUIAccess
-                        protected void onScopeChosen(@Nonnull ScopeToolState state) {
+                        protected void onScopeChosen(ScopeToolState state) {
                             setConfigPanel(configPanelAnchor, state, myDisposable);
                             configPanelAnchor.revalidate();
                             configPanelAnchor.repaint();
@@ -1341,12 +1339,12 @@ public class SingleInspectionProfilePanel extends JPanel {
         myShareProfile = profileShared;
     }
 
-    @Nonnull
+    
     public String getCurrentProfileName() {
         return myCurrentProfileName;
     }
 
-    public void setCurrentProfileName(@Nonnull String currentProfileName) {
+    public void setCurrentProfileName(String currentProfileName) {
         myCurrentProfileName = currentProfileName;
     }
 
@@ -1359,7 +1357,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     }
 
     @RequiredUIAccess
-    private void setNewHighlightingLevel(@Nonnull HighlightDisplayLevel level) {
+    private void setNewHighlightingLevel(HighlightDisplayLevel level) {
         int[] rows = myTreeTable.getTree().getSelectionRows();
         boolean showOptionsAndDescriptorPanels = rows != null && rows.length == 1;
         for (int i = 0; rows != null && i < rows.length; i++) {
@@ -1386,7 +1384,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     }
 
     private void updateErrorLevelUpInHierarchy(
-        @Nonnull HighlightDisplayLevel level,
+        HighlightDisplayLevel level,
         boolean showOptionsAndDescriptorPanels,
         InspectionConfigTreeNode node
     ) {
@@ -1407,7 +1405,7 @@ public class SingleInspectionProfilePanel extends JPanel {
     private void updateErrorLevel(
         InspectionConfigTreeNode child,
         boolean showOptionsAndDescriptorPanels,
-        @Nonnull HighlightDisplayLevel level
+        HighlightDisplayLevel level
     ) {
         HighlightDisplayKey key = child.getDefaultDescriptor().getKey();
         mySelectedProfile.setErrorLevel(key, level, null, myProjectProfileManager.getProject());

@@ -23,7 +23,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 @Singleton

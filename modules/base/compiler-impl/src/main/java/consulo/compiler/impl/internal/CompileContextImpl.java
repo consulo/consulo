@@ -43,8 +43,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -56,7 +55,7 @@ import java.util.function.Supplier;
  */
 public class CompileContextImpl extends UserDataHolderBase implements CompileContextEx {
     private static final Logger LOG = Logger.getInstance(CompileContextImpl.class);
-    @Nonnull
+    
     private final Project myProject;
     private final CompilerTask myTask;
     private CompileScope myCompileScope;
@@ -80,7 +79,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @RequiredReadAction
     public CompileContextImpl(
-        @Nonnull Project project,
+        Project project,
         CompilerTask task,
         CompileScope compileScope,
         CompositeDependencyCache dependencyCache,
@@ -168,7 +167,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         }) != null;
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
         return myProject;
@@ -268,7 +267,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return myRebuildReason;
     }
 
-    @Nonnull
+    
     @Override
     public ProgressIndicator getProgressIndicator() {
         //if (myProgressIndicatorProxy != null) {
@@ -278,7 +277,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @Nullable Compiler compiler) {
+    public void assignModule(VirtualFile root, Module module, boolean isTestSource, @Nullable Compiler compiler) {
         try {
             myRootToModuleMap.put(root, module);
             Set<VirtualFile> set = myModuleToRootsMap.get(module);
@@ -372,7 +371,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    @Nonnull
+    
     public Set<VirtualFile> getTestOutputDirectories() {
         return myTestOutputDirectories;
     }
@@ -419,7 +418,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInTestSourceContent(VirtualFile fileOrDir) {
         if (TestSourcesFilter.isTestSources(fileOrDir, myProject) || myProjectFileIndex.isInTestResource(fileOrDir)) {
             return true;
         }
@@ -431,7 +430,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     }
 
     @Override
-    public boolean isInSourceContent(@Nonnull VirtualFile fileOrDir) {
+    public boolean isInSourceContent(VirtualFile fileOrDir) {
         if (myProjectFileIndex.isInSourceContent(fileOrDir) || myProjectFileIndex.isInResource(fileOrDir)) {
             return true;
         }
@@ -442,7 +441,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         return false;
     }
 
-    public static boolean isUnderRoots(@Nonnull Set<VirtualFile> roots, @Nonnull VirtualFile file) {
+    public static boolean isUnderRoots(Set<VirtualFile> roots, VirtualFile file) {
         VirtualFile parent = file;
         while (true) {
             if (parent == null) {

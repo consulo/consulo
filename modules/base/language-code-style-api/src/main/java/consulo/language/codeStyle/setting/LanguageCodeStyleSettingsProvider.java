@@ -13,8 +13,7 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,13 +37,13 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     }
 
     @Nullable
-    public abstract String getCodeSample(@Nonnull SettingsType settingsType);
+    public abstract String getCodeSample(SettingsType settingsType);
 
-    public int getRightMargin(@Nonnull SettingsType settingsType) {
+    public int getRightMargin(SettingsType settingsType) {
         return settingsType == SettingsType.WRAPPING_AND_BRACES_SETTINGS ? 30 : -1;
     }
 
-    public void customizeSettings(@Nonnull CodeStyleSettingsCustomizable consumer, @Nonnull SettingsType settingsType) {
+    public void customizeSettings(CodeStyleSettingsCustomizable consumer, SettingsType settingsType) {
     }
 
     /**
@@ -62,7 +61,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      *
      * @return The language name to show in preview tab (null by default).
      */
-    @Nonnull
+    
     public LocalizeValue getLanguageName() {
         return LocalizeValue.empty();
     }
@@ -98,13 +97,13 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     /**
      * @deprecated use PredefinedCodeStyle extension point instead
      */
-    @Nonnull
+    
     @Deprecated
     public PredefinedCodeStyle[] getPredefinedCodeStyles() {
         return PredefinedCodeStyle.EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     public static Language[] getLanguagesWithCodeStyleSettings() {
         return Application.get().getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
             .collectMapped(LanguageCodeStyleSettingsProvider::getLanguage)
@@ -112,12 +111,12 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
     }
 
     @Nullable
-    public static String getCodeSample(Language lang, @Nonnull SettingsType settingsType) {
+    public static String getCodeSample(Language lang, SettingsType settingsType) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getCodeSample(settingsType) : null;
     }
 
-    public static int getRightMargin(Language lang, @Nonnull SettingsType settingsType) {
+    public static int getRightMargin(Language lang, SettingsType settingsType) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         return provider != null ? provider.getRightMargin(settingsType) : -1;
     }
@@ -129,7 +128,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return Found provider or {@code null} if it doesn't exist neither for the language itself nor for any of its base languages.
      */
     @Nullable
-    public static LanguageCodeStyleSettingsProvider findUsingBaseLanguage(@Nonnull Language language) {
+    public static LanguageCodeStyleSettingsProvider findUsingBaseLanguage(Language language) {
         for (Language currLang = language; currLang != null; currLang = currLang.getBaseLanguage()) {
             LanguageCodeStyleSettingsProvider curr = forLanguage(currLang);
             if (curr != null) {
@@ -139,7 +138,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public abstract Language getLanguage();
 
@@ -163,7 +162,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return Alternative UI name defined by provider.getLanguageName() method or (if the method returns null)
      * language's own display name.
      */
-    @Nonnull
+    
     public static LocalizeValue getLanguageName(Language lang) {
         LanguageCodeStyleSettingsProvider provider = forLanguage(lang);
         LocalizeValue providerLangName = provider != null ? provider.getLanguageName() : LocalizeValue.empty();
@@ -278,8 +277,8 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return {@code DocCommentSettings} wrapper object object which allows to retrieve and modify language's own
      * settings related to doc comment. The object is used then by common platform doc comment handling algorithms.
      */
-    @Nonnull
-    public DocCommentSettings getDocCommentSettings(@Nonnull CodeStyleSettings rootSettings) {
+    
+    public DocCommentSettings getDocCommentSettings(CodeStyleSettings rootSettings) {
         return DocCommentSettings.DEFAULTS;
     }
 
@@ -288,7 +287,7 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings modelSettings) {
         throw new RuntimeException(

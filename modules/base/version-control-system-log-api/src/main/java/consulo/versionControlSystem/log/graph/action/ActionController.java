@@ -15,15 +15,14 @@
  */
 package consulo.versionControlSystem.log.graph.action;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author erokhins
  */
 public interface ActionController<Id> {
 
-  @Nonnull
-  GraphAnswer<Id> performAction(@Nonnull GraphAction graphAction);
+  
+  GraphAnswer<Id> performAction(GraphAction graphAction);
 
   boolean areLongEdgesHidden();
 

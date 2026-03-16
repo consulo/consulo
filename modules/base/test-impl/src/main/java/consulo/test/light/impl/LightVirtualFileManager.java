@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.virtualFileSystem.internal.BaseVirtualFileManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -31,7 +30,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class LightVirtualFileManager extends BaseVirtualFileManager {
   @Inject
-  public LightVirtualFileManager(@Nonnull Application application) {
+  public LightVirtualFileManager(Application application) {
     super(application);
   }
 }

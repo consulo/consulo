@@ -31,14 +31,13 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
 public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware {
-    @Nonnull
+    
     @Override
     public String getId() {
         return ToolWindowId.BOOKMARKS;
@@ -46,7 +45,7 @@ public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware 
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
         FavoritesTreeViewPanel panel = new FavoritesPanel(project).getPanel();
         panel.setupToolWindow(toolWindow);
@@ -62,19 +61,19 @@ public class BookmarksToolWindowFactory implements ToolWindowFactory, DumbAware 
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.LEFT;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return BookmarkIconGroup.toolwindowBookmarks();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return BookmarkLocalize.toolwindowBookmarksDisplayName();

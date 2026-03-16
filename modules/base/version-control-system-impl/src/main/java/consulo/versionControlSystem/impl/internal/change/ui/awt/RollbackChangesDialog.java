@@ -35,8 +35,7 @@ import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.impl.internal.util.RollbackUtil;
 import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -139,7 +138,7 @@ public class RollbackChangesDialog extends DialogWrapper {
         };
         myBrowser =
             new InternalChangesBrowser(project, changeLists, changes, null, true, true, listChangeListener, InternalChangesBrowser.MyUseCase.LOCAL_CHANGES, null) {
-                @Nonnull
+                
                 @Override
                 protected DefaultTreeModel buildTreeModel(List<Change> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten) {
                     TreeModelBuilder builder = new TreeModelBuilder(myProject, showFlatten);
@@ -169,13 +168,13 @@ public class RollbackChangesDialog extends DialogWrapper {
         listChangeListener.run();
     }
 
-    @Nonnull
-    public static String operationNameByChanges(@Nonnull Project project, @Nonnull Collection<Change> changes) {
+    
+    public static String operationNameByChanges(Project project, Collection<Change> changes) {
         return RollbackUtil.getRollbackOperationName(ChangesUtil.getAffectedVcses(changes, project));
     }
 
-    @Nonnull
-    private static List<Change> getAllChanges(@Nonnull List<? extends ChangeList> changeLists) {
+    
+    private static List<Change> getAllChanges(List<? extends ChangeList> changeLists) {
         List<Change> result = new ArrayList<>();
 
         for (ChangeList list : changeLists) {

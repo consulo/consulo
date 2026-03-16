@@ -17,7 +17,7 @@ package consulo.versionControlSystem.ui.awt;
 
 import consulo.platform.Platform;
 import consulo.ui.ex.awt.ClickListener;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

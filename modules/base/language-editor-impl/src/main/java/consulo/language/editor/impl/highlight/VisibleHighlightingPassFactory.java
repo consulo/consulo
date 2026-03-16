@@ -18,7 +18,6 @@ package consulo.language.editor.impl.highlight;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.document.util.ProperTextRange;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -26,8 +25,8 @@ import java.awt.*;
  * @author max
  */
 public abstract class VisibleHighlightingPassFactory  {
-  @Nonnull
-  public static ProperTextRange calculateVisibleRange(@Nonnull Editor editor) {
+  
+  public static ProperTextRange calculateVisibleRange(Editor editor) {
     Rectangle rect = editor.getScrollingModel().getVisibleArea();
     LogicalPosition startPosition = editor.xyToLogicalPosition(new Point(rect.x, rect.y));
 

@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Kirill Likhodedov
@@ -36,7 +35,7 @@ public class WrapWhenTypingReachesRightMarginCustomization extends SimpleEditorC
   }
 
   @Override
-  public void customize(@Nonnull EditorEx editor) {
+  public void customize(EditorEx editor) {
     editor.getSettings().setWrapWhenTypingReachesRightMargin(isEnabled());
   }
 

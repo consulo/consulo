@@ -17,8 +17,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -41,7 +40,7 @@ class MultiPsiElementHyperlinkInfo extends HyperlinkInfoBase {
 
     @Override
     @RequiredUIAccess
-    public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
+    public void navigate(Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
         if (myMap.isEmpty()) {
             return;
         }
@@ -70,7 +69,7 @@ class MultiPsiElementHyperlinkInfo extends HyperlinkInfoBase {
     }
 
     @RequiredUIAccess
-    private static void navigateTo(@Nonnull Project project, VirtualFile file, SmartPsiElementPointer<?> pointer) {
+    private static void navigateTo(Project project, VirtualFile file, SmartPsiElementPointer<?> pointer) {
         PsiElement element = pointer.getElement();
         int line = 0, column = 0;
         if (element != null) {

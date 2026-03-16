@@ -20,8 +20,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -83,7 +82,7 @@ class TabContentLayout extends ContentLayout {
         myIdLabel = null;
     }
 
-    void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+    void setTabDoubleClickActions(AnAction... actions) {
         myDoubleClickActions = ContainerUtil.newArrayList(actions);
     }
 

@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -29,7 +28,7 @@ import javax.swing.*;
  * {@link #com.intellij.ide.ui.search.TraverseUIStarter}
  */
 public interface SearchableConfigurable extends Configurable {
-  @Nonnull
+  
   String getId();
 
   @Nullable
@@ -48,7 +47,7 @@ public interface SearchableConfigurable extends Configurable {
    *
    * @return a class which is a cause of the creation of this configurable
    */
-  @Nonnull
+  
   default Class<?> getOriginalClass() {
     return this.getClass();
   }
@@ -72,7 +71,7 @@ public interface SearchableConfigurable extends Configurable {
       @RequiredUIAccess
       @Nullable
       @Override
-      public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+      public JComponent createComponent(Disposable parentDisposable) {
         return createComponent();
       }
 
@@ -86,7 +85,7 @@ public interface SearchableConfigurable extends Configurable {
       @RequiredUIAccess
       @Nullable
       @Override
-      public Component createUIComponent(@Nonnull Disposable parentDisposable) {
+      public Component createUIComponent(Disposable parentDisposable) {
         return createUIComponent();
       }
 
@@ -128,7 +127,7 @@ public interface SearchableConfigurable extends Configurable {
         return true;
       }
 
-      @Nonnull
+      
       @Override
       public final Configurable[] getConfigurables() {
         if (myKids != null) return myKids;

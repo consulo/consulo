@@ -21,7 +21,6 @@ import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Danila Ponomarenko
@@ -29,52 +28,52 @@ import jakarta.annotation.Nonnull;
 public abstract class PriorityLocalQuickFixWrapper implements LocalQuickFix {
   private final LocalQuickFix fix;
 
-  private PriorityLocalQuickFixWrapper(@Nonnull LocalQuickFix fix) {
+  private PriorityLocalQuickFixWrapper(LocalQuickFix fix) {
     this.fix = fix;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return fix.getName();
   }
 
   @Override
-  public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+  public void applyFix(Project project, ProblemDescriptor descriptor) {
     fix.applyFix(project, descriptor);
   }
 
   private static class HighPriorityLocalQuickFixWrapper extends PriorityLocalQuickFixWrapper implements HighPriorityAction {
-    protected HighPriorityLocalQuickFixWrapper(@Nonnull LocalQuickFix fix) {
+    protected HighPriorityLocalQuickFixWrapper(LocalQuickFix fix) {
       super(fix);
     }
   }
 
   private static class NormalPriorityLocalQuickFixWrapper extends PriorityLocalQuickFixWrapper {
-    protected NormalPriorityLocalQuickFixWrapper(@Nonnull LocalQuickFix fix) {
+    protected NormalPriorityLocalQuickFixWrapper(LocalQuickFix fix) {
       super(fix);
     }
   }
 
 
   private static class LowPriorityLocalQuickFixWrapper extends PriorityLocalQuickFixWrapper implements LowPriorityAction {
-    protected LowPriorityLocalQuickFixWrapper(@Nonnull LocalQuickFix fix) {
+    protected LowPriorityLocalQuickFixWrapper(LocalQuickFix fix) {
       super(fix);
     }
   }
 
-  @Nonnull
-  public static LocalQuickFix highPriority(@Nonnull LocalQuickFix fix) {
+  
+  public static LocalQuickFix highPriority(LocalQuickFix fix) {
     return new HighPriorityLocalQuickFixWrapper(fix);
   }
 
-  @Nonnull
-  public static LocalQuickFix normalPriority(@Nonnull LocalQuickFix fix) {
+  
+  public static LocalQuickFix normalPriority(LocalQuickFix fix) {
     return new NormalPriorityLocalQuickFixWrapper(fix);
   }
 
-  @Nonnull
-  public static LocalQuickFix lowPriority(@Nonnull LocalQuickFix fix) {
+  
+  public static LocalQuickFix lowPriority(LocalQuickFix fix) {
     return new LowPriorityLocalQuickFixWrapper(fix);
   }
 }

@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,20 +28,20 @@ import jakarta.annotation.Nullable;
 public interface HasValidator<V> extends Component {
   static class ValidationInfo {
     private final String myMessage;
+    @Nullable
     private final Image myIcon;
     private final NotificationType myType;
 
-    public ValidationInfo(@Nonnull String message) {
+    public ValidationInfo(String message) {
       this(message, null, NotificationType.ERROR);
     }
 
-    public ValidationInfo(@Nonnull String message, @Nullable Image icon, @Nonnull NotificationType type) {
+    public ValidationInfo(String message, @Nullable Image icon, NotificationType type) {
       myMessage = message;
       myIcon = icon;
       myType = type;
     }
 
-    @Nonnull
     public String getMessage() {
       return myMessage;
     }
@@ -52,7 +51,6 @@ public interface HasValidator<V> extends Component {
       return myIcon;
     }
 
-    @Nonnull
     public NotificationType getType() {
       return myType;
     }
@@ -63,8 +61,7 @@ public interface HasValidator<V> extends Component {
     ValidationInfo validateValue(V value);
   }
 
-  @Nonnull
-  Disposable addValidator(@Nonnull Validator<V> validator);
+  Disposable addValidator(Validator<V> validator);
 
   /**
    * Check value in all validators and show notification

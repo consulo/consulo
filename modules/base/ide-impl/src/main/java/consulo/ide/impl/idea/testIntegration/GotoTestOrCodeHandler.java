@@ -36,8 +36,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.util.collection.SmartList;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
       final TestCreator creator = TestCreator.forLanguage(file.getLanguage());
       if (creator != null && creator.isAvailable(file.getProject(), editor, file)) {
         actions.add(new AdditionalAction() {
-          @Nonnull
+          
           @Override
           public String getText() {
             return "Create New Test...";
@@ -87,7 +86,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     return new GotoData(sourceElement, PsiUtilCore.toPsiElementArray(candidates), actions);
   }
 
-  @Nonnull
+  
   public static PsiElement getSelectedElement(Editor editor, PsiFile file) {
     return PsiUtilCore.getElementAtOffset(file, editor.getCaretModel().getOffset());
   }
@@ -97,9 +96,9 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     return false;
   }
 
-  @Nonnull
+  
   @Override
-  protected String getChooserTitle(@Nonnull PsiElement sourceElement, String name, int length, boolean finished) {
+  protected String getChooserTitle(PsiElement sourceElement, String name, int length, boolean finished) {
     String suffix = finished ? "" : " so far";
     if (TestFinderHelper.isTest(sourceElement)) {
       return CodeInsightBundle.message("goto.test.chooserTitle.subject", name, length, suffix);
@@ -109,9 +108,9 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     }
   }
 
-  @Nonnull
+  
   @Override
-  protected String getFindUsagesTitle(@Nonnull PsiElement sourceElement, String name, int length) {
+  protected String getFindUsagesTitle(PsiElement sourceElement, String name, int length) {
     if (TestFinderHelper.isTest(sourceElement)) {
       return CodeInsightBundle.message("goto.test.findUsages.subject.title", name);
     }
@@ -120,9 +119,9 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
     }
   }
 
-  @Nonnull
+  
   @Override
-  protected String getNotFoundMessage(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  protected String getNotFoundMessage(Project project, Editor editor, PsiFile file) {
     return CodeInsightBundle.message("goto.test.notFound");
   }
 
@@ -140,7 +139,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
   }
 
   @Override
-  protected void navigateToElement(@Nonnull Navigatable element) {
+  protected void navigateToElement(Navigatable element) {
     if (element instanceof PsiElement) {
       PopupNavigationUtil.activateFileWithPsiElement((PsiElement)element, true);
     }

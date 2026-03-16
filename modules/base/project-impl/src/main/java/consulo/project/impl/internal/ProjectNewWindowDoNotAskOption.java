@@ -21,8 +21,7 @@ import consulo.project.internal.ProjectOpenSetting;
 import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
 import consulo.ui.ex.awt.DialogWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOption, AlertValueRemember<Integer> {
     public static final ProjectNewWindowDoNotAskOption INSTANCE = new ProjectNewWindowDoNotAskOption();
@@ -48,14 +47,14 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDoNotShowMessage() {
         return CommonLocalize.dialogOptionsDoNotAsk();
     }
 
     @Override
-    public void setValue(@Nonnull Integer value) {
+    public void setValue(Integer value) {
         if (value == Alert.CANCEL) {
             return;
         }
@@ -73,7 +72,7 @@ public class ProjectNewWindowDoNotAskOption implements DialogWrapper.DoNotAskOpt
         return confirmOpenNewProject;
     }
 
-    @Nonnull
+    
     @Override
     public String getMessageBoxText() {
         return CommonLocalize.dialogOptionsDoNotAsk().get();

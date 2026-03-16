@@ -18,7 +18,6 @@ package consulo.compiler.artifact.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ import java.util.Map;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class ArtifactSortingUtil {
-  public static ArtifactSortingUtil getInstance(@Nonnull Project project) {
+  public static ArtifactSortingUtil getInstance(Project project) {
     return project.getInstance(ArtifactSortingUtil.class);
   }
 

@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -38,12 +37,12 @@ import java.util.List;
  * @author nik
  */
 public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends ClasspathTableItem<T> {
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final LibrariesConfigurator myLibrariesConfigurator;
 
-  public LibraryClasspathTableItem(T orderEntry, @Nonnull Project project, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public LibraryClasspathTableItem(T orderEntry, Project project, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
     super(orderEntry);
     myProject = project;
     myLibrariesConfigurator = librariesConfigurator;

@@ -20,18 +20,17 @@ import consulo.ide.impl.idea.find.FindUtil;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.*;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SelectionManager {
-  @Nonnull
+  
   private final SearchResults mySearchResults;
   private final boolean myHadSelectionInitially;
   private final List<FoldRegion> myRegionsToRestore = new ArrayList<>();
 
-  public SelectionManager(@Nonnull SearchResults results) {
+  public SelectionManager(SearchResults results) {
     mySearchResults = results;
     myHadSelectionInitially = results.getEditor().getSelectionModel().hasSelection();
   }
@@ -97,7 +96,7 @@ public class SelectionManager {
     }
   }
 
-  public boolean isSelected(@Nonnull FindResult result) {
+  public boolean isSelected(FindResult result) {
     Editor editor = mySearchResults.getEditor();
     int endOffset = result.getEndOffset();
     for (Caret caret : editor.getCaretModel().getAllCarets()) {

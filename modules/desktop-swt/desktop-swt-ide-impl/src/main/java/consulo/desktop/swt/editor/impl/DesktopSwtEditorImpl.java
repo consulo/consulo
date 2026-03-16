@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.ui.Component;
 import org.intellij.lang.annotations.MagicConstant;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -38,20 +37,20 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
 
   private DesktopSwtEditorGutterComponentImpl myGutterComponent;
 
-  public DesktopSwtEditorImpl(@Nonnull Document document, boolean viewer, @Nullable Project project, @Nonnull EditorKind kind) {
+  public DesktopSwtEditorImpl(Document document, boolean viewer, @Nullable Project project, EditorKind kind) {
     super(document, viewer, project, kind);
 
     myComponent = new DesktopSwtEditorComponent(document);
     myGutterComponent = new DesktopSwtEditorGutterComponentImpl();
   }
 
-  @Nonnull
+  
   @Override
   public Component getUIComponent() {
     return myComponent;
   }
 
-  @Nonnull
+  
   @Override
   public Component getContentUIComponent() {
     return myComponent;
@@ -97,7 +96,7 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
     return new DesktopSwtCodeEditorSoftWrapModelImpl(this);
   }
 
-  @Nonnull
+  
   @Override
   protected DataContext getComponentContext() {
     return DataManager.getInstance().getDataContext(getUIComponent());
@@ -128,7 +127,7 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
 
   }
 
-  @Nonnull
+  
   @Override
   public EditorGutterComponentEx getGutterComponentEx() {
     return myGutterComponent;
@@ -205,7 +204,7 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
   }
 
   @Override
-  public void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor) {
+  public void setCustomCursor(Object requestor, @Nullable Cursor cursor) {
 
   }
 
@@ -215,35 +214,35 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
   }
 
   @Override
-  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+  public int logicalPositionToOffset(LogicalPosition pos) {
     return 0;
   }
 
-  @Nonnull
+  
   @Override
-  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos) {
+  public VisualPosition logicalToVisualPosition(LogicalPosition logicalPos) {
     return new VisualPosition(1, 1);
   }
 
-  @Nonnull
+  
   @Override
-  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos) {
+  public LogicalPosition visualToLogicalPosition(VisualPosition visiblePos) {
     return new LogicalPosition(1, 1);
   }
 
-  @Nonnull
+  
   @Override
   public LogicalPosition offsetToLogicalPosition(int offset) {
     return new LogicalPosition(1, 1);
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition offsetToVisualPosition(int offset) {
     return new VisualPosition(1 ,1);
   }
 
-  @Nonnull
+  
   @Override
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
     // todo impl
@@ -251,7 +250,7 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
   }
 
 
-  @Nonnull
+  
   @Override
   public EditorGutter getGutter() {
     return myGutterComponent;
@@ -262,14 +261,14 @@ public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
     return false;
   }
 
-  @Nonnull
-  public LogicalPosition xyToLogicalPosition(@Nonnull java.awt.Point p) {
+  
+  public LogicalPosition xyToLogicalPosition(java.awt.Point p) {
     // todo fake return
     return new LogicalPosition(0, 0);
   }
 
-  @Nonnull
-  public java.awt.Point visualPositionToXY(@Nonnull VisualPosition visible) {
+  
+  public java.awt.Point visualPositionToXY(VisualPosition visible) {
     // todo fake return
     return new Point(1, 1);
   }

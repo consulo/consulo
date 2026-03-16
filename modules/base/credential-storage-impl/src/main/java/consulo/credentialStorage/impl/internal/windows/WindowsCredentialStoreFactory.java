@@ -21,8 +21,7 @@ import consulo.credentialStorage.impl.internal.NativeCredentialStoreWrapper;
 import consulo.credentialStorage.internal.CredentialStoreFactory;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nullable;
 public class WindowsCredentialStoreFactory implements CredentialStoreFactory {
     @Nullable
     @Override
-    public CredentialStore create(@Nonnull Platform platform) {
+    public CredentialStore create(Platform platform) {
         if (platform.os().isWindows() && JnaLoader.isLoaded()) {
             return new NativeCredentialStoreWrapper(new WindowsCredentialStore());
         }

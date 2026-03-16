@@ -13,8 +13,7 @@ import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.impl.internal.util.CloudConfigurationBase;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,7 +43,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     }
 
     @Override
-    public <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@Nonnull ServerType<C> type) {
+    public <C extends ServerConfiguration> List<RemoteServer<C>> getServers(ServerType<C> type) {
         List<RemoteServer<C>> servers = new ArrayList<>();
         for (RemoteServer<?> server : myServers) {
             if (server.getType().equals(type)) {
@@ -56,7 +55,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     }
 
     @Override
-    public @Nullable <C extends ServerConfiguration> RemoteServer<C> findByName(@Nonnull String name, @Nonnull ServerType<C> type) {
+    public @Nullable <C extends ServerConfiguration> RemoteServer<C> findByName(String name, ServerType<C> type) {
         for (RemoteServer<?> server : myServers) {
             if (server.getType().equals(type) && server.getName().equals(name)) {
                 //noinspection unchecked
@@ -67,12 +66,12 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     }
 
     @Override
-    public @Nonnull <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type, @Nonnull String name) {
+    public <C extends ServerConfiguration> RemoteServer<C> createServer(ServerType<C> type, String name) {
         return new RemoteServerImpl<>(name, type, type.createDefaultConfiguration());
     }
 
     @Override
-    public @Nonnull <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type) {
+    public <C extends ServerConfiguration> RemoteServer<C> createServer(ServerType<C> type) {
         String name = UniqueNameGenerator.generateUniqueName(
             type.getPresentableName().get(), s -> getServers(type).stream().map(RemoteServer::getName).noneMatch(s::equals));
         return createServer(type, name);
@@ -91,7 +90,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     }
 
     @Override
-    public @Nonnull RemoteServersManagerState getState() {
+    public RemoteServersManagerState getState() {
         RemoteServersManagerState state = new RemoteServersManagerState();
         for (RemoteServer<?> server : myServers) {
             state.myServers.add(createServerState(server));
@@ -101,7 +100,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
     }
 
     @Override
-    public void loadState(@Nonnull RemoteServersManagerState state) {
+    public void loadState(RemoteServersManagerState state) {
         myUnknownServers.clear();
         myServers.clear();
 
@@ -131,7 +130,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         }
     }
 
-    private @Nonnull RemoteServerState createServerState(@Nonnull RemoteServer<?> server) {
+    private RemoteServerState createServerState(RemoteServer<?> server) {
         RemoteServerState serverState = new RemoteServerState();
         serverState.myName = server.getName();
         serverState.myTypeId = server.getType().getId();
@@ -139,7 +138,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         return serverState;
     }
 
-    private static @Nonnull <C extends ServerConfiguration> RemoteServerImpl<C> createConfiguration(
+    private static <C extends ServerConfiguration> RemoteServerImpl<C> createConfiguration(
         ServerType<C> type,
         RemoteServerState server
     ) {
@@ -149,7 +148,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         return new RemoteServerImpl<>(server.myName, type, configuration);
     }
 
-    private static @Nullable ServerType<?> findServerType(@Nonnull String typeId) {
+    private static @Nullable ServerType<?> findServerType(String typeId) {
         return ServerType.EP_NAME.findFirstSafe(next -> typeId.equals(next.getId()));
     }
 }

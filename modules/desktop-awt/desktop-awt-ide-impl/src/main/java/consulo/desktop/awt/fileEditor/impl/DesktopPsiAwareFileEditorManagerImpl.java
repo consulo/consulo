@@ -33,7 +33,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -64,16 +63,16 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   }
 
 
-  @Nonnull
+  
   @Override
-  protected FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
-                                                                              @Nonnull FileEditor[] editors,
-                                                                              @Nonnull FileEditorProvider[] providers,
-                                                                              @Nonnull FileEditorManagerEx fileEditorManager) {
+  protected FileEditorWithProviderComposite createEditorWithProviderComposite(VirtualFile file,
+                                                                              FileEditor[] editors,
+                                                                              FileEditorProvider[] providers,
+                                                                              FileEditorManagerEx fileEditorManager) {
     return new DesktopFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     initUI();

@@ -6,8 +6,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -25,8 +24,8 @@ public abstract class IntentionsUI {
 
   private final AtomicReference<CachedIntentions> myCachedIntentions = new AtomicReference<>();
 
-  @Nonnull
-  public CachedIntentions getCachedIntentions(@Nullable Editor editor, @Nonnull PsiFile file) {
+  
+  public CachedIntentions getCachedIntentions(@Nullable Editor editor, PsiFile file) {
     return myCachedIntentions.updateAndGet(cachedIntentions -> {
       if (cachedIntentions != null && editor == cachedIntentions.getEditor() && file == cachedIntentions.getFile()) {
         return cachedIntentions;
@@ -45,7 +44,7 @@ public abstract class IntentionsUI {
 
   public abstract Object getLastIntentionHint();
 
-  public abstract void update(@Nonnull CachedIntentions cachedIntentions, boolean actionsChanged);
+  public abstract void update(CachedIntentions cachedIntentions, boolean actionsChanged);
 
   public abstract void hide();
 }

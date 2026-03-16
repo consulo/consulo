@@ -22,8 +22,7 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public class DesktopAWTAuthDialogImpl implements AuthDialog {
 
   @Nullable
   @Override
-  public AuthenticationData show(@Nonnull String title,
+  public AuthenticationData show(String title,
                                  @Nullable String description,
                                  @Nullable String login,
                                  @Nullable String password,

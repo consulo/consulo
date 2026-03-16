@@ -4,8 +4,7 @@ package consulo.ide.impl.idea.ide.util.gotoByName;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,11 +20,11 @@ public abstract class FilteringGotoByModel<T> extends ContributorsBasedGotoByMod
    */
   private Set<T> myFilterItems;
 
-  protected FilteringGotoByModel(@Nonnull Project project, @Nonnull ChooseByNameContributor[] contributors) {
+  protected FilteringGotoByModel(Project project, ChooseByNameContributor[] contributors) {
     super(project, contributors);
   }
 
-  protected FilteringGotoByModel(@Nonnull Project project, @Nonnull List<? extends ChooseByNameContributor> contributors) {
+  protected FilteringGotoByModel(Project project, List<? extends ChooseByNameContributor> contributors) {
     super(project, contributors);
   }
 

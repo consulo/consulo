@@ -34,8 +34,7 @@ import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -79,14 +78,14 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
   private final WeakReference<Document>    myDocument;
   private final int                        myFileTextLength;
 
-  @Nonnull
+  
   private FormattingStateId myLastState                       = FormattingStateId.WRAPPING_BLOCKS;
   private long              myDocumentModificationStampBefore = -1;
 
   private int myBlocksToModifyNumber;
   private int myModifiedBlocksNumber;
 
-  public FormattingProgressTask(@Nullable Project project, @Nonnull PsiFile file, @Nonnull Document document) {
+  public FormattingProgressTask(@Nullable Project project, PsiFile file, Document document) {
     super(project, getTitle(file));
     myFile = new WeakReference<VirtualFile>(file.getVirtualFile());
     myDocument = new WeakReference<Document>(document);
@@ -94,8 +93,8 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     addCallback(EventType.CANCEL, new MyCancelCallback());
   }
 
-  @Nonnull
-  private static String getTitle(@Nonnull PsiFile file) {
+  
+  private static String getTitle(PsiFile file) {
     VirtualFile virtualFile = file.getOriginalFile().getVirtualFile();
     if (virtualFile == null) {
       return CodeInsightBundle.message("reformat.progress.common.text");
@@ -106,7 +105,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
   }
 
   @Override
-  protected void prepare(@Nonnull final SequentialTask task) {
+  protected void prepare(final SequentialTask task) {
     UIUtil.invokeAndWaitIfNeeded(new Runnable() {
       @Override
       public void run() {
@@ -120,7 +119,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
   }
 
   @Override
-  public boolean addCallback(@Nonnull EventType eventType, @Nonnull Runnable callback) {
+  public boolean addCallback(EventType eventType, Runnable callback) {
     return getCallbacks(eventType).add(callback);
   }
 
@@ -142,7 +141,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     }
   }
 
-  private Collection<Runnable> getCallbacks(@Nonnull EventType eventType) {
+  private Collection<Runnable> getCallbacks(EventType eventType) {
     Collection<Runnable> result = myCallbacks.get(eventType);
     if (result == null) {
       Collection<Runnable> candidate = myCallbacks.putIfAbsent(eventType, result = ContainerUtil.newConcurrentSet());
@@ -154,24 +153,24 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
   }
 
   @Override
-  public void afterWrappingBlock(@Nonnull LeafBlockWrapper wrapped) {
+  public void afterWrappingBlock(LeafBlockWrapper wrapped) {
     update(FormattingStateId.WRAPPING_BLOCKS, MAX_PROGRESS_VALUE * wrapped.getEndOffset() / myFileTextLength);
   }
 
   @Override
-  public void afterProcessingBlock(@Nonnull LeafBlockWrapper block) {
+  public void afterProcessingBlock(LeafBlockWrapper block) {
     update(FormattingStateId.PROCESSING_BLOCKS, MAX_PROGRESS_VALUE * block.getEndOffset() / myFileTextLength);
   }
 
   @Override
-  public void beforeApplyingFormatChanges(@Nonnull Collection<LeafBlockWrapper> modifiedBlocks) {
+  public void beforeApplyingFormatChanges(Collection<LeafBlockWrapper> modifiedBlocks) {
     myBlocksToModifyNumber = modifiedBlocks.size();
     updateTextIfNecessary(FormattingStateId.APPLYING_CHANGES);
     setCancelText(CodeStyleLocalize.actionStop());
   }
 
   @Override
-  public void afterApplyingChange(@Nonnull LeafBlockWrapper block) {
+  public void afterApplyingChange(LeafBlockWrapper block) {
     if (myModifiedBlocksNumber++ >= myBlocksToModifyNumber) {
       return;
     }
@@ -185,7 +184,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
    * @param state          current state
    * @param completionRate completion rate of the given state. Is assumed to belong to <code>[0; 1]</code> interval
    */
-  private void update(@Nonnull FormattingStateId state, double completionRate) {
+  private void update(FormattingStateId state, double completionRate) {
     ProgressIndicator indicator = getIndicator();
     if (indicator == null) {
       return;
@@ -209,7 +208,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
     indicator.setFraction(newFraction);
   }
 
-  private void updateTextIfNecessary(@Nonnull FormattingStateId currentState) {
+  private void updateTextIfNecessary(FormattingStateId currentState) {
     ProgressIndicator indicator = getIndicator();
     if (myLastState != currentState && indicator != null) {
       indicator.setText(currentState.getDescription());

@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.branch;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface PopupElementWithAdditionalInfo {
   @Nullable

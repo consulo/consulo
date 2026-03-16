@@ -12,7 +12,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -44,7 +43,7 @@ public class DirectoryAccessChecker {
   private static volatile long instanceEOL = 0;
 
   public static
-  @Nonnull
+  
   FilenameFilter getFileFilter(File directory) {
     return !IS_ENABLED || directory.toPath().startsWith(USER_HOME_DIR) ? DirectoryFilter.ACCEPTING_FILTER : instance;
   }
@@ -84,7 +83,7 @@ public class DirectoryAccessChecker {
     private static final String USER_HOME_NAME = USER_HOME_PARENT != null && USER_HOME_PARENT.getParent() != null ? USER_HOME_DIR.getFileName().toString() : null;
 
     static
-    @Nonnull
+    
     DirectoryFilter create() {
       Collection<Path> inaccessible = new HashSet<>();
       boolean userHomeMounted = false;

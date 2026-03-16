@@ -8,7 +8,6 @@ import consulo.language.editor.completion.CompletionType;
 import consulo.language.editor.impl.internal.completion.OffsetsInFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.util.PsiUtilBase;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -16,12 +15,12 @@ import jakarta.annotation.Nonnull;
 class CompletionInitializationContextImpl extends CompletionInitializationContext {
   private final OffsetsInFile myHostOffsets;
 
-  CompletionInitializationContextImpl(Editor editor, @Nonnull Caret caret, PsiFile file, CompletionType completionType, int invocationCount) {
+  CompletionInitializationContextImpl(Editor editor, Caret caret, PsiFile file, CompletionType completionType, int invocationCount) {
     super(editor, caret, PsiUtilBase.getLanguageInEditor(editor, file.getProject()), file, completionType, invocationCount);
     myHostOffsets = new OffsetsInFile(file, getOffsetMap()).toTopLevelFile();
   }
 
-  @Nonnull
+  
   OffsetsInFile getHostOffsets() {
     return myHostOffsets;
   }

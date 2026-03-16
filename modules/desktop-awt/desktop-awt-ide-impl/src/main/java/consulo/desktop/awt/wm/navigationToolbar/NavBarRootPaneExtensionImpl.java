@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.TitlelessDecorator;
 import consulo.ui.ex.awt.action.ComboBoxAction;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;

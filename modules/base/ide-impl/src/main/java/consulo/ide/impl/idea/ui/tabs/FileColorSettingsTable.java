@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.table.JBTable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -45,14 +44,14 @@ public abstract class FileColorSettingsTable extends JBTable {
     private static final int COLOR_COLUMN = 1;
 
     private final List<FileColorConfiguration> myOriginal;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final FileColorManager myManager;
 
-    public FileColorSettingsTable(@Nonnull Project project,
-                                  @Nonnull FileColorManager manager,
-                                  @Nonnull List<FileColorConfiguration> configurations) {
+    public FileColorSettingsTable(Project project,
+                                  FileColorManager manager,
+                                  List<FileColorConfiguration> configurations) {
         super(new ModelAdapter(project, manager, copy(configurations)));
         myProject = project;
         myManager = manager;
@@ -68,7 +67,7 @@ public abstract class FileColorSettingsTable extends JBTable {
         colorColumn.setCellRenderer(new ColorCellRenderer(manager));
     }
 
-    private static List<FileColorConfiguration> copy(@Nonnull List<FileColorConfiguration> configurations) {
+    private static List<FileColorConfiguration> copy(List<FileColorConfiguration> configurations) {
         List<FileColorConfiguration> result = new ArrayList<>();
         for (FileColorConfiguration c : configurations) {
             try {
@@ -82,7 +81,7 @@ public abstract class FileColorSettingsTable extends JBTable {
         return result;
     }
 
-    protected abstract void apply(@Nonnull List<FileColorConfiguration> configurations);
+    protected abstract void apply(List<FileColorConfiguration> configurations);
 
     @Override
     public ModelAdapter getModel() {
@@ -173,7 +172,7 @@ public abstract class FileColorSettingsTable extends JBTable {
         return removed;
     }
 
-    public void addConfiguration(@Nonnull FileColorConfiguration configuration) {
+    public void addConfiguration(FileColorConfiguration configuration) {
         getModel().add(configuration);
     }
 
@@ -208,7 +207,7 @@ public abstract class FileColorSettingsTable extends JBTable {
             return myConfigurations.get(rowIndex);
         }
 
-        @Nonnull
+        
         public List<FileColorConfiguration> getConfigurations() {
             return myConfigurations;
         }
@@ -219,7 +218,7 @@ public abstract class FileColorSettingsTable extends JBTable {
             return removed;
         }
 
-        public void add(@Nonnull FileColorConfiguration configuration) {
+        public void add(FileColorConfiguration configuration) {
             myConfigurations.add(configuration);
             fireTableRowsInserted(myConfigurations.size() - 1, myConfigurations.size() - 1);
         }

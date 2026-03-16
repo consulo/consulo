@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProgressBuilderFactory {
-    @Nonnull
+    
     ProgressBuilder newProgressBuilder(@Nullable ComponentManager project,
-                                       @Nonnull LocalizeValue title);
+                                       LocalizeValue title);
 }

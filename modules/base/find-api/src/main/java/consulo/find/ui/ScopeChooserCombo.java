@@ -18,8 +18,7 @@ import consulo.util.concurrent.Promise;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.swing.*;
@@ -89,7 +88,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         rebuildModelAndSelectScopeOnSuccess(selection);
     }
 
-    @Nonnull
+    
     public static ListCellRenderer<ScopeDescriptor> createDefaultRenderer() {
         return new MyRenderer();
     }
@@ -148,10 +147,10 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     }
 
     public static boolean processScopes(
-        @Nonnull Project project,
-        @Nonnull DataContext dataContext,
+        Project project,
+        DataContext dataContext,
         @MagicConstant(flagsFromClass = ScopeChooserCombo.class) int options,
-        @Nonnull Predicate<? super ScopeDescriptor> processor
+        Predicate<? super ScopeDescriptor> processor
     ) {
         List<SearchScope> predefinedScopes = PredefinedSearchScopeProvider.getInstance().getPredefinedScopes(
             project,
@@ -260,7 +259,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     private static class ScopeSeparator extends ScopeDescriptor {
         String text;
 
-        ScopeSeparator(@Nonnull String text) {
+        ScopeSeparator(String text) {
             super(null);
             this.text = text;
         }
@@ -274,7 +273,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     private static class MyRenderer extends ColoredListCellRenderer<ScopeDescriptor> {
         @Override
         protected void customizeCellRenderer(
-            @Nonnull JList<? extends ScopeDescriptor> list,
+            JList<? extends ScopeDescriptor> list,
             ScopeDescriptor value,
             int index,
             boolean selected,

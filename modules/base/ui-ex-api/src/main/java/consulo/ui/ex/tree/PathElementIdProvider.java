@@ -1,8 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.ui.ex.tree;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.List;
@@ -39,7 +38,6 @@ public interface PathElementIdProvider {
      *
      * @return this node's string ID
      */
-    @Nonnull
     String getPathElementId();
 
     /**

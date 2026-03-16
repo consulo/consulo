@@ -16,7 +16,6 @@
 package consulo.ui.event.details;
 
 import consulo.ui.internal.KeyCodeImpl;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,13 +31,9 @@ public interface KeyCode {
     int key();
 
     String name();
-
-    @Nonnull
     static KeyCode of(int key) {
         return KeyCodeImpl.ourMap.computeIfAbsent(key, it -> new KeyCodeImpl(it, Character.toString(it)));
     }
-
-    @Nonnull
     static KeyCode of(int key, String name) {
         return KeyCodeImpl.ourMap.computeIfAbsent(key, it -> new KeyCodeImpl(it, name));
     }

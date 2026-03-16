@@ -32,8 +32,7 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
         connection.subscribe(LogModelListener.class, (project) -> application.invokeLater(IdeNotificationArea.this::updateStatus));
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myFactory.getId();
@@ -74,7 +73,7 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
 
     @Override
     @RequiredUIAccess
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         myStatusBar = statusBar;
         updateStatus();
     }

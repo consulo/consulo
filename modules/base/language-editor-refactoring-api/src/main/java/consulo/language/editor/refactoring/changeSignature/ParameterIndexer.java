@@ -16,13 +16,12 @@
 package consulo.language.editor.refactoring.changeSignature;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface ParameterIndexer {
-  void setIndex(@Nonnull PsiElement element, int index);
+  void setIndex(PsiElement element, int index);
 
-  int getIndex(@Nonnull PsiElement element);
+  int getIndex(PsiElement element);
 }

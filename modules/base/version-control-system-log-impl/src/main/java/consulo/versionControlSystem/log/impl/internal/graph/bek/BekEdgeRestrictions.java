@@ -16,13 +16,12 @@
 package consulo.versionControlSystem.log.impl.internal.graph.bek;
 
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
 
 class BekEdgeRestrictions {
-  @Nonnull
+  
   private final MultiMap<Integer, Integer> myUpToEdge = new MultiMap<>();
 
-  @Nonnull
+  
   private final MultiMap<Integer, Integer> myDownToEdge = new MultiMap<>();
 
   void addRestriction(int upNode, int downNode) {

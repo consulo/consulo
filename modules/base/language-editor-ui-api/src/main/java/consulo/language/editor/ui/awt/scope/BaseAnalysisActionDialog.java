@@ -22,8 +22,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.RadioUpDownListener;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -34,12 +33,12 @@ import java.util.List;
 public class BaseAnalysisActionDialog extends DialogWrapper {
     private final static Logger LOG = Logger.getInstance(BaseAnalysisActionDialog.class);
 
-    @Nonnull
+    
     private final AnalysisUIOptions myOptions;
     private final boolean myRememberScope;
     private final boolean myShowInspectTestSource;
     private final String myScopeTitle;
-    @Nonnull
+    
     private final Project myProject;
     private final List<RadioButton> radioButtons = new ArrayList<>();
     private CheckBox myInspectTestSource;
@@ -52,13 +51,13 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
     @Deprecated
     @RequiredUIAccess
     public BaseAnalysisActionDialog(
-        @Nonnull String title,
-        @Nonnull String scopeTitle,
-        @Nonnull Project project,
-        @Nonnull AnalysisScope scope,
+        String title,
+        String scopeTitle,
+        Project project,
+        AnalysisScope scope,
         String moduleName,
         boolean rememberScope,
-        @Nonnull AnalysisUIOptions analysisUIOptions,
+        AnalysisUIOptions analysisUIOptions,
         @Nullable PsiElement context
     ) {
         this(
@@ -76,10 +75,10 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         );
     }
 
-    @Nonnull
+    
     public static List<ModelScopeItem> standardItems(
-        @Nonnull Project project,
-        @Nonnull AnalysisScope scope,
+        Project project,
+        AnalysisScope scope,
         @Nullable Module module,
         @Nullable PsiElement context
     ) {
@@ -91,11 +90,11 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
     @RequiredUIAccess
     public BaseAnalysisActionDialog(
-        @Nonnull String title,
-        @Nonnull String scopeTitle,
-        @Nonnull Project project,
-        @Nonnull List<? extends ModelScopeItem> items,
-        @Nonnull AnalysisUIOptions options,
+        String title,
+        String scopeTitle,
+        Project project,
+        List<? extends ModelScopeItem> items,
+        AnalysisUIOptions options,
         boolean rememberScope
     ) {
         this(title, scopeTitle, project, items, options, rememberScope, ModuleUtilCore.hasTestSourceRoots(project));
@@ -103,11 +102,11 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
 
     @RequiredUIAccess
     public BaseAnalysisActionDialog(
-        @Nonnull String title,
-        @Nonnull String scopeTitle,
-        @Nonnull Project project,
-        @Nonnull List<? extends ModelScopeItem> items,
-        @Nonnull AnalysisUIOptions options,
+        String title,
+        String scopeTitle,
+        Project project,
+        List<? extends ModelScopeItem> items,
+        AnalysisUIOptions options,
         boolean rememberScope,
         boolean showInspectTestSource
     ) {
@@ -235,9 +234,9 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
      */
     @Deprecated
     public AnalysisScope getScope(
-        @Nonnull AnalysisUIOptions uiOptions,
-        @Nonnull AnalysisScope defaultScope,
-        @Nonnull Project project,
+        AnalysisUIOptions uiOptions,
+        AnalysisScope defaultScope,
+        Project project,
         Module module
     ) {
         return getScope(defaultScope);
@@ -257,7 +256,7 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         return !myAnalyzeInjectedCode.isVisible() || myAnalyzeInjectedCode.getValueOrError();
     }
 
-    public AnalysisScope getScope(@Nonnull AnalysisScope defaultScope) {
+    public AnalysisScope getScope(AnalysisScope defaultScope) {
         AnalysisScope scope = null;
         for (ModelScopeItemView x : myViewItems) {
             if (x.button().getValueOrError()) {
@@ -297,15 +296,15 @@ public class BaseAnalysisActionDialog extends DialogWrapper {
         return scope;
     }
 
-    protected void extendMainLayout(@Nonnull VerticalLayout layout, @Nonnull Project project) {
+    protected void extendMainLayout(VerticalLayout layout, Project project) {
     }
 
     @Nullable
-    protected JComponent getAdditionalActionSettings(@Nonnull Project project) {
+    protected JComponent getAdditionalActionSettings(Project project) {
         return null;
     }
 
-    @Nonnull
+    
     public String getOKButtonText() {
         return AnalysisScopeLocalize.actionAnalyzeVerb().get();
     }

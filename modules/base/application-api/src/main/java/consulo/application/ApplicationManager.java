@@ -20,8 +20,7 @@ import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides access to the <code>Application</code>.
@@ -46,7 +45,7 @@ public class ApplicationManager {
     RootComponentHolder.setRootComponent(instance);
   }
 
-  public static void setApplication(@Nonnull Application instance, @Nonnull Disposable parent) {
+  public static void setApplication(Application instance, Disposable parent) {
     Disposer.register(parent, () -> {
       setApplication(null);
       RootComponentHolder.setRootComponent(null);

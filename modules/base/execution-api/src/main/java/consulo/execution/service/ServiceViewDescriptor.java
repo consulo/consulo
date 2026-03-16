@@ -6,8 +6,7 @@ import consulo.navigation.ItemPresentation;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -16,7 +15,7 @@ import java.util.List;
 public interface ServiceViewDescriptor {
   Key<Boolean> ACTION_HOLDER_KEY = Key.create("ServiceViewActionHolderContentComponent");
 
-  @Nonnull
+  
   ItemPresentation getPresentation();
 
   default @Nullable String getId() {
@@ -27,11 +26,11 @@ public interface ServiceViewDescriptor {
     return null;
   }
 
-  default @Nonnull ItemPresentation getContentPresentation() {
+  default ItemPresentation getContentPresentation() {
     return getPresentation();
   }
 
-  default @Nonnull ItemPresentation getCustomPresentation(@Nonnull ServiceViewOptions options, @Nonnull ServiceViewItemState state) {
+  default ItemPresentation getCustomPresentation(ServiceViewOptions options, ServiceViewItemState state) {
     return getPresentation();
   }
 
@@ -49,7 +48,7 @@ public interface ServiceViewDescriptor {
   default void onNodeUnselected() {
   }
 
-  default boolean handleDoubleClick(@Nonnull MouseEvent event) {
+  default boolean handleDoubleClick(MouseEvent event) {
     Navigatable navigatable = getNavigatable();
     if (navigatable != null && navigatable.getNavigateOptions().canNavigateToSource()) {
       navigatable.navigate(true);

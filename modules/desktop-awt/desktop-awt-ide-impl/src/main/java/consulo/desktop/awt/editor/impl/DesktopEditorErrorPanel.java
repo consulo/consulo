@@ -39,8 +39,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +82,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         uiSettingsChanged(UISettings.getInstance());
     }
 
-    @Nonnull
+    
     public ProperTextRange offsetsToYPositions(int start, int end) {
         if (!dimensionsAreValid) {
             recalcEditorDimensions();
@@ -181,7 +180,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         }
     }
 
-    public void markDirtied(@Nonnull ProperTextRange yPositions) {
+    public void markDirtied(ProperTextRange yPositions) {
         ProperTextRange dirtyYPositions = getUI().getDirtyYPositions();
 
         if (dirtyYPositions != DesktopEditorErrorPanelUI.WHOLE_DOCUMENT) {
@@ -326,7 +325,7 @@ public class DesktopEditorErrorPanel extends JComponent implements UISettingsLis
         });
     }
 
-    public void showTooltip(MouseEvent e, TooltipRenderer tooltipObject, @Nonnull HintHint hintHint) {
+    public void showTooltip(MouseEvent e, TooltipRenderer tooltipObject, HintHint hintHint) {
         TooltipController tooltipController = TooltipController.getInstance();
         tooltipController.showTooltipByMouseMove(
             myEditor,

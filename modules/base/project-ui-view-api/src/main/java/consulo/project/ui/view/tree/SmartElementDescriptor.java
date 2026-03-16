@@ -33,14 +33,13 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class SmartElementDescriptor extends NodeDescriptor {
   private final SmartPsiElementPointer mySmartPointer;
   private final Project myProject;
 
-  public SmartElementDescriptor(@Nonnull Project project, NodeDescriptor parentDescriptor, @Nonnull PsiElement element) {
+  public SmartElementDescriptor(Project project, NodeDescriptor parentDescriptor, PsiElement element) {
     super(parentDescriptor);
     myProject = project;
     mySmartPointer = SmartPointerManager.getInstance(project).createSmartPsiElementPointer(element);
@@ -51,7 +50,7 @@ public class SmartElementDescriptor extends NodeDescriptor {
     return mySmartPointer.getElement();
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }

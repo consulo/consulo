@@ -22,8 +22,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
 import gnu.trove.TObjectIntHashMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 class IndexConfiguration {
@@ -41,7 +40,7 @@ class IndexConfiguration {
     return pair != null ? (UpdatableIndex<K, V, FileContent>)pair.getFirst() : null;
   }
 
-  FileBasedIndex.InputFilter getInputFilter(@Nonnull ID<?, ?> indexId) {
+  FileBasedIndex.InputFilter getInputFilter(ID<?, ?> indexId) {
     assert myFreezed;
     Pair<UpdatableIndex<?, ?, FileContent>, FileBasedIndex.InputFilter> pair = myIndices.get(indexId);
 
@@ -55,7 +54,7 @@ class IndexConfiguration {
   }
 
   <K, V> void registerIndex(ID<K, V> name,
-                            @Nonnull UpdatableIndex<K, V, FileContent> index,
+                            UpdatableIndex<K, V, FileContent> index,
                             FileBasedIndex.InputFilter inputFilter,
                             int version,
                             @Nullable Collection<? extends FileType> associatedFileTypes) {
@@ -81,8 +80,8 @@ class IndexConfiguration {
     }
   }
 
-  @Nonnull
-  List<ID<?, ?>> getFileTypesForIndex(@Nonnull FileType fileType) {
+  
+  List<ID<?, ?>> getFileTypesForIndex(FileType fileType) {
     assert myFreezed;
     List<ID<?, ?>> ids = myFileType2IndicesWithFileTypeInfoMap.get(fileType);
     if (ids == null) ids = myIndicesWithoutFileTypeInfo;

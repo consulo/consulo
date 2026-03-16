@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.Point;
 
@@ -200,7 +199,7 @@ public class LogicalPosition implements Comparable<LogicalPosition> {
     return 29 * line + column;
   }
 
-  @NonNls
+  
   public String toString() {
     return "LogicalPosition: (" + line + ", " + column + ")"
            + (visualPositionAware ? "; vp aware" : "")

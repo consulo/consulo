@@ -16,7 +16,6 @@
 package consulo.application.ui.util;
 
 import consulo.util.xml.serializer.annotation.OptionTag;
-import jakarta.annotation.Nonnull;
 
 public class TodoPanelSettings {
     @OptionTag(tag = "are-packages-shown", nameAttribute = "")
@@ -35,7 +34,7 @@ public class TodoPanelSettings {
     public TodoPanelSettings() {
     }
 
-    public TodoPanelSettings(@Nonnull TodoPanelSettings s) {
+    public TodoPanelSettings(TodoPanelSettings s) {
         arePackagesShown = s.arePackagesShown;
         areModulesShown = s.areModulesShown;
         areFlattenPackages = s.areFlattenPackages;

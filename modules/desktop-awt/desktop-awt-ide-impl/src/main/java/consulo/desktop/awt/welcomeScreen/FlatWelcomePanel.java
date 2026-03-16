@@ -46,7 +46,6 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,15 +66,15 @@ public abstract class FlatWelcomePanel extends BaseWelcomeScreenPanel {
     @RequiredUIAccess
     public abstract JComponent createActionPanel();
 
-    @Nonnull
+    
     @Override
-    protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
+    protected JComponent createLeftComponent(Disposable parentDisposable) {
         return new NewRecentProjectPanel(parentDisposable, true).getRootPanel();
     }
 
     @RequiredUIAccess
     @Override
-    @Nonnull
+    
     protected JComponent createRightComponent() {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel logoPanel = new JPanel(new BorderLayout());

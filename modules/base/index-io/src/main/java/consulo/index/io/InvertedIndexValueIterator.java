@@ -15,7 +15,6 @@
  */
 package consulo.index.io;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -23,7 +22,7 @@ import jakarta.annotation.Nonnull;
  */
 public interface InvertedIndexValueIterator<Value> extends ValueContainer.ValueIterator<Value> {
   @Override
-  @Nonnull
+  
   ValueContainer.IntPredicate getValueAssociationPredicate();
 
   Object getFileSetObject();

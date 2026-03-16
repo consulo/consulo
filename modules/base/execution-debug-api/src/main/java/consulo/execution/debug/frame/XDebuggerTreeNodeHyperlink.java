@@ -18,7 +18,6 @@ package consulo.execution.debug.frame;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import jakarta.annotation.Nonnull;
 import java.awt.event.MouseEvent;
 
 /**
@@ -29,16 +28,16 @@ public abstract class XDebuggerTreeNodeHyperlink {
 
   private final LocalizeValue linkText;
 
-  protected XDebuggerTreeNodeHyperlink(@Nonnull LocalizeValue linkText) {
+  protected XDebuggerTreeNodeHyperlink(LocalizeValue linkText) {
     this.linkText = linkText;
   }
 
-  @Nonnull
+  
   public LocalizeValue getLinkText() {
     return linkText;
   }
 
-  @Nonnull
+  
   public SimpleTextAttributes getTextAttributes() {
     return TEXT_ATTRIBUTES;
   }

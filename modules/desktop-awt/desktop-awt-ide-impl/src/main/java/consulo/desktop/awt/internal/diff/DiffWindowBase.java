@@ -27,8 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.WindowWrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,13 +35,13 @@ import java.awt.*;
 public abstract class DiffWindowBase {
     @Nullable
     protected final Project myProject;
-    @Nonnull
+    
     protected final DiffDialogHints myHints;
 
     private DiffRequestProcessor myProcessor;
     private WindowWrapper myWrapper;
 
-    public DiffWindowBase(@Nullable Project project, @Nonnull DiffDialogHints hints) {
+    public DiffWindowBase(@Nullable Project project, DiffDialogHints hints) {
         myProject = project;
         myHints = hints;
     }
@@ -86,14 +85,14 @@ public abstract class DiffWindowBase {
         myWrapper.show();
     }
 
-    @Nonnull
+    
     protected abstract DiffRequestProcessor createProcessor();
 
     //
     // Delegate
     //
 
-    protected void setWindowTitle(@Nonnull String title) {
+    protected void setWindowTitle(String title) {
         myWrapper.setTitle(title);
     }
 
@@ -114,7 +113,7 @@ public abstract class DiffWindowBase {
     }
 
     private static class MyPanel extends JPanel {
-        public MyPanel(@Nonnull JComponent content) {
+        public MyPanel(JComponent content) {
             super(new BorderLayout());
             add(content, BorderLayout.CENTER);
         }

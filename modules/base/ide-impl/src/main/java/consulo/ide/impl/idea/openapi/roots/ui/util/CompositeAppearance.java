@@ -24,8 +24,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   private int myInsertionIndex = 0;
 
   @Override
-  public void customize(@Nonnull ColoredTextContainer component) {
+  public void customize(ColoredTextContainer component) {
     synchronized (mySections) {
       for (TextSection section : mySections) {
         TextAttributes attributes = section.getTextAttributes();
@@ -65,7 +64,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  @Nonnull
+  
   public String getText() {
     synchronized (mySections) {
       StringBuilder buffer = new StringBuilder();
@@ -95,7 +94,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
     return getText().hashCode();
   }
 
-  protected void addSectionAt(int index, @Nonnull TextSection section) {
+  protected void addSectionAt(int index, TextSection section) {
     synchronized (mySections) {
       mySections.add(index, section);
       for (Iterator<TextSection> iterator = mySections.iterator(); iterator.hasNext();) {

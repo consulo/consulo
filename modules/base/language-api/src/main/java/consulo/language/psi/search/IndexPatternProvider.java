@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Provider of regular expression patterns the occurrences of which in the comments of
@@ -47,6 +46,6 @@ public interface IndexPatternProvider {
    *
    * @return the array of index patterns
    */
-  @Nonnull
+  
   IndexPattern[] getIndexPatterns();
 }

@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.font.Font;
 import consulo.util.lang.BitUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -30,7 +29,7 @@ public final class DesktopFontImpl implements Font {
   private final java.awt.Font myFont;
   private final int myFontStyle;
 
-  public DesktopFontImpl(@Nonnull String fontName, int fontSize, int fontStyle) {
+  public DesktopFontImpl(String fontName, int fontSize, int fontStyle) {
     myFontStyle = fontStyle;
 
     int style = 0;
@@ -52,24 +51,24 @@ public final class DesktopFontImpl implements Font {
     myFontStyle = result;
   }
 
-  @Nonnull
+  
   public java.awt.Font getFont() {
     return myFont;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return myFont.getFontName();
   }
 
-  @Nonnull
+  
   @Override
   public String getFontName() {
     return myFont.getFontName();
   }
 
-  @Nonnull
+  
   @Override
   public String getFamily() {
     return myFont.getFamily();
@@ -85,7 +84,7 @@ public final class DesktopFontImpl implements Font {
     return myFont.getSize();
   }
 
-  @Nonnull
+  
   @Override
   public Font buildNewFont(int newSize) {
     java.awt.Font newFont = myFont.deriveFont((float)newSize);

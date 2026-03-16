@@ -27,8 +27,7 @@ import consulo.component.persist.Storage;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -46,7 +45,7 @@ public class FileOperateDialogSettings implements PersistentStateComponent<FileO
 
   private State myState = new State();
 
-  @Nonnull
+  
   public static FileOperateDialogSettings getInstance() {
     return ServiceManager.getService(FileOperateDialogSettings.class);
   }

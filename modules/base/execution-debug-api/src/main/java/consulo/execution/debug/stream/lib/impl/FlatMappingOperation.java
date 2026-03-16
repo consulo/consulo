@@ -16,10 +16,9 @@
 package consulo.execution.debug.stream.lib.impl;
 
 import consulo.execution.debug.stream.resolve.FlatMapResolver;
-import jakarta.annotation.Nonnull;
 
 public class FlatMappingOperation extends OrderBasedOperation {
-  public FlatMappingOperation(@Nonnull String name) {
+  public FlatMappingOperation(String name) {
     super(name, new FlatMapResolver());
   }
 }

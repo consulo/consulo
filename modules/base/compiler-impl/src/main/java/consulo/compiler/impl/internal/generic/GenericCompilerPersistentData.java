@@ -20,7 +20,6 @@ import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.util.HashMap;
@@ -99,7 +98,7 @@ public class GenericCompilerPersistentData {
         }
     }
 
-    public int getId(@Nonnull String target) {
+    public int getId(String target) {
         if (myTarget2Id.containsKey(target)) {
             return myTarget2Id.get(target);
         }

@@ -18,22 +18,17 @@ package consulo.ui;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface MenuBar extends Component {
-  @Nonnull
   static MenuBar create() {
     return UIInternal.get()._MenuItems_menuBar();
   }
 
-
   void clear();
 
   @RequiredUIAccess
-  @Nonnull
-  MenuBar add(@Nonnull MenuItem menuItem);
+  MenuBar add(MenuItem menuItem);
 }

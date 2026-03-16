@@ -4,7 +4,6 @@ package consulo.codeEditor.impl;
 import consulo.document.RangeMarker;
 import consulo.document.internal.DocumentEx;
 import consulo.document.util.DocumentUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +16,7 @@ public final class GuardedBlocksIndex {
     private final boolean[] guards;
     private final int length;
 
-    GuardedBlocksIndex(@Nonnull int[] offsets, @Nonnull boolean[] guards, int length) {
+    GuardedBlocksIndex(int[] offsets, boolean[] guards, int length) {
         assert offsets.length == guards.length;
         assert length <= offsets.length;
 
@@ -102,7 +101,7 @@ public final class GuardedBlocksIndex {
 
     // Document independent for unit test purpose
     public static sealed class Builder permits DocumentBuilder {
-        public @Nonnull GuardedBlocksIndex build(int start, int end, @Nonnull List<RangeMarker> guardedBlocks) {
+        public GuardedBlocksIndex build(int start, int end, List<RangeMarker> guardedBlocks) {
             assert 0 <= start && start <= end;
             List<Offset> offsetList = guardedBlocks.stream().flatMap(r -> {
                 int rangeStart = r.getStartOffset();
@@ -152,11 +151,11 @@ public final class GuardedBlocksIndex {
     static final class DocumentBuilder extends Builder {
         private final DocumentEx document;
 
-        DocumentBuilder(@Nonnull DocumentEx document) {
+        DocumentBuilder(DocumentEx document) {
             this.document = document;
         }
 
-        @Nonnull
+        
         GuardedBlocksIndex build(int start, int end) {
             return build(start, end, document.getGuardedBlocks());
         }
@@ -181,7 +180,7 @@ public final class GuardedBlocksIndex {
         }
 
         @Override
-        public int compareTo(@Nonnull GuardedBlocksIndex.Offset o) {
+        public int compareTo(GuardedBlocksIndex.Offset o) {
             int compare = Integer.compare(value(), o.value());
             if (compare != 0) {
                 return compare;
@@ -193,7 +192,7 @@ public final class GuardedBlocksIndex {
         }
 
         @Override
-        public @Nonnull String toString() {
+        public String toString() {
             String s = isStart ? "start" : "end";
             return s + "[" + value + "]";
         }

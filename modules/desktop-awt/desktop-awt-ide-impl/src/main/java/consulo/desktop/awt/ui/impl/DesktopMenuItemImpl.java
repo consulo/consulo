@@ -22,8 +22,7 @@ import consulo.ui.Component;
 import consulo.ui.MenuItem;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -37,7 +36,7 @@ class DesktopMenuItemImpl extends SwingComponentDelegate<JMenuItem> implements M
             super(text);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopMenuItemImpl.this;
@@ -55,7 +54,7 @@ class DesktopMenuItemImpl extends SwingComponentDelegate<JMenuItem> implements M
         return new MyJMenuItem(myText.get());
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return myText;

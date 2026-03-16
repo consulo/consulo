@@ -22,7 +22,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.image.Image;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladimir Kondratyev
@@ -40,7 +39,7 @@ public class TodoAttributes implements Cloneable {
   private static final String ELEMENT_OPTION = "option";
   private static final String USE_CUSTOM_COLORS_ATT = "useCustomColors";
 
-  public TodoAttributes(@Nonnull Element element) throws InvalidDataException {
+  public TodoAttributes(Element element) throws InvalidDataException {
     String icon = element.getAttributeValue(ATTRIBUTE_ICON, ICON_DEFAULT);
 
     if (ICON_DEFAULT.equals(icon)) {
@@ -67,7 +66,7 @@ public class TodoAttributes implements Cloneable {
     }
   }
 
-  public TodoAttributes(@Nonnull Image icon, @Nonnull TextAttributes textAttributes) {
+  public TodoAttributes(Image icon, TextAttributes textAttributes) {
     myIcon = icon;
     myTextAttributes = textAttributes;
   }
@@ -79,7 +78,7 @@ public class TodoAttributes implements Cloneable {
   /**
    * @see TodoAttributesUtil#getTextAttributes(TodoAttributes)
    */
-  @Nonnull
+  
   public TextAttributes getTextAttributes() {
     return myTextAttributes;
   }
@@ -132,7 +131,7 @@ public class TodoAttributes implements Cloneable {
     return myShouldUseCustomColors;
   }
 
-  public void setUseCustomTodoColor(boolean useCustomColors, @Nonnull TextAttributes defaultTodoAttributes) {
+  public void setUseCustomTodoColor(boolean useCustomColors, TextAttributes defaultTodoAttributes) {
     myShouldUseCustomColors = useCustomColors;
     if (!useCustomColors) {
       myTextAttributes = defaultTodoAttributes;

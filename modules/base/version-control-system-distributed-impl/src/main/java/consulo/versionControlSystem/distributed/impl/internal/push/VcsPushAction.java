@@ -27,8 +27,7 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.VcsRepositoryManager;
 import consulo.versionControlSystem.icon.VersionControlSystemIconGroup;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,9 +39,9 @@ public class VcsPushAction extends DumbAwareAction {
         super(ActionLocalize.actionVcsPushText(), ActionLocalize.actionVcsPushText(), VersionControlSystemIconGroup.checkin());
     }
 
-    @Nonnull
+    
     private static Collection<Repository> collectRepositories(
-        @Nonnull VcsRepositoryManager vcsRepositoryManager,
+        VcsRepositoryManager vcsRepositoryManager,
         @Nullable VirtualFile[] files
     ) {
         if (files == null) {
@@ -60,7 +59,7 @@ public class VcsPushAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VcsRepositoryManager manager = project.getInstance(VcsRepositoryManager.class);
         Collection<Repository> repositories = e.hasData(Editor.KEY)
@@ -75,7 +74,7 @@ public class VcsPushAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         e.getPresentation().setEnabledAndVisible(
             project != null && !project.getInstance(VcsRepositoryManager.class).getRepositories().isEmpty()

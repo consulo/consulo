@@ -23,7 +23,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "OpenFilesActivity")
 public class OpenFilesActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     if (!(fileEditorManager instanceof FileEditorManagerImpl)) {
       return;

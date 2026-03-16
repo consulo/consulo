@@ -23,14 +23,13 @@ import consulo.externalService.impl.internal.WebServiceApi;
 import consulo.externalService.impl.internal.WebServiceApiSender;
 import consulo.externalService.impl.internal.repository.api.UserAccount;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DevelopersLoader {
-    @Nonnull
+    
     public static List<Developer> fetchDevelopers(ProgressIndicator indicator) throws IOException {
         ExternalServiceConfiguration externalServiceConfiguration = Application.get().getInstance(ExternalServiceConfiguration.class);
 

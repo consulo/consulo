@@ -16,8 +16,7 @@
 package consulo.externalSystem.service.project.autoimport;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -31,20 +30,20 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class CachingExternalSystemAutoImportAware implements ExternalSystemAutoImportAware {
 
-  @Nonnull
+  
   private final ConcurrentMap<String/* file path */, String/* root external project path */> myCache
     = new ConcurrentHashMap<>();
   
-  @Nonnull
+  
   private final ExternalSystemAutoImportAware myDelegate;
 
-  public CachingExternalSystemAutoImportAware(@Nonnull ExternalSystemAutoImportAware delegate) {
+  public CachingExternalSystemAutoImportAware(ExternalSystemAutoImportAware delegate) {
     myDelegate = delegate;
   }
 
   @Nullable
   @Override
-  public String getAffectedExternalProjectPath(@Nonnull String changedFileOrDirPath, @Nonnull Project project) {
+  public String getAffectedExternalProjectPath(String changedFileOrDirPath, Project project) {
     String cached = myCache.get(changedFileOrDirPath);
     if (cached != null) {
       return cached;

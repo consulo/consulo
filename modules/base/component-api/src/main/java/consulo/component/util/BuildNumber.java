@@ -15,8 +15,7 @@
  */
 package consulo.component.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -77,7 +76,7 @@ public class BuildNumber implements Comparable<BuildNumber> {
   }
 
   @Override
-  public int compareTo(@Nonnull BuildNumber o) {
+  public int compareTo(BuildNumber o) {
     return myBuildNumber - o.myBuildNumber;
   }
 

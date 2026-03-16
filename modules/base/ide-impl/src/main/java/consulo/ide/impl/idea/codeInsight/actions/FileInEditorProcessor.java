@@ -36,8 +36,7 @@ import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -115,7 +114,7 @@ class FileInEditorProcessor {
     myProcessor.run();
   }
 
-  private AbstractLayoutCodeProcessor mixWithRearrangeProcessor(@Nonnull AbstractLayoutCodeProcessor processor) {
+  private AbstractLayoutCodeProcessor mixWithRearrangeProcessor(AbstractLayoutCodeProcessor processor) {
     if (myProcessSelectedText) {
       processor = new RearrangeCodeProcessor(processor, myEditor.getSelectionModel());
     }
@@ -125,7 +124,7 @@ class FileInEditorProcessor {
     return processor;
   }
 
-  @Nonnull
+  
   private AbstractLayoutCodeProcessor mixWithReformatProcessor(@Nullable AbstractLayoutCodeProcessor processor) {
     if (processor != null) {
       if (myProcessSelectedText) {
@@ -146,7 +145,7 @@ class FileInEditorProcessor {
     return processor;
   }
 
-  @Nonnull
+  
   private String prepareMessage() {
     StringBuilder builder = new StringBuilder("<html>");
     LayoutCodeInfoCollector notifications = myProcessor.getInfoCollector();
@@ -193,7 +192,7 @@ class FileInEditorProcessor {
     return builder.toString();
   }
 
-  @Nonnull
+  
   private static String joinWithCommaAndCapitalize(String reformatNotification, String rearrangeNotification) {
     String firstNotificationLine = reformatNotification != null ? reformatNotification : rearrangeNotification;
     if (reformatNotification != null && rearrangeNotification != null) {
@@ -203,7 +202,7 @@ class FileInEditorProcessor {
     return firstNotificationLine;
   }
 
-  public static void showHint(@Nonnull Editor editor, @Nonnull String info, @Nullable HyperlinkListener hyperlinkListener) {
+  public static void showHint(Editor editor, String info, @Nullable HyperlinkListener hyperlinkListener) {
     JComponent component = HintUtil.createInformationLabel(info, hyperlinkListener, null, null);
     LightweightHintImpl hint = new LightweightHintImpl(component);
     HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, HintManager.UNDER,

@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

@@ -40,7 +40,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -59,20 +58,20 @@ public class CopyrightBulkFileListener implements BulkFileListener {
 
   private AtomicBoolean myDocumentListenerRegistrator = new AtomicBoolean();
 
-  @Nonnull
+  
   private final Application myApplication;
-  @Nonnull
+  
   private Provider<EditorFactory> myEditorFactoryProvider;
-  @Nonnull
+  
   private Provider<FileDocumentManager> myFileDocumentManagerProvider;
-  @Nonnull
+  
   private Provider<ProjectManager> myProjectManagerProvider;
 
   @Inject
-  public CopyrightBulkFileListener(@Nonnull Application application,
-                                   @Nonnull Provider<EditorFactory> editorFactoryProvider,
-                                   @Nonnull Provider<FileDocumentManager> fileDocumentManagerProvider,
-                                   @Nonnull Provider<ProjectManager> projectManagerProvider) {
+  public CopyrightBulkFileListener(Application application,
+                                   Provider<EditorFactory> editorFactoryProvider,
+                                   Provider<FileDocumentManager> fileDocumentManagerProvider,
+                                   Provider<ProjectManager> projectManagerProvider) {
     myApplication = application;
     myEditorFactoryProvider = editorFactoryProvider;
     myFileDocumentManagerProvider = fileDocumentManagerProvider;
@@ -80,7 +79,7 @@ public class CopyrightBulkFileListener implements BulkFileListener {
   }
 
   @Override
-  public void after(@Nonnull List<? extends VFileEvent> events) {
+  public void after(List<? extends VFileEvent> events) {
     for (VFileEvent event : events) {
       if (event.isFromRefresh()) {
         continue;

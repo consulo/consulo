@@ -17,8 +17,7 @@ package consulo.execution.test.sm;
 
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman.Chernyatchik
@@ -27,5 +26,5 @@ import jakarta.annotation.Nullable;
 @Deprecated
 public interface SMStacktraceParser {
     @Nullable
-    Navigatable getErrorNavigatable(@Nonnull Project project, @Nonnull String stacktrace);
+    Navigatable getErrorNavigatable(Project project, String stacktrace);
 }

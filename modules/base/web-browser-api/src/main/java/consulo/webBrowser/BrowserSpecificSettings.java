@@ -16,16 +16,15 @@
 package consulo.webBrowser;
 
 import consulo.configurable.Configurable;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class BrowserSpecificSettings implements Cloneable {
-    @Nonnull
+    
     public abstract Configurable createConfigurable();
 
-    @Nonnull
+    
     public List<String> getAdditionalParameters() {
         return Collections.emptyList();
     }

@@ -44,8 +44,7 @@ import consulo.ui.ex.internal.IdeGlassPaneEx;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,7 +107,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         this(wrapper, (Project) null, canBeParent);
     }
 
-    public GlassPaneDialogWrapperPeer(DialogWrapper wrapper, @Nonnull Component parent, boolean canBeParent) throws GlasspanePeerUnavailableException {
+    public GlassPaneDialogWrapperPeer(DialogWrapper wrapper, Component parent, boolean canBeParent) throws GlasspanePeerUnavailableException {
         myWrapper = wrapper;
         myCanBeParent = canBeParent;
         if (!parent.isShowing() && parent != JOptionPane.getRootFrame()) {
@@ -274,14 +273,13 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         throw new UnsupportedOperationException("Not implemented in " + getClass().getCanonicalName());
     }
 
-    @Nonnull
     @Override
     public Point getLocation() {
         return myDialog.getLocation();
     }
 
     @Override
-    public void setLocation(@Nonnull Point p) {
+    public void setLocation(Point p) {
         setLocation(p.x, p.y);
     }
 
@@ -596,7 +594,7 @@ public class GlassPaneDialogWrapperPeer extends DialogWrapperPeer {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             DialogWrapper wrapper = myDialogWrapper.get();
             if (wrapper instanceof UiDataProvider uiProvider) {
                 sink.uiDataSnapshot(uiProvider);

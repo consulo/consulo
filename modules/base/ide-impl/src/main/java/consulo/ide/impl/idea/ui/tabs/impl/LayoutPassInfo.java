@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.tabs.impl;
 
 import consulo.ui.ex.awt.tab.TabInfo;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;

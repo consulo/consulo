@@ -30,7 +30,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     private final int myEndOffset;
     private final boolean hasDirtyTextRange;
 
-    ShowAutoImportPass(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor) {
+    ShowAutoImportPass(Project project, PsiFile file, Editor editor) {
         super(project, editor.getDocument(), false);
 
         TextRange range = HighlightingSessionImpl.getFromCurrentIndicator(file).getVisibleRange();
@@ -59,7 +58,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     }
 
     @Override
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    public void doCollectInformation(ProgressIndicator progress) {
     }
 
     @Override
@@ -143,13 +142,12 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         }
     }
 
-    @Nonnull
     @RequiredReadAction
     private static List<HighlightInfoImpl> getVisibleHighlights(
         int startOffset,
         int endOffset,
-        @Nonnull Project project,
-        @Nonnull Editor editor,
+        Project project,
+        Editor editor,
         boolean isDirty
     ) {
         List<HighlightInfoImpl> highlights = new ArrayList<>();
@@ -176,7 +174,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
     }
 
     @RequiredReadAction
-    private boolean showAddImportHint(@Nonnull HighlightInfoImpl info) {
+    private boolean showAddImportHint(HighlightInfoImpl info) {
         if (!DaemonCodeAnalyzerSettings.getInstance().isImportHintEnabled()) {
             return false;
         }
@@ -196,8 +194,7 @@ public class ShowAutoImportPass extends TextEditorHighlightingPass {
         return false;
     }
 
-    @Nonnull
-    private static List<HintAction> extractHints(@Nonnull HighlightInfoImpl info) {
+    private static List<HintAction> extractHints(HighlightInfoImpl info) {
         List<Pair<IntentionActionDescriptor, TextRange>> list = info.myQuickFixActionRanges;
         if (list == null) {
             return Collections.emptyList();

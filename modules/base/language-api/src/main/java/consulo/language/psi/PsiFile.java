@@ -24,8 +24,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A PSI element representing a file.
@@ -81,7 +80,7 @@ public interface PsiFile extends PsiFileSystemItem {
      *
      * @return the original file of a copy, or the same file if the file is not a copy.
      */
-    @Nonnull
+    
     PsiFile getOriginalFile();
 
     /**
@@ -89,7 +88,7 @@ public interface PsiFile extends PsiFileSystemItem {
      *
      * @return the file type instance.
      */
-    @Nonnull
+    
     FileType getFileType();
 
     /**
@@ -101,10 +100,10 @@ public interface PsiFile extends PsiFileSystemItem {
      * if the file has only a single language.
      * @deprecated Use {@link FileViewProvider#getAllFiles()} instead.
      */
-    @Nonnull
+    
     PsiFile[] getPsiRoots();
 
-    @Nonnull
+    
     FileViewProvider getViewProvider();
 
     /**
@@ -117,7 +116,7 @@ public interface PsiFile extends PsiFileSystemItem {
      * @throws UnsupportedOperationException if the document is not associated with this type of file
      *                                       (for example, if the file is binary).
      */
-    @Nonnull
+    
     default Document getFileDocument() {
         Document document = getViewProvider().getDocument();
         if (document == null) {

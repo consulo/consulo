@@ -20,8 +20,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.diff.DiffContext;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Wrapper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,33 +29,24 @@ import java.util.List;
 
 public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
   @Nullable protected final Project myProject;
-  @Nonnull
   private final UiDataProvider myDataProvider;
-  @Nonnull
   protected final DiffContext myContext;
 
-  @Nonnull
   private final List<JComponent> myPersistentNotifications = new ArrayList<JComponent>();
 
-  @Nonnull
   protected final JPanel myContentPanel;
-  @Nonnull
   protected final JPanel myNotificationsPanel;
 
-  @Nonnull
   private final Wrapper myNorthPanel;
-  @Nonnull
   private final Wrapper mySouthPanel;
 
-  @Nonnull
   protected final CardLayout myCardLayout;
 
-  @Nonnull
   protected String myCurrentCard;
 
   public DiffPanelBase(@Nullable Project project,
-                       @Nonnull UiDataProvider provider,
-                       @Nonnull DiffContext context) {
+                       UiDataProvider provider,
+                       DiffContext context) {
     super(new BorderLayout());
     myProject = project;
     myDataProvider = provider;
@@ -84,11 +74,11 @@ public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
     mySouthPanel.setContent(component);
   }
 
-  protected void setCurrentCard(@Nonnull String card) {
+  protected void setCurrentCard(String card) {
     setCurrentCard(card, true);
   }
 
-  protected void setCurrentCard(@Nonnull String card, boolean keepFocus) {
+  protected void setCurrentCard(String card, boolean keepFocus) {
     boolean restoreFocus = keepFocus && myContext.isFocused();
 
     myCardLayout.show(myContentPanel, card);
@@ -99,7 +89,7 @@ public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.uiDataSnapshot(myDataProvider);
   }
 
@@ -107,7 +97,7 @@ public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
   // Notifications
   //
 
-  public void setPersistentNotifications(@Nonnull List<JComponent> components) {
+  public void setPersistentNotifications(List<JComponent> components) {
     for (JComponent notification : myPersistentNotifications) {
       myNotificationsPanel.remove(notification);
     }
@@ -129,7 +119,7 @@ public abstract class DiffPanelBase extends JPanel implements UiDataProvider {
     myNotificationsPanel.revalidate();
   }
 
-  public void addNotification(@Nonnull JComponent notification) {
+  public void addNotification(JComponent notification) {
     myNotificationsPanel.add(notification);
     myNotificationsPanel.revalidate();
   }

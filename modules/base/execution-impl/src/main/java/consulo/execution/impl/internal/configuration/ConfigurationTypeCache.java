@@ -19,8 +19,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.component.extension.ExtensionWalker;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -37,7 +36,7 @@ public class ConfigurationTypeCache {
   private List<ConfigurationType> myTypes;
   private final Map<String, ConfigurationType> myTypesById = new LinkedHashMap<>();
 
-  private ConfigurationTypeCache(@Nonnull ExtensionWalker<ConfigurationType> walker) {
+  private ConfigurationTypeCache(ExtensionWalker<ConfigurationType> walker) {
     List<ConfigurationType> types = new ArrayList<>();
     walker.walk(types::add);
 
@@ -49,7 +48,7 @@ public class ConfigurationTypeCache {
     }
   }
 
-  @Nonnull
+  
   public List<ConfigurationType> getTypes() {
     return myTypes;
   }

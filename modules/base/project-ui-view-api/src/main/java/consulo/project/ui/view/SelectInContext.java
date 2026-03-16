@@ -20,8 +20,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -30,10 +29,10 @@ import java.util.function.Supplier;
 public interface SelectInContext {
   Key<SelectInContext> DATA_KEY = Key.create("SelectInContext");
 
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   VirtualFile getVirtualFile();
 
   @Nullable
@@ -49,7 +48,7 @@ public interface SelectInContext {
    * @param requestFocus specifies whether a focus request is needed or not
    * @return {@code true} if a selection request is approved and executed by the given target
    */
-  default boolean selectIn(@Nonnull SelectInTarget target, boolean requestFocus) {
+  default boolean selectIn(SelectInTarget target, boolean requestFocus) {
     if (!target.canSelect(this)) return false;
     target.selectIn(this, requestFocus);
     return true;

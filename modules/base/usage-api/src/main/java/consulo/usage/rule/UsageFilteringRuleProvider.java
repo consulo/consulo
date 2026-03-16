@@ -22,15 +22,14 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UsageFilteringRuleProvider {
     ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);
 
-    @Nonnull
-    UsageFilteringRule[] getActiveRules(@Nonnull Project project);
+    
+    UsageFilteringRule[] getActiveRules(Project project);
 
-    @Nonnull
-    AnAction[] createFilteringActions(@Nonnull UsageView view);
+    
+    AnAction[] createFilteringActions(UsageView view);
 }

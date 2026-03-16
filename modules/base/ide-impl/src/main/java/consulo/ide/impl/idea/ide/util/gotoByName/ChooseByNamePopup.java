@@ -24,9 +24,7 @@ import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -54,8 +52,8 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   private final MergingUpdateQueue myRepaintQueue = new MergingUpdateQueue("ChooseByNamePopup repaint", 50, true, myList, this);
 
   protected ChooseByNamePopup(@Nullable Project project,
-                              @Nonnull ChooseByNameModel model,
-                              @Nonnull ChooseByNameItemProvider provider,
+                              ChooseByNameModel model,
+                              ChooseByNameItemProvider provider,
                               @Nullable ChooseByNamePopup oldPopup,
                               @Nullable String predefinedText,
                               boolean mayRequestOpenInCurrentWindow,
@@ -280,17 +278,17 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     return createPopup(project, model, ChooseByNameModelEx.getItemProvider(model, context), predefinedText, mayRequestOpenInCurrentWindow, initialIndex);
   }
 
-  public static ChooseByNamePopup createPopup(Project project, @Nonnull ChooseByNameModel model, @Nonnull ChooseByNameItemProvider provider) {
+  public static ChooseByNamePopup createPopup(Project project, ChooseByNameModel model, ChooseByNameItemProvider provider) {
     return createPopup(project, model, provider, null);
   }
 
-  public static ChooseByNamePopup createPopup(Project project, @Nonnull ChooseByNameModel model, @Nonnull ChooseByNameItemProvider provider, @Nullable String predefinedText) {
+  public static ChooseByNamePopup createPopup(Project project, ChooseByNameModel model, ChooseByNameItemProvider provider, @Nullable String predefinedText) {
     return createPopup(project, model, provider, predefinedText, false, 0);
   }
 
   public static ChooseByNamePopup createPopup(Project project,
-                                              @Nonnull ChooseByNameModel model,
-                                              @Nonnull ChooseByNameItemProvider provider,
+                                              ChooseByNameModel model,
+                                              ChooseByNameItemProvider provider,
                                               @Nullable String predefinedText,
                                               boolean mayRequestOpenInCurrentWindow,
                                               int initialIndex) {
@@ -318,15 +316,15 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   //space character in the end of pattern forces full matches search
   private static final String fullMatchSearchSuffix = " ";
 
-  @Nonnull
+  
   @Override
-  public String transformPattern(@Nonnull String pattern) {
+  public String transformPattern(String pattern) {
     ChooseByNameModel model = getModel();
     return getTransformedPattern(pattern, model);
   }
 
-  @Nonnull
-  public static String getTransformedPattern(@Nonnull String pattern, @Nonnull ChooseByNameModel model) {
+  
+  public static String getTransformedPattern(String pattern, ChooseByNameModel model) {
     String rawPattern = pattern;
 
     Pattern regex = null;
@@ -402,7 +400,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     return StringUtil.isEmpty(name) ? null : name;
   }
 
-  public void registerAction(@NonNls String aActionName, KeyStroke keyStroke, Action aAction) {
+  public void registerAction(String aActionName, KeyStroke keyStroke, Action aAction) {
     if (myInputMap == null) myInputMap = new InputMap();
     if (myActionMap == null) myActionMap = new ActionMap();
     myInputMap.put(keyStroke, aActionName);
@@ -448,9 +446,9 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
     }
   }
 
-  @Nonnull
+  
   @TestOnly
-  public List<Object> calcPopupElements(@Nonnull String text, boolean checkboxState) {
+  public List<Object> calcPopupElements(String text, boolean checkboxState) {
     List<Object> elements = List.of("empty");
     Semaphore semaphore = new Semaphore(1);
     scheduleCalcElements(text, checkboxState, ModalityState.nonModal(), SelectMostRelevant.INSTANCE, set -> {

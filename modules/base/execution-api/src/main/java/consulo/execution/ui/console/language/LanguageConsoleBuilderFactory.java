@@ -18,7 +18,6 @@ package consulo.execution.ui.console.language;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.language.Language;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface LanguageConsoleBuilderFactory {
-  @Nonnull
-  LanguageConsoleBuilder newBuilder(@Nonnull Language language);
+  
+  LanguageConsoleBuilder newBuilder(Language language);
 }

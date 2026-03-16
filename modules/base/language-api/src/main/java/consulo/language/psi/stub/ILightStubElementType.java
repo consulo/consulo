@@ -20,11 +20,10 @@ import consulo.language.ast.LighterAST;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class ILightStubElementType<StubT extends StubElement, PsiT extends PsiElement> extends IStubElementType<StubT, PsiT> {
-  public ILightStubElementType(@Nonnull String debugName, @Nullable Language language) {
+  public ILightStubElementType(String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 

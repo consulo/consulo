@@ -17,7 +17,6 @@ package consulo.language.editor.completion.lookup;
 
 import consulo.language.editor.completion.*;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -42,7 +41,7 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
   }
 
   @Override
-  @Nonnull
+  
   public String getLookupString() {
     return myDelegate.getLookupString();
   }
@@ -52,7 +51,7 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
     return myDelegate.getAllLookupStrings();
   }
 
-  @Nonnull
+  
   @Override
   public Object getObject() {
     return myDelegate.getObject();
@@ -108,13 +107,13 @@ public abstract class LookupElementDecorator<T extends LookupElement> extends Lo
     };
   }
 
-  @Nonnull
-  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(@Nonnull T element, @Nonnull InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
+  
+  public static <T extends LookupElement> LookupElementDecorator<T> withInsertHandler(T element, InsertHandler<? super LookupElementDecorator<T>> insertHandler) {
     return new InsertingDecorator<T>(element, insertHandler);
   }
 
-  @Nonnull
-  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(@Nonnull T element, @Nonnull LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
+  
+  public static <T extends LookupElement> LookupElementDecorator<T> withRenderer(T element, LookupElementRenderer<? super LookupElementDecorator<T>> visagiste) {
     return new VisagisteDecorator<T>(element, visagiste);
   }
 

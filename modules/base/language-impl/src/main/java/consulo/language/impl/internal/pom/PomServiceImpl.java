@@ -24,7 +24,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -39,9 +38,9 @@ public class PomServiceImpl extends PomService {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
-  public PsiElement convertToPsi(@Nonnull PomTarget target) {
+  public PsiElement convertToPsi(PomTarget target) {
     if (target instanceof PsiElement) {
       return (PsiElement)target;
     }

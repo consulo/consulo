@@ -44,8 +44,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -54,7 +53,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         invoke(project, editor, file, null);
     }
 
@@ -64,7 +63,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
     }
 
     @RequiredUIAccess
-    public static void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file, Surrounder surrounder) {
+    public static void invoke(Project project, Editor editor, PsiFile file, Surrounder surrounder) {
         if (!EditorModificationUtil.checkModificationAllowed(editor)) {
             return;
         }
@@ -294,7 +293,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (!FileDocumentManager.getInstance().requestWriting(myEditor.getDocument(), myProject)) {
                 return;
             }
@@ -318,7 +317,7 @@ public class SurroundWithHandler implements CodeInsightActionHandler {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             ShowSettingsUtil.getInstance()
                 .showSettingsDialog(e.getData(Project.KEY), CodeInsightLocalize.templatesSettingsPageTitle().get());
         }

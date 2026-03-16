@@ -29,7 +29,6 @@ import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,8 +40,8 @@ public abstract class PostfixTemplateProvider implements LanguageExtension {
   private static final ExtensionPointCacheKey<PostfixTemplateProvider, ByLanguageValue<List<PostfixTemplateProvider>>> KEY =
           ExtensionPointCacheKey.create("PostfixTemplateProvider", LanguageOneToMany.build(false));
 
-  @Nonnull
-  public static List<PostfixTemplateProvider> forLanguage(@Nonnull Language language) {
+  
+  public static List<PostfixTemplateProvider> forLanguage(Language language) {
     return Application.get().getExtensionPoint(PostfixTemplateProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -60,7 +59,7 @@ public abstract class PostfixTemplateProvider implements LanguageExtension {
   /**
    * Return all templates registered in the provider
    */
-  @Nonnull
+  
   public final Set<PostfixTemplate> getTemplates() {
     return myTemplatesValue.get();
   }
@@ -81,13 +80,13 @@ public abstract class PostfixTemplateProvider implements LanguageExtension {
    * Note that while postfix template is checking its availability the file parameter is a _COPY_ of the real file,
    * so you can do with it anything that you want, but in the same time it doesn't recommended to modify editor state because it's real.
    */
-  public abstract void preExpand(@Nonnull PsiFile file, @Nonnull Editor editor);
+  public abstract void preExpand(PsiFile file, Editor editor);
 
   /**
    * Invoked after template finished (doesn't matter if it finished successfully or not).
    * E.g. java postfix template use this method for deleting inserted semicolon.
    */
-  public abstract void afterExpand(@Nonnull PsiFile file, @Nonnull Editor editor);
+  public abstract void afterExpand(PsiFile file, Editor editor);
 
   /**
    * Prepare file for checking availability of templates.
@@ -101,6 +100,6 @@ public abstract class PostfixTemplateProvider implements LanguageExtension {
    * NOTE: editor is real (not copy) and it doesn't represents the copyFile.
    * So it's safer to use currentOffset parameter instead of offset from editor. Do not modify text via editor.
    */
-  @Nonnull
-  public abstract PsiFile preCheck(@Nonnull PsiFile copyFile, @Nonnull Editor realEditor, int currentOffset);
+  
+  public abstract PsiFile preCheck(PsiFile copyFile, Editor realEditor, int currentOffset);
 }

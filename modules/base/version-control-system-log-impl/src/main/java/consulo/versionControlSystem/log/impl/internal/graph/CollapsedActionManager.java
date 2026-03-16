@@ -21,15 +21,14 @@ import consulo.versionControlSystem.log.graph.LinearGraphController.LinearGraphA
 import consulo.versionControlSystem.log.graph.LinearGraphController.LinearGraphAnswer;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.versionControlSystem.log.impl.internal.util.UnsignedBitSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 class CollapsedActionManager {
 
   @Nullable
-  public static LinearGraphAnswer performAction(@Nonnull CollapsedController graphController, @Nonnull LinearGraphAction action) {
+  public static LinearGraphAnswer performAction(CollapsedController graphController, LinearGraphAction action) {
     ActionContext context = new ActionContext(graphController.getCollapsedGraph(), graphController.getPermanentGraphInfo(), action);
 
     for (ActionCase actionCase : FILTER_ACTION_CASES) {
@@ -41,7 +40,7 @@ class CollapsedActionManager {
     return null;
   }
 
-  public static void expandNodes(@Nonnull CollapsedGraph collapsedGraph, Set<Integer> nodesToShow) {
+  public static void expandNodes(CollapsedGraph collapsedGraph, Set<Integer> nodesToShow) {
     FragmentGenerator generator =
       new FragmentGenerator(LinearGraphUtils.asLiteLinearGraph(collapsedGraph.getDelegatedGraph()), collapsedGraph::isNodeVisible);
 
@@ -70,25 +69,25 @@ class CollapsedActionManager {
 
   private interface ActionCase {
     @Nullable
-    LinearGraphAnswer performAction(@Nonnull ActionContext context);
+    LinearGraphAnswer performAction(ActionContext context);
 
-    @Nonnull
+    
     Set<GraphAction.Type> supportedActionTypes();
   }
 
   private static class ActionContext {
-    @Nonnull
+    
     private final CollapsedGraph myCollapsedGraph;
-    @Nonnull
+    
     private final LinearGraphAction myGraphAction;
-    @Nonnull
+    
     private final FragmentGenerators myDelegatedFragmentGenerators;
-    @Nonnull
+    
     private final FragmentGenerators myCompiledFragmentGenerators;
 
-    private ActionContext(@Nonnull CollapsedGraph collapsedGraph,
-                          @Nonnull PermanentGraphInfo permanentGraphInfo,
-                          @Nonnull LinearGraphAction graphAction) {
+    private ActionContext(CollapsedGraph collapsedGraph,
+                          PermanentGraphInfo permanentGraphInfo,
+                          LinearGraphAction graphAction) {
       myCollapsedGraph = collapsedGraph;
       myGraphAction = graphAction;
       myDelegatedFragmentGenerators =
@@ -97,7 +96,7 @@ class CollapsedActionManager {
         new FragmentGenerators(collapsedGraph.getCompiledGraph(), permanentGraphInfo, collapsedGraph.getMatchedNodeId());
     }
 
-    @Nonnull
+    
     GraphAction.Type getActionType() {
       return myGraphAction.getType();
     }
@@ -107,12 +106,12 @@ class CollapsedActionManager {
       return myGraphAction.getAffectedElement() == null ? null : myGraphAction.getAffectedElement().getGraphElement();
     }
 
-    @Nonnull
+    
     LinearGraph getDelegatedGraph() {
       return myCollapsedGraph.getDelegatedGraph();
     }
 
-    @Nonnull
+    
     LinearGraph getCompiledGraph() {
       return myCollapsedGraph.getCompiledGraph();
     }
@@ -121,13 +120,13 @@ class CollapsedActionManager {
       return myCollapsedGraph.convertToDelegateNodeIndex(compiledNodeIndex);
     }
 
-    @Nonnull
-    Set<Integer> convertToDelegateNodeIndex(@Nonnull Collection<Integer> compiledNodeIndexes) {
+    
+    Set<Integer> convertToDelegateNodeIndex(Collection<Integer> compiledNodeIndexes) {
       return ContainerUtil.map2Set(compiledNodeIndexes, this::convertToDelegateNodeIndex);
     }
 
-    @Nonnull
-    GraphEdge convertToDelegateEdge(@Nonnull GraphEdge compiledEdge) {
+    
+    GraphEdge convertToDelegateEdge(GraphEdge compiledEdge) {
       Integer upNodeIndex = null, downNodeIndex = null;
       if (compiledEdge.getUpNodeIndex() != null) upNodeIndex = convertToDelegateNodeIndex(compiledEdge.getUpNodeIndex());
       if (compiledEdge.getDownNodeIndex() != null) downNodeIndex = convertToDelegateNodeIndex(compiledEdge.getDownNodeIndex());
@@ -137,15 +136,15 @@ class CollapsedActionManager {
   }
 
   private static class FragmentGenerators {
-    @Nonnull
+    
     private final FragmentGenerator fragmentGenerator;
-    @Nonnull
+    
     private final LinearFragmentGenerator linearFragmentGenerator;
 
     private FragmentGenerators(
-      @Nonnull LinearGraph linearGraph,
-      @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
-      @Nonnull UnsignedBitSet matchedNodeId
+      LinearGraph linearGraph,
+      PermanentGraphInfo<?> permanentGraphInfo,
+      UnsignedBitSet matchedNodeId
     ) {
       fragmentGenerator = new FragmentGenerator(
         LinearGraphUtils.asLiteLinearGraph(linearGraph),
@@ -160,7 +159,7 @@ class CollapsedActionManager {
   private final static ActionCase LINEAR_COLLAPSE_CASE = new ActionCase() {
     @Nullable
     @Override
-    public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
+    public LinearGraphAnswer performAction(ActionContext context) {
       if (isForDelegateGraph(context)) return null;
 
       GraphElement affectedGraphElement = context.getAffectedGraphElement();
@@ -202,7 +201,7 @@ class CollapsedActionManager {
       return new LinearGraphController.LinearGraphAnswer(GraphChangesUtil.SOME_CHANGES);
     }
 
-    @Nonnull
+    
     @Override
     public Set<GraphAction.Type> supportedActionTypes() {
       return Set.of(GraphAction.Type.MOUSE_CLICK, GraphAction.Type.MOUSE_OVER);
@@ -212,14 +211,14 @@ class CollapsedActionManager {
   private final static ActionCase EXPAND_ALL = new ActionCase() {
     @Nullable
     @Override
-    public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
+    public LinearGraphAnswer performAction(ActionContext context) {
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
       modification.removeAdditionalEdges();
       modification.resetNodesVisibility();
       return new DeferredGraphAnswer(GraphChangesUtil.SOME_CHANGES, modification);
     }
 
-    @Nonnull
+    
     @Override
     public Set<GraphAction.Type> supportedActionTypes() {
       return Collections.singleton(GraphAction.Type.BUTTON_EXPAND);
@@ -227,9 +226,9 @@ class CollapsedActionManager {
   };
 
   private final static ActionCase COLLAPSE_ALL = new ActionCase() {
-    @Nonnull
+    
     @Override
-    public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
+    public LinearGraphAnswer performAction(ActionContext context) {
       CollapsedGraph.Modification modification = context.myCollapsedGraph.startModification();
       modification.removeAdditionalEdges();
       modification.resetNodesVisibility();
@@ -251,7 +250,7 @@ class CollapsedActionManager {
       return new DeferredGraphAnswer(GraphChangesUtil.SOME_CHANGES, modification);
     }
 
-    @Nonnull
+    
     @Override
     public Set<GraphAction.Type> supportedActionTypes() {
       return Collections.singleton(GraphAction.Type.BUTTON_COLLAPSE);
@@ -261,7 +260,7 @@ class CollapsedActionManager {
   private final static ActionCase LINEAR_EXPAND_CASE = new ActionCase() {
     @Nullable
     @Override
-    public LinearGraphAnswer performAction(@Nonnull ActionContext context) {
+    public LinearGraphAnswer performAction(ActionContext context) {
       if (isForDelegateGraph(context)) return null;
 
       GraphEdge dottedEdge = getDottedEdge(context.getAffectedGraphElement(), context.getCompiledGraph());
@@ -289,7 +288,7 @@ class CollapsedActionManager {
       return null;
     }
 
-    @Nonnull
+    
     @Override
     public Set<GraphAction.Type> supportedActionTypes() {
       return Set.of(GraphAction.Type.MOUSE_CLICK, GraphAction.Type.MOUSE_OVER);
@@ -299,7 +298,7 @@ class CollapsedActionManager {
   private final static List<ActionCase> FILTER_ACTION_CASES =
     ContainerUtil.list(COLLAPSE_ALL, EXPAND_ALL, LINEAR_EXPAND_CASE, LINEAR_COLLAPSE_CASE);
 
-  private static boolean isForDelegateGraph(@Nonnull ActionContext context) {
+  private static boolean isForDelegateGraph(ActionContext context) {
     GraphElement affectedGraphElement = context.getAffectedGraphElement();
     if (affectedGraphElement == null) return false;
 
@@ -322,7 +321,7 @@ class CollapsedActionManager {
   }
 
   @Nullable
-  private static GraphEdge getDottedEdge(@Nullable GraphElement graphElement, @Nonnull LinearGraph graph) {
+  private static GraphEdge getDottedEdge(@Nullable GraphElement graphElement, LinearGraph graph) {
     if (graphElement == null) return null;
 
     if (graphElement instanceof GraphEdge edge && edge.getType() == GraphEdgeType.DOTTED) {
@@ -338,10 +337,10 @@ class CollapsedActionManager {
   }
 
   private static class DeferredGraphAnswer extends LinearGraphController.LinearGraphAnswer {
-    @Nonnull
+    
     private final CollapsedGraph.Modification myModification;
 
-    public DeferredGraphAnswer(@Nullable GraphChanges<Integer> graphChanges, @Nonnull CollapsedGraph.Modification modification) {
+    public DeferredGraphAnswer(@Nullable GraphChanges<Integer> graphChanges, CollapsedGraph.Modification modification) {
       super(graphChanges);
       myModification = modification;
     }

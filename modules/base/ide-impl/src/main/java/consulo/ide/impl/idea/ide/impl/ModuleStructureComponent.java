@@ -21,7 +21,6 @@ import consulo.module.Module;
 import consulo.ui.ex.awt.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -39,7 +38,7 @@ public class ModuleStructureComponent extends SimpleToolWindowPanel implements D
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     myStructurePane.uiDataSnapshot(sink);
   }
 

@@ -18,7 +18,6 @@ import consulo.language.psi.PsiModificationTracker;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -131,7 +130,7 @@ public class DeclarativeInlayHintsPassFactory
     }
 
     @Override
-    public void register(@Nonnull Registrar registrar) {
+    public void register(Registrar registrar) {
         int[] deps = new int[]{Pass.UPDATE_ALL};
         registrar.registerTextEditorHighlightingPass(
             this, deps, null, false, -1);

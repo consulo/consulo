@@ -31,8 +31,7 @@ import consulo.http.HttpRequests;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,8 +45,8 @@ import java.util.List;
  * @since 2003-03-28
  */
 public class RepositoryHelper {
-    @Nonnull
-    private static String buildUrlForList(@Nonnull UpdateChannel channel, @Nonnull String platformVersion, boolean addObsoletePlatformsV2) {
+    
+    private static String buildUrlForList(UpdateChannel channel, String platformVersion, boolean addObsoletePlatformsV2) {
         return new StringBuilder().append(WebServiceApi.REPOSITORY_API.buildUrl("list"))
             .append("?platformVersion=")
             .append(platformVersion)
@@ -58,10 +57,10 @@ public class RepositoryHelper {
             .toString();
     }
 
-    @Nonnull
+    
     public static String buildUrlForDownload(
-        @Nonnull UpdateChannel channel,
-        @Nonnull String pluginId,
+        UpdateChannel channel,
+        String pluginId,
         @Nullable String platformVersion,
         boolean noTracking,
         boolean viaUpdate,
@@ -99,11 +98,11 @@ public class RepositoryHelper {
     /**
      * Load & return only plugins from repository
      */
-    @Nonnull
+    
     public static List<PluginDescriptor> loadOnlyPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
-        @Nonnull UpdateChannel channel,
-        @Nonnull EarlyAccessProgramManager eapManager
+        UpdateChannel channel,
+        EarlyAccessProgramManager eapManager
     )
         throws Exception {
         List<PluginDescriptor> ideaPluginDescriptors = loadPluginsFromRepository(indicator, channel);
@@ -118,18 +117,18 @@ public class RepositoryHelper {
         return !pluginDescriptor.isExperimental() || earlyAccessProgramManager.getState(ExperimentalPluginsDescriptor.class);
     }
 
-    @Nonnull
+    
     public static List<PluginDescriptor> loadPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
-        @Nonnull UpdateChannel channel
+        UpdateChannel channel
     ) throws Exception {
         return loadPluginsFromRepository(indicator, channel, null, false);
     }
 
-    @Nonnull
+    
     public static List<PluginDescriptor> loadPluginsFromRepository(
         @Nullable ProgressIndicator indicator,
-        @Nonnull UpdateChannel channel,
+        UpdateChannel channel,
         @Nullable String buildNumber,
         boolean withObsoletePlatforms
     ) throws Exception {

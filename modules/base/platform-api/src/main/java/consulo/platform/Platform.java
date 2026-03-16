@@ -18,7 +18,6 @@ package consulo.platform;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -32,30 +31,30 @@ import java.nio.file.Path;
 public interface Platform extends UserDataHolder {
     static String LOCAL = "local";
 
-    @Nonnull
+    
     static Platform current() {
         return PlatformInternal.current();
     }
 
-    @Nonnull
+    
     String getId();
 
-    @Nonnull
+    
     String getName();
 
-    @Nonnull
+    
     PlatformFileSystem fs();
 
-    @Nonnull
+    
     PlatformOperatingSystem os();
 
-    @Nonnull
+    
     PlatformJvm jvm();
 
-    @Nonnull
+    
     PlatformUser user();
 
-    default boolean supportsFeature(@Nonnull PlatformFeature feature) {
+    default boolean supportsFeature(PlatformFeature feature) {
         return false;
     }
 
@@ -69,33 +68,33 @@ public interface Platform extends UserDataHolder {
         }
     }
 
-    void openInBrowser(@Nonnull URL url);
+    void openInBrowser(URL url);
 
-    @Nonnull
+    
     default String fileManagerName() {
         return "File Manager";
     }
 
-    default void openFileInFileManager(@Nonnull Path path, @Nonnull UIAccess uiAccess) {
+    default void openFileInFileManager(Path path, UIAccess uiAccess) {
         openFileInFileManager(path.toFile(), uiAccess);
     }
 
-    void openFileInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess);
+    void openFileInFileManager(File file, UIAccess uiAccess);
 
-    default void openDirectoryInFileManager(@Nonnull Path path, @Nonnull UIAccess uiAccess) {
+    default void openDirectoryInFileManager(Path path, UIAccess uiAccess) {
         openFileInFileManager(path.toFile(), uiAccess);
     }
 
-    void openDirectoryInFileManager(@Nonnull File file, @Nonnull UIAccess uiAccess);
+    void openDirectoryInFileManager(File file, UIAccess uiAccess);
 
-    @Nonnull
-    default String mapExecutableName(@Nonnull String baseName) {
+    
+    default String mapExecutableName(String baseName) {
         String archSuffix = jvm().arch().fileNameSuffix();
         return !archSuffix.isEmpty() ? baseName + archSuffix : baseName;
     }
 
-    @Nonnull
-    default String mapAnyExecutableName(@Nonnull String baseName) {
+    
+    default String mapAnyExecutableName(String baseName) {
         if (os().isWindows()) {
             return mapWindowsExecutable(baseName, "exe");
         }
@@ -103,8 +102,8 @@ public interface Platform extends UserDataHolder {
         return mapExecutableName(baseName);
     }
 
-    @Nonnull
-    default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {
+    
+    default String mapWindowsExecutable(String baseName, String extension) {
         if (!os().isWindows()) {
             throw new IllegalArgumentException("Must be Windows");
         }
@@ -112,8 +111,8 @@ public interface Platform extends UserDataHolder {
         return mapExecutableName(baseName) + "." + extension;
     }
 
-    @Nonnull
-    default String mapLibraryName(@Nonnull String libName) {
+    
+    default String mapLibraryName(String libName) {
         String baseName = libName;
         String archSuffix = jvm().arch().fileNameSuffix();
         if (!archSuffix.isEmpty()) {

@@ -21,7 +21,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import consulo.compiler.artifact.element.PackagingElementType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -38,7 +37,7 @@ public class AddNewPackagingElementAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myArtifactEditor.addNewPackagingElement(myType);
     }
 }

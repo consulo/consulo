@@ -24,8 +24,7 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -118,7 +117,7 @@ public abstract class CoverageDataManager {
         chooseSuitesBundle(suite != null ? new CoverageSuitesBundle(suite) : null);
     }
 
-    public abstract void coverageGathered(@Nonnull CoverageSuite suite);
+    public abstract void coverageGathered(CoverageSuite suite);
 
     /**
      * Remove suite
@@ -140,9 +139,9 @@ public abstract class CoverageDataManager {
 
     public abstract boolean isSubCoverageActive();
 
-    public abstract void selectSubCoverage(@Nonnull CoverageSuitesBundle suite, List<String> methodNames);
+    public abstract void selectSubCoverage(CoverageSuitesBundle suite, List<String> methodNames);
 
-    public abstract void restoreMergedCoverage(@Nonnull CoverageSuitesBundle suite);
+    public abstract void restoreMergedCoverage(CoverageSuitesBundle suite);
 
     public abstract void addSuiteListener(CoverageSuiteListener listener, Disposable parentDisposable);
 
@@ -152,10 +151,10 @@ public abstract class CoverageDataManager {
      * This method attach process listener to process handler. Listener will load coverage information after process termination
      */
     public abstract void attachToProcess(
-        @Nonnull ProcessHandler handler,
-        @Nonnull RunConfigurationBase configuration,
+        ProcessHandler handler,
+        RunConfigurationBase configuration,
         RunnerSettings runnerSettings
     );
 
-    public abstract void processGatheredCoverage(@Nonnull RunConfigurationBase configuration, RunnerSettings runnerSettings);
+    public abstract void processGatheredCoverage(RunConfigurationBase configuration, RunnerSettings runnerSettings);
 }

@@ -16,9 +16,7 @@
 package consulo.ui.ex.awt.util;
 
 import consulo.component.util.ComparableObject;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 
 /**
@@ -38,19 +36,19 @@ public abstract class Update extends ComparableObject.Impl implements Runnable {
 
   private final int myPriority;
 
-  public Update(@NonNls Object identity) {
+  public Update(Object identity) {
     this(identity, false);
   }
 
-  public Update(@NonNls Object identity, int priority) {
+  public Update(Object identity, int priority) {
     this(identity, false, priority);
   }
 
-  public Update(@NonNls Object identity, boolean executeInWriteAction) {
+  public Update(Object identity, boolean executeInWriteAction) {
     this(identity, executeInWriteAction, LOW_PRIORITY);
   }
 
-  public Update(@NonNls Object identity, boolean executeInWriteAction, int priority) {
+  public Update(Object identity, boolean executeInWriteAction, int priority) {
     super(identity);
     myExecuteInWriteAction = executeInWriteAction;
     myPriority = priority;
@@ -102,7 +100,7 @@ public abstract class Update extends ComparableObject.Impl implements Runnable {
     return myRejected;
   }
 
-  public static Update create(@NonNls Object identity, @Nonnull Runnable runnable) {
+  public static Update create(Object identity, Runnable runnable) {
     return new Update(identity) {
       @Override
       public void run() {

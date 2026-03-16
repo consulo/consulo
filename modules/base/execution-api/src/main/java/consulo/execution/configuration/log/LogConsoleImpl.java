@@ -21,8 +21,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.nio.charset.Charset;
 
@@ -32,20 +31,20 @@ import java.nio.charset.Charset;
  */
 public abstract class LogConsoleImpl extends LogConsoleBase {
   private final String myPath;
-  @Nonnull
+  
   private final File myFile;
-  @Nonnull
+  
   private final Charset myCharset;
   private long myOldLength = 0;
 
   /**
    * @deprecated use {@link #LogConsoleImpl(Project, java.io.File, java.nio.charset.Charset, long, String, boolean, GlobalSearchScope)}
    */
-  public LogConsoleImpl(Project project, @Nonnull File file, @Nonnull Charset charset, long skippedContents, String title, boolean buildInActions) {
+  public LogConsoleImpl(Project project, File file, Charset charset, long skippedContents, String title, boolean buildInActions) {
     this(project, file, charset, skippedContents, title, buildInActions, GlobalSearchScope.allScope(project));
   }
 
-  public LogConsoleImpl(Project project, @Nonnull File file, @Nonnull Charset charset, long skippedContents, String title, boolean buildInActions, SearchScope searchScope) {
+  public LogConsoleImpl(Project project, File file, Charset charset, long skippedContents, String title, boolean buildInActions, SearchScope searchScope) {
     super(project, getReader(file, charset, skippedContents), title, buildInActions, new DefaultLogFilterModel(project), searchScope);
     myPath = file.getAbsolutePath();
     myFile = file;
@@ -53,7 +52,7 @@ public abstract class LogConsoleImpl extends LogConsoleBase {
   }
 
   @Nullable
-  private static Reader getReader(@Nonnull File file, @Nonnull Charset charset, long skippedContents) {
+  private static Reader getReader(File file, Charset charset, long skippedContents) {
     Reader reader = null;
     try {
       try {

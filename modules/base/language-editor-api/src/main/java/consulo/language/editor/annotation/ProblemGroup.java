@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.annotation;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unique object, which is the same for all of the problems of some group.

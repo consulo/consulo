@@ -23,7 +23,6 @@ import consulo.module.content.layer.ModuleRootLayer;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,11 +32,11 @@ import jakarta.annotation.Nonnull;
 public interface CustomOrderEntryTypeProvider<M extends CustomOrderEntryModel> {
   ExtensionList<CustomOrderEntryTypeProvider, Application> EP = ExtensionList.of(CustomOrderEntryTypeProvider.class);
 
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
-  M loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException;
+  
+  M loadOrderEntry(Element element, ModuleRootLayer moduleRootLayer) throws InvalidDataException;
 
-  void storeOrderEntry(@Nonnull Element element, @Nonnull M data);
+  void storeOrderEntry(Element element, M data);
 }

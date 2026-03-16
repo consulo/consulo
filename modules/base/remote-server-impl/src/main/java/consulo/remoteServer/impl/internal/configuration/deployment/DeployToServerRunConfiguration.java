@@ -34,8 +34,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.List;
@@ -64,12 +63,12 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         myDeploymentConfigurator = deploymentConfigurator;
     }
 
-    void lockDeploymentSource(@Nonnull SingletonDeploymentSourceType theOnlySourceType) {
+    void lockDeploymentSource(SingletonDeploymentSourceType theOnlySourceType) {
         myDeploymentSourceIsLocked = true;
         myDeploymentSource = theOnlySourceType.getSingletonSource();
     }
 
-    public @Nonnull ServerType<S> getServerType() {
+    public ServerType<S> getServerType() {
         //noinspection unchecked
         ServerType<S> result = (ServerType<S>) ServerType.EP_NAME.findFirstSafe(next -> next.getId().equals(myServerTypeId));
         assert result != null : "Server type `" + myServerTypeId + "` had been unloaded already";
@@ -80,12 +79,12 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
         return myServerName;
     }
 
-    private @Nonnull DeploymentConfigurator<D, S> getDeploymentConfigurator() {
+    private DeploymentConfigurator<D, S> getDeploymentConfigurator() {
         return myDeploymentConfigurator;
     }
 
     @Override
-    public @Nonnull SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
+    public SettingsEditor<DeployToServerRunConfiguration> getConfigurationEditor() {
         ServerType<S> serverType = getServerType();
         //noinspection unchecked
         SettingsEditor<DeployToServerRunConfiguration> commonEditor =
@@ -102,7 +101,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
 
     @Override
-    public @Nullable RunProfileState getState(@Nonnull Executor executor, @Nonnull ExecutionEnvironment env) throws ExecutionException {
+    public @Nullable RunProfileState getState(Executor executor, ExecutionEnvironment env) throws ExecutionException {
         String serverName = getServerName();
         if (serverName == null) {
             throw new ExecutionException(RemoteServerLocalize.deploytoserverrunconfigurationErrorServerRequired().get());
@@ -189,7 +188,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
     }
 
     @Override
-    public void readExternal(@Nonnull Element element) throws InvalidDataException {
+    public void readExternal(Element element) throws InvalidDataException {
         super.readExternal(element);
         ConfigurationState state = XmlSerializer.deserialize(element, ConfigurationState.class);
         myServerName = null;
@@ -223,7 +222,7 @@ public class DeployToServerRunConfiguration<S extends ServerConfiguration, D ext
 
     @SuppressWarnings("unchecked")
     @Override
-    public void writeExternal(@Nonnull Element element) throws WriteExternalException {
+    public void writeExternal(Element element) throws WriteExternalException {
         ConfigurationState state = new ConfigurationState();
         state.myServerName = myServerName;
         if (myDeploymentSource != null) {

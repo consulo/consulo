@@ -3,22 +3,21 @@ package consulo.content.scope;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class FilteredPackageSet extends AbstractPackageSet {
-    public FilteredPackageSet(@Nonnull String text) {
+    public FilteredPackageSet(String text) {
         super(text);
     }
 
-    public FilteredPackageSet(@Nonnull String text, int priority) {
+    public FilteredPackageSet(String text, int priority) {
         super(text, priority);
     }
 
-    public abstract boolean contains(@Nonnull VirtualFile file, @Nonnull Project project);
+    public abstract boolean contains(VirtualFile file, Project project);
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
+    public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
         return contains(file, project);
     }
 }

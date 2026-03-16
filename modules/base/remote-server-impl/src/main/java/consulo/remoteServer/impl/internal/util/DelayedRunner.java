@@ -19,7 +19,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -36,7 +35,7 @@ public abstract class DelayedRunner implements Disposable {
     /**
      * Call {@link DelayedRunner#queueChangesCheck()} to start the runner
      */
-    public DelayedRunner(@Nonnull JComponent activationComponent) {
+    public DelayedRunner(JComponent activationComponent) {
         myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, this);
     }
 

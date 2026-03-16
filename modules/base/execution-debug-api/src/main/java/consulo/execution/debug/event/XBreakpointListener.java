@@ -17,7 +17,6 @@
 package consulo.execution.debug.event;
 
 import consulo.execution.debug.breakpoint.XBreakpoint;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -25,12 +24,12 @@ import java.util.EventListener;
  * @author nik
  */
 public interface XBreakpointListener<B extends XBreakpoint<?>> extends EventListener {
-  default void breakpointAdded(@Nonnull B breakpoint) {
+  default void breakpointAdded(B breakpoint) {
   }
 
-  default void breakpointRemoved(@Nonnull B breakpoint) {
+  default void breakpointRemoved(B breakpoint) {
   }
 
-  default void breakpointChanged(@Nonnull B breakpoint) {
+  default void breakpointChanged(B breakpoint) {
   }
 }

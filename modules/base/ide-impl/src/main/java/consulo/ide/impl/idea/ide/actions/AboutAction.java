@@ -27,7 +27,6 @@ import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -46,14 +45,14 @@ public class AboutAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setVisible(!Platform.current().os().isEnabledTopMenu());
         e.getPresentation().setDescription("Show information about " + myApplication.getName());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Window window = myWindowManager.get().suggestParentWindow(e.getData(Project.KEY));
 
         myAboutManager.get().showAsync(window);

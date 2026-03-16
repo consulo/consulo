@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.CopyProvider;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.StringSelection;
 import java.util.Collection;
@@ -40,7 +39,7 @@ public abstract class TextCopyProvider implements CopyProvider {
   public abstract Collection<String> getTextLinesToCopy();
 
   @Override
-  public void performCopy(@Nonnull DataContext dataContext) {
+  public void performCopy(DataContext dataContext) {
     Collection<String> lines = getTextLinesToCopy();
     if (lines != null && !lines.isEmpty()) {
       String text = StringUtil.join(lines, getLinesSeparator());
@@ -53,12 +52,12 @@ public abstract class TextCopyProvider implements CopyProvider {
   }
 
   @Override
-  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+  public boolean isCopyEnabled(DataContext dataContext) {
     return getTextLinesToCopy() != null;
   }
 
   @Override
-  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+  public boolean isCopyVisible(DataContext dataContext) {
     return true;
   }
 }

@@ -17,7 +17,7 @@ package consulo.language.psi;
 
 import consulo.navigation.NavigationItem;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole

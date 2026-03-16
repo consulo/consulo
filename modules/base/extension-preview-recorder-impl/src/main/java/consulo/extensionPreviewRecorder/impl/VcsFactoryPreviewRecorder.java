@@ -21,7 +21,6 @@ import consulo.component.extension.preview.ExtensionPreviewRecorder;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.versionControlSystem.VcsFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.function.Consumer;
@@ -40,7 +39,7 @@ public class VcsFactoryPreviewRecorder implements ExtensionPreviewRecorder<VcsFa
     }
 
     @Override
-    public void analyze(@Nonnull Consumer<ExtensionPreview> recorder) {
+    public void analyze(Consumer<ExtensionPreview> recorder) {
         Project project = myProjectManager.getDefaultProject();
 
         project.getExtensionPoint(VcsFactory.class).forEachExtensionSafe(it -> {

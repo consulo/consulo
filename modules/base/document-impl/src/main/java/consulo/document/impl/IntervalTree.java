@@ -15,18 +15,17 @@
  */
 package consulo.document.impl;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 interface IntervalTree<T> {
-  boolean processAll(@Nonnull Predicate<? super T> processor);
+  boolean processAll(Predicate<? super T> processor);
 
-  boolean processOverlappingWith(int start, int end, @Nonnull Predicate<? super T> processor);
+  boolean processOverlappingWith(int start, int end, Predicate<? super T> processor);
 
-  boolean processContaining(int offset, @Nonnull Predicate<? super T> processor);
+  boolean processContaining(int offset, Predicate<? super T> processor);
 
-  boolean removeInterval(@Nonnull T interval);
+  boolean removeInterval(T interval);
 
-  boolean processOverlappingWithOutside(int start, int end, @Nonnull Predicate<? super T> processor);
+  boolean processOverlappingWithOutside(int start, int end, Predicate<? super T> processor);
 }

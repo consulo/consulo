@@ -20,8 +20,7 @@ import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +31,10 @@ import java.util.Map;
 public abstract class LanguageVersionableSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   private final Map<LanguageVersion, SyntaxHighlighter> myHighlighters = new HashMap<>();
 
-  @Nonnull
-  public abstract SyntaxHighlighter getSyntaxHighlighter(@Nonnull LanguageVersion languageVersion);
+  
+  public abstract SyntaxHighlighter getSyntaxHighlighter(LanguageVersion languageVersion);
 
-  @Nonnull
+  
   @Override
   public final SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     LanguageVersion languageVersion = LanguageVersionUtil.findLanguageVersion(getLanguage(), project, virtualFile);

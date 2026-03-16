@@ -6,8 +6,7 @@ import consulo.codeEditor.Inlay;
 import consulo.codeEditor.InlayProperties;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -20,13 +19,13 @@ public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends Inlay
     private int myHeightInPixels;
     private GutterIconRenderer myGutterIconRenderer;
 
-    public BlockInlayImpl(@Nonnull CodeEditorBase editor,
+    public BlockInlayImpl(CodeEditorBase editor,
                           int offset,
                           boolean relatesToPrecedingText,
                           boolean showAbove,
                           boolean showWhenFolded,
                           int priority,
-                          @Nonnull R renderer) {
+                          R renderer) {
         super(editor, offset, relatesToPrecedingText, renderer);
         myShowAbove = showAbove;
         myShowWhenFolded = showWhenFolded;
@@ -100,13 +99,13 @@ public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends Inlay
         return myHeightInPixels;
     }
 
-    @Nonnull
+    
     @Override
     public Placement getPlacement() {
         return myShowAbove ? Placement.ABOVE_LINE : Placement.BELOW_LINE;
     }
 
-    @Nonnull
+    
     @Override
     public VisualPosition getVisualPosition() {
         return myEditor.offsetToVisualPosition(getOffset());
@@ -118,7 +117,7 @@ public class BlockInlayImpl<R extends EditorCustomElementRenderer> extends Inlay
     }
 
     @Override
-    @Nonnull
+    
     public InlayProperties getProperties() {
         return new InlayProperties()
             .relatesToPrecedingText(isRelatedToPrecedingText())

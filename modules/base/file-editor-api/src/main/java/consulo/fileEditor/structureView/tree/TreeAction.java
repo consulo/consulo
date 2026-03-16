@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A grouping, sorting or filtering action which can be applied to a generic tree.
@@ -32,7 +31,7 @@ public interface TreeAction {
    * @return the action presentation.
    * @see ActionPresentationData#ActionPresentationData(String, String, consulo.ui.image.Image)
    */
-  @Nonnull
+  
   ActionPresentation getPresentation();
 
   /**
@@ -40,14 +39,14 @@ public interface TreeAction {
    *
    * @return the action identifier.
    */
-  @Nonnull
+  
   String getName();
 
   /**
    * Return identifier which will be store state in {@link consulo.component.PropertiesComponent}
    * @return property identifier
    */
-  @Nonnull
+  
   default String getSerializePropertyName() {
     return getName();
   }

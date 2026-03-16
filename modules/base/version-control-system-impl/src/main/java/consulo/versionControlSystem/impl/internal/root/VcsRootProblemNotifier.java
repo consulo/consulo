@@ -27,8 +27,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -42,36 +41,36 @@ import static consulo.versionControlSystem.VcsRootError.Type.UNREGISTERED_ROOT;
 public final class VcsRootProblemNotifier {
     private static final Logger LOG = Logger.getInstance(VcsRootProblemNotifier.class);
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final VcsConfiguration mySettings;
-    @Nonnull
+    
     private final ProjectLevelVcsManager myVcsManager;
-    @Nonnull
+    
     private final ChangeListManager myChangeListManager;
-    @Nonnull
+    
     private final ProjectFileIndex myProjectFileIndex;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     // unregistered roots reported during this session but not explicitly ignored
-    @Nonnull
+    
     private final Set<String> myReportedUnregisteredRoots;
 
     @Nullable
     private Notification myNotification;
-    @Nonnull
+    
     private final Object NOTIFICATION_LOCK = new Object();
 
-    @Nonnull
+    
     private final Function<VcsRootError, String> ROOT_TO_PRESENTABLE = rootError -> getPresentableMapping(rootError.getMapping());
 
-    public static VcsRootProblemNotifier createInstance(@Nonnull Project project) {
+    public static VcsRootProblemNotifier createInstance(Project project) {
         return new VcsRootProblemNotifier(project);
     }
 
-    private VcsRootProblemNotifier(@Nonnull Project project) {
+    private VcsRootProblemNotifier(Project project) {
         myProject = project;
         mySettings = VcsConfiguration.getInstance(myProject);
         myChangeListManager = ChangeListManager.getInstance(project);
@@ -171,7 +170,7 @@ public final class VcsRootProblemNotifier {
         }
     }
 
-    @Nonnull
+    
     private NotificationAction getConfigureNotificationAction() {
         return NotificationAction.create(
             VcsLocalize.actionNotificationactionVcsrootproblemnotifierTextConfigure(),
@@ -200,14 +199,14 @@ public final class VcsRootProblemNotifier {
         myVcsManager.setDirectoryMappings(mappings);
     }
 
-    private boolean isUnderOrAboveProjectDir(@Nonnull VcsDirectoryMapping mapping) {
+    private boolean isUnderOrAboveProjectDir(VcsDirectoryMapping mapping) {
         String projectDir = Objects.requireNonNull(myProject.getBasePath());
         return mapping.isDefaultMapping()
             || FileUtil.isAncestor(projectDir, mapping.getDirectory(), false)
             || FileUtil.isAncestor(mapping.getDirectory(), projectDir, false);
     }
 
-    private boolean isIgnoredOrExcludedPath(@Nonnull VcsDirectoryMapping mapping) {
+    private boolean isIgnoredOrExcludedPath(VcsDirectoryMapping mapping) {
         if (mapping.isDefaultMapping()) {
             return false;
         }
@@ -215,7 +214,7 @@ public final class VcsRootProblemNotifier {
         return file != null && (myChangeListManager.isIgnoredFile(file) || ReadAction.compute(() -> myProjectFileIndex.isExcluded(file)));
     }
 
-    private boolean isExplicitlyIgnoredPath(@Nonnull VcsDirectoryMapping mapping) {
+    private boolean isExplicitlyIgnoredPath(VcsDirectoryMapping mapping) {
         //noinspection SimplifiableIfStatement
         if (mapping.isDefaultMapping()) {
             return false;
@@ -232,15 +231,15 @@ public final class VcsRootProblemNotifier {
         }
     }
 
-    @Nonnull
+    
     private Collection<VcsRootError> scan() {
         return new VcsRootErrorsFinder(myProject).find();
     }
 
-    @Nonnull
+    
     private String makeDescription(
-        @Nonnull Collection<? extends VcsRootError> unregisteredRoots,
-        @Nonnull Collection<? extends VcsRootError> invalidRoots
+        Collection<? extends VcsRootError> unregisteredRoots,
+        Collection<? extends VcsRootError> invalidRoots
     ) {
         StringBuilder description = new StringBuilder();
         if (!invalidRoots.isEmpty()) {
@@ -269,16 +268,16 @@ public final class VcsRootProblemNotifier {
         return description.toString();
     }
 
-    @Nonnull
-    String getInvalidRootDescriptionItem(@Nonnull VcsRootError rootError, @Nonnull String vcsName) {
+    
+    String getInvalidRootDescriptionItem(VcsRootError rootError, String vcsName) {
         return VcsLocalize.rootsNotificationContentDirectoryRegisteredAsRootButNoRepositoriesWereFoundThere(
             ROOT_TO_PRESENTABLE.apply(rootError),
             vcsName
         ).get();
     }
 
-    @Nonnull
-    private String joinRootsForPresentation(@Nonnull Collection<? extends VcsRootError> errors) {
+    
+    private String joinRootsForPresentation(Collection<? extends VcsRootError> errors) {
         List<? extends VcsRootError> sortedRoots = ContainerUtil.sorted(
             errors,
             (root1, root2) -> {
@@ -294,10 +293,10 @@ public final class VcsRootProblemNotifier {
         return StringUtil.join(sortedRoots, ROOT_TO_PRESENTABLE, BR);
     }
 
-    @Nonnull
+    
     private static LocalizeValue makeTitle(
-        @Nonnull Collection<? extends VcsRootError> unregisteredRoots,
-        @Nonnull Collection<? extends VcsRootError> invalidRoots,
+        Collection<? extends VcsRootError> unregisteredRoots,
+        Collection<? extends VcsRootError> invalidRoots,
         boolean rootsAlreadyAdded
     ) {
         LocalizeValue title;
@@ -330,8 +329,8 @@ public final class VcsRootProblemNotifier {
         return result;
     }
 
-    @Nonnull
-    private List<VcsRootError> getImportantUnregisteredMappings(@Nonnull Collection<? extends VcsRootError> errors) {
+    
+    private List<VcsRootError> getImportantUnregisteredMappings(Collection<? extends VcsRootError> errors) {
         return ContainerUtil.filter(
             errors,
             error -> {
@@ -348,14 +347,14 @@ public final class VcsRootProblemNotifier {
         return ContainerUtil.exists(allErrors, it -> it.getType() == UNREGISTERED_ROOT && isExplicitlyIgnoredPath(it.getMapping()));
     }
 
-    @Nonnull
-    private static Collection<VcsRootError> getInvalidRoots(@Nonnull Collection<? extends VcsRootError> errors) {
+    
+    private static Collection<VcsRootError> getInvalidRoots(Collection<? extends VcsRootError> errors) {
         return ContainerUtil.filter(errors, error -> error.getType() == VcsRootError.Type.EXTRA_MAPPING);
     }
 
 
-    @Nonnull
-    String getPresentableMapping(@Nonnull VcsDirectoryMapping directoryMapping) {
+    
+    String getPresentableMapping(VcsDirectoryMapping directoryMapping) {
         if (directoryMapping.isDefaultMapping()) {
             return directoryMapping.toString();
         }
@@ -363,8 +362,8 @@ public final class VcsRootProblemNotifier {
         return getPresentableMapping(directoryMapping.getDirectory());
     }
 
-    @Nonnull
-    String getPresentableMapping(@Nonnull String mapping) {
+    
+    String getPresentableMapping(String mapping) {
         String presentablePath = null;
         String projectDir = myProject.getBasePath();
         if (projectDir != null && FileUtil.isAncestor(projectDir, mapping, true)) {

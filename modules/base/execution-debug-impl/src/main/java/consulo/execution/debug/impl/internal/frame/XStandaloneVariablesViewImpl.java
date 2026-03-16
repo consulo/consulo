@@ -21,7 +21,6 @@ import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XStandaloneVariablesView;
 import consulo.project.Project;
 import consulo.project.ui.util.AppUIUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,9 +30,9 @@ import javax.swing.*;
 public class XStandaloneVariablesViewImpl extends XVariablesViewBase implements XStandaloneVariablesView {
     private final XStackFrame myStackFrame;
 
-    public XStandaloneVariablesViewImpl(@Nonnull Project project,
-                                        @Nonnull XDebuggerEditorsProvider editorsProvider,
-                                        @Nonnull XStackFrame stackFrame) {
+    public XStandaloneVariablesViewImpl(Project project,
+                                        XDebuggerEditorsProvider editorsProvider,
+                                        XStackFrame stackFrame) {
         super(project, editorsProvider, null);
         myStackFrame = stackFrame;
         buildTreeAndRestoreState(stackFrame);
@@ -44,7 +43,6 @@ public class XStandaloneVariablesViewImpl extends XVariablesViewBase implements 
         return null;
     }
 
-    @Nonnull
     @Override
     public JComponent getComponent() {
         return getPanel();
@@ -59,6 +57,6 @@ public class XStandaloneVariablesViewImpl extends XVariablesViewBase implements 
     }
 
     @Override
-    public void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session) {
+    public void processSessionEvent(SessionEvent event, XDebugSession session) {
     }
 }

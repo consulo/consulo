@@ -21,19 +21,18 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.impl.internal.change.RemoteRevisionsCache;
 import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangeNodeDecorator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RemoteStatusChangeNodeDecorator implements ChangeNodeDecorator {
   private final RemoteRevisionsCache myRemoteRevisionsCache;
   private final ChangeListRemoteState myListState;
   private final int myIdx;
 
-  public RemoteStatusChangeNodeDecorator(@Nonnull RemoteRevisionsCache remoteRevisionsCache) {
+  public RemoteStatusChangeNodeDecorator(RemoteRevisionsCache remoteRevisionsCache) {
     this(remoteRevisionsCache, null, -1);
   }
 
-  public RemoteStatusChangeNodeDecorator(@Nonnull RemoteRevisionsCache remoteRevisionsCache,
+  public RemoteStatusChangeNodeDecorator(RemoteRevisionsCache remoteRevisionsCache,
                                          @Nullable ChangeListRemoteState listRemoteState,
                                          int idx) {
     myRemoteRevisionsCache = remoteRevisionsCache;

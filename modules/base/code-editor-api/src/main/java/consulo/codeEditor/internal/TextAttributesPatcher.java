@@ -25,7 +25,6 @@ import consulo.document.util.TextRange;
 import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class TextAttributesPatcher {
    * Patches attributes to be visible under debugger active line
    */
   @SuppressWarnings("UseJBColor")
-  public static TextAttributes patchAttributesColor(TextAttributes attributes, @Nonnull TextRange range, @Nonnull Editor editor) {
+  public static TextAttributes patchAttributesColor(TextAttributes attributes, TextRange range, Editor editor) {
     if (attributes.getForegroundColor() == null && attributes.getEffectColor() == null) return attributes;
     MarkupModel model = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
     if (model != null) {

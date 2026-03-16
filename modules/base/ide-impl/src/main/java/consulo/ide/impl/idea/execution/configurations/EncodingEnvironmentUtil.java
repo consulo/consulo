@@ -23,8 +23,7 @@ import consulo.process.local.EnvironmentUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -56,7 +55,7 @@ public class EncodingEnvironmentUtil {
    * The workaround this method applies is to set LC_CTYPE environment variable if LC_ALL, LC_CTYPE or LANG aren't set before. <br/>
    * LC_CTYPE value is taken from "Settings | File Encodings".
    */
-  public static void setLocaleEnvironmentIfMac(@Nonnull GeneralCommandLine commandLine) {
+  public static void setLocaleEnvironmentIfMac(GeneralCommandLine commandLine) {
     if (Platform.current().os().isMac() && !isLocaleDefined(commandLine)) {
       setLocaleEnvironment(commandLine.getEnvironment(), commandLine.getCharset());
     }
@@ -67,39 +66,39 @@ public class EncodingEnvironmentUtil {
    * <p>
    * Sets default encoding on Mac if it's undefined. <br/>
    */
-  public static void setLocaleEnvironmentIfMac(@Nonnull Map<String, String> env, @Nonnull Charset charset) {
+  public static void setLocaleEnvironmentIfMac(Map<String, String> env, Charset charset) {
     if (Platform.current().os().isMac() && !isLocaleDefined(env)) {
       setLocaleEnvironment(env, charset);
     }
   }
 
-  private static void setLocaleEnvironment(@Nonnull Map<String, String> env, @Nonnull Charset charset) {
+  private static void setLocaleEnvironment(Map<String, String> env, Charset charset) {
     env.put(LC_CTYPE, formatLocaleValue(charset));
     if (LOG.isDebugEnabled()) {
       LOG.debug("Fixed mac locale: " + charset.name());
     }
   }
 
-  @Nonnull
-  private static String formatLocaleValue(@Nonnull Charset charset) {
+  
+  private static String formatLocaleValue(Charset charset) {
     Locale locale = Locale.getDefault();
     String language = locale.getLanguage();
     String country = locale.getCountry();
     return (language.isEmpty() || country.isEmpty() ? "en_US" : language + "_" + country) + "." + charset.name();
   }
 
-  private static boolean isLocaleDefined(@Nonnull GeneralCommandLine commandLine) {
+  private static boolean isLocaleDefined(GeneralCommandLine commandLine) {
     return isLocaleDefined(commandLine.getEnvironment()) || isLocaleDefined(commandLine.getParentEnvironment());
   }
 
-  private static boolean isLocaleDefined(@Nonnull Map<String, String> env) {
+  private static boolean isLocaleDefined(Map<String, String> env) {
     return !env.isEmpty() && (env.containsKey(LC_CTYPE) || env.containsKey(LC_ALL) || env.containsKey(LANG));
   }
 
   /**
    * @deprecated use {@link #setLocaleEnvironmentIfMac(GeneralCommandLine)} instead (to be removed in IDEA 16)
    */
-  public static void fixDefaultEncodingIfMac(@Nonnull GeneralCommandLine commandLine, @Nullable Project project) {
+  public static void fixDefaultEncodingIfMac(GeneralCommandLine commandLine, @Nullable Project project) {
     if (Platform.current().os().isMac() && !isLocaleDefined(commandLine)) {
       setLocaleEnvironment(commandLine.getEnvironment(), getCharset(project));
     }
@@ -108,7 +107,7 @@ public class EncodingEnvironmentUtil {
   /**
    * @deprecated use {@link #setLocaleEnvironmentIfMac(Map, Charset)} instead (to be removed in IDEA 16)
    */
-  public static void fixDefaultEncodingIfMac(@Nonnull Map<String, String> env, @Nullable Project project) {
+  public static void fixDefaultEncodingIfMac(Map<String, String> env, @Nullable Project project) {
     if (Platform.current().os().isMac() && !isLocaleDefined(env)) {
       setLocaleEnvironment(env, getCharset(project));
     }

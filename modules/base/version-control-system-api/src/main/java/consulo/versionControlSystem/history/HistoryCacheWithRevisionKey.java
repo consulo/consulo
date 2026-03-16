@@ -18,7 +18,6 @@ package consulo.versionControlSystem.history;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 
-import jakarta.annotation.Nonnull;
 
 /**
 * @author Irina.Chernushina
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
 public class HistoryCacheWithRevisionKey extends HistoryCacheBaseKey {
   private final VcsRevisionNumber myRevisionNumber;
 
-  public HistoryCacheWithRevisionKey(FilePath filePath, VcsKey vcsKey, @Nonnull VcsRevisionNumber revisionNumber) {
+  public HistoryCacheWithRevisionKey(FilePath filePath, VcsKey vcsKey, VcsRevisionNumber revisionNumber) {
     super(filePath, vcsKey);
     myRevisionNumber = revisionNumber;
   }

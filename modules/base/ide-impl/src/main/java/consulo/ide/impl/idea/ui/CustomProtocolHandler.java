@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.io.URLUtil;
-import jakarta.annotation.Nonnull;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -34,13 +33,13 @@ public class CustomProtocolHandler {
 
   private static final Logger LOG = Logger.getInstance(CustomProtocolHandler.class);
 
-  public void openLink(@Nonnull URI uri) {
+  public void openLink(URI uri) {
     LOG.info("CustomProtocolHandler.openLink");
     List<String> args = getOpenArgs(uri);
     CommandLineProcessor.processExternalCommandLine(CommandLineArgs.parse(ArrayUtil.toStringArray(args)), null);
   }
 
-  @Nonnull
+  
   public List<String> getOpenArgs(URI uri) {
     List<String> args = new ArrayList<String>();
     String query = uri.getQuery();

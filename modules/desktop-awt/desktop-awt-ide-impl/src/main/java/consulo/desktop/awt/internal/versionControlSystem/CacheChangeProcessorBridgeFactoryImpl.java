@@ -21,7 +21,6 @@ import consulo.versionControlSystem.internal.CacheChangeProcessorBridgeFactory;
 import consulo.versionControlSystem.internal.CacheChangeProcessorImpl;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -57,20 +56,20 @@ public class CacheChangeProcessorBridgeFactoryImpl implements CacheChangeProcess
         return super.isWindowFocused();
       }
 
-      @Nonnull
+      
       @Override
       protected List<Change> getSelectedChanges() {
         return impl.getSelectedChanges();
       }
 
-      @Nonnull
+      
       @Override
       protected List<Change> getAllChanges() {
         return impl.getAllChanges();
       }
 
       @Override
-      protected void selectChange(@Nonnull Change change) {
+      protected void selectChange(Change change) {
         impl.selectChange(change);
       }
 

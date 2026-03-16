@@ -24,7 +24,6 @@ import consulo.util.io.ClassPathUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.function.Supplier;
@@ -41,7 +40,7 @@ import java.util.jar.Manifest;
 public class ApplicationInfo {
   private static final Supplier<ApplicationInfo> ourValue = LazyValue.notNull(ApplicationInfo::new);
 
-  @Nonnull
+  
   public static ApplicationInfo getInstance() {
     return ourValue.get();
   }
@@ -104,7 +103,7 @@ public class ApplicationInfo {
     return new GregorianCalendar(year, month, day, hour, minute);
   }
 
-  @Nonnull
+  
   public Calendar getBuildDate() {
     return myBuildDate;
   }
@@ -115,17 +114,17 @@ public class ApplicationInfo {
     return getBuild().asString();
   }
 
-  @Nonnull
+  
   public BuildNumber getBuild() {
     return myBuild;
   }
 
-  @Nonnull
+  
   public final String getMajorVersion() {
     return String.valueOf(myBuildDate.get(Calendar.YEAR));
   }
 
-  @Nonnull
+  
   public final String getMinorVersion() {
     return String.valueOf(myBuildDate.get(Calendar.MONTH) + 1);
   }
@@ -136,7 +135,7 @@ public class ApplicationInfo {
     return getName();
   }
 
-  @Nonnull
+  
   public final String getFullApplicationName() {
     StringBuilder buffer = new StringBuilder();
     buffer.append(getName());
@@ -152,12 +151,12 @@ public class ApplicationInfo {
     return buffer.toString();
   }
 
-  @Nonnull
+  
   public final String getName() {
     return "Consulo";
   }
 
-  @Nonnull
+  
   public final String getCompanyName() {
     return "consulo.io";
   }

@@ -28,8 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "background-task";
@@ -57,7 +56,7 @@ public class BackgroundTaskEditorNotificationProvider implements EditorNotificat
   @RequiredReadAction
   @Nullable
   @Override
-  public EditorNotificationBuilder buildNotification(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor, @Nonnull Supplier<EditorNotificationBuilder> builderFactory) {
+  public EditorNotificationBuilder buildNotification(VirtualFile file, FileEditor fileEditor, Supplier<EditorNotificationBuilder> builderFactory) {
     List<BackgroundTaskByVfsChangeProvider> providers = BackgroundTaskByVfsChangeProviders.getProviders(myProject, file);
     if (providers.isEmpty()) {
       return null;

@@ -15,7 +15,7 @@
  */
 package consulo.build.ui.issue;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

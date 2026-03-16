@@ -20,8 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.ui.Rectangle2D;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -30,7 +29,7 @@ public interface IdeFrame extends FocusableFrame {
         IdeFrame getParentFrame();
     }
 
-    @Nonnull
+    
     default IdeFrameState getFrameState() {
         return IdeFrameState.EMPTY;
     }
@@ -51,7 +50,7 @@ public interface IdeFrame extends FocusableFrame {
     void setFileTitle(String fileTitle, File ioFile);
 
     @Nullable
-    <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass);
+    <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass);
 
     @Nullable
     BalloonLayout getBalloonLayout();

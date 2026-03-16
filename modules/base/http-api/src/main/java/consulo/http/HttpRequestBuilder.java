@@ -17,8 +17,7 @@ package consulo.http;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.HostnameVerifier;
 import java.io.File;
@@ -54,17 +53,17 @@ public interface HttpRequestBuilder {
         return header("Accept", mimeType);
     }
 
-    HttpRequestBuilder header(@Nonnull String headerName, @Nullable String headerValue);
+    HttpRequestBuilder header(String headerName, @Nullable String headerValue);
 
-    HttpRequestBuilder version(@Nonnull HttpVersion version);
+    HttpRequestBuilder version(HttpVersion version);
 
     HttpRequestBuilder body(@Nullable byte[] bytes);
 
-    <T> T connect(@Nonnull HttpRequestProcessor<T> processor) throws IOException;
+    <T> T connect(HttpRequestProcessor<T> processor) throws IOException;
 
     int tryConnect() throws IOException;
 
-    default <T> T connect(@Nonnull HttpRequestProcessor<T> processor, T errorValue, @Nullable Logger logger) {
+    default <T> T connect(HttpRequestProcessor<T> processor, T errorValue, @Nullable Logger logger) {
         try {
             return connect(processor);
         }
@@ -76,16 +75,16 @@ public interface HttpRequestBuilder {
         }
     }
 
-    default void saveToFile(@Nonnull File file, @Nullable ProgressIndicator indicator) throws IOException {
+    default void saveToFile(File file, @Nullable ProgressIndicator indicator) throws IOException {
         connect((request) -> request.saveToFile(file, indicator));
     }
 
-    @Nonnull
+    
     default byte[] readBytes(@Nullable ProgressIndicator indicator) throws IOException {
         return connect((request) -> request.readBytes(indicator));
     }
 
-    @Nonnull
+    
     default String readString(@Nullable ProgressIndicator indicator) throws IOException {
         return connect((request) -> request.readString(indicator));
     }

@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -35,7 +34,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     if (myDumb) {
       myDumb = false;
     }
@@ -45,7 +44,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
 
       DumbService.getInstance(project).queueTask(new DumbModeTask() {
         @Override
-        public void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace) {
+        public void performInDumbMode(ProgressIndicator indicator, Exception trace) {
           while (myDumb) {
             indicator.checkCanceled();
             TimeoutUtil.sleep(100);
@@ -56,7 +55,7 @@ public class ToggleDumbModeAction extends AnAction implements DumbAware {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Presentation presentation = e.getPresentation();
     Project project = e.getData(Project.KEY);
     presentation.setEnabled(project != null && myDumb == DumbService.getInstance(project).isDumb());

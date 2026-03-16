@@ -22,12 +22,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseViewAction extends DumbAwareAction {
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         ViewContext context = getViewFacade(e);
         Content[] content = getContent(e);
 

@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -30,19 +29,19 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ModuleExtensionHelper {
-  @Nonnull
-  public static ModuleExtensionHelper getInstance(@Nonnull Project project) {
+  
+  public static ModuleExtensionHelper getInstance(Project project) {
     return project.getInstance(ModuleExtensionHelper.class);
   }
 
-  public boolean hasModuleExtension(@Nonnull Class<? extends ModuleExtension> clazz);
+  public boolean hasModuleExtension(Class<? extends ModuleExtension> clazz);
 
-  @Nonnull
-  public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz);
+  
+  public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(Class<T> clazz);
 
-  @Nonnull
-  public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension);
+  
+  public String getModuleExtensionName(ModuleExtension<?> moduleExtension);
 
   @Nullable
-  public Image getModuleExtensionIcon(@Nonnull String extensionId);
+  public Image getModuleExtensionIcon(String extensionId);
 }

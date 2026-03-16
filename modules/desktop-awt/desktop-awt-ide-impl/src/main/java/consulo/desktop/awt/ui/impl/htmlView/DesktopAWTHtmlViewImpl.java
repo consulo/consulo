@@ -27,8 +27,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.Range;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.cobraparser.html.HtmlRendererContext;
 import org.cobraparser.html.domimpl.HTMLDocumentImpl;
 import org.cobraparser.html.domimpl.NodeImpl;
@@ -71,7 +70,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
             return new ScrollPreservingHtmlBlockPanel(JBColor.WHITE, true, ucontext, rcontext, this);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopAWTHtmlViewImpl.this;
@@ -84,8 +83,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     }
 
     @Override
-    @Nonnull
-    public CompletableFuture<?> render(@Nonnull RenderData renderData) {
+    
+    public CompletableFuture<?> render(RenderData renderData) {
         CompletableFuture<?> future = new CompletableFuture<>();
 
         MyHtmlPanel panel = toAWTComponent();
@@ -188,7 +187,7 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
     }
 
     @Nullable
-    private static Range<Integer> nodeToSrcRange(@Nonnull Node node) {
+    private static Range<Integer> nodeToSrcRange(Node node) {
         if (!node.hasAttributes()) {
             return null;
         }
@@ -203,8 +202,8 @@ public class DesktopAWTHtmlViewImpl extends SwingComponentDelegate<DesktopAWTHtm
         return new Range<>(Integer.parseInt(startEnd.get(0)), Integer.parseInt(startEnd.get(1)));
     }
 
-    @Nonnull
-    private static String getCssLines(@Nullable String inlineCss, @Nonnull String... fileUris) {
+    
+    private static String getCssLines(@Nullable String inlineCss, String... fileUris) {
         StringBuilder result = new StringBuilder();
 
         for (String uri : fileUris) {

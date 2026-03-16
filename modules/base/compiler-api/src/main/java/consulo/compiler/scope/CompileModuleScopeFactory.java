@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,5 +28,5 @@ import jakarta.annotation.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface CompileModuleScopeFactory {
     @Nullable
-    FileIndexCompileScope createScope(@Nonnull Module module, boolean includeDependentModules, boolean includeTestScope);
+    FileIndexCompileScope createScope(Module module, boolean includeDependentModules, boolean includeTestScope);
 }

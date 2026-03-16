@@ -18,7 +18,6 @@ package consulo.execution.debug.impl.internal.breakpoint.ui.group;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.execution.debug.breakpoint.ui.XBreakpointsGroupingPriorities;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -43,7 +42,7 @@ public class XBreakpointGroupingByTypeRule<B> extends XBreakpointGroupingRule<B,
   }
 
   @Override
-  public XBreakpointTypeGroup getGroup(@Nonnull B b, @Nonnull Collection<XBreakpointTypeGroup> groups) {
+  public XBreakpointTypeGroup getGroup(B b, Collection<XBreakpointTypeGroup> groups) {
     if (b instanceof XBreakpoint) {
       XBreakpoint breakpoint = (XBreakpoint)b;
       for (XBreakpointTypeGroup group : groups) {

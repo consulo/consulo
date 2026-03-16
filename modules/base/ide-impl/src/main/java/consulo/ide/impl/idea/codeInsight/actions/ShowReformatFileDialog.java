@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "ShowReformatFileDialog")
 public class ShowReformatFileDialog extends AnAction implements DumbAware {
@@ -37,7 +36,7 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor editor = e.getData(Editor.KEY);
         if (project == null || editor == null) {
@@ -58,7 +57,7 @@ public class ShowReformatFileDialog extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor editor = e.getRequiredData(Editor.KEY);
 

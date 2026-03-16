@@ -15,15 +15,13 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2026-03-14
  */
 public interface ComponentItemRenderer<E> extends ItemRenderer<E> {
-    @Nonnull
     static <V> ComponentItemRenderer<V> defaultRenderer() {
         return (index, item) -> Label.create();
     }

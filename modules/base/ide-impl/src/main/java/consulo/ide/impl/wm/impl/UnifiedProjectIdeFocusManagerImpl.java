@@ -25,8 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -40,49 +39,49 @@ import java.awt.*;
 @ServiceImpl(profiles = ComponentProfiles.UNIFIED)
 public class UnifiedProjectIdeFocusManagerImpl implements ProjectIdeFocusManager {
   @Override
-  @Nonnull
-  public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
+  
+  public AsyncResult<Void> requestFocus(Component c, boolean forced) {
     return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> requestFocus(@Nonnull consulo.ui.Component c, boolean forced) {
+  public AsyncResult<Void> requestFocus(consulo.ui.Component c, boolean forced) {
     return IdeFocusManager.getGlobalInstance().requestFocus(c, forced);
   }
 
   @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable ComponentManager project) {
+  public AsyncResult<Void> requestFocusInProject(Component c, @Nullable ComponentManager project) {
     return IdeFocusManager.getGlobalInstance().requestFocusInProject(c, project);
   }
 
   @Override
-  public JComponent getFocusTargetFor(@Nonnull JComponent comp) {
+  public JComponent getFocusTargetFor(JComponent comp) {
     return IdeFocusManager.getGlobalInstance().getFocusTargetFor(comp);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
+  public void doWhenFocusSettlesDown(Runnable runnable) {
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull Runnable runnable, @Nonnull ModalityState modality) {
+  public void doWhenFocusSettlesDown(Runnable runnable, ModalityState modality) {
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable, modality);
   }
 
   @Override
-  public void doWhenFocusSettlesDown(@Nonnull ExpirableRunnable runnable) {
+  public void doWhenFocusSettlesDown(ExpirableRunnable runnable) {
     IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(runnable);
   }
 
   @Override
   @Nullable
-  public Component getFocusedDescendantFor(@Nonnull Component comp) {
+  public Component getFocusedDescendantFor(Component comp) {
     return IdeFocusManager.getGlobalInstance().getFocusedDescendantFor(comp);
   }
 
-  @Nonnull
+  
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
     return AsyncResult.resolved(null);
@@ -99,7 +98,7 @@ public class UnifiedProjectIdeFocusManagerImpl implements ProjectIdeFocusManager
   }
 
   @Override
-  public void runOnOwnContext(@Nonnull DataContext context, @Nonnull Runnable runnable) {
+  public void runOnOwnContext(DataContext context, Runnable runnable) {
     IdeFocusManager.getGlobalInstance().runOnOwnContext(context, runnable);
   }
 

@@ -20,8 +20,7 @@ import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -42,24 +41,24 @@ import static consulo.virtualFileSystem.util.VirtualFileVisitor.*;
 public final class VcsRootScanner implements Disposable {
     private static final Logger LOG = Logger.getInstance(VcsRootScanner.class);
 
-    @Nonnull
+    
     private final VcsRootProblemNotifier myRootProblemNotifier;
-    @Nonnull
+    
     private final Project myProject;
     private final ApplicationConcurrency myApplicationConcurrency;
 
-    @Nonnull
+    
     private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
 
-    @Nonnull
-    public static VcsRootScanner getInstance(@Nonnull Project project) {
+    
+    public static VcsRootScanner getInstance(Project project) {
         return project.getInstance(VcsRootScanner.class);
     }
 
     @Inject
     public VcsRootScanner(
-        @Nonnull Project project,
-        @Nonnull AsyncVfsEventsPostProcessor processor,
+        Project project,
+        AsyncVfsEventsPostProcessor processor,
         ApplicationConcurrency applicationConcurrency
     ) {
         myProject = project;
@@ -76,7 +75,7 @@ public final class VcsRootScanner implements Disposable {
         myUpdateFuture.cancel(false);
     }
 
-    private void filesChanged(@Nonnull List<? extends VFileEvent> events) {
+    private void filesChanged(List<? extends VFileEvent> events) {
         List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
         if (checkers.isEmpty()) {
             return;
@@ -97,10 +96,10 @@ public final class VcsRootScanner implements Disposable {
     }
 
     static void visitDirsRecursivelyWithoutExcluded(
-        @Nonnull Project project,
-        @Nonnull VirtualFile root,
+        Project project,
+        VirtualFile root,
         boolean visitIgnoredFoldersThemselves,
-        @Nonnull Function<? super VirtualFile, Result> processor
+        Function<? super VirtualFile, Result> processor
     ) {
         ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
         Option depthLimit = limit(Registry.intValue("vcs.root.detector.folder.depth"));
@@ -111,9 +110,9 @@ public final class VcsRootScanner implements Disposable {
         }
 
         VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor<Void>(NO_FOLLOW_SYMLINKS, depthLimit) {
-            @Nonnull
+            
             @Override
-            public VirtualFileVisitor.Result visitFileEx(@Nonnull VirtualFile file) {
+            public VirtualFileVisitor.Result visitFileEx(VirtualFile file) {
                 if (!file.isDirectory()) {
                     return CONTINUE;
                 }
@@ -145,7 +144,7 @@ public final class VcsRootScanner implements Disposable {
         });
     }
 
-    private static boolean isVcsDir(@Nonnull List<VcsRootChecker> checkers, @Nonnull String filePath) {
+    private static boolean isVcsDir(List<VcsRootChecker> checkers, String filePath) {
         return checkers.stream().anyMatch(it -> it.isVcsDir(filePath));
     }
 
@@ -167,7 +166,7 @@ public final class VcsRootScanner implements Disposable {
     }
 
 
-    static boolean isUnderIgnoredDirectory(@Nonnull Project project, @Nullable Pattern ignorePattern, @Nullable VirtualFile dir) {
+    static boolean isUnderIgnoredDirectory(Project project, @Nullable Pattern ignorePattern, @Nullable VirtualFile dir) {
         VirtualFile parent = dir;
         while (parent != null) {
             if (isIgnoredDirectory(project, ignorePattern, parent)) {
@@ -178,7 +177,7 @@ public final class VcsRootScanner implements Disposable {
         return false;
     }
 
-    private static boolean isIgnoredDirectory(@Nonnull Project project, @Nullable Pattern ignorePattern, @Nonnull VirtualFile dir) {
+    private static boolean isIgnoredDirectory(Project project, @Nullable Pattern ignorePattern, VirtualFile dir) {
         if (ProjectLevelVcsManager.getInstance(project).isIgnored(dir)) {
             LOG.debug("Skipping ignored dir: ", dir);
             return true;

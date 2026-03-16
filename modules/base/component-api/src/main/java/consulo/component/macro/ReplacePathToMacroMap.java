@@ -19,8 +19,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Attribute;
 
 import java.util.ArrayList;
@@ -36,11 +35,11 @@ public class ReplacePathToMacroMap extends PathMacroMap {
     private List<String> myPathsIndex = null;
     private final Map<String, String> myMacroMap = new LinkedHashMap<>();
 
-    public void addMacroReplacement(@Nonnull PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroName) {
+    public void addMacroReplacement(PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroName) {
         addReplacement(pathMacroProtocolProvider, quotePath(path), "$" + macroName + "$", true);
     }
 
-    public void addReplacement(@Nonnull PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroExpr, boolean overwrite) {
+    public void addReplacement(PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroExpr, boolean overwrite) {
         path = StringUtil.trimEnd(path, "/");
         putIfAbsent(path, macroExpr, overwrite);
 
@@ -195,8 +194,8 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         return myPathsIndex;
     }
 
-    @Nonnull
-    public String getAttributeValue(@Nonnull Attribute attribute, @Nullable PathMacroFilter filter, boolean caseSensitive, boolean recursively) {
+    
+    public String getAttributeValue(Attribute attribute, @Nullable PathMacroFilter filter, boolean caseSensitive, boolean recursively) {
         String oldValue = attribute.getValue();
         if (recursively || (filter != null && filter.recursePathMacros(attribute))) {
             return substituteRecursively(oldValue, caseSensitive).toString();

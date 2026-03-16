@@ -33,8 +33,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.EmptyAction;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Predicate;
 
@@ -46,30 +45,30 @@ public class ConsoleExecuteAction extends DumbAwareAction {
     private final Predicate<LanguageConsoleView> myEnabledCondition;
 
     @SuppressWarnings("UnusedDeclaration")
-    public ConsoleExecuteAction(@Nonnull LanguageConsoleView console, @Nonnull BaseConsoleExecuteActionHandler executeActionHandler) {
+    public ConsoleExecuteAction(LanguageConsoleView console, BaseConsoleExecuteActionHandler executeActionHandler) {
         this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, Predicates.<LanguageConsoleView>alwaysTrue());
     }
 
     public ConsoleExecuteAction(
-        @Nonnull LanguageConsoleView console,
-        @Nonnull ConsoleExecuteActionHandler executeActionHandler,
+        LanguageConsoleView console,
+        ConsoleExecuteActionHandler executeActionHandler,
         @Nullable Predicate<LanguageConsoleView> enabledCondition
     ) {
         this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
     }
 
     public ConsoleExecuteAction(
-        @Nonnull LanguageConsoleView console,
-        @Nonnull BaseConsoleExecuteActionHandler executeActionHandler,
+        LanguageConsoleView console,
+        BaseConsoleExecuteActionHandler executeActionHandler,
         @Nullable Predicate<LanguageConsoleView> enabledCondition
     ) {
         this(console, executeActionHandler, CONSOLE_EXECUTE_ACTION_ID, enabledCondition);
     }
 
     public ConsoleExecuteAction(
-        @Nonnull LanguageConsoleView consoleView,
-        @Nonnull ConsoleExecuteActionHandler executeActionHandler,
-        @Nonnull String emptyExecuteActionId,
+        LanguageConsoleView consoleView,
+        ConsoleExecuteActionHandler executeActionHandler,
+        String emptyExecuteActionId,
         @Nullable Predicate<LanguageConsoleView> enabledCondition
     ) {
         super(LocalizeValue.empty(), LocalizeValue.empty(), PlatformIconGroup.actionsExecute());
@@ -82,7 +81,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         EditorEx editor = myConsoleView.getConsoleEditor();
         boolean enabled = !editor.isRendererMode() && isEnabled()
             && (myExecuteActionHandler.isEmptyCommandExecutionAllowed()
@@ -99,7 +98,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         myExecuteActionHandler.runExecuteAction(myConsoleView);
     }
 
@@ -107,7 +106,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
         return myEnabledCondition.test(myConsoleView);
     }
 
-    public void execute(@Nullable TextRange range, @Nonnull String text, @Nullable EditorEx editor) {
+    public void execute(@Nullable TextRange range, String text, @Nullable EditorEx editor) {
         if (range == null) {
             ((LanguageConsoleViewEx)myConsoleView).doAddPromptToHistory();
             myConsoleView.print(text, ConsoleViewContentType.USER_INPUT);

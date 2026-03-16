@@ -22,34 +22,33 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.dataholder.UserDataHolderBase;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class ModuleConfigurationStateImpl extends UserDataHolderBase implements ModuleConfigurationState {
   private final ModulesConfigurator myProvider;
   private final LibrariesConfigurator myLibrariesConfigurator;
   private final Project myProject;
-  @Nonnull
+  
   private final Supplier<? extends ModifiableRootModel> myModifiableRootModelValue;
 
-  public ModuleConfigurationStateImpl(@Nonnull Project project,
-                                      @Nonnull ModulesConfigurator provider,
-                                      @Nonnull LibrariesConfigurator librariesConfigurator,
-                                      @Nonnull Supplier<? extends ModifiableRootModel> modifiableRootModelValue) {
+  public ModuleConfigurationStateImpl(Project project,
+                                      ModulesConfigurator provider,
+                                      LibrariesConfigurator librariesConfigurator,
+                                      Supplier<? extends ModifiableRootModel> modifiableRootModelValue) {
     myProvider = provider;
     myLibrariesConfigurator = librariesConfigurator;
     myProject = project;
     myModifiableRootModelValue = modifiableRootModelValue;
   }
 
-  @Nonnull
+  
   @Override
   public ModulesConfigurator getModulesConfigurator() {
     return myProvider;
   }
 
-  @Nonnull
+  
   @Override
   public LibrariesConfigurator getLibrariesConfigurator() {
     return myLibrariesConfigurator;

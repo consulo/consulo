@@ -16,7 +16,6 @@
 package consulo.http;
 
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 /**
  * Handy class for reading data from HTTP connections with built-in support for HTTP redirects and gzipped content and automatic cleanup.
@@ -33,9 +32,9 @@ public final class HttpRequests {
     private HttpRequests() {
     }
 
-    @Nonnull
+    
     @Deprecated
-    public static HttpRequestBuilder request(@Nonnull String url) {
+    public static HttpRequestBuilder request(String url) {
         HttpRequestBuilderFactory factory = Application.get().getInstance(HttpRequestBuilderFactory.class);
         return factory.newBuilder(url, HttpMethod.GET);
     }

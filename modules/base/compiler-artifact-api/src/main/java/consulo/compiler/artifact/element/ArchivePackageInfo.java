@@ -19,7 +19,6 @@ package consulo.compiler.artifact.element;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -61,7 +60,7 @@ public class ArchivePackageInfo {
     return myPackedArchives;
   }
 
-  @Nonnull
+  
   public ArchivePackageWriter<?> getPackageWriter() {
     return myPackageWriter;
   }

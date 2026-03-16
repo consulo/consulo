@@ -23,7 +23,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
 import org.eclipse.swt.widgets.Display;
 
 import java.util.concurrent.CompletableFuture;
@@ -84,9 +83,9 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
     return myDisplay;
   }
 
-  @Nonnull
+  
   @Override
-  public <T> CompletableFuture<T> giveAsync(@Nonnull Supplier<T> supplier) {
+  public <T> CompletableFuture<T> giveAsync(Supplier<T> supplier) {
     CompletableFuture<T> result = new CompletableFuture<>();
     myDisplay.asyncExec(() -> {
       try {
@@ -100,9 +99,9 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
     return result;
   }
 
-  @Nonnull
+  
   @Override
-  public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {
+  public <T> AsyncResult<T> give(Supplier<T> supplier) {
     AsyncResult<T> result = AsyncResult.undefined();
     myDisplay.asyncExec(() -> {
       try {
@@ -116,9 +115,9 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
     return result;
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> give(@Nonnull Runnable runnable) {
+  public AsyncResult<Void> give(Runnable runnable) {
     AsyncResult<Void> result = AsyncResult.undefined();
     myDisplay.asyncExec(() -> {
       try {
@@ -134,7 +133,7 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
   }
 
   @Override
-  public void giveAndWait(@Nonnull Runnable runnable) {
+  public void giveAndWait(Runnable runnable) {
     myDisplay.syncExec(() -> {
       try {
         runnable.run();
@@ -145,14 +144,14 @@ public class DesktopSwtUIAccess extends BaseUIAccess implements UIAccess {
     });
   }
 
-  @Nonnull
+  
   @Override
   protected SingleUIAccessScheduler createScheduler() {
     Application application = Application.get();
     ApplicationConcurrency concurrency = application.getInstance(ApplicationConcurrency.class);
     return new SingleUIAccessScheduler(this, concurrency.getScheduledExecutorService()) {
       @Override
-      public void runWithModalityState(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+      public void runWithModalityState(Runnable runnable, ModalityState modalityState) {
         Application.get().invokeLater(runnable, modalityState);
       }
     };

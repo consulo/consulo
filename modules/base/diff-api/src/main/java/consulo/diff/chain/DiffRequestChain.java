@@ -16,12 +16,11 @@
 package consulo.diff.chain;
 
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public interface DiffRequestChain extends UserDataHolder {
-  @Nonnull
+  
   List<? extends DiffRequestProducer> getRequests();
 
   int getIndex();

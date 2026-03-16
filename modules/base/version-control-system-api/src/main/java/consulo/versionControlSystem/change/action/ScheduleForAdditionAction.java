@@ -40,8 +40,7 @@ import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -59,15 +58,15 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         Set.of(ActionPlaces.ACTION_PLACE_VCS_QUICK_LIST_POPUP_ACTION, ActionPlaces.CHANGES_VIEW_POPUP);
 
     protected ScheduleForAdditionAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean enabled = e.hasData(Project.KEY) && !Streams.isEmpty(getUnversionedFiles(e, e.getRequiredData(Project.KEY)));
 
         e.getPresentation().setEnabled(enabled);
@@ -78,7 +77,7 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         List<VirtualFile> unversionedFiles = getUnversionedFiles(e, project).collect(Collectors.toList());
 
@@ -87,9 +86,9 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
 
     @RequiredUIAccess
     public static boolean addUnversioned(
-        @Nonnull Project project,
-        @Nonnull List<VirtualFile> files,
-        @Nonnull Predicate<FileStatus> unversionedFileCondition,
+        Project project,
+        List<VirtualFile> files,
+        Predicate<FileStatus> unversionedFileCondition,
         @Nullable ChangesBrowser browser
     ) {
         boolean result = true;
@@ -113,8 +112,8 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
         return result;
     }
 
-    @Nonnull
-    private Stream<VirtualFile> getUnversionedFiles(@Nonnull AnActionEvent e, @Nonnull Project project) {
+    
+    private Stream<VirtualFile> getUnversionedFiles(AnActionEvent e, Project project) {
         ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(project);
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(project);
         boolean hasExplicitUnversioned = !Streams.isEmpty(e.getData(ChangesListView.UNVERSIONED_FILES_DATA_KEY));
@@ -128,9 +127,9 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
     }
 
     private boolean isFileUnversioned(
-        @Nonnull VirtualFile file,
-        @Nonnull ProjectLevelVcsManager vcsManager,
-        @Nonnull FileStatusManager fileStatusManager
+        VirtualFile file,
+        ProjectLevelVcsManager vcsManager,
+        FileStatusManager fileStatusManager
     ) {
         AbstractVcs vcs = vcsManager.getVcsFor(file);
         return vcs != null && !vcs.areDirectoriesVersionedItems() && file.isDirectory()
@@ -148,7 +147,7 @@ public abstract class ScheduleForAdditionAction extends AnAction implements Dumb
      * {@link VcsDataKeys.VIRTUAL_FILE_STREAM}. So there will be no files with {@link FileStatus.UNKNOWN} status and we should not explicitly
      * check {@link VcsDataKeys.VIRTUAL_FILE_STREAM} files in this case.
      */
-    protected boolean checkVirtualFiles(@Nonnull AnActionEvent e) {
+    protected boolean checkVirtualFiles(AnActionEvent e) {
         return ArrayUtil.isEmpty(e.getData(VcsDataKeys.CHANGES));
     }
 }

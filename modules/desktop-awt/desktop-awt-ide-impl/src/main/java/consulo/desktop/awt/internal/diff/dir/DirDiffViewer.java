@@ -37,8 +37,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,17 +46,17 @@ import java.util.Collections;
 import java.util.List;
 
 class DirDiffViewer implements FrameDiffTool.DiffViewer {
-  @Nonnull
+  
   private final DiffContext myContext;
-  @Nonnull
+  
   private final ContentDiffRequest myRequest;
 
-  @Nonnull
+  
   private final DirDiffPanel myDirDiffPanel;
-  @Nonnull
+  
   private final JPanel myPanel;
 
-  public DirDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
+  public DirDiffViewer(DiffContext context, ContentDiffRequest request) {
     myContext = context;
     myRequest = request;
 
@@ -94,7 +93,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     });
   }
 
-  @Nonnull
+  
   @Override
   public FrameDiffTool.ToolbarComponents init() {
     myDirDiffPanel.setupSplitter();
@@ -114,7 +113,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     Disposer.dispose(myDirDiffPanel);
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -130,7 +129,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
   // Misc
   //
 
-  public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+  public static boolean canShowRequest(DiffContext context, DiffRequest request) {
     if (!(request instanceof ContentDiffRequest)) return false;
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();
     if (contents.size() != 2) return false;
@@ -142,7 +141,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
     return !(contents.get(0) instanceof EmptyContent) || !(contents.get(1) instanceof EmptyContent);
   }
 
-  private static boolean canShowContent(@Nonnull DiffContent content) {
+  private static boolean canShowContent(DiffContent content) {
     if (content instanceof EmptyContent || content instanceof DirectoryContent) {
       return true;
     }
@@ -150,8 +149,8 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
       && fileContent.getFile().isValid() && fileContent.getFile().isInLocalFileSystem();
   }
 
-  @Nonnull
-  private static DiffElement createDiffElement(@Nonnull DiffContent content) {
+  
+  private static DiffElement createDiffElement(DiffContent content) {
     if (content instanceof EmptyContent) {
       return new DiffElement() {
         @Override
@@ -159,7 +158,7 @@ class DirDiffViewer implements FrameDiffTool.DiffViewer {
           return "";
         }
 
-        @Nonnull
+        
         @Override
         public String getName() {
           return "Nothing";

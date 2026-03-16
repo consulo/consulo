@@ -37,8 +37,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,10 +56,10 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
         select(myProject, selector, getMinorViewId(), mySubId, virtualFile, requestFocus);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static ActionCallback select(
-        @Nonnull Project project,
+        Project project,
         Object toSelect,
         @Nullable String viewId,
         @Nullable String subviewId,
@@ -89,8 +88,8 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     }
 
     @Override
-    @Nonnull
-    public Collection<SelectInTarget> getSubTargets(@Nonnull SelectInContext context) {
+    
+    public Collection<SelectInTarget> getSubTargets(SelectInContext context) {
         List<SelectInTarget> result = new ArrayList<>();
         ProjectViewPane pane = ProjectView.getInstance(myProject).getProjectViewPaneById(getMinorViewId());
         int index = 0;

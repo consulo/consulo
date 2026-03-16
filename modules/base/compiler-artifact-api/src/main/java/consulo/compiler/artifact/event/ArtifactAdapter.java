@@ -17,19 +17,18 @@ package consulo.compiler.artifact.event;
 
 import consulo.compiler.artifact.Artifact;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @Deprecated
 public class ArtifactAdapter implements ArtifactListener {
-  public void artifactAdded(@Nonnull Artifact artifact) {
+  public void artifactAdded(Artifact artifact) {
   }
 
-  public void artifactRemoved(@Nonnull Artifact artifact) {
+  public void artifactRemoved(Artifact artifact) {
   }
 
-  public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
+  public void artifactChanged(Artifact artifact, String oldName) {
   }
 }

@@ -943,6 +943,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   @Nullable
   public V get(Object key) {
+    Objects.requireNonNull(key);
     Node<K, V>[] tab;
     Node<K, V> e, p;
     int n, eh;
@@ -1027,7 +1028,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       int n, i, fh;
       if (tab == null || (n = tab.length) == 0) tab = initTable();
       else if ((f = tabAt(Objects.requireNonNull(tab), i = (n - 1) & hash)) == null) {
-        if (casTabAt(tab, i, null, new Node<K, V>(hash, key, value, hashingStrategy))) break;                   // no lock when adding to empty bin
+        if (casTabAt(tab, i, null, new Node<K, V>(hash, key, value, hashingStrategy))) break; // no lock when adding to empty bin
       }
       else if ((fh = f.hash) == MOVED) tab = helpTransfer(tab, f);
       else {
@@ -1050,15 +1051,19 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
                 }
               }
             }
-            else if (f instanceof TreeBin) {
-              Node<K, V> p;
+            else if (f instanceof TreeBin<K, V> tb) {
+              Node<K, V> p = tb.putTreeVal(hash, key, value);
               binCount = 2;
-              if ((p = ((TreeBin<K, V>)f).putTreeVal(hash, key, value)) != null) {
+              if (p != null) {
                 oldVal = p.val;
-                if (!onlyIfAbsent) p.val = value;
+                if (!onlyIfAbsent) {
+                  p.val = value;
+                }
               }
             }
-            else if (f instanceof ReservationNode) throw new IllegalStateException("Recursive update");
+            else if (f instanceof ReservationNode) {
+              throw new IllegalStateException("Recursive update");
+            }
           }
         }
         if (binCount != 0) {
@@ -1106,7 +1111,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   @Nullable
   final V replaceNode(Object key, @Nullable V value, @Nullable Object cv) {
-    int hash = hash((K)key);
+    int hash = hash(Objects.requireNonNull((K) key));
     for (Node<K, V>[] tab = table; ; ) {
       Node<K, V> f;
       int n, i, fh;
@@ -1274,8 +1279,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    */
   public int hashCode() {
     int h = 0;
-    Node<K, V>[] t;
-    if ((t = table) != null) {
+    Node<K, V>[] t = table;
+    if (t != null) {
       Traverser<K, V> it = new Traverser<K, V>(t, t.length, 0, t.length);
       for (Node<K, V> p; (p = it.advance()) != null; )
         h += hash(Objects.requireNonNull(p.key)) ^ Objects.hashCode(p.val);
@@ -1326,20 +1331,29 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @return {@code true} if the specified object is equal to this map
    */
   public boolean equals(Object o) {
-    if (o != this) {
-      if (!(o instanceof Map)) return false;
-      Map<?, ?> m = (Map<?, ?>)o;
-      Node<K, V>[] t;
-      int f = (t = table) == null ? 0 : t.length;
-      Traverser<K, V> it = new Traverser<K, V>(t, f, 0, f);
-      for (Node<K, V> p; (p = it.advance()) != null; ) {
-        V val = p.val;
-        Object v = m.get(p.key);
-        if (v == null || (v != val && !v.equals(val))) return false;
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof Map<?, ?> m)) {
+      return false;
+    }
+    Node<K, V>[] t;
+    int f = (t = table) == null ? 0 : t.length;
+    Traverser<K, V> it = new Traverser<K, V>(t, f, 0, f);
+    for (Node<K, V> p; (p = it.advance()) != null; ) {
+      V val = p.val;
+      Object v = m.get(p.key);
+      if (v == null || (v != val && !v.equals(val))) {
+        return false;
       }
-      for (Map.Entry<?, ?> e : m.entrySet()) {
-        Object mk, mv, v;
-        if ((mk = e.getKey()) == null || (mv = e.getValue()) == null || (v = get(mk)) == null || (mv != v && !mv.equals(v))) return false;
+    }
+    for (Entry<?, ?> e : m.entrySet()) {
+      Object mk, mv, v;
+      if ((mk = e.getKey()) == null
+        || (mv = e.getValue()) == null
+        || (v = get(mk)) == null
+        || (mv != v && !mv.equals(v))) {
+        return false;
       }
     }
     return true;
@@ -1357,7 +1371,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.loadFactor = lf;
     }
   }
-
 
   // ConcurrentMap methods
 
@@ -1379,8 +1392,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws NullPointerException if the specified key is null
    */
   public boolean remove(Object key, Object value) {
-    if (key == null) throw new NullPointerException();
-    return value != null && replaceNode(key, null, value) != null;
+    return replaceNode(key, null, Objects.requireNonNull(value)) != null;
   }
 
   /**
@@ -1389,8 +1401,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws NullPointerException if any of the arguments are null
    */
   public boolean replace(K key, V oldValue, V newValue) {
-    if (key == null || oldValue == null || newValue == null) throw new NullPointerException();
-    return replaceNode(key, newValue, oldValue) != null;
+    return replaceNode(key, Objects.requireNonNull(newValue), Objects.requireNonNull(oldValue)) != null;
   }
 
   /**

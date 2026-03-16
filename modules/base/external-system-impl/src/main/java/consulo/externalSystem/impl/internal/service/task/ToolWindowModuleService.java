@@ -31,8 +31,7 @@ import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -47,10 +46,10 @@ import java.util.function.Function;
 @ExtensionImpl
 public class ToolWindowModuleService extends AbstractToolWindowService<ModuleData> {
 
-  @Nonnull
+  
   public static final Function<DataNode<ModuleData>, ExternalProjectPojo> MAPPER = node -> ExternalProjectPojo.from(node.getData());
 
-  @Nonnull
+  
   @Override
   public Key<ModuleData> getTargetDataKey() {
     return ProjectKeys.MODULE;
@@ -58,8 +57,8 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
 
   @Override
   protected void processData(
-    @Nonnull Collection<DataNode<ModuleData>> nodes,
-    @Nonnull Project project,
+    Collection<DataNode<ModuleData>> nodes,
+    Project project,
     @Nullable ExternalSystemTasksTreeModel model
   ) {
     if (nodes.isEmpty()) {
@@ -85,10 +84,10 @@ public class ToolWindowModuleService extends AbstractToolWindowService<ModuleDat
     settings.setAvailableProjects(projects);
   }
 
-  @Nonnull
+  
   private static Set<String> detectRenamedProjects(
-    @Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
-    @Nonnull Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo
+    Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> currentInfo,
+    Map<ExternalProjectPojo, Collection<ExternalProjectPojo>> oldInfo
   ) {
     Map<String/* external config path */, String/* project name */> map = new HashMap<>();
     for (Map.Entry<ExternalProjectPojo, Collection<ExternalProjectPojo>> entry : currentInfo.entrySet()) {

@@ -25,8 +25,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -40,13 +39,13 @@ public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
         ExtensionPointCacheKey.groupBy("ByKeyModuleExtensionProvider", ModuleExtensionProvider::getId);
 
     @Nullable
-    static ModuleExtensionProvider findProvider(@Nonnull String id) {
+    static ModuleExtensionProvider findProvider(String id) {
         ExtensionPoint<ModuleExtensionProvider> point = Application.get().getExtensionPoint(ModuleExtensionProvider.class);
         Map<String, ModuleExtensionProvider> map = point.getOrBuildCache(BY_ID);
         return map.get(id);
     }
 
-    @Nonnull
+    
     String getId();
 
     @Nullable
@@ -62,15 +61,15 @@ public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
         return false;
     }
 
-    @Nonnull
+    
     LocalizeValue getName();
 
-    @Nonnull
+    
     Image getIcon();
 
-    @Nonnull
-    ModuleExtension<T> createImmutableExtension(@Nonnull ModuleRootLayer layer);
+    
+    ModuleExtension<T> createImmutableExtension(ModuleRootLayer layer);
 
-    @Nonnull
-    MutableModuleExtension<T> createMutableExtension(@Nonnull ModuleRootLayer layer);
+    
+    MutableModuleExtension<T> createMutableExtension(ModuleRootLayer layer);
 }

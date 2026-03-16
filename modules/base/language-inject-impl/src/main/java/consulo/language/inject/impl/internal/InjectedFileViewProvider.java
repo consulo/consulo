@@ -20,11 +20,10 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.util.lang.ref.Ref;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public interface InjectedFileViewProvider extends FileViewProvider, FreeThreadedFileViewProvider {
-  default void rootChangedImpl(@Nonnull PsiFile psiFile) {
+  default void rootChangedImpl(PsiFile psiFile) {
     if (!isPhysical()) return; // injected PSI change happened inside reparse; ignore
     if (getPatchingLeaves()) return;
 
@@ -79,7 +78,7 @@ public interface InjectedFileViewProvider extends FileViewProvider, FreeThreaded
   }
 
   // returns true if shreds were set, false if old ones were reused
-  default boolean setShreds(@Nonnull PlaceImpl newShreds) {
+  default boolean setShreds(PlaceImpl newShreds) {
     synchronized (getLock()) {
       PlaceImpl oldShreds = getDocument().getShreds();
       // try to reuse shreds, otherwise there are too many range markers disposals/re-creations
@@ -120,7 +119,7 @@ public interface InjectedFileViewProvider extends FileViewProvider, FreeThreaded
 
   boolean getPatchingLeaves();
 
-  void forceCachedPsi(@Nonnull PsiFile file);
+  void forceCachedPsi(PsiFile file);
 
   Object getLock();
 
@@ -141,10 +140,10 @@ public interface InjectedFileViewProvider extends FileViewProvider, FreeThreaded
   }
 
   @Override
-  @Nonnull
+  
   DocumentWindowImpl getDocument();
 
-  static InjectedFileViewProvider create(@Nonnull PsiManagerEx manager, @Nonnull VirtualFileWindowImpl file, @Nonnull DocumentWindowImpl window, @Nonnull Language language) {
+  static InjectedFileViewProvider create(PsiManagerEx manager, VirtualFileWindowImpl file, DocumentWindowImpl window, Language language) {
     AbstractFileViewProvider original = (AbstractFileViewProvider)manager.getFileManager().createFileViewProvider(file, false);
     return original instanceof TemplateLanguageFileViewProvider
            ? new MultipleRootsInjectedFileViewProvider.Template(manager, file, window, language, original)

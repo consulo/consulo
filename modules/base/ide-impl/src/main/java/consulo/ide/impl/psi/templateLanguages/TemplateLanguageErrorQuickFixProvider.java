@@ -35,7 +35,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -57,7 +56,7 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
         final VirtualFile virtualFile = containingFile.getVirtualFile();
         final Language language = ((TemplateLanguageFileViewProvider) containingFile.getViewProvider()).getTemplateDataLanguage();
         return new SyntheticIntentionAction() {
-            @Nonnull
+            
             @Override
             public LocalizeValue getText() {
                 return LanguageLocalize.quickfixChangeTemplateDataLanguageText(language.getDisplayName());
@@ -65,7 +64,7 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
 
             @Override
             @RequiredUIAccess
-            public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+            public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
                 ShowSettingsUtil.getInstance().showAndSelect(
                     project,
                     TemplateDataLanguageConfigurable.class,

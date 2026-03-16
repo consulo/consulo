@@ -22,8 +22,7 @@ import consulo.language.psi.UseScopeEnlarger;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PsiSearchScopeUtil {
   /**
@@ -34,8 +33,8 @@ public class PsiSearchScopeUtil {
    * @param element the element to return the use scope form.
    * @return the search scope instance.
    */
-  @Nonnull
-  public static SearchScope getUseScope(@Nonnull PsiElement element) {
+  
+  public static SearchScope getUseScope(PsiElement element) {
     Project project = element.getProject();
     SearchScope scope = element.getUseScope();
     for (UseScopeEnlarger enlarger : project.getExtensionList(UseScopeEnlarger.class)) {
@@ -57,12 +56,12 @@ public class PsiSearchScopeUtil {
    * Use com.intellij.psi.search.SearchScope#union(com.intellij.psi.search.SearchScope)
    */
   @Deprecated
-  @Nonnull
-  public static SearchScope scopesUnion(@Nonnull SearchScope scope1, @Nonnull SearchScope scope2) {
+  
+  public static SearchScope scopesUnion(SearchScope scope1, SearchScope scope2) {
     return scope1.union(scope2);
   }
 
-  public static boolean isInScope(@Nonnull SearchScope scope, @Nonnull PsiElement element) {
+  public static boolean isInScope(SearchScope scope, PsiElement element) {
     if (scope instanceof LocalSearchScope) {
       LocalSearchScope local = (LocalSearchScope)scope;
       return isInScope(local, element);
@@ -73,7 +72,7 @@ public class PsiSearchScopeUtil {
     }
   }
 
-  public static boolean isInScope(@Nonnull GlobalSearchScope globalScope, @Nonnull PsiElement element) {
+  public static boolean isInScope(GlobalSearchScope globalScope, PsiElement element) {
     PsiFile file = element.getContainingFile();
     if (file == null) {
       return true;
@@ -85,7 +84,7 @@ public class PsiSearchScopeUtil {
     return virtualFile == null || globalScope.contains(file.getVirtualFile());
   }
 
-  public static boolean isInScope(@Nonnull LocalSearchScope local, @Nonnull PsiElement element) {
+  public static boolean isInScope(LocalSearchScope local, PsiElement element) {
     PsiElement[] scopeElements = local.getScope();
     for (PsiElement scopeElement : scopeElements) {
       if (PsiTreeUtil.isAncestor(scopeElement, element, false)) return true;

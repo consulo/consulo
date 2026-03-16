@@ -18,7 +18,6 @@ package consulo.language.pattern;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.util.ProcessingContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -28,14 +27,14 @@ public class IElementTypePattern extends ObjectPattern<IElementType, IElementTyp
     super(IElementType.class);
   }
 
-  public IElementTypePattern or(@Nonnull IElementType... types){
+  public IElementTypePattern or(IElementType... types){
     return tokenSet(TokenSet.create(types));
   }
 
-  public IElementTypePattern tokenSet(@Nonnull final TokenSet tokenSet){
+  public IElementTypePattern tokenSet(final TokenSet tokenSet){
     return with(new PatternCondition<IElementType>("tokenSet") {
       @Override
-      public boolean accepts(@Nonnull IElementType type, ProcessingContext context) {
+      public boolean accepts(IElementType type, ProcessingContext context) {
         return tokenSet.contains(type);
       }
     });

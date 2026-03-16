@@ -14,13 +14,12 @@ import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.LocalChangeList;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Consumer;
 
 @ExtensionImpl(order = "last")
 public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
-  @Nonnull
+  
   private final Project myProject;
 
   public static ChangeListsScopesProvider getInstance(Project project) {
@@ -28,12 +27,12 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
   }
 
   @Inject
-  public ChangeListsScopesProvider(@Nonnull Project project) {
+  public ChangeListsScopesProvider(Project project) {
     myProject = project;
   }
 
   @Override
-  public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
+  public void acceptScopes(Consumer<NamedScope> consumer) {
     if (myProject.isDefault() || !ProjectLevelVcsManager.getInstance(myProject).hasActiveVcss()) return ;
     ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
 
@@ -51,7 +50,7 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
   }
 
   @Override
-  public NamedScope getCustomScope(@Nonnull String name) {
+  public NamedScope getCustomScope(String name) {
     if (myProject.isDefault()) return null;
     ChangeListManager changeListManager = ChangeListManager.getInstance(myProject);
     if (ChangeListScope.ALL_CHANGED_FILES_SCOPE_NAME.equals(name)) {

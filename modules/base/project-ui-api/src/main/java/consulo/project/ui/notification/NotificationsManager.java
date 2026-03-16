@@ -25,8 +25,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public abstract class NotificationsManager {
         return Application.get().getInstance(NotificationsManager.class);
     }
 
-    public abstract void expire(@Nonnull Notification notification);
+    public abstract void expire(Notification notification);
 
     @Nullable
     @RequiredUIAccess
@@ -48,24 +47,24 @@ public abstract class NotificationsManager {
 
     public abstract <T extends Notification> T[] getNotificationsOfType(Class<T> clazz, @Nullable Project project);
 
-    @Nonnull
+    
     public Balloon createBalloon(
-        @Nonnull IdeFrame window,
-        @Nonnull Notification notification,
+        IdeFrame window,
+        Notification notification,
         boolean showCallout,
         boolean hideOnClickOutside,
-        @Nonnull SimpleReference<Object> layoutDataRef,
-        @Nonnull Disposable parentDisposable
+        SimpleReference<Object> layoutDataRef,
+        Disposable parentDisposable
     ) {
         return createBalloon(window.getComponent(), notification, showCallout, hideOnClickOutside, layoutDataRef, parentDisposable);
     }
 
     public abstract Balloon createBalloon(
         @Nullable JComponent windowComponent,
-        @Nonnull Notification notification,
+        Notification notification,
         boolean showCallout,
         boolean hideOnClickOutside,
-        @Nonnull SimpleReference<Object> layoutDataRef,
-        @Nonnull Disposable parentDisposable
+        SimpleReference<Object> layoutDataRef,
+        Disposable parentDisposable
     );
 }

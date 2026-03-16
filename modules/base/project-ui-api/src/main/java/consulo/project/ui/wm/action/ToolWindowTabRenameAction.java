@@ -21,8 +21,7 @@ import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -32,30 +31,30 @@ import java.util.function.BiConsumer;
 public class ToolWindowTabRenameAction extends ToolWindowContextMenuActionBase {
     private final String myToolWindowId;
     private final LocalizeValue myLabelText;
-    @Nonnull
+    
     private final BiConsumer<Content, String> myOnRenameConsumer;
 
-    public ToolWindowTabRenameAction(@Nonnull String toolWindowId,
-                                     @Nonnull LocalizeValue labelText) {
+    public ToolWindowTabRenameAction(String toolWindowId,
+                                     LocalizeValue labelText) {
         this(toolWindowId, labelText, Content::setDisplayName);
     }
 
-    public ToolWindowTabRenameAction(@Nonnull String toolWindowId,
-                                     @Nonnull LocalizeValue labelText,
-                                     @Nonnull BiConsumer<Content, String> onRenameConsumer) {
+    public ToolWindowTabRenameAction(String toolWindowId,
+                                     LocalizeValue labelText,
+                                     BiConsumer<Content, String> onRenameConsumer) {
         myToolWindowId = toolWindowId;
         myLabelText = labelText;
         myOnRenameConsumer = onRenameConsumer;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
+    public void update(AnActionEvent e, ToolWindow toolWindow, @Nullable Content content) {
         String id = toolWindow.getId();
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && myToolWindowId.equals(id) && content != null);
     }
 
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
+    public void actionPerformed(AnActionEvent e, ToolWindow toolWindow, @Nullable Content content) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

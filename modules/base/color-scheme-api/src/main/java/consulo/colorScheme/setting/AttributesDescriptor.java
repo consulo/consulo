@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Describes a text attribute key the attributes for which can be configured in a custom
@@ -33,7 +32,7 @@ public final class AttributesDescriptor {
 
     @Deprecated
     @DeprecationInfo("Use parameter with LocalizeValue")
-    public AttributesDescriptor(@Nonnull String displayName, @Nonnull TextAttributesKey key) {
+    public AttributesDescriptor(String displayName, TextAttributesKey key) {
         this(LocalizeValue.of(displayName), key);
     }
 
@@ -43,7 +42,7 @@ public final class AttributesDescriptor {
      * @param displayName the name of the attribute shown in the colors list.
      * @param key         the attributes key for which the colors are specified.
      */
-    public AttributesDescriptor(@Nonnull LocalizeValue displayName, @Nonnull TextAttributesKey key) {
+    public AttributesDescriptor(LocalizeValue displayName, TextAttributesKey key) {
         myKey = key;
         myDisplayName = displayName;
     }
@@ -53,7 +52,7 @@ public final class AttributesDescriptor {
      *
      * @return the attributes key.
      */
-    @Nonnull
+    
     public TextAttributesKey getKey() {
         return myKey;
     }
@@ -63,7 +62,7 @@ public final class AttributesDescriptor {
      *
      * @return the name of the attribute.
      */
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }

@@ -26,7 +26,6 @@ import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.project.ui.view.localize.ProjectUIViewLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.Set;
@@ -103,7 +102,7 @@ public class ModuleNode extends PackageDependenciesNode implements NavigatableWi
         return myModule != null && !myModule.isDisposed();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getNavigateActionText(boolean focusEditor) {
         return ProjectUIViewLocalize.actionOpenModuleSettingsText();

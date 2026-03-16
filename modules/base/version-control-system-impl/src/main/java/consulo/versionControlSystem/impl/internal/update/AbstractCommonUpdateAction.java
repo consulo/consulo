@@ -59,8 +59,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -88,7 +87,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext context) {
+    protected void actionPerformed(VcsContext context) {
         Project project = context.getProject();
 
         boolean showUpdateOptions = myActionInfo.showOptions(project);
@@ -195,7 +194,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         return envToConfMap;
     }
 
-    private Map<AbstractVcs, Collection<FilePath>> createVcsToFilesMap(@Nonnull FilePath[] roots, @Nonnull Project project) {
+    private Map<AbstractVcs, Collection<FilePath>> createVcsToFilesMap(FilePath[] roots, Project project) {
         MultiMap<AbstractVcs, FilePath> resultPrep = MultiMap.createSet();
         for (FilePath file : roots) {
             AbstractVcs vcs = VcsUtil.getVcsFor(project, file);
@@ -215,7 +214,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         return result;
     }
 
-    @Nonnull
     private FilePath[] filterRoots(FilePath[] roots, VcsContext vcsContext) {
         List<FilePath> result = new ArrayList<>();
         Project project = vcsContext.getProject();
@@ -248,7 +246,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     protected abstract boolean filterRootsBeforeAction();
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         Project project = vcsContext.getProject();
 
         if (project != null) {
@@ -305,7 +303,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
     private class Updater extends Task.Backgroundable {
         private final LocalizeValue LOCAL_HISTORY_ACTION = VcsLocalize.localHistoryUpdateFromVcs();
 
-        @Nonnull
         private final Project myProject;
         private final ProjectLevelVcsManagerImpl myProjectLevelVcsManager;
         private UpdatedFiles myUpdatedFiles;
@@ -323,7 +320,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         private Label myAfter;
         private LocalHistoryAction myLocalHistoryAction;
 
-        public Updater(@Nonnull Project project, FilePath[] roots, Map<AbstractVcs, Collection<FilePath>> vcsToVirtualFiles) {
+        public Updater(Project project, FilePath[] roots, Map<AbstractVcs, Collection<FilePath>> vcsToVirtualFiles) {
             super(
                 project,
                 // FIXME better make correct message, instead using action text
@@ -354,7 +351,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         }
 
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
             runImpl();
         }
 
@@ -429,7 +426,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             }
         }
 
-        private void putExceptions(HotfixData key, @Nonnull List<VcsException> list) {
+        private void putExceptions(HotfixData key, List<VcsException> list) {
             if (list.isEmpty()) {
                 return;
             }
@@ -447,8 +444,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(myUpdatedFiles, (filePath, groupId) -> refresher.dirty(filePath));
         }
 
-        @Nonnull
-        private Notification.Builder prepareNotification(@Nonnull UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
+        private Notification.Builder prepareNotification(UpdateInfoTreeImpl tree, boolean someSessionWasCancelled) {
             int allFiles = getUpdatedFilesCount();
 
             NotificationService notificationService = myProject.getApplication().getInstance(NotificationService.class);
@@ -468,12 +464,12 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             return myUpdatedFiles.getTopLevelGroups().stream().mapToInt(this::getFilesCount).sum();
         }
 
-        private int getFilesCount(@Nonnull FileGroup group) {
+        private int getFilesCount(FileGroup group) {
             return group.getFiles().size() + group.getChildren().stream().mapToInt(this::getFilesCount).sum();
         }
 
         @Nullable
-        private String prepareScopeUpdatedText(@Nonnull UpdateInfoTreeImpl tree) {
+        private String prepareScopeUpdatedText(UpdateInfoTreeImpl tree) {
             String scopeText = null;
             NamedScope scopeFilter = tree.getFilterScope();
             if (scopeFilter != null) {
@@ -628,7 +624,6 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
             }
         }
 
-        @Nonnull
         @RequiredUIAccess
         private UpdateInfoTreeImpl showUpdateTree(boolean willBeContinued, boolean wasCanceled) {
             RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(myProject);

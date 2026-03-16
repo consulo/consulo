@@ -44,8 +44,7 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.usage.UsageTreeColors;
 import consulo.usage.UsageTreeColorsScheme;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -56,13 +55,13 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   private final TodoTreeBuilder myBuilder;
   @Nullable private final String myPresentationName;
 
-  public TodoPackageNode(@Nonnull Project project,
+  public TodoPackageNode(Project project,
                          PackageElement element,
                          TodoTreeBuilder builder) {
     this(project, element, builder,null);
   }
 
-  public TodoPackageNode(@Nonnull Project project,
+  public TodoPackageNode(Project project,
                          PackageElement element,
                          TodoTreeBuilder builder,
                          @Nullable String name) {
@@ -139,7 +138,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
   }
 
   @Override
-  public void apply(@Nonnull Map<String, String> info) {
+  public void apply(Map<String, String> info) {
     info.put("toDoFileCount", String.valueOf(getFileCount(getValue())));
     info.put("toDoItemCount", String.valueOf(getTodoItemCount(getValue())));
   }
@@ -202,7 +201,7 @@ public final class TodoPackageNode extends PackageElementNode implements Highlig
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     ArrayList<AbstractTreeNode> children = new ArrayList<AbstractTreeNode>();
     Project project = getProject();

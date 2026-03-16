@@ -4,8 +4,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -19,12 +18,12 @@ public interface VcsRootDetector {
   /**
    * Detect vcs roots for whole project
    */
-  @Nonnull
+  
   Collection<VcsRoot> detect();
 
   /**
    * Detect vcs roots for startDir
    */
-  @Nonnull
+  
   Collection<VcsRoot> detect(@Nullable VirtualFile startDir);
 }

@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.TableLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +39,7 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
             super(layout);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTableLayoutImpl.this;
@@ -90,7 +89,7 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
     }
 
     @Override
-    public void forEachChild(@RequiredUIAccess @Nonnull Consumer<Component> consumer) {
+    public void forEachChild(@RequiredUIAccess Consumer<Component> consumer) {
         toAWTComponent(); // initialize root
 
         JPanel component = myGridPanel; // grid is owner of of children, not myComponent
@@ -105,9 +104,9 @@ public class DesktopTableLayoutImpl extends SwingComponentDelegate<JPanel> imple
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public TableLayout add(@Nonnull Component component, @Nonnull TableCell tableCell) {
+    public TableLayout add(Component component, TableCell tableCell) {
         toAWTComponent(); // initialize root
 
         GridBagConstraints constraints = new GridBagConstraints();

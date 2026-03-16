@@ -17,7 +17,6 @@ package consulo.ui.ex.internal;
 
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
 public interface CustomShortcutBuilder {
     Key<CustomShortcutBuilder> KEY = Key.create(CustomShortcutBuilder.class);
 
-    @Nonnull
+    
     LocalizeValue build();
 }

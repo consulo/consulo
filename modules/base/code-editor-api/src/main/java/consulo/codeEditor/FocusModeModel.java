@@ -18,7 +18,7 @@ package consulo.codeEditor;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

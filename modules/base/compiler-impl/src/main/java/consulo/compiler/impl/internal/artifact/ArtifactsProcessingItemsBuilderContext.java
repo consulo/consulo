@@ -21,8 +21,7 @@ import consulo.compiler.artifact.element.ArtifactIncrementalCompilerContext;
 import consulo.compiler.artifact.element.DestinationInfo;
 import consulo.compiler.artifact.element.ExplodedDestinationInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
         myPrintToLog = ArtifactsCompilerInstance.FULL_LOG.isDebugEnabled();
     }
 
-    public boolean addDestination(@Nonnull VirtualFile sourceFile, @Nonnull DestinationInfo destinationInfo) {
+    public boolean addDestination(VirtualFile sourceFile, DestinationInfo destinationInfo) {
         if (destinationInfo instanceof ExplodedDestinationInfo && sourceFile.equals(destinationInfo.getOutputFile())) {
             return false;
         }
@@ -79,7 +78,7 @@ public class ArtifactsProcessingItemsBuilderContext implements ArtifactIncrement
         return myItemsBySource.get(source);
     }
 
-    public boolean registerJarFile(@Nonnull ArchivePackageInfo archivePackageInfo, @Nonnull String outputPath) {
+    public boolean registerJarFile(ArchivePackageInfo archivePackageInfo, String outputPath) {
         if (mySourceByOutput.containsKey(outputPath) || myJarByPath.containsKey(outputPath)) {
             return false;
         }

@@ -20,7 +20,6 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.util.lang.CharSequenceSubSequence;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Sergey Evdokimov
@@ -39,7 +38,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
   }
 
   @Override
-  public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int state) {
+  public void start(CharSequence buffer, int startOffset, int endOffset, int state) {
     if (myAlreadyInitializedHighlighter) {
       this.buffer = buffer;
       start = startOffset;
@@ -80,7 +79,7 @@ public class LexerEditorHighlighterLexer extends LexerBase {
     iterator.advance();
   }
 
-  @Nonnull
+  
   @Override
   public CharSequence getBufferSequence() {
     return buffer;

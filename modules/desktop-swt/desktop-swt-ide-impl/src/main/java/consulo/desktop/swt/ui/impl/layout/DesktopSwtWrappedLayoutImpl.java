@@ -23,8 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Layout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ public class DesktopSwtWrappedLayoutImpl extends DesktopSwtLayoutComponent<Layou
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public WrappedLayout set(@Nullable Component component) {
     addImpl(component, null);

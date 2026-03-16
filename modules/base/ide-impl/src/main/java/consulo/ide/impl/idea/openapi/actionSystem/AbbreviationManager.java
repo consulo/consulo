@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.actionSystem;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Set;
@@ -43,5 +42,5 @@ public abstract class AbbreviationManager {
 
   public abstract void remove(String abbreviation, String actionId);
 
-  public abstract void removeAllAbbreviations(@Nonnull String actionId);
+  public abstract void removeAllAbbreviations(String actionId);
 }

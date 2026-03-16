@@ -15,7 +15,6 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import static consulo.versionControlSystem.log.graph.EdgeFilter.*;
 public interface LiteLinearGraph {
   int nodesCount();
 
-  @Nonnull
+  
   List<Integer> getNodes(int nodeIndex, NodeFilter filter);
 
   enum NodeFilter {
@@ -34,10 +33,10 @@ public interface LiteLinearGraph {
 
     public final boolean up;
     public final boolean down;
-    @Nonnull
+    
     public final EdgeFilter edgeFilter;
 
-    NodeFilter(boolean up, boolean down, @Nonnull EdgeFilter edgeFilter) {
+    NodeFilter(boolean up, boolean down, EdgeFilter edgeFilter) {
       this.up = up;
       this.down = down;
       this.edgeFilter = edgeFilter;

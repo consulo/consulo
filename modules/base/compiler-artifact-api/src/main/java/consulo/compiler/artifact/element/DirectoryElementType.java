@@ -27,7 +27,6 @@ import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -42,15 +41,15 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
     super("directory", CompilerLocalize.elementTypeNameDirectory());
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Actions.NewFolder;
   }
 
   @Override
-  @Nonnull
-  public DirectoryPackagingElement createEmpty(@Nonnull Project project) {
+  
+  public DirectoryPackagingElement createEmpty(Project project) {
     return new DirectoryPackagingElement();
   }
 
@@ -66,7 +65,7 @@ public class DirectoryElementType extends CompositePackagingElementType<Director
   @Override
   public CompositePackagingElement<?> createComposite(CompositePackagingElement<?> parent,
                                                       String baseName,
-                                                      @Nonnull ArtifactEditorContext context) {
+                                                      ArtifactEditorContext context) {
     String initialValue = ArtifactUtil.suggestFileName(parent, baseName != null ? baseName : "folder", "");
     String path = Messages
       .showInputDialog(context.getProject(), "Enter directory name: ", "New Directory", null, initialValue, new FilePathValidator());

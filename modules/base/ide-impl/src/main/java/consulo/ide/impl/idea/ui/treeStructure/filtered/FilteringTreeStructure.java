@@ -23,7 +23,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.ui.ex.awt.speedSearch.ElementFilter;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -45,11 +44,11 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
 
     private final Map<Object, FilteringNode> myDescriptors2Nodes = new HashMap<>();
 
-    public FilteringTreeStructure(@Nonnull ElementFilter filter, @Nonnull AbstractTreeStructure originalStructure) {
+    public FilteringTreeStructure(ElementFilter filter, AbstractTreeStructure originalStructure) {
         this(filter, originalStructure, true);
     }
 
-    public FilteringTreeStructure(@Nonnull ElementFilter filter, @Nonnull AbstractTreeStructure originalStructure, boolean initNow) {
+    public FilteringTreeStructure(ElementFilter filter, AbstractTreeStructure originalStructure, boolean initNow) {
         //noinspection unchecked
         myFilter = filter;
         myBaseStructure = originalStructure;
@@ -111,7 +110,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         }
     }
 
-    private State getState(@Nonnull FilteringNode node) {
+    private State getState(FilteringNode node) {
         return myFilter.shouldBeShowing(node.getDelegate()) ? State.VISIBLE : State.HIDDEN;
     }
 
@@ -132,36 +131,36 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         return myDescriptors2Nodes.get(nodeObject);
     }
 
-    @Nonnull
+    
     @Override
     public FilteringNode getRootElement() {
         return myRoot;
     }
 
-    @Nonnull
+    
     @Override
-    public Object[] getChildElements(@Nonnull Object element) {
+    public Object[] getChildElements(Object element) {
         return ((FilteringNode)element).getChildren();
     }
 
     @Override
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         return ((FilteringNode)element).getParent();
     }
 
     @Override
-    public boolean isAlwaysLeaf(@Nonnull Object element) {
+    public boolean isAlwaysLeaf(Object element) {
         return element instanceof FilteringNode && ((FilteringNode)element).isAlwaysLeaf();
     }
 
     @Override
-    public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+    public boolean isToBuildChildrenInBackground(Object element) {
         return myBaseStructure.isToBuildChildrenInBackground(element);
     }
 
     @Override
-    @Nonnull
-    public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    
+    public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         return element instanceof FilteringNode ? (FilteringNode)element : new FilteringNode((SimpleNode)parentDescriptor, element);
     }
 
@@ -175,7 +174,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         return myBaseStructure.hasSomethingToCommit();
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback asyncCommit() {
         return myBaseStructure.asyncCommit();
@@ -222,7 +221,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         }
 
         @Override
-        public boolean isHighlightableContentNode(@Nonnull PresentableNodeDescriptor kid) {
+        public boolean isHighlightableContentNode(PresentableNodeDescriptor kid) {
             return myDelegate instanceof PresentableNodeDescriptor node && node.isHighlightableContentNode(kid);
         }
 
@@ -242,7 +241,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
             }
         }
 
-        @Nonnull
+        
         @Override
         public SimpleNode[] getChildren() {
             List<FilteringNode> nodes = myNodesCache.get(this);
@@ -270,7 +269,7 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
         }
 
         @Override
-        @Nonnull
+        
         public Object[] getEqualityObjects() {
             return new Object[]{myDelegate};
         }

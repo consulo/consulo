@@ -9,17 +9,16 @@ import consulo.webBrowser.BrowserSpecificSettings;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.icon.WebBrowserIconGroup;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 
 final class ConfigurableWebBrowser extends WebBrowser {
     private final UUID id;
-    @Nonnull
+    
     private BrowserFamily family;
-    @Nonnull
+    
     private String name;
     private boolean active;
     private String path;
@@ -31,11 +30,11 @@ final class ConfigurableWebBrowser extends WebBrowser {
         this(UUID.randomUUID(), BrowserFamily.CHROME);
     }
 
-    ConfigurableWebBrowser(@Nonnull UUID id, @Nonnull BrowserFamily family) {
+    ConfigurableWebBrowser(UUID id, BrowserFamily family) {
         this(id, family, family.getName(), family.getExecutionPath(), true, family.createBrowserSpecificSettings());
     }
 
-    ConfigurableWebBrowser(@Nonnull UUID id, @Nonnull BrowserFamily family, @Nonnull String name, @Nullable String path, boolean active, @Nullable BrowserSpecificSettings specificSettings) {
+    ConfigurableWebBrowser(UUID id, BrowserFamily family, String name, @Nullable String path, boolean active, @Nullable BrowserSpecificSettings specificSettings) {
         this.id = id;
         this.family = family;
         this.name = name;
@@ -45,15 +44,15 @@ final class ConfigurableWebBrowser extends WebBrowser {
         this.specificSettings = specificSettings;
     }
 
-    public void setName(@Nonnull String value) {
+    public void setName(String value) {
         name = value;
     }
 
-    public void setFamily(@Nonnull BrowserFamily value) {
+    public void setFamily(BrowserFamily value) {
         family = value;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         if (family == BrowserFamily.CHROME) {
@@ -85,7 +84,7 @@ final class ConfigurableWebBrowser extends WebBrowser {
         return family.getIcon();
     }
 
-    private boolean checkNameAndPath(@Nonnull String what) {
+    private boolean checkNameAndPath(String what) {
         return WebBrowserManagerImpl.checkNameAndPath(what, this);
     }
 
@@ -141,31 +140,31 @@ final class ConfigurableWebBrowser extends WebBrowser {
     }
 
     @Override
-    @Nonnull
+    
     public String getName() {
         return name;
     }
 
     @Override
-    @Nonnull
+    
     public final UUID getId() {
         return id;
     }
 
     @Override
-    @Nonnull
+    
     public BrowserFamily getFamily() {
         return family;
     }
 
     @Override
-    @Nonnull
+    
     public String getBrowserNotFoundMessage() {
         return WebBrowserLocalize.error0BrowserPathNotSpecified(getName()).get();
     }
 
     @Override
-    public void addOpenUrlParameter(@Nonnull List<? super String> command, @Nonnull String url) {
+    public void addOpenUrlParameter(List<? super String> command, String url) {
         if (WebBrowserManagerImpl.isEdge(this) && !command.isEmpty()) {
             command.set(command.size() - 1, command.get(command.size() - 1) + ":" + url);
         }

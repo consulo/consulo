@@ -6,7 +6,7 @@ import consulo.application.Application;
 import consulo.language.Language;
 import consulo.language.extension.LanguageExtension;
 import consulo.project.Project;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 

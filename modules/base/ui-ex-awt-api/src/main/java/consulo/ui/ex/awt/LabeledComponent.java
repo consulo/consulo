@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,26 +40,26 @@ public class LabeledComponent<Comp extends JComponent> extends JPanel implements
         insertLabel();
     }
 
-    @Nonnull
-    public static <Comp extends JComponent> LabeledComponent<Comp> create(@Nonnull Comp component, @Nonnull String text) {
+    
+    public static <Comp extends JComponent> LabeledComponent<Comp> create(Comp component, String text) {
         LabeledComponent<Comp> labeledComponent = new LabeledComponent<>();
         labeledComponent.setComponent(component);
         labeledComponent.setText(text);
         return labeledComponent;
     }
 
-    @Nonnull
-    public static <Comp extends JComponent> LabeledComponent<Comp> sided(@Nonnull Comp component, @Nonnull String text) {
+    
+    public static <Comp extends JComponent> LabeledComponent<Comp> sided(Comp component, String text) {
         LabeledComponent<Comp> labeledComponent = new LabeledComponent<>(true);
         labeledComponent.setComponent(component);
         labeledComponent.setText(text);
         return labeledComponent;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use #create() - default position is left already")
-    public static <Comp extends JComponent> LabeledComponent<Comp> left(@Nonnull Comp component, @Nonnull String text) {
+    public static <Comp extends JComponent> LabeledComponent<Comp> left(Comp component, String text) {
         LabeledComponent<Comp> labeledComponent = create(component, text);
         labeledComponent.setLabelLocation(BorderLayout.WEST);
         return labeledComponent;

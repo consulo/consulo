@@ -12,7 +12,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
@@ -37,7 +36,7 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
   private String title;
   private String comment;
 
-  public ExpandableSupport(@Nonnull Source source, Function<? super String, String> onShow, Function<? super String, String> onHide) {
+  public ExpandableSupport(Source source, Function<? super String, String> onShow, Function<? super String, String> onHide) {
     this.source = source;
     this.onShow = onShow != null ? onShow : Function.identity();
     this.onHide = onHide != null ? onHide : Function.identity();
@@ -51,14 +50,14 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
    * @param onShow a string converter from the source to the popup content
    * @return a specific content to create the popup
    */
-  @Nonnull
-  protected abstract Content prepare(@Nonnull Source source, @Nonnull Function<? super String, String> onShow);
+  
+  protected abstract Content prepare(Source source, Function<? super String, String> onShow);
 
   protected interface Content {
     /**
      * @return a component to show on the popup
      */
-    @Nonnull
+    
     JComponent getContentComponent();
 
     /**
@@ -71,7 +70,7 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
      *
      * @param onHide a string converter from the popup content to the source
      */
-    void cancel(@Nonnull Function<? super String, String> onHide);
+    void cancel(Function<? super String, String> onHide);
   }
 
   /**
@@ -159,18 +158,18 @@ public abstract class ExpandableSupport<Source extends JComponent> implements Ex
     popup.show(new RelativePoint(location));
   }
 
-  @Nonnull
+  
   public Extension createCollapseExtension() {
     return Extension.create(AllIcons.General.CollapseComponent, AllIcons.General.CollapseComponentHover, createTooltipText("Collapse", "CollapseExpandableComponent"), this::collapse);
   }
 
-  @Nonnull
+  
   public Extension createExpandExtension() {
     return Extension.create(AllIcons.General.ExpandComponent, AllIcons.General.ExpandComponentHover, createTooltipText("Expand", "ExpandExpandableComponent"), this::expand);
   }
 
-  @Nonnull
-  public static JLabel createLabel(@Nonnull Extension extension) {
+  
+  public static JLabel createLabel(Extension extension) {
     return new JLabel(TargetAWT.to(extension.getIcon(false))) {{
       setToolTipText(extension.getTooltip());
       setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

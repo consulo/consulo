@@ -24,8 +24,7 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     private volatile boolean myAllowDirt = true;
 
     // Don't reduce visibility rules here because this class is used in Upsource as well.
-    public FileStatusMapImpl(@Nonnull Project project) {
+    public FileStatusMapImpl(Project project) {
         myProject = project;
     }
 
@@ -59,7 +58,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
      */
     @Nullable
     // used in scala
-    public static TextRange getDirtyTextRange(@Nonnull Editor editor, int passId) {
+    public static TextRange getDirtyTextRange(Editor editor, int passId) {
         Document document = editor.getDocument();
 
         FileStatusMapImpl me = (FileStatusMapImpl) DaemonCodeAnalyzerInternal.getInstanceEx(editor.getProject()).getFileStatusMap();
@@ -72,7 +71,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @Override
-    public void setErrorFoundFlag(@Nonnull Project project, @Nonnull Document document, boolean errorFound) {
+    public void setErrorFoundFlag(Project project, Document document, boolean errorFound) {
         //GHP has found error. Flag is used by ExternalToolPass to decide whether to run or not
         synchronized (myDocumentToStatusMap) {
             FileStatus status = myDocumentToStatusMap.get(document);
@@ -88,7 +87,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @Override
-    public boolean wasErrorFound(@Nonnull Document document) {
+    public boolean wasErrorFound(Document document) {
         synchronized (myDocumentToStatusMap) {
             FileStatus status = myDocumentToStatusMap.get(document);
             return status != null && status.errorFound;
@@ -102,11 +101,11 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         private final IntObjectMap<RangeMarker> dirtyScopes = IntMaps.newIntObjectHashMap();
         private boolean errorFound;
 
-        private FileStatus(@Nonnull Project project) {
+        private FileStatus(Project project) {
             markWholeFileDirty(project);
         }
 
-        private void markWholeFileDirty(@Nonnull Project project) {
+        private void markWholeFileDirty(Project project) {
             setDirtyScope(Pass.UPDATE_ALL, WHOLE_FILE_DIRTY_MARKER);
             setDirtyScope(Pass.EXTERNAL_TOOLS, WHOLE_FILE_DIRTY_MARKER);
             setDirtyScope(Pass.LOCAL_INSPECTIONS, WHOLE_FILE_DIRTY_MARKER);
@@ -126,7 +125,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
             return true;
         }
 
-        private void combineScopesWith(@Nonnull TextRange scope, int fileLength, @Nonnull Document document) {
+        private void combineScopesWith(TextRange scope, int fileLength, Document document) {
             List<IntObjectMap.IntObjectEntry<RangeMarker>> rangeMarkers = new ArrayList<>(dirtyScopes.entrySet());
 
             for (IntObjectMap.IntObjectEntry<RangeMarker> entry : rangeMarkers) {
@@ -170,7 +169,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @Override
-    public void markAllFilesDirty(@Nonnull Object reason) {
+    public void markAllFilesDirty(Object reason) {
         assertAllowModifications();
         synchronized (myDocumentToStatusMap) {
             if (!myDocumentToStatusMap.isEmpty()) {
@@ -190,7 +189,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @Override
-    public void markFileUpToDate(@Nonnull Document document, int passId) {
+    public void markFileUpToDate(Document document, int passId) {
         synchronized (myDocumentToStatusMap) {
             FileStatus status = myDocumentToStatusMap.computeIfAbsent(document, __ -> new FileStatus(myProject));
             status.defensivelyMarked = false;
@@ -208,7 +207,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
      */
     @Override
     @Nullable
-    public TextRange getFileDirtyScope(@Nonnull Document document, int passId) {
+    public TextRange getFileDirtyScope(Document document, int passId) {
         synchronized (myDocumentToStatusMap) {
             PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
             if (!ProblemHighlightFilter.shouldHighlightFile(file)) {
@@ -231,7 +230,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @Override
-    public void markFileScopeDirtyDefensively(@Nonnull PsiFile file, @Nonnull Object reason) {
+    public void markFileScopeDirtyDefensively(PsiFile file, Object reason) {
         assertAllowModifications();
         log("Mark dirty file defensively: ", file.getName(), reason);
         // mark whole file dirty in case no subsequent PSI events will come, but file requires rehighlighting nevertheless
@@ -250,7 +249,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @Override
-    public void markFileScopeDirty(@Nonnull Document document, @Nonnull TextRange scope, int fileLength, @Nonnull Object reason) {
+    public void markFileScopeDirty(Document document, TextRange scope, int fileLength, Object reason) {
         assertAllowModifications();
         log("Mark scope dirty: ", scope, reason);
         synchronized (myDocumentToStatusMap) {
@@ -265,8 +264,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         }
     }
 
-    @Nonnull
-    private static RangeMarker combineScopes(RangeMarker old, @Nonnull TextRange scope, int textLength, @Nonnull Document document) {
+    private static RangeMarker combineScopes(RangeMarker old, TextRange scope, int textLength, Document document) {
         if (old == null) {
             if (scope.equalsToRange(0, textLength)) {
                 return WHOLE_FILE_DIRTY_MARKER;
@@ -290,7 +288,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
 
     @RequiredReadAction
     @Override
-    public boolean allDirtyScopesAreNull(@Nonnull Document document) {
+    public boolean allDirtyScopesAreNull(Document document) {
         PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(document);
         if (!ProblemHighlightFilter.shouldHighlightFile(file)) {
             return true;
@@ -303,7 +301,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
     }
 
     @TestOnly
-    public void assertAllDirtyScopesAreNull(@Nonnull Document document) {
+    public void assertAllDirtyScopesAreNull(Document document) {
         synchronized (myDocumentToStatusMap) {
             FileStatus status = myDocumentToStatusMap.get(document);
             assert status != null && !status.defensivelyMarked && status.wolfPassFinished && status.allDirtyScopesAreNull() : status;
@@ -320,7 +318,6 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
             throw new UnsupportedOperationException();
         }
 
-        @Nonnull
         @Override
         public Document getDocument() {
             throw new UnsupportedOperationException();
@@ -367,12 +364,12 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         }
 
         @Override
-        public <T> T getUserData(@Nonnull Key<T> key) {
+        public <T> T getUserData(Key<T> key) {
             return null;
         }
 
         @Override
-        public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+        public <T> void putUserData(Key<T> key, @Nullable T value) {
             throw new UnsupportedOperationException();
         }
 
@@ -389,7 +386,7 @@ public final class FileStatusMapImpl implements Disposable, FileStatusMap {
         return Maps.cacheOrGet(threads, Thread.currentThread(), threads.size());
     }
 
-    public static void log(@Nonnull Object... info) {
+    public static void log(Object... info) {
         if (LOG.isDebugEnabled()) {
             String s = StringUtil.repeatSymbol(' ', getThreadNum() * 4) + Arrays.asList(info) + "\n";
             LOG.debug(s);

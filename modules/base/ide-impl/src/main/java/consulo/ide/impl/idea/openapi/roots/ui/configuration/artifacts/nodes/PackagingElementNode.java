@@ -32,8 +32,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -47,9 +46,9 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
     private final CompositePackagingElementNode myParentNode;
 
     public PackagingElementNode(
-        @Nonnull E packagingElement, ArtifactEditorContext context, @Nullable CompositePackagingElementNode parentNode,
+        E packagingElement, ArtifactEditorContext context, @Nullable CompositePackagingElementNode parentNode,
         @Nullable CompositePackagingElement<?> parentElement,
-        @Nonnull Collection<PackagingNodeSource> nodeSources
+        Collection<PackagingNodeSource> nodeSources
     ) {
         super(context, parentNode, packagingElement.createPresentation(context));
         myParentNode = parentNode;
@@ -82,7 +81,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
         return myPackagingElements.size() == 1 ? myPackagingElements.get(0) : null;
     }
 
-    @Nonnull
+    
     @Override
     public Object[] getEqualityObjects() {
         return ArrayUtil.toObjectArray(myPackagingElements);
@@ -134,13 +133,13 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
         myNodeSources.putAll(element, nodeSource);
     }
 
-    @Nonnull
+    
     public Collection<PackagingNodeSource> getNodeSources() {
         return myNodeSources.values();
     }
 
-    @Nonnull
-    public Collection<PackagingNodeSource> getNodeSource(@Nonnull PackagingElement<?> element) {
+    
+    public Collection<PackagingNodeSource> getNodeSource(PackagingElement<?> element) {
         Collection<PackagingNodeSource> nodeSources = myNodeSources.get(element);
         return nodeSources != null ? nodeSources : Collections.<PackagingNodeSource>emptyList();
     }
@@ -150,7 +149,7 @@ public class PackagingElementNode<E extends PackagingElement<?>> extends Artifac
     }
 
     @Nullable
-    public CompositePackagingElementNode findCompositeChild(@Nonnull String name) {
+    public CompositePackagingElementNode findCompositeChild(String name) {
         SimpleNode[] children = getChildren();
         for (SimpleNode child : children) {
             if (child instanceof CompositePackagingElementNode) {

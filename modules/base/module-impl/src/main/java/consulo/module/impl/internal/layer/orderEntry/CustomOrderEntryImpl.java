@@ -19,8 +19,7 @@ import consulo.content.RootProvider;
 import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.*;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -31,7 +30,7 @@ import java.util.Objects;
 public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends LibraryOrderEntryBaseImpl implements CustomOrderEntry<M>, ClonableOrderEntry {
   private final M myModel;
 
-  public CustomOrderEntryImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer, @Nonnull M data, boolean init) {
+  public CustomOrderEntryImpl(OrderEntryType<?> provider, ModuleRootLayerImpl rootLayer, M data, boolean init) {
     super(provider, rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     myModel = data;
 
@@ -49,7 +48,7 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
   }
 
   @Override
-  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
+  public boolean isEquivalentTo(OrderEntry other) {
     if (other instanceof CustomOrderEntry otherCustomOrderEntry) {
       CustomOrderEntryTypeWrapper<?> type = (CustomOrderEntryTypeWrapper<?>)otherCustomOrderEntry.getType();
 
@@ -63,7 +62,7 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public M getModel() {
     return myModel;
@@ -75,7 +74,7 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     return myModel.getRootProvider();
   }
 
-  @Nonnull
+  
   @Override
   public String getPresentableName() {
     return myModel.getPresentableName();

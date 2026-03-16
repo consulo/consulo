@@ -18,8 +18,7 @@ package consulo.configurable;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -38,7 +37,7 @@ public interface Configurable extends UnnamedConfigurable {
 
     ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
-    @Nonnull
+    
     default String getId() {
         throw new AbstractMethodError("#getId() implementation required for class " + getClass());
     }
@@ -58,7 +57,7 @@ public interface Configurable extends UnnamedConfigurable {
      *
      * @return the visible name of the component.
      */
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 
     /**
@@ -73,7 +72,7 @@ public interface Configurable extends UnnamedConfigurable {
     }
 
     interface Composite {
-        @Nonnull
+        
         Configurable[] getConfigurables();
     }
 

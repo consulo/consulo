@@ -24,8 +24,7 @@ import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -39,21 +38,21 @@ public interface OrderRootTypeUIFactory {
         ExtensionPointCacheKey.groupBy("OrderRootTypeUIFactory", OrderRootTypeUIFactory::getOrderRootTypeId);
 
     @Nullable
-    static OrderRootTypeUIFactory forOrderType(@Nonnull OrderRootType orderRootType) {
+    static OrderRootTypeUIFactory forOrderType(OrderRootType orderRootType) {
         ExtensionPoint<OrderRootTypeUIFactory> point = Application.get().getExtensionPoint(OrderRootTypeUIFactory.class);
         Map<String, OrderRootTypeUIFactory> map = point.getOrBuildCache(KEY);
         return map.get(orderRootType.getId());
     }
 
-    @Nonnull
+    
     String getOrderRootTypeId();
 
-    @Nonnull
+    
     SdkPathEditor createPathEditor(Sdk sdk);
 
-    @Nonnull
+    
     Image getIcon();
 
-    @Nonnull
+    
     String getNodeText();
 }

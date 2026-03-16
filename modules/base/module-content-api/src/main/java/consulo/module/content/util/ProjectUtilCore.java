@@ -26,17 +26,16 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileProvider;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 //TODO [VISTALL] not good name for util
 public class ProjectUtilCore {
-    @Nonnull
+    
     @RequiredReadAction
     public static String appendModuleName(
-        @Nonnull VirtualFile file,
-        @Nonnull Project project,
-        @Nonnull String result,
+        VirtualFile file,
+        Project project,
+        String result,
         boolean moduleOnTheLeft
     ) {
         Module module = ModuleContentUtil.findModuleForFile(file, project);
@@ -51,7 +50,7 @@ public class ProjectUtilCore {
     }
 
     @Nullable
-    public static String decorateWithLibraryName(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull String result) {
+    public static String decorateWithLibraryName(VirtualFile file, Project project, String result) {
         if (file.getFileSystem() instanceof LocalFileProvider localFileProvider) {
             VirtualFile localFile = localFileProvider.getLocalVirtualFileFor(file);
             if (localFile != null) {
@@ -70,9 +69,9 @@ public class ProjectUtilCore {
 
     @RequiredReadAction
     public static String displayUrlRelativeToProject(
-        @Nonnull VirtualFile file,
-        @Nonnull String result,
-        @Nonnull Project project,
+        VirtualFile file,
+        String result,
+        Project project,
         boolean includeFilePath,
         boolean moduleOnTheLeft
     ) {

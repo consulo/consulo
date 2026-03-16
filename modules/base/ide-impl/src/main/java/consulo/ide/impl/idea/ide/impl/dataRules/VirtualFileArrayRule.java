@@ -33,14 +33,13 @@ import consulo.usage.UsageView;
 import consulo.usage.internal.UsageDataUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public final class VirtualFileArrayRule {
-    static VirtualFile[] getData(@Nonnull DataSnapshot dataProvider) {
+    static VirtualFile[] getData(DataSnapshot dataProvider) {
         // Try to detect multi-selection.
 
         Project project = dataProvider.get(PlatformDataKeys.PROJECT_CONTEXT);

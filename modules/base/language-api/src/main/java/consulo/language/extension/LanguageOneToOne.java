@@ -18,8 +18,7 @@ package consulo.language.extension;
 import consulo.component.extension.ExtensionWalker;
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -41,7 +40,7 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
 
     @Nullable
     @Override
-    public T get(@Nonnull Language language) {
+    public T get(Language language) {
       T extension = myExtensions.get(language);
       if (extension != null) {
         return extension;
@@ -59,12 +58,12 @@ public final class LanguageOneToOne<E extends LanguageExtension> implements Func
     }
   }
 
-  @Nonnull
+  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build() {
     return build(null);
   }
 
-  @Nonnull
+  
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<E1>> build(@Nullable E1 defaultImpl) {
     return new LanguageOneToOne<>(defaultImpl);
   }

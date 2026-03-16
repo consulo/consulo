@@ -37,8 +37,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,10 +51,9 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
     public static final Key<InlineVariablesInfo> DEBUG_VARIABLES = Key.create("debug.variables");
     public static final Key<Object2LongMap<VirtualFile>> DEBUG_VARIABLES_TIMESTAMPS = Key.create("debug.variables.timestamps");
     private final JPanel myComponent;
-    @Nonnull
     protected final XDebugSessionImpl mySession;
 
-    public XVariablesView(@Nonnull XDebugSessionImpl session) {
+    public XVariablesView(XDebugSessionImpl session) {
         super(session.getProject(), session.getDebugProcess().getEditorsProvider(), session.getValueMarkers());
         mySession = session;
         myComponent = new BorderLayoutPanel();
@@ -75,7 +73,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
         return mySession;
     }
 
-    protected void beforeTreeBuild(@Nonnull SessionEvent event) {
+    protected void beforeTreeBuild(SessionEvent event) {
     }
 
     @Nullable
@@ -89,7 +87,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
     }
 
     @Override
-    public void processSessionEvent(@Nonnull SessionEvent event, @Nonnull XDebugSession session) {
+    public void processSessionEvent(SessionEvent event, XDebugSession session) {
         if (ApplicationManager.getApplication().isDispatchThread()) { // mark nodes obsolete asap
             getTree().markNodesObsolete();
         }
@@ -155,7 +153,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         VirtualFile file = getCurrentFile();
         if (file != null) {
             sink.set(VirtualFile.KEY, file);
@@ -167,7 +165,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
         private final Object2LongMap<VirtualFile> myTimestamps = new Object2LongOpenHashMap<>();
 
         @Nullable
-        public synchronized List<XValueNodeImpl> get(@Nonnull VirtualFile file, int line, long currentTimestamp) {
+        public synchronized List<XValueNodeImpl> get(VirtualFile file, int line, long currentTimestamp) {
             long timestamp = myTimestamps.getOrDefault(file, -1);
             if (timestamp == -1 || timestamp < currentTimestamp) {
                 return null;
@@ -179,7 +177,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
             return ContainerUtil.map(entries, entry -> entry.myNode);
         }
 
-        public synchronized void put(@Nonnull VirtualFile file, @Nonnull XSourcePosition position, @Nonnull XValueNodeImpl node, long timestamp) {
+        public synchronized void put(VirtualFile file, XSourcePosition position, XValueNodeImpl node, long timestamp) {
             myTimestamps.put(file, timestamp);
             Pair<VirtualFile, Integer> key = Pair.create(file, position.getLine());
             myData.computeIfAbsent(key, k -> new TreeSet<>()).add(new Entry(position.getOffset(), node));
@@ -189,7 +187,7 @@ public class XVariablesView extends XVariablesViewBase implements UiDataProvider
             private final long myOffset;
             private final XValueNodeImpl myNode;
 
-            public Entry(long offset, @Nonnull XValueNodeImpl node) {
+            public Entry(long offset, XValueNodeImpl node) {
                 myOffset = offset;
                 myNode = node;
             }

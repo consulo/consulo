@@ -2,7 +2,6 @@
 package consulo.versionControlSystem.impl.internal.util;
 
 import consulo.versionControlSystem.FilePath;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -13,11 +12,11 @@ public class RecursiveFilePathSet {
     myMapping = new FilePathMapping<>(caseSensitive);
   }
 
-  public void add(@Nonnull FilePath filePath) {
+  public void add(FilePath filePath) {
     myMapping.add(filePath.getPath(), filePath);
   }
 
-  public void addAll(@Nonnull Collection<? extends FilePath> filePath) {
+  public void addAll(Collection<? extends FilePath> filePath) {
     for (FilePath path : filePath) {
       add(path);
     }
@@ -27,7 +26,7 @@ public class RecursiveFilePathSet {
     return myMapping.values().isEmpty();
   }
 
-  public void remove(@Nonnull FilePath filePath) {
+  public void remove(FilePath filePath) {
     myMapping.remove(filePath.getPath());
   }
 
@@ -35,15 +34,15 @@ public class RecursiveFilePathSet {
     myMapping.clear();
   }
 
-  public boolean contains(@Nonnull FilePath filePath) {
+  public boolean contains(FilePath filePath) {
     return myMapping.containsKey(filePath.getPath());
   }
 
-  public boolean hasAncestor(@Nonnull FilePath filePath) {
+  public boolean hasAncestor(FilePath filePath) {
     return myMapping.getMappingFor(filePath.getPath()) != null;
   }
 
-  @Nonnull
+  
   public Collection<FilePath> filePaths() {
     return myMapping.values();
   }

@@ -21,14 +21,13 @@ import consulo.language.psi.PsiManager;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
-import jakarta.annotation.Nonnull;
 
 public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T, P> {
     private final ParameterizedCachedValueProvider<T, P> myProvider;
 
     PsiParameterizedCachedValue(
-        @Nonnull PsiManager manager,
-        @Nonnull ParameterizedCachedValueProvider<T, P> provider,
+        PsiManager manager,
+        ParameterizedCachedValueProvider<T, P> provider,
         boolean trackValue,
         CachedValuesFactory factory
     ) {
@@ -41,7 +40,7 @@ public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> impleme
         return getValueWithLock(param);
     }
 
-    @Nonnull
+    
     @Override
     public ParameterizedCachedValueProvider<T, P> getValueProvider() {
         return myProvider;

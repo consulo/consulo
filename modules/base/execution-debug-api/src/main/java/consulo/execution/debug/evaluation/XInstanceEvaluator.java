@@ -17,7 +17,6 @@ package consulo.execution.debug.evaluation;
 
 import consulo.execution.debug.frame.XStackFrame;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Subclass to allow to recalculate instance value in a different context
@@ -29,5 +28,5 @@ public interface XInstanceEvaluator {
    * Recalculates instance value in the context of the provided stack frame
    * @see XDebuggerEvaluator
    */
-  void evaluate(@Nonnull XDebuggerEvaluator.XEvaluationCallback callback, @Nonnull XStackFrame frame);
+  void evaluate(XDebuggerEvaluator.XEvaluationCallback callback, XStackFrame frame);
 }

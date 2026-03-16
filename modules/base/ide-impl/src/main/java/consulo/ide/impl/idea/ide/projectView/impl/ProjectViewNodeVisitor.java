@@ -7,8 +7,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.AbstractTreeNodeVisitor;
 import consulo.project.ui.view.tree.ProjectViewNode;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.function.Predicate;
@@ -19,7 +18,7 @@ import static consulo.language.psi.SmartPointerManager.createPointer;
 class ProjectViewNodeVisitor extends AbstractTreeNodeVisitor<PsiElement> {
   private final VirtualFile file;
 
-  ProjectViewNodeVisitor(@Nonnull PsiElement element, @Nullable VirtualFile file, @Nullable Predicate<? super TreePath> predicate) {
+  ProjectViewNodeVisitor(PsiElement element, @Nullable VirtualFile file, @Nullable Predicate<? super TreePath> predicate) {
     super(createPointer(element)::getElement, predicate);
     this.file = file;
     LOG.debug("create visitor for element: " + element);
@@ -34,26 +33,26 @@ class ProjectViewNodeVisitor extends AbstractTreeNodeVisitor<PsiElement> {
   }
 
   @Override
-  protected boolean contains(@Nonnull AbstractTreeNode node, @Nonnull PsiElement element) {
+  protected boolean contains(AbstractTreeNode node, PsiElement element) {
     return node instanceof ProjectViewNode && contains((ProjectViewNode)node, element) || super.contains(node, element);
   }
 
-  private boolean contains(@Nonnull ProjectViewNode node, @Nonnull PsiElement element) {
+  private boolean contains(ProjectViewNode node, PsiElement element) {
     return contains(node, file) || contains(node, getVirtualFile(element));
   }
 
-  private static boolean contains(@Nonnull ProjectViewNode node, VirtualFile file) {
+  private static boolean contains(ProjectViewNode node, VirtualFile file) {
     return file != null && node.contains(file);
   }
 
   @Override
-  protected PsiElement getContent(@Nonnull AbstractTreeNode node) {
+  protected PsiElement getContent(AbstractTreeNode node) {
     Object value = node.getValue();
     return value instanceof PsiElement ? (PsiElement)value : null;
   }
 
   @Override
-  protected boolean isAncestor(@Nonnull PsiElement content, @Nonnull PsiElement element) {
+  protected boolean isAncestor(PsiElement content, PsiElement element) {
     return PsiTreeUtil.isAncestor(content, element, true);
   }
 }

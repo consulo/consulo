@@ -25,8 +25,7 @@ import consulo.language.version.LanguageVersion;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A token type which represents a fragment of text (possibly in a different language)
@@ -40,15 +39,15 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
 
   public static final Key<Language> LANGUAGE_KEY = Key.create("LANGUAGE_KEY");
 
-  public ILazyParseableElementType(@Nonnull String debugName) {
+  public ILazyParseableElementType(String debugName) {
     this(debugName, null);
   }
 
-  public ILazyParseableElementType(@Nonnull String debugName, @Nullable Language language) {
+  public ILazyParseableElementType(String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
-  public ILazyParseableElementType(@Nonnull String debugName, @Nullable Language language, boolean register) {
+  public ILazyParseableElementType(String debugName, @Nullable Language language, boolean register) {
     super(debugName, language, register);
   }
 
@@ -65,7 +64,7 @@ public class ILazyParseableElementType extends IElementType implements ILazyPars
     return doParseContents(chameleon, parentElement);
   }
 
-  protected ASTNode doParseContents(@Nonnull ASTNode chameleon, @Nonnull PsiElement psi) {
+  protected ASTNode doParseContents(ASTNode chameleon, PsiElement psi) {
     Project project = psi.getProject();
     Language languageForParser = getLanguageForParser(psi);
     LanguageVersion tempLanguageVersion = chameleon.getUserData(LanguageVersion.KEY);

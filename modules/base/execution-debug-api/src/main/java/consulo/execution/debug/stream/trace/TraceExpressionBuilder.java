@@ -4,19 +4,17 @@ package consulo.execution.debug.stream.trace;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.stream.wrapper.StreamChain;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface TraceExpressionBuilder {
-  @NonNls
-  @Nonnull
-  String createTraceExpression(@Nonnull StreamChain chain);
+  
+  
+  String createTraceExpression(StreamChain chain);
 
-  @Nonnull
-  default XExpression createXExpression(@Nonnull StreamChain chain, @Nonnull String expressionText) {
+  
+  default XExpression createXExpression(StreamChain chain, String expressionText) {
     return XExpression.fromText(expressionText, EvaluationMode.CODE_FRAGMENT);
   }
 }

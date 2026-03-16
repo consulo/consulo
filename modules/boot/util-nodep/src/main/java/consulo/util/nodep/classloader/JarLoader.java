@@ -3,11 +3,11 @@ package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.ArrayUtilRt;
 import consulo.util.nodep.LoggerRt;
-import consulo.util.nodep.Pair;
 import consulo.util.nodep.io.FileUtilRt;
 import consulo.util.nodep.io.UnsyncByteArrayInputStream;
 import consulo.util.nodep.reference.SoftReference;
 import consulo.util.nodep.text.StringUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,35 +22,40 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static consulo.util.nodep.Pair.pair;
-
 class JarLoader extends Loader {
-    private static final List<Pair<Resource.Attribute, Attributes.Name>> PACKAGE_FIELDS =
-        Arrays.asList(pair(Resource.Attribute.SPEC_TITLE, Attributes.Name.SPECIFICATION_TITLE),
-            pair(Resource.Attribute.SPEC_VERSION, Attributes.Name.SPECIFICATION_VERSION),
-            pair(Resource.Attribute.SPEC_VENDOR, Attributes.Name.SPECIFICATION_VENDOR),
-            pair(Resource.Attribute.IMPL_TITLE, Attributes.Name.IMPLEMENTATION_TITLE),
-            pair(Resource.Attribute.IMPL_VERSION, Attributes.Name.IMPLEMENTATION_VERSION),
-            pair(Resource.Attribute.IMPL_VENDOR, Attributes.Name.IMPLEMENTATION_VENDOR));
+    private static final Map<Resource.Attribute, Attributes.Name> PACKAGE_FIELDS = Map.of(
+        Resource.Attribute.SPEC_TITLE, Attributes.Name.SPECIFICATION_TITLE,
+        Resource.Attribute.SPEC_VERSION, Attributes.Name.SPECIFICATION_VERSION,
+        Resource.Attribute.SPEC_VENDOR, Attributes.Name.SPECIFICATION_VENDOR,
+        Resource.Attribute.IMPL_TITLE, Attributes.Name.IMPLEMENTATION_TITLE,
+        Resource.Attribute.IMPL_VERSION, Attributes.Name.IMPLEMENTATION_VERSION,
+        Resource.Attribute.IMPL_VENDOR, Attributes.Name.IMPLEMENTATION_VENDOR
+    );
 
     private final String myFilePath;
     private final ClassPath myConfiguration;
     private final URL myUrl;
-    private volatile SoftReference<JarFile> myZipFileSoftReference; // Used only when myConfiguration.myCanLockJars==true
-    private volatile Map<Resource.Attribute, String> myAttributes;
-    private volatile String myClassPathManifestAttribute;
+    @Nullable
+    private volatile SoftReference<JarFile> myZipFileSoftReference = null; // Used only when myConfiguration.myCanLockJars==true
+    private volatile Map<Resource.@Nullable Attribute, String> myAttributes = null;
+    @Nullable
+    private volatile String myClassPathManifestAttribute = null;
     private static final String NULL_STRING = "<null>";
 
+    @Nullable
     private JarIndex myJarIndex;
-    private PreloadedJar myPreloadedJar;
+    @Nullable
+    private PreloadedJar myPreloadedJar = null;
     private final Object myJarLock = new Object();
 
+    @Nullable
     private final Set<String> myFullJarIndex;
-    private volatile Set<String> myFullPackageIndex;
+    @Nullable
+    private volatile Set<String> myFullPackageIndex = null;
 
     private boolean myClosed;
 
-    JarLoader(URL url, int index, ClassPath configuration, Set<String> fullJarIndex) throws IOException {
+    JarLoader(URL url, int index, ClassPath configuration, @Nullable Set<String> fullJarIndex) throws IOException {
         super(new URL("jar", "", -1, url + "!/"), index);
         myFullJarIndex = fullJarIndex;
      
@@ -115,6 +120,7 @@ class JarLoader extends Loader {
         return true;
     }
 
+    @Nullable
     protected Set<String> fullPackageIndex() {
         if (myFullJarIndex == null) {
             return null;
@@ -140,10 +146,12 @@ class JarLoader extends Loader {
         return result;
     }
 
-    protected MemoryResource createMemoryResource(URL baseUrl,
-                                                  ZipFile zipFile,
-                                                  ZipEntry entry,
-                                                  Map<Resource.Attribute, String> attributes) throws IOException {
+    protected MemoryResource createMemoryResource(
+        URL baseUrl,
+        ZipFile zipFile,
+        ZipEntry entry,
+        Map<Resource.Attribute, String> attributes
+    ) throws IOException {
         String name = entry.getName();
         URL url = new URL(baseUrl, name);
 
@@ -163,10 +171,10 @@ class JarLoader extends Loader {
 
     Map<Resource.Attribute, String> getAttributes() {
         loadManifestAttributes();
-        return myAttributes;
+        return Objects.requireNonNull(myAttributes);
     }
 
-
+    @Nullable
     String getClassPathManifestAttribute() {
         loadManifestAttributes();
         String manifestAttribute = myClassPathManifestAttribute;
@@ -182,20 +190,19 @@ class JarLoader extends Loader {
         }
     }
 
-
-    private static Map<Resource.Attribute, String> getAttributes(Attributes attributes) {
+    private static Map<Resource.@Nullable Attribute, String> getAttributes(@Nullable Attributes attributes) {
         if (attributes == null) {
             return null;
         }
         Map<Resource.Attribute, String> map = null;
 
-        for (Pair<Resource.Attribute, Attributes.Name> p : PACKAGE_FIELDS) {
-            String value = attributes.getValue(p.second);
+        for (Map.Entry<Resource.Attribute, Attributes.Name> entry : PACKAGE_FIELDS.entrySet()) {
+            String value = attributes.getValue(entry.getValue());
             if (value != null) {
                 if (map == null) {
-                    map = new EnumMap<Resource.Attribute, String>(Resource.Attribute.class);
+                    map = new EnumMap<>(Resource.Attribute.class);
                 }
-                map.put(p.first, value);
+                map.put(entry.getKey(), value);
             }
         }
 
@@ -238,8 +245,8 @@ class JarLoader extends Loader {
         }
     }
 
-
-    protected Attributes loadManifestAttributes(ZipFile zipFile, InputStream stream) {
+    @Nullable
+    protected Attributes loadManifestAttributes(ZipFile zipFile, @Nullable InputStream stream) {
         if (stream == null) {
             return null;
         }
@@ -292,7 +299,8 @@ class JarLoader extends Loader {
     }
 
     private final AtomicInteger myNumberOfRequests = new AtomicInteger();
-    private volatile IntHashSet myPackageHashesInside;
+    @Nullable
+    private volatile IntHashSet myPackageHashesInside = null;
 
     private IntHashSet buildPackageHashes() {
         try {
@@ -318,6 +326,7 @@ class JarLoader extends Loader {
         }
     }
 
+    @Nullable
     @Override
     Resource getResource(String name) {
         if (myConfiguration.myLazyClassloadingCaches) {
@@ -348,6 +357,7 @@ class JarLoader extends Loader {
         return getJarResource(name);
     }
 
+    @Nullable
     private Resource getJarResource(String name) {
         try {
             JarFile zipFile = getJarFile();
@@ -408,6 +418,7 @@ class JarLoader extends Loader {
             }
         }
 
+        @Nullable
         @Override
         public String getValue(Attribute key) {
             loadManifestAttributes();

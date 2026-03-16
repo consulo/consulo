@@ -17,8 +17,7 @@ package consulo.component.internal.inject;
 
 import consulo.component.bind.InjectingBinding;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -46,7 +45,7 @@ public class InjectingBindingHolder {
     myBindings.computeIfAbsent(binding.getApiClassName(), s -> new LinkedList<>()).add(binding);
   }
 
-  @Nonnull
+  
   public Map<String, List<InjectingBinding>> getBindings() {
     return Collections.unmodifiableMap(myBindings);
   }

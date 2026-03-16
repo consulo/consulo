@@ -17,8 +17,7 @@ package consulo.language.psi;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -40,14 +39,14 @@ public final class PsiElementRef<T extends PsiElement> {
     return myColleague.getPsiElement();
   }
 
-  @Nonnull
+  
   public final T ensurePsiElementExists() {
     PsiRefColleague.Real<T> realColleague = myColleague.makeReal();
     myColleague = realColleague;
     return realColleague.getPsiElement();
   }
 
-  @Nonnull
+  
   public final PsiElement getRoot() {
     return myColleague.getRoot();
   }
@@ -66,7 +65,7 @@ public final class PsiElementRef<T extends PsiElement> {
     return myColleague.isValid();
   }
 
-  public static <T extends PsiElement> PsiElementRef<T> real(@Nonnull T element) {
+  public static <T extends PsiElement> PsiElementRef<T> real(T element) {
     return new PsiElementRef<T>(new PsiRefColleague.Real<T>(element));
   }
 
@@ -85,22 +84,22 @@ public final class PsiElementRef<T extends PsiElement> {
     @Nullable
     T getPsiElement();
 
-    @Nonnull
+    
     Real<T> makeReal();
 
-    @Nonnull
+    
     PsiElement getRoot();
 
     class Real<T extends PsiElement> implements PsiRefColleague<T> {
       private final T myElement;
 
-      public Real(@Nonnull T element) {
+      public Real(T element) {
         LOG.assertTrue(element.isValid());
         myElement = element;
       }
 
       @Override
-      @Nonnull
+      
       public T getPsiElement() {
         return myElement;
       }
@@ -128,13 +127,13 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      @Nonnull
+      
       public Real<T> makeReal() {
         return this;
       }
 
       @Override
-      @Nonnull
+      
       public PsiElement getRoot() {
         return myElement;
       }
@@ -180,13 +179,13 @@ public final class PsiElementRef<T extends PsiElement> {
       }
 
       @Override
-      @Nonnull
+      
       public Real<Child> makeReal() {
         return new Real<Child>(myCreator.createChild(myParent.ensurePsiElementExists()));
       }
 
       @Override
-      @Nonnull
+      
       public PsiElement getRoot() {
         return myParent.getRoot();
       }

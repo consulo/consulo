@@ -21,8 +21,7 @@ import consulo.localHistory.impl.internal.revision.CurrentRevision;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.tree.RootEntry;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class RevisionsCollector extends ChangeSetsProcessor {
 
   private final List<Revision> myResult = new ArrayList<Revision>();
 
-  public RevisionsCollector(LocalHistoryFacade facade, RootEntry rootEntry, @Nonnull String path, String projectId, @Nullable String pattern) {
+  public RevisionsCollector(LocalHistoryFacade facade, RootEntry rootEntry, String path, String projectId, @Nullable String pattern) {
     super(path);
     myFacade = facade;
     myRoot = rootEntry;

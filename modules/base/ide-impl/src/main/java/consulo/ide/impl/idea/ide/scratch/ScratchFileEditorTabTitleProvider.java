@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class ScratchFileEditorTabTitleProvider implements EditorTabTitleProvider {
@@ -37,7 +36,7 @@ public class ScratchFileEditorTabTitleProvider implements EditorTabTitleProvider
 
   @Nullable
   @Override
-  public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public String getEditorTabTitle(Project project, VirtualFile file) {
     RootType rootType = myScratchFileService.getRootType(file);
     if (rootType == null) return null;
     return rootType.substituteName(project, file);

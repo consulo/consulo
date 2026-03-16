@@ -17,7 +17,6 @@ package consulo.versionControlSystem.merge;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -35,6 +34,6 @@ public interface MergeProvider2 extends MergeProvider {
    * @param files the list of files to be merged.
    * @return the merge session instance.
    */
-  @Nonnull
+  
   MergeSession createMergeSession(List<VirtualFile> files);
 }

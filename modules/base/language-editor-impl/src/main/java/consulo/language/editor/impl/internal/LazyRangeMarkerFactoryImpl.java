@@ -30,8 +30,7 @@ import consulo.util.collection.WeakList;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -45,9 +44,9 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     private static final Key<WeakList<LazyMarker>> LAZY_MARKERS_KEY = Key.create("LAZY_MARKERS_KEY");
 
     @Inject
-    public LazyRangeMarkerFactoryImpl(@Nonnull Project project,
-                                      @Nonnull FileDocumentManager fileDocumentManager,
-                                      @Nonnull EditorFactory editorFactory) {
+    public LazyRangeMarkerFactoryImpl(Project project,
+                                      FileDocumentManager fileDocumentManager,
+                                      EditorFactory editorFactory) {
         myProject = project;
 
         editorFactory.getEventMulticaster().addDocumentListener(new DocumentAdapter() {
@@ -61,7 +60,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
                 transformRangeMarkers(e);
             }
 
-            private void transformRangeMarkers(@Nonnull DocumentEvent e) {
+            private void transformRangeMarkers(DocumentEvent e) {
                 Document document = e.getDocument();
                 VirtualFile file = fileDocumentManager.getFile(document);
                 if (file == null || myProject.isDisposed()) {
@@ -83,11 +82,11 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         }, project);
     }
 
-    static WeakList<LazyMarker> getMarkers(@Nonnull VirtualFile file) {
+    static WeakList<LazyMarker> getMarkers(VirtualFile file) {
         return file.getUserData(LazyRangeMarkerFactoryImpl.LAZY_MARKERS_KEY);
     }
 
-    private static void addToLazyMarkersList(@Nonnull LazyMarker marker, @Nonnull VirtualFile file) {
+    private static void addToLazyMarkersList(LazyMarker marker, VirtualFile file) {
         WeakList<LazyMarker> markers = getMarkers(file);
 
         if (markers == null) {
@@ -96,7 +95,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         markers.add(marker);
     }
 
-    private static void removeFromLazyMarkersList(@Nonnull LazyMarker marker, @Nonnull VirtualFile file) {
+    private static void removeFromLazyMarkersList(LazyMarker marker, VirtualFile file) {
         WeakList<LazyMarker> markers = getMarkers(file);
 
         if (markers != null) {
@@ -105,8 +104,8 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     }
 
     @Override
-    @Nonnull
-    public RangeMarker createRangeMarker(@Nonnull VirtualFile file, int offset) {
+    
+    public RangeMarker createRangeMarker(VirtualFile file, int offset) {
         return ApplicationManager.getApplication().runReadAction((Supplier<RangeMarker>) () -> {
             // even for already loaded document do not create range marker yet - wait until it really needed when e.g. user clicked to jump to OpenFileDescriptor
             LazyMarker marker = new OffsetLazyMarker(file, offset);
@@ -116,8 +115,8 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     }
 
     @Override
-    @Nonnull
-    public RangeMarker createRangeMarker(@Nonnull VirtualFile file, int line, int column, boolean persistent) {
+    
+    public RangeMarker createRangeMarker(VirtualFile file, int line, int column, boolean persistent) {
         return ApplicationManager.getApplication().runReadAction((Supplier<RangeMarker>) () -> {
             Document document = FileDocumentManager.getInstance().getCachedDocument(file);
             if (document != null) {
@@ -137,7 +136,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         protected final VirtualFile myFile;
         protected final int myInitialOffset;
 
-        private LazyMarker(@Nonnull VirtualFile file, int offset) {
+        private LazyMarker(VirtualFile file, int offset) {
             myFile = file;
             myInitialOffset = offset;
         }
@@ -146,7 +145,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
             return myDelegate != null;
         }
 
-        @Nonnull
+        
         public VirtualFile getFile() {
             return myFile;
         }
@@ -165,10 +164,10 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         }
 
         @Nullable
-        protected abstract RangeMarker createDelegate(@Nonnull VirtualFile file, @Nonnull Document document);
+        protected abstract RangeMarker createDelegate(VirtualFile file, Document document);
 
         @Override
-        @Nonnull
+        
         public Document getDocument() {
             RangeMarker delegate = getOrCreateDelegate();
             if (delegate == null) {
@@ -234,7 +233,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     }
 
     private static class OffsetLazyMarker extends LazyMarker {
-        private OffsetLazyMarker(@Nonnull VirtualFile file, int offset) {
+        private OffsetLazyMarker(VirtualFile file, int offset) {
             super(file, offset);
         }
 
@@ -255,8 +254,8 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         }
 
         @Override
-        @Nonnull
-        public RangeMarker createDelegate(@Nonnull VirtualFile file, @Nonnull Document document) {
+        
+        public RangeMarker createDelegate(VirtualFile file, Document document) {
             int offset = Math.min(myInitialOffset, document.getTextLength());
             return document.createRangeMarker(offset, offset);
         }
@@ -267,7 +266,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         private final int myColumn;
         private final int myTabSize;
 
-        private LineColumnLazyMarker(@Nonnull Project project, @Nonnull VirtualFile file, int line, int column) {
+        private LineColumnLazyMarker(Project project, VirtualFile file, int line, int column) {
             super(file, -1);
             myLine = line;
             myColumn = column;
@@ -281,7 +280,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
 
         @Override
         @Nullable
-        public RangeMarker createDelegate(@Nonnull VirtualFile file, @Nonnull Document document) {
+        public RangeMarker createDelegate(VirtualFile file, Document document) {
             if (document.getTextLength() == 0 && !(myLine == 0 && myColumn == 0)) {
                 return null;
             }
@@ -314,7 +313,7 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
         }
     }
 
-    private static int calculateOffset(@Nonnull Document document,
+    private static int calculateOffset(Document document,
                                        int line,
                                        int column,
                                        int tabSize) {

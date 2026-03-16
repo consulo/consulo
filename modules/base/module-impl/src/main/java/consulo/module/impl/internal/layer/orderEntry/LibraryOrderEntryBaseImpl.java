@@ -28,8 +28,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,13 +40,13 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     private static final Logger LOG = Logger.getInstance(LibraryOrderEntryBaseImpl.class);
 
     protected final ProjectRootManagerImpl myProjectRootManagerImpl;
-    @Nonnull
+    
     protected DependencyScope myScope = DependencyScope.COMPILE;
     @Nullable
     private RootProvider myCurrentlySubscribedRootProvider = null;
 
-    public LibraryOrderEntryBaseImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootModel,
-                                     @Nonnull ProjectRootManagerImpl instanceImpl) {
+    public LibraryOrderEntryBaseImpl(OrderEntryType<?> provider, ModuleRootLayerImpl rootModel,
+                                     ProjectRootManagerImpl instanceImpl) {
         super(provider, rootModel);
         myProjectRootManagerImpl = instanceImpl;
     }
@@ -63,15 +62,15 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     }
 
     @Override
-    @Nonnull
-    public VirtualFile[] getFiles(@Nonnull OrderRootType type) {
+    
+    public VirtualFile[] getFiles(OrderRootType type) {
         RootProvider rootProvider = getRootProvider();
         return rootProvider != null ? rootProvider.getFiles(type) : VirtualFile.EMPTY_ARRAY;
     }
 
     @Override
-    @Nonnull
-    public String[] getUrls(@Nonnull OrderRootType type) {
+    
+    public String[] getUrls(OrderRootType type) {
         LOG.assertTrue(!getRootModel().getModule().isDisposed());
         RootProvider rootProvider = getRootProvider();
         return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
@@ -82,13 +81,13 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
     protected abstract RootProvider getRootProvider();
 
     @Override
-    @Nonnull
+    
     public final Module getOwnerModule() {
         return getRootModel().getModule();
     }
 
     @Override
-    public boolean isEquivalentTo(@Nonnull OrderEntry other) {
+    public boolean isEquivalentTo(OrderEntry other) {
         LOG.assertTrue(this instanceof LibraryOrderEntry);
 
         LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry) this;

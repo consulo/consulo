@@ -36,8 +36,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.io.FileUtil;
 import consulo.util.jna.JnaLoader;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.*;
@@ -71,7 +70,7 @@ public class FileManagerProxy {
     };
 
     private static final NotNullLazyValue<String> fileManagerName = new AtomicNotNullLazyValue<>() {
-        @Nonnull
+        
         @Override
         protected String compute() {
             if (Platform.current().os().isMac()) {
@@ -118,7 +117,7 @@ public class FileManagerProxy {
             ':' + StringUtil.defaultIfEmpty(dataDirs, "/usr/local/share:/usr/share");
     }
 
-    @Nonnull
+    
     public static String getFileManagerName() {
         return fileManagerName.getValue();
     }
@@ -129,7 +128,7 @@ public class FileManagerProxy {
      *
      * @param file a file or directory to show and highlight in a file manager.
      */
-    public static void openFile(@Nonnull File file, @Nonnull UIAccess uiAccess) {
+    public static void openFile(File file, UIAccess uiAccess) {
         if (!file.exists()) {
             return;
         }
@@ -151,7 +150,7 @@ public class FileManagerProxy {
      *
      * @param directory a directory to show in a file manager.
      */
-    public static void openDirectory(@Nonnull File directory, @Nonnull UIAccess uiAccess) {
+    public static void openDirectory(File directory, UIAccess uiAccess) {
         if (!directory.isDirectory()) {
             return;
         }
@@ -163,7 +162,7 @@ public class FileManagerProxy {
         }
     }
 
-    private static void doOpen(@Nonnull File _dir, @Nullable File _toSelect, @Nonnull UIAccess uiAccess) throws IOException, ExecutionException {
+    private static void doOpen(File _dir, @Nullable File _toSelect, UIAccess uiAccess) throws IOException, ExecutionException {
         String dir = FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_dir.getPath()));
         String toSelect = _toSelect != null ? FileUtil.toSystemDependentName(FileUtil.toCanonicalPath(_toSelect.getPath())) : null;
 

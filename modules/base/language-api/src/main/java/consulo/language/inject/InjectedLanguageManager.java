@@ -30,44 +30,43 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface InjectedLanguageManager {
-    @Nonnull
+   
     static InjectedLanguageManager getInstance(Project project) {
         return InjectedLanguageManagerHolder.LAZY_INJECT.apply(project);
     }
 
     Key<Boolean> FRANKENSTEIN_INJECTION = Key.create("FRANKENSTEIN_INJECTION");
 
-    PsiLanguageInjectionHost getInjectionHost(@Nonnull FileViewProvider injectedProvider);
+    PsiLanguageInjectionHost getInjectionHost(FileViewProvider injectedProvider);
 
     @Nullable
-    PsiLanguageInjectionHost getInjectionHost(@Nonnull PsiElement injectedElement);
+    PsiLanguageInjectionHost getInjectionHost(PsiElement injectedElement);
 
-    @Nonnull
-    TextRange injectedToHost(@Nonnull PsiElement injectedContext, @Nonnull TextRange injectedTextRange);
+   
+    TextRange injectedToHost(PsiElement injectedContext, TextRange injectedTextRange);
 
-    int injectedToHost(@Nonnull PsiElement injectedContext, int injectedOffset);
+    int injectedToHost(PsiElement injectedContext, int injectedOffset);
 
-    int injectedToHost(@Nonnull PsiElement injectedContext, int injectedOffset, boolean minHostOffset);
+    int injectedToHost(PsiElement injectedContext, int injectedOffset, boolean minHostOffset);
 
     @Nullable
     String getUnescapedLeafText(PsiElement element, boolean strict);
 
-    @Nonnull
-    String getUnescapedText(@Nonnull PsiElement injectedNode);
+   
+    String getUnescapedText(PsiElement injectedNode);
 
-    @Nonnull
-    List<TextRange> intersectWithAllEditableFragments(@Nonnull PsiFile injectedPsi, @Nonnull TextRange rangeToEdit);
+   
+    List<TextRange> intersectWithAllEditableFragments(PsiFile injectedPsi, TextRange rangeToEdit);
 
-    boolean isInjectedFragment(@Nonnull PsiFile injectedFile);
+    boolean isInjectedFragment(PsiFile injectedFile);
 
-    PsiFile findInjectedPsiNoCommit(@Nonnull PsiFile host, int offset);
+    PsiFile findInjectedPsiNoCommit(PsiFile host, int offset);
 
     /**
      * Finds PSI element in injected fragment (if any) at the given offset in the host file.<p/>
@@ -76,61 +75,59 @@ public interface InjectedLanguageManager {
      * Invocation of this method on uncommitted {@code hostFile} can lead to unexpected results, including throwing an exception!
      */
     @Nullable
-    PsiElement findInjectedElementAt(@Nonnull PsiFile hostFile, int hostDocumentOffset);
+    PsiElement findInjectedElementAt(PsiFile hostFile, int hostDocumentOffset);
 
     /**
      * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
      */
     @Nullable
-    PsiElement findElementAtNoCommit(@Nonnull PsiFile file, int offset);
+    PsiElement findElementAtNoCommit(PsiFile file, int offset);
 
     @Nullable
-    List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(@Nonnull PsiElement host);
+    List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(PsiElement host);
 
-    void dropFileCaches(@Nonnull PsiFile file);
+    void dropFileCaches(PsiFile file);
 
-    PsiFile getTopLevelFile(@Nonnull PsiElement element);
+    PsiFile getTopLevelFile(PsiElement element);
 
-    @Nonnull
-    List<DocumentWindow> getCachedInjectedDocumentsInRange(@Nonnull PsiFile hostPsiFile, @Nonnull TextRange range);
+   
+    List<DocumentWindow> getCachedInjectedDocumentsInRange(PsiFile hostPsiFile, TextRange range);
 
-    void enumerate(@Nonnull PsiElement host, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
+    void enumerate(PsiElement host, PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
-    void enumerate(@Nonnull DocumentWindow documentWindow, @Nonnull PsiFile hostPsiFile, @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
+    void enumerate(DocumentWindow documentWindow, PsiFile hostPsiFile, PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
     @RequiredReadAction
-    void enumerateEx(@Nonnull PsiElement host,
-                     @Nonnull PsiFile containingFile,
+    void enumerateEx(PsiElement host,
+                     PsiFile containingFile,
                      boolean probeUp,
-                     @RequiredReadAction @Nonnull PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
+                     @RequiredReadAction PsiLanguageInjectionHost.InjectedPsiVisitor visitor);
 
     /**
      * @return the ranges in this document window that correspond to prefix/suffix injected text fragments and thus can't be edited and are not visible in the editor.
      */
-    @Nonnull
-    List<TextRange> getNonEditableFragments(@Nonnull DocumentWindow window);
+   
+    List<TextRange> getNonEditableFragments(DocumentWindow window);
 
     /**
      * This method can be invoked on an uncommitted document, before performing commit and using other methods here
      * (which don't work for uncommitted document).
      */
-    boolean mightHaveInjectedFragmentAtOffset(@Nonnull Document hostDocument, int hostOffset);
+    boolean mightHaveInjectedFragmentAtOffset(Document hostDocument, int hostOffset);
 
-    @Nonnull
-    DocumentWindow freezeWindow(@Nonnull DocumentWindow document);
+   
+    DocumentWindow freezeWindow(DocumentWindow document);
 
-    @Nullable
-    PsiLanguageInjectionHost.Place getShreds(@Nonnull PsiFile injectedFile);
+    PsiLanguageInjectionHost.@Nullable Place getShreds(PsiFile injectedFile);
 
-    @Nullable
-    PsiLanguageInjectionHost.Place getShreds(@Nonnull FileViewProvider viewProvider);
+    PsiLanguageInjectionHost.@Nullable Place getShreds(FileViewProvider viewProvider);
 
-    @Nonnull
-    PsiLanguageInjectionHost.Place getShreds(@Nonnull DocumentWindow documentWindow);
+   
+    PsiLanguageInjectionHost.Place getShreds(DocumentWindow documentWindow);
 
     @RequiredReadAction
-    @Nonnull
-    default String getUnescapedText(@Nonnull PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {
+   
+    default String getUnescapedText(PsiFile file, @Nullable PsiElement startElement, @Nullable PsiElement endElement) {
         int beginIndex = startElement == null ? 0 : startElement.getTextRange().getStartOffset();
         int endIndex = endElement == null ? file.getTextLength() : endElement.getTextRange().getStartOffset();
         return file.getText().substring(beginIndex, endIndex);

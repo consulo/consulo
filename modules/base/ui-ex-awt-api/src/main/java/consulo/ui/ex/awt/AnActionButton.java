@@ -20,8 +20,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -36,19 +35,19 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     public static class AnActionButtonWrapper extends AnActionButton implements ActionWithDelegate<AnAction> {
         private final AnAction myAction;
 
-        public AnActionButtonWrapper(Presentation presentation, @Nonnull AnAction action) {
+        public AnActionButtonWrapper(Presentation presentation, AnAction action) {
             super(presentation.getText(), presentation.getDescription(), presentation.getIcon());
             myAction = action;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myAction.actionPerformed(e);
         }
 
         @Override
-        public void updateButton(@Nonnull AnActionEvent e) {
+        public void updateButton(AnActionEvent e) {
             myAction.update(e);
             boolean enabled = e.getPresentation().isEnabled();
             boolean visible = e.getPresentation().isVisible();
@@ -62,7 +61,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
             return myAction.isDumbAware();
         }
 
-        @Nonnull
+        
         @Override
         public AnAction getDelegate() {
             return myAction;
@@ -77,7 +76,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
             myDelegate = action;
         }
 
-        @Nonnull
+        
         @Override
         public AnAction getDelegate() {
             return myDelegate;
@@ -103,15 +102,15 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         this(text, null, icon);
     }
 
-    protected AnActionButton(@Nonnull LocalizeValue text) {
+    protected AnActionButton(LocalizeValue text) {
         super(text);
     }
 
-    protected AnActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected AnActionButton(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected AnActionButton(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected AnActionButton(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -142,7 +141,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
     }
 
     @Override
-    public final void update(@Nonnull AnActionEvent e) {
+    public final void update(AnActionEvent e) {
         boolean myActionVisible = true;
         boolean myActionEnabled = true;
         if (myAction != null) {
@@ -167,7 +166,7 @@ public abstract class AnActionButton extends AnAction implements ShortcutProvide
         }
     }
 
-    public final void addCustomUpdater(@Nonnull AnActionButtonUpdater updater) {
+    public final void addCustomUpdater(AnActionButtonUpdater updater) {
         if (myUpdaters == null) {
             myUpdaters = new HashSet<>();
         }

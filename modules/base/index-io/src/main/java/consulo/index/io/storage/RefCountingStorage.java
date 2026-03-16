@@ -21,7 +21,6 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.StreamUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -41,7 +40,7 @@ public class RefCountingStorage extends AbstractStorage {
   private int myPendingWriteRequestsSize;
   private final ExecutorService myPendingWriteRequestsExecutor = createExecutor();
 
-  @Nonnull
+  
   protected ExecutorService createExecutor() {
     return new ThreadPoolExecutor(1, 1, Long.MAX_VALUE, TimeUnit.DAYS, new LinkedBlockingQueue<Runnable>(), r -> new Thread(r,
                                                                                                                             "RefCountingStorage write content helper"));

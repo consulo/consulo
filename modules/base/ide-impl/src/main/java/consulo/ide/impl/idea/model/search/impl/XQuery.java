@@ -1,7 +1,6 @@
 package consulo.ide.impl.idea.model.search.impl;
 
 import consulo.application.util.query.Query;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -11,14 +10,14 @@ public final class XQuery<B, R> extends AbstractDecomposableQuery<R> {
 
     private XTransformation<? super B, ? extends R> transformation;
 
-    public XQuery(@Nonnull Query<? extends B> baseQuery, @Nonnull XTransformation<? super B, ? extends R> transformation) {
+    public XQuery(Query<? extends B> baseQuery, XTransformation<? super B, ? extends R> transformation) {
         super();
         this.baseQuery = baseQuery;
         this.transformation = transformation;
     }
 
     @Override
-    protected boolean processResults(@Nonnull Predicate<? super R> consumer) {
+    protected boolean processResults(Predicate<? super R> consumer) {
         return baseQuery.forEach(baseValue -> {
             for (XResult<? extends R> result : transformation.apply(baseValue)) {
                 if (!result.process(consumer)) {
@@ -30,7 +29,7 @@ public final class XQuery<B, R> extends AbstractDecomposableQuery<R> {
         });
     }
 
-    @Nonnull
+    
     @Override
     public Requests<R> decompose() {
         return RequestsKt.andThen(RequestsKt.decompose(baseQuery), transformation);

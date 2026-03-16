@@ -14,8 +14,7 @@ import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,19 +34,19 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   private final String id;
   private final LocalizeValue displayName;
 
-  public MergedCompositeConfigurable(@Nonnull String id, @Nonnull LocalizeValue displayName, @Nonnull Configurable[] children) {
+  public MergedCompositeConfigurable(String id, LocalizeValue displayName, Configurable[] children) {
     this.children = children;
     this.id = id;
     this.displayName = displayName;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return id;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return displayName;
@@ -62,7 +61,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public Component createUIComponent(@Nonnull Disposable uiDisposable) {
+  public Component createUIComponent(Disposable uiDisposable) {
     if (myRootComponent == null) {
       Configurable firstConfigurable = children[0];
       if (children.length == 1) {
@@ -95,7 +94,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+  public JComponent createComponent(Disposable parentDisposable) {
     if (!Application.get().isSwingApplication()) {
       return null;
     }
@@ -129,7 +128,7 @@ class MergedCompositeConfigurable implements SearchableConfigurable {
     return myRootPanel;
   }
 
-  @Nonnull
+  
   static JPanel createPanel(boolean isUseTitledBorder) {
     int verticalGap = TitledSeparator.TOP_INSET;
     JPanel panel = new JPanel(new VerticalFlowLayout(0, isUseTitledBorder ? 0 : verticalGap));

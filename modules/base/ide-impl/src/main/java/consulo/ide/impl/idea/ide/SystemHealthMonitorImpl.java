@@ -45,7 +45,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.TimeoutUtil;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -62,18 +61,18 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
     public static final NotificationGroup GROUP =
         new NotificationGroup("systemHealth", LocalizeValue.localizeTODO("System Health"), NotificationDisplayType.STICKY_BALLOON, false);
 
-    @Nonnull
+    
     private final Application myApplication;
-    @Nonnull
+    
     private final ApplicationPropertiesComponent myProperties;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     @Inject
     public SystemHealthMonitorImpl(
-        @Nonnull Application application,
-        @Nonnull ApplicationPropertiesComponent properties,
-        @Nonnull NotificationService notificationService
+        Application application,
+        ApplicationPropertiesComponent properties,
+        NotificationService notificationService
     ) {
         myApplication = application;
         myProperties = properties;
@@ -81,7 +80,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
     }
 
     @Override
-    public void preload(@Nonnull ProgressIndicator indicator) {
+    public void preload(ProgressIndicator indicator) {
         checkEARuntime();
 
         SystemHealthMonitor.Reporter reporter = (notificationText, actionText, actionListener) -> myApplication.invokeLater(
@@ -164,7 +163,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                 .important()
                 .hyperlinkListener(new NotificationListener.Adapter() {
                     @Override
-                    protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+                    protected void hyperlinkActivated(Notification notification, HyperlinkEvent e) {
                         adapter.hyperlinkActivated(e);
                     }
                 })

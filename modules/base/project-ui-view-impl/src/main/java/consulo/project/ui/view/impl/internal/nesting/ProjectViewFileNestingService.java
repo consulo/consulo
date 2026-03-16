@@ -15,7 +15,6 @@ import consulo.project.ui.view.tree.ProjectViewNestingRulesProvider;
 import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -41,11 +40,11 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
     private MyState myState = new MyState();
     private long myModCount;
 
-    public static @Nonnull ProjectViewFileNestingService getInstance() {
+    public static ProjectViewFileNestingService getInstance() {
         return ApplicationManager.getApplication().getService(ProjectViewFileNestingService.class);
     }
 
-    static @Nonnull List<NestingRule> loadDefaultNestingRules() {
+    static List<NestingRule> loadDefaultNestingRules() {
         List<NestingRule> result = new ArrayList<>();
 
         ProjectViewNestingRulesProvider.Consumer consumer = (parentFileSuffix, childFileSuffix) -> {
@@ -67,7 +66,7 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
     }
 
     @Override
-    public void loadState(@Nonnull MyState state) {
+    public void loadState(MyState state) {
         myState = state;
         myModCount++;
     }
@@ -76,11 +75,11 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
      * This list of rules is used for serialization and for UI.
      * See also {@link NestingTreeStructureProvider}, it adjusts this list of rules to match its needs
      */
-    public @Nonnull List<NestingRule> getRules() {
+    public List<NestingRule> getRules() {
         return myState.myRules;
     }
 
-    public void setRules(@Nonnull List<NestingRule> rules) {
+    public void setRules(List<NestingRule> rules) {
         myState.myRules.clear();
         myState.myRules.addAll(rules);
         myModCount++;
@@ -101,35 +100,35 @@ public final class ProjectViewFileNestingService implements PersistentStateCompo
     }
 
     public static final class NestingRule {
-        private @Nonnull String myParentFileSuffix;
+        private String myParentFileSuffix;
 
-        private @Nonnull String myChildFileSuffix;
+        private String myChildFileSuffix;
 
         @SuppressWarnings("unused") // used by serializer
         public NestingRule() {
             this("", "");
         }
 
-        public NestingRule(@Nonnull String parentFileSuffix, @Nonnull String childFileSuffix) {
+        public NestingRule(String parentFileSuffix, String childFileSuffix) {
             myParentFileSuffix = parentFileSuffix;
             myChildFileSuffix = childFileSuffix;
         }
 
         @Attribute("parent-file-suffix")
-        public @Nonnull String getParentFileSuffix() {
+        public String getParentFileSuffix() {
             return myParentFileSuffix;
         }
 
-        public void setParentFileSuffix(@Nonnull String parentFileSuffix) {
+        public void setParentFileSuffix(String parentFileSuffix) {
             myParentFileSuffix = parentFileSuffix;
         }
 
         @Attribute("child-file-suffix")
-        public @Nonnull String getChildFileSuffix() {
+        public String getChildFileSuffix() {
             return myChildFileSuffix;
         }
 
-        public void setChildFileSuffix(@Nonnull String childFileSuffix) {
+        public void setChildFileSuffix(String childFileSuffix) {
             myChildFileSuffix = childFileSuffix;
         }
 

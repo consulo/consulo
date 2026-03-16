@@ -13,13 +13,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
 abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction implements DumbAware {
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
     ServiceViewOptions viewOptions = e.getData(ServiceViewActionUtils.OPTIONS_KEY);
     Presentation presentation = e.getPresentation();
@@ -40,7 +39,7 @@ abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction impleme
   }
 
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
+  public boolean isSelected(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     if (project == null) return false;
 
@@ -49,7 +48,7 @@ abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction impleme
 
   @Override
   @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+  public void setSelected(AnActionEvent e, boolean state) {
     Project project = e.getData(Project.KEY);
     if (project == null) return;
 
@@ -58,7 +57,7 @@ abstract class RunDashboardGroupingRuleToggleAction extends ToggleAction impleme
       ServiceEventListener.ServiceEvent.createResetEvent(RunDashboardServiceViewContributor.class));
   }
 
-  protected abstract @Nonnull String getRuleName();
+  protected abstract String getRuleName();
 
   protected boolean isEnabledByDefault() {
     return true;

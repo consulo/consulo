@@ -20,8 +20,7 @@ import consulo.annotation.component.TopicImpl;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationServiceListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nullable;
 @TopicImpl(ComponentScope.APPLICATION)
 public class NotificationProjectTrackerTopicListener implements NotificationServiceListener {
     @Override
-    public void notify(@Nonnull Notification notification, @Nullable Project project) {
+    public void notify(Notification notification, @Nullable Project project) {
         if (project != null) {
             NotificationProjectTracker.getInstance(project).printNotification(notification);
         }

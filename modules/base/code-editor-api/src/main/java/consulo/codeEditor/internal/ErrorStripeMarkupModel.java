@@ -18,7 +18,6 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,5 +29,5 @@ public interface ErrorStripeMarkupModel extends MarkupModel {
 
     ErrorStripeRenderer getErrorStripeRenderer();
 
-    void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent);
+    void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent);
 }

@@ -17,7 +17,6 @@ package consulo.fileEditor.impl.internal.largeFileEditor.action;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ public class LfeEditorActionTextEndHandler extends LfeEditorActionTextStartEndHa
         super(false);
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_TEXT_END;

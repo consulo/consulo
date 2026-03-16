@@ -27,8 +27,7 @@ import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class TemplateLineStartEndHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
   private EditorActionHandler myOriginalHandler;
@@ -42,7 +41,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler im
   }
 
   @Override
-  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       TextRange range = templateState.getCurrentVariableRange();
@@ -53,7 +52,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler im
   }
 
   @Override
-  protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+  protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
     TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       TextRange range = templateState.getCurrentVariableRange();

@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Interface which should be implemented in order to draw icons in the gutter area.
@@ -38,7 +37,7 @@ public interface GutterMark {
      *
      * @return the gutter icon.
      */
-    @Nonnull
+    
     Image getIcon();
 
     /**
@@ -47,7 +46,7 @@ public interface GutterMark {
      * @return the tooltip text, or null if no tooltip is required.
      */
     //TODO: rename into getTooltipValue() after deprecation deletion
-    @Nonnull
+    
     default LocalizeValue getTooltipValue() {
         return LocalizeValue.ofNullable(getTooltipText());
     }

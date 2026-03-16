@@ -30,7 +30,6 @@ import consulo.util.lang.SystemProperties;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -52,12 +51,12 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
             mySdkTable = sdkTable;
         }
 
-        @Nonnull
+        
         @Override
         public Sdk createSdkWithName(
-            @Nonnull BundleType sdkType,
-            @Nonnull Path homePath,
-            @Nonnull String suggestName
+            BundleType sdkType,
+            Path homePath,
+            String suggestName
         ) {
             // TODO [VISTALL] path can be remote - handle it
 
@@ -69,9 +68,9 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
         }
 
         @Override
-        @Nonnull
+        
         @SuppressWarnings("deprecation")
-        public Sdk createSdkWithName(@Nonnull SdkType sdkType, @Nonnull String suggestName) {
+        public Sdk createSdkWithName(SdkType sdkType, String suggestName) {
             Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
             String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
             Sdk sdk = mySdkTable.createSdk(uniqueSdkName, sdkType);
@@ -80,8 +79,8 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
         }
 
         @Override
-        @Nonnull
-        public Sdk createSdk(@Nonnull SdkType sdkType, @Nonnull String sdkHome) {
+        
+        public Sdk createSdk(SdkType sdkType, String sdkHome) {
             return createSdkWithName(sdkType, sdkType.suggestSdkName(null, sdkHome));
         }
     }
@@ -98,7 +97,7 @@ public class PredefinedBundlesLoader extends PreloadingActivity {
     }
 
     @Override
-    public void preload(@Nonnull ProgressIndicator indicator) {
+    public void preload(ProgressIndicator indicator) {
         if (SystemProperties.is("consulo.disable.predefined.bundles")) {
             return;
         }

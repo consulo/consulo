@@ -6,7 +6,6 @@ import consulo.ui.ex.popup.ListComponentUpdater;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class JBListUpdater<T> implements ListComponentUpdater<T> {
   }
 
   @Override
-  public void replaceModel(@Nonnull List<? extends T> data) {
+  public void replaceModel(List<? extends T> data) {
     Object selectedValue = myComponent.getSelectedValue();
     int index = myComponent.getSelectedIndex();
     ListModel model = myComponent.getModel();

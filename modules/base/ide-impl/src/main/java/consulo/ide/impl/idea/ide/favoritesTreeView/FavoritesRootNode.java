@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class FavoritesRootNode extends AbstractTreeNode<String> {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Collection<AbstractTreeNode> getChildren() {
     if (myFavoritesRoots == null) {
       myFavoritesRoots = new ArrayList<AbstractTreeNode>(FavoritesManagerImpl.getInstance(myProject).createRootNodes());

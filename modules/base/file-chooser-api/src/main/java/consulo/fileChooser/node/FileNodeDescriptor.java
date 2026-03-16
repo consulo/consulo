@@ -22,7 +22,6 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class FileNodeDescriptor extends NodeDescriptor {
 
@@ -30,7 +29,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
   private final Image myOriginalIcon;
   private final String myComment;
 
-  public FileNodeDescriptor(@Nonnull FileElement element, NodeDescriptor parentDescriptor, Image icon, String name, String comment) {
+  public FileNodeDescriptor(FileElement element, NodeDescriptor parentDescriptor, Image icon, String name, String comment) {
     super(parentDescriptor);
     myOriginalIcon = icon;
     myComment = comment;
@@ -69,7 +68,7 @@ public class FileNodeDescriptor extends NodeDescriptor {
   }
 
   @Override
-  @Nonnull
+  
   public final FileElement getElement() {
     return myFileElement;
   }

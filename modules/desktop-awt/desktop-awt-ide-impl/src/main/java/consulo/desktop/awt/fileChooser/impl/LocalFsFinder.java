@@ -16,32 +16,31 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.application.AllIcons;
-import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSystemTree;
-import consulo.application.util.function.Computable;
+import consulo.platform.Platform;
+import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.platform.Platform;
-import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFilePresentation;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class LocalFsFinder implements FileLookup.Finder, FileLookup {
 
   private File myBaseDir = Platform.current().user().homePath().toFile();
 
   @Override
-  public LookupFile find(@Nonnull String path) {
+  public LookupFile find(String path) {
     VirtualFile byUrl = VirtualFileManager.getInstance().findFileByUrl(path);
     if (byUrl != null) {
       return new VfsFile(this, byUrl);
@@ -66,7 +65,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
   }
 
   @Override
-  public String normalize(@Nonnull String path) {
+  public String normalize(String path) {
     File file = new File(path);
     if (file.isAbsolute()) return file.getAbsolutePath();
 
@@ -78,17 +77,16 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     return File.separator;
   }
 
-  public void setBaseDir(@Nonnull File baseDir) {
+  public void setBaseDir(File baseDir) {
     myBaseDir = baseDir;
   }
 
   public static class FileChooserFilter implements LookupFilter {
-
     private final FileChooserDescriptor myDescriptor;
-    private final Computable<Boolean> myShowHidden;
+    private final Supplier<Boolean> myShowHidden;
 
     public FileChooserFilter(FileChooserDescriptor descriptor, boolean showHidden) {
-      myShowHidden = new Computable.PredefinedValueComputable<Boolean>(showHidden);
+      myShowHidden = () -> showHidden;
       myDescriptor = descriptor;
     }
     public FileChooserFilter(FileChooserDescriptor descriptor, FileSystemTree tree) {
@@ -99,7 +97,7 @@ public class LocalFsFinder implements FileLookup.Finder, FileLookup {
     @Override
     public boolean isAccepted(LookupFile file) {
       VirtualFile vFile = ((VfsFile)file).getFile();
-      return vFile != null && myDescriptor.isFileVisible(vFile, myShowHidden.compute());
+      return vFile != null && myDescriptor.isFileVisible(vFile, myShowHidden.get());
     }
   }
 

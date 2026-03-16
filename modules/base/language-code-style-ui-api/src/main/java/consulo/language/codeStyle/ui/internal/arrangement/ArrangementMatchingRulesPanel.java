@@ -26,8 +26,7 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.PopupHandler;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -39,17 +38,16 @@ import java.util.List;
  */
 public class ArrangementMatchingRulesPanel extends JPanel implements UiDataProvider {
 
-  @Nonnull
   protected final ArrangementSectionRulesControl myControl;
 
-  public ArrangementMatchingRulesPanel(@Nonnull Language language, @Nonnull ArrangementStandardSettingsManager settingsManager, @Nonnull ArrangementColorsProvider colorsProvider) {
+  public ArrangementMatchingRulesPanel(Language language, ArrangementStandardSettingsManager settingsManager, ArrangementColorsProvider colorsProvider) {
     super(new GridBagLayout());
 
     JBScrollPane scrollPane = new JBScrollPane();
     final JViewport viewport = scrollPane.getViewport();
     ArrangementMatchingRulesControl.RepresentationCallback callback = new ArrangementMatchingRulesControl.RepresentationCallback() {
       @Override
-      public void ensureVisible(@Nonnull Rectangle r) {
+      public void ensureVisible(Rectangle r) {
         Rectangle visibleRect = viewport.getViewRect();
         if (r.y <= visibleRect.y) {
           return;
@@ -76,14 +74,13 @@ public class ArrangementMatchingRulesPanel extends JPanel implements UiDataProvi
     add(scrollPane, new GridBag().fillCell().weightx(1).weighty(1).insets(0, ArrangementConstants.HORIZONTAL_PADDING, 0, 0));
   }
 
-  protected ArrangementSectionRulesControl createRulesControl(@Nonnull Language language,
-                                                              @Nonnull ArrangementStandardSettingsManager settingsManager,
-                                                              @Nonnull ArrangementColorsProvider colorsProvider,
-                                                              @Nonnull ArrangementMatchingRulesControl.RepresentationCallback callback) {
+  protected ArrangementSectionRulesControl createRulesControl(Language language,
+                                                              ArrangementStandardSettingsManager settingsManager,
+                                                              ArrangementColorsProvider colorsProvider,
+                                                              ArrangementMatchingRulesControl.RepresentationCallback callback) {
     return new ArrangementSectionRulesControl(language, settingsManager, colorsProvider, callback);
   }
 
-  @Nonnull
   public List<ArrangementSectionRule> getSections() {
     return myControl.getSections();
   }
@@ -106,7 +103,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements UiDataProvi
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(ArrangementSectionRulesControl.KEY, myControl);
   }
 }

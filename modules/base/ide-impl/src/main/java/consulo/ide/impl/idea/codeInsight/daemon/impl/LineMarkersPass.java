@@ -34,7 +34,6 @@ import consulo.ui.image.Image;
 import consulo.util.collection.NotNullList;
 import gnu.trove.TIntObjectHashMap;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -43,25 +42,25 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
 
   private volatile List<LineMarkerInfo<PsiElement>> myMarkers = Collections.emptyList();
 
-  @Nonnull
+  
   private final PsiFile myFile;
-  @Nonnull
+  
   private final TextRange myPriorityBounds;
-  @Nonnull
+  
   private final TextRange myRestrictRange;
 
-  LineMarkersPass(@Nonnull Project project,
-                  @Nonnull PsiFile file,
-                  @Nonnull Document document,
-                  @Nonnull TextRange priorityBounds,
-                  @Nonnull TextRange restrictRange) {
+  LineMarkersPass(Project project,
+                  PsiFile file,
+                  Document document,
+                  TextRange priorityBounds,
+                  TextRange restrictRange) {
     super(project, document, false);
     myFile = file;
     myPriorityBounds = priorityBounds;
     myRestrictRange = restrictRange;
   }
 
-  @Nonnull
+  
   @Override
   public Document getDocument() {
     //noinspection ConstantConditions
@@ -79,7 +78,7 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+  public void doCollectInformation(ProgressIndicator progress) {
     List<LineMarkerInfo<PsiElement>> lineMarkers = new ArrayList<>();
     FileViewProvider viewProvider = myFile.getViewProvider();
     for (Language language : viewProvider.getLanguages()) {
@@ -108,9 +107,9 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     }
   }
 
-  @Nonnull
-  private static List<LineMarkerInfo<PsiElement>> mergeLineMarkers(@Nonnull List<LineMarkerInfo<PsiElement>> markers,
-                                                                   @Nonnull Document document) {
+  
+  private static List<LineMarkerInfo<PsiElement>> mergeLineMarkers(List<LineMarkerInfo<PsiElement>> markers,
+                                                                   Document document) {
     List<MergeableLineMarkerInfo<PsiElement>> forMerge = new ArrayList<>();
     TIntObjectHashMap<List<MergeableLineMarkerInfo<PsiElement>>> sameLineMarkers = new TIntObjectHashMap<>();
 
@@ -140,10 +139,10 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     return result;
   }
 
-  @Nonnull
-  public static List<LineMarkerProvider> getMarkerProviders(@Nonnull PsiFile psiFile,
-                                                            @Nonnull Language language,
-                                                            @Nonnull Project project) {
+  
+  public static List<LineMarkerProvider> getMarkerProviders(PsiFile psiFile,
+                                                            Language language,
+                                                            Project project) {
     DumbService dumbService = DumbService.getInstance(project);
     LineMarkerSettings settings = LineMarkerSettings.getInstance();
 
@@ -169,10 +168,10 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
 
   @RequiredReadAction
   @SuppressWarnings({"deprecation", "unchecked"})
-  private void queryProviders(@Nonnull List<PsiElement> elements,
-                              @Nonnull PsiFile containingFile,
-                              @Nonnull List<? extends LineMarkerProvider> providers,
-                              @Nonnull BiConsumer<? super PsiElement, ? super LineMarkerInfo<PsiElement>> consumer) {
+  private void queryProviders(List<PsiElement> elements,
+                              PsiFile containingFile,
+                              List<? extends LineMarkerProvider> providers,
+                              BiConsumer<? super PsiElement, ? super LineMarkerInfo<PsiElement>> consumer) {
     myProject.getApplication().assertReadAccessAllowed();
     Set<PsiFile> visitedInjectedFiles = new HashSet<>();
     //noinspection ForLoopReplaceableByForEach
@@ -231,10 +230,10 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
   }
 
   @RequiredReadAction
-  private void queryLineMarkersForInjected(@Nonnull PsiElement element,
-                                           @Nonnull PsiFile containingFile,
-                                           @Nonnull Set<? super PsiFile> visitedInjectedFiles,
-                                           @Nonnull BiConsumer<? super PsiElement, ? super LineMarkerInfo<PsiElement>> consumer) {
+  private void queryLineMarkersForInjected(PsiElement element,
+                                           PsiFile containingFile,
+                                           Set<? super PsiFile> visitedInjectedFiles,
+                                           BiConsumer<? super PsiElement, ? super LineMarkerInfo<PsiElement>> consumer) {
     InjectedLanguageManager manager = InjectedLanguageManager.getInstance(containingFile.getProject());
     if (manager.isInjectedFragment(containingFile)) return;
 
@@ -268,9 +267,9 @@ public class LineMarkersPass extends TextEditorHighlightingPass {
     });
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static Collection<LineMarkerInfo<PsiElement>> queryLineMarkers(@Nonnull PsiFile file, @Nonnull Document document) {
+  public static Collection<LineMarkerInfo<PsiElement>> queryLineMarkers(PsiFile file, Document document) {
     if (file.getNode() == null) {
       // binary file? see IDEADEV-2809
       return Collections.emptyList();

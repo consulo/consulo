@@ -37,8 +37,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,7 +57,7 @@ public class SwitchTaskAction extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ListPopup popup = createPopup(e.getDataContext(), null, true);
         popup.showCenteredInCurrentWindow(project);
@@ -98,7 +97,7 @@ public class SwitchTaskAction extends BaseTaskAction {
                 return aValue.getIcon();
             }
 
-            @Nonnull
+            
             @Override
             public String getTextFor(TaskListItem value) {
                 return value.getText();
@@ -131,7 +130,7 @@ public class SwitchTaskAction extends BaseTaskAction {
             new AbstractAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     shiftPressed.set(true);
                     popup.setCaption(TaskLocalize.popupTitleMergeWithCurrentContext().get());
                 }
@@ -143,7 +142,7 @@ public class SwitchTaskAction extends BaseTaskAction {
             new AbstractAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     shiftPressed.set(false);
                     popup.setCaption(TaskLocalize.popupTitleSwitchToTask().get());
                 }
@@ -155,7 +154,7 @@ public class SwitchTaskAction extends BaseTaskAction {
             new AbstractAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     popup.handleSelect(true);
                 }
             }
@@ -175,7 +174,7 @@ public class SwitchTaskAction extends BaseTaskAction {
             group.add(new AnAction(TaskLocalize.actionSwitchToText()) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     manager.activateTask(task, !shiftPressed.get());
                 }
             });
@@ -183,7 +182,7 @@ public class SwitchTaskAction extends BaseTaskAction {
         AnAction remove = new AnAction(TaskLocalize.actionRemoveText()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 for (TaskListItem item : tasks) {
                     LocalTask itemTask = item.getTask();
                     if (itemTask != null) {
@@ -197,9 +196,9 @@ public class SwitchTaskAction extends BaseTaskAction {
         return group.build();
     }
 
-    @Nonnull
+    
     private static List<TaskListItem> createPopupActionGroup(
-        @Nonnull Project project,
+        Project project,
         final SimpleReference<Boolean> shiftPressed,
         final Component contextComponent
     ) {
@@ -252,7 +251,7 @@ public class SwitchTaskAction extends BaseTaskAction {
     }
 
     @RequiredUIAccess
-    public static void removeTask(@Nonnull Project project, LocalTask task, TaskManager manager) {
+    public static void removeTask(Project project, LocalTask task, TaskManager manager) {
         if (task.isDefault()) {
             Messages.showInfoMessage(project, TaskLocalize.dialogMessageDefaultTaskCannotBeRemoved().get(), TaskLocalize.dialogTitleCannotRemove().get());
         }

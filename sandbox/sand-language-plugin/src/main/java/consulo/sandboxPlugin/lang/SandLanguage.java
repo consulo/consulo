@@ -17,7 +17,6 @@ package consulo.sandboxPlugin.lang;
 
 import consulo.language.Language;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public class SandLanguage extends Language {
         super("SAND");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.of("Sand");

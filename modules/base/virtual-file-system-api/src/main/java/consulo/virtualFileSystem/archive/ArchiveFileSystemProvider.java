@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.archive;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -29,11 +28,11 @@ import java.io.IOException;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ArchiveFileSystemProvider {
-    @Nonnull
+    
     String getProtocol();
 
-    @Nonnull
-    ArchiveFile createArchiveFile(@Nonnull String path) throws IOException;
+    
+    ArchiveFile createArchiveFile(String path) throws IOException;
 
     default boolean isNeedToRepackArchive() {
         return false;

@@ -23,7 +23,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "RecentChanges", parents = @ActionParentRef(@ActionRef(id = "ViewRecentActions")))
 public class RecentChangesAction extends LocalHistoryAction {
@@ -33,7 +32,7 @@ public class RecentChangesAction extends LocalHistoryAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         new RecentChangesPopup(e.getData(Project.KEY), getGateway(), getVcs()).show();
     }
 }

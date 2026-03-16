@@ -16,10 +16,9 @@
 package consulo.execution.debug.stream.lib.impl;
 
 import consulo.execution.debug.stream.resolve.CollapseResolver;
-import jakarta.annotation.Nonnull;
 
 public class CollapseOperation extends OrderBasedOperation {
-    public CollapseOperation(@Nonnull String name) {
+    public CollapseOperation(String name) {
         super(name, new CollapseResolver());
     }
 }

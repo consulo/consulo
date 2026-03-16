@@ -8,7 +8,6 @@ import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +17,17 @@ public class ExcludedFiles {
     private final List<FileSetDescriptor> myDescriptors = new ArrayList<>();
     private final State myState = new State();
 
-    public void serializeInto(@Nonnull Element element) {
+    public void serializeInto(Element element) {
         if (myDescriptors.size() > 0) {
             XmlSerializer.serializeInto(myState, element);
         }
     }
 
-    public void deserializeFrom(@Nonnull Element element) {
+    public void deserializeFrom(Element element) {
         XmlSerializer.deserializeInto(myState, element);
     }
 
-    public void addDescriptor(@Nonnull FileSetDescriptor descriptor) {
+    public void addDescriptor(FileSetDescriptor descriptor) {
         myDescriptors.add(descriptor);
     }
 
@@ -37,12 +36,12 @@ public class ExcludedFiles {
     }
 
 
-    public void setDescriptors(@Nonnull List<FileSetDescriptor> descriptors) {
+    public void setDescriptors(List<FileSetDescriptor> descriptors) {
         myDescriptors.clear();
         myDescriptors.addAll(descriptors);
     }
 
-    public boolean contains(@Nonnull PsiFile file) {
+    public boolean contains(PsiFile file) {
         if (file.isPhysical()) {
             for (FileSetDescriptor descriptor : myDescriptors) {
                 if (descriptor.matches(file)) {
@@ -59,7 +58,7 @@ public class ExcludedFiles {
 
     @Override
     @SuppressWarnings("EqualsHashCode")
-    public boolean equals(@Nonnull Object o) {
+    public boolean equals(Object o) {
         return o instanceof ExcludedFiles excludedFiles && myDescriptors.equals(excludedFiles.myDescriptors);
     }
 
@@ -69,7 +68,7 @@ public class ExcludedFiles {
             return myDescriptors.stream().map(FileSetDescriptor::getState).collect(Collectors.toList());
         }
 
-        public void setDescriptors(@Nonnull List<FileSetDescriptor.State> states) {
+        public void setDescriptors(List<FileSetDescriptor.State> states) {
             myDescriptors.clear();
             for (FileSetDescriptor.State state : states) {
                 FileSetDescriptor descriptor = FileSetDescriptorFactory.createDescriptor(state);

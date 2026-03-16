@@ -30,9 +30,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentFileViewProvider implements FreeThreadedFileViewProvider, InjectedFileViewProvider {
@@ -42,11 +40,11 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
   private boolean myPatchingLeaves;
   protected final AbstractFileViewProvider myOriginalProvider;
 
-  MultipleRootsInjectedFileViewProvider(@Nonnull PsiManager psiManager,
-                                        @Nonnull VirtualFileWindow virtualFile,
-                                        @Nonnull DocumentWindowImpl documentWindow,
-                                        @Nonnull Language language,
-                                        @Nonnull AbstractFileViewProvider original) {
+  MultipleRootsInjectedFileViewProvider(PsiManager psiManager,
+                                        VirtualFileWindow virtualFile,
+                                        DocumentWindowImpl documentWindow,
+                                        Language language,
+                                        AbstractFileViewProvider original) {
     super(psiManager, (VirtualFile)virtualFile, true);
     myDocumentWindow = documentWindow;
     myLanguage = language;
@@ -69,7 +67,7 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
   }
 
   @Override
-  public void rootChanged(@Nonnull PsiFile psiFile) {
+  public void rootChanged(PsiFile psiFile) {
     super.rootChanged(psiFile);
     rootChangedImpl(psiFile);
   }
@@ -84,13 +82,13 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
     return isPhysicalImpl();
   }
 
-  @Nonnull
+  
   @Override
   public Language getBaseLanguage() {
     return myLanguage;
   }
 
-  @Nonnull
+  
   @Override
   public Set<Language> getLanguages() {
     FileViewProvider original = myOriginalProvider;
@@ -99,31 +97,31 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
     return ContainerUtil.map2Set(languages, (language) -> language == base ? myLanguage : language);
   }
 
-  @Nonnull
+  
   @Override
-  protected MultiplePsiFilesPerDocumentFileViewProvider cloneInner(@Nonnull VirtualFile fileCopy) {
+  protected MultiplePsiFilesPerDocumentFileViewProvider cloneInner(VirtualFile fileCopy) {
     return (MultiplePsiFilesPerDocumentFileViewProvider)((PsiManagerEx)getManager()).getFileManager().createFileViewProvider(fileCopy, false);
   }
 
   @Override
-  @Nonnull
+  
   public DocumentWindowImpl getDocument() {
     return myDocumentWindow;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "Multi root injected file '" + getVirtualFile().getName() + "' " + (isValid() ? "" : " invalid") + (isPhysical() ? "" : " nonphysical");
   }
 
   @Override
-  public final void forceCachedPsi(@Nonnull PsiFile psiFile) {
+  public final void forceCachedPsi(PsiFile psiFile) {
     myRoots.put(psiFile.getLanguage(), (PsiFileImpl)psiFile);
     ((PsiManagerEx)getManager()).getFileManager().setViewProvider(getVirtualFile(), this);
   }
 
-  public void doNotInterruptMeWhileImPatchingLeaves(@Nonnull Runnable runnable) {
+  public void doNotInterruptMeWhileImPatchingLeaves(Runnable runnable) {
     myPatchingLeaves = true;
     try {
       runnable.run();
@@ -134,19 +132,19 @@ class MultipleRootsInjectedFileViewProvider extends MultiplePsiFilesPerDocumentF
   }
 
   static final class Template extends MultipleRootsInjectedFileViewProvider implements TemplateLanguageFileViewProvider {
-    Template(@Nonnull PsiManagerEx psiManager, @Nonnull VirtualFileWindow virtualFile, @Nonnull DocumentWindowImpl documentWindow, @Nonnull Language language, AbstractFileViewProvider original) {
+    Template(PsiManagerEx psiManager, VirtualFileWindow virtualFile, DocumentWindowImpl documentWindow, Language language, AbstractFileViewProvider original) {
       super(psiManager, virtualFile, documentWindow, language, original);
       assert myOriginalProvider instanceof TemplateLanguageFileViewProvider;
     }
 
-    @Nonnull
+    
     @Override
     public Language getTemplateDataLanguage() {
       return ((TemplateLanguageFileViewProvider)myOriginalProvider).getTemplateDataLanguage();
     }
 
     @Override
-    public IElementType getContentElementType(@Nonnull Language language) {
+    public IElementType getContentElementType(Language language) {
       return ((TemplateLanguageFileViewProvider)myOriginalProvider).getContentElementType(language);
     }
   }

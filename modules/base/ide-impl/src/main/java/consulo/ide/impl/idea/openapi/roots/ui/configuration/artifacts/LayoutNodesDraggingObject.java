@@ -20,7 +20,6 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ArtifactUtil;
 import consulo.ui.ex.awt.tree.SimpleNode;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class LayoutNodesDraggingObject extends PackagingElementDraggingObject {
   }
 
   @Override
-  public boolean canDropInto(@Nonnull PackagingElementNode node) {
+  public boolean canDropInto(PackagingElementNode node) {
     LayoutTree tree = myArtifactsEditor.getLayoutTreeComponent().getLayoutTree();
     TreePath path = tree.getPathFor(node);
     if (path != null) {

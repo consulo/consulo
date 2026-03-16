@@ -25,7 +25,7 @@ import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileHighlighter;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole

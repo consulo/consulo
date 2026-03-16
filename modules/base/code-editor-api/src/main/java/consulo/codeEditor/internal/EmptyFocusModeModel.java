@@ -17,7 +17,7 @@ package consulo.codeEditor.internal;
 
 import consulo.codeEditor.FocusModeModel;
 import consulo.document.util.Segment;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

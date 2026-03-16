@@ -15,23 +15,22 @@
  */
 package consulo.versionControlSystem.log.impl.internal.data;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
 public interface VcsLogUiProperties {
-  @Nonnull
-  <T> T get(@Nonnull VcsLogUiProperty<T> property);
+  
+  <T> T get(VcsLogUiProperty<T> property);
 
-  <T> void set(@Nonnull VcsLogUiProperty<T> property, @Nonnull T value);
+  <T> void set(VcsLogUiProperty<T> property, T value);
 
-  <T> boolean exists(@Nonnull VcsLogUiProperty<T> property);
+  <T> boolean exists(VcsLogUiProperty<T> property);
 
   class VcsLogUiProperty<T> {
-    @Nonnull
+    
     private final String myName;
 
-    public VcsLogUiProperty(@Nonnull String name) {
+    public VcsLogUiProperty(String name) {
       myName = name;
     }
 

@@ -17,9 +17,7 @@ package consulo.externalSystem.model.execution;
 
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +32,8 @@ import java.util.List;
 @Tag("ExternalSystemSettings")
 public class ExternalSystemTaskExecutionSettings implements Cloneable {
 
-  @Nonnull
-  @NonNls public static final String TAG_NAME = "ExternalSystemSettings";
+  
+  public static final String TAG_NAME = "ExternalSystemSettings";
 
   private List<String> myTaskNames = new ArrayList<>();
   private List<String> myTaskDescriptions = new ArrayList<>();

@@ -16,8 +16,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class SyntheticFileSystemItem extends PsiElementBase implements PsiFileSystemItem {
     public static final Logger LOG = Logger.getInstance(SyntheticFileSystemItem.class);
@@ -69,7 +68,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
 
     @Override
     @RequiredWriteAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         throw new IncorrectOperationException("Frameworks cannot be changed");
     }
 
@@ -85,11 +84,11 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         // TODO
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -98,7 +97,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         return collector.toArray(new PsiFileSystemItem[0]);
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         return myManager;
@@ -106,7 +105,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Language getLanguage() {
         return Language.ANY;
     }
@@ -118,7 +117,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
 
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         throw new IncorrectOperationException("Frameworks cannot be renamed");
     }
 
@@ -128,7 +127,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -165,7 +164,7 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public char[] textToCharArray() {
@@ -174,13 +173,13 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull CharSequence text) {
+    public boolean textMatches(CharSequence text) {
         return false;
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return false;
     }
 
@@ -191,24 +190,24 @@ public abstract class SyntheticFileSystemItem extends PsiElementBase implements 
     }
 
     @Override
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
-    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void checkAdd(PsiElement element) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 }

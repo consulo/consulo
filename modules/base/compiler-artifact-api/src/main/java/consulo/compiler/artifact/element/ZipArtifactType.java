@@ -21,7 +21,6 @@ import consulo.compiler.artifact.ArtifactUtil;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,22 +32,22 @@ public class ZipArtifactType extends ArtifactType {
         super("zip", LocalizeValue.localizeTODO("Zip"));
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.nodesArtifact();
     }
 
     @Override
-    public String getDefaultPathFor(@Nonnull PackagingElementOutputKind kind) {
+    public String getDefaultPathFor(PackagingElementOutputKind kind) {
         return "/";
     }
 
-    @Nonnull
+    
     @Override
     public CompositePackagingElement<?> createRootElement(
-        @Nonnull PackagingElementFactory packagingElementFactory,
-        @Nonnull String artifactName
+        PackagingElementFactory packagingElementFactory,
+        String artifactName
     ) {
         return new ZipArchivePackagingElement(ArtifactUtil.suggestArtifactFileName(artifactName) + ".zip");
     }

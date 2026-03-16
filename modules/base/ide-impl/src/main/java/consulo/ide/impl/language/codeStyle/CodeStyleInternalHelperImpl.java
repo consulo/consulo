@@ -39,8 +39,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.CharTable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -55,7 +54,7 @@ import java.util.Collections;
 @ServiceImpl
 public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
     @Override
-    public void debugTreeToBuffer(@Nonnull Appendable buffer, @Nonnull ASTNode root, int indent, boolean skipWhiteSpaces, boolean showRanges, boolean showChildrenRanges, boolean usePsi) {
+    public void debugTreeToBuffer(Appendable buffer, ASTNode root, int indent, boolean skipWhiteSpaces, boolean showRanges, boolean showChildrenRanges, boolean usePsi) {
         DebugUtil.treeToBuffer(buffer, root, indent, skipWhiteSpaces, showRanges, showChildrenRanges, usePsi);
     }
 
@@ -228,7 +227,7 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
     }
 
     @Override
-    public void replaceInnerWhiteSpace(@Nonnull String newWhiteSpaceText, @Nonnull ASTNode holder, @Nonnull TextRange whiteSpaceRange) {
+    public void replaceInnerWhiteSpace(String newWhiteSpaceText, ASTNode holder, TextRange whiteSpaceRange) {
         CharTable charTable = SharedImplUtil.findCharTableByTree(holder);
         StringBuilder newText = createNewLeafChars(holder, whiteSpaceRange, newWhiteSpaceText);
         LeafElement newElement = Factory.createSingleLeafElement(holder.getElementType(), newText, charTable, holder.getPsi().getManager());
@@ -313,27 +312,27 @@ public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
     }
 
     @Override
-    public FormattingDocumentModel createFormattingDocumentModel(@Nonnull Document document, @Nullable PsiFile file) {
+    public FormattingDocumentModel createFormattingDocumentModel(Document document, @Nullable PsiFile file) {
         return new FormattingDocumentModelImpl(document, file);
     }
 
     @Override
-    public int nextTabStop(int x, @Nonnull Object editor, int tabSize) {
+    public int nextTabStop(int x, Object editor, int tabSize) {
         return EditorUtil.nextTabStop(x, (Editor) editor, tabSize);
     }
 
     @Override
-    public int nextTabStop(int x, @Nonnull Object editor) {
+    public int nextTabStop(int x, Object editor) {
         return EditorUtil.nextTabStop(x, (Editor) editor);
     }
 
     @Override
-    public int charWidth(char c, @JdkConstants.FontStyle int fontType, @Nonnull Object editor) {
+    public int charWidth(char c, @JdkConstants.FontStyle int fontType, Object editor) {
         return EditorUtil.charWidth(c, fontType, (Editor) editor);
     }
 
     @Override
-    public int getSpaceWidth(@JdkConstants.FontStyle int fontType, @Nonnull Object editor) {
+    public int getSpaceWidth(@JdkConstants.FontStyle int fontType, Object editor) {
         return EditorUtil.getSpaceWidth(fontType, (Editor) editor);
     }
 

@@ -14,7 +14,6 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 import org.imgscalr.Scalr;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -424,19 +423,19 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   }
 
   @Override
-  public void setFont(@Nonnull consulo.ui.font.Font font) {
+  public void setFont(consulo.ui.font.Font font) {
     if (!font.equals(state.myFont)) {
       state.myFont = TargetAWT.to(font);
     }
   }
 
   @Override
-  public void setTextAlign(@Nonnull TextAlign textAlign) {
+  public void setTextAlign(TextAlign textAlign) {
     state.myTextAlign = textAlign;
   }
 
   @Override
-  public void setTextBaseline(@Nonnull TextBaseline baseline) {
+  public void setTextBaseline(TextBaseline baseline) {
     state.myTextBaseline = baseline;
   }
 
@@ -450,7 +449,7 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     }
   }
 
-  @Nonnull
+  
   private AutoCloseable withAlpha(Graphics2D graphics) {
     if (state.myGlobalAlpha == 1) {
       return () -> {
@@ -520,8 +519,8 @@ public class DesktopCanvas2DImpl implements Canvas2D {
     state.fillColorValue = null;
   }
 
-  @Nonnull
-  private Color convertColor(@Nonnull ColorValue colorValue) {
+  
+  private Color convertColor(ColorValue colorValue) {
     RGBColor rgbColor = colorValue.toRGB();
     float[] floatValues = rgbColor.getFloatValues();
     try {
@@ -551,11 +550,11 @@ public class DesktopCanvas2DImpl implements Canvas2D {
   }
 
   @Override
-  public void drawImage(@Nonnull Image image, double x, double y, double w, double h) {
+  public void drawImage(Image image, double x, double y, double w, double h) {
     drawImageImpl(image, x, y, w, h, false, false, false);
   }
 
-  public void drawImageImpl(@Nonnull Image src, double x, double y, double w, double h, boolean aspect, boolean flipH, boolean flipV) {
+  public void drawImageImpl(Image src, double x, double y, double w, double h, boolean aspect, boolean flipH, boolean flipV) {
     if (w > 0 && h > 0) {
       Icon icon = TargetAWT.to(src);
 

@@ -22,7 +22,6 @@ import consulo.language.editor.refactoring.impl.internal.inline.InlineRefactorin
 import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteHandler;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -32,25 +31,25 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class RefactoringActionHandlerFactoryImpl implements RefactoringActionHandlerFactory {
 
-    @Nonnull
+    
     @Override
     public RefactoringActionHandler createSafeDeleteHandler() {
         return new SafeDeleteHandler();
     }
 
-    @Nonnull
+    
     @Override
     public RefactoringActionHandler createMoveHandler() {
         return new MoveHandler();
     }
 
-    @Nonnull
+    
     @Override
     public RefactoringActionHandler createRenameHandler() {
         return new PsiElementRenameHandler();
     }
 
-    @Nonnull
+    
     @Override
     public RefactoringActionHandler createInlineHandler() {
         return new InlineRefactoringActionHandler();

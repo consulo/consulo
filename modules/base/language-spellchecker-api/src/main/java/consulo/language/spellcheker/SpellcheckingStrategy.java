@@ -31,7 +31,6 @@ import consulo.language.spellcheker.internal.SpellcheckerInternalHelper;
 import consulo.language.spellcheker.tokenizer.*;
 import consulo.language.spellcheker.tokenizer.splitter.PlainTextTokenSplitter;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -40,8 +39,8 @@ public abstract class SpellcheckingStrategy implements LanguageExtension {
     private static final ExtensionPointCacheKey<SpellcheckingStrategy, ByLanguageValue<List<SpellcheckingStrategy>>> KEY =
         ExtensionPointCacheKey.create("SpellcheckingStrategy", LanguageOneToMany.build(false));
 
-    @Nonnull
-    public static List<SpellcheckingStrategy> forLanguage(@Nonnull Language language) {
+    
+    public static List<SpellcheckingStrategy> forLanguage(Language language) {
         return Application.get().getExtensionPoint(SpellcheckingStrategy.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
@@ -51,13 +50,13 @@ public abstract class SpellcheckingStrategy implements LanguageExtension {
     public static final Tokenizer EMPTY_TOKENIZER = new Tokenizer() {
         @Override
         @RequiredReadAction
-        public void tokenize(@Nonnull PsiElement element, TokenConsumer consumer) {
+        public void tokenize(PsiElement element, TokenConsumer consumer) {
         }
     };
 
     public static final Tokenizer<PsiElement> TEXT_TOKENIZER = new TokenizerBase<>(PlainTextTokenSplitter.getInstance());
 
-    @Nonnull
+    
     @RequiredReadAction
     public Tokenizer getTokenizer(PsiElement element) {
         if (element instanceof PsiWhiteSpace) {
@@ -91,7 +90,7 @@ public abstract class SpellcheckingStrategy implements LanguageExtension {
         return EMPTY_TOKENIZER;
     }
 
-    public boolean isMyContext(@Nonnull PsiElement element) {
+    public boolean isMyContext(PsiElement element) {
         return true;
     }
 }

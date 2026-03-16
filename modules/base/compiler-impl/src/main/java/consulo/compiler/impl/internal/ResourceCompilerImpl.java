@@ -40,7 +40,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.File;
@@ -65,7 +64,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
     }
 
     @Override
-    @Nonnull
+    
     public String getDescription() {
         return CompilerLocalize.resourceCompilerDescription().get();
     }
@@ -177,13 +176,13 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         context.getProgressIndicator().popState();
     }
 
-    @Nonnull
+    
     @Override
     public FileType[] getInputFileTypes() {
         return FileType.EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     @Override
     public FileType[] getOutputFileTypes() {
         return FileType.EMPTY_ARRAY;

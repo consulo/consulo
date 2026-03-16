@@ -19,8 +19,7 @@ import consulo.platform.PlatformOperatingSystem;
 import consulo.platform.ProcessInfo;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,17 +80,17 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return !isWindows && !isMac;
     }
 
-    @Nonnull
+    
     @Override
     public String fileNamePrefix() {
         return myFileNamePrefix;
     }
 
-    public boolean isOsVersionAtLeast(@Nonnull String version) {
+    public boolean isOsVersionAtLeast(String version) {
         return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
     }
 
-    @Nonnull
+    
     @Override
     public Collection<ProcessInfo> processes() {
         List<ProcessInfo> processInfos = new ArrayList<>();
@@ -142,13 +141,13 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
         return isLinux;
     }
 
-    @Nonnull
+    
     @Override
     public String name() {
         return OS_NAME;
     }
 
-    @Nonnull
+    
     @Override
     public String version() {
         return OS_VERSION;
@@ -156,17 +155,17 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
 
     @Nullable
     @Override
-    public String getEnvironmentVariable(@Nonnull String key) {
+    public String getEnvironmentVariable(String key) {
         return getEnvFunc.apply(key);
     }
 
-    @Nonnull
+    
     @Override
     public Map<String, String> environmentVariables() {
         return getEnvsSup.get();
     }
 
-    @Nonnull
+    
     @Override
     public String arch() {
         return myOSArch;

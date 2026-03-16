@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.nodep.function;
+package consulo.http.ws;
 
-public interface Getter<A> {
-  A get();
+import consulo.util.dataholder.UserDataHolder;
+
+/**
+ * @author VISTALL
+ * @since 2026-03-15
+ */
+public interface WebSocketSession extends UserDataHolder {
+    void send(String text);
+
+    void send(byte[] data);
+
+    void close();
 }

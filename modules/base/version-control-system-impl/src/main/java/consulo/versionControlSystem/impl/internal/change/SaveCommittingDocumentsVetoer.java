@@ -22,7 +22,6 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.CommitHelper;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 
 /**
@@ -38,7 +37,7 @@ public class SaveCommittingDocumentsVetoer extends FileDocumentSynchronizationVe
   }
 
   @Override
-  public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
+  public boolean maySaveDocument(Document document, boolean isSaveExplicit) {
     Object beingCommitted = document.getUserData(CommitHelper.DOCUMENT_BEING_COMMITTED_KEY);
     if (beingCommitted == VetoSavingCommittingDocumentsAdapter.SAVE_DENIED) {
       return false;

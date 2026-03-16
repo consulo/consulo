@@ -19,7 +19,6 @@ import consulo.application.util.ConcurrentFactoryMap;
 import consulo.ui.Size2D;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.image.EmptyImage;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -31,7 +30,7 @@ public class DesktopEmptyImageImpl extends EmptyIcon implements EmptyImage, Desk
     private static final ConcurrentMap<Size2D, DesktopEmptyImageImpl> ourCache =
         ConcurrentFactoryMap.createMap(s -> new DesktopEmptyImageImpl(s.width(), s.height()));
 
-    @Nonnull
+    
     public static DesktopEmptyImageImpl get(int width, int height) {
         return ourCache.get(new Size2D(width, height));
     }
@@ -51,13 +50,13 @@ public class DesktopEmptyImageImpl extends EmptyIcon implements EmptyImage, Desk
         return getIconWidth();
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithNewSize(int width, int height) {
         return get(width, height);
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
         return this;

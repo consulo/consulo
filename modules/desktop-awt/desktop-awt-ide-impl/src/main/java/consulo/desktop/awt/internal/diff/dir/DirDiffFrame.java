@@ -21,7 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.ui.ex.awt.FrameWrapper;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 

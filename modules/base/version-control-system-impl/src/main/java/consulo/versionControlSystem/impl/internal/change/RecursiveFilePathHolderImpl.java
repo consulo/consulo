@@ -9,7 +9,6 @@ import consulo.versionControlSystem.change.VcsDirtyScope;
 import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -36,7 +35,7 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
   }
 
   @Override
-  public void addFile(@Nonnull FilePath file) {
+  public void addFile(FilePath file) {
     if (!containsFile(file)) {
       myMap.add(file);
     }
@@ -55,11 +54,11 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
   }
 
   @Override
-  public boolean containsFile(@Nonnull FilePath file, @Nonnull VirtualFile vcsRoot) {
+  public boolean containsFile(FilePath file, VirtualFile vcsRoot) {
     return containsFile(file);
   }
 
-  private boolean containsFile(@Nonnull FilePath file) {
+  private boolean containsFile(FilePath file) {
     if (myMap.isEmpty()) return false;
     FilePath parent = file;
     while (parent != null) {
@@ -86,7 +85,7 @@ public class RecursiveFilePathHolderImpl implements IgnoredFilesHolder {
     }
   }
 
-  private static boolean isFileDirty(@Nonnull VcsDirtyScope scope, @Nonnull FilePath filePath) {
+  private static boolean isFileDirty(VcsDirtyScope scope, FilePath filePath) {
     return scope.belongsTo(filePath);
   }
 

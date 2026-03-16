@@ -23,7 +23,6 @@ import consulo.compiler.artifact.element.PackagingElementOutputKind;
 import consulo.compiler.artifact.element.ModuleOutputElementTypeBase;
 import consulo.compiler.artifact.internal.SourceItemWeights;
 import consulo.component.util.pointer.NamedPointer;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   private final Module myModule;
   private final ModuleOutputElementTypeBase myModuleOutputType;
 
-  public ModuleOutputSourceItem(@Nonnull Module module, ModuleOutputElementTypeBase moduleOutputType) {
+  public ModuleOutputSourceItem(Module module, ModuleOutputElementTypeBase moduleOutputType) {
     myModule = module;
     myModuleOutputType = moduleOutputType;
   }
@@ -57,7 +56,7 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   }
 
   @Override
-  public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+  public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
     final NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
     return new DelegatedSourceItemPresentation(new ModuleElementPresentation(modulePointer, context, myModuleOutputType.getContentFolderType())) {
       @Override
@@ -68,14 +67,14 @@ public class ModuleOutputSourceItem extends PackagingSourceItem {
   }
 
   @Override
-  @Nonnull
-  public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
+  
+  public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
     NamedPointer<Module> modulePointer = ModuleUtilCore.createPointer(myModule);
 
     return Collections.singletonList(myModuleOutputType.createElement(context.getProject(), modulePointer));
   }
 
-  @Nonnull
+  
   @Override
   public PackagingElementOutputKind getKindOfProducedElements() {
     return PackagingElementOutputKind.DIRECTORIES_WITH_CLASSES;

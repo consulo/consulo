@@ -23,8 +23,7 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.END_SECTION;
@@ -40,7 +39,7 @@ public class ArrangementSectionRule implements Cloneable {
   private final String myEndComment;
   private final List<StdArrangementMatchRule> myMatchRules;
 
-  private ArrangementSectionRule(@Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
+  private ArrangementSectionRule(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
     myStartComment = start;
     myEndComment = end;
     myMatchRules = rules;
@@ -50,15 +49,15 @@ public class ArrangementSectionRule implements Cloneable {
     return myMatchRules;
   }
 
-  public static ArrangementSectionRule create(@Nonnull StdArrangementMatchRule... rules) {
+  public static ArrangementSectionRule create(StdArrangementMatchRule... rules) {
     return create(null, null, rules);
   }
 
-  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @Nonnull StdArrangementMatchRule... rules) {
+  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, StdArrangementMatchRule... rules) {
     return create(start, end, ContainerUtil.newArrayList(rules));
   }
 
-  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
+  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, List<StdArrangementMatchRule> rules) {
     List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
     if (StringUtil.isNotEmpty(start)) {
       matchRules.add(createSectionRule(start, START_SECTION));
@@ -71,7 +70,7 @@ public class ArrangementSectionRule implements Cloneable {
   }
 
   @Nullable
-  private static StdArrangementMatchRule createSectionRule(@Nullable String comment, @Nonnull ArrangementSettingsToken token) {
+  private static StdArrangementMatchRule createSectionRule(@Nullable String comment, ArrangementSettingsToken token) {
     if (StringUtil.isEmpty(comment)) {
       return null;
     }

@@ -17,7 +17,6 @@ package consulo.compiler.artifact;
 
 import consulo.compiler.artifact.element.CompositePackagingElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -28,11 +27,11 @@ public interface ModifiableArtifact extends Artifact {
 
   void setOutputPath(String outputPath);
 
-  void setName(@Nonnull String name);
+  void setName(String name);
 
   void setRootElement(CompositePackagingElement<?> root);
 
   void setProperties(ArtifactPropertiesProvider provider, ArtifactProperties<?> properties);
 
-  void setArtifactType(@Nonnull ArtifactType selected);
+  void setArtifactType(ArtifactType selected);
 }

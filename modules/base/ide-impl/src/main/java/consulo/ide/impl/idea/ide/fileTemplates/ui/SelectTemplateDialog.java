@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FixedSizeButton;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +102,7 @@ public class SelectTemplateDialog extends DialogWrapper {
             myCbxTemplates.setRenderer(new ColoredListCellRenderer<>() {
                 @Override
                 protected void customizeCellRenderer(
-                    @Nonnull JList list,
+                    JList list,
                     FileTemplate value,
                     int index,
                     boolean selected,

@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ExtensionImpl
@@ -29,7 +28,7 @@ final class EditorTrackerEditorFactoryListener implements EditorFactoryListener 
   }
 
   @Override
-  public void editorCreated(@Nonnull EditorFactoryEvent event) {
+  public void editorCreated(EditorFactoryEvent event) {
     Project project = event.getEditor().getProject();
     if (project != null) {
       EditorTracker.getInstance(project).editorCreated(event);
@@ -37,7 +36,7 @@ final class EditorTrackerEditorFactoryListener implements EditorFactoryListener 
   }
 
   @Override
-  public void editorReleased(@Nonnull EditorFactoryEvent event) {
+  public void editorReleased(EditorFactoryEvent event) {
     Project project = event.getEditor().getProject();
     if (project != null) {
       EditorTracker.getInstance(project).editorReleased(event);

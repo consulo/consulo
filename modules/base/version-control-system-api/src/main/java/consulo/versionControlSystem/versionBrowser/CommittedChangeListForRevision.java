@@ -20,32 +20,31 @@ import consulo.versionControlSystem.change.commited.CommittedChangeListImpl;
 import consulo.versionControlSystem.history.LongRevisionNumber;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Date;
 
 public class CommittedChangeListForRevision extends CommittedChangeListImpl implements VcsRevisionNumberAware {
 
-  @Nonnull
+  
   private VcsRevisionNumber myRevisionNumber;
 
-  public CommittedChangeListForRevision(@Nonnull String subject,
-                                        @Nonnull String comment,
-                                        @Nonnull String committerName,
-                                        @Nonnull Date commitDate,
-                                        @Nonnull Collection<Change> changes,
-                                        @Nonnull VcsRevisionNumber revisionNumber) {
+  public CommittedChangeListForRevision(String subject,
+                                        String comment,
+                                        String committerName,
+                                        Date commitDate,
+                                        Collection<Change> changes,
+                                        VcsRevisionNumber revisionNumber) {
     super(subject, comment, committerName, getLong(revisionNumber), commitDate, changes);
     myRevisionNumber = revisionNumber;
   }
 
-  @Nonnull
+  
   @Override
   public VcsRevisionNumber getRevisionNumber() {
     return myRevisionNumber;
   }
 
-  private static long getLong(@Nonnull VcsRevisionNumber number) {
+  private static long getLong(VcsRevisionNumber number) {
     if (number instanceof LongRevisionNumber) return ((LongRevisionNumber)number).getLongRevisionNumber();
     return 0;
   }

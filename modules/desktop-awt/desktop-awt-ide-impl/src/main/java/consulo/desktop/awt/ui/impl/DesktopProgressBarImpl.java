@@ -21,7 +21,6 @@ import consulo.desktop.awt.ui.impl.progressBar.SpinnerProgress;
 import consulo.ui.Component;
 import consulo.ui.ProgressBar;
 import consulo.ui.ProgressBarStyle;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,7 +30,7 @@ import javax.swing.*;
  */
 class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implements ProgressBar {
     private class BaseProgressBar extends JProgressBar implements FromSwingComponentWrapper {
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopProgressBarImpl.this;
@@ -39,7 +38,7 @@ class DesktopProgressBarImpl extends SwingComponentDelegate<JProgressBar> implem
     }
 
     private class SpinnerProgressBar extends SpinnerProgress implements FromSwingComponentWrapper {
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopProgressBarImpl.this;

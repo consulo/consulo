@@ -28,8 +28,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -41,19 +40,19 @@ import jakarta.annotation.Nullable;
 @State(name = "EditorRichCopySettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")})
 public class RichCopySettings implements PersistentStateComponent<RichCopySettings> {
 
-  @Nonnull
+  
   public static final String ACTIVE_GLOBAL_SCHEME_MARKER = "__ACTIVE_GLOBAL_SCHEME__";
 
   private boolean myEnabled = true;
   private String  mySchemeName = ACTIVE_GLOBAL_SCHEME_MARKER;
 
-  @Nonnull
+  
   public static RichCopySettings getInstance() {
     return ServiceManager.getService(RichCopySettings.class);
   }
 
-  @Nonnull
-  public EditorColorsScheme getColorsScheme(@Nonnull EditorColorsScheme editorColorsScheme) {
+  
+  public EditorColorsScheme getColorsScheme(EditorColorsScheme editorColorsScheme) {
     EditorColorsScheme result = null;
     if (mySchemeName != null && !ACTIVE_GLOBAL_SCHEME_MARKER.equals(mySchemeName)) {
       result = EditorColorsManager.getInstance().getScheme(mySchemeName);
@@ -72,7 +71,7 @@ public class RichCopySettings implements PersistentStateComponent<RichCopySettin
     XmlSerializerUtil.copyBean(state, this);
   }
 
-  @Nonnull
+  
   public String getSchemeName() {
     return mySchemeName == null ? ACTIVE_GLOBAL_SCHEME_MARKER : mySchemeName;
   }

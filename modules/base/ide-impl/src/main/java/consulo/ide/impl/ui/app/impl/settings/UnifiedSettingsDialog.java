@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -79,12 +78,12 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     protected Couple<Component> createComponents(Disposable uiDisposable) {
         TreeModel<Configurable> configurableTreeModel = new TreeModel<>() {
             @Override
-            public void buildChildren(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
+            public void buildChildren(Function<Configurable, TreeNode<Configurable>> nodeFactory, @Nullable Configurable parentValue) {
                 if (parentValue != null) {
                     if (parentValue instanceof Configurable.Composite composite) {
                         build(nodeFactory, composite.getConfigurables());
@@ -101,7 +100,7 @@ public class UnifiedSettingsDialog extends WholeLeftWindowWrapper {
                 return UnifiedConfigurableComparator.INSTANCE;
             }
 
-            private void build(@Nonnull Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {
+            private void build(Function<Configurable, TreeNode<Configurable>> nodeFactory, Configurable[] configurables) {
                 for (Configurable configurable : configurables) {
                     TreeNode<Configurable> node = nodeFactory.apply(configurable);
 

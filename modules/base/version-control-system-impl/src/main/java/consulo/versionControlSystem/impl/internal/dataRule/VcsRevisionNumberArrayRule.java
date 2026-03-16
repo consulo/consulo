@@ -25,8 +25,7 @@ import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeListByDateComparator;
 import consulo.versionControlSystem.versionBrowser.VcsRevisionNumberAware;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,14 +37,14 @@ import java.util.function.Function;
 public final class VcsRevisionNumberArrayRule {
 
   @Nullable
-  public static VcsRevisionNumber[] getData(@Nonnull DataSnapshot dataProvider) {
+  public static VcsRevisionNumber[] getData(DataSnapshot dataProvider) {
     List<VcsRevisionNumber> revisionNumbers = getRevisionNumbers(dataProvider);
 
     return !ContainerUtil.isEmpty(revisionNumbers) ? ArrayUtil.toObjectArray(revisionNumbers, VcsRevisionNumber.class) : null;
   }
 
   @Nullable
-  public static List<VcsRevisionNumber> getRevisionNumbers(@Nonnull DataSnapshot dataProvider) {
+  public static List<VcsRevisionNumber> getRevisionNumbers(DataSnapshot dataProvider) {
     VcsRevisionNumber revisionNumber = dataProvider.get(VcsDataKeys.VCS_REVISION_NUMBER);
     if (revisionNumber != null) {
       return Collections.singletonList(revisionNumber);

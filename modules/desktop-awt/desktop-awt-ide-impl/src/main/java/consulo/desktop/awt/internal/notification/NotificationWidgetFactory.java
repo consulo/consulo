@@ -8,7 +8,6 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "notificationsWidget", order = "after readOnlyWidget")
 public class NotificationWidgetFactory implements StatusBarWidgetFactory {
@@ -17,24 +16,24 @@ public class NotificationWidgetFactory implements StatusBarWidgetFactory {
     }
 
     @Override
-    @Nonnull
+    
     public String getDisplayName() {
         return UILocalize.statusBarNotificationsWidgetName().get();
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project) {
+    public boolean isAvailable(Project project) {
         return isAvailable();
     }
 
     @Override
-    @Nonnull
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    public StatusBarWidget createWidget(Project project) {
         return new IdeNotificationArea(this);
     }
 
     @Override
-    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+    public boolean canBeEnabledOn(StatusBar statusBar) {
         return isAvailable();
     }
 }

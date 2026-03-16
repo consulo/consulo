@@ -21,8 +21,7 @@ import consulo.language.Language;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 /**
@@ -31,7 +30,7 @@ import java.util.Objects;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public class LanguageVersion {
-  @Nonnull
+  
   public static final Key<LanguageVersion> KEY = Key.create("LANGUAGE_VERSION");
 
   private final String myId;
@@ -39,29 +38,29 @@ public class LanguageVersion {
   private final Language myLanguage;
   private final String[] myMimeTypes;
 
-  public LanguageVersion(@Nonnull String id, @Nonnull String name, @Nonnull Language language, String... mimeTypes) {
+  public LanguageVersion(String id, String name, Language language, String... mimeTypes) {
     myId = id;
     myName = name;
     myLanguage = language;
     myMimeTypes = mimeTypes;
   }
 
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   public Language getLanguage() {
     return myLanguage;
   }
 
-  @Nonnull
+  
   public String[] getMimeTypes() {
     return myMimeTypes;
   }

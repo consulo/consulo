@@ -19,12 +19,11 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.UnnamedConfigurable;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface RunConfigurationsSettings {
   ExtensionPointName<RunConfigurationsSettings> EXTENSION_POINT = ExtensionPointName.create(RunConfigurationsSettings.class);
 
-  @Nonnull
+  
   UnnamedConfigurable createConfigurable();
 }

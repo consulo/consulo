@@ -20,7 +20,6 @@ import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.localize.UsageLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Jeka
@@ -34,7 +33,7 @@ public class MoveMemberViewDescriptor implements UsageViewDescriptor {
   }
 
   @Override
-  @Nonnull
+  
   public PsiElement[] getElements() {
     return myElementsToMove;
   }

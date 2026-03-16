@@ -21,7 +21,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.spellcheker.tokenizer.splitter.TokenSplitter;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -39,7 +38,7 @@ public class TokenizerBase<T extends PsiElement> extends Tokenizer<T> {
 
     @Override
     @RequiredReadAction
-    public void tokenize(@Nonnull T element, TokenConsumer consumer) {
+    public void tokenize(T element, TokenConsumer consumer) {
         if (element instanceof PsiLanguageInjectionHost
             && InjectedLanguageManager.getInstance(element.getProject()).getInjectedPsiFiles(element) != null) {
             return;

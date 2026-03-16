@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -251,7 +250,7 @@ public class CreateFromTemplatePanel {
         }
     }
 
-    @Nonnull
+    
     public Map<String, Object> getVariables(Map<String, Object> predefinedProperties) {
         Map<String, Object> result = new HashMap<>(predefinedProperties);
         for (Pair<String, JTextField> pair : myAttributes) {

@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.Messages;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -42,7 +41,7 @@ public class PackagingErrorDialog extends DialogWrapper {
   private JTextPane myMessage;
   private JBLabel myMessageIcon;
 
-  public PackagingErrorDialog(@Nonnull String title, @Nonnull PackageManagementService.ErrorDescription errorDescription) {
+  public PackagingErrorDialog(String title, PackageManagementService.ErrorDescription errorDescription) {
     super(false);
     init();
     setResizable(false);

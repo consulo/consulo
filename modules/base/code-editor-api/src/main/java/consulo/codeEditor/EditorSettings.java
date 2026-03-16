@@ -16,8 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public interface EditorSettings {
      *
      * @return A list of current editor soft margins. The list may be empty if no soft margins are defined.
      */
-    @Nonnull
+    
     List<Integer> getSoftMargins();
 
     /**
@@ -236,7 +235,7 @@ public interface EditorSettings {
         return false; // TODO
     }
 
-    @Nonnull
+    
     default TabCharacterPaintMode getTabCharacterPaintMode() {
         return TabCharacterPaintMode.HORIZONTAL_LINE; // TODO !
     }

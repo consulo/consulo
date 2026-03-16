@@ -20,15 +20,14 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EnvironmentVariable implements JDOMExternalizable, Cloneable {
   public String NAME;
   public String VALUE;
   public boolean IS_PREDEFINED;
 
-  public EnvironmentVariable(@NonNls String name, @NonNls String value, boolean isPredefined) {
+  public EnvironmentVariable(String name, String value, boolean isPredefined) {
     NAME = name;
     VALUE = value;
     IS_PREDEFINED = isPredefined;

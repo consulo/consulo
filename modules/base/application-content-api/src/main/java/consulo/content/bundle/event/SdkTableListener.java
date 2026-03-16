@@ -18,7 +18,6 @@ package consulo.content.bundle.event;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.content.bundle.Sdk;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,20 +25,20 @@ import jakarta.annotation.Nonnull;
  */
 @TopicAPI(ComponentScope.APPLICATION)
 public interface SdkTableListener {
-  default void beforeSdkAdded(@Nonnull Sdk sdk){}
+  default void beforeSdkAdded(Sdk sdk){}
 
-  default void sdkAdded(@Nonnull Sdk sdk) {
+  default void sdkAdded(Sdk sdk) {
   }
 
-  default void beforeSdkRemoved(@Nonnull Sdk sdk) {
+  default void beforeSdkRemoved(Sdk sdk) {
   }
 
-  default void sdkRemoved(@Nonnull Sdk sdk) {
+  default void sdkRemoved(Sdk sdk) {
   }
 
-  default void beforeSdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
+  default void beforeSdkNameChanged(Sdk sdk, String previousName) {
   }
 
-  default void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
+  default void sdkNameChanged(Sdk sdk, String previousName) {
   }
 }

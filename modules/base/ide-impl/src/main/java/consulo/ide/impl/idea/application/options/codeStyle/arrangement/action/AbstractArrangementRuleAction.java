@@ -21,8 +21,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya
@@ -31,15 +30,15 @@ public abstract class AbstractArrangementRuleAction extends AnAction {
     protected AbstractArrangementRuleAction() {
     }
 
-    protected AbstractArrangementRuleAction(@Nonnull LocalizeValue text) {
+    protected AbstractArrangementRuleAction(LocalizeValue text) {
         super(text);
     }
 
-    protected AbstractArrangementRuleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected AbstractArrangementRuleAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected AbstractArrangementRuleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected AbstractArrangementRuleAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -48,7 +47,7 @@ public abstract class AbstractArrangementRuleAction extends AnAction {
         return e.getData(ArrangementSectionRulesControl.KEY);
     }
 
-    protected void scrollRowToVisible(@Nonnull ArrangementMatchingRulesControl control, int row) {
+    protected void scrollRowToVisible(ArrangementMatchingRulesControl control, int row) {
         control.scrollRowToVisible(row);
     }
 }

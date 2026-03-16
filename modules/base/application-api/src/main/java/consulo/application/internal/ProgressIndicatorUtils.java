@@ -10,8 +10,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +38,7 @@ public class ProgressIndicatorUtils {
      * @return the computation result or {@code null} if timeout has been exceeded.
      */
     @Nullable
-    public static <T> T withTimeout(long timeoutMs, @Nonnull Supplier<T> computation) {
+    public static <T> T withTimeout(long timeoutMs, Supplier<T> computation) {
         ProgressManager.checkCanceled();
         ProgressIndicator outer = ProgressIndicatorProvider.getGlobalProgressIndicator();
         ProgressIndicator inner = outer != null ? new SensitiveProgressWrapper(outer) : new ProgressIndicatorBase(false, false);
@@ -62,7 +61,7 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(@Nonnull Lock lock, int timeout, @Nonnull TimeUnit timeUnit, @Nonnull ThrowableComputable<T, E> computable)
+    public static <T, E extends Throwable> T computeWithLockAndCheckingCanceled(Lock lock, int timeout, TimeUnit timeUnit, ThrowableComputable<T, E> computable)
         throws E, ProcessCanceledException {
         awaitWithCheckCanceled(lock, timeout, timeUnit);
 
@@ -74,16 +73,16 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull CountDownLatch waiter) {
+    public static void awaitWithCheckCanceled(CountDownLatch waiter) {
         awaitWithCheckCanceled(() -> waiter.await(10, TimeUnit.MILLISECONDS));
     }
 
-    public static <T> T awaitWithCheckCanceled(@Nonnull Future<T> future) {
+    public static <T> T awaitWithCheckCanceled(Future<T> future) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         return awaitWithCheckCanceled(future, indicator);
     }
 
-    public static <T> T awaitWithCheckCanceled(@Nonnull Future<T> future, @Nullable ProgressIndicator indicator) {
+    public static <T> T awaitWithCheckCanceled(Future<T> future, @Nullable ProgressIndicator indicator) {
         while (true) {
             checkCancelledEvenWithPCEDisabled(indicator);
             try {
@@ -107,11 +106,11 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull Lock lock, int timeout, @Nonnull TimeUnit timeUnit) {
+    public static void awaitWithCheckCanceled(Lock lock, int timeout, TimeUnit timeUnit) {
         awaitWithCheckCanceled(() -> lock.tryLock(timeout, timeUnit));
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull ThrowableComputable<Boolean, ? extends Exception> waiter) {
+    public static void awaitWithCheckCanceled(ThrowableComputable<Boolean, ? extends Exception> waiter) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         boolean success = false;
         while (!success) {
@@ -139,7 +138,7 @@ public class ProgressIndicatorUtils {
         }
     }
 
-    public static void awaitWithCheckCanceled(@Nonnull Semaphore semaphore, @Nullable ProgressIndicator indicator) {
+    public static void awaitWithCheckCanceled(Semaphore semaphore, @Nullable ProgressIndicator indicator) {
         while (!semaphore.waitFor(10)) {
             checkCancelledEvenWithPCEDisabled(indicator);
         }

@@ -14,35 +14,34 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class RunAnythingAnActionProvider<V extends AnAction> extends RunAnythingProviderBase<V> {
-    @Nonnull
+    
     @Override
-    public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull V value) {
+    public RunAnythingItem getMainListItem(DataContext dataContext, V value) {
         return new RunAnythingActionItem<>(value, getCommand(value), value.getTemplatePresentation().getIcon());
     }
 
     @Override
-    public void execute(@Nonnull DataContext dataContext, @Nonnull V value) {
+    public void execute(DataContext dataContext, V value) {
         performRunAnythingAction(value, dataContext);
     }
 
     @Nullable
     @Override
-    public Image getIcon(@Nonnull V value) {
+    public Image getIcon(V value) {
         return value.getTemplatePresentation().getIcon();
     }
 
-    private static void performRunAnythingAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
+    private static void performRunAnythingAction(AnAction action, DataContext dataContext) {
         Application.get().invokeLater(
             () -> ProjectIdeFocusManager.getInstance(RunAnythingUtil.fetchProject(dataContext))
                 .doWhenFocusSettlesDown(() -> performAction(action, dataContext))
         );
     }
 
-    private static void performAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
+    private static void performAction(AnAction action, DataContext dataContext) {
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.UNKNOWN, dataContext);
 
         ActionImplUtil.performActionDumbAwareWithCallbacks(action, event, dataContext);

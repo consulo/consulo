@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.util.TextRange;
@@ -35,8 +34,7 @@ import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.awt.*;
@@ -55,26 +53,24 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public boolean isEnabled(@Nonnull Project project) {
+    public boolean isEnabled(Project project) {
         XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         return session != null && session.getDebugProcess().getEvaluator() != null;
     }
 
     @Override
-    public AbstractValueHint createValueHint(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final Point point, final ValueHintType type) {
-        final XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
+    public AbstractValueHint createValueHint(Project project, Editor editor, Point point, ValueHintType type) {
+        XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
         if (session == null) {
             return null;
         }
 
-        final XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
+        XDebuggerEvaluator evaluator = session.getDebugProcess().getEvaluator();
         if (evaluator == null) {
             return null;
         }
 
-        return PsiDocumentManager.getInstance(project).commitAndRunReadAction(new Computable<XValueHint>() {
-            @Override
-            public XValueHint compute() {
+        return PsiDocumentManager.getInstance(project).commitAndRunReadAction(() -> {
                 int offset = AbstractValueHint.calculateOffset(editor, point);
                 ExpressionInfo expressionInfo = getExpressionInfo(evaluator, project, type, editor, offset);
                 if (expressionInfo == null) {
@@ -89,7 +85,6 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
                 }
 
                 return new XValueHint(project, editor, point, type, expressionInfo, evaluator, session);
-            }
         });
     }
 
@@ -113,7 +108,7 @@ public class XQuickEvaluateHandler extends QuickEvaluateHandler {
     }
 
     @Override
-    public boolean canShowHint(@Nonnull Project project) {
+    public boolean canShowHint(Project project) {
         return isEnabled(project);
     }
 

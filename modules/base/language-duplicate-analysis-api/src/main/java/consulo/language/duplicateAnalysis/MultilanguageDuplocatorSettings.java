@@ -8,7 +8,6 @@ import consulo.component.persist.Storage;
 import consulo.language.Language;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.Map;
@@ -28,13 +27,13 @@ public class MultilanguageDuplocatorSettings implements PersistentStateComponent
     return Application.get().getService(MultilanguageDuplocatorSettings.class);
   }
 
-  public void registerState(@Nonnull Language language, @Nonnull ExternalizableDuplocatorState state) {
+  public void registerState(Language language, ExternalizableDuplocatorState state) {
     synchronized (mySettingsMap) {
       mySettingsMap.put(language.getID(), state);
     }
   }
 
-  public ExternalizableDuplocatorState getState(@Nonnull Language language) {
+  public ExternalizableDuplocatorState getState(Language language) {
     synchronized (mySettingsMap) {
       return mySettingsMap.get(language.getID());
     }
@@ -62,7 +61,7 @@ public class MultilanguageDuplocatorSettings implements PersistentStateComponent
   }
 
   @Override
-  public void loadState(@Nonnull Element state) {
+  public void loadState(Element state) {
     synchronized (mySettingsMap) {
       if (state == null) {
         return;

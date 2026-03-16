@@ -17,12 +17,11 @@ package consulo.application.util.function;
 
 import consulo.application.progress.ProgressIndicatorProvider;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 public class Processors {
-  @Nonnull
-  public static <T> Processor<T> cancelableCollectProcessor(@Nonnull Collection<T> collection) {
+  
+  public static <T> Processor<T> cancelableCollectProcessor(Collection<T> collection) {
     return new CommonProcessors.CollectProcessor<T>(collection){
       @Override
       public boolean process(T t) {

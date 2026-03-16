@@ -13,7 +13,6 @@
 // limitations under the License.
 package consulo.ui.ex.action;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * IntelliJ Platform uses logging and statistics for actions. Please use this interface for actions with same action class
@@ -22,7 +21,7 @@ import jakarta.annotation.Nonnull;
  * @author Konstantin Bulenkov
  */
 public interface ActionWithDelegate<T> {
-  @Nonnull
+  
   T getDelegate();
 
   default String getPresentableName() {

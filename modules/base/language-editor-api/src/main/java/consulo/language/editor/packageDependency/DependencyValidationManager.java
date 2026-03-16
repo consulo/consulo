@@ -24,8 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +47,10 @@ public abstract class DependencyValidationManager extends NamedScopesHolder {
   @Nullable
   public abstract DependencyRule getViolatorDependencyRule(PsiFile from, PsiFile to);
 
-  @Nonnull
+  
   public abstract DependencyRule[] getViolatorDependencyRules(PsiFile from, PsiFile to);
 
-  @Nonnull
+  
   public abstract DependencyRule[] getApplicableRules(PsiFile file);
 
   public abstract DependencyRule[] getAllRules();
@@ -68,6 +67,6 @@ public abstract class DependencyValidationManager extends NamedScopesHolder {
 
   public abstract void reloadRules();
 
-  @Nonnull
+  
   public abstract List<Pair<NamedScope, NamedScopesHolder>> getScopeBasedHighlightingCachedScopes();
 }

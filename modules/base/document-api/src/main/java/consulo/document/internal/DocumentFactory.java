@@ -18,7 +18,6 @@ package consulo.document.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,8 +30,8 @@ public interface DocumentFactory {
         return Application.get().getInstance(DocumentFactory.class);
     }
 
-    @Nonnull
-    default DocumentEx createDocument(@Nonnull CharSequence chars) {
+    
+    default DocumentEx createDocument(CharSequence chars) {
         return createDocument(chars, false);
     }
 
@@ -41,11 +40,11 @@ public interface DocumentFactory {
      * The noticeable peculiarity of DocumentImpl behavior in this mode is that DocumentImpl won't suppress ProcessCancelledException
      * thrown from listeners during changedUpdate event, so the exception will be rethrown and rest of the listeners WON'T be notified.
      */
-    @Nonnull
-    default DocumentEx createDocument(@Nonnull CharSequence chars, boolean forUseInNonAWTThread) {
+    
+    default DocumentEx createDocument(CharSequence chars, boolean forUseInNonAWTThread) {
         return createDocument(chars, false, forUseInNonAWTThread);
     }
 
-    @Nonnull
-    DocumentEx createDocument(@Nonnull CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread);
+    
+    DocumentEx createDocument(CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread);
 }

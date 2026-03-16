@@ -20,7 +20,6 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.internal.ImplementationViewComponent;
 import consulo.usage.internal.ImplementationViewComponentFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,7 +30,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ImplementationViewComponentFactoryImpl implements ImplementationViewComponentFactory {
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public ImplementationViewComponent create(PsiElement[] elements, int index) {
         return new ImplementationViewComponentImpl(elements, index);

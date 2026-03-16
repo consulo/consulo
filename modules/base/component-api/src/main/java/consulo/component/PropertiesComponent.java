@@ -17,8 +17,7 @@ package consulo.component;
 
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -37,39 +36,39 @@ public interface PropertiesComponent {
     /**
      * Consider to use {@link #setValue(String, String, String)} to avoid write defaults.
      */
-    void setValue(@Nonnull String name, @Nullable String value);
+    void setValue(String name, @Nullable String value);
 
     /**
      * Set value or unset if equals to default value
      */
-    void setValue(@Nonnull String name, @Nullable String value, @Nullable String defaultValue);
+    void setValue(String name, @Nullable String value, @Nullable String defaultValue);
 
     /**
      * Set value or unset if equals to default value
      */
-    void setValue(@Nonnull String name, float value, float defaultValue);
+    void setValue(String name, float value, float defaultValue);
 
     /**
      * Set value or unset if equals to default value
      */
-    void setValue(@Nonnull String name, long value, long defaultValue);
+    void setValue(String name, long value, long defaultValue);
 
     /**
      * Set value or unset if equals to default value
      */
-    void setValue(@Nonnull String name, int value, int defaultValue);
+    void setValue(String name, int value, int defaultValue);
 
     /**
      * Set value or unset if equals to false
      */
-    default void setValue(@Nonnull String name, boolean value) {
+    default void setValue(String name, boolean value) {
         setValue(name, value, false);
     }
 
     /**
      * Set value or unset if equals to default
      */
-    void setValue(@Nonnull String name, boolean value, boolean defaultValue);
+    void setValue(String name, boolean value, boolean defaultValue);
 
     @Nullable
     String[] getValues(String name);
@@ -80,27 +79,27 @@ public interface PropertiesComponent {
         return Boolean.valueOf(getValue(name));
     }
 
-    default boolean getBoolean(@Nonnull String name, boolean defaultValue) {
+    default boolean getBoolean(String name, boolean defaultValue) {
         return isValueSet(name) ? isTrueValue(name) : defaultValue;
     }
 
-    default boolean getBoolean(@Nonnull String name) {
+    default boolean getBoolean(String name) {
         return getBoolean(name, false);
     }
 
-    @Nonnull
-    default String getValue(String name, @Nonnull String defaultValue) {
+    
+    default String getValue(String name, String defaultValue) {
         if (!isValueSet(name)) {
             return defaultValue;
         }
         return ObjectUtil.notNull(getValue(name), defaultValue);
     }
 
-    default int getInt(@Nonnull String name, int defaultValue) {
+    default int getInt(String name, int defaultValue) {
         return StringUtil.parseInt(getValue(name), defaultValue);
     }
 
-    default long getLong(@Nonnull String name, int defaultValue) {
+    default long getLong(String name, int defaultValue) {
         return StringUtil.parseLong(getValue(name), defaultValue);
     }
 
@@ -132,7 +131,7 @@ public interface PropertiesComponent {
      * Init was never performed and in any case is not recommended.
      */
     @Deprecated
-    default int getOrInitInt(@Nonnull String name, int defaultValue) {
+    default int getOrInitInt(String name, int defaultValue) {
         return getInt(name, defaultValue);
     }
 
@@ -148,7 +147,7 @@ public interface PropertiesComponent {
         return getValue(name);
     }
 
-    default boolean saveFields(@Nonnull Object object) {
+    default boolean saveFields(Object object) {
         try {
             for (Field field : object.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
@@ -165,7 +164,7 @@ public interface PropertiesComponent {
         }
     }
 
-    default boolean loadFields(@Nonnull Object object) {
+    default boolean loadFields(Object object) {
         try {
             for (Field field : object.getClass().getDeclaredFields()) {
                 field.setAccessible(true);

@@ -20,7 +20,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.util.proximity.ProximityLocation;
 import consulo.language.util.proximity.ProximityWeigher;
 import consulo.module.Module;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
 public class SameModuleWeigher extends ProximityWeigher {
 
   @Override
-  public Comparable weigh(@Nonnull PsiElement element, @Nonnull ProximityLocation location) {
+  public Comparable weigh(PsiElement element, ProximityLocation location) {
     Module elementModule = element.getModule();
     if (location.getPositionModule() == elementModule) {
       return 2;

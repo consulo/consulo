@@ -22,7 +22,6 @@ import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -39,7 +38,7 @@ public class XJumpToSourceAction extends XJumpToSourceActionBase {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(XValueNodeImpl node, AnActionEvent e) {
         return super.isEnabled(node, e) && node.getValueContainer().canNavigateToSource();
     }
 }

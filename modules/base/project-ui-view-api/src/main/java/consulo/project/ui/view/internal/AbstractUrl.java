@@ -17,7 +17,7 @@
 package consulo.project.ui.view.internal;
 
 import consulo.project.Project;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 /**

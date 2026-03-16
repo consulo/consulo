@@ -7,14 +7,13 @@ import consulo.execution.debug.stream.trace.PrevAwareState;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamCall;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface ResolvedStreamCall<CALL extends StreamCall, STATE_BEFORE extends IntermediateState, STATE_AFTER extends IntermediateState> {
-  @Nonnull
+  
   CALL getCall();
 
   @Nullable
@@ -24,17 +23,17 @@ public interface ResolvedStreamCall<CALL extends StreamCall, STATE_BEFORE extend
   STATE_AFTER getStateAfter();
 
   interface Intermediate extends ResolvedStreamCall<IntermediateStreamCall, NextAwareState, PrevAwareState> {
-    @Nonnull
+    
     @Override
     NextAwareState getStateBefore();
 
-    @Nonnull
+    
     @Override
     PrevAwareState getStateAfter();
   }
 
   interface Terminator extends ResolvedStreamCall<TerminatorStreamCall, NextAwareState, PrevAwareState> {
-    @Nonnull
+    
     @Override
     NextAwareState getStateBefore();
   }

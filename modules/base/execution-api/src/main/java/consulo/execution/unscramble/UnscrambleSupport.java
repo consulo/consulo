@@ -20,18 +20,17 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UnscrambleSupport {
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
+  
   LocalizeValue getName();
 
-  boolean isAvailable(@Nonnull StacktraceAnalyzer analyzer);
+  boolean isAvailable(StacktraceAnalyzer analyzer);
 
   @Nullable
   String unscramble(Project project, String text, String logName);

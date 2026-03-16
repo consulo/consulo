@@ -5,7 +5,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenType;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 public class FlexAdapter extends LexerBase {
 
@@ -24,7 +23,7 @@ public class FlexAdapter extends LexerBase {
 
     private boolean myFailed;
 
-    public FlexAdapter(@Nonnull FlexLexer flex) {
+    public FlexAdapter(FlexLexer flex) {
         myFlex = flex;
     }
 
@@ -33,7 +32,7 @@ public class FlexAdapter extends LexerBase {
     }
 
     @Override
-    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         myText = buffer;
         myTokenStart = myTokenEnd = startOffset;
         myBufferEnd = endOffset;
@@ -72,7 +71,7 @@ public class FlexAdapter extends LexerBase {
     }
 
     @Override
-    @Nonnull
+    
     public CharSequence getBufferSequence() {
         return myText;
     }

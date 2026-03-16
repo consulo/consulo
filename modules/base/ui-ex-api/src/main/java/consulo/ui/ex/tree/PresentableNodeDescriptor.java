@@ -20,8 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 
@@ -95,7 +94,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     return presentation;
   }
 
-  @Nonnull
+  
   protected PresentationData createPresentation() {
     return new PresentationData();
   }
@@ -118,7 +117,7 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
 
   protected abstract void update(PresentationData presentation);
 
-  @Nonnull
+  
   public final PresentationData getPresentation() {
     PresentationData result;
     if (myUpdatedPresentation == null) {
@@ -178,22 +177,22 @@ public abstract class PresentableNodeDescriptor<E> extends NodeDescriptor<E> {
     private final LocalizeValue myToolTip;
     private final SimpleTextAttributes myAttributes;
 
-    public ColoredFragment(@Nonnull LocalizeValue aText, SimpleTextAttributes aAttributes) {
+    public ColoredFragment(LocalizeValue aText, SimpleTextAttributes aAttributes) {
       this(aText, LocalizeValue.empty(), aAttributes);
     }
 
-    public ColoredFragment(@Nonnull LocalizeValue aText, @Nonnull LocalizeValue toolTip, SimpleTextAttributes aAttributes) {
+    public ColoredFragment(LocalizeValue aText, LocalizeValue toolTip, SimpleTextAttributes aAttributes) {
       myText = aText;
       myAttributes = aAttributes;
       myToolTip = toolTip;
     }
 
-    @Nonnull
+    
     public LocalizeValue getToolTip() {
       return myToolTip;
     }
 
-    @Nonnull
+    
     public LocalizeValue getText() {
       return myText;
     }

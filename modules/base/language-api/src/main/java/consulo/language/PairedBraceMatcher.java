@@ -25,8 +25,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the brace matching support required for a custom language. For paired
@@ -42,7 +41,7 @@ public interface PairedBraceMatcher extends LanguageExtension {
   ExtensionPointCacheKey<PairedBraceMatcher, ByLanguageValue<PairedBraceMatcher>> KEY = ExtensionPointCacheKey.create("PairedBraceMatcher", LanguageOneToOne.build());
 
   @Nullable
-  static PairedBraceMatcher forLanguage(@Nonnull Language language) {
+  static PairedBraceMatcher forLanguage(Language language) {
     return Application.get().getExtensionPoint(PairedBraceMatcher.class).getOrBuildCache(KEY).get(language);
   }
 
@@ -62,7 +61,7 @@ public interface PairedBraceMatcher extends LanguageExtension {
    * @param contextType token type that follows lbrace
    * @return true / false as described
    */
-  default boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
+  default boolean isPairedBracesAllowedBeforeType(IElementType lbraceType, @Nullable IElementType contextType) {
     return false;
   }
 

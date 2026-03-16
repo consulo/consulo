@@ -41,8 +41,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -52,7 +51,7 @@ import jakarta.annotation.Nullable;
  */
 public class SMTRunnerConsoleProperties extends TestConsoleProperties implements SMStacktraceParserEx {
     private final RunProfile myConfiguration;
-    @Nonnull
+    
     private final String myTestFrameworkName;
     private final CompositeFilter myCustomFilter;
     private boolean myIdBasedTestTree = false;
@@ -63,15 +62,15 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
      * @param testFrameworkName Prefix for storage which keeps runner settings. E.g. "RubyTestUnit"
      * @param executor
      */
-    public SMTRunnerConsoleProperties(@Nonnull RunConfiguration config, @Nonnull String testFrameworkName, @Nonnull Executor executor) {
+    public SMTRunnerConsoleProperties(RunConfiguration config, String testFrameworkName, Executor executor) {
         this(config.getProject(), config, testFrameworkName, executor);
     }
 
     public SMTRunnerConsoleProperties(
-        @Nonnull Project project,
-        @Nonnull RunProfile config,
-        @Nonnull String testFrameworkName,
-        @Nonnull Executor executor
+        Project project,
+        RunProfile config,
+        String testFrameworkName,
+        Executor executor
     ) {
         super(getStorage(testFrameworkName), project, executor);
         myConfiguration = config;
@@ -79,7 +78,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         myCustomFilter = new CompositeFilter(project);
     }
 
-    @Nonnull
+    
     private static Storage.PropertiesComponentStorage getStorage(String testFrameworkName) {
         return new Storage.PropertiesComponentStorage(testFrameworkName + "Support.", ApplicationPropertiesComponent.getInstance());
     }
@@ -113,13 +112,13 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
 
     @Nullable
     @Override
-    public Navigatable getErrorNavigatable(@Nonnull Location<?> location, @Nonnull String stacktrace) {
+    public Navigatable getErrorNavigatable(Location<?> location, String stacktrace) {
         return getErrorNavigatable(location.getProject(), stacktrace);
     }
 
     @Nullable
     @Override
-    public Navigatable getErrorNavigatable(@Nonnull final Project project, @Nonnull String stacktrace) {
+    public Navigatable getErrorNavigatable(final Project project, String stacktrace) {
         if (myCustomFilter.isEmpty()) {
             return null;
         }
@@ -164,7 +163,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     @Deprecated
     @Nullable
     @RequiredReadAction
-    protected Navigatable findSuitableNavigatableForLine(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
+    protected Navigatable findSuitableNavigatableForLine(Project project, VirtualFile file, int line) {
         // lets find first non-ws psi element
         Document doc = FileDocumentManager.getInstance().getDocument(file);
         PsiFile psi = doc == null ? null : PsiDocumentManager.getInstance(project).getPsiFile(doc);
@@ -204,7 +203,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
         return null;
     }
 
-    @Nonnull
+    
     public String getTestFrameworkName() {
         return myTestFrameworkName;
     }

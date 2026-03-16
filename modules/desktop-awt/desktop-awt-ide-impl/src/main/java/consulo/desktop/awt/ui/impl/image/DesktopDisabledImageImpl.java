@@ -24,8 +24,7 @@ import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +40,7 @@ import java.awt.image.RGBImageFilter;
  * @since 2018-06-22
  */
 public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, DesktopAWTImage {
-    public static DesktopAWTImage of(@Nonnull Image original) {
+    public static DesktopAWTImage of(Image original) {
         return new DesktopDisabledImageImpl(original);
     }
 
@@ -75,7 +74,7 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, Desk
      * Creates new icon with the filter applied.
      */
     @SuppressWarnings("UndesirableClassUsage")
-    public static Icon filterIcon(@Nonnull Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
+    public static Icon filterIcon(Icon icon, RGBImageFilter filter, @Nullable Component ancestor) {
         if (icon instanceof DesktopLazyImageImpl) {
             icon = ((DesktopLazyImageImpl) icon).getOrComputeIcon();
         }
@@ -115,7 +114,7 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, Desk
         private static final JComponent ourFakeComponent = new JLabel();
     }
 
-    @Nonnull
+    
     @Override
     public Icon toSwingIcon() {
         return myDisabledIcon;
@@ -131,7 +130,7 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, Desk
         return myOriginal.getWidth();
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithNewSize(int width, int height) {
         if (myOriginal instanceof DesktopAWTImage desktopAWTImage) {
@@ -140,7 +139,7 @@ public class DesktopDisabledImageImpl implements ToSwingIconWrapper, Image, Desk
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
         if (myOriginal instanceof DesktopAWTImage desktopAWTImage) {

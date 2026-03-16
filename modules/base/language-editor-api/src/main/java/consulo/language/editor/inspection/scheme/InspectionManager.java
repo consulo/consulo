@@ -27,8 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
@@ -41,52 +40,52 @@ import java.util.List;
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class InspectionManager {
     public interface ProblemDescriptorBuilder {
-        @Nonnull
-        default ProblemDescriptorBuilder range(@Nonnull PsiElement element) {
+        
+        default ProblemDescriptorBuilder range(PsiElement element) {
             return range(element, element);
         }
 
-        @Nonnull
-        ProblemDescriptorBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement);
+        
+        ProblemDescriptorBuilder range(PsiElement element, @Nullable TextRange rangeInElement);
 
-        @Nonnull
-        ProblemDescriptorBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement);
+        
+        ProblemDescriptorBuilder range(PsiElement startElement, PsiElement endElement);
 
-        @Nonnull
-        ProblemDescriptorBuilder highlightType(@Nonnull ProblemHighlightType highlightType);
+        
+        ProblemDescriptorBuilder highlightType(ProblemHighlightType highlightType);
 
-        @Nonnull
+        
         ProblemDescriptorBuilder afterEndOfLine();
 
-        @Nonnull
+        
         default ProblemDescriptorBuilder afterEndOfLine(boolean isAfterEndOfLine) {
             return isAfterEndOfLine ? afterEndOfLine() : this;
         }
 
-        @Nonnull
+        
         ProblemDescriptorBuilder onTheFly();
 
-        @Nonnull
+        
         default ProblemDescriptorBuilder onTheFly(boolean onTheFly) {
             return onTheFly ? onTheFly() : this;
         }
 
-        @Nonnull
+        
         default ProblemDescriptorBuilder hideTooltip() {
             return showTooltip(false);
         }
 
-        @Nonnull
+        
         ProblemDescriptorBuilder showTooltip(boolean showTooltip);
 
-        @Nonnull
-        ProblemDescriptorBuilder withFix(@Nonnull LocalQuickFix fix);
+        
+        ProblemDescriptorBuilder withFix(LocalQuickFix fix);
 
         default ProblemDescriptorBuilder withOptionalFix(@Nullable LocalQuickFix fix) {
             return fix != null ? withFix(fix) : this;
         }
 
-        @Nonnull
+        
         default ProblemDescriptorBuilder withFixes(LocalQuickFix... fixes) {
             if (fixes == null || fixes.length == 0) {
                 return this;
@@ -94,10 +93,10 @@ public abstract class InspectionManager {
             return fixes.length == 1 ? withFix(fixes[0]) : withFixes(Arrays.asList(fixes));
         }
 
-        @Nonnull
-        ProblemDescriptorBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes);
+        
+        ProblemDescriptorBuilder withFixes(Collection<? extends LocalQuickFix> localQuickFixes);
 
-        @Nonnull
+        
         @RequiredReadAction
         ProblemDescriptor create();
     }
@@ -106,37 +105,37 @@ public abstract class InspectionManager {
         return project.getInstance(InspectionManager.class);
     }
 
-    @Nonnull
+    
     public abstract Project getProject();
 
     /**
      * Used in java plugin
      */
-    @Nonnull
+    
     @UsedInPlugin
     @RequiredReadAction
     public abstract List<ProblemDescriptor> runLocalToolLocaly(
-        @Nonnull LocalInspectionTool tool,
-        @Nonnull PsiFile file,
-        @Nonnull Object state
+        LocalInspectionTool tool,
+        PsiFile file,
+        Object state
     );
 
-    @Nonnull
+    
     @UsedInPlugin
-    public abstract ProblemsHolder createProblemsHolder(@Nonnull PsiFile file, boolean onTheFly);
+    public abstract ProblemsHolder createProblemsHolder(PsiFile file, boolean onTheFly);
 
     @Contract(pure = true)
-    public abstract ProblemDescriptorBuilder newProblemDescriptor(@Nonnull LocalizeValue descriptionTemplate);
+    public abstract ProblemDescriptorBuilder newProblemDescriptor(LocalizeValue descriptionTemplate);
 
     @Contract(pure = true)
     public abstract ModuleProblemDescriptor createProblemDescriptor(
-        @Nonnull String descriptionTemplate,
-        @Nonnull Module module,
+        String descriptionTemplate,
+        Module module,
         QuickFix<?>... fixes
     );
 
-    @Nonnull
-    public abstract CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes);
+    
+    public abstract CommonProblemDescriptor createProblemDescriptor(String descriptionTemplate, QuickFix... fixes);
 
     /**
      * Factory method for ProblemDescriptor. Should be called from LocalInspectionTool.checkXXX() methods.
@@ -149,13 +148,13 @@ public abstract class InspectionManager {
      */
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         LocalQuickFix fix,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean onTheFly
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
@@ -168,14 +167,14 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         boolean onTheFly,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType
+        ProblemHighlightType highlightType
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
             .range(psiElement)
@@ -187,13 +186,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean onTheFly,
         boolean isAfterEndOfLine
     ) {
@@ -208,13 +207,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
+        PsiElement startElement,
+        PsiElement endElement,
+        String descriptionTemplate,
+        ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
     ) {
@@ -228,13 +227,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
+        PsiElement psiElement,
         @Nullable TextRange rangeInElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
+        String descriptionTemplate,
+        ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
     ) {
@@ -248,13 +247,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         boolean showTooltip,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean onTheFly,
         LocalQuickFix... fixes
     ) {
@@ -269,13 +268,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         LocalQuickFix fix,
-        @Nonnull ProblemHighlightType highlightType
+        ProblemHighlightType highlightType
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
             .range(psiElement)
@@ -286,13 +285,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType
+        ProblemHighlightType highlightType
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
             .range(psiElement)
@@ -303,13 +302,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         LocalQuickFix[] fixes,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         boolean isAfterEndOfLine
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
@@ -322,13 +321,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement startElement,
-        @Nonnull PsiElement endElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
+        PsiElement startElement,
+        PsiElement endElement,
+        String descriptionTemplate,
+        ProblemHighlightType highlightType,
         LocalQuickFix... fixes
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
@@ -340,13 +339,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
+        PsiElement psiElement,
         TextRange rangeInElement,
-        @Nonnull String descriptionTemplate,
-        @Nonnull ProblemHighlightType highlightType,
+        String descriptionTemplate,
+        ProblemHighlightType highlightType,
         LocalQuickFix... fixes
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
@@ -358,13 +357,13 @@ public abstract class InspectionManager {
 
     @Deprecated
     @DeprecationInfo("Use #newProblemDescriptor()...create()")
-    @Nonnull
+    
     @RequiredReadAction
     public ProblemDescriptor createProblemDescriptor(
-        @Nonnull PsiElement psiElement,
-        @Nonnull String descriptionTemplate,
+        PsiElement psiElement,
+        String descriptionTemplate,
         boolean showTooltip,
-        @Nonnull ProblemHighlightType highlightType,
+        ProblemHighlightType highlightType,
         LocalQuickFix... fixes
     ) {
         return newProblemDescriptor(LocalizeValue.of(descriptionTemplate))
@@ -375,7 +374,7 @@ public abstract class InspectionManager {
             .create();
     }
 
-    @Nonnull
+    
     public abstract GlobalInspectionContext createNewGlobalContext(boolean reuse);
 
     public abstract String getCurrentProfile();

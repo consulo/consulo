@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.errorTreeView;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class HotfixData {
@@ -24,7 +23,7 @@ public class HotfixData {
   private final String myFixComment;
   private final Consumer<HotfixGate> myFix;
 
-  public HotfixData(@Nonnull String id, @Nonnull String errorText, @Nonnull String fixComment, Consumer<HotfixGate> fix) {
+  public HotfixData(String id, String errorText, String fixComment, Consumer<HotfixGate> fix) {
     myErrorText = errorText;
     myFixComment = fixComment;
     myFix = fix;

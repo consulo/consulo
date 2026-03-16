@@ -19,8 +19,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -35,7 +34,7 @@ public interface FileIndex {
    *
    * @return false if files processing was stopped ({@link ContentIterator#processFile(VirtualFile)} returned false)
    */
-  boolean iterateContent(@Nonnull ContentIterator processor);
+  boolean iterateContent(ContentIterator processor);
 
   /**
    * Same as {@link #iterateContent(ContentIterator)} but allows to pass {@code filter} to
@@ -47,7 +46,7 @@ public interface FileIndex {
    *
    * @return false if files processing was stopped ({@link ContentIterator#processFile(VirtualFile)} returned false)
    */
-  boolean iterateContent(@Nonnull ContentIterator processor, @Nullable VirtualFileFilter filter);
+  boolean iterateContent(ContentIterator processor, @Nullable VirtualFileFilter filter);
 
   /**
    * Processes all files and directories in the content under directory {@code dir} (including the directory itself) skipping excluded
@@ -55,7 +54,7 @@ public interface FileIndex {
    *
    * @return false if files processing was stopped ({@link ContentIterator#processFile(VirtualFile)} returned false)
    */
-  boolean iterateContentUnderDirectory(@Nonnull VirtualFile dir, @Nonnull ContentIterator processor);
+  boolean iterateContentUnderDirectory(VirtualFile dir, ContentIterator processor);
 
   /**
    * Same as {@link #iterateContentUnderDirectory(VirtualFile, ContentIterator)} but allows to pass additional {@code customFilter} to
@@ -64,13 +63,13 @@ public interface FileIndex {
    * <p>
    * {@code null} filter means that all directories should be processed.
    */
-  boolean iterateContentUnderDirectory(@Nonnull VirtualFile dir, @Nonnull ContentIterator processor, @Nullable VirtualFileFilter customFilter);
+  boolean iterateContentUnderDirectory(VirtualFile dir, ContentIterator processor, @Nullable VirtualFileFilter customFilter);
 
   /**
    * Returns {@code true} if {@code fileOrDir} is a file or directory under a content root of this project or module and not excluded or
    * ignored.
    */
-  boolean isInContent(@Nonnull VirtualFile fileOrDir);
+  boolean isInContent(VirtualFile fileOrDir);
 
   /**
    * Returns {@code true} if {@code file} is a file located under a sources, tests or resources root and not excluded or ignored.
@@ -78,12 +77,12 @@ public interface FileIndex {
    * Note that sometimes a file can belong to the content and be a source file but not belong to sources of the content.
    * This happens if sources of some library are located under the content (so they belong to the project content but not as sources).
    */
-  boolean isContentSourceFile(@Nonnull VirtualFile file);
+  boolean isContentSourceFile(VirtualFile file);
 
   /**
    * Returns {@code true} if {@code fileOrDir} is a file or directory located under a sources, tests or resources root and not excluded or ignored.
    */
-  boolean isInSourceContent(@Nonnull VirtualFile fileOrDir);
+  boolean isInSourceContent(VirtualFile fileOrDir);
 
   /**
    * Returns true if {@code fileOrDir} is a file or directory located under a test sources or resources root and not excluded or ignored.
@@ -96,17 +95,17 @@ public interface FileIndex {
    *
    * @see TestSourcesFilter#isTestSources(VirtualFile, Project)
    */
-  boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir);
+  boolean isInTestSourceContent(VirtualFile fileOrDir);
 
   @Nullable
-  ContentFolderTypeProvider getContentFolderTypeForFile(@Nonnull VirtualFile file);
+  ContentFolderTypeProvider getContentFolderTypeForFile(VirtualFile file);
 
-  default boolean isUnderContentFolderType(@Nonnull VirtualFile virtualFile, @Nonnull ContentFolderTypeProvider contentFolderTypeProvider) {
+  default boolean isUnderContentFolderType(VirtualFile virtualFile, ContentFolderTypeProvider contentFolderTypeProvider) {
     ContentFolderTypeProvider contentFolderTypeForFile = getContentFolderTypeForFile(virtualFile);
     return contentFolderTypeProvider == contentFolderTypeForFile;
   }
 
-  default boolean isUnderContentFolderType(@Nonnull VirtualFile virtualFile, @Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  default boolean isUnderContentFolderType(VirtualFile virtualFile, Predicate<ContentFolderTypeProvider> predicate) {
     ContentFolderTypeProvider contentFolderTypeForFile = getContentFolderTypeForFile(virtualFile);
     return contentFolderTypeForFile != null && predicate.test(contentFolderTypeForFile);
   }

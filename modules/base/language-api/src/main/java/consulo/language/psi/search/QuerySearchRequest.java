@@ -7,7 +7,6 @@ import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.BiPredicate;
 
 /**
@@ -18,10 +17,10 @@ public class QuerySearchRequest {
   public final SearchRequestCollector collector;
   public final Processor<? super PsiReference> processor;
 
-  public QuerySearchRequest(@Nonnull Query<PsiReference> query,
-                            @Nonnull final SearchRequestCollector collector,
+  public QuerySearchRequest(Query<PsiReference> query,
+                            final SearchRequestCollector collector,
                             boolean inReadAction,
-                            @Nonnull final BiPredicate<? super PsiReference, ? super SearchRequestCollector> processor) {
+                            final BiPredicate<? super PsiReference, ? super SearchRequestCollector> processor) {
     this.query = query;
     this.collector = collector;
     if (inReadAction) {

@@ -21,8 +21,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,29 +32,29 @@ public interface BackgroundTaskByVfsChangeTask extends Named {
 
   void setEnabled(boolean enabled);
 
-  @Nonnull
+  
   String getProviderName();
 
   @Nullable
   BackgroundTaskByVfsChangeProvider getProvider();
 
-  @Nonnull
+  
   VirtualFilePointer getVirtualFilePointer();
 
-  @Nonnull
+  
   BackgroundTaskByVfsParameters getParameters();
 
-  @Nonnull
+  
   @RequiredReadAction
   String[] getGeneratedFilePaths();
 
-  @Nonnull
+  
   @RequiredReadAction
   VirtualFile[] getGeneratedFiles();
 
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   BackgroundTaskByVfsChangeTask clone();
 }

@@ -21,8 +21,7 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.OrderRoot;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -47,11 +46,11 @@ public interface LibraryEditor {
 
   void addJarDirectory(String url, boolean recursive, OrderRootType rootType);
 
-  void addExcludedRoot(@Nonnull String url);
+  void addExcludedRoot(String url);
 
   void removeRoot(String url, OrderRootType rootType);
 
-  void removeExcludedRoot(@Nonnull String url);
+  void removeExcludedRoot(String url);
 
   void removeAllRoots();
 

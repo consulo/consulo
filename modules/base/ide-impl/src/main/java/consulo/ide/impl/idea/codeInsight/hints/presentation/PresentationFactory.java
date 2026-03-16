@@ -12,7 +12,6 @@ import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.ide.impl.idea.codeInsight.hints.InlayHintsUtils;
 import consulo.ide.impl.idea.codeInsight.hints.InlayTextMetricsStorage;
 import consulo.ide.impl.idea.codeInsight.hints.InsetValueProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inlay.InlayPresentation;
 import consulo.language.editor.inlay.InlayPresentationFactory;
@@ -31,6 +30,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -536,7 +536,7 @@ public class PresentationFactory implements InlayPresentationFactory {
             String root = ArchiveVfsUtil.getArchiveRootForLocalFile(element.getContainingFile().getVirtualFile()).getName();
             path = fs.getProtocol() + "://" + root +
                 URLUtil.JAR_SEPARATOR +
-                VfsUtilCore.getRelativeLocation(element.getContainingFile().getVirtualFile(),
+                VirtualFileUtil.getRelativeLocation(element.getContainingFile().getVirtualFile(),
                     ArchiveVfsUtil.getArchiveRootForLocalFile(element.getContainingFile().getVirtualFile()));
         }
         else {

@@ -23,7 +23,6 @@ import consulo.ui.MenuBar;
 import consulo.ui.MenuItem;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -34,7 +33,7 @@ import javax.swing.*;
 public class DesktopMenuBarImpl extends SwingComponentDelegate<JMenuBar> implements MenuBar {
     class MyJMenu extends JMenuBar implements FromSwingComponentWrapper {
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopMenuBarImpl.this;
@@ -52,9 +51,9 @@ public class DesktopMenuBarImpl extends SwingComponentDelegate<JMenuBar> impleme
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public MenuBar add(@Nonnull MenuItem menuItem) {
+    public MenuBar add(MenuItem menuItem) {
         if (menuItem instanceof Menu) {
             toAWTComponent().add((JMenu) TargetAWT.to(menuItem));
         }

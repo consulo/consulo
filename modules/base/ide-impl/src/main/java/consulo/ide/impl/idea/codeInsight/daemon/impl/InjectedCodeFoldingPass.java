@@ -24,7 +24,6 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   private static final Key<Boolean> THE_FIRST_TIME_KEY = Key.create("FirstInjectedFoldingPass");
@@ -32,14 +31,14 @@ class InjectedCodeFoldingPass extends TextEditorHighlightingPass {
   private final Editor myEditor;
   private final PsiFile myFile;
 
-  InjectedCodeFoldingPass(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  InjectedCodeFoldingPass(Project project, Editor editor, PsiFile file) {
     super(project, editor.getDocument(), false);
     myEditor = editor;
     myFile = file;
   }
 
   @Override
-  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+  public void doCollectInformation(ProgressIndicator progress) {
     boolean firstTime = CodeFoldingPass.isFirstTime(myFile, myEditor, THE_FIRST_TIME_KEY);
     Runnable runnable = FoldingUpdate.updateInjectedFoldRegions(myEditor, myFile, firstTime);
     synchronized (this) {

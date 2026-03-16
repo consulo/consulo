@@ -38,7 +38,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 import consulo.util.collection.impl.map.LinkedHashMap;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;

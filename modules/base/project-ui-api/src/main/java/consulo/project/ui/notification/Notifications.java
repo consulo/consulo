@@ -17,8 +17,7 @@ package consulo.project.ui.notification;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,19 +28,19 @@ public interface Notifications {
     NotificationGroup SYSTEM_MESSAGES_GROUP = NotificationGroup.balloonGroup("System Messages");
 
     class Bus {
-        public static void notify(@Nonnull Notification notification) {
+        public static void notify(Notification notification) {
             notify(notification, null);
         }
 
-        public static void notify(@Nonnull Notification notification, @Nullable Project project) {
+        public static void notify(Notification notification, @Nullable Project project) {
             NotificationService.getInstance().notify(notification, project);
         }
 
-        public static void notifyAndHide(@Nonnull Notification notification) {
+        public static void notifyAndHide(Notification notification) {
             notifyAndHide(notification, null);
         }
 
-        public static void notifyAndHide(@Nonnull Notification notification, @Nullable Project project) {
+        public static void notifyAndHide(Notification notification, @Nullable Project project) {
             notify(notification);
             AppExecutorUtil.getAppScheduledExecutorService().schedule(
                 () -> {

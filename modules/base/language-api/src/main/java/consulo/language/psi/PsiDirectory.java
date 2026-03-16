@@ -21,8 +21,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a file system directory and allows to access its contents.
@@ -41,18 +40,18 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the virtual file instance.
      */
     @Override
-    @Nonnull
+    
     VirtualFile getVirtualFile();
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     String getName();
 
-    @Nonnull
+    
     @Override
     @RequiredWriteAction
-    PsiElement setName(@Nonnull String name) throws IncorrectOperationException;
+    PsiElement setName(String name) throws IncorrectOperationException;
 
     /**
      * Returns the parent directory of the directory.
@@ -71,7 +70,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the array of subdirectories.
      */
-    @Nonnull
+    
     PsiDirectory[] getSubdirectories();
 
     /**
@@ -79,7 +78,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      *
      * @return the array of files.
      */
-    @Nonnull
+    
     @RequiredReadAction
     PsiFile[] getFiles();
 
@@ -90,7 +89,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the subdirectory instance, or null if no subdirectory with such a name is found.
      */
     @Nullable
-    PsiDirectory findSubdirectory(@Nonnull String name);
+    PsiDirectory findSubdirectory(String name);
 
     /**
      * Finds a file with the specified name in this directory.
@@ -99,7 +98,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the file instance, or null if no file with such a name is found.
      */
     @Nullable
-    PsiFile findFile(@Nonnull String name);
+    PsiFile findFile(String name);
 
     /**
      * Creates a subdirectory with the specified name in the directory.
@@ -108,8 +107,8 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the created directory instance.
      * @throws IncorrectOperationException if the operation failed for some reason.
      */
-    @Nonnull
-    PsiDirectory createSubdirectory(@Nonnull String name) throws IncorrectOperationException;
+    
+    PsiDirectory createSubdirectory(String name) throws IncorrectOperationException;
 
     /**
      * Checks if it's possible to create a subdirectory with the specified name in the directory,
@@ -119,7 +118,7 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @param name the name of the subdirectory to check creation possibility.
      * @throws IncorrectOperationException if the creation is not possible.
      */
-    void checkCreateSubdirectory(@Nonnull String name) throws IncorrectOperationException;
+    void checkCreateSubdirectory(String name) throws IncorrectOperationException;
 
     /**
      * Creates a file with the specified name in the directory.
@@ -128,11 +127,11 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @return the created file instance.
      * @throws IncorrectOperationException if the operation failed for some reason.
      */
-    @Nonnull
-    PsiFile createFile(@Nonnull String name) throws IncorrectOperationException;
+    
+    PsiFile createFile(String name) throws IncorrectOperationException;
 
-    @Nonnull
-    PsiFile copyFileFrom(@Nonnull String newName, @Nonnull PsiFile originalFile) throws IncorrectOperationException;
+    
+    PsiFile copyFileFrom(String newName, PsiFile originalFile) throws IncorrectOperationException;
 
     /**
      * Checks if it's possible to create a file with the specified name in the directory,
@@ -142,5 +141,5 @@ public interface PsiDirectory extends PsiFileSystemItem {
      * @param name the name of the file to check creation possibility.
      * @throws IncorrectOperationException if the creation is not possible.
      */
-    void checkCreateFile(@Nonnull String name) throws IncorrectOperationException;
+    void checkCreateFile(String name) throws IncorrectOperationException;
 }

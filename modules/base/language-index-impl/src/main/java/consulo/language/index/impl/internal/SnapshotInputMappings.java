@@ -25,8 +25,7 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -73,7 +72,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return new File(IndexInfrastructure.getIndexRootDir(myIndexId), "fileIdToHashId");
   }
 
-  @Nonnull
+  
   @Override
   public Map<Key, Value> readData(int hashId) throws IOException {
     return ObjectUtil.notNull(doReadData(hashId), Collections.emptyMap());
@@ -81,7 +80,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
 
   @Nullable
   @Override
-  public InputData<Key, Value> readData(@Nonnull Input content) throws IOException {
+  public InputData<Key, Value> readData(Input content) throws IOException {
     int hashId = getHashId(content);
 
     Map<Key, Value> data = doReadData(hashId);
@@ -109,8 +108,8 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return null;
   }
 
-  @Nonnull
-  private Map<Key, Value> deserialize(@Nonnull ByteArraySequence byteSequence) throws IOException {
+  
+  private Map<Key, Value> deserialize(ByteArraySequence byteSequence) throws IOException {
     if (myMapExternalizer != null) {
       return AbstractForwardIndexAccessor.deserializeFromByteSeq(byteSequence, myMapExternalizer);
     }
@@ -122,8 +121,8 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     }
   }
 
-  @Nonnull
-  private ByteArraySequence serializeData(@Nonnull Map<Key, Value> data) throws IOException {
+  
+  private ByteArraySequence serializeData(Map<Key, Value> data) throws IOException {
     if (myMapExternalizer != null) {
       return AbstractForwardIndexAccessor.serializeToByteSeq(data, myMapExternalizer, data.size());
     }
@@ -134,7 +133,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
   }
 
   @Override
-  public InputData<Key, Value> putData(@Nullable Input content, @Nonnull InputData<Key, Value> data) throws IOException {
+  public InputData<Key, Value> putData(@Nullable Input content, InputData<Key, Value> data) throws IOException {
     int hashId;
     InputData<Key, Value> result;
     if (data instanceof HashedInputData) {
@@ -159,7 +158,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return result;
   }
 
-  @Nonnull
+  
   private String getContentDebugData(Input input) {
     FileContentImpl content = (FileContentImpl)input;
     return "[" + content.getFile().getPath() + ";" + content.getFileType().getId() + ";" + content.getCharset() + "]";
@@ -231,12 +230,12 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     try {
       return new PersistentHashMap<>(mapFile, EnumeratorIntegerDescriptor.INSTANCE, new DataExternalizer<String>() {
         @Override
-        public void save(@Nonnull DataOutput out, String value) throws IOException {
+        public void save(DataOutput out, String value) throws IOException {
           out.write((byte[])CompressionUtil.compressStringRawBytes(value));
         }
 
         @Override
-        public String read(@Nonnull DataInput in) throws IOException {
+        public String read(DataInput in) throws IOException {
           byte[] b = new byte[((InputStream)in).available()];
           in.readFully(b);
           return (String)CompressionUtil.uncompressStringRawBytes(b);
@@ -360,7 +359,7 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     return moreInfo;
   }
 
-  private boolean savePersistentData(@Nonnull Map<Key, Value> data, int id) {
+  private boolean savePersistentData(Map<Key, Value> data, int id) {
     try {
       if (myContents != null && myContents.containsMapping(id)) return false;
       ByteArraySequence bytes = serializeData(data);
@@ -392,13 +391,13 @@ class SnapshotInputMappings<Key, Value, Input> implements UpdatableSnapshotInput
     }
   }
 
-  @Nonnull
-  private static ByteArraySequence decompress(@Nonnull ByteArraySequence seq) throws IOException {
+  
+  private static ByteArraySequence decompress(ByteArraySequence seq) throws IOException {
     return new ByteArraySequence(CompressionUtil.readCompressed(seq.toInputStream()));
   }
 
-  @Nonnull
-  private static ByteArraySequence compress(@Nonnull ByteArraySequence seq) throws IOException {
+  
+  private static ByteArraySequence compress(ByteArraySequence seq) throws IOException {
     UnsyncByteArrayOutputStream result = new UnsyncByteArrayOutputStream();
     CompressionUtil.writeCompressed(new DataOutputStream(result), seq.getBytes(), seq.getOffset(), seq.length());
     return result.toByteArraySequence();

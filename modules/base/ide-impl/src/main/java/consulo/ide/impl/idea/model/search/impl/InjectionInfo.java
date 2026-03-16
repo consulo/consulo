@@ -1,6 +1,5 @@
 package consulo.ide.impl.idea.model.search.impl;
 
-import jakarta.annotation.Nonnull;
 
 // from kotlin
 public abstract class InjectionInfo {
@@ -24,12 +23,12 @@ public abstract class InjectionInfo {
   public static class InInjection extends InjectionInfo {
     private LanguageInfo languageInfo;
 
-    public InInjection(@Nonnull LanguageInfo languageInfo) {
+    public InInjection(LanguageInfo languageInfo) {
       super();
       this.languageInfo = languageInfo;
     }
 
-    @Nonnull
+    
     public final LanguageInfo getLanguageInfo() {
       return languageInfo;
     }

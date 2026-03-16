@@ -19,7 +19,7 @@ package consulo.component.persist;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Every component which would like to persist its state across IDE restarts

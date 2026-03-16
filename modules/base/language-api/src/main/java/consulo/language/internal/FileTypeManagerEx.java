@@ -17,7 +17,6 @@ package consulo.language.internal;
 
 import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -27,14 +26,14 @@ public abstract class FileTypeManagerEx extends FileTypeManager {
         return (FileTypeManagerEx) getInstance();
     }
 
-    @Nonnull
-    public abstract String getExtension(@Nonnull String fileName);
+    
+    public abstract String getExtension(String fileName);
 
     public abstract void fireFileTypesChanged();
 
     public abstract void fireBeforeFileTypesChanged();
 
-    public void freezeFileTypeTemporarilyIn(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
+    public void freezeFileTypeTemporarilyIn(VirtualFile file, Runnable runnable) {
         runnable.run();
     }
 }

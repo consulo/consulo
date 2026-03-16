@@ -24,14 +24,13 @@ import consulo.versionControlSystem.VcsDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.task.TaskManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean isChangelist = !e.hasData(VcsDataKeys.CHANGE_LISTS);
         e.getPresentation().setVisible(isChangelist);
         if (isChangelist) {
@@ -40,7 +39,7 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
         if (lists == null) {
             return false;
@@ -57,7 +56,7 @@ public class AssociateWithTaskAction extends ToggleAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         ChangeList[] lists = e.getData(VcsDataKeys.CHANGE_LISTS);
         if (lists == null) {
             return;

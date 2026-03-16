@@ -17,12 +17,11 @@ package consulo.component.util;
 
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 public interface ComparableObject {
   Object[] NONE = ArrayUtil.EMPTY_OBJECT_ARRAY;
 
-  @Nonnull
+  
   Object[] getEqualityObjects();
 
   class Impl implements ComparableObject {
@@ -32,11 +31,11 @@ public interface ComparableObject {
       this(NONE);
     }
 
-    public Impl(@Nonnull Object... objects) {
+    public Impl(Object... objects) {
       myObjects = objects;
     }
 
-    @Nonnull
+    
     @Override
     public Object[] getEqualityObjects() {
       return myObjects;

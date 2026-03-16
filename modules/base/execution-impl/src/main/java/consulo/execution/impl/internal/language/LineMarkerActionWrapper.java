@@ -18,8 +18,7 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +30,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     protected final PsiElement myElement;
     private final AnAction myOrigin;
 
-    public LineMarkerActionWrapper(PsiElement element, @Nonnull AnAction origin) {
+    public LineMarkerActionWrapper(PsiElement element, AnAction origin) {
         myElement = element;
         myOrigin = origin;
 
@@ -43,7 +42,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
         }
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         // This is quickfix for IDEA-208231
@@ -76,7 +75,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         AnActionEvent wrapped = wrapEvent(e);
         myOrigin.update(wrapped);
         Image icon = wrapped.getPresentation().getIcon();
@@ -85,13 +84,13 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
         }
     }
 
-    @Nonnull
-    private AnActionEvent wrapEvent(@Nonnull AnActionEvent e) {
+    
+    private AnActionEvent wrapEvent(AnActionEvent e) {
         DataContext dataContext = wrapContext(e.getDataContext());
         return new AnActionEvent(e.getInputEvent(), dataContext, e.getPlace(), e.getPresentation(), e.getActionManager(), e.getModifiers());
     }
 
-    @Nonnull
+    
     private DataContext wrapContext(DataContext dataContext) {
         Pair<PsiElement, MyDataContext> pair = DataManager.getInstance().loadFromDataContext(dataContext, LOCATION_WRAPPER);
         if (pair == null || pair.first != myElement) {
@@ -103,17 +102,17 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myOrigin.actionPerformed(wrapEvent(e));
     }
 
-    @Nonnull
+    
     @Override
     public Priority getPriority() {
         return Priority.TOP;
     }
 
-    @Nonnull
+    
     @Override
     public AnAction getDelegate() {
         return myOrigin;
@@ -130,7 +129,7 @@ public class LineMarkerActionWrapper extends ActionGroup implements PriorityActi
         @Override
         @RequiredReadAction
         @SuppressWarnings("unchecked")
-        public synchronized <T> T getData(@Nonnull Key<T> dataId) {
+        public synchronized <T> T getData(Key<T> dataId) {
             if (Location.DATA_KEY == dataId) {
                 return myElement.isValid() ? (T) new PsiLocation<>(myElement) : null;
             }

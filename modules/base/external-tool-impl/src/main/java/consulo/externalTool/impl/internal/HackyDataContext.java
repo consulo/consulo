@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +59,7 @@ class HackyDataContext implements DataContext {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getData(@Nonnull Key<T> dataId) {
+  public <T> T getData(Key<T> dataId) {
     if (values.keySet().contains(dataId)) {
       return (T)values.get(dataId);
     }

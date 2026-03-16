@@ -17,7 +17,6 @@ package consulo.dataContext;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 /**
  * Extension point for computing derived data from an already-collected snapshot.
@@ -30,5 +29,5 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface UiDataRule {
-    void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot);
+    void uiDataSnapshot(DataSink sink, DataSnapshot snapshot);
 }

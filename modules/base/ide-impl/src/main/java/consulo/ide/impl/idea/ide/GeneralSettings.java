@@ -25,7 +25,7 @@ import consulo.execution.ProcessCloseConfirmation;
 import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

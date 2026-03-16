@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 public abstract class TooltipLinkHandler {
   public static final String INSPECTION_INFO = "Inspection info";
 
-  @Nonnull
+  
   public abstract String getPrefix();
 
   /**
@@ -39,7 +38,7 @@ public abstract class TooltipLinkHandler {
    * @param editor    an editor in which tooltip with a link was shown.
    * @return {@code true} if a link was handled.
    */
-  public boolean handleLink(@Nonnull String refSuffix, @Nonnull Editor editor) {
+  public boolean handleLink(String refSuffix, Editor editor) {
     return false;
   }
 
@@ -53,7 +52,7 @@ public abstract class TooltipLinkHandler {
    * @return detailed description to show.
    */
   @Nullable
-  public String getDescription(@Nonnull String refSuffix, @Nonnull Editor editor) {
+  public String getDescription(String refSuffix, Editor editor) {
     return null;
   }
 
@@ -64,8 +63,8 @@ public abstract class TooltipLinkHandler {
    * @param editor    an editor in which tooltip with a link was shown.
    * @return title above detailed description in the expanded tooltip
    */
-  @Nonnull
-  public String getDescriptionTitle(@Nonnull String refSuffix, @Nonnull Editor editor) {
+  
+  public String getDescriptionTitle(String refSuffix, Editor editor) {
     return INSPECTION_INFO;
   }
 }

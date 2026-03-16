@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,13 +52,13 @@ class VirtualFileDirectoryImpl extends VirtualFileImpl {
   }
 
   @Override
-  @Nonnull
+  
   public OutputStream getOutputStream(Object requestor, long newModificationStamp, long newTimeStamp) throws IOException {
     throw new IOException(VirtualFileSystemLocalize.fileWriteError(getUrl()).get());
   }
 
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     throw new IOException(VirtualFileSystemLocalize.fileReadError(getUrl()).get());
   }

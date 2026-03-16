@@ -27,8 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -43,14 +42,14 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     private static final ExtensionPointCacheKey<ParagraphFillHandler, ByLanguageValue<ParagraphFillHandler>> KEY =
         ExtensionPointCacheKey.create("ParagraphFillHandler", LanguageOneToOne.build(new DefaultParagraphFillHandler()));
 
-    @Nonnull
-    public static ParagraphFillHandler forLanguage(@Nonnull Language language) {
+    
+    public static ParagraphFillHandler forLanguage(Language language) {
         return Application.get().getExtensionPoint(ParagraphFillHandler.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
     @RequiredReadAction
     @RequiredUIAccess
-    public final void performOnElement(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    public final void performOnElement(PsiElement element, Editor editor) {
         Document document = editor.getDocument();
 
         TextRange textRange = getTextRange(element, editor);
@@ -103,9 +102,9 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     protected void appendPostfix(
-        @Nonnull PsiElement element,
-        @Nonnull String text,
-        @Nonnull StringBuilder stringBuilder
+        PsiElement element,
+        String text,
+        StringBuilder stringBuilder
     ) {
         String postfix = getPostfix(element);
         if (text.endsWith(postfix.trim())) {
@@ -113,7 +112,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         }
     }
 
-    protected void appendPrefix(@Nonnull PsiElement element, @Nonnull String text, @Nonnull StringBuilder stringBuilder) {
+    protected void appendPrefix(PsiElement element, String text, StringBuilder stringBuilder) {
         String prefix = getPrefix(element);
         if (text.startsWith(prefix.trim())) {
             stringBuilder.append(prefix);
@@ -121,14 +120,14 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     @RequiredReadAction
-    private TextRange getTextRange(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    private TextRange getTextRange(PsiElement element, Editor editor) {
         int startOffset = getStartOffset(element, editor);
         int endOffset = getEndOffset(element, editor);
         return new UnfairTextRange(startOffset, endOffset);
     }
 
     @RequiredReadAction
-    private int getStartOffset(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    private int getStartOffset(PsiElement element, Editor editor) {
         if (isBunchOfElement(element)) {
             PsiElement firstElement = getFirstElement(element);
             return firstElement != null ? firstElement.getTextRange().getStartOffset() : element.getTextRange().getStartOffset();
@@ -161,7 +160,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
     }
 
     @RequiredReadAction
-    private int getEndOffset(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    private int getEndOffset(PsiElement element, Editor editor) {
         if (isBunchOfElement(element)) {
             PsiElement next = getLastElement(element);
             return next != null ? next.getTextRange().getEndOffset() : element.getTextRange().getEndOffset();
@@ -185,7 +184,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
 
     @Nullable
     @RequiredReadAction
-    private PsiElement getFirstElement(@Nonnull PsiElement element) {
+    private PsiElement getFirstElement(PsiElement element) {
         IElementType elementType = element.getNode().getElementType();
         PsiElement prevSibling = element.getPrevSibling();
         PsiElement result = element;
@@ -210,7 +209,7 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
 
     @Nullable
     @RequiredReadAction
-    private PsiElement getLastElement(@Nonnull PsiElement element) {
+    private PsiElement getLastElement(PsiElement element) {
         IElementType elementType = element.getNode().getElementType();
         PsiElement nextSibling = element.getNextSibling();
         PsiElement result = element;
@@ -245,13 +244,13 @@ public abstract class ParagraphFillHandler implements LanguageExtension {
         return psiFile instanceof PsiPlainTextFile;
     }
 
-    @Nonnull
-    protected String getPrefix(@Nonnull PsiElement element) {
+    
+    protected String getPrefix(PsiElement element) {
         return "";
     }
 
-    @Nonnull
-    protected String getPostfix(@Nonnull PsiElement element) {
+    
+    protected String getPostfix(PsiElement element) {
         return "";
     }
 }

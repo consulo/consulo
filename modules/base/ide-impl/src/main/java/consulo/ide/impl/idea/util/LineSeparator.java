@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
 
@@ -43,13 +42,13 @@ public enum LineSeparator {
     private final String mySeparatorString;
     private final byte[] myBytes;
 
-    LineSeparator(@Nonnull String separatorString) {
+    LineSeparator(String separatorString) {
         mySeparatorString = separatorString;
         myBytes = separatorString.getBytes(StandardCharsets.UTF_8);
     }
 
-    @Nonnull
-    public static LineSeparator fromString(@Nonnull String string) {
+    
+    public static LineSeparator fromString(String string) {
         for (LineSeparator separator : values()) {
             if (separator.getSeparatorString().equals(string)) {
                 return separator;
@@ -59,12 +58,12 @@ public enum LineSeparator {
         return getSystemLineSeparator();
     }
 
-    @Nonnull
+    
     public String getSeparatorString() {
         return mySeparatorString;
     }
 
-    @Nonnull
+    
     public byte[] getSeparatorBytes() {
         return myBytes;
     }
@@ -73,7 +72,7 @@ public enum LineSeparator {
         return separator1 != null && separator2 != null && !separator1.equals(separator2);
     }
 
-    @Nonnull
+    
     public static LineSeparator getSystemLineSeparator() {
         return Platform.current().os().isWindows() ? CRLF : LF;
     }

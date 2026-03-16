@@ -21,19 +21,18 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.content.ContentIterator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class FileBasedIndexScanRunnableCollector {
-    public static FileBasedIndexScanRunnableCollector getInstance(@Nonnull Project project) {
+    public static FileBasedIndexScanRunnableCollector getInstance(Project project) {
         return project.getInstance(FileBasedIndexScanRunnableCollector.class);
     }
 
     // Returns true if file should be indexed
-    public abstract boolean shouldCollect(@Nonnull VirtualFile file);
+    public abstract boolean shouldCollect(VirtualFile file);
 
     // Collect all roots for indexing
-    public abstract List<Runnable> collectScanRootRunnables(@Nonnull ContentIterator processor, ProgressIndicator indicator);
+    public abstract List<Runnable> collectScanRootRunnables(ContentIterator processor, ProgressIndicator indicator);
 }

@@ -17,8 +17,7 @@ package consulo.compiler.artifact.element;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.LocalFileSystem;
-import jakarta.annotation.Nullable;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -28,13 +27,13 @@ public abstract class DestinationInfo {
   private final String myOutputPath;
   private final String myOutputFilePath;
 
-  protected DestinationInfo(@Nonnull String outputPath, @Nullable VirtualFile outputFile, @Nonnull String outputFilePath) {
+  protected DestinationInfo(String outputPath, @Nullable VirtualFile outputFile, String outputFilePath) {
     myOutputFilePath = outputFilePath;
     myOutputFile = outputFile;
     myOutputPath = outputPath;
   }
 
-  @Nonnull
+  
   public String getOutputPath() {
     return myOutputPath;
   }
@@ -44,7 +43,7 @@ public abstract class DestinationInfo {
     return myOutputFile;
   }
 
-  @Nonnull
+  
   public String getOutputFilePath() {
     return myOutputFilePath;
   }

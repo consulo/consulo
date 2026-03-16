@@ -24,7 +24,6 @@ import consulo.language.statistician.StatisticsManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.*;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -43,7 +42,7 @@ public class LookupStatisticsWeigher extends Classifier<LookupElement> {
   }
 
   @Override
-  public void addElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
+  public void addElement(LookupElement element, ProcessingContext context) {
     StatisticsInfo baseInfo = CompletionStatistician.getBaseStatisticsInfo(element, myLocation);
     int weight = weigh(baseInfo);
     if (weight != 0) {
@@ -56,9 +55,9 @@ public class LookupStatisticsWeigher extends Classifier<LookupElement> {
     super.addElement(element, context);
   }
 
-  @Nonnull
+  
   @Override
-  public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
+  public Iterable<LookupElement> classify(Iterable<LookupElement> source, ProcessingContext context) {
     List<LookupElement> initialList = getInitialNoStatElements(source, context);
     Iterable<LookupElement> rest = withoutInitial(source, initialList);
     Collection<List<LookupElement>> byWeight = buildMapByWeight(rest).descendingMap().values();
@@ -137,14 +136,14 @@ public class LookupStatisticsWeigher extends Classifier<LookupElement> {
     return minRecency == Integer.MAX_VALUE ? 0 : StatisticsManager.RECENCY_OBLIVION_THRESHOLD - minRecency;
   }
 
-  @Nonnull
+  
   @Override
-  public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
+  public List<Pair<LookupElement, Object>> getSortingWeights(Iterable<LookupElement> items, ProcessingContext context) {
     return ContainerUtil.map(items, lookupElement -> new Pair<LookupElement, Object>(lookupElement, getWeight(lookupElement)));
   }
 
   @Override
-  public void removeElement(@Nonnull LookupElement element, @Nonnull ProcessingContext context) {
+  public void removeElement(LookupElement element, ProcessingContext context) {
     myWeights.remove(element);
     myNoStats.remove(element);
     super.removeElement(element, context);

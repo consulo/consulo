@@ -13,8 +13,7 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -31,7 +30,7 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
   }
 
   @Override
-  public WindowState getStateFor(@Nullable Project project, @Nonnull String key, @Nonnull Window window) {
+  public WindowState getStateFor(@Nullable Project project, String key, Window window) {
     synchronized (myRunnableMap) {
       WindowStateBean state = WindowStateAdapter.getState(window);
       Runnable runnable = myRunnableMap.put(key, new Runnable() {
@@ -61,8 +60,8 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
   }
 
   @Override
-  @Nonnull
-  protected String getAbsoluteKey(@Nullable GraphicsConfiguration configuration, @Nonnull String key) {
+  
+  protected String getAbsoluteKey(@Nullable GraphicsConfiguration configuration, String key) {
     StringBuilder sb = new StringBuilder(key);
     for (GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
       Rectangle bounds = ScreenUtil.getScreenRectangle(device.getDefaultConfiguration());
@@ -107,12 +106,12 @@ abstract class DesktopAWTWindowStateServiceImpl extends UnifiedWindowStateServic
   }
 
   @Override
-  protected Rectangle2D getScreenRectangle(@Nonnull Point2D location) {
+  protected Rectangle2D getScreenRectangle(Point2D location) {
     return TargetAWT.from(ScreenUtil.getScreenRectangle(location.x(), location.y()));
   }
 
   @Override
-  @Nonnull
+  
   protected Rectangle2D getScreenRectangle(@Nullable GraphicsConfiguration configuration) {
     Rectangle rectangle;
     if (configuration != null) {

@@ -38,8 +38,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,9 +52,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     private final static String PRIMARY_CONSOLE_PANEL = "PRIMARY_CONSOLE_PANEL";
     private final static String SECONDARY_CONSOLE_PANEL = "SECONDARY_CONSOLE_PANEL";
 
-    @Nonnull
     private final S myPrimaryConsoleView;
-    @Nonnull
     private final T mySecondaryConsoleView;
     @Nullable
     private final String myStateStorageKey;
@@ -63,17 +60,16 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     private boolean myPrimary;
     @Nullable
     private ProcessHandler myProcessHandler;
-    @Nonnull
     private final SwitchDuplexConsoleViewAction mySwitchConsoleAction;
     private boolean myDisableSwitchConsoleActionOnProcessEnd = true;
 
     private final Collection<DuplexConsoleListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
-    public DuplexConsoleView(@Nonnull S primaryConsoleView, @Nonnull T secondaryConsoleView) {
+    public DuplexConsoleView(S primaryConsoleView, T secondaryConsoleView) {
         this(primaryConsoleView, secondaryConsoleView, null);
     }
 
-    public DuplexConsoleView(@Nonnull S primaryConsoleView, @Nonnull T secondaryConsoleView, @Nullable String stateStorageKey) {
+    public DuplexConsoleView(S primaryConsoleView, T secondaryConsoleView, @Nullable String stateStorageKey) {
         super(new CardLayout());
         myPrimaryConsoleView = primaryConsoleView;
         mySecondaryConsoleView = secondaryConsoleView;
@@ -91,8 +87,8 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         Disposer.register(this, mySecondaryConsoleView);
     }
 
-    public static <S extends ConsoleView, T extends ConsoleView> DuplexConsoleView<S, T> create(@Nonnull S primary,
-                                                                                                @Nonnull T secondary,
+    public static <S extends ConsoleView, T extends ConsoleView> DuplexConsoleView<S, T> create(S primary,
+                                                                                                T secondary,
                                                                                                 @Nullable String stateStorageKey) {
         return new DuplexConsoleView<>(primary, secondary, stateStorageKey);
     }
@@ -128,7 +124,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         }
     }
 
-    public void addSwitchListener(@Nonnull DuplexConsoleListener listener, @Nonnull Disposable parent) {
+    public void addSwitchListener(DuplexConsoleListener listener, Disposable parent) {
         myListeners.add(listener);
         Disposer.register(parent, () -> myListeners.remove(listener));
     }
@@ -137,12 +133,10 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         return myPrimary;
     }
 
-    @Nonnull
     public S getPrimaryConsoleView() {
         return myPrimaryConsoleView;
     }
 
-    @Nonnull
     public T getSecondaryConsoleView() {
         return mySecondaryConsoleView;
     }
@@ -152,7 +146,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType) {
+    public void print(String s, ConsoleViewContentType contentType) {
         myPrimaryConsoleView.print(s, contentType);
         mySecondaryConsoleView.print(s, contentType);
     }
@@ -194,7 +188,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public void performWhenNoDeferredOutput(@Nonnull Runnable runnable) {
+    public void performWhenNoDeferredOutput(Runnable runnable) {
     }
 
     @Override
@@ -204,13 +198,13 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public void addMessageFilter(@Nonnull Filter filter) {
+    public void addMessageFilter(Filter filter) {
         myPrimaryConsoleView.addMessageFilter(filter);
         mySecondaryConsoleView.addMessageFilter(filter);
     }
 
     @Override
-    public void printHyperlink(@Nonnull String hyperlinkText, HyperlinkInfo info) {
+    public void printHyperlink(String hyperlinkText, HyperlinkInfo info) {
         myPrimaryConsoleView.printHyperlink(hyperlinkText, info);
         mySecondaryConsoleView.printHyperlink(hyperlinkText, info);
     }
@@ -237,7 +231,6 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         return false;
     }
 
-    @Nonnull
     @Override
     public AnAction[] createConsoleActions() {
         List<AnAction> actions = new ArrayList<>();
@@ -275,7 +268,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent) {
+    public void addChangeListener(ChangeListener listener, Disposable parent) {
         if (myPrimaryConsoleView instanceof ObservableConsoleView observableConsoleView) {
             observableConsoleView.addChangeListener(listener, parent);
         }
@@ -285,14 +278,13 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         ConsoleView consoleView = getSubConsoleView(isPrimaryConsoleEnabled());
         if (consoleView instanceof UiDataProvider uiDataProvider) {
             sink.uiDataSnapshot(uiDataProvider);
         }
     }
 
-    @Nonnull
     public Presentation getSwitchConsoleActionPresentation() {
         return mySwitchConsoleAction.getTemplatePresentation();
     }
@@ -301,8 +293,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         myDisableSwitchConsoleActionOnProcessEnd = disableSwitchConsoleActionOnProcessEnd;
     }
 
-    @Nonnull
-    private List<AnAction> mergeConsoleActions(@Nonnull List<AnAction> actions1, @Nonnull Collection<AnAction> actions2) {
+    private List<AnAction> mergeConsoleActions(List<AnAction> actions1, Collection<AnAction> actions2) {
         return ContainerUtil.map(actions1, action1 -> {
             AnAction action2 = ContainerUtil.find(actions2, action -> action1.getClass() == action.getClass() &&
                 StringUtil.equals(action1.getTemplatePresentation().getText(),
@@ -324,7 +315,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
 
     private class MergedWrapTextAction extends MergedToggleAction {
 
-        private MergedWrapTextAction(@Nonnull ToggleUseSoftWrapsToolbarAction action1, @Nonnull ToggleUseSoftWrapsToolbarAction action2) {
+        private MergedWrapTextAction(ToggleUseSoftWrapsToolbarAction action1, ToggleUseSoftWrapsToolbarAction action2) {
             super(action1, action2);
         }
 
@@ -343,20 +334,20 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return !isPrimaryConsoleEnabled();
         }
 
         @RequiredUIAccess
         @Override
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             enableConsole(!flag);
             setStoredState(!flag);
             Application.get().invokeLater(() -> update(event));
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent event) {
+        public void update(AnActionEvent event) {
             super.update(event);
             if (!myDisableSwitchConsoleActionOnProcessEnd) {
                 return;
@@ -376,12 +367,10 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     private static class MergedToggleAction extends ToggleAction implements DumbAware {
-        @Nonnull
         private final ToggleAction myAction1;
-        @Nonnull
         private final ToggleAction myAction2;
 
-        private MergedToggleAction(@Nonnull ToggleAction action1, @Nonnull ToggleAction action2) {
+        private MergedToggleAction(ToggleAction action1, ToggleAction action2) {
             myAction1 = action1;
             myAction2 = action2;
             copyFrom(action1);
@@ -401,12 +390,10 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
     }
 
     private static class MergedAction extends AnAction implements DumbAware {
-        @Nonnull
         private final AnAction myAction1;
-        @Nonnull
         private final AnAction myAction2;
 
-        private MergedAction(@Nonnull AnAction action1, @Nonnull AnAction action2) {
+        private MergedAction(AnAction action1, AnAction action2) {
             myAction1 = action1;
             myAction2 = action2;
             copyFrom(action1);
@@ -414,7 +401,7 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myAction1.actionPerformed(e);
             myAction2.actionPerformed(e);
         }

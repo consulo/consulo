@@ -35,8 +35,7 @@ import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +48,7 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class RenamePsiElementProcessor {
-    public abstract boolean canProcessElement(@Nonnull PsiElement element);
+    public abstract boolean canProcessElement(PsiElement element);
 
     @RequiredUIAccess
     public RenameDialog createRenameDialog(Project project, PsiElement element, PsiElement nameSuggestionContext, Editor editor) {
@@ -66,18 +65,18 @@ public abstract class RenamePsiElementProcessor {
         RenameUtil.doRenameGenericNamedElement(element, newName, usages, listener);
     }
 
-    @Nonnull
+    
     public Collection<PsiReference> findReferences(PsiElement element, boolean searchInCommentsAndStrings) {
         return findReferences(element);
     }
 
-    @Nonnull
+    
     public Collection<PsiReference> findReferences(PsiElement element) {
         return ReferencesSearch.search(element).findAll();
     }
 
     @Nullable
-    public Pair<String, String> getTextOccurrenceSearchStrings(@Nonnull PsiElement element, @Nonnull String newName) {
+    public Pair<String, String> getTextOccurrenceSearchStrings(PsiElement element, String newName) {
         return null;
     }
 
@@ -116,7 +115,7 @@ public abstract class RenamePsiElementProcessor {
         return true;
     }
 
-    public static List<RenamePsiElementProcessor> allForElement(@Nonnull PsiElement element) {
+    public static List<RenamePsiElementProcessor> allForElement(PsiElement element) {
         List<RenamePsiElementProcessor> result = new ArrayList<>();
         for (RenamePsiElementProcessor processor : element.getProject()
             .getApplication()
@@ -128,8 +127,8 @@ public abstract class RenamePsiElementProcessor {
         return result;
     }
 
-    @Nonnull
-    public static RenamePsiElementProcessor forElement(@Nonnull PsiElement element) {
+    
+    public static RenamePsiElementProcessor forElement(PsiElement element) {
         for (RenamePsiElementProcessor processor : element.getProject()
             .getApplication()
             .getExtensionList(RenamePsiElementProcessor.class)) {
@@ -196,9 +195,9 @@ public abstract class RenamePsiElementProcessor {
      */
     @RequiredUIAccess
     public void substituteElementToRename(
-        @Nonnull PsiElement element,
-        @Nonnull Editor editor,
-        @Nonnull Consumer<PsiElement> renameCallback
+        PsiElement element,
+        Editor editor,
+        Consumer<PsiElement> renameCallback
     ) {
         PsiElement psiElement = substituteElementToRename(element, editor);
         if (psiElement == null) {
@@ -220,7 +219,7 @@ public abstract class RenamePsiElementProcessor {
 
     public static final RenamePsiElementProcessor DEFAULT = new RenamePsiElementProcessor() {
         @Override
-        public boolean canProcessElement(@Nonnull PsiElement element) {
+        public boolean canProcessElement(PsiElement element) {
             return true;
         }
     };

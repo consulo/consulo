@@ -11,8 +11,7 @@ import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class ChangedPsiRangeUtil {
     return result;
   }
 
-  private static int getMatchingLength(@Nonnull FileElement treeElement, @Nonnull CharSequence text, boolean fromStart) {
+  private static int getMatchingLength(FileElement treeElement, CharSequence text, boolean fromStart) {
     int patternIndex = fromStart ? 0 : text.length() - 1;
     int finalPatternIndex = fromStart ? text.length() - 1 : 0;
     int direction = fromStart ? 1 : -1;
@@ -60,9 +59,9 @@ public class ChangedPsiRangeUtil {
   }
 
   @Nullable
-  public static TextRange getChangedPsiRange(@Nonnull PsiFile file,
-                                             @Nonnull FileElement treeElement,
-                                             @Nonnull CharSequence newDocumentText) {
+  public static TextRange getChangedPsiRange(PsiFile file,
+                                             FileElement treeElement,
+                                             CharSequence newDocumentText) {
     int psiLength = treeElement.getTextLength();
     if (!file.getViewProvider().supportsIncrementalReparse(file.getLanguage())) {
       return new TextRange(0, psiLength);
@@ -78,10 +77,10 @@ public class ChangedPsiRangeUtil {
   }
 
   @Nullable
-  public static ProperTextRange getChangedPsiRange(@Nonnull PsiFile file,
-                                                   @Nonnull Document document,
-                                                   @Nonnull CharSequence oldDocumentText,
-                                                   @Nonnull CharSequence newDocumentText) {
+  public static ProperTextRange getChangedPsiRange(PsiFile file,
+                                                   Document document,
+                                                   CharSequence oldDocumentText,
+                                                   CharSequence newDocumentText) {
     int psiLength = oldDocumentText.length();
     if (!file.getViewProvider().supportsIncrementalReparse(file.getLanguage())) {
       return new ProperTextRange(0, psiLength);

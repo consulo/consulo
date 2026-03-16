@@ -22,7 +22,6 @@ import consulo.localHistory.impl.internal.StreamUtil;
 import consulo.localHistory.impl.internal.revision.Difference;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -194,7 +193,7 @@ public abstract class Entry {
     return result;
   }
 
-  @Nonnull
+  
   public abstract Entry copy();
 
   public void setName(String newName) {

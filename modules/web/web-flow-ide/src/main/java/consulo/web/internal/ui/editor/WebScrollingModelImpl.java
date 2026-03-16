@@ -21,7 +21,6 @@ import consulo.codeEditor.ScrollingModelEx;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorScrollingModelBase;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -43,14 +42,14 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
 
   }
 
-  @Nonnull
+  
   @Override
   public Rectangle getVisibleArea() {
     // todo unsupported
     return new Rectangle(Integer.MAX_VALUE, Integer.MAX_VALUE);
   }
 
-  @Nonnull
+  
   @Override
   public Rectangle getVisibleAreaOnScrollingFinished() {
     // todo unsupported
@@ -58,17 +57,17 @@ public class WebScrollingModelImpl extends CodeEditorScrollingModelBase implemen
   }
 
   @Override
-  public void scrollToCaret(@Nonnull ScrollType scrollType) {
+  public void scrollToCaret(ScrollType scrollType) {
 
   }
 
   @Override
-  public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
+  public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
 
   }
 
   @Override
-  public void runActionOnScrollingFinished(@Nonnull Runnable action) {
+  public void runActionOnScrollingFinished(Runnable action) {
 
   }
 

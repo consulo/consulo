@@ -21,8 +21,7 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,13 +52,13 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         }
     }
 
-    public static EditorColorKey find(@Nonnull String externalName) {
+    public static EditorColorKey find(String externalName) {
         EditorColorKey key = ourRegistry.get(externalName);
         return key != null ? key : new EditorColorKey(externalName);
     }
 
     @Override
-    @Nonnull
+    
     public String toString() {
         return myExternalName;
     }
@@ -69,7 +68,7 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myFallbackColorKey;
     }
 
-    @Nonnull
+    
     public String getExternalName() {
         return myExternalName;
     }
@@ -84,11 +83,11 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return myDefaultColorValue;
     }
 
-    public static EditorColorKey createColorKey(@Nonnull String externalName) {
+    public static EditorColorKey createColorKey(String externalName) {
         return find(externalName);
     }
 
-    public static EditorColorKey createColorKeyWithFallback(@Nonnull String externalName, @Nonnull EditorColorKey fallbackColor) {
+    public static EditorColorKey createColorKeyWithFallback(String externalName, EditorColorKey fallbackColor) {
         EditorColorKey key = ourRegistry.get(externalName);
         if (key == null) {
             key = find(externalName);
@@ -98,7 +97,7 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return fallbackColor;
     }
 
-    public static EditorColorKey createColorKey(@Nonnull String externalName, ColorValue defaultColor) {
+    public static EditorColorKey createColorKey(String externalName, ColorValue defaultColor) {
         EditorColorKey key = ourRegistry.get(externalName);
         if (key == null) {
             key = find(externalName);
@@ -110,7 +109,7 @@ public final class EditorColorKey implements ColorValue, Comparable<EditorColorK
         return key;
     }
 
-    @Nonnull
+    
     @Override
     public RGBColor toRGB() {
         EditorColorsScheme currentScheme = EditorColorsManager.getInstance().getCurrentScheme();

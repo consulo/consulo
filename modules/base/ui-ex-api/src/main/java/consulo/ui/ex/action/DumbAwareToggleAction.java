@@ -6,14 +6,13 @@ import consulo.annotation.DeprecationInfo;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class DumbAwareToggleAction extends ToggleAction implements DumbAware {
     protected DumbAwareToggleAction() {
     }
 
-    protected DumbAwareToggleAction(@Nonnull LocalizeValue text) {
+    protected DumbAwareToggleAction(LocalizeValue text) {
         super(text);
     }
 
@@ -29,7 +28,7 @@ public abstract class DumbAwareToggleAction extends ToggleAction implements Dumb
         super(text, description, icon);
     }
 
-    protected DumbAwareToggleAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected DumbAwareToggleAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 }

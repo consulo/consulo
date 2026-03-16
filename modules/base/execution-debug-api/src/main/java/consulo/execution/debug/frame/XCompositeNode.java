@@ -20,8 +20,7 @@ import consulo.execution.debug.Obsolescent;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a node with children in a debugger tree. This interface isn't supposed to be implemented by a plugin.
@@ -41,7 +40,7 @@ public interface XCompositeNode extends Obsolescent {
      * @param children child nodes to add
      * @param last     <code>true</code> if all children added
      */
-    void addChildren(@Nonnull XValueChildrenList children, boolean last);
+    void addChildren(XValueChildrenList children, boolean last);
 
     /**
      * Add an ellipsis node ("...") indicating that the node has too many children. If user double-click on that node
@@ -62,7 +61,7 @@ public interface XCompositeNode extends Obsolescent {
      *
      * @param errorMessage message describing the error
      */
-    default void setErrorMessage(@Nonnull LocalizeValue errorMessage) {
+    default void setErrorMessage(LocalizeValue errorMessage) {
         setErrorMessage(errorMessage, null);
     }
 
@@ -72,18 +71,18 @@ public interface XCompositeNode extends Obsolescent {
      * @param errorMessage message describing the error
      * @param link         describes a hyperlink which will be appended to the error message
      */
-    void setErrorMessage(@Nonnull LocalizeValue errorMessage, @Nullable XDebuggerTreeNodeHyperlink link);
+    void setErrorMessage(LocalizeValue errorMessage, @Nullable XDebuggerTreeNodeHyperlink link);
 
-    void setMessage(@Nonnull LocalizeValue message,
+    void setMessage(LocalizeValue message,
                     @Nullable Image icon,
-                    @Nonnull SimpleTextAttributes attributes,
+                    SimpleTextAttributes attributes,
                     @Nullable XDebuggerTreeNodeHyperlink link);
 
     @Deprecated
     @DeprecationInfo("Use with localize value")
-    default void setMessage(@Nonnull String message,
+    default void setMessage(String message,
                             @Nullable Image icon,
-                            @Nonnull SimpleTextAttributes attributes,
+                            SimpleTextAttributes attributes,
                             @Nullable XDebuggerTreeNodeHyperlink link) {
         setMessage(LocalizeValue.of(message), icon, attributes, link);
     }
@@ -95,7 +94,7 @@ public interface XCompositeNode extends Obsolescent {
      */
     @Deprecated
     @DeprecationInfo("Use #setErrorMessage(LocalizeValue)")
-    default void setErrorMessage(@Nonnull String errorMessage) {
+    default void setErrorMessage(String errorMessage) {
         setErrorMessage(LocalizeValue.of(errorMessage));
     }
 
@@ -107,7 +106,7 @@ public interface XCompositeNode extends Obsolescent {
      */
     @Deprecated
     @DeprecationInfo("Use #setErrorMessage(LocalizeValue, XDebuggerTreeNodeHyperlink)")
-    default void setErrorMessage(@Nonnull String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
+    default void setErrorMessage(String errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
         setErrorMessage(LocalizeValue.of(errorMessage), link);
     }
 }

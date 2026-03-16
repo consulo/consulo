@@ -14,8 +14,7 @@ import consulo.project.Project;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,13 +26,13 @@ import static consulo.util.lang.ObjectUtil.chooseNotNull;
 public class BuildTextConsoleView extends ConsoleViewImpl implements BuildConsoleView, AnsiEscapeDecoder.ColoredTextAcceptor {
   private final AnsiEscapeDecoder myAnsiEscapeDecoder = new AnsiEscapeDecoder();
 
-  public BuildTextConsoleView(@Nonnull Project project, boolean viewer, @Nonnull List<Filter> executionFilters) {
+  public BuildTextConsoleView(Project project, boolean viewer, List<Filter> executionFilters) {
     super(project, GlobalSearchScope.allScope(project), viewer, true);
     executionFilters.forEach(this::addMessageFilter);
   }
 
   @Override
-  public void onEvent(@Nonnull Object buildId, @Nonnull BuildEvent event) {
+  public void onEvent(Object buildId, BuildEvent event) {
     if (event instanceof BuildIssueEvent) {
       BuildConsoleUtils.print(this, ((BuildIssueEvent)event).getGroup(), ((BuildIssueEvent)event).getIssue());
     }
@@ -73,7 +72,7 @@ public class BuildTextConsoleView extends ConsoleViewImpl implements BuildConsol
     }
   }
 
-  public void onEvent(@Nonnull OutputBuildEvent event) {
+  public void onEvent(OutputBuildEvent event) {
     append(event.getMessage(), event.isStdOut());
   }
 
@@ -107,7 +106,7 @@ public class BuildTextConsoleView extends ConsoleViewImpl implements BuildConsol
     return hasChanged;
   }
 
-  public boolean append(@Nonnull Failure failure) {
+  public boolean append(Failure failure) {
     String text = chooseNotNull(failure.getDescription(), failure.getMessage());
     if (text == null && failure.getError() != null) {
       text = failure.getError().getMessage();
@@ -117,13 +116,13 @@ public class BuildTextConsoleView extends ConsoleViewImpl implements BuildConsol
     return true;
   }
 
-  public void append(@Nonnull String text, boolean isStdOut) {
+  public void append(String text, boolean isStdOut) {
     Key outputType = !isStdOut ? ProcessOutputTypes.STDERR : ProcessOutputTypes.STDOUT;
     myAnsiEscapeDecoder.escapeText(text, outputType, this);
   }
 
   @Override
-  public void coloredTextAvailable(@Nonnull String text, @Nonnull Key attributes) {
+  public void coloredTextAvailable(String text, Key attributes) {
     print(text, ConsoleViewContentType.getConsoleViewType(attributes));
   }
 }

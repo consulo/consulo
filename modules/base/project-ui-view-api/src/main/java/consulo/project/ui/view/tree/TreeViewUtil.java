@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiPackage;
 import consulo.project.ui.view.internal.PsiPackageAbbreviateHelper;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -30,9 +29,9 @@ public class TreeViewUtil {
     return aPackage.getProject().getInstance(PsiPackageAbbreviateHelper.class).shouldAbbreviateName(aPackage);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static String calcAbbreviatedPackageFQName(@Nonnull PsiPackage aPackage) {
+  public static String calcAbbreviatedPackageFQName(PsiPackage aPackage) {
     StringBuilder name = new StringBuilder(aPackage.getName());
     for (PsiPackage parentPackage = aPackage.getParentPackage(); parentPackage != null; parentPackage = parentPackage.getParentPackage()) {
       String packageName = parentPackage.getName();
@@ -50,9 +49,9 @@ public class TreeViewUtil {
     return name.toString();
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static String getNodeName(@Nonnull ViewSettings settings, PsiPackage aPackage, PsiPackage parentPackageInTree, @Nonnull String defaultShortName, boolean isFQNameShown) {
+  public static String getNodeName(ViewSettings settings, PsiPackage aPackage, PsiPackage parentPackageInTree, String defaultShortName, boolean isFQNameShown) {
     String name;
     if (isFQNameShown) {
       name = settings.isAbbreviatePackageNames() ? aPackage == null ? defaultShortName : calcAbbreviatedPackageFQName(aPackage) : aPackage == null ? defaultShortName : aPackage.getQualifiedName();

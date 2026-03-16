@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -49,7 +48,7 @@ public class LightPathMacros implements PathMacros {
   }
 
   @Override
-  public void addLegacyMacro(@Nonnull String name, @Nonnull String value) {
+  public void addLegacyMacro(String name, String value) {
 
   }
 
@@ -74,17 +73,17 @@ public class LightPathMacros implements PathMacros {
   }
 
   @Override
-  public void setIgnoredMacroNames(@Nonnull Collection<String> names) {
+  public void setIgnoredMacroNames(Collection<String> names) {
 
   }
 
   @Override
-  public void addIgnoredMacro(@Nonnull String name) {
+  public void addIgnoredMacro(String name) {
 
   }
 
   @Override
-  public boolean isIgnoredMacroName(@Nonnull String macro) {
+  public boolean isIgnoredMacroName(String macro) {
     return false;
   }
 

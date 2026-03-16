@@ -18,8 +18,7 @@ package consulo.usage;
 import consulo.annotation.DeprecationInfo;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -29,5 +28,5 @@ import jakarta.annotation.Nullable;
 public interface UsageTypeProviderEx extends UsageTypeProvider {
     @Override
     @Nullable
-    UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets);
+    UsageType getUsageType(PsiElement element, UsageTarget[] targets);
 }

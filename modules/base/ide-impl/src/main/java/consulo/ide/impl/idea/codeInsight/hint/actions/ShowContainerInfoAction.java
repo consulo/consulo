@@ -28,8 +28,7 @@ import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "EditorContextInfo")
 public class ShowContainerInfoAction extends BaseCodeInsightAction {
@@ -37,7 +36,7 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction {
         super(CodeEditorLocalize.actionContextInfoText(), CodeEditorLocalize.actionContextInfoDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ShowContainerInfoHandler();
@@ -51,7 +50,7 @@ public class ShowContainerInfoAction extends BaseCodeInsightAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return PsiStructureViewFactory.createBuilderForFile(file) instanceof TreeBasedStructureViewBuilder;
     }
 }

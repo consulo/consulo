@@ -23,12 +23,11 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.CommentUtilCore;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 
-import jakarta.annotation.Nonnull;
 
 public class CommentUtil extends CommentUtilCore {
   private CommentUtil() { }
 
-  public static IndentData getMinLineIndent(Document document, int line1, int line2, @Nonnull PsiFile file) {
+  public static IndentData getMinLineIndent(Document document, int line1, int line2, PsiFile file) {
     CharSequence chars = document.getCharsSequence();
     IndentData minIndent = null;
     for (int line = line1; line <= line2; line++) {

@@ -33,8 +33,7 @@ import consulo.externalSystem.util.ExternalSystemConstants;
 import consulo.externalSystem.util.Order;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ import java.util.function.Function;
 @ExtensionImpl
 public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
 
-  @Nonnull
+  
   public static final Function<DataNode<TaskData>, ExternalTaskPojo> MAPPER = node -> ExternalTaskPojo.from(node.getData());
 
   public static final Function<DataNode<TaskData>, ExternalConfigPathAware> TASK_HOLDER_RETRIEVAL_STRATEGY = new Function<>() {
@@ -62,14 +61,14 @@ public class ToolWindowTaskService extends AbstractToolWindowService<TaskData> {
     }
   };
 
-  @Nonnull
+  
   @Override
   public Key<TaskData> getTargetDataKey() {
     return ProjectKeys.TASK;
   }
 
   @Override
-  protected void processData(@Nonnull Collection<DataNode<TaskData>> nodes, @Nonnull Project project, @Nullable ExternalSystemTasksTreeModel model) {
+  protected void processData(Collection<DataNode<TaskData>> nodes, Project project, @Nullable ExternalSystemTasksTreeModel model) {
     if (nodes.isEmpty()) {
       return;
     }

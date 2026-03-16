@@ -9,8 +9,7 @@ import consulo.logging.Logger;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FoldingPolicy {
     private static final Logger LOG = Logger.getInstance(FoldingPolicy.class);
@@ -20,7 +19,7 @@ public class FoldingPolicy {
     private FoldingPolicy() {
     }
 
-    static boolean isCollapsedByDefault(@Nonnull FoldingDescriptor foldingDescriptor, @Nonnull FoldingBuilder foldingBuilder) {
+    static boolean isCollapsedByDefault(FoldingDescriptor foldingDescriptor, FoldingBuilder foldingBuilder) {
         try {
             return foldingBuilder.isCollapsedByDefault(foldingDescriptor);
         }
@@ -31,7 +30,7 @@ public class FoldingPolicy {
     }
 
     @Nullable
-    public static String getSignature(@Nonnull PsiElement element) {
+    public static String getSignature(PsiElement element) {
         for (ElementSignatureProvider provider : ElementSignatureProvider.EP_NAME.getExtensionList()) {
             String signature = provider.getSignature(element);
             if (signature != null) {
@@ -42,7 +41,7 @@ public class FoldingPolicy {
     }
 
     @Nullable
-    public static PsiElement restoreBySignature(@Nonnull PsiFile file, @Nonnull String signature) {
+    public static PsiElement restoreBySignature(PsiFile file, String signature) {
         return restoreBySignature(file, signature, null);
     }
 
@@ -57,8 +56,8 @@ public class FoldingPolicy {
      */
     @Nullable
     public static PsiElement restoreBySignature(
-        @Nonnull PsiFile file,
-        @Nonnull String signature,
+        PsiFile file,
+        String signature,
         @Nullable StringBuilder processingInfoStorage
     ) {
         for (ElementSignatureProvider provider : ElementSignatureProvider.EP_NAME.getExtensionList()) {

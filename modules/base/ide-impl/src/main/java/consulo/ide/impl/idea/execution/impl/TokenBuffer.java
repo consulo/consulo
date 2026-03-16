@@ -20,8 +20,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Queue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +48,7 @@ class TokenBuffer {
         this.maxCapacity = maxCapacity;
     }
 
-    void print(@Nonnull String text, @Nonnull ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
+    void print(String text, ConsoleViewContentType contentType, @Nullable HyperlinkInfo info) {
         int start = 0;
         while (start < text.length()) {
             if (hasTrailingCR()) {
@@ -82,7 +81,7 @@ class TokenBuffer {
 
     // \r with \n should be \n
     // \r with other character c should be remove last line, c
-    private void combineTrailingCRWith(@Nonnull String currentText) {
+    private void combineTrailingCRWith(String currentText) {
         if (StringUtil.startsWith(currentText, "\n")) {
             TokenInfo last = tokens.removeLast();
             String lastTextWithNoCR = last.getText().substring(0, last.length() - 1);
@@ -147,7 +146,7 @@ class TokenBuffer {
         size = 0;
     }
 
-    @Nonnull
+    
     CharSequence getText() {
         if (hasTrailingCR()) {
             removeLastLine();
@@ -155,8 +154,8 @@ class TokenBuffer {
         return getRawText(getInfos());
     }
 
-    @Nonnull
-    static CharSequence getRawText(@Nonnull List<? extends TokenInfo> tokens) {
+    
+    static CharSequence getRawText(List<? extends TokenInfo> tokens) {
         int size = 0;
         for (TokenInfo token : tokens) {
             size += token.getText().length();
@@ -170,7 +169,7 @@ class TokenBuffer {
 
     // the first token may be CR_TOKEN meaning that instead of appending it we should delete the last line of the document
     // all the remaining text is guaranteed not to contain CR_TOKEN - they can be appended safely to the document end
-    @Nonnull
+    
     List<TokenInfo> drain() {
         if (hasTrailingCR()) {
             removeLastLine();
@@ -183,7 +182,7 @@ class TokenBuffer {
         }
     }
 
-    @Nonnull
+    
     private List<TokenInfo> getInfos() {
         List<TokenInfo> list = tokens.toList();
         if (startIndex != 0) {
@@ -200,12 +199,12 @@ class TokenBuffer {
     }
 
     static class TokenInfo {
-        @Nonnull
+        
         final ConsoleViewContentType contentType;
         private final String text;
         private final HyperlinkInfo myHyperlinkInfo;
 
-        TokenInfo(@Nonnull ConsoleViewContentType contentType, @Nonnull String text, @Nullable HyperlinkInfo hyperlinkInfo) {
+        TokenInfo(ConsoleViewContentType contentType, String text, @Nullable HyperlinkInfo hyperlinkInfo) {
             this.contentType = contentType;
             myHyperlinkInfo = hyperlinkInfo;
             this.text = text;
@@ -224,7 +223,7 @@ class TokenBuffer {
             return myHyperlinkInfo;
         }
 
-        @Nonnull
+        
         String getText() {
             return text;
         }

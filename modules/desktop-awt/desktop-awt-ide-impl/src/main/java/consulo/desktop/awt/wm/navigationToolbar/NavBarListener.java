@@ -45,7 +45,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -225,32 +224,32 @@ public class NavBarListener
   }
 
   @Override
-  public void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
+  public void fileStatusChanged(VirtualFile virtualFile) {
     rebuildUI();
   }
 
   @Override
-  public void childAdded(@Nonnull PsiTreeChangeEvent event) {
+  public void childAdded(PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+  public void childReplaced(PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void childMoved(@Nonnull PsiTreeChangeEvent event) {
+  public void childMoved(PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void childrenChanged(PsiTreeChangeEvent event) {
     updateModel();
   }
 
   @Override
-  public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void propertyChanged(PsiTreeChangeEvent event) {
     updateModel();
   }
 
@@ -260,12 +259,12 @@ public class NavBarListener
   }
 
   @Override
-  public void problemsAppeared(@Nonnull VirtualFile file) {
+  public void problemsAppeared(VirtualFile file) {
     updateModel();
   }
 
   @Override
-  public void problemsDisappeared(@Nonnull VirtualFile file) {
+  public void problemsDisappeared(VirtualFile file) {
     updateModel();
   }
 
@@ -337,7 +336,7 @@ public class NavBarListener
   }
 
   @Override
-  public void fileOpened(@Nonnull final FileEditorManager manager, @Nonnull final VirtualFile file) {
+  public void fileOpened(final FileEditorManager manager, final VirtualFile file) {
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -375,29 +374,29 @@ public class NavBarListener
   public void beforeRootsChange(ModuleRootEvent event) {}
 
   @Override
-  public void beforeChildAddition(@Nonnull PsiTreeChangeEvent event) {}
+  public void beforeChildAddition(PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildRemoval(@Nonnull PsiTreeChangeEvent event) {}
+  public void beforeChildRemoval(PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildReplacement(@Nonnull PsiTreeChangeEvent event) {}
+  public void beforeChildReplacement(PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildMovement(@Nonnull PsiTreeChangeEvent event) {}
+  public void beforeChildMovement(PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforeChildrenChange(@Nonnull PsiTreeChangeEvent event) {}
+  public void beforeChildrenChange(PsiTreeChangeEvent event) {}
 
   @Override
-  public void beforePropertyChange(@Nonnull PsiTreeChangeEvent event) {}
+  public void beforePropertyChange(PsiTreeChangeEvent event) {}
 
   @Override
-  public void childRemoved(@Nonnull PsiTreeChangeEvent event) {}
+  public void childRemoved(PsiTreeChangeEvent event) {}
 
   @Override
-  public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {}
+  public void fileClosed(FileEditorManager source, VirtualFile file) {}
 
   @Override
-  public void selectionChanged(@Nonnull FileEditorManagerEvent event) {}
+  public void selectionChanged(FileEditorManagerEvent event) {}
 }

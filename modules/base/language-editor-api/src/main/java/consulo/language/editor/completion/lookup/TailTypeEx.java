@@ -17,7 +17,6 @@
 package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ public class TailTypeEx {
       return moveCaret(editor, insertChar(editor, tailOffset, ')'), -1);
     }
 
-    @NonNls
+    
     public String toString() {
       return "SMART_LPARENTH";
     }

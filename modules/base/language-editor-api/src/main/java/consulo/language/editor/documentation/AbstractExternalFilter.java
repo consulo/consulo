@@ -28,9 +28,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.net.URL;
@@ -46,32 +44,32 @@ public abstract class AbstractExternalFilter {
   private static final Pattern ourClassDataEndPattern = Pattern.compile("SUMMARY ========", Pattern.CASE_INSENSITIVE);
   private static final Pattern ourNonClassDataEndPattern = Pattern.compile("<A NAME=", Pattern.CASE_INSENSITIVE);
 
-  @NonNls
+  
   protected static final Pattern ourAnchorSuffix = Pattern.compile("#(.*)$");
   protected static
-  @NonNls
+  
   final Pattern ourHtmlFileSuffix = Pattern.compile("/([^/]*[.][hH][tT][mM][lL]?)$");
   private static
-  @NonNls
+  
   final Pattern ourAnnihilator = Pattern.compile("/[^/^.]*/[.][.]/");
   private static
-  @NonNls
+  
   final String JAR_PROTOCOL = "jar:";
-  @NonNls
+  
   private static final String HR = "<HR>";
-  @NonNls
+  
   private static final String P = "<P>";
-  @NonNls
+  
   private static final String DL = "<DL>";
-  @NonNls
+  
   protected static final String H2 = "</H2>";
-  @NonNls
+  
   protected static final String HTML_CLOSE = "</HTML>";
-  @NonNls
+  
   protected static final String HTML = "<HTML>";
-  @NonNls
+  
   private static final String BR = "<BR>";
-  @NonNls
+  
   private static final String DT = "<DT>";
   private static final Pattern CHARSET_META_PATTERN =
     Pattern.compile("<meta[^>]+\\s*charset=\"?([\\w\\-]*)\\s*\">", Pattern.CASE_INSENSITIVE);
@@ -79,16 +77,16 @@ public abstract class AbstractExternalFilter {
   private static final String CLASS_SUMMARY = "<div class=\"summary\">";
 
   protected static abstract class RefConvertor {
-    @Nonnull
+    
     private final Pattern mySelector;
 
-    public RefConvertor(@Nonnull Pattern selector) {
+    public RefConvertor(Pattern selector) {
       mySelector = selector;
     }
 
     protected abstract String convertReference(String root, String href);
 
-    public CharSequence refFilter(String root, @Nonnull CharSequence read) {
+    public CharSequence refFilter(String root, CharSequence read) {
       CharSequence toMatch = StringUtil.toUpperCase(read);
       StringBuilder ready = new StringBuilder();
       int prev = 0;
@@ -169,8 +167,8 @@ public abstract class AbstractExternalFilter {
     return correctDocText(url, fetcher.data);
   }
 
-  @Nonnull
-  protected String correctDocText(@Nonnull String url, @Nonnull CharSequence data) {
+  
+  protected String correctDocText(String url, CharSequence data) {
     CharSequence docText = correctRefs(ourAnchorSuffix.matcher(url).replaceAll(""), data);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Filtered JavaDoc: " + docText + "\n");
@@ -193,10 +191,10 @@ public abstract class AbstractExternalFilter {
                                    boolean searchForEncoding,
                                    boolean matchStart) throws IOException {
     ParseSettings settings = getParseSettings(url);
-    @NonNls Pattern startSection = settings.startPattern;
-    @NonNls Pattern endSection = settings.endPattern;
+    Pattern startSection = settings.startPattern;
+    Pattern endSection = settings.endPattern;
     boolean useDt = settings.useDt;
-    @NonNls String greatestEndSection = "<!-- ========= END OF CLASS DATA ========= -->";
+    String greatestEndSection = "<!-- ========= END OF CLASS DATA ========= -->";
 
     data.append(HTML);
     URL baseUrl = VirtualFileUtil.convertToURL(url);
@@ -313,8 +311,8 @@ public abstract class AbstractExternalFilter {
     data.append(HTML_CLOSE);
   }
 
-  @Nonnull
-  protected ParseSettings getParseSettings(@Nonnull String url) {
+  
+  protected ParseSettings getParseSettings(String url) {
     Pattern startSection = ourClassDataStartPattern;
     Pattern endSection = ourClassDataEndPattern;
     boolean anchorPresent = false;
@@ -339,7 +337,7 @@ public abstract class AbstractExternalFilter {
   }
 
   @Nullable
-  static String parseContentEncoding(@Nonnull String htmlLine) {
+  static String parseContentEncoding(String htmlLine) {
     if (!htmlLine.contains("charset")) {
       return null;
     }
@@ -389,7 +387,7 @@ public abstract class AbstractExternalFilter {
           if (parsedUrl != null) {
             HttpRequests.request(parsedUrl.toString()).gzip(false).connect(new HttpRequestProcessor<Void>() {
               @Override
-              public Void process(@Nonnull HttpRequest request) throws IOException {
+              public Void process(HttpRequest request) throws IOException {
                 byte[] bytes = request.readBytes(null);
                 String contentEncoding = null;
                 ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
@@ -453,12 +451,12 @@ public abstract class AbstractExternalFilter {
    * Settings used for parsing of external documentation
    */
   protected static class ParseSettings {
-    @Nonnull
+    
     /**
      * Pattern defining the start of target fragment
      */
     private final Pattern startPattern;
-    @Nonnull
+    
     /**
      * Pattern defining the end of target fragment
      */
@@ -472,7 +470,7 @@ public abstract class AbstractExternalFilter {
      */
     private final boolean useDt;
 
-    public ParseSettings(@Nonnull Pattern startPattern, @Nonnull Pattern endPattern, boolean useDt, boolean forcePatternSearch) {
+    public ParseSettings(Pattern startPattern, Pattern endPattern, boolean useDt, boolean forcePatternSearch) {
       this.startPattern = startPattern;
       this.endPattern = endPattern;
       this.useDt = useDt;

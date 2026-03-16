@@ -18,12 +18,11 @@ package consulo.language.impl.internal.psi;
 import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.stub.StubElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-10-16
  */
 public interface SubstrateRefOwner<T extends StubElement> extends StubBasedPsiElement<T> {
-  void setSubstrateRef(@Nonnull SubstrateRef substrateRef);
+  void setSubstrateRef(SubstrateRef substrateRef);
 }

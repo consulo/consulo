@@ -16,7 +16,6 @@
 package consulo.content.library;
 
 import consulo.content.OrderRootType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -25,12 +24,12 @@ public class LibraryRootType {
   private final OrderRootType myType;
   private final boolean myJarDirectory;
 
-  public LibraryRootType(@Nonnull OrderRootType type, boolean jarDirectory) {
+  public LibraryRootType(OrderRootType type, boolean jarDirectory) {
     myType = type;
     myJarDirectory = jarDirectory;
   }
 
-  @Nonnull
+  
   public OrderRootType getType() {
     return myType;
   }

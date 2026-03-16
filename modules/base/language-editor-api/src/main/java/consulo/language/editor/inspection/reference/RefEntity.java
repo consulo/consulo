@@ -18,7 +18,7 @@ package consulo.language.editor.inspection.reference;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**

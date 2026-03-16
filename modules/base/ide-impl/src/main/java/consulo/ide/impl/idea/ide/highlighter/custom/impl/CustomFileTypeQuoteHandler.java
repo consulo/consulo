@@ -25,7 +25,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.action.FileQuoteHandler;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Maxim.Mossienko
@@ -93,7 +92,7 @@ class CustomFileTypeQuoteHandler implements FileQuoteHandler {
     return tokenType == CustomHighlighterTokenType.STRING || tokenType == CustomHighlighterTokenType.SINGLE_QUOTED_STRING || tokenType == CustomHighlighterTokenType.CHARACTER;
   }
 
-  @Nonnull
+  
   @Override
   public FileType getFileType() {
     return myFileType;

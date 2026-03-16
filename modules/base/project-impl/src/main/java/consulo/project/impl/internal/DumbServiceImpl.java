@@ -43,8 +43,7 @@ import consulo.util.collection.Lists;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.event.BatchFileChangeListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -77,7 +76,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     private final Map<DumbModeTask, ProgressIndicatorEx> myProgresses = new ConcurrentHashMap<>();
 
     private final ConcurrentLinkedDeque<Runnable> myRunWhenSmartQueue = new ConcurrentLinkedDeque<>();
-    @Nonnull
     private final Application myApplication;
     private final Project myProject;
     private final ThreadLocal<Integer> myAlternativeResolution = new ThreadLocal<>();
@@ -96,7 +94,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             java.util.Stack<AccessToken> stack = new Stack<>();
 
             @Override
-            public void batchChangeStarted(@Nonnull ComponentManager project, @Nullable String activityName) {
+            public void batchChangeStarted(ComponentManager project, @Nullable String activityName) {
                 if (project == myProject) {
                     String heavyActivityName = Optional.ofNullable(activityName)
                         .map(TextWithMnemonic::parse)
@@ -107,7 +105,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             }
 
             @Override
-            public void batchChangeCompleted(@Nonnull ComponentManager project) {
+            public void batchChangeCompleted(ComponentManager project) {
                 if (project != myProject) {
                     return;
                 }
@@ -121,7 +119,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void cancelTask(@Nonnull DumbModeTask task) {
+    public void cancelTask(DumbModeTask task) {
         if (myApplication.isInternal()) {
             LOG.info("cancel " + task);
         }
@@ -154,9 +152,8 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return myAlternativeResolution.get() != null;
     }
 
-    @Nonnull
     @Override
-    public AccessToken startHeavyActivityStarted(@Nonnull LocalizeValue activityName) {
+    public AccessToken startHeavyActivityStarted(LocalizeValue activityName) {
         return heavyActivityStarted(activityName);
     }
 
@@ -166,8 +163,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return isDumb() && suspender != null && suspender.isSuspended();
     }
 
-    @Nonnull
-    private AccessToken heavyActivityStarted(@Nonnull LocalizeValue activityName) {
+    private AccessToken heavyActivityStarted(LocalizeValue activityName) {
         LocalizeValue reason = ProjectLocalize.dumbServiceIndexingPausedDueTo(activityName);
         synchronized (myRequestedSuspensions) {
             myRequestedSuspensions.add(reason);
@@ -185,14 +181,14 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         };
     }
 
-    private void suspendCurrentTask(@Nonnull LocalizeValue reason) {
+    private void suspendCurrentTask(LocalizeValue reason) {
         ProgressSuspender currentSuspender = myCurrentSuspender;
         if (currentSuspender != null && !currentSuspender.isSuspended()) {
             currentSuspender.suspendProcess(reason);
         }
     }
 
-    private void resumeAutoSuspendedTask(@Nonnull LocalizeValue reason) {
+    private void resumeAutoSuspendedTask(LocalizeValue reason) {
         ProgressSuspender currentSuspender = myCurrentSuspender;
         if (currentSuspender != null && currentSuspender.isSuspended() && reason.equals(currentSuspender.getSuspendedText())) {
             currentSuspender.resumeProcess();
@@ -245,7 +241,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void runWhenSmart(@Nonnull Runnable runnable) {
+    public void runWhenSmart(Runnable runnable) {
         StartupManager.getInstance(myProject).runWhenProjectIsInitialized(() -> {
             synchronized (myRunWhenSmartQueue) {
                 if (isDumb()) {
@@ -259,7 +255,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void queueTask(@Nonnull DumbModeTask task) {
+    public void queueTask(DumbModeTask task) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Scheduling task " + task);
         }
@@ -281,7 +277,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private static void runTaskSynchronously(@Nonnull DumbModeTask task) {
+    private static void runTaskSynchronously(DumbModeTask task) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         if (indicator == null) {
             indicator = new EmptyProgressIndicator();
@@ -306,7 +302,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    void queueAsynchronousTask(@Nonnull DumbModeTask task) {
+    void queueAsynchronousTask(DumbModeTask task) {
         Exception trace = new Exception(); // please report exceptions here to peter
         if (!addTaskToQueue(task)) {
             return;
@@ -318,7 +314,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private boolean addTaskToQueue(@Nonnull DumbModeTask task) {
+    private boolean addTaskToQueue(DumbModeTask task) {
         if (!myQueuedEquivalences.add(task.getEquivalenceObject())) {
             Disposer.dispose(task);
             return false;
@@ -330,7 +326,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         return true;
     }
 
-    private void enterDumbMode(@Nonnull Throwable trace) {
+    private void enterDumbMode(Throwable trace) {
         boolean wasSmart = !isDumb();
         WriteAction.run(() -> {
             synchronized (myRunWhenSmartQueue) {
@@ -418,7 +414,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void showDumbModeNotification(@Nonnull LocalizeValue message) {
+    public void showDumbModeNotification(LocalizeValue message) {
         myProject.getUIAccess().giveIfNeed(() -> {
             IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
             if (ideFrame != null) {
@@ -441,12 +437,12 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
     }
 
     @Override
-    public void smartInvokeLater(@Nonnull Runnable runnable) {
+    public void smartInvokeLater(Runnable runnable) {
         smartInvokeLater(runnable, Application.get().getDefaultModalityState());
     }
 
     @Override
-    public void smartInvokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState modalityState) {
+    public void smartInvokeLater(Runnable runnable, ModalityState modalityState) {
         myApplication.invokeLater(
             () -> {
                 if (isDumb()) {
@@ -517,11 +513,11 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private void startBackgroundProcess(@Nonnull Exception startTrace) {
+    private void startBackgroundProcess(Exception startTrace) {
         try {
             ProgressManager.getInstance().run(new Task.Backgroundable(myProject, ProjectLocalize.progressIndexing(), false) {
                 @Override
-                public void run(@Nonnull ProgressIndicator visibleIndicator) {
+                public void run(ProgressIndicator visibleIndicator) {
                     runBackgroundProcess(visibleIndicator, startTrace);
                 }
             });
@@ -532,7 +528,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
     }
 
-    private void runBackgroundProcess(@Nonnull ProgressIndicator visibleIndicator, @Nonnull Exception trace) {
+    private void runBackgroundProcess(ProgressIndicator visibleIndicator, Exception trace) {
         ((UnsafeProgressIndicator) visibleIndicator).markAsUnsafeIndicator();
 
         if (!myState.compareAndSet(State.SCHEDULED_TASKS, State.RUNNING_DUMB_TASKS)) {
@@ -566,7 +562,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
                     suspender.attachToProgress(taskIndicator);
                     taskIndicator.addStateDelegate(new AbstractProgressIndicatorExBase() {
                         @Override
-                        protected void delegateProgressChange(@Nonnull IndicatorAction action) {
+                        protected void delegateProgressChange(IndicatorAction action) {
                             super.delegateProgressChange(action);
                             action.execute((ProgressIndicatorEx) visibleIndicator);
                         }
@@ -677,7 +673,7 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
         }
 
         @Override
-        public void finish(@Nonnull TaskInfo task) {
+        public void finish(TaskInfo task) {
             if (lastFraction != 0) { // we should call setProgress at least once before
                 myProject.getUIAccess().giveIfNeed(() -> {
                     AppIcon appIcon = AppIcon.getInstance();

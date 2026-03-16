@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -31,5 +30,5 @@ public abstract class ChooseByNameFactory {
     return ServiceManager.getService(project, ChooseByNameFactory.class);
   }
 
-  public abstract ChooseByNamePopupComponent createChooseByNamePopupComponent(@Nonnull ChooseByNameModel model);
+  public abstract ChooseByNamePopupComponent createChooseByNamePopupComponent(ChooseByNameModel model);
 }

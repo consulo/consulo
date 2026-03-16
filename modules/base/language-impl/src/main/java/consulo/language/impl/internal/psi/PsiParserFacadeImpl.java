@@ -34,7 +34,6 @@ import consulo.language.util.IncorrectOperationException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -52,8 +51,8 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
   }
 
   @Override
-  @Nonnull
-  public PsiElement createWhiteSpaceFromText(@Nonnull String text) throws IncorrectOperationException {
+  
+  public PsiElement createWhiteSpaceFromText(String text) throws IncorrectOperationException {
     FileElement holderElement = DummyHolderFactory.createHolder(myPsiManager, null).getTreeElement();
     LeafElement newElement = ASTFactory.leaf(TokenType.WHITE_SPACE, holderElement.getCharTable().intern(text));
     holderElement.rawAddChildren(newElement);
@@ -62,8 +61,8 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
   }
 
   @Override
-  @Nonnull
-  public PsiComment createLineCommentFromText(@Nonnull LanguageFileType fileType, @Nonnull String text) throws IncorrectOperationException {
+  
+  public PsiComment createLineCommentFromText(LanguageFileType fileType, String text) throws IncorrectOperationException {
     Commenter commenter = Commenter.forLanguage(fileType.getLanguage());
     assert commenter != null;
     String prefix = commenter.getLineCommentPrefix();
@@ -75,9 +74,9 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     return findPsiCommentChild(aFile);
   }
 
-  @Nonnull
+  
   @Override
-  public PsiComment createBlockCommentFromText(@Nonnull Language language, @Nonnull String text) throws IncorrectOperationException {
+  public PsiComment createBlockCommentFromText(Language language, String text) throws IncorrectOperationException {
     Commenter commenter = Commenter.forLanguage(language);
     assert commenter != null : language;
     String blockCommentPrefix = commenter.getBlockCommentPrefix();
@@ -88,8 +87,8 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
   }
 
   @Override
-  @Nonnull
-  public PsiComment createLineOrBlockCommentFromText(@Nonnull Language lang, @Nonnull String text) throws IncorrectOperationException {
+  
+  public PsiComment createLineOrBlockCommentFromText(Language lang, String text) throws IncorrectOperationException {
     Commenter commenter = Commenter.forLanguage(lang);
     assert commenter != null : lang;
     String prefix = commenter.getLineCommentPrefix();

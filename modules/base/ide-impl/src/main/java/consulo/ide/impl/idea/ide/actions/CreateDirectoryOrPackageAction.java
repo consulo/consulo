@@ -48,7 +48,6 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.function.Consumer;
@@ -61,7 +60,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         IdeView view = e.getRequiredData(IdeView.KEY);
         Project project = e.getRequiredData(Project.KEY);
 
@@ -94,7 +93,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         ).showCenteredInCurrentWindow(project);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private JBPopup createLightWeightPopup(
         CreateDirectoryOrPackageHandler validator,
@@ -130,7 +129,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
 
         Project project = event.getData(Project.KEY);
@@ -170,7 +169,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private static Trinity<ContentFolderTypeProvider, PsiDirectory, CreateDirectoryOrPackageType> getInfo(PsiDirectory d) {
         Project project = d.getProject();

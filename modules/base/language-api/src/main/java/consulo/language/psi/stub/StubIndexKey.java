@@ -18,18 +18,17 @@ package consulo.language.psi.stub;
 import consulo.language.psi.PsiElement;
 import consulo.index.io.ID;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public final class StubIndexKey<K, Psi extends PsiElement> extends ID<K, Psi> {
-  private StubIndexKey(@Nonnull String name) {
+  private StubIndexKey(String name) {
     super(name);
   }
 
-  @Nonnull
-  public static synchronized <K, Psi extends PsiElement> StubIndexKey<K, Psi> createIndexKey(@Nonnull String name) {
+  
+  public static synchronized <K, Psi extends PsiElement> StubIndexKey<K, Psi> createIndexKey(String name) {
     return new StubIndexKey<>(name);
   }
 }

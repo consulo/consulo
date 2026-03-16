@@ -19,7 +19,6 @@ import consulo.document.util.TextRange;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Holds settings that should be used if
@@ -45,14 +44,14 @@ public class DependentSpacingRule {
 
     private final ObjectIntMap<Anchor> myData = ObjectMaps.newObjectIntHashMap();
 
-    @Nonnull
+    
     private final Trigger myTrigger;
 
-    public DependentSpacingRule(@Nonnull Trigger trigger) {
+    public DependentSpacingRule(Trigger trigger) {
         myTrigger = trigger;
     }
 
-    @Nonnull
+    
     public Trigger getTrigger() {
         return myTrigger;
     }
@@ -65,7 +64,7 @@ public class DependentSpacingRule {
      * @param <T>    data's type
      * @see #getData(Anchor)
      */
-    public DependentSpacingRule registerData(@Nonnull Anchor anchor, int data) {
+    public DependentSpacingRule registerData(Anchor anchor, int data) {
         myData.putInt(anchor, data);
         return this;
     }
@@ -75,7 +74,7 @@ public class DependentSpacingRule {
      * @return <code>true</code> if there is a data registered for the given anchor within the current rule;
      * <code>false</code> otherwise
      */
-    public boolean hasData(@Nonnull Anchor anchor) {
+    public boolean hasData(Anchor anchor) {
         return myData.containsKey(anchor);
     }
 
@@ -88,7 +87,7 @@ public class DependentSpacingRule {
      * @throws IllegalArgumentException if no data is registered for the given anchor
      *                                  (use {@link #hasData(Anchor)} for the preliminary examination)
      */
-    public int getData(@Nonnull Anchor anchor) throws IllegalArgumentException {
+    public int getData(Anchor anchor) throws IllegalArgumentException {
         if (!myData.containsKey(anchor)) {
             throw new IllegalArgumentException(
                 String.format("No data is registered for the dependent spacing rule %s. Registered: %s", anchor, myData)

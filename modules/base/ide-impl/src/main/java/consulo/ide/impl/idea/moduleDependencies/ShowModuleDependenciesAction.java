@@ -32,7 +32,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +48,7 @@ public class ShowModuleDependenciesAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ModulesDependenciesPanel panel;
         AnalysisScope scope = new AnalysisScope(project);
@@ -93,7 +92,7 @@ public class ShowModuleDependenciesAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(Project.KEY));
     }
 

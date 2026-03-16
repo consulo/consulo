@@ -47,8 +47,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -94,8 +93,8 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         T[] elements,
         boolean allowEmptySelection,
         boolean allowMultiSelection,
-        @Nonnull List<Pair<KeyWithDefaultValue<Boolean>, LocalizeValue>> options,
-        @Nonnull Project project
+        List<Pair<KeyWithDefaultValue<Boolean>, LocalizeValue>> options,
+        Project project
     ) {
         super(project, true);
         myAllowEmptySelection = allowEmptySelection;
@@ -233,7 +232,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         List<Action> actions = new ArrayList<>();
         actions.add(getOKAction());
@@ -371,7 +370,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         return new ColoredTreeCellRenderer() {
             @Override
             public void customizeCellRenderer(
-                @Nonnull JTree tree,
+                JTree tree,
                 Object value,
                 boolean selected,
                 boolean expanded,
@@ -386,8 +385,8 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         };
     }
 
-    @Nonnull
-    protected String convertElementText(@Nonnull String originalElementText) {
+    
+    protected String convertElementText(String originalElementText) {
         String res = originalElementText;
 
         int i = res.indexOf(':');
@@ -662,7 +661,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.lazy(PsiElement.KEY, () -> {
             if (mySelectedElements != null && !mySelectedElements.isEmpty()) {
                 T selectedElement = mySelectedElements.iterator().next();
@@ -806,13 +805,13 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return isAlphabeticallySorted();
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean flag) {
+        public void setSelected(AnActionEvent e, boolean flag) {
             myAlphabeticallySorted = flag;
             setSortComparator(flag ? new AlphaComparator() : new OrderComparator());
             if (flag) {
@@ -831,18 +830,18 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent event) {
+        public boolean isSelected(AnActionEvent event) {
             return myShowClasses;
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public void setSelected(AnActionEvent event, boolean flag) {
             setShowClasses(flag);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myContainerNodes.size() > 1);
@@ -856,7 +855,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeUtil.expandAll(myTree);
         }
     }
@@ -868,7 +867,7 @@ public class MemberChooserImpl<T extends ClassMember> extends DialogWrapper impl
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeUtil.collapseAll(myTree, 1);
         }
     }

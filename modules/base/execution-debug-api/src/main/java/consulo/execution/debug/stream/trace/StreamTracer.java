@@ -2,8 +2,6 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamChain;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 /**
  * @author Vitaliy.Bibaev
@@ -14,17 +12,17 @@ public interface StreamTracer {
       private final TracingResult result;
       private final GenericEvaluationContext evaluationContext;
 
-      public Evaluated(@Nonnull TracingResult result, @Nonnull GenericEvaluationContext evaluationContext) {
+      public Evaluated(TracingResult result, GenericEvaluationContext evaluationContext) {
         this.result = result;
         this.evaluationContext = evaluationContext;
       }
 
-      @Nonnull
+      
       public TracingResult getResult() {
         return result;
       }
 
-      @Nonnull
+      
       public GenericEvaluationContext getEvaluationContext() {
         return evaluationContext;
       }
@@ -32,21 +30,21 @@ public interface StreamTracer {
 
     final class EvaluationFailed implements Result {
       private final String traceExpression;
-      @Nls
+      
       private final String message;
 
-      public EvaluationFailed(@Nonnull String traceExpression, @Nls @Nonnull String message) {
+      public EvaluationFailed(String traceExpression, String message) {
         this.traceExpression = traceExpression;
         this.message = message;
       }
 
-      @Nonnull
+      
       public String getTraceExpression() {
         return traceExpression;
       }
 
-      @Nls
-      @Nonnull
+      
+      
       public String getMessage() {
         return message;
       }
@@ -54,21 +52,21 @@ public interface StreamTracer {
 
     final class CompilationFailed implements Result {
       private final String traceExpression;
-      @Nls
+      
       private final String message;
 
-      public CompilationFailed(@Nonnull String traceExpression, @Nls @Nonnull String message) {
+      public CompilationFailed(String traceExpression, String message) {
         this.traceExpression = traceExpression;
         this.message = message;
       }
 
-      @Nonnull
+      
       public String getTraceExpression() {
         return traceExpression;
       }
 
-      @Nls
-      @Nonnull
+      
+      
       public String getMessage() {
         return message;
       }
@@ -82,6 +80,6 @@ public interface StreamTracer {
     }
   }
 
-  @Nonnull
-  Result trace(@Nonnull StreamChain chain);
+  
+  Result trace(StreamChain chain);
 }

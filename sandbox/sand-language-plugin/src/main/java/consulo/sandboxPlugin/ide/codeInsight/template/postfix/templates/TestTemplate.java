@@ -20,7 +20,6 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
 * @author VISTALL
@@ -32,12 +31,12 @@ public class TestTemplate extends PostfixTemplate {
   }
 
   @Override
-  public boolean isApplicable(@Nonnull PsiElement context, @Nonnull Document copyDocument, int newOffset) {
+  public boolean isApplicable(PsiElement context, Document copyDocument, int newOffset) {
     return true;
   }
 
   @Override
-  public void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
+  public void expand(PsiElement context, Editor editor) {
 
   }
 }

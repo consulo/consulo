@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,18 +28,17 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface StatusBarWidgetsManager extends ModificationTracker {
-    @Nonnull
-    public static StatusBarWidgetsManager getInstance(@Nonnull Project project) {
+    public static StatusBarWidgetsManager getInstance(Project project) {
         return project.getInstance(StatusBarWidgetsManager.class);
     }
 
-    void updateWidget(@Nonnull Class<? extends StatusBarWidgetFactory> factoryExtension, @Nonnull UIAccess uiAccess);
+    void updateWidget(Class<? extends StatusBarWidgetFactory> factoryExtension, UIAccess uiAccess);
 
-    void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess);
+    void updateWidget(StatusBarWidgetFactory factory, UIAccess uiAccess);
 
-    default void updateAllWidgets(@Nonnull UIAccess uiAccess) {
+    default void updateAllWidgets(UIAccess uiAccess) {
         updateAllWidgets(null, uiAccess);
     }
 
-    void updateAllWidgets(@Nullable IdeFrame frame, @Nonnull UIAccess uiAccess);
+    void updateAllWidgets(@Nullable IdeFrame frame, UIAccess uiAccess);
 }

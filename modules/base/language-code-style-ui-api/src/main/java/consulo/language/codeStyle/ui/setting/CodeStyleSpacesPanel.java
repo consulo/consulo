@@ -20,7 +20,6 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingPresentation;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class CodeStyleSpacesPanel extends OptionTreeWithPreviewPanel {
         }
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getTabTitle() {
         return ApplicationLocalize.titleSpaces();

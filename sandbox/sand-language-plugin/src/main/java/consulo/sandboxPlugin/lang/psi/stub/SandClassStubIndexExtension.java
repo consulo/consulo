@@ -20,7 +20,6 @@ import consulo.language.psi.stub.StringStubIndexExtension;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,7 +27,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandClassStubIndexExtension extends StringStubIndexExtension<SandClass> {
-  @Nonnull
+  
   @Override
   public StubIndexKey<String, SandClass> getKey() {
     return SandIndexKeys.SAND_CLASSES;

@@ -21,22 +21,21 @@ import consulo.project.Project;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface MessageView {
-  @Nonnull
+  
   public static MessageView getInstance(Project project) {
     return project.getInstance(MessageView.class);
   }
 
-  @Nonnull
+  
   ToolWindow getToolWindow();
 
-  @Nonnull
+  
   ContentManager getContentManager();
 
-  void runWhenInitialized(@Nonnull Runnable runnable);
+  void runWhenInitialized(Runnable runnable);
 
   @Deprecated
   class SERVICE {

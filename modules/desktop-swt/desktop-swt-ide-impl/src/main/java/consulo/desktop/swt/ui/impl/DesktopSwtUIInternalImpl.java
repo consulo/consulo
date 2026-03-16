@@ -36,8 +36,7 @@ import consulo.ui.layout.*;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
 import consulo.ui.style.StyleManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -52,14 +51,13 @@ import java.util.function.Supplier;
  * @since 29/04/2021
  */
 public class DesktopSwtUIInternalImpl extends UIInternal {
-  @Nonnull
   @Override
   public IconLibraryManager _IconLibraryManager_get() {
     return DesktopSwtIconLibraryManager.INSTANCE;
   }
 
   @Override
-  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+  public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
     return new DesktopSwtImageKeyImpl(groupId, imageId, width, height);
   }
 
@@ -159,7 +157,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtProgressBarImpl();
   }
 
-  @Nonnull
   @Override
   public IntBox _Components_intBox(int value) {
     return new DesktopSwtIntBoxImpl(value);
@@ -201,22 +198,22 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_layered(@Nonnull Image[] images) {
+  public Image _ImageEffects_layered(Image[] images) {
     return new DesktopSwtLayeredImageImpl(images);
   }
 
   @Override
-  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+  public Image _ImageEffects_transparent(Image original, float alpha) {
     return new DesktopSwtTransparentImageImpl(original, alpha);
   }
 
   @Override
-  public Image _ImageEffects_grayed(@Nonnull Image original) {
+  public Image _ImageEffects_grayed(Image original) {
     return original;
   }
 
   @Override
-  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+  public Image _ImageEffects_appendRight(Image i0, Image i1) {
     return i1;
   }
 
@@ -260,13 +257,11 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return new DesktopSwtMenuBar();
   }
 
-  @Nonnull
   @Override
   public StyleManager _StyleManager_get() {
     return DesktopSwtStyleManagerImpl.INSTANCE;
   }
 
-  @Nonnull
   @Override
   public FontManager _FontManager_get() {
     return DesktopSwtFontManagerImpl.INSTANCE;
@@ -277,7 +272,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
     return DesktopSwtFocusManagerImpl.INSTANCE;
   }
 
-  @Nonnull
   @Override
   public Window _Window_create(String title, WindowOptions options) {
     return new DesktopSwtWindowImpl(title, options);
@@ -312,7 +306,6 @@ public class DesktopSwtUIInternalImpl extends UIInternal {
   }
 
   @RequiredUIAccess
-  @Nonnull
   @Override
   public UIAccess _UIAccess_get() {
     return DesktopSwtUIAccess.INSTANCE;

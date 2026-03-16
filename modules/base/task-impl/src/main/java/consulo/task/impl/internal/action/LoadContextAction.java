@@ -37,8 +37,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -57,7 +56,7 @@ public class LoadContextAction extends BaseTaskAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         DefaultActionGroup group = new DefaultActionGroup();
         final WorkingContextManager manager = WorkingContextManager.getInstance(project);
@@ -172,7 +171,7 @@ public class LoadContextAction extends BaseTaskAction {
             new AbstractAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     shiftPressed.set(true);
                     popup.setCaption(TaskLocalize.popupTitleMergeWithCurrentContext().get());
                 }
@@ -184,7 +183,7 @@ public class LoadContextAction extends BaseTaskAction {
             new AbstractAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     shiftPressed.set(false);
                     popup.setCaption(TaskLocalize.popupTitleLoadContext().get());
                 }
@@ -196,7 +195,7 @@ public class LoadContextAction extends BaseTaskAction {
             new AbstractAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull ActionEvent e) {
+                public void actionPerformed(ActionEvent e) {
                     popup.handleSelect(true);
                 }
             }
@@ -225,7 +224,7 @@ public class LoadContextAction extends BaseTaskAction {
         final AnAction loadAction = new AnAction(TaskLocalize.actionLoadcontextactionAnonymousTextLoad()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 holder.load(!shiftPressed.get());
             }
         };
@@ -236,11 +235,11 @@ public class LoadContextAction extends BaseTaskAction {
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 loadAction.actionPerformed(e);
             }
 
-            @Nonnull
+            
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 return new AnAction[]{
@@ -248,7 +247,7 @@ public class LoadContextAction extends BaseTaskAction {
                     new AnAction(TaskLocalize.actionLoadcontextactionAnonymousTextRemove()) {
                         @Override
                         @RequiredUIAccess
-                        public void actionPerformed(@Nonnull AnActionEvent e) {
+                        public void actionPerformed(AnActionEvent e) {
                             holder.remove();
                         }
                     }

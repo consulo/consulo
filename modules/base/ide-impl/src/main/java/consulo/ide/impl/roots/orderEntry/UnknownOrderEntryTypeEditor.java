@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -32,15 +31,15 @@ import java.util.function.Consumer;
  */
 @ExtensionImpl
 public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<OrderEntry> {
-  @Nonnull
+  
   @Override
   public String getOrderTypeId() {
     return "";
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRender(@Nonnull OrderEntry orderEntry) {
+  public Consumer<ColoredTextContainer> getRender(OrderEntry orderEntry) {
     return it -> {
       it.setIcon(PlatformIconGroup.actionsHelp());
       it.append(orderEntry.getPresentableName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
@@ -49,6 +48,6 @@ public class UnknownOrderEntryTypeEditor implements OrderEntryTypeEditor<OrderEn
 
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull OrderEntry orderEntry) {
+  public void navigate(OrderEntry orderEntry) {
   }
 }

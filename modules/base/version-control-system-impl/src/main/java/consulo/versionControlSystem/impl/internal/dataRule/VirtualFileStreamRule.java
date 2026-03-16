@@ -18,14 +18,13 @@ package consulo.versionControlSystem.impl.internal.dataRule;
 import consulo.dataContext.DataSnapshot;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.stream.Stream;
 
 public final class VirtualFileStreamRule {
   @Nullable
-  public static Stream<VirtualFile> getData(@Nonnull DataSnapshot dataProvider) {
+  public static Stream<VirtualFile> getData(DataSnapshot dataProvider) {
     VirtualFile[] files = dataProvider.get(VirtualFile.KEY_OF_ARRAY);
     if (files != null) {
       return Stream.of(files);

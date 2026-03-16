@@ -18,7 +18,6 @@ package consulo.ide.newModule;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,5 +25,5 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface NewModuleBuilder {
-  void setupContext(@Nonnull NewModuleContext context);
+  void setupContext(NewModuleContext context);
 }

@@ -40,8 +40,7 @@ import consulo.versionControlSystem.internal.ChangeListManagerEx;
 import consulo.versionControlSystem.log.CommitId;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsLog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,32 +51,32 @@ import java.util.*;
 @ServiceImpl
 public class VcsCherryPickManager {
     private static final Logger LOG = Logger.getInstance(VcsCherryPickManager.class);
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ProjectLevelVcsManager myProjectLevelVcsManager;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
-    @Nonnull
+    
     private final Set<CommitId> myIdsInProgress = Sets.newConcurrentHashSet();
 
     @Inject
     public VcsCherryPickManager(
-        @Nonnull Project project,
-        @Nonnull ProjectLevelVcsManager projectLevelVcsManager,
-        @Nonnull NotificationService notificationService
+        Project project,
+        ProjectLevelVcsManager projectLevelVcsManager,
+        NotificationService notificationService
     ) {
         myProject = project;
         myProjectLevelVcsManager = projectLevelVcsManager;
         myNotificationService = notificationService;
     }
 
-    public void cherryPick(@Nonnull VcsLog log) {
+    public void cherryPick(VcsLog log) {
         log.requestSelectedDetails(details -> ProgressManager.getInstance()
             .run(new CherryPickingTask(myProject, ContainerUtil.reverse(details))), null);
     }
 
-    public boolean isCherryPickAlreadyStartedFor(@Nonnull List<CommitId> commits) {
+    public boolean isCherryPickAlreadyStartedFor(List<CommitId> commits) {
         for (CommitId commit : commits) {
             if (myIdsInProgress.contains(commit)) {
                 return true;
@@ -87,7 +86,7 @@ public class VcsCherryPickManager {
     }
 
     @Nullable
-    private VcsCherryPicker getCherryPickerForCommit(@Nonnull VcsFullCommitDetails commitDetails) {
+    private VcsCherryPicker getCherryPickerForCommit(VcsFullCommitDetails commitDetails) {
         AbstractVcs vcs = myProjectLevelVcsManager.getVcsFor(commitDetails.getRoot());
         if (vcs == null) {
             return null;
@@ -97,18 +96,18 @@ public class VcsCherryPickManager {
     }
 
     @Nullable
-    public VcsCherryPicker getCherryPickerFor(@Nonnull VcsKey key) {
+    public VcsCherryPicker getCherryPickerFor(VcsKey key) {
         return ContainerUtil.find(myProject.getExtensionList(VcsCherryPicker.class), picker -> picker.getSupportedVcs().equals(key));
     }
 
     private class CherryPickingTask extends Task.Backgroundable {
-        @Nonnull
+        
         private final List<VcsFullCommitDetails> myAllDetailsInReverseOrder;
-        @Nonnull
+        
         private final ChangeListManagerEx myChangeListManager;
 
         @RequiredUIAccess
-        public CherryPickingTask(@Nonnull Project project, @Nonnull List<VcsFullCommitDetails> detailsInReverseOrder) {
+        public CherryPickingTask(Project project, List<VcsFullCommitDetails> detailsInReverseOrder) {
             super(project, LocalizeValue.localizeTODO("Cherry-Picking"));
             myAllDetailsInReverseOrder = detailsInReverseOrder;
             myChangeListManager = (ChangeListManagerEx) ChangeListManager.getInstance((Project) myProject);
@@ -116,7 +115,7 @@ public class VcsCherryPickManager {
         }
 
         @Nullable
-        private VcsCherryPicker getCherryPickerOrReportError(@Nonnull VcsFullCommitDetails details) {
+        private VcsCherryPicker getCherryPickerOrReportError(VcsFullCommitDetails details) {
             CommitId commitId = new CommitId(details.getId(), details.getRoot());
             if (myIdsInProgress.contains(commitId)) {
                 showError("Cherry pick process is already started for commit " +
@@ -137,7 +136,7 @@ public class VcsCherryPickManager {
             return cherryPicker;
         }
 
-        public void showError(@Nonnull String message) {
+        public void showError(String message) {
             myNotificationService.newError(VcsNotifier.NOTIFICATION_GROUP_ID)
                 .content(LocalizeValue.localizeTODO(message))
                 .notify((Project) myProject);
@@ -145,7 +144,7 @@ public class VcsCherryPickManager {
         }
 
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
             try {
                 boolean isOk = true;
                 MultiMap<VcsCherryPicker, VcsFullCommitDetails> groupedCommits = createArrayMultiMap();
@@ -174,10 +173,10 @@ public class VcsCherryPickManager {
             }
         }
 
-        @Nonnull
+        
         public MultiMap<VcsCherryPicker, VcsFullCommitDetails> createArrayMultiMap() {
             return new MultiMap<>() {
-                @Nonnull
+                
                 @Override
                 protected Collection<VcsFullCommitDetails> createCollection() {
                     return new ArrayList<>();
@@ -186,7 +185,7 @@ public class VcsCherryPickManager {
         }
     }
 
-    public static VcsCherryPickManager getInstance(@Nonnull Project project) {
+    public static VcsCherryPickManager getInstance(Project project) {
         return project.getInstance(VcsCherryPickManager.class);
     }
 }

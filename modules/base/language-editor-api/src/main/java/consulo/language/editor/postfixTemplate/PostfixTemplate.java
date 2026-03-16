@@ -18,9 +18,7 @@ import consulo.undoRedo.util.UndoUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -58,7 +56,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   private final String myKey;
   private final Supplier<String> myLazyDescription = LazyValue.notNull(this::calcDescription);
 
-  private final @Nonnull
+  private final 
   String myExample;
   private final @Nullable PostfixTemplateProvider myProvider;
 
@@ -66,21 +64,21 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
    * @deprecated use {@link #PostfixTemplate(String, String, String, PostfixTemplateProvider)}
    */
   @Deprecated(forRemoval = true)
-  protected PostfixTemplate(@Nonnull String name, @Nonnull String example) {
+  protected PostfixTemplate(String name, String example) {
     this(null, name, "." + name, example, null);
   }
 
-  protected PostfixTemplate(@Nullable @NonNls String id,
-                            @Nonnull String name,
-                            @Nonnull String example,
+  protected PostfixTemplate(@Nullable String id,
+                            String name,
+                            String example,
                             @Nullable PostfixTemplateProvider provider) {
     this(id, name, "." + name, example, provider);
   }
 
   protected PostfixTemplate(@Nullable String id,
-                            @Nonnull String name,
-                            @Nonnull String key,
-                            @Nonnull String example,
+                            String name,
+                            String key,
+                            String example,
                             @Nullable PostfixTemplateProvider provider) {
     myId = id != null ? id : getClass().getName() + "#" + key;
     myPresentableName = name;
@@ -89,7 +87,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
     myProvider = provider;
   }
 
-  @Nonnull
+  
   protected String calcDescription() {
     String defaultDescription = CodeInsightBundle.message("postfix.template.description.under.construction");
     try {
@@ -105,7 +103,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return identifier used for saving the settings related to this template
    */
-  @Nonnull
+  
   public String getId() {
     return myId;
   }
@@ -113,7 +111,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return key used for expanding the template in the editor
    */
-  @Nonnull
+  
   public final String getKey() {
     return myKey;
   }
@@ -121,7 +119,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return template name displayed in UI
    */
-  @Nonnull
+  
   public String getPresentableName() {
     return myPresentableName;
   }
@@ -129,7 +127,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return template description displayed in UI
    */
-  @Nonnull
+  
   public String getDescription() {
     return myLazyDescription.get();
   }
@@ -137,7 +135,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
   /**
    * @return short example of the expanded form shown in the completion popup and templates tree on the configuration page
    */
-  @Nonnull
+  
   public String getExample() {
     return myExample;
   }
@@ -163,7 +161,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
    * @param newOffset    offset before the template key
    * @return {@code true} if template is applicable in the given context, {@code false} otherwise
    */
-  public abstract boolean isApplicable(@Nonnull PsiElement context, @Nonnull Document copyDocument, int newOffset);
+  public abstract boolean isApplicable(PsiElement context, Document copyDocument, int newOffset);
 
   /**
    * Inserts the template content in the given editor.
@@ -171,7 +169,7 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
    * @param context PSI element before the template key
    * @param editor  current editor
    */
-  public abstract void expand(@Nonnull PsiElement context, @Nonnull Editor editor);
+  public abstract void expand(PsiElement context, Editor editor);
 
   /**
    * @return the {@link PostfixTemplateProvider} that provided this template
@@ -215,9 +213,9 @@ public abstract class PostfixTemplate implements PossiblyDumbAware {
     return Objects.hash(myId, myPresentableName, myKey, getDescription(), myExample, myProvider);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static PsiFile copyFile(@Nonnull PsiFile file, @Nonnull StringBuilder fileContentWithoutKey) {
+  public static PsiFile copyFile(PsiFile file, StringBuilder fileContentWithoutKey) {
     PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(file.getProject());
     FileType fileType = file.getFileType();
     Language language = LanguageUtil.getLanguageForPsi(file.getProject(), file.getVirtualFile(), fileType);

@@ -17,7 +17,6 @@ package consulo.component.impl.internal.messagebus;
 
 import consulo.component.bind.TopicMethod;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,13 +33,13 @@ public class TopicMethodMessage<T> implements Message<T> {
     myArguments = args;
   }
 
-  @Nonnull
+  
   @Override
   public Class<T> getTopicClass() {
     return myTopicClass;
   }
 
-  @Nonnull
+  
   @Override
   public String getMethodName() {
     return myTopicMethod.getName();

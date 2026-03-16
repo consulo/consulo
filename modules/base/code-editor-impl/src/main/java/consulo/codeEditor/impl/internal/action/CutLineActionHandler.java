@@ -23,8 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class CutLineActionHandler extends EditorWriteActionHandler {
     private final boolean myToLineStart;
@@ -88,7 +87,7 @@ class CutLineActionHandler extends EditorWriteActionHandler {
         delete(editor, caret, start, end);
     }
 
-    private void delete(@Nonnull Editor editor, @Nonnull Caret caret, int start, int end) {
+    private void delete(Editor editor, Caret caret, int start, int end) {
         if (myCopyToClipboard) {
             KillRingUtil.copyToKillRing(editor, start, end, true);
         }

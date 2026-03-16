@@ -18,7 +18,7 @@ package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.TitledSeparator;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

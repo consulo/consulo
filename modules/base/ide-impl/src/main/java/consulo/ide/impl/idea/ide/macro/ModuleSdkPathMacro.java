@@ -24,13 +24,12 @@ import consulo.content.bundle.Sdk;
 import consulo.pathMacro.Macro;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
 public abstract class ModuleSdkPathMacro extends Macro {
-  @Nonnull
+  
   public abstract Class<? extends ModuleExtensionWithSdk<?>> getExtensionClass();
 
   @Override

@@ -25,8 +25,7 @@ import consulo.module.Module;
 import consulo.module.ModulePointerManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -42,7 +41,7 @@ public class RootConfigurationAccessor {
     return sdk;
   }
 
-  @Nonnull
+  
   public NamedPointer<Sdk> getSdkPointer(String sdkName) {
     return SdkPointerManager.getInstance().create(sdkName);
   }
@@ -51,7 +50,7 @@ public class RootConfigurationAccessor {
     return module;
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public NamedPointer<Module> getModulePointer(Project project, String name) {
     return ModulePointerManager.getInstance(project).create(name);

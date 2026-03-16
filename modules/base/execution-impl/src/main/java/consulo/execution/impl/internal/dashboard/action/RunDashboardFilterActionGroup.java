@@ -19,9 +19,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CheckedActionGroup;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Set<ServiceViewContributor> contributors = e.getData(ServiceViewActionUtils.CONTRIBUTORS_KEY);
 
     boolean isEnabled = false;
@@ -74,7 +73,7 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
       Project project = e.getData(Project.KEY);
       if (project == null) return false;
 
@@ -84,7 +83,7 @@ public final class RunDashboardFilterActionGroup extends DefaultActionGroup impl
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
       Project project = e.getData(Project.KEY);
       if (project == null) return;
 

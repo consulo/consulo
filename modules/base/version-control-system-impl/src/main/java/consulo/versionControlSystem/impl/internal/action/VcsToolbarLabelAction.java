@@ -10,8 +10,7 @@ import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.ui.ex.awt.action.ToolbarLabelAction;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "VcsToolbarLabelAction")
 public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomComponentAction {
@@ -20,7 +19,7 @@ public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomC
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         Project project = e.getData(Project.KEY);
@@ -28,7 +27,7 @@ public class VcsToolbarLabelAction extends ToolbarLabelAction implements CustomC
         e.getPresentation().setTextValue(getConsolidatedVcsName(project));
     }
 
-    @Nonnull
+    
     private static LocalizeValue getConsolidatedVcsName(@Nullable Project project) {
         if (project != null) {
             return ProjectLevelVcsManager.getInstance(project)

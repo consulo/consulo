@@ -4,7 +4,6 @@ import consulo.application.AllIcons;
 import consulo.module.Module;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -17,12 +16,12 @@ public class ModuleListCellRenderer extends ColoredListCellRenderer<Module> {
     this("[none]");
   }
 
-  public ModuleListCellRenderer(@Nonnull String emptySelectionText) {
+  public ModuleListCellRenderer(String emptySelectionText) {
     myEmptySelectionText = emptySelectionText;
   }
 
   @Override
-  protected void customizeCellRenderer(@Nonnull JList<? extends Module> list, Module module, int index, boolean selected, boolean hasFocus) {
+  protected void customizeCellRenderer(JList<? extends Module> list, Module module, int index, boolean selected, boolean hasFocus) {
     if (module == null) {
       append(myEmptySelectionText);
     }

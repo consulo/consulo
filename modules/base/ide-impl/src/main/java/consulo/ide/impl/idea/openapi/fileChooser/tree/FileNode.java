@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,7 +36,7 @@ public class FileNode {
   private final AtomicBoolean mySymlink = new AtomicBoolean();
   private final AtomicBoolean myWritable = new AtomicBoolean();
 
-  FileNode(@Nonnull VirtualFile file) {
+  FileNode(VirtualFile file) {
     myFile = file;
   }
 

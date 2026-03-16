@@ -27,29 +27,28 @@ import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinAction {
     protected AbstractCommitChangesAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
-    @Nonnull
+    
     @Override
-    protected FilePath[] getRoots(@Nonnull VcsContext context) {
+    protected FilePath[] getRoots(VcsContext context) {
         return getAllContentRoots(context);
     }
 
     @Override
-    protected boolean approximatelyHasRoots(@Nonnull VcsContext dataContext) {
+    protected boolean approximatelyHasRoots(VcsContext dataContext) {
         Project project = dataContext.getProject();
         ProjectLevelVcsManager manager = ProjectLevelVcsManager.getInstance(project);
         return manager.hasAnyMappings();
@@ -60,7 +59,7 @@ public abstract class AbstractCommitChangesAction extends AbstractCommonCheckinA
     }
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         super.update(vcsContext, presentation);
         if (presentation.isVisible() && presentation.isEnabled()) {
             ChangeList[] selectedChangeLists = vcsContext.getSelectedChangeLists();

@@ -24,7 +24,6 @@ import consulo.project.ui.notification.Notification;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,14 +31,14 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ExternalSystemInternalNotificationHelper {
-    @Nonnull
+    
     Key<Pair<NotificationSource, ProjectSystemId>> CONTENT_ID_KEY = Key.create("CONTENT_ID");
 
     void addMessage(
         VirtualFile virtualFile,
         String groupName,
-        @Nonnull Notification notification,
-        @Nonnull ProjectSystemId externalSystemId,
-        @Nonnull NotificationData notificationData
+        Notification notification,
+        ProjectSystemId externalSystemId,
+        NotificationData notificationData
     );
 }

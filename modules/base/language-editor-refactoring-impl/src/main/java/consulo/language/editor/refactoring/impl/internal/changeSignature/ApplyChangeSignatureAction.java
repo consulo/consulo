@@ -27,8 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction implements SyntheticIntentionAction {
   private final String myMethodName;
@@ -37,14 +36,14 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
     myMethodName = methodName;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return RefactoringLocalize.changingSignatureOf0(myMethodName);
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) {
+  public boolean isAvailable(Project project, Editor editor, PsiElement element) {
     LanguageChangeSignatureDetector<ChangeInfo> detector = LanguageChangeSignatureDetector.forLanguage(element.getLanguage());
     if (detector != null) {
       InplaceChangeSignature changeSignature = InplaceChangeSignature.getCurrentRefactoring(editor);
@@ -57,7 +56,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException {
     InplaceChangeSignature signatureGestureDetector = InplaceChangeSignature.getCurrentRefactoring(editor);
     String initialSignature = signatureGestureDetector.getInitialSignature();
     ChangeInfo currentInfo = signatureGestureDetector.getCurrentInfo();
@@ -70,7 +69,7 @@ public class ApplyChangeSignatureAction extends BaseRefactoringIntentionAction i
 
   @Nullable
   @Override
-  public PsiElement getElementToMakeWritable(@Nonnull PsiFile file) {
+  public PsiElement getElementToMakeWritable(PsiFile file) {
     return file;
   }
 

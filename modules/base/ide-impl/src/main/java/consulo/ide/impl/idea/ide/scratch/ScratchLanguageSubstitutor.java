@@ -25,19 +25,18 @@ import consulo.language.psi.LanguageSubstitutors;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(order = "first")
 public class ScratchLanguageSubstitutor extends LanguageSubstitutor {
   @Nullable
   @Override
-  public Language getLanguage(@Nonnull VirtualFile file, @Nonnull Project project) {
+  public Language getLanguage(VirtualFile file, Project project) {
     return substituteLanguage(project, file);
   }
 
   @Nullable
-  public static Language substituteLanguage(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public static Language substituteLanguage(Project project, VirtualFile file) {
     RootType rootType = ScratchFileService.getInstance().getRootType(file);
     if (rootType == null) return null;
     Language language = rootType.substituteLanguage(project, file);
@@ -46,7 +45,7 @@ public class ScratchLanguageSubstitutor extends LanguageSubstitutor {
     return result == Language.ANY ? null : result;
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

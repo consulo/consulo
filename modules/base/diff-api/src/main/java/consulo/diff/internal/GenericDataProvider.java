@@ -4,7 +4,6 @@ package consulo.diff.internal;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class GenericDataProvider implements UiDataProvider {
 
   @SuppressWarnings("unchecked")
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     for (Map.Entry<Key, Object> entry : myGenericData.entrySet()) {
       sink.set(entry.getKey(), entry.getValue());
     }

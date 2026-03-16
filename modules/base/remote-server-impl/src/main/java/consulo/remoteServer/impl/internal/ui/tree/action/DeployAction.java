@@ -11,7 +11,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import static consulo.remoteServer.impl.internal.util.ApplicationActionUtils.getDeploymentTarget;
 
@@ -25,7 +24,7 @@ public class DeployAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
         Presentation presentation = e.getPresentation();
         boolean visible = node != null && node.isDeployActionVisible();
@@ -43,7 +42,7 @@ public class DeployAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DeploymentNode node = getDeploymentTarget(e);
         if (node != null) {
             node.deploy();

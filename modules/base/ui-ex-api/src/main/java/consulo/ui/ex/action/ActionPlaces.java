@@ -16,8 +16,7 @@
 package consulo.ui.ex.action;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -175,7 +174,7 @@ public abstract class ActionPlaces {
 
     @Deprecated
     @DeprecationInfo("Use consulo.ui.ex.action.AnActionEvent#isFromActionToolbar")
-    public static boolean isToolbarPlace(@Nonnull String place) {
+    public static boolean isToolbarPlace(String place) {
         return ourToolbarPlaces.contains(place);
     }
 
@@ -224,16 +223,16 @@ public abstract class ActionPlaces {
         SERVICES_POPUP
     );
 
-    @Nonnull
+    
     public static String getActionGroupPopupPlace(@Nullable String actionId) {
         return actionId == null ? POPUP : POPUP_PREFIX + actionId;
     }
 
-    public static boolean isMainMenuOrShortcut(@Nonnull String place) {
+    public static boolean isMainMenuOrShortcut(String place) {
         return MAIN_MENU.equals(place) || KEYBOARD_SHORTCUT.equals(place);
     }
 
-    public static boolean isPopupPlace(@Nonnull String place) {
+    public static boolean isPopupPlace(String place) {
         return ourPopupPlaces.contains(place) || place.startsWith(POPUP_PREFIX);
     }
 }

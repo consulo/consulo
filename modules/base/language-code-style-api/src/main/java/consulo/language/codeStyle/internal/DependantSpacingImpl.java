@@ -20,7 +20,6 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.DependentSpacingRule;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +32,12 @@ public class DependantSpacingImpl extends SpacingImpl {
   private static final int DEPENDENCE_CONTAINS_LF_MASK = 0x10;
   private static final int DEPENDENT_REGION_LF_CHANGED_MASK = 0x20;
 
-  @Nonnull
+  
   private final List<TextRange> myDependentRegionRanges;
-  @Nonnull
+  
   private final DependentSpacingRule myRule;
 
-  public DependantSpacingImpl(int minSpaces, int maxSpaces, @Nonnull TextRange dependency, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule) {
+  public DependantSpacingImpl(int minSpaces, int maxSpaces, TextRange dependency, boolean keepLineBreaks, int keepBlankLines, DependentSpacingRule rule) {
     super(minSpaces, maxSpaces, 0, false, false, keepLineBreaks, keepBlankLines, false, 0);
     myDependentRegionRanges = new ArrayList<>();
     myDependentRegionRanges.add(dependency);
@@ -47,10 +46,10 @@ public class DependantSpacingImpl extends SpacingImpl {
 
   public DependantSpacingImpl(int minSpaces,
                               int maxSpaces,
-                              @Nonnull List<TextRange> dependencyRanges,
+                              List<TextRange> dependencyRanges,
                               boolean keepLineBreaks,
                               int keepBlankLines,
-                              @Nonnull DependentSpacingRule rule) {
+                              DependentSpacingRule rule) {
     super(minSpaces, maxSpaces, 0, false, false, keepLineBreaks, keepBlankLines, false, 0);
     myDependentRegionRanges = dependencyRanges;
     myRule = rule;
@@ -103,7 +102,7 @@ public class DependantSpacingImpl extends SpacingImpl {
     }
   }
 
-  @Nonnull
+  
   public List<TextRange> getDependentRegionRanges() {
     return myDependentRegionRanges;
   }

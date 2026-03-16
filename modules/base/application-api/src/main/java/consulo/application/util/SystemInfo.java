@@ -21,8 +21,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -58,7 +57,7 @@ public class SystemInfo {
 
   public static final boolean isJetBrainsJvm = isJetbrainsJvm() || isConsuloJvm();
 
-  public static boolean isOsVersionAtLeast(@Nonnull String version) {
+  public static boolean isOsVersionAtLeast(String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
   }
 
@@ -134,7 +133,7 @@ public class SystemInfo {
   public static final boolean isMacOSElCapitan = isMac && isOsVersionAtLeast("10.11");
   public static final boolean isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
 
-  @Nonnull
+  
   public static String getMacOSMajorVersion() {
     return getMacOSMajorVersion(OS_VERSION);
   }
@@ -144,40 +143,40 @@ public class SystemInfo {
     return String.format("%d.%d", parts[0], parts[1]);
   }
 
-  @Nonnull
+  
   public static String getMacOSVersionCode() {
     return getMacOSVersionCode(OS_VERSION);
   }
 
-  @Nonnull
+  
   public static String getMacOSMajorVersionCode() {
     return getMacOSMajorVersionCode(OS_VERSION);
   }
 
-  @Nonnull
+  
   public static String getMacOSMinorVersionCode() {
     return getMacOSMinorVersionCode(OS_VERSION);
   }
 
-  @Nonnull
-  public static String getMacOSVersionCode(@Nonnull String version) {
+  
+  public static String getMacOSVersionCode(String version) {
     int[] parts = getMacOSVersionParts(version);
     return String.format("%02d%d%d", parts[0], normalize(parts[1]), normalize(parts[2]));
   }
 
-  @Nonnull
-  public static String getMacOSMajorVersionCode(@Nonnull String version) {
+  
+  public static String getMacOSMajorVersionCode(String version) {
     int[] parts = getMacOSVersionParts(version);
     return String.format("%02d%d%d", parts[0], normalize(parts[1]), 0);
   }
 
-  @Nonnull
-  public static String getMacOSMinorVersionCode(@Nonnull String version) {
+  
+  public static String getMacOSMinorVersionCode(String version) {
     int[] parts = getMacOSVersionParts(version);
     return String.format("%02d%02d", parts[1], parts[2]);
   }
 
-  private static int[] getMacOSVersionParts(@Nonnull String version) {
+  private static int[] getMacOSVersionParts(String version) {
     List<String> parts = StringUtil.split(version, ".");
     while (parts.size() < 3) {
       parts.add("0");

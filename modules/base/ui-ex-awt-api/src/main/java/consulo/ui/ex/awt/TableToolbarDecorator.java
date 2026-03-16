@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.dnd.RowsDnDSupport;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.util.TableUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -37,7 +36,7 @@ class TableToolbarDecorator extends ToolbarDecorator {
   @Nullable
   private final ElementProducer<?> myProducer;
 
-  TableToolbarDecorator(@Nonnull JTable table, @Nullable ElementProducer<?> producer) {
+  TableToolbarDecorator(JTable table, @Nullable ElementProducer<?> producer) {
     myTable = table;
     myProducer = producer;
     myAddActionEnabled = myRemoveActionEnabled = myUpActionEnabled = myDownActionEnabled = isModelEditable();

@@ -14,8 +14,7 @@ import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public interface ModelScopeItemPresenter {
   @AnalysisScope.Type
   int getScopeId();
 
-  @Nonnull
+  
   RadioButton getButton(ModelScopeItem model);
 
   @Nullable
@@ -39,14 +38,14 @@ public interface ModelScopeItemPresenter {
   boolean isApplicable(ModelScopeItem model);
 
   @Nullable
-  default ModelScopeItem tryCreate(@Nonnull Project project,
-                                   @Nonnull AnalysisScope scope,
+  default ModelScopeItem tryCreate(Project project,
+                                   AnalysisScope scope,
                                    @Nullable Module module,
                                    @Nullable PsiElement context) {
     return null;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   static List<ModelScopeItemView> createOrderedViews(List<? extends ModelScopeItem> models, Disposable dialogDisposable) {
     List<ModelScopeItemView> result = new ArrayList<>();

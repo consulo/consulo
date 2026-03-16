@@ -21,7 +21,6 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -42,7 +41,7 @@ public class ExperimentalPluginSystemHealthMonitor implements SystemHealthMonito
     }
 
     @Override
-    public void check(@Nonnull Reporter reporter) {
+    public void check(Reporter reporter) {
         List<PluginDescriptor> plugins = PluginManager.getPlugins().stream()
             .filter(PluginDescriptor::isExperimental)
             .collect(Collectors.toList());

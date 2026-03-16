@@ -26,8 +26,7 @@ import consulo.util.collection.WeakList;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -58,14 +57,14 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Override
   @RequiredUIAccess
-  public void releaseFoldings(@Nonnull Editor editor) {
+  public void releaseFoldings(Editor editor) {
     UIAccess.assertIsUIThread();
 
     EditorFoldingInfoImpl.get(editor).dispose();
   }
 
   @Override
-  public void buildInitialFoldings(@Nonnull Editor editor) {
+  public void buildInitialFoldings(Editor editor) {
     Project project = editor.getProject();
     if (project == null || !project.equals(myProject) || editor.isDisposed()) return;
     if (!editor.getFoldingModel().isFoldingEnabled()) return;
@@ -81,7 +80,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Nullable
   @Override
-  public CodeFoldingState buildInitialFoldings(@Nonnull Document document) {
+  public CodeFoldingState buildInitialFoldings(Document document) {
     if (myProject.isDisposed()) {
       return null;
     }
@@ -115,17 +114,17 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Nullable
   @Override
-  public Boolean isCollapsedByDefault(@Nonnull FoldRegion region) {
+  public Boolean isCollapsedByDefault(FoldRegion region) {
     return region.getUserData(UpdateFoldRegionsOperation.COLLAPSED_BY_DEFAULT);
   }
 
   @Override
-  public void scheduleAsyncFoldingUpdate(@Nonnull Editor editor) {
+  public void scheduleAsyncFoldingUpdate(Editor editor) {
     FoldingUpdate.clearFoldingCache(editor);
     DaemonCodeAnalyzer.getInstance(myProject).restart();
   }
 
-  private void initFolding(@Nonnull Editor editor) {
+  private void initFolding(Editor editor) {
     Document document = editor.getDocument();
     editor.getFoldingModel().runBatchFoldingOperation(() -> {
       DocumentFoldingInfo documentFoldingInfo = getDocumentFoldingInfo(document);
@@ -144,17 +143,17 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Override
   @Nullable
-  public FoldRegion findFoldRegion(@Nonnull Editor editor, int startOffset, int endOffset) {
+  public FoldRegion findFoldRegion(Editor editor, int startOffset, int endOffset) {
     return FoldingUtil.findFoldRegion(editor, startOffset, endOffset);
   }
 
   @Override
-  public FoldRegion[] getFoldRegionsAtOffset(@Nonnull Editor editor, int offset) {
+  public FoldRegion[] getFoldRegionsAtOffset(Editor editor, int offset) {
     return FoldingUtil.getFoldRegionsAtOffset(editor, offset);
   }
 
   @Override
-  public void updateFoldRegions(@Nonnull Editor editor) {
+  public void updateFoldRegions(Editor editor) {
     updateFoldRegions(editor, false);
   }
 
@@ -169,7 +168,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Override
   @Nullable
-  public Runnable updateFoldRegionsAsync(@Nonnull Editor editor, boolean firstTime) {
+  public Runnable updateFoldRegionsAsync(Editor editor, boolean firstTime) {
     if (!editor.getSettings().isAutoCodeFoldingEnabled()) return null;
     Runnable runnable = updateFoldRegions(editor, firstTime, false);
     return () -> {
@@ -183,14 +182,14 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Nullable
-  private Runnable updateFoldRegions(@Nonnull Editor editor, boolean applyDefaultState, boolean quick) {
+  private Runnable updateFoldRegions(Editor editor, boolean applyDefaultState, boolean quick) {
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
     return file == null ? null : FoldingUpdate.updateFoldRegions(editor, file, applyDefaultState, quick);
   }
 
   @Override
   @RequiredUIAccess
-  public CodeFoldingState saveFoldingState(@Nonnull Editor editor) {
+  public CodeFoldingState saveFoldingState(Editor editor) {
     UIAccess.assertIsUIThread();
     DocumentFoldingInfo info = getDocumentFoldingInfo(editor.getDocument());
     if (isFoldingsInitializedInEditor(editor)) {
@@ -201,7 +200,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
 
   @Override
   @RequiredUIAccess
-  public void restoreFoldingState(@Nonnull Editor editor, @Nonnull CodeFoldingState state) {
+  public void restoreFoldingState(Editor editor, CodeFoldingState state) {
     UIAccess.assertIsUIThread();
     if (isFoldingsInitializedInEditor(editor)) {
       state.setToEditor(editor);
@@ -209,21 +208,21 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   }
 
   @Override
-  public void writeFoldingState(@Nonnull CodeFoldingState state, @Nonnull Element element) {
+  public void writeFoldingState(CodeFoldingState state, Element element) {
     if (state instanceof DocumentFoldingInfo) {
       ((DocumentFoldingInfo)state).writeExternal(element);
     }
   }
 
   @Override
-  public CodeFoldingState readFoldingState(@Nonnull Element element, @Nonnull Document document) {
+  public CodeFoldingState readFoldingState(Element element, Document document) {
     DocumentFoldingInfo info = getDocumentFoldingInfo(document);
     info.readExternal(element);
     return info;
   }
 
-  @Nonnull
-  private DocumentFoldingInfo getDocumentFoldingInfo(@Nonnull Document document) {
+  
+  private DocumentFoldingInfo getDocumentFoldingInfo(Document document) {
     DocumentFoldingInfo info = document.getUserData(myFoldingInfoInDocumentKey);
     if (info == null) {
       info = new DocumentFoldingInfo(myProject, document);
@@ -238,7 +237,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
     return info;
   }
 
-  private static boolean isFoldingsInitializedInEditor(@Nonnull Editor editor) {
+  private static boolean isFoldingsInitializedInEditor(Editor editor) {
     return Boolean.TRUE.equals(editor.getUserData(FOLDING_STATE_KEY));
   }
 }

@@ -23,7 +23,6 @@ import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementType;
 import consulo.compiler.artifact.ui.ArtifactEditor;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -33,13 +32,13 @@ import javax.swing.*;
 public interface ArtifactEditorEx extends ArtifactEditor, Disposable {
   Key<ArtifactEditorEx> ARTIFACTS_EDITOR_KEY = Key.create("artifactsEditor");
 
-  void addNewPackagingElement(@Nonnull PackagingElementType<?> type);
+  void addNewPackagingElement(PackagingElementType<?> type);
 
   void removeSelectedElements();
 
-  void removePackagingElement(@Nonnull String pathToParent, @Nonnull PackagingElement<?> element);
+  void removePackagingElement(String pathToParent, PackagingElement<?> element);
 
-  void replacePackagingElement(@Nonnull String pathToParent, @Nonnull PackagingElement<?> element, @Nonnull PackagingElement<?> replacement);
+  void replacePackagingElement(String pathToParent, PackagingElement<?> element, PackagingElement<?> replacement);
 
   LayoutTreeComponent getLayoutTreeComponent();
 

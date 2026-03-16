@@ -4,8 +4,7 @@ package consulo.language.ast;
 import consulo.language.Language;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An additional interface to be implemented by {@link IElementType} instances for tokens, which allows for incremental reparse.
@@ -32,11 +31,11 @@ public interface IReparseableElementTypeBase extends ILazyParseableElementTypeBa
    * @param project      the project containing the content.
    * @return true if the content is valid, false if not
    */
-  default boolean isParsable(@Nullable ASTNode parent, @Nonnull CharSequence buffer, @Nonnull Language fileLanguage, @Nonnull Project project) {
+  default boolean isParsable(@Nullable ASTNode parent, CharSequence buffer, Language fileLanguage, Project project) {
     return false;
   }
 
-  default boolean isValidReparse(@Nonnull ASTNode oldNode, @Nonnull ASTNode newNode) {
+  default boolean isValidReparse(ASTNode oldNode, ASTNode newNode) {
     return true;
   }
 }

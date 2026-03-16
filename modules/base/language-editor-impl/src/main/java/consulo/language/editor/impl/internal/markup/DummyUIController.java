@@ -17,7 +17,6 @@ package consulo.language.editor.impl.internal.markup;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.GridBag;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Collections;
@@ -35,31 +34,28 @@ public class DummyUIController implements UIController {
         return false;
     }
 
-    @Nonnull
     @Override
     public List<AnAction> getActions() {
         return Collections.emptyList();
     }
 
-    @Nonnull
     @Override
     public List<InspectionsLevel> getAvailableLevels() {
         return Collections.emptyList();
     }
 
-    @Nonnull
     @Override
     public List<LanguageHighlightLevel> getHighlightLevels() {
         return Collections.emptyList();
     }
 
     @Override
-    public void setHighLightLevel(@Nonnull LanguageHighlightLevel newLevels) {
+    public void setHighLightLevel(LanguageHighlightLevel newLevels) {
 
     }
 
     @Override
-    public void fillHectorPanels(@Nonnull Container container, @Nonnull GridBag bag) {
+    public void fillHectorPanels(Container container, GridBag bag) {
 
     }
 

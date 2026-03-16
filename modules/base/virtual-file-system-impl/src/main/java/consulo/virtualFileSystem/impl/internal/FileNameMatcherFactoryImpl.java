@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.internal.matcher.ExtensionFileNameMatcherImpl;
 import consulo.virtualFileSystem.internal.matcher.WildcardFileNameMatcherImpl;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,21 +30,21 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class FileNameMatcherFactoryImpl extends FileNameMatcherFactory {
-  @Nonnull
+  
   @Override
-  public FileNameMatcher createExtensionFileNameMatcher(@Nonnull String extension) {
+  public FileNameMatcher createExtensionFileNameMatcher(String extension) {
     return new ExtensionFileNameMatcherImpl(extension);
   }
 
-  @Nonnull
+  
   @Override
-  public FileNameMatcher createExactFileNameMatcher(@Nonnull String fileName, boolean ignoreCase) {
+  public FileNameMatcher createExactFileNameMatcher(String fileName, boolean ignoreCase) {
     return new ExactFileNameMatcherImpl(fileName, ignoreCase);
   }
 
-  @Nonnull
+  
   @Override
-  public FileNameMatcher createWildcardFileNameMatcher(@Nonnull String pattern) {
+  public FileNameMatcher createWildcardFileNameMatcher(String pattern) {
     return new WildcardFileNameMatcherImpl(pattern);
   }
 }

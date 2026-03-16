@@ -38,8 +38,7 @@ import consulo.versionControlSystem.impl.internal.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.util.VcsCatchingRunnable;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,8 +61,8 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
 
   @Override
   public void apply(
-    @Nonnull List<FilePatch> remaining,
-    @Nonnull final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
+    List<FilePatch> remaining,
+    final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
     @Nullable LocalChangeList localList,
     @Nullable final String fileName,
     @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
@@ -137,24 +136,24 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
       myMap = new HashMap<>();
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
       return myName;
     }
 
     @Override
-    public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
+    public CharSequence provideContent(String path, CommitContext commitContext) {
       return myMap.get(path);
     }
 
     @Override
-    public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
+    public void consumeContent(String path, CharSequence content, CommitContext commitContext) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void consumeContentBeforePatchApplied(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
+    public void consumeContentBeforePatchApplied(String path, CharSequence content, CommitContext commitContext) {
       throw new UnsupportedOperationException();
     }
 

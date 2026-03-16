@@ -16,8 +16,7 @@
 package consulo.ui.image;
 
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -28,23 +27,13 @@ import java.util.Map;
 public interface IconLibraryManager {
   String LIGHT_LIBRARY_ID = "light";
   String DARK_LIBRARY_ID = "dark";
-
-  @Nonnull
   public static IconLibraryManager get() {
     return UIInternal.get()._IconLibraryManager_get();
   }
-
-  @Nonnull
   Map<String, IconLibrary> getLibraries();
-
-  @Nonnull
   String getActiveLibraryId();
-
-  @Nonnull
   IconLibrary getActiveLibrary();
-
-  @Nonnull
-  default Image inverseIcon(@Nonnull Image image) {
+  default Image inverseIcon(Image image) {
     return image;
   }
 

@@ -17,8 +17,7 @@ package consulo.diagram;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -31,12 +30,12 @@ public interface GraphNode<T> {
    *  [THIS NODE] -> [TARGET NODE]
    * @param target
    */
-  void makeArrow(@Nonnull GraphNode<?> target);
+  void makeArrow(GraphNode<?> target);
 
-  @Nonnull
+  
   List<GraphNode<?>> getArrowNodes();
 
-  @Nonnull
+  
   String getName();
 
   @Nullable

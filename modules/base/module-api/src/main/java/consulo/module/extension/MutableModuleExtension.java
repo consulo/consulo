@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -29,9 +28,9 @@ import jakarta.annotation.Nullable;
 public interface MutableModuleExtension<T extends ModuleExtension<T>> extends ModuleExtension<T> {
   @Nullable
   @RequiredUIAccess
-  Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck);
+  Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck);
 
   void setEnabled(boolean val);
 
-  boolean isModified(@Nonnull T originalExtension);
+  boolean isModified(T originalExtension);
 }

@@ -24,7 +24,6 @@ import consulo.ui.AntialiasingType;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TextItemRenderer;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.function.Supplier;
@@ -42,11 +41,11 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
   }
 
   @Override
-  protected void customizeCellRenderer(@Nonnull JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
+  protected void customizeCellRenderer(JList<? extends E> list, E value, int index, boolean selected, boolean hasFocus) {
     DesktopTextItemPresentationImpl render = new DesktopTextItemPresentationImpl(this) {
-      @Nonnull
+      
       @Override
-      public TextItemPresentation withAntialiasingType(@Nonnull AntialiasingType type) {
+      public TextItemPresentation withAntialiasingType(AntialiasingType type) {
         myAntialiasingType = () -> type;
         updateUI();
         return super.withAntialiasingType(type);
@@ -56,7 +55,7 @@ class DesktopListRender<E> extends ColoredListCellRenderer<E> {
   }
 
   @Override
-  protected void applyAdditionalHints(@Nonnull Graphics2D g2d) {
+  protected void applyAdditionalHints(Graphics2D g2d) {
     super.applyAdditionalHints(g2d);
 
     if(myAntialiasingType == null) {

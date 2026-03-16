@@ -22,8 +22,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.impl.internal.entry.ChildInfoImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -37,12 +36,12 @@ public class VfsEventGenerationHelper {
     private final List<VFileEvent> myEvents = new ArrayList<>();
     private int myMarkedStart = -1;
 
-    @Nonnull
+    
     public List<VFileEvent> getEvents() {
         return myEvents;
     }
 
-    public static boolean checkDirty(@Nonnull NewVirtualFile file) {
+    public static boolean checkDirty(NewVirtualFile file) {
         boolean fileDirty = file.isDirty();
         if (LOG.isTraceEnabled()) {
             LOG.trace("file=" + file + " dirty=" + fileDirty);
@@ -50,7 +49,7 @@ public class VfsEventGenerationHelper {
         return fileDirty;
     }
 
-    public void checkContentChanged(@Nonnull VirtualFile file, long oldTimestamp, long newTimestamp, long oldLength, long newLength) {
+    public void checkContentChanged(VirtualFile file, long oldTimestamp, long newTimestamp, long oldLength, long newLength) {
         if (oldTimestamp != newTimestamp || oldLength != newLength) {
             if (LOG.isTraceEnabled()) {
                 LOG.trace("update file=" + file + (oldTimestamp != newTimestamp ? " TS=" + oldTimestamp + "->" + newTimestamp : "") + (oldLength != newLength ? " len=" + oldLength + "->" + newLength : ""));
@@ -60,11 +59,11 @@ public class VfsEventGenerationHelper {
     }
 
     public void scheduleCreation(
-        @Nonnull VirtualFile parent,
-        @Nonnull String childName,
-        @Nonnull FileAttributes attributes,
+        VirtualFile parent,
+        String childName,
+        FileAttributes attributes,
         @Nullable String symlinkTarget,
-        @Nonnull ThrowableRunnable<RefreshWorker.RefreshCancelledException> checkCanceled
+        ThrowableRunnable<RefreshWorker.RefreshCancelledException> checkCanceled
     ) throws RefreshWorker.RefreshCancelledException {
         if (LOG.isTraceEnabled()) {
             LOG.trace("create parent=" + parent + " name=" + childName + " attr=" + attributes);
@@ -89,7 +88,7 @@ public class VfsEventGenerationHelper {
         myEvents.add(event);
     }
 
-    private static boolean shouldScanDirectory(@Nonnull VirtualFile parent, @Nonnull Path child, @Nonnull String childName) {
+    private static boolean shouldScanDirectory(VirtualFile parent, Path child, String childName) {
         if (FileTypeRegistry.getInstance().isFileIgnored(childName)) {
             return false;
         }
@@ -122,7 +121,7 @@ public class VfsEventGenerationHelper {
 
     // scan all children of "root" (except excluded dirs) recursively and return them in the ChildInfo[] array
     @Nullable // null means error during scan
-    private static ChildInfo[] scanChildren(@Nonnull Path root, @Nonnull Path[] excluded, @Nonnull ThrowableRunnable<RefreshWorker.RefreshCancelledException> checkCanceled) throws RefreshWorker.RefreshCancelledException {
+    private static ChildInfo[] scanChildren(Path root, Path[] excluded, ThrowableRunnable<RefreshWorker.RefreshCancelledException> checkCanceled) throws RefreshWorker.RefreshCancelledException {
         // top of the stack contains list of children found so far in the current directory
         Stack<List<ChildInfo>> stack = new Stack<>();
         ChildInfo fakeRoot = new ChildInfoImpl(ChildInfoImpl.UNKNOWN_ID_YET, "", null, null, null);
@@ -193,40 +192,40 @@ public class VfsEventGenerationHelper {
         return stack.pop().get(0).getChildren();
     }
 
-    void scheduleDeletion(@Nonnull VirtualFile file) {
+    void scheduleDeletion(VirtualFile file) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("delete file=" + file);
         }
         myEvents.add(new VFileDeleteEvent(null, file, true));
     }
 
-    void checkSymbolicLinkChange(@Nonnull VirtualFile child, String oldTarget, String currentTarget) {
+    void checkSymbolicLinkChange(VirtualFile child, String oldTarget, String currentTarget) {
         String currentVfsTarget = currentTarget != null ? FileUtil.toSystemIndependentName(currentTarget) : null;
         if (!Comparing.equal(oldTarget, currentVfsTarget)) {
             scheduleAttributeChange(child, VirtualFile.PROP_SYMLINK_TARGET, oldTarget, currentVfsTarget);
         }
     }
 
-    void checkHiddenAttributeChange(@Nonnull VirtualFile child, boolean oldHidden, boolean newHidden) {
+    void checkHiddenAttributeChange(VirtualFile child, boolean oldHidden, boolean newHidden) {
         if (oldHidden != newHidden) {
             scheduleAttributeChange(child, VirtualFile.PROP_HIDDEN, oldHidden, newHidden);
         }
     }
 
-    void checkWritableAttributeChange(@Nonnull VirtualFile file, boolean oldWritable, boolean newWritable) {
+    void checkWritableAttributeChange(VirtualFile file, boolean oldWritable, boolean newWritable) {
         if (oldWritable != newWritable) {
             scheduleAttributeChange(file, VirtualFile.PROP_WRITABLE, oldWritable, newWritable);
         }
     }
 
-    void scheduleAttributeChange(@Nonnull VirtualFile file, @VirtualFile.PropName @Nonnull String property, Object current, Object upToDate) {
+    void scheduleAttributeChange(VirtualFile file, @VirtualFile.PropName String property, Object current, Object upToDate) {
         if (LOG.isTraceEnabled()) {
             LOG.trace("update file=" + file + ' ' + property + '=' + current + "->" + upToDate);
         }
         myEvents.add(new VFilePropertyChangeEvent(null, file, property, current, upToDate, true));
     }
 
-    void addAllEventsFrom(@Nonnull VfsEventGenerationHelper otherHelper) {
+    void addAllEventsFrom(VfsEventGenerationHelper otherHelper) {
         myEvents.addAll(otherHelper.myEvents);
     }
 }

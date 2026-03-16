@@ -26,7 +26,6 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -40,17 +39,16 @@ import java.awt.event.KeyEvent;
 public class ActivateToolWindowAction extends DumbAwareAction {
     private final String myToolWindowId;
 
-    private ActivateToolWindowAction(@Nonnull String toolWindowId) {
+    private ActivateToolWindowAction(String toolWindowId) {
         myToolWindowId = toolWindowId;
     }
 
-    @Nonnull
     public String getToolWindowId() {
         return myToolWindowId;
     }
 
     @RequiredUIAccess
-    public static void ensureToolWindowActionRegistered(@Nonnull ToolWindow toolWindow) {
+    public static void ensureToolWindowActionRegistered(ToolWindow toolWindow) {
         ActionManager actionManager = ActionManager.getInstance();
         String actionId = getActionIdForToolWindow(toolWindow.getId());
         AnAction action = actionManager.getAction(actionId);
@@ -62,7 +60,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    public static void updateToolWindowActionPresentation(@Nonnull ToolWindow toolWindow) {
+    public static void updateToolWindowActionPresentation(ToolWindow toolWindow) {
         ActionManager actionManager = ActionManager.getInstance();
         String actionId = getActionIdForToolWindow(toolWindow.getId());
         AnAction action = actionManager.getAction(actionId);
@@ -71,9 +69,8 @@ public class ActivateToolWindowAction extends DumbAwareAction {
         }
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return Coroutine.first(UIAction.apply(o -> {
             Project project = e.getData(Project.KEY);
             Presentation presentation = e.getPresentation();
@@ -95,7 +92,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
         }));
     }
 
-    private void updatePresentation(@Nonnull Presentation presentation, @Nonnull ToolWindow toolWindow) {
+    private void updatePresentation(Presentation presentation, ToolWindow toolWindow) {
         LocalizeValue title = toolWindow.getDisplayName();
         presentation.setTextValue(title);
         presentation.setDescriptionValue(ProjectUILocalize.actionActivateToolWindow(title));
@@ -104,7 +101,7 @@ public class ActivateToolWindowAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         if (windowManager.isEditorComponentActive() || !myToolWindowId.equals(windowManager.getActiveToolWindowId())) {

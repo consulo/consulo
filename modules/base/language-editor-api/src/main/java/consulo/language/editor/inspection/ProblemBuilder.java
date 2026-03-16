@@ -19,8 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,58 +29,58 @@ import java.util.Collection;
  * @since 2024-10-31
  */
 public interface ProblemBuilder {
-    @Nonnull
-    default ProblemBuilder range(@Nonnull PsiElement element) {
+    
+    default ProblemBuilder range(PsiElement element) {
         return range(element, element);
     }
 
-    @Nonnull
-    ProblemBuilder range(@Nonnull PsiElement element, @Nullable TextRange rangeInElement);
+    
+    ProblemBuilder range(PsiElement element, @Nullable TextRange rangeInElement);
 
-    @Nonnull
-    ProblemBuilder range(@Nonnull PsiElement startElement, @Nonnull PsiElement endElement);
+    
+    ProblemBuilder range(PsiElement startElement, PsiElement endElement);
 
-    @Nonnull
+    
     @RequiredReadAction
-    default ProblemBuilder rangeByRef(@Nonnull PsiReference reference) {
+    default ProblemBuilder rangeByRef(PsiReference reference) {
         return range(reference.getElement(), reference.getRangeInElement());
     }
 
-    @Nonnull
-    ProblemBuilder highlightType(@Nonnull ProblemHighlightType highlightType);
+    
+    ProblemBuilder highlightType(ProblemHighlightType highlightType);
 
-    @Nonnull
+    
     ProblemBuilder afterEndOfLine();
 
-    @Nonnull
+    
     default ProblemBuilder afterEndOfLine(boolean isAfterEndOfLine) {
         return isAfterEndOfLine ? afterEndOfLine() : this;
     }
 
-    @Nonnull
+    
     ProblemBuilder onTheFly();
 
-    @Nonnull
+    
     default ProblemBuilder onTheFly(boolean onTheFly) {
         return onTheFly ? onTheFly() : this;
     }
 
-    @Nonnull
+    
     default ProblemBuilder hideTooltip() {
         return showTooltip(false);
     }
 
-    @Nonnull
+    
     ProblemBuilder showTooltip(boolean showTooltip);
 
-    @Nonnull
-    ProblemBuilder withFix(@Nonnull LocalQuickFix fix);
+    
+    ProblemBuilder withFix(LocalQuickFix fix);
 
     default ProblemBuilder withOptionalFix(@Nullable LocalQuickFix fix) {
         return fix != null ? withFix(fix) : this;
     }
 
-    @Nonnull
+    
     default ProblemBuilder withFixes(LocalQuickFix... fixes) {
         if (fixes == null || fixes.length == 0) {
             return this;
@@ -89,8 +88,8 @@ public interface ProblemBuilder {
         return fixes.length == 1 ? withFix(fixes[0]) : withFixes(Arrays.asList(fixes));
     }
 
-    @Nonnull
-    ProblemBuilder withFixes(@Nonnull Collection<? extends LocalQuickFix> localQuickFixes);
+    
+    ProblemBuilder withFixes(Collection<? extends LocalQuickFix> localQuickFixes);
 
     void create();
 }

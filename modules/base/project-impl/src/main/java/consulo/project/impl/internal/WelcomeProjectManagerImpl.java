@@ -32,8 +32,7 @@ import consulo.project.ProjectOpenContext;
 import consulo.project.internal.ProjectOpenService;
 import consulo.project.internal.WelcomeProjectManager;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -61,11 +60,8 @@ import java.util.concurrent.CompletableFuture;
 public class WelcomeProjectManagerImpl implements WelcomeProjectManager, PersistentStateComponent<Element> {
     private static final Logger LOG = Logger.getInstance(WelcomeProjectManagerImpl.class);
 
-    @Nonnull
     private final Application myApplication;
-    @Nonnull
     private final ProjectManager myProjectManager;
-    @Nonnull
     private final ComponentBinding myComponentBinding;
 
     /**
@@ -84,17 +80,16 @@ public class WelcomeProjectManagerImpl implements WelcomeProjectManager, Persist
     private Element myStateElement;
 
     @Inject
-    public WelcomeProjectManagerImpl(@Nonnull Application application,
-                                     @Nonnull ProjectManager projectManager,
-                                     @Nonnull ComponentBinding componentBinding) {
+    public WelcomeProjectManagerImpl(Application application,
+                                     ProjectManager projectManager,
+                                     ComponentBinding componentBinding) {
         myApplication = application;
         myProjectManager = projectManager;
         myComponentBinding = componentBinding;
     }
 
-    @Nonnull
     @Override
-    public CompletableFuture<?> openWelcomeProjectAsync(@Nonnull UIAccess uiAccess) {
+    public CompletableFuture<?> openWelcomeProjectAsync(UIAccess uiAccess) {
         WelcomeProjectImpl current = myOpenWelcomeProject;
         if (current != null && ((ProjectManagerImpl) myProjectManager).isProjectOpened(current)) {
             return CompletableFuture.completedFuture(null);
@@ -120,7 +115,6 @@ public class WelcomeProjectManagerImpl implements WelcomeProjectManager, Persist
      * The project is NOT initialized — that happens in the standard open flow
      * ({@code doOpenInProject} calls {@code initNotLazyServices()}).
      */
-    @Nonnull
     WelcomeProjectImpl createWelcomeProject() {
         WelcomeProjectImpl project = new WelcomeProjectImpl(myApplication, myProjectManager, myComponentBinding);
 
@@ -132,9 +126,8 @@ public class WelcomeProjectManagerImpl implements WelcomeProjectManager, Persist
         return project;
     }
 
-    @Nonnull
     @Override
-    public CompletableFuture<Boolean> closeWelcomeProjectAsync(@Nonnull UIAccess uiAccess) {
+    public CompletableFuture<Boolean> closeWelcomeProjectAsync(UIAccess uiAccess) {
         WelcomeProjectImpl welcomeProject = myOpenWelcomeProject;
         if (welcomeProject == null || !((ProjectManagerImpl) myProjectManager).isProjectOpened(welcomeProject)) {
             myOpenWelcomeProject = null;

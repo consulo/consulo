@@ -18,8 +18,7 @@ package consulo.compiler.artifact.ui;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -42,7 +41,7 @@ public class DelegatedPackagingElementPresentation extends PackagingElementPrese
   }
 
   @Override
-  public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
+  public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes, SimpleTextAttributes commentAttributes) {
     myDelegate.render(presentationData, mainAttributes, commentAttributes);
   }
 

@@ -19,8 +19,7 @@ import consulo.document.Document;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,9 +43,9 @@ import java.util.List;
  */
 public class ArrangementEntryWrapper<E extends ArrangementEntry> {
 
-  @Nonnull
+  
   private final List<ArrangementEntryWrapper<E>> myChildren = new ArrayList<ArrangementEntryWrapper<E>>();
-  @Nonnull
+  
   private final E myEntry;
 
   @Nullable private ArrangementEntryWrapper<E> myParent;
@@ -59,7 +58,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
   private int myBlankLinesBefore;
 
   @SuppressWarnings("unchecked")
-  public ArrangementEntryWrapper(@Nonnull E entry) {
+  public ArrangementEntryWrapper(E entry) {
     myEntry = entry;
     myStartOffset = entry.getStartOffset();
     myEndOffset = entry.getEndOffset();
@@ -76,7 +75,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     }
   }
 
-  @Nonnull
+  
   public E getEntry() {
     return myEntry;
   }
@@ -121,7 +120,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
   }
 
   @SuppressWarnings("AssignmentToForLoopParameter")
-  public void updateBlankLines(@Nonnull Document document) {
+  public void updateBlankLines(Document document) {
     int startLine = document.getLineNumber(getStartOffset());
     myBlankLinesBefore = 0;
     if (startLine <= 0) {
@@ -145,7 +144,7 @@ public class ArrangementEntryWrapper<E extends ArrangementEntry> {
     myNext = next;
   }
 
-  @Nonnull
+  
   public List<ArrangementEntryWrapper<E>> getChildren() {
     return myChildren;
   }

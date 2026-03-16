@@ -6,14 +6,13 @@ import consulo.index.io.forward.AbstractForwardIndexAccessor;
 import consulo.index.io.forward.InputDataDiffBuilder;
 import consulo.language.index.impl.internal.MapInputDataDiffBuilder;
 import consulo.util.io.ByteArraySequence;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
 
 public abstract class AbstractMapForwardIndexAccessor<Key, Value, DataType> extends AbstractForwardIndexAccessor<Key, Value, DataType> {
-  public AbstractMapForwardIndexAccessor(@Nonnull DataExternalizer<DataType> externalizer) {
+  public AbstractMapForwardIndexAccessor(DataExternalizer<DataType> externalizer) {
     super(externalizer);
   }
 

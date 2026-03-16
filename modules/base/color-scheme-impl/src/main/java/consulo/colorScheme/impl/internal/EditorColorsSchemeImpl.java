@@ -25,8 +25,7 @@ import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.util.lang.Comparing;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -35,7 +34,7 @@ import java.util.Map;
 public class EditorColorsSchemeImpl extends AbstractColorsScheme implements ExternalizableScheme {
   private final ExternalInfo myExternalInfo = new ExternalInfo();
 
-  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, @Nonnull EditorColorsManager editorColorsManager) {
+  public EditorColorsSchemeImpl(EditorColorsScheme parentScheme, EditorColorsManager editorColorsManager) {
     super(parentScheme, editorColorsManager);
   }
 
@@ -90,7 +89,7 @@ public class EditorColorsSchemeImpl extends AbstractColorsScheme implements Exte
   }
 
   @Override
-  @Nonnull
+  
   public ExternalInfo getExternalInfo() {
     return myExternalInfo;
   }

@@ -22,8 +22,7 @@ import consulo.fileChooser.FileSaverDialog;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -33,13 +32,13 @@ import java.awt.*;
  */
 @ExtensionImpl
 public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "mac-native";
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "system";
@@ -50,9 +49,9 @@ public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
     return Platform.current().os().isMac();
   }
 
-  @Nonnull
+  
   @Override
-  public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
+  public FileSaverDialog createSaveFileDialog(FileSaverDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     if(parent != null) {
       return new MacFileSaverDialog(descriptor, parent);
     }

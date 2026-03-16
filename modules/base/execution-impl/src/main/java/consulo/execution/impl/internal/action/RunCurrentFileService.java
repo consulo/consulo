@@ -50,7 +50,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -72,10 +71,10 @@ public class RunCurrentFileService {
 
     private record RunCurrentFileInfo(
         long psiModCount,
-        @Nonnull List<RunnerAndConfigurationSettings> runConfigs) {
+        List<RunnerAndConfigurationSettings> runConfigs) {
     }
 
-    public void runCurrentFile(@Nonnull Executor executor, @Nonnull AnActionEvent e) {
+    public void runCurrentFile(Executor executor, AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         List<RunnerAndConfigurationSettings> runConfigs = getRunCurrentFileActionStatus(executor, e, true).runConfigs();
         if (runConfigs.isEmpty()) {
@@ -92,7 +91,7 @@ public class RunCurrentFileService {
             .setRenderer(new ColoredListCellRenderer<RunnerAndConfigurationSettings>() {
                 @Override
                 protected void customizeCellRenderer(
-                    @Nonnull JList list,
+                    JList list,
                     RunnerAndConfigurationSettings runConfig,
                     int index,
                     boolean selected,
@@ -123,10 +122,10 @@ public class RunCurrentFileService {
     }
 
     protected void doRunCurrentFile(
-        @Nonnull Project project,
-        @Nonnull Executor executor,
-        @Nonnull RunnerAndConfigurationSettings runConfig,
-        @Nonnull DataContext dataContext
+        Project project,
+        Executor executor,
+        RunnerAndConfigurationSettings runConfig,
+        DataContext dataContext
     ) {
 
         ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.createOrNull(executor, runConfig);
@@ -136,11 +135,11 @@ public class RunCurrentFileService {
         ExecutionManager.getInstance(project).restartRunProfile(builder.activeTarget().dataContext(dataContext).build());
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     public RunCurrentFileActionStatus getRunCurrentFileActionStatus(
-        @Nonnull Executor executor,
-        @Nonnull AnActionEvent e,
+        Executor executor,
+        AnActionEvent e,
         boolean resetCache
     ) {
         Project project = e.getRequiredData(Project.KEY);
@@ -175,11 +174,11 @@ public class RunCurrentFileService {
     }
 
     @RequiredReadAction
-    private @Nonnull RunCurrentFileActionStatus getRunCurrentFileActionStatus(
-        @Nonnull Executor executor,
-        @Nonnull PsiFile psiFile,
+    private RunCurrentFileActionStatus getRunCurrentFileActionStatus(
+        Executor executor,
+        PsiFile psiFile,
         boolean resetCache,
-        @Nonnull AnActionEvent e
+        AnActionEvent e
     ) {
         List<RunnerAndConfigurationSettings> runConfigs = getRunConfigsForCurrentFile(psiFile, resetCache);
         if (runConfigs.isEmpty()) {
@@ -215,10 +214,10 @@ public class RunCurrentFileService {
         return RunCurrentFileActionStatus.createEnabled(executor.getStartActiveText(psiFile.getName()), icon, runnableConfigs);
     }
 
-    @Nonnull
+    
     private List<RunnerAndConfigurationSettings> filterConfigsThatHaveRunner(
-        @Nonnull Executor executor,
-        @Nonnull List<? extends RunnerAndConfigurationSettings> runConfigs
+        Executor executor,
+        List<? extends RunnerAndConfigurationSettings> runConfigs
     ) {
         return ContainerUtil.filter(
             runConfigs,
@@ -227,7 +226,7 @@ public class RunCurrentFileService {
     }
 
     @RequiredReadAction
-    public static List<RunnerAndConfigurationSettings> getRunConfigsForCurrentFile(@Nonnull PsiFile psiFile, boolean resetCache) {
+    public static List<RunnerAndConfigurationSettings> getRunConfigsForCurrentFile(PsiFile psiFile, boolean resetCache) {
         if (resetCache) {
             psiFile.putUserData(CURRENT_FILE_RUN_CONFIGS_KEY, null);
         }

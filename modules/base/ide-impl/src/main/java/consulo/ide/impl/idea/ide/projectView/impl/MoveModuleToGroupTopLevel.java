@@ -30,8 +30,7 @@ import consulo.project.ui.view.tree.ModuleGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -47,14 +46,14 @@ public class MoveModuleToGroupTopLevel extends ActionGroup {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Module[] modules = e.getData(LangDataKeys.MODULE_CONTEXT_ARRAY);
         boolean active = project != null && modules != null && modules.length != 0;
         e.getPresentation().setVisible(active);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public AnAction[] getChildren(@Nullable AnActionEvent e) {

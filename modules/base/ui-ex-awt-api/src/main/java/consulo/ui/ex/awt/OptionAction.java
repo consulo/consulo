@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -25,6 +24,6 @@ import javax.swing.*;
 public interface OptionAction extends Action {
     String AN_ACTION = "AnAction";
 
-    @Nonnull
+    
     Action[] getOptions();
 }

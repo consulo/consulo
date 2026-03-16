@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.Language;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
@@ -26,8 +25,8 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PerFileMappings;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,14 +53,14 @@ public abstract class LRUPopupBuilder<T> {
     private Iterable<? extends T> myItemsIterable;
     private JBIterable<T> myExtraItems = JBIterable.empty();
 
-    @Nonnull
+    
     public static ListPopup forFileLanguages(
-        @Nonnull Project project,
-        @Nonnull String title,
-        @Nonnull Iterable<? extends VirtualFile> files,
-        @Nonnull PerFileMappings<Language> mappings
+        Project project,
+        String title,
+        Iterable<? extends VirtualFile> files,
+        PerFileMappings<Language> mappings
     ) {
-        VirtualFile[] filesCopy = VfsUtilCore.toVirtualFileArray(JBIterable.from(files).toList());
+        VirtualFile[] filesCopy = VirtualFileUtil.toVirtualFileArray(JBIterable.from(files).toList());
         Arrays.sort(filesCopy, (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), !o1.getFileSystem().isCaseSensitive()));
         return forFileLanguages(
             project,
@@ -87,21 +86,21 @@ public abstract class LRUPopupBuilder<T> {
      * @deprecated use {@link #forFileLanguages(Project, String, Language, Consumer)}
      */
     @Deprecated
-    @Nonnull
+    
     public static ListPopup forFileLanguages(
-        @Nonnull Project project,
+        Project project,
         @Nullable Language selection,
-        @Nonnull Consumer<? super Language> onChosen
+        Consumer<? super Language> onChosen
     ) {
         return forFileLanguages(project, "Languages", selection, onChosen);
     }
 
-    @Nonnull
+    
     public static ListPopup forFileLanguages(
-        @Nonnull Project project,
-        @Nonnull String title,
+        Project project,
+        String title,
         @Nullable Language selection,
-        @Nonnull Consumer<? super Language> onChosen
+        Consumer<? super Language> onChosen
     ) {
         return languagePopupBuilder(project, title).
             forValues(LanguageUtil.getFileLanguages()).
@@ -110,8 +109,8 @@ public abstract class LRUPopupBuilder<T> {
             buildPopup();
     }
 
-    @Nonnull
-    public static LRUPopupBuilder<Language> languagePopupBuilder(@Nonnull Project project, @Nonnull String title) {
+    
+    public static LRUPopupBuilder<Language> languagePopupBuilder(Project project, String title) {
         return new LRUPopupBuilder<Language>(project, title) {
             @Override
             public String getDisplayName(Language language) {
@@ -131,7 +130,7 @@ public abstract class LRUPopupBuilder<T> {
         }.withComparator(LanguageUtil.LANGUAGE_COMPARATOR);
     }
 
-    protected LRUPopupBuilder(@Nonnull Project project, @Nonnull String title) {
+    protected LRUPopupBuilder(Project project, String title) {
         myTitle = title;
         myPropertiesComponent = PropertiesComponent.getInstance(project);
     }
@@ -142,26 +141,26 @@ public abstract class LRUPopupBuilder<T> {
 
     public abstract Image getIcon(T t);
 
-    @Nonnull
+    
     public LRUPopupBuilder<T> forValues(@Nullable Iterable<? extends T> items) {
         myItemsIterable = items;
         return this;
     }
 
-    @Nonnull
+    
     public LRUPopupBuilder<T> withSelection(@Nullable T t) {
         mySelection = t;
         return this;
     }
 
-    @Nonnull
-    public LRUPopupBuilder<T> withExtra(@Nonnull T extra, @Nonnull String displayName, @Nullable Image icon) {
+    
+    public LRUPopupBuilder<T> withExtra(T extra, String displayName, @Nullable Image icon) {
         myExtraItems = myExtraItems.append(extra);
         myPresentations.put(extra, Pair.create(displayName, icon));
         return this;
     }
 
-    @Nonnull
+    
     public LRUPopupBuilder<T> onChosen(@Nullable Consumer<? super T> consumer) {
         myOnChosen = consumer;
         return this;
@@ -172,7 +171,7 @@ public abstract class LRUPopupBuilder<T> {
         return this;
     }
 
-    @Nonnull
+    
     public ListPopup buildPopup() {
         List<String> ids = ContainerUtil.newArrayList(restoreLRUItems());
         if (mySelection != null) {
@@ -197,7 +196,7 @@ public abstract class LRUPopupBuilder<T> {
 
         List<T> combinedItems = ContainerUtil.concat(lru, items, extra);
         BaseListPopupStep<T> step = new BaseListPopupStep<T>(myTitle, combinedItems) {
-            @Nonnull
+            
             @Override
             public String getTextFor(T t) {
                 return t == null ? "" : getPresentation(t).first;
@@ -236,7 +235,7 @@ public abstract class LRUPopupBuilder<T> {
         return tweakSizeToPreferred(JBPopupFactory.getInstance().createListPopup(step));
     }
 
-    @Nonnull
+    
     private Pair<String, Image> getPresentation(T t) {
         Pair<String, Image> p = myPresentations.get(t);
         if (p == null) {
@@ -245,8 +244,8 @@ public abstract class LRUPopupBuilder<T> {
         return p;
     }
 
-    @Nonnull
-    private static ListPopup tweakSizeToPreferred(@Nonnull ListPopup popup) {
+    
+    private static ListPopup tweakSizeToPreferred(ListPopup popup) {
         int nameLen = 0;
         ListPopupStep step = popup.getListStep();
         List values = step.getValues();
@@ -264,12 +263,12 @@ public abstract class LRUPopupBuilder<T> {
         return popup;
     }
 
-    @Nonnull
+    
     private String[] restoreLRUItems() {
         return ObjectUtil.notNull(myPropertiesComponent.getValues(getLRUKey()), ArrayUtil.EMPTY_STRING_ARRAY);
     }
 
-    private void storeLRUItems(@Nonnull T t) {
+    private void storeLRUItems(T t) {
         String[] values = myPropertiesComponent.getValues(getLRUKey());
         List<String> lastUsed = new ArrayList<>(LRU_ITEMS);
         lastUsed.add(getStorageId(t));
@@ -286,16 +285,16 @@ public abstract class LRUPopupBuilder<T> {
         myPropertiesComponent.setValues(getLRUKey(), ArrayUtil.toStringArray(lastUsed));
     }
 
-    @Nonnull
+    
     private String getLRUKey() {
         return getClass().getName() + "/" + myTitle;
     }
 
     private static void changeLanguageWithUndo(
-        @Nonnull Project project,
-        @Nonnull Language t,
-        @Nonnull VirtualFile[] sortedFiles,
-        @Nonnull PerFileMappings<Language> mappings
+        Project project,
+        Language t,
+        VirtualFile[] sortedFiles,
+        PerFileMappings<Language> mappings
     ) throws UnexpectedUndoException {
         ReadonlyStatusHandler.OperationStatus status =
             ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(Arrays.asList(sortedFiles));

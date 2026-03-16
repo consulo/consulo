@@ -15,7 +15,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -37,7 +36,7 @@ public class IntentionsUIImpl extends IntentionsUI {
 
   @Override
   @RequiredUIAccess
-  public void update(@Nonnull CachedIntentions cachedIntentions, boolean actionsChanged) {
+  public void update(CachedIntentions cachedIntentions, boolean actionsChanged) {
     UIAccess.assertIsUIThread();
     Editor editor = cachedIntentions.getEditor();
     if (editor == null) return;

@@ -15,7 +15,6 @@
  */
 package consulo.application.internal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -23,7 +22,7 @@ import jakarta.annotation.Nonnull;
 public interface NonCancelableSection {
   void done();
 
-  @Nonnull
+  
   NonCancelableSection EMPTY = new NonCancelableSection() {
     @Override
     public void done() {

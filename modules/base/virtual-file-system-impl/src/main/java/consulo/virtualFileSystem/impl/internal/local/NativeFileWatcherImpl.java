@@ -19,8 +19,7 @@ import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.ManagingFS;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.BufferedWriter;
@@ -66,7 +65,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   }
 
   @Override
-  public void initialize(@Nonnull ManagingFS managingFS, @Nonnull FileWatcherNotificationSink notificationSink) {
+  public void initialize(ManagingFS managingFS, FileWatcherNotificationSink notificationSink) {
     myNotificationSink = notificationSink;
 
     boolean disabled = isDisabled();
@@ -113,7 +112,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   }
 
   @Override
-  public void setWatchRoots(@Nonnull List<String> recursive, @Nonnull List<String> flat) {
+  public void setWatchRoots(List<String> recursive, List<String> flat) {
     setWatchRoots(recursive, flat, false);
   }
 
@@ -127,7 +126,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   /**
    * Subclasses should override this method to provide a custom binary to run.
    */
-  @Nonnull
+  
   public static Path getExecutablePath() {
     Path path = getExecutablePathImpl();
     if (path == null) {
@@ -292,7 +291,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     private WatcherOp myLastOp;
     private final List<String> myLines = new ArrayList<>();
 
-    private MyProcessHandler(@Nonnull Process process, @Nonnull String commandLine) {
+    private MyProcessHandler(Process process, String commandLine) {
       super(process, commandLine, CHARSET);
       myWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), CHARSET));
     }
@@ -303,7 +302,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       myWriter.flush();
     }
 
-    @Nonnull
+    
     @Override
     protected BaseOutputReader.Options readerOptions() {
       return READER_OPTIONS;
@@ -333,7 +332,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     @Override
-    public void notifyTextAvailable(@Nonnull String line, @Nonnull Key outputType) {
+    public void notifyTextAvailable(String line, Key outputType) {
       if (outputType == ProcessOutputTypes.STDERR) {
         LOG.warn(line);
       }
@@ -406,7 +405,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       myNotificationSink.notifyManualWatchRoots(myLines);
     }
 
-    private void processChange(@Nonnull String path, @Nonnull WatcherOp op) {
+    private void processChange(String path, WatcherOp op) {
       if (Platform.current().os().isWindows() && op == WatcherOp.RECDIRTY) {
         myNotificationSink.notifyReset(path);
         return;

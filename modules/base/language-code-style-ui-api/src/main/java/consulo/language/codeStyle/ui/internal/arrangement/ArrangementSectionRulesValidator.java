@@ -19,8 +19,7 @@ import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,8 +50,7 @@ public class ArrangementSectionRulesValidator extends ArrangementMatchingRulesVa
     return super.validate(index);
   }
 
-  @Nullable
-  private String validateSectionRule(@Nonnull ArrangementSectionRuleManager.ArrangementSectionRuleData data, int index) {
+  private String validateSectionRule(ArrangementSectionRuleManager.@Nullable ArrangementSectionRuleData data, int index) {
     int startSectionIndex = -1;
     Set<String> sectionRules = new HashSet<>();
     for (int i = 0; i < index; i++) {
@@ -79,8 +77,7 @@ public class ArrangementSectionRulesValidator extends ArrangementMatchingRulesVa
     return null;
   }
 
-  @Nullable
-  private ArrangementSectionRuleManager.ArrangementSectionRuleData extractSectionText(int i) {
+  private ArrangementSectionRuleManager.@Nullable ArrangementSectionRuleData extractSectionText(int i) {
     Object element = myRulesModel.getElementAt(i);
     if (element instanceof StdArrangementMatchRule) {
       assert mySectionRuleManager != null;

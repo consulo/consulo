@@ -15,7 +15,6 @@
  */
 package consulo.virtualFileSystem.internal;
 
-import jakarta.annotation.Nonnull;
 
 public final class NameId {
     public static final NameId[] EMPTY_ARRAY = new NameId[0];
@@ -24,7 +23,7 @@ public final class NameId {
     public final CharSequence name;
     public final int nameId;
 
-    public NameId(int id, int nameId, @Nonnull CharSequence name) {
+    public NameId(int id, int nameId, CharSequence name) {
         this.id = id;
         this.nameId = nameId;
         this.name = name;

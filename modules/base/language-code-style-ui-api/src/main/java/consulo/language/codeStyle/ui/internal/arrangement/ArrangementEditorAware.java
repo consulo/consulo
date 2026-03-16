@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.ui.internal.arrangement;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -25,6 +24,6 @@ import javax.swing.*;
  */
 public interface ArrangementEditorAware {
 
-  @Nonnull
+  
   JComponent getComponent();
 }

@@ -20,8 +20,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.TreePopup;
 import consulo.ui.ex.popup.TreePopupStep;
 import consulo.ui.ex.tree.AlphaComparator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -48,7 +47,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
   private TreePath myPendingChildPath;
   private FilteringTreeBuilder myBuilder;
 
-  public TreePopupImpl(@Nullable Project project, @Nullable JBPopup parent, @Nonnull TreePopupStep<Object> aStep, @Nullable Object parentValue) {
+  public TreePopupImpl(@Nullable Project project, @Nullable JBPopup parent, TreePopupStep<Object> aStep, @Nullable Object parentValue) {
     super(project, parent, aStep);
     setParentValue(parentValue);
   }
@@ -378,7 +377,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
 
     @RequiredUIAccess
     @Override
-    public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       boolean shouldPaintSelected = (getTreeStep().isSelectable(value, extractUserObject(value)) && selected) || (getTreeStep().isSelectable(value, extractUserObject(value)) && hasFocus);
       boolean shouldPaintFocus = !getTreeStep().isSelectable(value, extractUserObject(value)) && selected || shouldPaintSelected || hasFocus;
 

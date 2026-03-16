@@ -17,7 +17,6 @@ package consulo.application.constraint;
 
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
@@ -37,12 +36,12 @@ class Job {
     return myState != PENDING;
   }
 
-  @Nonnull
+  
   public Disposable invokeOnCompletion(Consumer<Throwable> handler) {
     return invokeOnCompletion(false, handler);
   }
 
-  @Nonnull
+  
   public Disposable invokeOnCompletion(boolean onCancelling, Consumer<Throwable> handler) {
     if (myState != PENDING) {
 

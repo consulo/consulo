@@ -26,8 +26,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -37,19 +36,19 @@ import java.util.function.Supplier;
  */
 public class StartBuildEventImpl extends StartEventImpl implements StartBuildEvent {
 
-  private final @Nonnull
+  private final
   DefaultBuildDescriptor myBuildDescriptor;
   private @Nullable
   BuildViewSettingsProvider myBuildViewSettingsProvider;
 
-  public StartBuildEventImpl(@Nonnull BuildDescriptor descriptor, @Nonnull @BuildEventsNls.Message  String message) {
+  public StartBuildEventImpl(BuildDescriptor descriptor, @BuildEventsNls.Message  String message) {
     super(descriptor.getId(), null, descriptor.getStartTime(), message);
     myBuildDescriptor =
       descriptor instanceof DefaultBuildDescriptor ? (DefaultBuildDescriptor)descriptor : new DefaultBuildDescriptor(descriptor);
   }
 
   //@ApiStatus.Experimental
-  @Nonnull
+ 
   @Override
   public DefaultBuildDescriptor getBuildDescriptor() {
     return myBuildDescriptor;
@@ -69,7 +68,7 @@ public class StartBuildEventImpl extends StartEventImpl implements StartBuildEve
    * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
    */
   @Deprecated
-  public StartBuildEventImpl withRestartAction(@Nonnull AnAction anAction) {
+  public StartBuildEventImpl withRestartAction(AnAction anAction) {
     myBuildDescriptor.withRestartAction(anAction);
     return this;
   }
@@ -96,7 +95,7 @@ public class StartBuildEventImpl extends StartEventImpl implements StartBuildEve
    * @deprecated use {@link DefaultBuildDescriptor#withProcessHandler}
    */
   @Deprecated
-  public StartBuildEventImpl withExecutionFilter(@Nonnull Filter filter) {
+  public StartBuildEventImpl withExecutionFilter(Filter filter) {
     myBuildDescriptor.withExecutionFilter(filter);
     return this;
   }

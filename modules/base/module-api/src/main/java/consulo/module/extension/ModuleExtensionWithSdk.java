@@ -18,15 +18,14 @@ package consulo.module.extension;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 23:26/18.05.13
  */
 public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtension<T> {
-  @Nonnull
+  
   ModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 
   @Nullable
@@ -35,6 +34,6 @@ public interface ModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> ext
   @Nullable
   String getSdkName();
 
-  @Nonnull
+  
   Class<? extends SdkType> getSdkTypeClass();
 }

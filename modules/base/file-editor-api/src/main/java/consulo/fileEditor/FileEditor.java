@@ -23,8 +23,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 /**
@@ -63,14 +62,14 @@ public interface FileEditor extends UserDataHolder, Disposable {
      * and "Text". So "GUI Designer" can be a name of one editor and "Text"
      * can be a name of other editor. The method should never return <code>null</code>.
      */
-    @Nonnull
+   
     String getName();
 
     /**
      * @return editor's internal state. Method should never return <code>null</code>.
      */
-    @Nonnull
-    default FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+   
+    default FileEditorState getState(FileEditorStateLevel level) {
         return FileEditorState.INSTANCE;
     }
 
@@ -79,7 +78,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
      *
      * @param state cannot be null
      */
-    default void setState(@Nonnull FileEditorState state) {
+    default void setState(FileEditorState state) {
     }
 
     /**
@@ -114,14 +113,14 @@ public interface FileEditor extends UserDataHolder, Disposable {
      *
      * @param listener to be added
      */
-    void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
+    void addPropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * Adds specified listener
      *
      * @param listener to be removed
      */
-    void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
+    void removePropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * @return highlighter object to perform background analysis and highlighting activities.
@@ -160,7 +159,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
      * @return component which represents editor in the UI.
      * The method should never return <code>null</code>.
      */
-    @Nonnull
+   
     default javax.swing.JComponent getComponent() {
         Component uiComponent = getUIComponent();
         if (uiComponent != null) {
@@ -172,8 +171,7 @@ public interface FileEditor extends UserDataHolder, Disposable {
     /**
      * Returns component to be focused when editor is opened.
      */
-    @Nullable
-    default javax.swing.JComponent getPreferredFocusedComponent() {
+    default javax.swing.@Nullable JComponent getPreferredFocusedComponent() {
         Component component = getPreferredFocusedUIComponent();
         if (component != null) {
             return (javax.swing.JComponent) TargetAWT.to(component);

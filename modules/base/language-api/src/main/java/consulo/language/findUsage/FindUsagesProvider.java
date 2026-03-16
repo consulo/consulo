@@ -27,8 +27,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the support for the "Find Usages" feature in a custom language.
@@ -41,8 +40,8 @@ public interface FindUsagesProvider extends LanguageExtension {
   ExtensionPointCacheKey<FindUsagesProvider, ByLanguageValue<FindUsagesProvider>> KEY =
           ExtensionPointCacheKey.create("FindUsagesProvider", LanguageOneToOne.build(new EmptyFindUsagesProvider()));
 
-  @Nonnull
-  static FindUsagesProvider forLanguage(@Nonnull Language language) {
+  
+  static FindUsagesProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(FindUsagesProvider.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -65,7 +64,7 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @return true if the search is allowed, false otherwise.
    * @see FindManager#canFindUsages(PsiElement)
    */
-  boolean canFindUsagesFor(@Nonnull PsiElement psiElement);
+  boolean canFindUsagesFor(PsiElement psiElement);
 
   /**
    * Returns the ID of the help topic which is shown when the specified element is selected
@@ -75,7 +74,7 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @return the help topic ID, or null if no help is available.
    */
   @Nullable
-  default String getHelpId(@Nonnull PsiElement psiElement) {
+  default String getHelpId(PsiElement psiElement) {
     return "reference.dialogs.findUsages.other";
   }
 
@@ -86,8 +85,8 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param element the element for which the type is requested.
    * @return the type of the element.
    */
-  @Nonnull
-  String getType(@Nonnull PsiElement element);
+  
+  String getType(PsiElement element);
 
   /**
    * Returns an expanded user-visible name of the specified element, shown in the "Find Usages"
@@ -97,8 +96,8 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param element the element for which the name is requested.
    * @return the user-visible name.
    */
-  @Nonnull
-  String getDescriptiveName(@Nonnull PsiElement element);
+  
+  String getDescriptiveName(PsiElement element);
 
   /**
    * Returns the text representing the specified PSI element in the Find Usages tree.
@@ -107,6 +106,6 @@ public interface FindUsagesProvider extends LanguageExtension {
    * @param useFullName if true, the returned text should use fully qualified names
    * @return the text representing the element.
    */
-  @Nonnull
-  String getNodeText(@Nonnull PsiElement element, boolean useFullName);
+  
+  String getNodeText(PsiElement element, boolean useFullName);
 }

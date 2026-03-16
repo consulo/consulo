@@ -25,8 +25,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class ColorAndFontDescription extends TextAttributes implements EditorSchemeAttributeDescriptor {
     private final LocalizeValue myName;
@@ -55,12 +54,12 @@ public abstract class ColorAndFontDescription extends TextAttributes implements 
         return myName.get();
     }
 
-    @Nonnull
+    
     public LocalizeValue getName() {
         return myName;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getGroup() {
         return myGroup;

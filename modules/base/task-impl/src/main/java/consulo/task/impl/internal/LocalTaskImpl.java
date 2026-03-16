@@ -26,8 +26,7 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +74,7 @@ public class LocalTaskImpl extends LocalTask {
     public LocalTaskImpl() {
     }
 
-    public LocalTaskImpl(@Nonnull String id, @Nonnull String summary) {
+    public LocalTaskImpl(String id, String summary) {
         myId = id;
         mySummary = summary;
     }
@@ -99,14 +98,14 @@ public class LocalTaskImpl extends LocalTask {
 
     @Override
     @Attribute("id")
-    @Nonnull
+    
     public String getId() {
         return myId;
     }
 
     @Override
     @Attribute("summary")
-    @Nonnull
+    
     public String getSummary() {
         return mySummary;
     }
@@ -116,7 +115,7 @@ public class LocalTaskImpl extends LocalTask {
         return myDescription;
     }
 
-    @Nonnull
+    
     @Override
     public Comment[] getComments() {
         return myComments;
@@ -211,7 +210,7 @@ public class LocalTaskImpl extends LocalTask {
     }
 
     @Override
-    @Nonnull
+    
     @Property(surroundWithTag = false)
     @AbstractCollection(surroundWithTag = false, elementTag = "changelist")
     public List<ChangeListInfo> getChangeLists() {
@@ -234,7 +233,7 @@ public class LocalTaskImpl extends LocalTask {
         myChangeLists.remove(info);
     }
 
-    @Nonnull
+    
     @Override
     @Property(surroundWithTag = false)
     @AbstractCollection(surroundWithTag = false, elementTag = "branch")
@@ -265,7 +264,7 @@ public class LocalTaskImpl extends LocalTask {
         myClosed = closed;
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         String customIcon = getCustomIcon();
@@ -293,7 +292,7 @@ public class LocalTaskImpl extends LocalTask {
         }
     }
 
-    @Nonnull
+    
     @Override
     public TaskType getType() {
         return myType;
@@ -343,7 +342,7 @@ public class LocalTaskImpl extends LocalTask {
         myWorkItems = workItems;
     }
 
-    @Nonnull
+    
     @Property(surroundWithTag = false)
     @AbstractCollection(surroundWithTag = false, elementTag = "workItem")
     @Override
@@ -390,14 +389,14 @@ public class LocalTaskImpl extends LocalTask {
         return timeSpent;
     }
 
-    @Nonnull
+    
     @Override
     public String getNumber() {
         // extract number from ID for compatibility
         return StringUtil.isEmpty(myNumber) ? extractNumberFromId(myId) : myNumber;
     }
 
-    public void setNumber(@Nonnull String number) {
+    public void setNumber(String number) {
         myNumber = number;
     }
 
@@ -412,11 +411,11 @@ public class LocalTaskImpl extends LocalTask {
         myProject = project;
     }
 
-    public void setPresentableId(@Nonnull String presentableId) {
+    public void setPresentableId(String presentableId) {
         myPresentableId = presentableId;
     }
 
-    @Nonnull
+    
     @Override
     public String getPresentableId() {
         // Use global ID for compatibility

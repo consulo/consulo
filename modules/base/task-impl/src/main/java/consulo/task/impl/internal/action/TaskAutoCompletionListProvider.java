@@ -29,8 +29,7 @@ import consulo.task.impl.internal.TaskManagerImpl;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,11 +47,11 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
   }
 
   @Override
-  protected String getQuickDocHotKeyAdvertisementTail(@Nonnull String shortcut) {
+  protected String getQuickDocHotKeyAdvertisementTail(String shortcut) {
     return "task description and comments";
   }
 
-  @Nonnull
+  
   @Override
   public List<Task> getItems(String prefix, boolean cached, CompletionParameters parameters) {
     return TaskSearchSupport.getItems(TaskManager.getManager(myProject), prefix, cached, parameters.isAutoPopup());
@@ -64,7 +63,7 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
   }
 
   @Override
-  public LookupElementBuilder createLookupBuilder(@Nonnull Task task) {
+  public LookupElementBuilder createLookupBuilder(Task task) {
     LookupElementBuilder builder = super.createLookupBuilder(task);
 
     builder = builder.withLookupString(task.getSummary());
@@ -76,7 +75,7 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
   }
 
   @Override
-  protected InsertHandler<LookupElement> createInsertHandler(@Nonnull final Task task) {
+  protected InsertHandler<LookupElement> createInsertHandler(final Task task) {
     return new InsertHandler<LookupElement>() {
       @Override
       public void handleInsert(InsertionContext context, LookupElement item) {
@@ -91,33 +90,33 @@ public class TaskAutoCompletionListProvider extends TextFieldWithAutoCompletionL
     };
   }
 
-  protected void handleInsert(@Nonnull Task task) {
+  protected void handleInsert(Task task) {
     // Override it for autocompletion insert handler
   }
 
   @Override
-  protected Image getIcon(@Nonnull Task task) {
+  protected Image getIcon(Task task) {
     return task.getIcon();
   }
 
-  @Nonnull
+  
   @Override
-  protected String getLookupString(@Nonnull Task task) {
+  protected String getLookupString(Task task) {
     return task.getId();
   }
 
   @Override
-  protected String getTailText(@Nonnull Task task) {
+  protected String getTailText(Task task) {
     return " " + task.getSummary();
   }
 
   @Override
-  protected String getTypeText(@Nonnull Task task) {
+  protected String getTypeText(Task task) {
     return null;
   }
 
   @Override
-  public int compare(@Nonnull Task task1, @Nonnull Task task2) {
+  public int compare(Task task1, Task task2) {
     // N/A here
     throw new UnsupportedOperationException();
   }

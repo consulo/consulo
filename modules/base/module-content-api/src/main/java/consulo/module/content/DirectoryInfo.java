@@ -23,8 +23,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.ContentFolderTypeProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class DirectoryInfo {
   /**
@@ -37,7 +36,7 @@ public abstract class DirectoryInfo {
    * @param file a file under the directory described by this instance.
    * @return {@code true} if {@code file} is located under project content or library roots and not excluded or ignored
    */
-  public abstract boolean isInProject(@Nonnull VirtualFile file);
+  public abstract boolean isInProject(VirtualFile file);
 
   /**
    * @return {@code true} if located under ignored directory
@@ -56,12 +55,12 @@ public abstract class DirectoryInfo {
    *
    * @param file a file under the directory described by this instance.
    */
-  public abstract boolean isExcluded(@Nonnull VirtualFile file);
+  public abstract boolean isExcluded(VirtualFile file);
 
   /**
    * Returns {@code true} if {@code file} is located under a module source root and not excluded or ignored
    */
-  public abstract boolean isInModuleSource(@Nonnull VirtualFile file);
+  public abstract boolean isInModuleSource(VirtualFile file);
 
   /**
    * @deprecated use {@link #isInModuleSource(VirtualFile)} instead, this method doesn't take {@link ContentEntry#getExcludePatterns() exclude patterns} into account
@@ -79,7 +78,7 @@ public abstract class DirectoryInfo {
    * @return {@code true} if {@code file} located under this directory is located in library sources.
    * If {@code file} is a directory it means that all of its content is recursively in not part of the libraries.
    */
-  public abstract boolean isInLibrarySource(@Nonnull VirtualFile file);
+  public abstract boolean isInLibrarySource(VirtualFile file);
 
   @Nullable
   public abstract VirtualFile getSourceRoot();

@@ -30,10 +30,8 @@ import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,7 +53,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   private volatile boolean myIsDeleted;
   protected static final int IS_REACHABLE_MASK = 0x40;
 
-  protected RefElementImpl(@Nonnull String name, @Nonnull RefElement owner) {
+  protected RefElementImpl(String name, RefElement owner) {
     super(name, owner.getRefManager());
     myID = null;
     myFlags = 0;
@@ -65,7 +63,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
     this(file.getName(), file, manager);
   }
 
-  protected RefElementImpl(@Nonnull String name, @Nonnull PsiElement element, @Nonnull RefManager manager) {
+  protected RefElementImpl(String name, PsiElement element, RefManager manager) {
     super(name, manager);
     myID = SmartPointerManager.getInstance(manager.getProject()).createSmartPsiElementPointer(element);
     myFlags = 0;
@@ -159,13 +157,13 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  @Nonnull
+  
   public synchronized Collection<RefElement> getOutReferences() {
     return ObjectUtil.notNull(myOutReferences, List.of());
   }
 
   @Override
-  @Nonnull
+  
   public synchronized Collection<RefElement> getInReferences() {
     return ObjectUtil.notNull(myInReferences, List.of());
   }
@@ -208,7 +206,7 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
 
 
   @Override
-  @Nonnull
+  
   public RefElement getContainingEntry() {
     return this;
   }
@@ -256,9 +254,9 @@ public abstract class RefElementImpl extends RefEntityImpl implements RefElement
   }
 
   @Override
-  public boolean isSuppressed(@Nonnull String... toolId) {
+  public boolean isSuppressed(String... toolId) {
     if (mySuppressions != null) {
-      for (@NonNls String suppression : mySuppressions) {
+      for (String suppression : mySuppressions) {
         for (String id : toolId) {
           if (suppression.equals(id)) return true;
         }

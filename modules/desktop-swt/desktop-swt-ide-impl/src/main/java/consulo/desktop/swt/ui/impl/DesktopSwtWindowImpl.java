@@ -26,8 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -81,19 +80,19 @@ public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements
 
   @RequiredUIAccess
   @Override
-  public void setSize(@Nonnull Size2D size) {
+  public void setSize(Size2D size) {
     myComponent.setSize(size.width(), size.height());
   }
 
   @RequiredUIAccess
   @Override
-  public void setTitle(@Nonnull String title) {
+  public void setTitle(String title) {
     myComponent.setText(title);
   }
 
   @RequiredUIAccess
   @Override
-  public void setContent(@Nonnull Component content) {
+  public void setContent(Component content) {
     myContent = (SWTComponentDelegate)content;
   }
 

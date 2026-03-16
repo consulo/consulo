@@ -29,8 +29,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public final class UseConsoleInputAction extends ToggleAction implements DumbAwa
   private final String processInputStateKey;
   private boolean useProcessStdIn;
 
-  public UseConsoleInputAction(@Nonnull String processInputStateKey) {
+  public UseConsoleInputAction(String processInputStateKey) {
     super("Use Console Input", null, ExecutionIconGroup.console());
 
     this.processInputStateKey = processInputStateKey;
@@ -52,7 +51,7 @@ public final class UseConsoleInputAction extends ToggleAction implements DumbAwa
 
   @Override
   @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent event, boolean state) {
+  public void setSelected(AnActionEvent event, boolean state) {
     useProcessStdIn = !state;
 
     LanguageConsoleView consoleView = (LanguageConsoleView)event.getData(ConsoleView.KEY);

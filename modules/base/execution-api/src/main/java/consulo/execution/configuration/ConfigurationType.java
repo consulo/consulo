@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -41,7 +40,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the display name of the configuration type.
      */
-    @Nonnull
+    
     LocalizeValue getDisplayName();
 
     /**
@@ -49,7 +48,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the description of the configuration type.
      */
-    @Nonnull
+    
     default LocalizeValue getConfigurationTypeDescription() {
         return getDisplayName();
     }
@@ -68,7 +67,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the configuration type ID.
      */
-    @Nonnull
+    
     String getId();
 
     /**

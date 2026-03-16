@@ -51,8 +51,7 @@ import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -100,7 +99,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     private boolean myOrdered = true;
 
     @Inject
-    public RunManagerImpl(@Nonnull Project project, @Nonnull ProjectPropertiesComponent propertiesComponent) {
+    public RunManagerImpl(Project project, ProjectPropertiesComponent propertiesComponent) {
         myConfig = new RunManagerConfig(propertiesComponent);
         myProject = project;
 
@@ -115,25 +114,25 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         });
     }
 
-    @Nonnull
+    
     private ConfigurationTypeCache typeCache() {
         return myProject.getApplication().getExtensionPoint(ConfigurationType.class).getOrBuildCache(ConfigurationTypeCache.CACHE_KEY);
     }
 
     @Override
-    @Nonnull
-    public RunnerAndConfigurationSettings createConfiguration(@Nonnull String name, @Nonnull ConfigurationFactory factory) {
+    
+    public RunnerAndConfigurationSettings createConfiguration(String name, ConfigurationFactory factory) {
         return createConfiguration(doCreateConfiguration(name, factory, true), factory);
     }
 
     @Override
-    public RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration configuration, boolean isTemplate) {
+    public RunnerAndConfigurationSettings createConfiguration(RunConfiguration configuration, boolean isTemplate) {
         return new RunnerAndConfigurationSettingsImpl(this, configuration, isTemplate);
     }
 
     protected RunConfiguration doCreateConfiguration(
-        @Nonnull String name,
-        @Nonnull ConfigurationFactory factory,
+        String name,
+        ConfigurationFactory factory,
         boolean fromTemplate
     ) {
         if (fromTemplate) {
@@ -147,10 +146,10 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
+    
     public RunnerAndConfigurationSettings createConfiguration(
-        @Nonnull RunConfiguration runConfiguration,
-        @Nonnull ConfigurationFactory factory
+        RunConfiguration runConfiguration,
+        ConfigurationFactory factory
     ) {
         RunnerAndConfigurationSettings template = getConfigurationTemplate(factory);
         RunnerAndConfigurationSettingsImpl settings = new RunnerAndConfigurationSettingsImpl(this, runConfiguration, false);
@@ -171,7 +170,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return myConfig;
     }
 
-    @Nonnull
+    
     @Override
     public List<ConfigurationType> getConfigurationFactories(boolean includeUnknown) {
         if (includeUnknown) {
@@ -192,8 +191,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
      * Template configuration is not included
      */
     @Override
-    @Nonnull
-    public List<RunConfiguration> getConfigurationsList(@Nonnull ConfigurationType type) {
+    
+    public List<RunConfiguration> getConfigurationsList(ConfigurationType type) {
         List<RunConfiguration> result = null;
         for (RunnerAndConfigurationSettings settings : getSortedConfigurations()) {
             RunConfiguration configuration = settings.getConfiguration();
@@ -208,7 +207,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
+    
     public List<RunConfiguration> getAllConfigurationsList() {
         Collection<RunnerAndConfigurationSettings> sortedConfigurations = getSortedConfigurations();
         if (sortedConfigurations.isEmpty()) {
@@ -222,14 +221,14 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public RunConfiguration[] getAllConfigurations() {
         List<RunConfiguration> list = getAllConfigurationsList();
         return list.toArray(new RunConfiguration[list.size()]);
     }
 
-    @Nonnull
+    
     @Override
     public List<RunnerAndConfigurationSettings> getAllSettings() {
         return new ArrayList<>(getSortedConfigurations());
@@ -253,8 +252,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
      * Template configuration is not included
      */
     @Override
-    @Nonnull
-    public List<RunnerAndConfigurationSettings> getConfigurationSettingsList(@Nonnull ConfigurationType type) {
+    
+    public List<RunnerAndConfigurationSettings> getConfigurationSettingsList(ConfigurationType type) {
         List<RunnerAndConfigurationSettings> result = new SmartList<>();
         for (RunnerAndConfigurationSettings configuration : getSortedConfigurations()) {
             ConfigurationType configurationType = configuration.getType();
@@ -265,16 +264,16 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return result;
     }
 
-    @Nonnull
+    
     @Override
-    public RunnerAndConfigurationSettings[] getConfigurationSettings(@Nonnull ConfigurationType type) {
+    public RunnerAndConfigurationSettings[] getConfigurationSettings(ConfigurationType type) {
         List<RunnerAndConfigurationSettings> list = getConfigurationSettingsList(type);
         return list.toArray(new RunnerAndConfigurationSettings[list.size()]);
     }
 
-    @Nonnull
+    
     @Override
-    public RunConfiguration[] getConfigurations(@Nonnull ConfigurationType type) {
+    public RunConfiguration[] getConfigurations(ConfigurationType type) {
         RunnerAndConfigurationSettings[] settings = getConfigurationSettings(type);
         RunConfiguration[] result = new RunConfiguration[settings.length];
         for (int i = 0; i < settings.length; i++) {
@@ -283,9 +282,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return result;
     }
 
-    @Nonnull
+    
     @Override
-    public Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type) {
+    public Map<String, List<RunnerAndConfigurationSettings>> getStructure(ConfigurationType type) {
         LinkedHashMap<String, List<RunnerAndConfigurationSettings>> map = new LinkedHashMap<>();
         List<RunnerAndConfigurationSettings> typeList = new ArrayList<>();
         List<RunnerAndConfigurationSettings> settings = getConfigurationSettingsList(type);
@@ -311,8 +310,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
-    public RunnerAndConfigurationSettings getConfigurationTemplate(@Nonnull ConfigurationFactory factory) {
+    
+    public RunnerAndConfigurationSettings getConfigurationTemplate(ConfigurationFactory factory) {
         RunnerAndConfigurationSettings template = myTemplateConfigurationsMap.get(factory.getType().getId() + "." + factory.getId());
         if (template == null) {
             template = new RunnerAndConfigurationSettingsImpl(this, factory.createTemplateConfiguration(myProject, this), true);
@@ -500,7 +499,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
+    
     public Collection<RunnerAndConfigurationSettings> getSortedConfigurations() {
         if (myOrdered) {
             return myConfigurations.values();
@@ -563,12 +562,12 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return myConfigurations.values();
     }
 
-    public boolean canRunConfiguration(@Nonnull ExecutionEnvironment environment) {
+    public boolean canRunConfiguration(ExecutionEnvironment environment) {
         RunnerAndConfigurationSettings runnerAndConfigurationSettings = environment.getRunnerAndConfigurationSettings();
         return runnerAndConfigurationSettings != null && canRunConfiguration(runnerAndConfigurationSettings, environment.getExecutor());
     }
 
-    public static boolean canRunConfiguration(@Nonnull RunnerAndConfigurationSettings configuration, @Nonnull Executor executor) {
+    public static boolean canRunConfiguration(RunnerAndConfigurationSettings configuration, Executor executor) {
         try {
             configuration.checkSettings(executor);
         }
@@ -638,7 +637,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return parentNode;
     }
 
-    public void writeContext(@Nonnull Element parentNode) {
+    public void writeContext(Element parentNode) {
         Collection<RunnerAndConfigurationSettings> values = new ArrayList<>(myConfigurations.values());
         for (RunnerAndConfigurationSettings configurationSettings : values) {
             if (configurationSettings.isTemporary()) {
@@ -652,11 +651,11 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         }
     }
 
-    void addConfigurationElement(@Nonnull Element parentNode, RunnerAndConfigurationSettings template) {
+    void addConfigurationElement(Element parentNode, RunnerAndConfigurationSettings template) {
         addConfigurationElement(parentNode, template, CONFIGURATION);
     }
 
-    private void addConfigurationElement(@Nonnull Element parentNode, RunnerAndConfigurationSettings settings, String elementType) {
+    private void addConfigurationElement(Element parentNode, RunnerAndConfigurationSettings settings, String elementType) {
         Element configurationElement = new Element(elementType);
         parentNode.addContent(configurationElement);
         try {
@@ -787,7 +786,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         }
     }
 
-    private void readList(@Nonnull JDOMExternalizableStringList list) {
+    private void readList(JDOMExternalizableStringList list) {
         for (int i = 0; i < list.size(); i++) {
             for (RunnerAndConfigurationSettings settings : myConfigurations.values()) {
                 RunConfiguration configuration = settings.getConfiguration();
@@ -872,7 +871,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Nullable
-    public RunnerAndConfigurationSettings loadConfiguration(@Nonnull Element element, boolean isShared) {
+    public RunnerAndConfigurationSettings loadConfiguration(Element element, boolean isShared) {
         RunnerAndConfigurationSettingsImpl settings = new RunnerAndConfigurationSettingsImpl(this);
         try {
             settings.readExternal(element);
@@ -900,8 +899,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return settings;
     }
 
-    @Nonnull
-    private List<BeforeRunTask> readStepsBeforeRun(@Nullable Element child, @Nonnull RunnerAndConfigurationSettings settings) {
+    
+    private List<BeforeRunTask> readStepsBeforeRun(@Nullable Element child, RunnerAndConfigurationSettings settings) {
         List<BeforeRunTask> result = null;
         if (child != null) {
             for (Element methodElement : child.getChildren(OPTION)) {
@@ -954,7 +953,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         setSelectedConfiguration(tempConfiguration);
     }
 
-    @Nonnull
+    
     Collection<RunnerAndConfigurationSettings> getStableConfigurations(boolean shared) {
         List<RunnerAndConfigurationSettings> result = null;
         for (RunnerAndConfigurationSettings configuration : myConfigurations.values()) {
@@ -968,25 +967,25 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return Lists.notNullize(result);
     }
 
-    @Nonnull
+    
     Collection<? extends RunnerAndConfigurationSettings> getConfigurationSettings() {
         return myConfigurations.values();
     }
 
     @Override
-    public boolean isTemporary(@Nonnull RunConfiguration configuration) {
+    public boolean isTemporary(RunConfiguration configuration) {
         return Arrays.asList(getTempConfigurations()).contains(configuration);
     }
 
     @Override
-    @Nonnull
+    
     public List<RunnerAndConfigurationSettings> getTempConfigurationsList() {
         List<RunnerAndConfigurationSettings> configurations =
             ContainerUtil.filter(myConfigurations.values(), RunnerAndConfigurationSettings::isTemporary);
         return Collections.unmodifiableList(configurations);
     }
 
-    @Nonnull
+    
     @Override
     public RunConfiguration[] getTempConfigurations() {
         List<RunnerAndConfigurationSettings> list = getTempConfigurationsList();
@@ -998,7 +997,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    public void makeStable(@Nonnull RunnerAndConfigurationSettings settings) {
+    public void makeStable(RunnerAndConfigurationSettings settings) {
         settings.setTemporary(false);
         myRecentlyUsedTemporaries.remove(settings.getConfiguration());
         if (!myOrder.isEmpty()) {
@@ -1008,7 +1007,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    public void makeStable(@Nonnull RunConfiguration configuration) {
+    public void makeStable(RunConfiguration configuration) {
         RunnerAndConfigurationSettings settings = getSettings(configuration);
         if (settings != null) {
             makeStable(settings);
@@ -1016,8 +1015,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
-    public RunnerAndConfigurationSettings createRunConfiguration(@Nonnull String name, @Nonnull ConfigurationFactory type) {
+    
+    public RunnerAndConfigurationSettings createRunConfiguration(String name, ConfigurationFactory type) {
         return createConfiguration(name, type);
     }
 
@@ -1031,7 +1030,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return shared != null && shared;
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
     public <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID) {
@@ -1061,9 +1060,9 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return tasks;
     }
 
-    @Nonnull
+    
     @Override
-    public Image getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings) {
+    public Image getConfigurationIcon(RunnerAndConfigurationSettings settings) {
         String uniqueID = settings.getUniqueID();
         RunnerAndConfigurationSettings selectedConfiguration = getSelectedConfiguration();
         String selectedId = selectedConfiguration != null ? selectedConfiguration.getUniqueID() : "";
@@ -1117,7 +1116,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return icon;
     }
 
-    public RunnerAndConfigurationSettings getConfigurationById(@Nonnull String id) {
+    public RunnerAndConfigurationSettings getConfigurationById(String id) {
         return myConfigurations.get(id);
     }
 
@@ -1135,7 +1134,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID) {
         if (settings instanceof WrappingRunConfiguration wrappingRunConfiguration) {
@@ -1157,7 +1156,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     }
 
     @Override
-    @Nonnull
+    
     public List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings) {
         if (settings instanceof WrappingRunConfiguration wrappingRunConfiguration) {
             return getBeforeRunTasks(wrappingRunConfiguration.getPeer());
@@ -1167,14 +1166,14 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return tasks == null ? getTemplateBeforeRunTasks(settings) : getCopies(tasks);
     }
 
-    private List<BeforeRunTask> getTemplateBeforeRunTasks(@Nonnull RunConfiguration settings) {
+    private List<BeforeRunTask> getTemplateBeforeRunTasks(RunConfiguration settings) {
         RunnerAndConfigurationSettings template = getConfigurationTemplate(settings.getFactory());
         List<BeforeRunTask> templateTasks = myConfigurationToBeforeTasksMap.get(template.getConfiguration());
         return templateTasks == null ? getHardcodedBeforeRunTasks(settings) : getCopies(templateTasks);
     }
 
-    @Nonnull
-    private List<BeforeRunTask> getHardcodedBeforeRunTasks(@Nonnull RunConfiguration settings) {
+    
+    private List<BeforeRunTask> getHardcodedBeforeRunTasks(RunConfiguration settings) {
         List<BeforeRunTask> _tasks = new SmartList<>();
         myProject.getExtensionPoint(BeforeRunTaskProvider.class).forEach(provider -> {
             BeforeRunTask task = provider.createTask(settings);
@@ -1190,8 +1189,8 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return _tasks;
     }
 
-    @Nonnull
-    private static List<BeforeRunTask> getCopies(@Nonnull List<BeforeRunTask> original) {
+    
+    private static List<BeforeRunTask> getCopies(List<BeforeRunTask> original) {
         List<BeforeRunTask> result = new SmartList<>();
         for (BeforeRunTask task : original) {
             if (task.isEnabled()) {
@@ -1215,7 +1214,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     @Override
     public final void setBeforeRunTasks(
         RunConfiguration runConfiguration,
-        @Nonnull List<BeforeRunTask> tasks,
+        List<BeforeRunTask> tasks,
         boolean addEnabledTemplateTasksIfAbsent
     ) {
         List<BeforeRunTask> result = new SmartList<>(tasks);
@@ -1257,7 +1256,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return (RunManagerImpl)RunManager.getInstance(project);
     }
 
-    void removeNotExistingSharedConfigurations(@Nonnull Set<String> existing) {
+    void removeNotExistingSharedConfigurations(Set<String> existing) {
         List<RunnerAndConfigurationSettings> removed = null;
         for (Iterator<Map.Entry<String, RunnerAndConfigurationSettings>> it = myConfigurations.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<String, RunnerAndConfigurationSettings> entry = it.next();
@@ -1273,7 +1272,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         fireRunConfigurationsRemoved(removed);
     }
 
-    public void fireRunConfigurationChanged(@Nonnull RunnerAndConfigurationSettings settings) {
+    public void fireRunConfigurationChanged(RunnerAndConfigurationSettings settings) {
         getEventPublisher().runConfigurationChanged(new RunManagerListenerEvent(this, settings, null));
     }
 
@@ -1306,7 +1305,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     private Map<Key<? extends BeforeRunTask>, BeforeRunTaskProvider> myBeforeStepsMap;
     private Map<String, Key<? extends BeforeRunTask>> myProviderKeysMap;
 
-    @Nonnull
+    
     private synchronized BeforeRunTaskProvider getProvider(Key<? extends BeforeRunTask> providerId) {
         if (myBeforeStepsMap == null) {
             initProviderMaps();
@@ -1314,7 +1313,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return myBeforeStepsMap.get(providerId);
     }
 
-    @Nonnull
+    
     public Map<ConfigurationType, Map<String, List<RunnerAndConfigurationSettings>>> getConfigurationsGroupedByTypeAndFolder(boolean isIncludeUnknown) {
         Map<ConfigurationType, Map<String, List<RunnerAndConfigurationSettings>>> result = new LinkedHashMap<>();
 
@@ -1333,7 +1332,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         return result;
     }
 
-    @Nonnull
+    
     private synchronized Key<? extends BeforeRunTask> getProviderKey(String keyString) {
         if (myProviderKeysMap == null) {
             initProviderMaps();
@@ -1359,7 +1358,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
         });
     }
 
-    @Nonnull
+    
     private RunManagerListener getEventPublisher() {
         return myProject.getMessageBus().syncPublisher(RunManagerListener.class);
     }

@@ -46,8 +46,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.event.MouseEvent;
@@ -66,7 +65,7 @@ public class ShowFilePathAction extends AnAction {
     public static final NotificationListener FILE_SELECTING_LISTENER = new NotificationListener.Adapter() {
         @Override
         @RequiredUIAccess
-        protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent e) {
+        protected void hyperlinkActivated(Notification notification, HyperlinkEvent e) {
             URL url = e.getURL();
             if (url != null) {
                 try {
@@ -85,7 +84,7 @@ public class ShowFilePathAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         boolean visible = Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANAGER);
         e.getPresentation().setVisible(visible);
         if (visible) {
@@ -97,7 +96,7 @@ public class ShowFilePathAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         show(
             UIAccess.current(),
             e.getData(Project.KEY),
@@ -116,7 +115,7 @@ public class ShowFilePathAction extends AnAction {
         });
     }
 
-    public static void show(@Nonnull UIAccess uiAccess, @Nullable Project project, VirtualFile file, Consumer<ListPopup> action) {
+    public static void show(UIAccess uiAccess, @Nullable Project project, VirtualFile file, Consumer<ListPopup> action) {
         if (!Platform.current().supportsFeature(PlatformFeature.OPEN_FILE_IN_FILE_MANAGER)) {
             return;
         }
@@ -159,7 +158,7 @@ public class ShowFilePathAction extends AnAction {
 
     private static ListPopup createPopup(@Nullable Project project, List<VirtualFile> files, List<Image> icons) {
         BaseListPopupStep<VirtualFile> step = new BaseListPopupStep<VirtualFile>("File Path", files, icons) {
-            @Nonnull
+            
             @Override
             public String getTextFor(VirtualFile value) {
                 return value.getPresentableName();
@@ -187,7 +186,7 @@ public class ShowFilePathAction extends AnAction {
      */
     @RequiredUIAccess
     @Deprecated
-    public static void openFile(@Nonnull File file) {
+    public static void openFile(File file) {
         Platform.current().openDirectoryInFileManager(file, UIAccess.current());
     }
 
@@ -217,7 +216,7 @@ public class ShowFilePathAction extends AnAction {
                 return true;
             }
 
-            @Nonnull
+            
             @Override
             public LocalizeValue getDoNotShowMessage() {
                 return CommonLocalize.dialogOptionsDoNotAsk();

@@ -18,12 +18,11 @@ package consulo.diff;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.diff.request.DiffRequest;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface DiffTool {
-    @Nonnull
+    
     String getName();
 
-    boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request);
+    boolean canShow(DiffContext context, DiffRequest request);
 }

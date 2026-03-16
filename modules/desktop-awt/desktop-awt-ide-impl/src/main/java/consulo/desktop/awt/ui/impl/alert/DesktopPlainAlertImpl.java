@@ -34,8 +34,7 @@ import consulo.ui.image.Image;
 import consulo.ui.impl.BaseAlert;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.html.HTMLEditorKit;
@@ -58,7 +57,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       init();
     }
 
-    DialogImpl(@Nonnull java.awt.Component parentComponent) {
+    DialogImpl(java.awt.Component parentComponent) {
       super(parentComponent, false);
       setTitle(myTitle.getValue());
       init();
@@ -70,7 +69,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return doCreateCenterPanel();
     }
 
-    @Nonnull
+   
     @Override
     protected Action[] createActions() {
       Action[] actions = new Action[myButtons.size()];
@@ -155,7 +154,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return configureMessagePaneUi(messageComponent, message);
     }
 
-    @Nonnull
+   
     public JTextPane configureMessagePaneUi(JTextPane messageComponent, String message) {
       JTextPane pane = configureMessagePaneUi(messageComponent, message, null);
       if (UIUtil.HTML_MIME.equals(pane.getContentType())) {
@@ -164,8 +163,8 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
       return pane;
     }
 
-    @Nonnull
-    public JTextPane configureMessagePaneUi(@Nonnull JTextPane messageComponent, @Nullable String message, @Nullable UIUtil.FontSize fontSize) {
+   
+    public JTextPane configureMessagePaneUi(JTextPane messageComponent, @Nullable String message, UIUtil.@Nullable FontSize fontSize) {
       UIUtil.FontSize fixedFontSize = fontSize == null ? UIUtil.FontSize.NORMAL : fontSize;
       messageComponent.setFont(UIUtil.getLabelFont(fixedFontSize));
       if (BasicHTML.isHTMLString(message)) {
@@ -192,7 +191,7 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
     }
   }
 
-  @Nonnull
+ 
   public static Image getIcon(NotificationType type) {
     switch (type) {
       case INFO:
@@ -210,20 +209,20 @@ public class DesktopPlainAlertImpl<V> extends BaseAlert<V> {
 
   @Override
   @RequiredUIAccess
-  @Nonnull
+ 
   public AsyncResult<V> showAsync(@Nullable Component component) {
     return showAsync(TargetAWT.to(component));
   }
 
   @RequiredUIAccess
-  @Nonnull
+ 
   @Override
   public AsyncResult<V> showAsync(@Nullable Window component) {
     return showAsync(TargetAWT.to(component));
   }
 
   @RequiredUIAccess
-  private AsyncResult<V> showAsync(@Nullable java.awt.Component component) {
+  private AsyncResult<V> showAsync(java.awt.@Nullable Component component) {
     if (myButtons.isEmpty()) {
       throw new UnsupportedOperationException("Buttons empty");
     }

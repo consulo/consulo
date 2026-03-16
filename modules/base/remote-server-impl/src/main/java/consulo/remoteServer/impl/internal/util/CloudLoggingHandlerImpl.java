@@ -11,9 +11,7 @@ import consulo.remoteServer.impl.internal.runtime.log.TerminalHandlerBase;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.log.LoggingHandler;
 import consulo.remoteServer.runtime.log.TerminalHandler;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -62,7 +60,7 @@ public class CloudLoggingHandlerImpl implements CloudAgentLoggingHandler {
     }
 
     @Override
-    public TerminalListener createTerminal(@Nls String pipeName,
+    public TerminalListener createTerminal(String pipeName,
                                            OutputStream terminalInput,
                                            InputStream terminalOutput,
                                            InputStream stderr) {
@@ -102,7 +100,7 @@ public class CloudLoggingHandlerImpl implements CloudAgentLoggingHandler {
         public void printHyperlink(String line, Runnable action) {
             myLoggingHandler.printHyperlink(line, new HyperlinkInfo() {
                 @Override
-                public void navigate(@Nonnull Project project) {
+                public void navigate(Project project) {
                     action.run();
                 }
             });

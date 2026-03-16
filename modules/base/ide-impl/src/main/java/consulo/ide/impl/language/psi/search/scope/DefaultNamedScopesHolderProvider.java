@@ -21,7 +21,6 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.NamedScopesHolderProvider;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public class DefaultNamedScopesHolderProvider implements NamedScopesHolderProvid
     myNamedScopeManager = namedScopeManager;
   }
 
-  @Nonnull
+  
   @Override
   public NamedScopesHolder getScopesHolder() {
     return myNamedScopeManager;

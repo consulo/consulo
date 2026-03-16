@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -30,22 +29,20 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface MacroManager {
-  @Nonnull
+ 
   public static MacroManager getInstance() {
     return Application.get().getInstance(MacroManager.class);
   }
 
   void cacheMacrosPreview(DataContext dataContext);
 
-  @Nonnull
+ 
   Collection<Macro> getMacros();
 
   /**
    * Expands all macros that are found in the <code>str</code>.
    */
-  @Nullable
-  String expandMacrosInString(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.ExecutionCancelledException;
+  String expandMacrosInString(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.@Nullable ExecutionCancelledException;
 
-  @Nullable
-  String expandSilentMarcos(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.ExecutionCancelledException;
+  String expandSilentMarcos(String str, boolean firstQueueExpand, DataContext dataContext) throws Macro.@Nullable ExecutionCancelledException;
 }

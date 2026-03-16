@@ -17,14 +17,13 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class VirtualFileUrlChangeAdapter extends VirtualFileAdapter {
   @Override
-  public void fileMoved(@Nonnull VirtualFileMoveEvent event) {
+  public void fileMoved(VirtualFileMoveEvent event) {
     String oldUrl = event.getOldParent().getUrl() + "/" + event.getFileName();
     String newUrl = event.getNewParent().getUrl() + "/" + event.getFileName();
     fileUrlChanged(oldUrl, newUrl);
@@ -33,7 +32,7 @@ public abstract class VirtualFileUrlChangeAdapter extends VirtualFileAdapter {
   protected abstract void fileUrlChanged(String oldUrl, String newUrl);
 
   @Override
-  public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+  public void propertyChanged(VirtualFilePropertyEvent event) {
     if (VirtualFile.PROP_NAME.equals(event.getPropertyName())) {
       VirtualFile parent = event.getFile().getParent();
       if (parent != null) {

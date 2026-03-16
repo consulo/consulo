@@ -31,7 +31,6 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.internal.InjectedLanguageManagerInternal;
 import consulo.language.psi.PsiFile;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -60,7 +59,7 @@ public class OffsetsInFile {
         return file;
     }
 
-    @Nonnull
+    
     public OffsetsInFile toTopLevelFile() {
         InjectedLanguageManager manager = InjectedLanguageManager.getInstance(file.getProject());
         PsiFile hostFile = manager.getTopLevelFile(file);
@@ -72,7 +71,7 @@ public class OffsetsInFile {
         }
     }
 
-    @Nonnull
+    
     public OffsetsInFile toInjectedIfAny(int offset) {
         InjectedLanguageManagerInternal injectedLanguageManager = (InjectedLanguageManagerInternal) InjectedLanguageManager.getInstance(file.getProject());
 
@@ -86,12 +85,12 @@ public class OffsetsInFile {
         return new OffsetsInFile(injected, offsets.mapOffsets(documentWindow, documentWindow::hostToInjected));
     }
 
-    @Nonnull
+    
     public OffsetsInFile copyWithReplacement(int startOffset, int endOffset, String replacement) {
         return replaceInCopy((PsiFile) file.copy(), startOffset, endOffset, replacement);
     }
 
-    @Nonnull
+    
     public OffsetsInFile replaceInCopy(PsiFile fileCopy, int startOffset, int endOffset, String replacement) {
         DocumentFactory documentFactory = DocumentFactory.getInstance();
 

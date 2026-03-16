@@ -34,7 +34,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -58,12 +57,12 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
   private final Map<Window, WindowAdapter> myWindowToWindowFocusListenerMap = new HashMap<>();
 
   @Inject
-  public DesktopEditorTrackerImpl(@Nonnull Project project, @Nonnull Provider<WindowManager> windowManagerProvider) {
+  public DesktopEditorTrackerImpl(Project project, Provider<WindowManager> windowManagerProvider) {
     super(project, windowManagerProvider);
 
     project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
-      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+      public void selectionChanged(FileEditorManagerEvent event) {
         JFrame frame = windowManagerProvider.get().getFrame(myProject);
         if (frame == null || frame.getFocusOwner() == null) {
           return;
@@ -76,7 +75,7 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
 
   @RequiredUIAccess
   @Override
-  protected void editorCreated(@Nonnull EditorFactoryEvent event) {
+  protected void editorCreated(EditorFactoryEvent event) {
     final Editor editor = event.getEditor();
     if ((editor.getProject() != null && editor.getProject() != myProject) || myProject.isDisposedOrDisposeInProgress()) {
       return;
@@ -95,7 +94,7 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
     FocusListener focusListener = new FocusListener() {
       @Override
       @RequiredUIAccess
-      public void focusGained(@Nonnull FocusEvent e) {
+      public void focusGained(FocusEvent e) {
         UIAccess.assertIsUIThread();
         Window window = myEditorToWindowMap.get(editor);
         if (window == null) {
@@ -116,7 +115,7 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
       }
 
       @Override
-      public void focusLost(@Nonnull FocusEvent e) {
+      public void focusLost(FocusEvent e) {
       }
     };
     contentComponent.addFocusListener(focusListener);
@@ -161,7 +160,7 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
     return window;
   }
 
-  private void registerEditor(@Nonnull Editor editor) {
+  private void registerEditor(Editor editor) {
     unregisterEditor(editor);
 
     Window window = windowByEditor(editor);

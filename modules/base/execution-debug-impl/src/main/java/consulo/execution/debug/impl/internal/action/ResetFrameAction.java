@@ -24,7 +24,6 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,14 +33,14 @@ import jakarta.annotation.Nonnull;
 public class ResetFrameAction extends XDebuggerActionBase {
     private final DebuggerActionHandler myHandler = new XDebuggerActionHandler() {
         @Override
-        protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+        protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
             XStackFrame currentStackFrame = session.getCurrentStackFrame();
             XDropFrameHandler handler = session.getDebugProcess().getDropFrameHandler();
             return currentStackFrame != null && handler != null && handler.canDrop(currentStackFrame);
         }
 
         @Override
-        protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+        protected void perform(XDebugSession session, DataContext dataContext) {
             XStackFrame currentStackFrame = session.getCurrentStackFrame();
             XDropFrameHandler handler = session.getDebugProcess().getDropFrameHandler();
 
@@ -59,7 +58,7 @@ public class ResetFrameAction extends XDebuggerActionBase {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected DebuggerActionHandler getHandler() {
         return myHandler;

@@ -31,8 +31,7 @@ import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.tab.JBTabsPresentation;
 import consulo.ui.ex.content.Content;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -389,7 +388,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(ViewContext.CONTEXT_KEY, myViewContext);
 
         List<Content> contents = getContents();

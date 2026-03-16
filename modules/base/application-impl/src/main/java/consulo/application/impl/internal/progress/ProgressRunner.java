@@ -18,8 +18,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -48,14 +47,14 @@ import java.util.function.Supplier;
  * @param <R> type of result to be computed by a given task
  */
 public final class ProgressRunner<R> {
-    @Nonnull
+    
     private final Function<? super ProgressIndicator, ? extends R> myComputation;
 
     private final boolean isSync;
 
     private final boolean isModal;
 
-    @Nonnull
+    
     private final CompletableFuture<? extends ProgressIndicator> myProgressIndicatorFuture;
 
     /**
@@ -64,7 +63,7 @@ public final class ProgressRunner<R> {
      *
      * @param computation runnable to be executed under progress
      */
-    public ProgressRunner(@Nonnull Runnable computation) {
+    public ProgressRunner(Runnable computation) {
         this(__ -> {
             computation.run();
             return null;
@@ -77,7 +76,7 @@ public final class ProgressRunner<R> {
      *
      * @param task task to be executed under progress
      */
-    public ProgressRunner(@Nonnull Task task) {
+    public ProgressRunner(Task task) {
         this(progress -> {
             try {
                 task.run(progress);
@@ -97,26 +96,26 @@ public final class ProgressRunner<R> {
      *
      * @param computation runnable to be executed under progress
      */
-    public ProgressRunner(@Nonnull Function<? super ProgressIndicator, ? extends R> computation) {
+    public ProgressRunner(Function<? super ProgressIndicator, ? extends R> computation) {
         this(computation, false, false, CompletableFuture.completedFuture(new EmptyProgressIndicator()));
     }
 
-    public ProgressRunner(@Nonnull Function<? super ProgressIndicator, ? extends R> computation,
+    public ProgressRunner(Function<? super ProgressIndicator, ? extends R> computation,
                           boolean sync,
                           boolean modal,
-                          @Nonnull CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
+                          CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
         myComputation = ClientId.decorateFunction(computation);
         isSync = sync;
         isModal = modal;
         myProgressIndicatorFuture = progressIndicatorFuture;
     }
 
-    @Nonnull
+    
     public ProgressRunner<R> sync() {
         return isSync ? this : new ProgressRunner<>(myComputation, true, isModal, myProgressIndicatorFuture);
     }
 
-    @Nonnull
+    
     public ProgressRunner<R> modal() {
         return isModal ? this : new ProgressRunner<>(myComputation, isSync, true, myProgressIndicatorFuture);
     }
@@ -126,8 +125,8 @@ public final class ProgressRunner<R> {
      *
      * @param progressIndicator progress indicator instance
      */
-    @Nonnull
-    public ProgressRunner<R> withProgress(@Nonnull ProgressIndicator progressIndicator) {
+    
+    public ProgressRunner<R> withProgress(ProgressIndicator progressIndicator) {
         ProgressIndicator myIndicator;
         try {
             myIndicator = myProgressIndicatorFuture.isDone() ? myProgressIndicatorFuture.get() : null;
@@ -144,8 +143,8 @@ public final class ProgressRunner<R> {
      *
      * @param progressIndicatorFuture future with progress indicator
      */
-    @Nonnull
-    public ProgressRunner<R> withProgress(@Nonnull CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
+    
+    public ProgressRunner<R> withProgress(CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
         return myProgressIndicatorFuture == progressIndicatorFuture ? this : new ProgressRunner<>(myComputation, isSync, isModal, progressIndicatorFuture);
     }
 
@@ -154,7 +153,7 @@ public final class ProgressRunner<R> {
      *
      * @return a {@link ProgressResult} data class representing the result of computation
      */
-    @Nonnull
+    
     public ProgressResult<R> submitAndGet() {
         Future<ProgressResult<R>> future = sync().submit();
 
@@ -172,7 +171,7 @@ public final class ProgressRunner<R> {
      *
      * @return a completable future representing the computation via {@link ProgressResult} data class
      */
-    @Nonnull
+    
     public CompletableFuture<ProgressResult<R>> submit() {
         /*
          *    General flow:
@@ -259,8 +258,8 @@ public final class ProgressRunner<R> {
         return forceDirectExec;
     }
 
-    @Nonnull
-    private CompletableFuture<R> execFromEDT(@Nonnull CompletableFuture<? extends ProgressIndicator> progressFuture, @Nonnull Semaphore modalityEntered, @Nonnull Supplier<R> onThreadCallable) {
+    
+    private CompletableFuture<R> execFromEDT(CompletableFuture<? extends ProgressIndicator> progressFuture, Semaphore modalityEntered, Supplier<R> onThreadCallable) {
         CompletableFuture<R> taskFuture = launchTask(onThreadCallable);
         CompletableFuture<R> resultFuture;
 
@@ -302,8 +301,8 @@ public final class ProgressRunner<R> {
         return resultFuture;
     }
 
-    @Nonnull
-    private CompletableFuture<R> normalExec(@Nonnull CompletableFuture<? extends ProgressIndicator> progressFuture, @Nonnull Semaphore modalityEntered, @Nonnull Supplier<R> onThreadCallable) {
+    
+    private CompletableFuture<R> normalExec(CompletableFuture<? extends ProgressIndicator> progressFuture, Semaphore modalityEntered, Supplier<R> onThreadCallable) {
 
         if (isModal) {
             // Modality enter is now a no-op, just signal that modality is "entered"
@@ -328,7 +327,7 @@ public final class ProgressRunner<R> {
         return resultFuture;
     }
 
-    private static void waitForFutureUnlockingThread(@Nonnull CompletableFuture<?> resultFuture) {
+    private static void waitForFutureUnlockingThread(CompletableFuture<?> resultFuture) {
         if (UIAccess.isUIThread()) {
             throw new UnsupportedOperationException("Sync waiting from EDT is dangerous.");
         }
@@ -339,7 +338,7 @@ public final class ProgressRunner<R> {
         }
     }
 
-    public static boolean isCanceled(@Nonnull Future<? extends ProgressIndicator> progressFuture) {
+    public static boolean isCanceled(Future<? extends ProgressIndicator> progressFuture) {
         try {
             return progressFuture.get().isCanceled();
         }
@@ -352,8 +351,8 @@ public final class ProgressRunner<R> {
         return exception instanceof CompletionException || exception instanceof ExecutionException ? exception.getCause() : exception;
     }
 
-    @Nonnull
-    private CompletableFuture<R> launchTask(@Nonnull Supplier<R> callable) {
+    
+    private CompletableFuture<R> launchTask(Supplier<R> callable) {
         return CompletableFuture.supplyAsync(callable, AppExecutorUtil.getAppExecutorService());
     }
 }

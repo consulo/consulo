@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Comparator;
@@ -36,7 +35,7 @@ public interface FileSystemTree extends Disposable {
     @Nullable
     VirtualFile getSelectedFile();
 
-    @Nonnull
+    
     VirtualFile[] getSelectedFiles();
 
     @Nullable
@@ -53,7 +52,7 @@ public interface FileSystemTree extends Disposable {
 
     void addListener(Listener listener, Disposable parent);
 
-    boolean isUnderRoots(@Nonnull VirtualFile file);
+    boolean isUnderRoots(VirtualFile file);
 
     boolean selectionExists();
 
@@ -65,6 +64,6 @@ public interface FileSystemTree extends Disposable {
     }
 
     interface Listener {
-        void selectionChanged(@Nonnull List<? extends VirtualFile> selection);
+        void selectionChanged(List<? extends VirtualFile> selection);
     }
 }

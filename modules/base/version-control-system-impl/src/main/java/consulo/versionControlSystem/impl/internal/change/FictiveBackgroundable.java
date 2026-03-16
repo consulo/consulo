@@ -21,18 +21,17 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.VcsBundle;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.project.util.WaitForProgressToShow.runOrInvokeLaterAboveProgress;
 
 class FictiveBackgroundable extends Task.Backgroundable {
-  @Nonnull
+  
   private final Waiter myWaiter;
   @Nullable private final ModalityState myState;
 
-  FictiveBackgroundable(@Nonnull Project project,
-                        @Nonnull Runnable runnable,
+  FictiveBackgroundable(Project project,
+                        Runnable runnable,
                         String title,
                         boolean cancellable,
                         @Nullable ModalityState state) {
@@ -41,7 +40,7 @@ class FictiveBackgroundable extends Task.Backgroundable {
     myWaiter = new Waiter(project, runnable, title, cancellable);
   }
 
-  public void run(@Nonnull ProgressIndicator indicator) {
+  public void run(ProgressIndicator indicator) {
     myWaiter.run(indicator);
     runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), ObjectUtil.notNull(myState, ModalityState.nonModal()), (Project)myProject);
   }

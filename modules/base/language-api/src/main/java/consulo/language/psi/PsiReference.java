@@ -23,8 +23,7 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A reference to a PSI element. For example, the variable name used in an expression.
@@ -59,7 +58,7 @@ public interface PsiReference {
    *
    * @return Relative range in element
    */
-  @Nonnull
+  
   @RequiredReadAction
   TextRange getRangeInElement();
 
@@ -79,7 +78,7 @@ public interface PsiReference {
    *
    * @return the canonical text of the reference.
    */
-  @Nonnull
+  
   @RequiredReadAction
   String getCanonicalText();
 
@@ -104,7 +103,7 @@ public interface PsiReference {
    * @throws IncorrectOperationException if the rebind cannot be handled for some reason.
    */
   @RequiredWriteAction
-  PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException;
+  PsiElement bindToElement(PsiElement element) throws IncorrectOperationException;
 
   /**
    * Checks if the reference targets the specified element.
@@ -124,7 +123,7 @@ public interface PsiReference {
    *
    * @return the array of available identifiers.
    */
-  @Nonnull
+  
   @RequiredReadAction
   @Deprecated
   @DeprecationInfo(value = "Use consulo.ide.impl.idea.codeInsight.completion.CompletionContributor")

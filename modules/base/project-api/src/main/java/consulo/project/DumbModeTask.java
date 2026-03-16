@@ -18,7 +18,6 @@ package consulo.project;
 import consulo.disposer.Disposable;
 import consulo.application.progress.ProgressIndicator;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * A task that should be executed in IDE dumb mode, via {@link DumbService#queueTask(DumbModeTask)}.
@@ -35,7 +34,7 @@ public abstract class DumbModeTask implements Disposable {
   /**
    * @param equivalenceObject see {@link #getEquivalenceObject()}
    */
-  public DumbModeTask(@Nonnull Object equivalenceObject) {
+  public DumbModeTask(Object equivalenceObject) {
     myEquivalenceObject = equivalenceObject;
   }
 
@@ -43,12 +42,12 @@ public abstract class DumbModeTask implements Disposable {
    * @return an object whose {@link Object#equals(Object)} determines task equivalence. If several equivalent tasks are queued
    * for dumb mode execution at once, only one of them will be executed. By default the task object itself is returned.
    */
-  @Nonnull
+  
   public final Object getEquivalenceObject() {
     return myEquivalenceObject;
   }
 
-  public abstract void performInDumbMode(@Nonnull ProgressIndicator indicator, Exception trace);
+  public abstract void performInDumbMode(ProgressIndicator indicator, Exception trace);
 
   @Override
   public void dispose() {

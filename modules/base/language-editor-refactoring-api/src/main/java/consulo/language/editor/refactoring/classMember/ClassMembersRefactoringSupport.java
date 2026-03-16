@@ -25,8 +25,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dennis.Ushakov
@@ -37,7 +36,7 @@ public interface ClassMembersRefactoringSupport extends LanguageExtension {
           ExtensionPointCacheKey.create("ClassMembersRefactoringSupport", LanguageOneToOne.build());
 
   @Nullable
-  static ClassMembersRefactoringSupport forLanguage(@Nonnull Language language) {
+  static ClassMembersRefactoringSupport forLanguage(Language language) {
     return Application.get().getExtensionPoint(ClassMembersRefactoringSupport.class).getOrBuildCache(KEY).get(language);
   }
 

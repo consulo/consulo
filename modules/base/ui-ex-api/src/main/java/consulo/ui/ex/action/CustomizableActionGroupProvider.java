@@ -18,7 +18,6 @@ package consulo.ui.ex.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * This extension allows to add an action group to the list of customizable actions in Settings | Menus and Toolbars.
@@ -31,6 +30,6 @@ public abstract class CustomizableActionGroupProvider {
     public abstract void registerGroups(CustomizableActionGroupRegistrar registrar);
 
     public interface CustomizableActionGroupRegistrar {
-        void addCustomizableActionGroup(@Nonnull String groupId, @Nonnull LocalizeValue groupTitle);
+        void addCustomizableActionGroup(String groupId, LocalizeValue groupTitle);
     }
 }

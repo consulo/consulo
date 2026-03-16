@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -99,7 +98,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         createTemplate(IdeLocalize.templateUnnamed().get(), PlainTextFileType.INSTANCE.getDefaultExtension(), "");
     }
 
-    private FileTemplate createTemplate(@Nonnull String prefName, @Nonnull String extension, @Nonnull String content) {
+    private FileTemplate createTemplate(String prefName, String extension, String content) {
         FileTemplate[] templates = myCurrentTab.getTemplates();
         FileTemplate newTemplate = FileTemplateImplUtil.createTemplate(prefName, extension, content, templates);
         myCurrentTab.addTemplate(newTemplate);
@@ -143,7 +142,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         fireListChanged();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.titleFileTemplates();
@@ -163,7 +162,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable parentUIDisposable) {
+    public JComponent createComponent(Disposable parentUIDisposable) {
         myTemplatesList = new FileTemplateTabAsList(IdeLocalize.tabFiletemplatesTemplates().get()) {
             @Override
             @RequiredUIAccess
@@ -236,13 +235,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         AnAction removeAction = new AnAction(IdeLocalize.actionRemoveTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalRemove()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 onRemove();
             }
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
                 e.getPresentation()
@@ -252,13 +251,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         AnAction addAction = new AnAction(IdeLocalize.actionCreateTemplate(), LocalizeValue.empty(), PlatformIconGroup.generalAdd()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 onAdd();
             }
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 e.getPresentation().setEnabled(!(myCurrentTab == myCodeTemplatesList || myCurrentTab == myOtherTemplatesList));
             }
@@ -266,13 +265,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         AnAction cloneAction = new AnAction(IdeLocalize.actionCopyTemplate(), LocalizeValue.empty(), PlatformIconGroup.actionsCopy()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 onClone();
             }
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 e.getPresentation().setEnabled(
                     myCurrentTab != myCodeTemplatesList
@@ -284,13 +283,13 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         AnAction resetAction = new AnAction(IdeLocalize.actionResetToDefault(), LocalizeValue.empty(), PlatformIconGroup.generalReset()) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 onReset();
             }
 
             @RequiredUIAccess
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 super.update(e);
                 FileTemplate selectedItem = myCurrentTab.getSelectedTemplate();
                 e.getPresentation().setEnabled(selectedItem instanceof BundledFileTemplate && !selectedItem.isDefault());
@@ -627,12 +626,12 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
         myOtherTemplatesList = null;
     }
 
-    public FileTemplate createNewTemplate(@Nonnull String preferredName, @Nonnull String extension, @Nonnull String text) {
+    public FileTemplate createNewTemplate(String preferredName, String extension, String text) {
         return createTemplate(preferredName, extension, text);
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "fileTemplates";
     }
@@ -644,7 +643,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     }
 
     @RequiredUIAccess
-    public static void editCodeTemplate(@Nonnull String templateId, Project project) {
+    public static void editCodeTemplate(String templateId, Project project) {
         ShowSettingsUtil util = ShowSettingsUtil.getInstance();
         AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(project);
         util.editConfigurable(

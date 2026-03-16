@@ -77,8 +77,7 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -120,7 +119,7 @@ public class TemplateStateImpl implements TemplateState {
     private boolean mySelectionCalculated = false;
     private boolean myStarted;
 
-    TemplateStateImpl(@Nonnull Project project, @Nonnull Editor editor) {
+    TemplateStateImpl(Project project, Editor editor) {
         myProject = project;
         myEditor = editor;
         myDocument = myEditor.getDocument();
@@ -273,7 +272,7 @@ public class TemplateStateImpl implements TemplateState {
 
     @Override
     @Nullable
-    public TextResult getVariableValue(@Nonnull String variableName) {
+    public TextResult getVariableValue(String variableName) {
         if (variableName.equals(TemplateImpl.SELECTION)) {
             return new TextResult(StringUtil.notNullize(getSelectionBeforeTemplate()));
         }
@@ -331,7 +330,7 @@ public class TemplateStateImpl implements TemplateState {
         return mySegments.getSegmentsCount();
     }
 
-    @Nonnull
+    
     @Override
     public TextRange getSegmentRange(int segment) {
         return new TextRange(mySegments.getSegmentStart(segment), mySegments.getSegmentEnd(segment));
@@ -369,7 +368,7 @@ public class TemplateStateImpl implements TemplateState {
 
     @RequiredUIAccess
     public void start(
-        @Nonnull TemplateImpl template,
+        TemplateImpl template,
         @Nullable BiPredicate<String, String> processor,
         @Nullable Map<String, String> predefinedVarValues
     ) {
@@ -441,7 +440,7 @@ public class TemplateStateImpl implements TemplateState {
     }
 
     @RequiredUIAccess
-    private void processAllExpressions(@Nonnull TemplateImpl template) {
+    private void processAllExpressions(TemplateImpl template) {
         Application.get().runWriteAction(() -> {
             if (!template.isInline()) {
                 myDocument.insertString(myTemplateRange.getStartOffset(), template.getTemplateText());
@@ -674,7 +673,7 @@ public class TemplateStateImpl implements TemplateState {
         first.handleTemplateInsert(lookupItems, Lookup.AUTO_INSERT_SELECT_CHAR);
     }
 
-    @Nonnull
+    
     List<TemplateExpressionLookupElement> getCurrentExpressionLookupItems() {
         LookupElement[] elements = getCurrentExpression().calculateLookupItems(getCurrentExpressionContext());
         if (elements == null) {
@@ -838,7 +837,7 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
-    private void executeChanges(@Nonnull List<TemplateDocumentChange> changes) {
+    private void executeChanges(List<TemplateDocumentChange> changes) {
         if (isDisposed() || changes.isEmpty()) {
             return;
         }
@@ -884,7 +883,7 @@ public class TemplateStateImpl implements TemplateState {
         }
     }
 
-    @Nonnull
+    
     private String getVariableValueText(String variableName) {
         TextResult value = getVariableValue(variableName);
         return value != null ? value.getText() : "";
@@ -1560,7 +1559,7 @@ public class TemplateStateImpl implements TemplateState {
         return myTemplate;
     }
 
-    @Nonnull
+    
     @Override
     public Editor getEditor() {
         return myEditor;

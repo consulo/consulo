@@ -29,7 +29,6 @@ import consulo.language.internal.custom.SyntaxTable;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -47,7 +46,7 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
     extend(CompletionType.BASIC, psiElement().inFile(psiFile().withFileType(instanceOf(CustomSyntaxTableFileType.class))), new CompletionProvider() {
       @RequiredReadAction
       @Override
-      public void addCompletions(@Nonnull CompletionParameters parameters, ProcessingContext context, @Nonnull CompletionResultSet result) {
+      public void addCompletions(CompletionParameters parameters, ProcessingContext context, CompletionResultSet result) {
         if (inCommentOrLiteral(parameters)) {
           return;
         }
@@ -102,7 +101,7 @@ public class CustomFileTypeCompletionContributor extends CompletionContributor i
     return text.substring(start + 1, offsetInElement).trim();
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

@@ -41,8 +41,7 @@ import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ import java.util.stream.Collectors;
  * from kotlin
  */
 public class RecentLocationsDataModel {
-    @Nonnull
+    
     private final Project myProject;
     private final List<Editor> myEditorsToRelease;
 
@@ -63,19 +62,19 @@ public class RecentLocationsDataModel {
     private final SynchronizedClearableLazy<List<RecentLocationItem>> myNavigationPlaces;
     private final SynchronizedClearableLazy<List<RecentLocationItem>> myChangedPlaces;
 
-    public RecentLocationsDataModel(@Nonnull Project project, List<Editor> editorsToRelease) {
+    public RecentLocationsDataModel(Project project, List<Editor> editorsToRelease) {
         this.myProject = project;
         this.myEditorsToRelease = editorsToRelease;
         myProjectConnection = this.myProject.getMessageBus().connect();
 
         myProjectConnection.subscribe(RecentPlacesListener.class, new RecentPlacesListener() {
             @Override
-            public void recentPlaceAdded(@Nonnull PlaceInfo changePlace, boolean isChanged) {
+            public void recentPlaceAdded(PlaceInfo changePlace, boolean isChanged) {
                 resetPlaces(isChanged);
             }
 
             @Override
-            public void recentPlaceRemoved(@Nonnull PlaceInfo changePlace, boolean isChanged) {
+            public void recentPlaceRemoved(PlaceInfo changePlace, boolean isChanged) {
                 resetPlaces(isChanged);
             }
 
@@ -102,7 +101,7 @@ public class RecentLocationsDataModel {
         });
     }
 
-    @Nonnull
+    
     private List<RecentLocationItem> createPlaceLinePairs(boolean changed) {
         return getPlaces(myProject, changed).stream().map(placeInfo -> {
             EditorEx editor = createEditor(placeInfo);
@@ -258,7 +257,7 @@ public class RecentLocationsDataModel {
         return TextRange.create(startOffset, endOffset);
     }
 
-    @Nonnull
+    
     private TextRange getLinesRange(Document document, int line) {
         int lineCount = document.getLineCount();
         if (lineCount == 0) {
@@ -299,7 +298,7 @@ public class RecentLocationsDataModel {
         settings.setAdditionalPageAtBottom(false);
     }
 
-    @Nonnull
+    
     private List<PlaceInfo> getPlaces(Project project, boolean changed) {
         IdeDocumentHistory ideDocumentHistory = IdeDocumentHistory.getInstance(project);
         List<PlaceInfo> infos =

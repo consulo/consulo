@@ -27,7 +27,6 @@ import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -37,7 +36,7 @@ import java.util.List;
 
 public class HierarchyTreeBuilder extends AbstractTreeBuilder {
     HierarchyTreeBuilder(
-        @Nonnull Project project,
+        Project project,
         JTree tree,
         DefaultTreeModel treeModel,
         HierarchyTreeStructure treeStructure,
@@ -50,7 +49,7 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
         FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);
     }
 
-    @Nonnull
+    
     public Couple<List<Object>> storeExpandedAndSelectedInfo() {
         List<Object> pathsToExpand = new ArrayList<>();
         List<Object> selectionPaths = new ArrayList<>();
@@ -58,7 +57,7 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
         return Couple.of(pathsToExpand, selectionPaths);
     }
 
-    public final void restoreExpandedAndSelectedInfo(@Nonnull Couple<List<Object>> pair) {
+    public final void restoreExpandedAndSelectedInfo(Couple<List<Object>> pair) {
         TreeBuilderUtil.restorePaths(this, pair.first, pair.second, true);
     }
 
@@ -85,32 +84,32 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
 
     private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
         @Override
-        public final void childAdded(@Nonnull PsiTreeChangeEvent event) {
+        public final void childAdded(PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+        public final void childRemoved(PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+        public final void childReplaced(PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childMoved(@Nonnull PsiTreeChangeEvent event) {
+        public final void childMoved(PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+        public final void childrenChanged(PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
 
         @Override
-        public final void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+        public final void propertyChanged(PsiTreeChangeEvent event) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
     }
@@ -122,7 +121,7 @@ public class HierarchyTreeBuilder extends AbstractTreeBuilder {
         }
 
         @Override
-        public final void fileStatusChanged(@Nonnull VirtualFile virtualFile) {
+        public final void fileStatusChanged(VirtualFile virtualFile) {
             getUpdater().addSubtreeToUpdate(getRootNode());
         }
     }

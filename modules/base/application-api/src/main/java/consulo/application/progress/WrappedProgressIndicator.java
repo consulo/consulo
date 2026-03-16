@@ -15,9 +15,8 @@
  */
 package consulo.application.progress;
 
-import jakarta.annotation.Nonnull;
 
 public interface WrappedProgressIndicator extends ProgressIndicator {
-  @Nonnull
+  
   ProgressIndicator getOriginalProgressIndicator();
 }

@@ -6,22 +6,21 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 public interface FileIntPropertyPusher<T> extends FilePropertyPusher<T> {
-  @Nonnull
+  
   FileAttribute getAttribute();
 
-  int toInt(@Nonnull T property) throws IOException;
+  int toInt(T property) throws IOException;
 
-  @Nonnull
+  
   T fromInt(int val) throws IOException;
 
   @Override
-  default void persistAttribute(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull T actualValue) throws IOException {
+  default void persistAttribute(Project project, VirtualFile fileOrDir, T actualValue) throws IOException {
     try (DataInputStream stream = getAttribute().readAttribute(fileOrDir)) {
       if (stream != null) {
         int storedIntValue = DataInputOutputUtil.readINT(stream);
@@ -39,5 +38,5 @@ public interface FileIntPropertyPusher<T> extends FilePropertyPusher<T> {
     propertyChanged(project, fileOrDir, actualValue);
   }
 
-  void propertyChanged(@Nonnull Project project, @Nonnull VirtualFile fileOrDir, @Nonnull T actualProperty);
+  void propertyChanged(Project project, VirtualFile fileOrDir, T actualProperty);
 }

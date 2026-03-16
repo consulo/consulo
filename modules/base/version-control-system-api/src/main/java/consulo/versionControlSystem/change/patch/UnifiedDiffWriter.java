@@ -20,8 +20,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.CommitContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +74,7 @@ public class UnifiedDiffWriter {
         Collection<FilePatch> patches,
         Writer writer,
         String lineSeparator,
-        @Nonnull PatchEP[] extensions,
+        PatchEP[] extensions,
         CommitContext commitContext
     ) throws IOException {
         for (FilePatch filePatch : patches) {
@@ -129,8 +128,8 @@ public class UnifiedDiffWriter {
         }
     }
 
-    @Nonnull
-    private static String getPathRelatedToDir(@Nonnull String newBaseDir, @Nullable String basePath, @Nonnull String path) {
+    
+    private static String getPathRelatedToDir(String newBaseDir, @Nullable String basePath, String path) {
         if (basePath == null) {
             return path;
         }

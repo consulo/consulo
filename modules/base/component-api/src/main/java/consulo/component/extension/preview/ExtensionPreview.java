@@ -17,26 +17,25 @@ package consulo.component.extension.preview;
 
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 22/01/2023
  */
-public record ExtensionPreview(@Nonnull PluginId apiPluginId,
-                               @Nonnull String apiClassName,
-                               @Nonnull PluginId implPluginId,
-                               @Nonnull String implId) {
+public record ExtensionPreview(PluginId apiPluginId,
+                               String apiClassName,
+                               PluginId implPluginId,
+                               String implId) {
 
-    public static <T> ExtensionPreview of(@Nonnull Class<T> apiClass, @Nonnull String implId) {
+    public static <T> ExtensionPreview of(Class<T> apiClass, String implId) {
         return new ExtensionPreview(getPluginStrict(apiClass), apiClass.getName(), getPluginStrict(apiClass), implId);
     }
 
-    public static <T> ExtensionPreview of(@Nonnull Class<T> apiClass, @Nonnull String implId, @Nonnull T implClass) {
+    public static <T> ExtensionPreview of(Class<T> apiClass, String implId, T implClass) {
         return new ExtensionPreview(getPluginStrict(apiClass), apiClass.getName(), getPluginStrict(implClass.getClass()), implId);
     }
 
-    @Nonnull
+    
     private static PluginId getPluginStrict(Class<?> clazz) {
         PluginId pluginId = PluginManager.getPluginId(clazz);
         if (pluginId == null) {

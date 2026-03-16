@@ -22,7 +22,6 @@ import consulo.externalSystem.model.DataNode;
 import consulo.externalSystem.model.Key;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -57,7 +56,7 @@ public interface ProjectDataService<E, I> {
     /**
      * @return key of project data supported by the current manager
      */
-    @Nonnull
+    
     Key<E> getTargetDataKey();
 
     /**
@@ -79,7 +78,7 @@ public interface ProjectDataService<E, I> {
      * @param project
      * @param synchronous
      */
-    void importData(@Nonnull Collection<DataNode<E>> toImport, @Nonnull Project project, boolean synchronous);
+    void importData(Collection<DataNode<E>> toImport, Project project, boolean synchronous);
 
     /**
      * Asks to remove all given ide project entities.
@@ -92,5 +91,5 @@ public interface ProjectDataService<E, I> {
      * @param project     target project
      * @param synchronous flag which defines if entities removal should be synchronous
      */
-    void removeData(@Nonnull Collection<? extends I> toRemove, @Nonnull Project project, boolean synchronous);
+    void removeData(Collection<? extends I> toRemove, Project project, boolean synchronous);
 }

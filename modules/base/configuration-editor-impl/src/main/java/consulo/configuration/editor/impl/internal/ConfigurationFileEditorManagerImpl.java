@@ -30,7 +30,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -56,15 +55,15 @@ public class ConfigurationFileEditorManagerImpl implements ConfigurationFileEdit
 
     @RequiredUIAccess
     @Override
-    public void open(@Nonnull Project project,
-                     @Nonnull Class<? extends ConfigurationFileEditorProvider> providerClass,
-                     @Nonnull Map<String, String> params) {
+    public void open(Project project,
+                     Class<? extends ConfigurationFileEditorProvider> providerClass,
+                     Map<String, String> params) {
         open(project, myApplication.getExtensionPoint(ConfigurationFileEditorProvider.class).findExtensionOrFail(providerClass), params);
     }
 
     @RequiredUIAccess
     @Override
-    public void open(@Nonnull Project project, @Nonnull ConfigurationFileEditorProvider provider, @Nonnull Map<String, String> params) {
+    public void open(Project project, ConfigurationFileEditorProvider provider, Map<String, String> params) {
         VirtualFileSystem fileSystem = myVirtualFileManager.getFileSystem(ConfigurationEditorFileSystemImpl.PROTOCOL);
         if (!(fileSystem instanceof ConfigurationEditorFileSystemImpl fs)) {
             return;

@@ -37,8 +37,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -82,7 +81,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
         MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+            public void fileOpened(FileEditorManager source, VirtualFile file) {
                 updateNotifications(file);
             }
         });
@@ -106,7 +105,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     @Override
-    public void updateNotifications(@Nonnull VirtualFile file) {
+    public void updateNotifications(VirtualFile file) {
         myProject.getApplication().getLastUIAccess().giveIfNeed(() -> {
             ProgressIndicator indicator = getCurrentProgress(file);
             if (indicator != null) {
@@ -164,7 +163,7 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
         });
     }
 
-    private boolean isOutdated(@Nonnull VirtualFile file, @Nonnull ProgressIndicator indicator, @Nonnull List<FileEditor> editors) {
+    private boolean isOutdated(VirtualFile file, ProgressIndicator indicator, List<FileEditor> editors) {
         if (myProject.isDisposed() || !file.isValid() || indicator != getCurrentProgress(file)) {
             return true;
         }
@@ -183,8 +182,8 @@ public class EditorNotificationsImpl extends EditorNotifications implements Disp
     }
 
     private void updateNotification(
-        @Nonnull FileEditor editor,
-        @Nonnull String notificationId,
+        FileEditor editor,
+        String notificationId,
         @Nullable EditorNotificationBuilderEx builder
     ) {
         Key<NotificationInfo> key = myKeyStore.computeIfAbsent(notificationId, Key::create);

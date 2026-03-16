@@ -51,8 +51,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.PanelUI;
@@ -157,11 +156,11 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         this("");
     }
 
-    public EditorTextField(@Nonnull String text) {
+    public EditorTextField(String text) {
         this(EditorFactory.getInstance().createDocument(text), null, PlainTextFileType.INSTANCE);
     }
 
-    public EditorTextField(@Nonnull String text, Project project, FileType fileType) {
+    public EditorTextField(String text, Project project, FileType fileType) {
         this(EditorFactory.getInstance().createDocument(text), project, fileType, false, true);
     }
 
@@ -353,7 +352,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
     }
 
-    private static void doSelectAll(@Nonnull Editor editor) {
+    private static void doSelectAll(Editor editor) {
         editor.getCaretModel().removeSecondaryCarets();
         editor.getCaretModel().getPrimaryCaret().setSelection(0, editor.getDocument().getTextLength(), false);
     }
@@ -404,7 +403,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         if (myProject != null) {
             ProjectManagerListener listener = new ProjectManagerListener() {
                 @Override
-                public void projectClosing(@Nonnull Project project) {
+                public void projectClosing(Project project) {
                     releaseEditor(myEditor);
                     myEditor = null;
                 }
@@ -607,7 +606,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         return editor;
     }
 
-    public static boolean managesEditor(@Nonnull Editor editor) {
+    public static boolean managesEditor(Editor editor) {
         return Objects.equals(editor.getUserData(MANAGED_BY_FIELD), Boolean.TRUE);
     }
 
@@ -656,7 +655,6 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         return getBackgroundColor(isEnabled());
     }
 
-    @Nonnull
     protected Color getBackgroundColor(boolean enabled) {
         if (myEnforcedBgColor != null) {
             return myEnforcedBgColor;
@@ -827,7 +825,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myEditor != null && myEditor.isRendererMode()) {
             sink.set(CopyProvider.KEY, myEditor.getCopyProvider());
             return;
@@ -872,7 +870,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         }
     }
 
-    public void setNewDocumentAndFileType(@Nonnull FileType fileType, Document document) {
+    public void setNewDocumentAndFileType(FileType fileType, Document document) {
         myFileType = fileType;
         setDocument(document);
     }
@@ -887,11 +885,11 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
         myRendererFg = foregroundColor;
     }
 
-    public void addSettingsProvider(@Nonnull EditorSettingsProvider provider) {
+    public void addSettingsProvider(EditorSettingsProvider provider) {
         mySettingsProviders.add(provider);
     }
 
-    public boolean removeSettingsProvider(@Nonnull EditorSettingsProvider provider) {
+    public boolean removeSettingsProvider(EditorSettingsProvider provider) {
         return mySettingsProviders.remove(provider);
     }
 

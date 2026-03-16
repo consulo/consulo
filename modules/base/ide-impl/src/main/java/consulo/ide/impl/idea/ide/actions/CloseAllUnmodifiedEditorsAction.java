@@ -29,7 +29,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(
     id = IdeActions.ACTION_CLOSE_ALL_UNMODIFIED_EDITORS,
@@ -54,7 +53,7 @@ public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
         return super.isActionEnabled(project, event) && ProjectLevelVcsManager.getInstance(project).getAllActiveVcss().length > 0;
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getPresentationText(boolean inSplitter) {
         return inSplitter ? IdeLocalize.actionCloseAllUnmodifiedEditorsInTabGroup() : IdeLocalize.actionCloseAllUnmodifiedEditors();

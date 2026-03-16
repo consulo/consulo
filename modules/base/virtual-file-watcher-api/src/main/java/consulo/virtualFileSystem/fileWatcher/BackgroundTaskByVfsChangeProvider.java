@@ -25,7 +25,6 @@ import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,7 +40,7 @@ public abstract class BackgroundTaskByVfsChangeProvider {
         }
 
         @Override
-        public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+        public boolean validate(Project project, VirtualFile virtualFile) {
             return virtualFile.getFileType() == myFileType;
         }
     }
@@ -49,26 +48,26 @@ public abstract class BackgroundTaskByVfsChangeProvider {
     public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME =
         ExtensionPointName.create(BackgroundTaskByVfsChangeProvider.class);
 
-    public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    public boolean validate(Project project, VirtualFile virtualFile) {
         return true;
     }
 
     public abstract void setDefaultParameters(
-        @Nonnull Project project,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull BackgroundTaskByVfsParameters parameters
+        Project project,
+        VirtualFile virtualFile,
+        BackgroundTaskByVfsParameters parameters
     );
 
-    @Nonnull
+    
     public abstract String getTemplateName();
 
     public boolean containsGeneratedFiles() {
         return false;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public String[] getGeneratedFiles(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+    public String[] getGeneratedFiles(Project project, VirtualFile virtualFile) {
         if (!containsGeneratedFiles()) {
             return ArrayUtil.EMPTY_STRING_ARRAY;
         }
@@ -81,8 +80,8 @@ public abstract class BackgroundTaskByVfsChangeProvider {
         return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 
-    @Nonnull
-    public String[] getGeneratedFiles(@Nonnull PsiFile psiFile) {
+    
+    public String[] getGeneratedFiles(PsiFile psiFile) {
         return ArrayUtil.EMPTY_STRING_ARRAY;
     }
 }

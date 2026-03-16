@@ -47,8 +47,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -66,7 +65,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
 
   private final Project myProject;
 
-  public static EditorHistoryManagerImpl getInstance(@Nonnull Project project) {
+  public static EditorHistoryManagerImpl getInstance(Project project) {
     return (EditorHistoryManagerImpl)project.getInstance(EditorHistoryManager.class);
   }
 
@@ -76,7 +75,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
   private final List<HistoryEntry> myEntriesList = new ArrayList<>();
 
   @Inject
-  EditorHistoryManagerImpl(@Nonnull Project project) {
+  EditorHistoryManagerImpl(Project project) {
     myProject = project;
 
     MessageBusConnection connection = project.getMessageBus().connect();
@@ -85,7 +84,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
 
     connection.subscribe(FileEditorManagerBeforeListener.class, new FileEditorManagerBeforeListener.Adapter() {
       @Override
-      public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      public void beforeFileClosed(FileEditorManager source, VirtualFile file) {
         updateHistoryEntry(file, false);
       }
     });
@@ -110,7 +109,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
    * Makes file most recent one
    */
   @RequiredUIAccess
-  private void fileOpenedImpl(@Nonnull VirtualFile file,
+  private void fileOpenedImpl(VirtualFile file,
                               @Nullable FileEditor fallbackEditor,
                               @Nullable FileEditorProvider fallbackProvider) {
     UIAccess.assertIsUIThread();
@@ -254,7 +253,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
   /**
    * @return a set of valid files that are in the history, oldest first.
    */
-  @Nonnull
+  
   public synchronized List<VirtualFile> getFileList() {
     List<VirtualFile> result = new ArrayList<>();
     for (HistoryEntry entry : myEntriesList) {
@@ -267,7 +266,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
   }
 
   @Override
-  public synchronized boolean hasBeenOpen(@Nonnull VirtualFile f) {
+  public synchronized boolean hasBeenOpen(VirtualFile f) {
     for (HistoryEntry each : myEntriesList) {
       if (Comparing.equal(each.getFile(), f)) return true;
     }
@@ -282,7 +281,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
    *                                  is <code>null</code>
    */
   @Override
-  public synchronized void removeFile(@Nonnull VirtualFile file) {
+  public synchronized void removeFile(VirtualFile file) {
     HistoryEntry entry = getEntry(file);
     if (entry != null) {
       removeEntry(entry);
@@ -290,7 +289,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
   }
 
   @Override
-  public FileEditorState getState(@Nonnull VirtualFile file, FileEditorProvider provider) {
+  public FileEditorState getState(VirtualFile file, FileEditorProvider provider) {
     HistoryEntry entry = getEntry(file);
     return entry != null ? entry.getState(provider) : null;
   }
@@ -304,7 +303,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
     return entry != null ? entry.getSelectedProvider() : null;
   }
 
-  private synchronized HistoryEntry getEntry(@Nonnull VirtualFile file) {
+  private synchronized HistoryEntry getEntry(VirtualFile file) {
     for (int i = myEntriesList.size() - 1; i >= 0; i--) {
       HistoryEntry entry = myEntriesList.get(i);
       VirtualFile entryFile = entry.getFile();
@@ -330,7 +329,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
   }
 
   @Override
-  public void loadState(@Nonnull Element element) {
+  public void loadState(Element element) {
     // we have to delay xml processing because history entries require EditorStates to be created
     // which is done via corresponding EditorProviders, those are not accessible before their
     // is initComponent() called
@@ -351,7 +350,6 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
     });
   }
 
-  @Nonnull
   @Override
   public Coroutine<?, Element> getStateAsync() {
     return Coroutine.<Void, HistoryEntry[]>first(UIAction.apply(ignored -> {
@@ -389,12 +387,12 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentA
   private final class MyEditorManagerListener extends FileEditorManagerAdapter {
     @Override
     @RequiredUIAccess
-    public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileOpened(FileEditorManager source, VirtualFile file) {
       fileOpenedImpl(file, null, null);
     }
 
     @Override
-    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public void selectionChanged(FileEditorManagerEvent event) {
       // updateHistoryEntry does commitDocument which is 1) very expensive and 2) cannot be performed from within PSI change listener
       // so defer updating history entry until documents committed to improve responsiveness
       PsiDocumentManager.getInstance(myProject).performWhenAllCommitted(() -> {

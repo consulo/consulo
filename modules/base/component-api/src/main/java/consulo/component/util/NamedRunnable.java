@@ -16,7 +16,6 @@
 package consulo.component.util;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Kirill.Kalishev
@@ -26,7 +25,7 @@ public abstract class NamedRunnable implements Runnable {
   private static final Logger LOG = Logger.getInstance(NamedRunnable.class);
   private final String myName;
 
-  protected NamedRunnable(@Nonnull String name) {
+  protected NamedRunnable(String name) {
     myName = name;
   }
 

@@ -15,15 +15,14 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 public interface PersistentSet<T> {
 
-  boolean contains(@Nonnull T element) throws IOException;
+  boolean contains(T element) throws IOException;
 
-  void put(@Nonnull T element) throws IOException;
+  void put(T element) throws IOException;
 
   void flush();
 

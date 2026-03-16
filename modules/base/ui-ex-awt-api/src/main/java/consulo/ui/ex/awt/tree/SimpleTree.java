@@ -8,7 +8,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;

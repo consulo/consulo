@@ -17,44 +17,41 @@ package consulo.diff;
 
 import consulo.ui.ex.awt.WindowWrapper;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.function.Consumer;
 
 public class DiffDialogHints {
-  @Nonnull
+ 
   public static final DiffDialogHints DEFAULT = new DiffDialogHints(null);
-  @Nonnull
+ 
   public static final DiffDialogHints FRAME = new DiffDialogHints(WindowWrapper.Mode.FRAME);
-  @Nonnull
+ 
   public static final DiffDialogHints MODAL = new DiffDialogHints(WindowWrapper.Mode.MODAL);
-  @Nonnull
+ 
   public static final DiffDialogHints NON_MODAL = new DiffDialogHints(WindowWrapper.Mode.NON_MODAL);
 
-  @Nullable
-  private final WindowWrapper.Mode myMode;
+  private final WindowWrapper.@Nullable Mode myMode;
   @Nullable
   private final Component myParent;
   @Nullable
   private final Consumer<WindowWrapper> myWindowConsumer;
 
-  public DiffDialogHints(@Nullable WindowWrapper.Mode mode) {
+  public DiffDialogHints(WindowWrapper.@Nullable Mode mode) {
     this(mode, null);
   }
 
-  public DiffDialogHints(@Nullable WindowWrapper.Mode mode, @Nullable Component parent) {
+  public DiffDialogHints(WindowWrapper.@Nullable Mode mode, @Nullable Component parent) {
     this(mode, parent, null);
   }
 
-  public DiffDialogHints(@Nullable WindowWrapper.Mode mode, @Nullable Component parent, @Nullable Consumer<WindowWrapper> windowConsumer) {
+  public DiffDialogHints(WindowWrapper.@Nullable Mode mode, @Nullable Component parent, @Nullable Consumer<WindowWrapper> windowConsumer) {
     myMode = mode;
     myParent = parent;
     myWindowConsumer = windowConsumer;
   }
 
-  @Nullable
-  public WindowWrapper.Mode getMode() {
+  public WindowWrapper.@Nullable Mode getMode() {
     return myMode;
   }
 

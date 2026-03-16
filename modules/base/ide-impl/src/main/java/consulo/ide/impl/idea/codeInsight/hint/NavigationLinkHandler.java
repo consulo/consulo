@@ -22,7 +22,6 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.impl.internal.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 
 /**
@@ -33,14 +32,14 @@ import jakarta.annotation.Nonnull;
 public class NavigationLinkHandler extends TooltipLinkHandler {
   private static final Logger LOG = Logger.getInstance(NavigationLinkHandler.class);
 
-  @Nonnull
+  
   @Override
   public String getPrefix() {
     return "#navigation/";
   }
 
   @Override
-  public boolean handleLink(@Nonnull String refSuffix, @Nonnull Editor editor) {
+  public boolean handleLink(String refSuffix, Editor editor) {
     int pos = refSuffix.lastIndexOf(':');
     if (pos <= 0 || pos == refSuffix.length() - 1) {
       LOG.error("Malformed suffix: " + refSuffix);

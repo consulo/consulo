@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 
 /**

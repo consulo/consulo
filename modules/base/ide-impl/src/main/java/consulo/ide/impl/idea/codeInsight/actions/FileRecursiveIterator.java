@@ -13,7 +13,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.CompactVirtualFileSet;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,37 +21,37 @@ import java.util.List;
 import java.util.function.Predicate;
 
 class FileRecursiveIterator {
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final Collection<? extends VirtualFile> myRoots;
 
-    FileRecursiveIterator(@Nonnull Project project, @Nonnull List<? extends PsiFile> roots) {
+    FileRecursiveIterator(Project project, List<? extends PsiFile> roots) {
         this(project, ContainerUtil.<PsiFile, VirtualFile>map(roots, PsiFile::getVirtualFile));
     }
 
-    FileRecursiveIterator(@Nonnull Module module) {
+    FileRecursiveIterator(Module module) {
         this(
             module.getProject(),
             ContainerUtil.<PsiDirectory, VirtualFile>map(collectModuleDirectories(module), PsiDirectory::getVirtualFile)
         );
     }
 
-    FileRecursiveIterator(@Nonnull Project project) {
+    FileRecursiveIterator(Project project) {
         this(project, ContainerUtil.<PsiDirectory, VirtualFile>map(collectProjectDirectories(project), PsiDirectory::getVirtualFile));
     }
 
-    FileRecursiveIterator(@Nonnull PsiDirectory directory) {
+    FileRecursiveIterator(PsiDirectory directory) {
         this(directory.getProject(), Collections.singletonList(directory.getVirtualFile()));
     }
 
-    FileRecursiveIterator(@Nonnull Project project, @Nonnull Collection<? extends VirtualFile> roots) {
+    FileRecursiveIterator(Project project, Collection<? extends VirtualFile> roots) {
         myProject = project;
         myRoots = roots;
     }
 
-    @Nonnull
-    static List<PsiDirectory> collectProjectDirectories(@Nonnull Project project) {
+    
+    static List<PsiDirectory> collectProjectDirectories(Project project) {
         Module[] modules = ModuleManager.getInstance(project).getModules();
         List<PsiDirectory> directories = new ArrayList<>(modules.length * 3);
         for (Module module : modules) {
@@ -62,7 +61,7 @@ class FileRecursiveIterator {
         return directories;
     }
 
-    boolean processAll(@Nonnull Predicate<? super PsiFile> processor) {
+    boolean processAll(Predicate<? super PsiFile> processor) {
         CompactVirtualFileSet visited = new CompactVirtualFileSet();
         for (VirtualFile root : myRoots) {
             if (!ProjectRootManager.getInstance(myProject).getFileIndex().iterateContentUnderDirectory(
@@ -82,7 +81,7 @@ class FileRecursiveIterator {
         return true;
     }
 
-    @Nonnull
+    
     static List<PsiDirectory> collectModuleDirectories(Module module) {
         VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
         return ReadAction.compute(() -> ContainerUtil.mapNotNull(

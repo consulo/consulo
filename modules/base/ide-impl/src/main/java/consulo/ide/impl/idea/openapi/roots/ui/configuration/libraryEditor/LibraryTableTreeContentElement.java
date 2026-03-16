@@ -22,7 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.style.StandardColors;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LibraryTableTreeContentElement<E> extends NodeDescriptor<E> {
   protected LibraryTableTreeContentElement(@Nullable NodeDescriptor parentDescriptor) {

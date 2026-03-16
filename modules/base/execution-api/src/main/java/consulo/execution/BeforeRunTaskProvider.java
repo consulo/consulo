@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Kaznacheev
@@ -37,22 +36,22 @@ import jakarta.annotation.Nullable;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
-    @Nonnull
+    
     public abstract Key<T> getId();
 
-    @Nonnull
+    
     public abstract LocalizeValue getName();
 
     @Nullable
-    public abstract Image getIcon(@Nonnull RunConfiguration runConfiguration);
+    public abstract Image getIcon(RunConfiguration runConfiguration);
 
-    @Nonnull
+    
     public LocalizeValue getDescription(T task) {
         return getName();
     }
 
     @Nullable
-    public Image getTaskIcon(@Nonnull RunConfiguration runConfiguration, @Nonnull T task) {
+    public Image getTaskIcon(RunConfiguration runConfiguration, T task) {
         return getIcon(runConfiguration);
     }
 
@@ -76,7 +75,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
     /**
      * @return <code>true</code> if task configuration is changed
      */
-    @Nonnull
+    
     @RequiredUIAccess
     public abstract AsyncResult<Void> configureTask(RunConfiguration runConfiguration, T task);
 
@@ -90,7 +89,7 @@ public abstract class BeforeRunTaskProvider<T extends BeforeRunTask> {
         throw new AbstractMethodError();
     }
 
-    @Nonnull
+    
     @SuppressWarnings("deprecation")
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,

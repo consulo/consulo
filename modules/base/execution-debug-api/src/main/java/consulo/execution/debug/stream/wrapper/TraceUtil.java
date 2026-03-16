@@ -3,8 +3,7 @@ package consulo.execution.debug.stream.wrapper;
 
 import consulo.execution.debug.stream.trace.*;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -17,11 +16,11 @@ import java.util.stream.Collectors;
 public final class TraceUtil {
     private static final String THREE_DOTS = "...";
 
-    public static List<TraceElement> sortedByTime(@NotNull Collection<? extends TraceElement> values) {
+    public static List<TraceElement> sortedByTime(Collection<? extends TraceElement> values) {
         return values.stream().sorted(Comparator.comparing(TraceElement::getTime)).collect(Collectors.toList());
     }
 
-    public static @Nullable Object extractKey(@NotNull TraceElement element) {
+    public static @Nullable Object extractKey(TraceElement element) {
         final Value value = element.getValue();
         if (!(value instanceof PrimitiveValue)) {
             return value;
@@ -54,15 +53,15 @@ public final class TraceUtil {
         throw new RuntimeException("unknown primitive value: " + value.typeName());
     }
 
-    @NotNull
-    public static String formatWithArguments(@NotNull MethodCall call) {
+    
+    public static String formatWithArguments(MethodCall call) {
         return call.getName() + call.getGenericArguments() +"(" + call.getArguments()
             .stream()
             .map(x -> StringUtil.shortenTextWithEllipsis(x.getText().replaceAll("\\s", ""), 30, 5, THREE_DOTS))
             .collect(Collectors.joining(", ")) + ")";
     }
 
-    public static @NotNull String formatQualifierExpression(@NotNull String expression, int maxLength) {
+    public static String formatQualifierExpression(String expression, int maxLength) {
         expression = expression.replaceAll("\\s", "").replaceAll(",", ", ");
         if (expression.length() < maxLength) {
             return expression;

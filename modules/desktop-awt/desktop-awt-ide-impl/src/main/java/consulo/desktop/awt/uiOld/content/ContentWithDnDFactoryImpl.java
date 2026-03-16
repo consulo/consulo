@@ -19,7 +19,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.dnd.ContentWithDnDFactory;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ import java.util.function.Predicate;
 @ServiceImpl
 @Singleton
 public class ContentWithDnDFactoryImpl implements ContentWithDnDFactory {
-    @Nonnull
+    
     @Override
     public Content createContentWithDnd(JComponent component,
                                         String displayName,

@@ -19,7 +19,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.colorScheme.EditorColorKey;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Describes a color which can be configured in a custom colors and fonts page.
@@ -58,7 +57,7 @@ public final class ColorDescriptor {
      * @param key         the color key for which the color is specified.
      * @param kind        the type of color corresponding to the color key (foreground or background).
      */
-    public ColorDescriptor(@Nonnull LocalizeValue displayName, @Nonnull EditorColorKey key, @Nonnull Kind kind) {
+    public ColorDescriptor(LocalizeValue displayName, EditorColorKey key, Kind kind) {
         myKind = kind;
         myDisplayName = displayName;
         myKey = key;
@@ -69,7 +68,7 @@ public final class ColorDescriptor {
      *
      * @return the type of color.
      */
-    @Nonnull
+    
     public Kind getKind() {
         return myKind;
     }
@@ -79,7 +78,7 @@ public final class ColorDescriptor {
      *
      * @return the name of the color.
      */
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return myDisplayName;
     }
@@ -89,7 +88,7 @@ public final class ColorDescriptor {
      *
      * @return the color key.
      */
-    @Nonnull
+    
     public EditorColorKey getKey() {
         return myKey;
     }

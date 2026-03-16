@@ -33,8 +33,7 @@ import consulo.ui.ex.StateRestoringCheckBoxWrapper;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageViewContentManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,8 +65,8 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     private ScopeChooserCombo myScopeCombo;
 
     protected AbstractFindUsagesDialog(
-        @Nonnull Project project,
-        @Nonnull FindUsagesOptions findUsagesOptions,
+        Project project,
+        FindUsagesOptions findUsagesOptions,
         boolean toShowInNewTab,
         boolean mustOpenInNewTab,
         boolean isSingleFile,
@@ -92,7 +91,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         setTitle(isSingleFile ? FindLocalize.findUsagesInFileDialogTitle() : FindLocalize.findUsagesDialogTitle());
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -120,7 +119,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
         return panel;
     }
 
-    public abstract void configureLabelComponent(@Nonnull SimpleColoredComponent coloredComponent);
+    public abstract void configureLabelComponent(SimpleColoredComponent coloredComponent);
 
     @Override
     @RequiredUIAccess

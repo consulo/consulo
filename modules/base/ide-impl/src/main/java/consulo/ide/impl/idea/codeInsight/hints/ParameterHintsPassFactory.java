@@ -13,15 +13,14 @@ import consulo.language.editor.impl.internal.inlay.param.MethodInfoExcludeListFi
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class ParameterHintsPassFactory implements TextEditorHighlightingPassFactory {
     private static final Key<Long> PSI_MODIFICATION_STAMP = Key.create("psi.modification.stamp");
 
     @Override
-    public void register(@Nonnull Registrar registrar) {
+    public void register(Registrar registrar) {
         boolean serialized = false;
         int[] ghl = serialized ? new int[]{Pass.UPDATE_ALL} : null;
         registrar.registerTextEditorHighlightingPass(this, ghl, null, false, -1);
@@ -30,7 +29,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
     @Override
     @Nullable
     @RequiredReadAction
-    public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile psiFile, @Nonnull Editor editor) {
+    public TextEditorHighlightingPass createHighlightingPass(PsiFile psiFile, Editor editor) {
         if (editor.isOneLineMode()) return null;
         long currentStamp = getCurrentModificationStamp(psiFile);
         Long savedStamp = editor.getUserData(PSI_MODIFICATION_STAMP);
@@ -41,7 +40,7 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         return new ParameterHintsPass(psiFile, editor, MethodInfoExcludeListFilter.forLanguage(language), false);
     }
 
-    public static long getCurrentModificationStamp(@Nonnull PsiFile file) {
+    public static long getCurrentModificationStamp(PsiFile file) {
         return file.getManager().getModificationTracker().getModificationCount();
     }
 
@@ -51,11 +50,11 @@ public class ParameterHintsPassFactory implements TextEditorHighlightingPassFact
         }
     }
 
-    public static void forceHintsUpdateOnNextPass(@Nonnull Editor editor) {
+    public static void forceHintsUpdateOnNextPass(Editor editor) {
         editor.putUserData(PSI_MODIFICATION_STAMP, null);
     }
 
-    static void putCurrentPsiModificationStamp(@Nonnull Editor editor, @Nonnull PsiFile file) {
+    static void putCurrentPsiModificationStamp(Editor editor, PsiFile file) {
         editor.putUserData(PSI_MODIFICATION_STAMP, getCurrentModificationStamp(file));
     }
 }

@@ -37,8 +37,7 @@ import consulo.ui.image.Image;
 import consulo.ui.layout.TabbedLayout;
 import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -100,7 +99,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         }
     }
 
-    @Nonnull
+    
     @Override
     public Component getUIComponent() {
         return myTabbedLayout;
@@ -152,7 +151,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     protected void trimToSize(int limit, @Nullable VirtualFile fileToIgnore, boolean transferFocus) {
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorManagerImpl getManager() {
         return myManager;
@@ -173,7 +172,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorWindow[] findSiblings() {
         return new FileEditorWindow[0];
@@ -189,13 +188,13 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         return entry.getKey();
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorsSplittersBase<UnifiedFileEditorWindow> getOwner() {
         return myOwner;
     }
 
-    @Nonnull
+    
     @Override
     public FileEditorTabbedContainer getContainer() {
         return new FileEditorTabbedContainer() {
@@ -204,7 +203,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 return ActionCallback.REJECTED;
             }
 
-            @Nonnull
+            
             @Override
             public ActionCallback setSelectedIndex(int indexToSelect, boolean focusEditor) {
                 return ActionCallback.REJECTED;
@@ -220,7 +219,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
                 return 0;
             }
 
-            @Nonnull
+            
             @Override
             public ActionCallback removeTabAt(int componentIndex, int indexToSelect, boolean transferFocus) {
                 return ActionCallback.REJECTED;
@@ -248,7 +247,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
     }
 
     @Override
-    public void closeFile(@Nonnull VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
+    public void closeFile(VirtualFile file, boolean disposeIfNeeded, boolean transferFocus) {
         FileEditorManagerImpl editorManager = getManager();
         editorManager.runChange(
             splitters -> {

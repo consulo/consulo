@@ -24,7 +24,7 @@ import consulo.disposer.Disposer;
 import consulo.util.collection.MultiValuesMap;
 import consulo.compiler.artifact.element.PackagingElement;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;

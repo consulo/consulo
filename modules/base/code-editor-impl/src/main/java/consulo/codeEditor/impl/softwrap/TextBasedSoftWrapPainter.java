@@ -23,7 +23,6 @@ import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.EnumMap;
@@ -69,7 +68,7 @@ public class TextBasedSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int paint(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int paint(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     FontInfo fontInfo = myFonts.get(drawingType);
     if (fontInfo != null) {
       char[] buffer = mySymbols.get(drawingType);
@@ -80,12 +79,12 @@ public class TextBasedSoftWrapPainter implements SoftWrapPainter {
   }
 
   @Override
-  public int getDrawingHorizontalOffset(@Nonnull Graphics g, @Nonnull SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
+  public int getDrawingHorizontalOffset(Graphics g, SoftWrapDrawingType drawingType, int x, int y, int lineHeight) {
     return getMinDrawingWidth(drawingType);
   }
 
   @Override
-  public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
+  public int getMinDrawingWidth(SoftWrapDrawingType drawingType) {
     return myWidths[drawingType.ordinal()];
   }
 

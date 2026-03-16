@@ -18,7 +18,6 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.TreeExpander;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.function.Supplier;
 
@@ -28,11 +27,11 @@ import java.util.function.Supplier;
 public class DefaultTreeExpander implements TreeExpander {
   private final Supplier<? extends JTree> myTreeSupplier;
 
-  public DefaultTreeExpander(@Nonnull JTree tree) {
+  public DefaultTreeExpander(JTree tree) {
     this(() -> tree);
   }
 
-  public DefaultTreeExpander(@Nonnull Supplier<? extends JTree> treeSupplier) {
+  public DefaultTreeExpander(Supplier<? extends JTree> treeSupplier) {
     myTreeSupplier = treeSupplier;
   }
 

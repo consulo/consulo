@@ -16,7 +16,7 @@
 package consulo.versionControlSystem.impl.internal.change.ui.awt;
 
 import consulo.versionControlSystem.impl.internal.change.ui.StaticFilePath;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ChangesGroupingPolicy {
   @Nullable

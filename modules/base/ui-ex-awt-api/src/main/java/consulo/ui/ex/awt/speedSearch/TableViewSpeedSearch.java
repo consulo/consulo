@@ -18,8 +18,7 @@ package consulo.ui.ex.awt.speedSearch;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
@@ -27,12 +26,12 @@ import java.util.function.Function;
  * @author Gregory.Shrago
  */
 public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableView<Item>> {
-  @Nonnull
-  public static <E> TableViewSpeedSearch<E> register(@Nonnull TableView<E> component, @Nonnull Function<E, String> getItemTextFunc) {
+  
+  public static <E> TableViewSpeedSearch<E> register(TableView<E> component, Function<E, String> getItemTextFunc) {
     return new TableViewSpeedSearch<>(component) {
       @Nullable
       @Override
-      protected String getItemText(@Nonnull E element) {
+      protected String getItemText(E element) {
         return getItemTextFunc.apply(element);
       }
     };
@@ -53,7 +52,7 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
     return myComponent.convertRowIndexToModel(viewIndex);
   }
 
-  @Nonnull
+  
   @Override
   protected Object[] getAllElements() {
     return getComponent().getItems().toArray();
@@ -67,7 +66,7 @@ public abstract class TableViewSpeedSearch<Item> extends SpeedSearchBase<TableVi
   }
 
   @Nullable
-  protected abstract String getItemText(@Nonnull Item element);
+  protected abstract String getItemText(Item element);
 
   @Override
   protected void selectElement(Object element, String selectedText) {

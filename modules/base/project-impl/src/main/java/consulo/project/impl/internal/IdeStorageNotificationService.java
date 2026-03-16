@@ -32,8 +32,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -49,22 +48,22 @@ import java.util.Set;
 public class IdeStorageNotificationService implements StorageNotificationService {
     private static final Logger LOG = Logger.getInstance(IdeStorageNotificationService.class);
 
-    @Nonnull
+    
     private final Application myApplication;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
 
     @Inject
-    public IdeStorageNotificationService(@Nonnull Application application, @Nonnull NotificationService notificationService) {
+    public IdeStorageNotificationService(Application application, NotificationService notificationService) {
         myApplication = application;
         myNotificationService = notificationService;
     }
 
     @Override
     public void notify(
-        @Nonnull NotificationType notificationType,
-        @Nonnull String title,
-        @Nonnull String text,
+        NotificationType notificationType,
+        String title,
+        String text,
         @Nullable ComponentManager project
     ) {
         myNotificationService
@@ -76,8 +75,8 @@ public class IdeStorageNotificationService implements StorageNotificationService
 
     @Override
     public void notifyUnknownMacros(
-        @Nonnull TrackingPathMacroSubstitutor substitutor,
-        @Nonnull ComponentManager project,
+        TrackingPathMacroSubstitutor substitutor,
+        ComponentManager project,
         @Nullable String componentName
     ) {
         Set<String> unknownMacros = substitutor.getUnknownMacros(componentName);

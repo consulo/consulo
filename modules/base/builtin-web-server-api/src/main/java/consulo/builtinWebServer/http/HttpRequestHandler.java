@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.builtinWebServer.http.util.HttpRequestUtil;
 import consulo.http.HttpMethod;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -53,6 +52,6 @@ public abstract class HttpRequestHandler {
         return host != null && HttpRequestUtil.isLocalOrigin(request) && HttpRequestUtil.parseAndCheckIsLocalHost("http://" + host);
     }
 
-    @Nonnull
-    public abstract HttpResponse process(@Nonnull HttpRequest request) throws IOException;
+    
+    public abstract HttpResponse process(HttpRequest request) throws IOException;
 }

@@ -25,14 +25,13 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class XValuePresentationUtil {
-    public static void renderValue(@Nonnull String value, @Nonnull ColoredTextContainer text, @Nonnull SimpleTextAttributes attributes, int maxLength,
+    public static void renderValue(String value, ColoredTextContainer text, SimpleTextAttributes attributes, int maxLength,
                                    @Nullable String additionalCharsToEscape) {
         SimpleTextAttributes escapeAttributes = null;
         int lastOffset = 0;
@@ -87,14 +86,14 @@ public class XValuePresentationUtil {
         }
     }
 
-    public static void appendSeparator(@Nonnull ColoredTextContainer text, @Nonnull String separator) {
+    public static void appendSeparator(ColoredTextContainer text, String separator) {
         if (!separator.isEmpty()) {
             text.append(separator, SimpleTextAttributes.REGULAR_ATTRIBUTES);
         }
     }
 
-    @Nonnull
-    public static String computeValueText(@Nonnull XValuePresentation presentation) {
+    
+    public static String computeValueText(XValuePresentation presentation) {
         XValuePresentationTextExtractor extractor = new XValuePresentationTextExtractor();
         presentation.renderValue(extractor);
         return extractor.getText();
@@ -108,34 +107,34 @@ public class XValuePresentationUtil {
         }
 
         @Override
-        public void renderValue(@Nonnull String value) {
+        public void renderValue(String value) {
             myBuilder.append(value);
         }
 
         @Override
-        protected void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
+        protected void renderRawValue(String value, TextAttributesKey key) {
             myBuilder.append(value);
         }
 
         @Override
-        public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
+        public void renderStringValue(String value, @Nullable String additionalSpecialCharsToHighlight, char quoteChar, int maxLength) {
             myBuilder.append(quoteChar);
             myBuilder.append(value);
             myBuilder.append(quoteChar);
         }
 
         @Override
-        public void renderComment(@Nonnull String comment) {
+        public void renderComment(String comment) {
             myBuilder.append(comment);
         }
 
         @Override
-        public void renderError(@Nonnull LocalizeValue errorValue) {
+        public void renderError(LocalizeValue errorValue) {
             myBuilder.append(errorValue.get());
         }
 
         @Override
-        public void renderSpecialSymbol(@Nonnull String symbol) {
+        public void renderSpecialSymbol(String symbol) {
             myBuilder.append(symbol);
         }
 

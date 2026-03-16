@@ -22,8 +22,7 @@ import consulo.component.persist.Storage;
 import consulo.project.ui.view.internal.ProjectViewSharedSettings;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.LinkedHashMap;
@@ -54,13 +53,13 @@ public class ProjectViewSharedSettingsImpl implements PersistentStateComponent<P
     private LinkedHashMap<String, Object> myProperties = new LinkedHashMap<>();
 
     @Override
-    @Nonnull
+    
     public ProjectViewSharedSettingsImpl getState() {
         return this;
     }
 
     @Override
-    public void loadState(@Nonnull ProjectViewSharedSettingsImpl state) {
+    public void loadState(ProjectViewSharedSettingsImpl state) {
         XmlSerializerUtil.copyBean(state, this);
     }
 
@@ -75,7 +74,7 @@ public class ProjectViewSharedSettingsImpl implements PersistentStateComponent<P
     }
 
     @Override
-    public <T> void setViewOption(@Nonnull KeyWithDefaultValue<T> key, @Nullable T value) {
+    public <T> void setViewOption(KeyWithDefaultValue<T> key, @Nullable T value) {
         if (value == null || Objects.equals(value, key.getDefaultValue())) {
             myProperties.remove(key.toString());
         } else {
@@ -83,10 +82,10 @@ public class ProjectViewSharedSettingsImpl implements PersistentStateComponent<P
         }
     }
 
-    @Nonnull
+    
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
+    public <T> T getViewOption(KeyWithDefaultValue<T> option) {
         Object o = myProperties.get(option.toString());
         if (o != null) {
             return (T) o;

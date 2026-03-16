@@ -32,8 +32,7 @@ import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.HighlightInfoFactory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -45,25 +44,25 @@ import java.util.function.Predicate;
  */
 public interface HighlightInfo extends Segment {
     public interface FixBuilderBase<THIS extends FixBuilderBase<THIS>> {
-        @Nonnull
-        THIS options(@Nonnull List<IntentionAction> options);
+        
+        THIS options(List<IntentionAction> options);
 
-        @Nonnull
-        THIS displayName(@Nonnull LocalizeValue displayName);
+        
+        THIS displayName(LocalizeValue displayName);
 
-        @Nonnull
-        THIS fixRange(@Nonnull TextRange fixRange);
+        
+        THIS fixRange(TextRange fixRange);
 
-        @Nonnull
+        
         @SuppressWarnings("unchecked")
         default THIS optionalFixRange(@Nullable TextRange fixRange) {
             return fixRange == null ? (THIS) this : fixRange(fixRange);
         }
 
-        @Nonnull
-        THIS key(@Nonnull HighlightDisplayKey key);
+        
+        THIS key(HighlightDisplayKey key);
 
-        @Nonnull
+        
         @SuppressWarnings("unchecked")
         default THIS optionalKey(@Nullable HighlightDisplayKey key) {
             return key == null ? (THIS) this : key(key);
@@ -76,103 +75,103 @@ public interface HighlightInfo extends Segment {
 
     public interface Builder {
         public interface FixBuilder extends FixBuilderBase<FixBuilder> {
-            @Nonnull
+            
             Builder register();
         }
 
         // only one 'range' call allowed
-        @Nonnull
-        default Builder range(@Nonnull TextRange textRange) {
+        
+        default Builder range(TextRange textRange) {
             return range(textRange.getStartOffset(), textRange.getEndOffset());
         }
 
-        @Nonnull
+        
         @RequiredReadAction
-        default Builder range(@Nonnull ASTNode node) {
+        default Builder range(ASTNode node) {
             return range(node.getPsi());
         }
 
-        @Nonnull
+        
         @RequiredReadAction
-        Builder range(@Nonnull PsiElement element);
+        Builder range(PsiElement element);
 
-        @Nonnull
+        
         @RequiredReadAction
-        default HighlightInfo.Builder range(@Nonnull PsiElement element, @Nonnull TextRange rangeInElement) {
+        default HighlightInfo.Builder range(PsiElement element, TextRange rangeInElement) {
             TextRange absoluteRange = rangeInElement.shiftRight(element.getTextRange().getStartOffset());
             return range(element, absoluteRange.getStartOffset(), absoluteRange.getEndOffset());
         }
 
-        @Nonnull
-        Builder range(@Nonnull PsiElement element, int start, int end);
+        
+        Builder range(PsiElement element, int start, int end);
 
-        @Nonnull
+        
         Builder range(int start, int end);
 
-        @Nonnull
-        Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer);
+        
+        Builder gutterIconRenderer(GutterIconRenderer gutterIconRenderer);
 
-        @Nonnull
-        Builder problemGroup(@Nonnull ProblemGroup problemGroup);
+        
+        Builder problemGroup(ProblemGroup problemGroup);
 
-        @Nonnull
-        Builder inspectionToolId(@Nonnull String inspectionTool);
+        
+        Builder inspectionToolId(String inspectionTool);
 
-        @Nonnull
-        Builder description(@Nonnull LocalizeValue description);
+        
+        Builder description(LocalizeValue description);
 
-        @Nonnull
+        
         @SuppressWarnings("deprecation")
-        default Builder descriptionAndTooltip(@Nonnull LocalizeValue description) {
+        default Builder descriptionAndTooltip(LocalizeValue description) {
             return description(description).unescapedToolTip(description);
         }
 
         // only one allowed
-        @Nonnull
-        Builder textAttributes(@Nonnull TextAttributes attributes);
+        
+        Builder textAttributes(TextAttributes attributes);
 
-        @Nonnull
-        Builder textAttributes(@Nonnull TextAttributesKey attributesKey);
+        
+        Builder textAttributes(TextAttributesKey attributesKey);
 
-        @Nonnull
-        Builder unescapedToolTip(@Nonnull LocalizeValue unescapedToolTip);
+        
+        Builder unescapedToolTip(LocalizeValue unescapedToolTip);
 
-        @Nonnull
-        Builder escapedToolTip(@Nonnull LocalizeValue escapedToolTip);
+        
+        Builder escapedToolTip(LocalizeValue escapedToolTip);
 
-        @Nonnull
+        
         Builder endOfLine();
 
-        @Nonnull
+        
         Builder needsUpdateOnTyping(boolean update);
 
-        @Nonnull
-        Builder severity(@Nonnull HighlightSeverity severity);
+        
+        Builder severity(HighlightSeverity severity);
 
-        @Nonnull
+        
         Builder fileLevelAnnotation();
 
-        @Nonnull
+        
         Builder navigationShift(int navigationShift);
 
-        @Nonnull
+        
         Builder group(int group);
 
-        @Nonnull
-        FixBuilder newFix(@Nonnull IntentionAction action);
+        
+        FixBuilder newFix(IntentionAction action);
 
-        @Nonnull
-        default Builder registerFix(@Nonnull IntentionAction action) {
+        
+        default Builder registerFix(IntentionAction action) {
             return registerFix(action, null, LocalizeValue.empty(), null, null);
         }
 
         @Deprecated
         @DeprecationInfo("Use HighlightInfo.Builder.newFix()...register()")
-        @Nonnull
+        
         Builder registerFix(
-            @Nonnull IntentionAction action,
+            IntentionAction action,
             @Nullable List<IntentionAction> options,
-            @Nonnull LocalizeValue displayName,
+            LocalizeValue displayName,
             @Nullable TextRange fixRange,
             @Nullable HighlightDisplayKey key
         );
@@ -183,55 +182,55 @@ public interface HighlightInfo extends Segment {
         @Nullable
         HighlightInfo create();
 
-        @Nonnull
+        
         HighlightInfo createUnconditionally();
 
         // region deprecated stuff
 
-        @Nonnull
+        
         @Deprecated
         @DeprecationInfo("Use #description(LocalizeValue)")
-        default Builder description(@Nonnull String description) {
+        default Builder description(String description) {
             return description(LocalizeValue.of(description));
         }
 
-        @Nonnull
+        
         @Deprecated
         @DeprecationInfo("Use #descriptionAndTooltip(LocalizeValue)")
         @SuppressWarnings("deprecation")
-        default HighlightInfo.Builder descriptionAndTooltip(@Nonnull String description) {
+        default HighlightInfo.Builder descriptionAndTooltip(String description) {
             return descriptionAndTooltip(LocalizeValue.of(description));
         }
 
         // only one allowed
-        @Nonnull
+        
         @Deprecated
         @DeprecationInfo("Use #unescapedToolTip(LocalizeValue)")
-        default Builder unescapedToolTip(@Nonnull String unescapedToolTip) {
+        default Builder unescapedToolTip(String unescapedToolTip) {
             return unescapedToolTip(LocalizeValue.of(unescapedToolTip));
         }
 
-        @Nonnull
+        
         @Deprecated
         @DeprecationInfo("use #escapedToolTip(LocalizeValue)")
-        default Builder escapedToolTip(@Nonnull String escapedToolTip) {
+        default Builder escapedToolTip(String escapedToolTip) {
             return escapedToolTip(LocalizeValue.of(escapedToolTip));
         }
 
         // endregion
     }
 
-    @Nonnull
-    static Builder newHighlightInfo(@Nonnull HighlightInfoType type) {
+    
+    static Builder newHighlightInfo(HighlightInfoType type) {
         return HighlightInfoFactory.getInstance().createBuilder(type);
     }
 
     @Nullable
-    static HighlightInfo fromRangeHighlighter(@Nonnull RangeHighlighter highlighter) {
+    static HighlightInfo fromRangeHighlighter(RangeHighlighter highlighter) {
         return highlighter.getErrorStripeTooltip() instanceof HighlightInfo highlightInfo ? highlightInfo : null;
     }
 
-    @Nonnull
+    
     HighlightSeverity getSeverity();
 
     @Nullable
@@ -241,7 +240,7 @@ public interface HighlightInfo extends Segment {
 
     int getActualEndOffset();
 
-    @Nonnull
+    
     LocalizeValue getDescription();
 
     HighlightInfoType getType();
@@ -249,7 +248,7 @@ public interface HighlightInfo extends Segment {
     @Nullable
     PsiElement getPsiElement();
 
-    @Nonnull
+    
     LocalizeValue getToolTip();
 
     @Nullable
@@ -260,8 +259,8 @@ public interface HighlightInfo extends Segment {
 
     @Deprecated
     @DeprecationInfo("Use HighlightInfo.Builder.newFix()...register()")
-    @Nonnull
-    FixBuilder newFix(@Nonnull IntentionAction action);
+    
+    FixBuilder newFix(IntentionAction action);
 
     @Deprecated
     @DeprecationInfo("Use HighlightInfo.Builder.registerFix() or HighlightInfo.Builder.newFix()...register()")
@@ -275,14 +274,14 @@ public interface HighlightInfo extends Segment {
     void registerFix(
         @Nullable IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nonnull LocalizeValue displayName,
+        LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     );
 
     boolean isFileLevelAnnotation();
 
-    void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition);
+    void unregisterQuickFix(Predicate<? super IntentionAction> condition);
 
-    void forEachQuickFix(@Nonnull BiConsumer<IntentionAction, TextRange> consumer);
+    void forEachQuickFix(BiConsumer<IntentionAction, TextRange> consumer);
 }

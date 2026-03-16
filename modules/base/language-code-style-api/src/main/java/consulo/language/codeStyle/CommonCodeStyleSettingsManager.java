@@ -28,8 +28,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Content;
 import org.jdom.Element;
 
@@ -47,7 +46,7 @@ class CommonCodeStyleSettingsManager {
     private volatile Map<Language, CommonCodeStyleSettings> myCommonSettingsMap;
     private volatile Map<String, Content> myUnknownSettingsMap;
 
-    @Nonnull
+    
     private final CodeStyleSettings myParentSettings;
 
     static final String COMMON_SETTINGS_TAG = "codeStyleSettings";
@@ -63,7 +62,7 @@ class CommonCodeStyleSettingsManager {
         }
     }
 
-    CommonCodeStyleSettingsManager(@Nonnull CodeStyleSettings parentSettings) {
+    CommonCodeStyleSettingsManager(CodeStyleSettings parentSettings) {
         myParentSettings = parentSettings;
     }
 
@@ -85,7 +84,7 @@ class CommonCodeStyleSettingsManager {
         return DefaultsHolder.SETTINGS;
     }
 
-    @Nonnull
+    
     private Map<Language, CommonCodeStyleSettings> getCommonSettingsMap() {
         Map<Language, CommonCodeStyleSettings> commonSettingsMap = myCommonSettingsMap;
         if (commonSettingsMap == null) {
@@ -108,8 +107,8 @@ class CommonCodeStyleSettingsManager {
      * @param languageId The id of the language whose settings must be returned.
      * @return Common code style settings for the given language or a new instance with default values if not found.
      */
-    @Nonnull
-    public CommonCodeStyleSettings getCommonSettings(@Nonnull String languageId) {
+    
+    public CommonCodeStyleSettings getCommonSettings(String languageId) {
         Map<Language, CommonCodeStyleSettings> map = getCommonSettingsMap();
         for (Map.Entry<Language, CommonCodeStyleSettings> entry : map.entrySet()) {
             if (languageId.equals(entry.getKey().getID())) {
@@ -131,7 +130,7 @@ class CommonCodeStyleSettingsManager {
         });
     }
 
-    private void init(@Nonnull CommonCodeStyleSettings initialSettings, @Nonnull Language target) {
+    private void init(CommonCodeStyleSettings initialSettings, Language target) {
         initialSettings.setRootSettings(myParentSettings);
         registerCommonSettings(target, initialSettings);
     }
@@ -143,7 +142,7 @@ class CommonCodeStyleSettingsManager {
         return map;
     }
 
-    private void registerCommonSettings(@Nonnull Language lang, @Nonnull CommonCodeStyleSettings settings) {
+    private void registerCommonSettings(Language lang, CommonCodeStyleSettings settings) {
         synchronized (this) {
             if (!myCommonSettingsMap.containsKey(lang)) {
                 myCommonSettingsMap.put(lang, settings);
@@ -152,8 +151,8 @@ class CommonCodeStyleSettingsManager {
         }
     }
 
-    @Nonnull
-    public CommonCodeStyleSettingsManager clone(@Nonnull CodeStyleSettings parentSettings) {
+    
+    public CommonCodeStyleSettingsManager clone(CodeStyleSettings parentSettings) {
         synchronized (this) {
             CommonCodeStyleSettingsManager settingsManager = new CommonCodeStyleSettingsManager(parentSettings);
             if (myCommonSettingsMap != null && !myCommonSettingsMap.isEmpty()) {
@@ -169,7 +168,7 @@ class CommonCodeStyleSettingsManager {
         }
     }
 
-    public void readExternal(@Nonnull Element element) throws InvalidDataException {
+    public void readExternal(Element element) throws InvalidDataException {
         synchronized (this) {
             initCommonSettingsMap();
             for (Element commonSettingsElement : element.getChildren(COMMON_SETTINGS_TAG)) {
@@ -221,7 +220,7 @@ class CommonCodeStyleSettingsManager {
         }
     }
 
-    public void writeExternal(@Nonnull Element element) throws WriteExternalException {
+    public void writeExternal(Element element) throws WriteExternalException {
         synchronized (this) {
             if (myCommonSettingsMap == null) {
                 return;

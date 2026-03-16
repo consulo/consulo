@@ -21,12 +21,11 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface VirtualFileTracker {
-  void addTracker(@Nonnull String fileUrl, @Nonnull VirtualFileListener listener, boolean fromRefreshOnly, @Nonnull Disposable parentDisposable);
+  void addTracker(String fileUrl, VirtualFileListener listener, boolean fromRefreshOnly, Disposable parentDisposable);
 }

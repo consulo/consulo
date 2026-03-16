@@ -47,8 +47,7 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -62,15 +61,15 @@ import java.util.*;
 import static java.util.stream.Collectors.toList;
 
 public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBase<Object> {
-    @Nonnull
+    
     private final ChangeListChooser myChangeListChooser;
-    @Nonnull
+    
     final ChangeListListener myChangeListListener = new MyChangeListListener();
-    @Nonnull
+    
     private final EventDispatcher<InternalSelectedListChangeListener> myDispatcher = EventDispatcher.create(InternalSelectedListChangeListener.class);
     @Nullable
     private final Runnable myRebuildListListener;
-    @Nonnull
+    
     private final VcsConfiguration myVcsConfiguration;
     private final boolean myUnversionedFilesEnabled;
     private Collection<Change> myAllChanges;
@@ -79,9 +78,9 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     // todo terrible constructor
     public InternalMultipleChangeListBrowser(
-        @Nonnull Project project,
-        @Nonnull List<? extends ChangeList> changeLists,
-        @Nonnull List<Object> changes,
+        Project project,
+        List<? extends ChangeList> changeLists,
+        List<Object> changes,
         @Nullable ChangeList initialListSelection,
         boolean capableOfExcludingChanges,
         boolean highlightProblems,
@@ -167,8 +166,8 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     @Override
     protected void setInitialSelection(
-        @Nonnull List<? extends ChangeList> changeLists,
-        @Nonnull List<Object> changes,
+        List<? extends ChangeList> changeLists,
+        List<Object> changes,
         @Nullable ChangeList initialListSelection
     ) {
         myAllChanges = new ArrayList<>();
@@ -193,7 +192,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         ChangeListManager.getInstance(myProject).removeChangeListListener(myChangeListListener);
     }
 
-    public void addSelectedListChangeListener(@Nonnull InternalSelectedListChangeListener listener) {
+    public void addSelectedListChangeListener(InternalSelectedListChangeListener listener) {
         myDispatcher.addListener(listener);
     }
 
@@ -223,7 +222,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         }
     }
 
-    @Nonnull
+    
     private Collection<Change> getLocalChanges() {
         Collection<Change> result = new ArrayList<>();
         ChangeListManager manager = ChangeListManager.getInstance(myProject);
@@ -238,17 +237,17 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     }
 
     @Override
-    @Nonnull
+    
     public List<Change> getCurrentIncludedChanges() {
         Collection<Object> includedObjects = myViewer.getIncludedChanges();
 
         return mySelectedChangeList.getChanges().stream().filter(includedObjects::contains).collect(toList());
     }
 
-    @Nonnull
+    
     @Override
     protected DefaultTreeModel buildTreeModel(
-        @Nonnull List<Object> objects,
+        List<Object> objects,
         @Nullable ChangeNodeDecorator changeNodeDecorator,
         boolean showFlatten
     ) {
@@ -263,9 +262,9 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return builder.build();
     }
 
-    @Nonnull
+    
     @Override
-    protected List<Object> getSelectedObjects(@Nonnull ChangesBrowserNode<Object> node) {
+    protected List<Object> getSelectedObjects(ChangesBrowserNode<Object> node) {
         List<Object> result = new ArrayList<>();
 
         result.addAll(node.getAllChangesUnder());
@@ -278,7 +277,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     @Nullable
     @Override
-    protected Object getLeadSelectedObject(@Nonnull ChangesBrowserNode node) {
+    protected Object getLeadSelectedObject(ChangesBrowserNode node) {
         Object result = null;
         Object userObject = node.getUserObject();
 
@@ -289,14 +288,14 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public List<Object> getCurrentDisplayedObjects() {
         //noinspection unchecked
         return (List) getCurrentDisplayedChanges();
     }
 
-    @Nonnull
+    
     @Override
     public List<VirtualFile> getIncludedUnversionedFiles() {
         return isShowUnversioned()
@@ -330,7 +329,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         );
     }
 
-    @Nonnull
+    
     @Override
     public List<Change> getSelectedChanges() {
         Set<Change> changes = new LinkedHashSet<>();
@@ -346,20 +345,20 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         return ContainerUtil.newArrayList(changes);
     }
 
-    @Nonnull
+    
     @Override
     public List<Change> getAllChanges() {
         return myViewer.getRoot().getAllChangesUnder();
     }
 
     @Override
-    @Nonnull
+    
     public Set<AbstractVcs> getAffectedVcses() {
         return ChangesUtil.getAffectedVcses(myAllChanges, myProject);
     }
 
     @Override
-    protected void buildToolBar(@Nonnull DefaultActionGroup toolBarGroup) {
+    protected void buildToolBar(DefaultActionGroup toolBarGroup) {
         super.buildToolBar(toolBarGroup);
 
         toolBarGroup.add(new AnAction(
@@ -369,7 +368,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 rebuildList();
             }
         });
@@ -420,7 +419,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
     }
 
     @Nullable
-    private static ChangeList findDefaultList(@Nonnull List<? extends ChangeList> lists) {
+    private static ChangeList findDefaultList(List<? extends ChangeList> lists) {
         return ContainerUtil.find(
             lists,
             list -> list instanceof LocalChangeList localChangeList && localChangeList.isDefault()
@@ -429,7 +428,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     private class ChangeListChooser extends JPanel {
         private final static int MAX_LEN = 35;
-        @Nonnull
+        
         private final ComboBox myChooser;
 
         public ChangeListChooser() {
@@ -438,7 +437,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
             myChooser.setRenderer(new ColoredListCellRenderer<LocalChangeList>() {
                 @Override
                 protected void customizeCellRenderer(
-                    @Nonnull JList<? extends LocalChangeList> list,
+                    JList<? extends LocalChangeList> list,
                     LocalChangeList value,
                     int index,
                     boolean selected,
@@ -471,7 +470,7 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
             add(TargetAWT.to(label), BorderLayout.WEST);
         }
 
-        public void updateLists(@Nonnull List<? extends ChangeList> lists) {
+        public void updateLists(List<? extends ChangeList> lists) {
             //noinspection unchecked
             myChooser.setModel(new DefaultComboBoxModel(lists.toArray()));
             myChooser.setEnabled(lists.size() > 1);
@@ -501,20 +500,20 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
 
             e.getPresentation().setEnabledAndVisible(e.isFromActionToolbar());
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT;
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myVcsConfiguration.SHOW_UNVERSIONED_FILES_WHILE_COMMIT = state;
             rebuildList();
         }
@@ -522,13 +521,13 @@ public class InternalMultipleChangeListBrowser extends InternalChangesBrowserBas
 
     private class MoveAction extends MoveChangesToAnotherListAction {
         @Override
-        protected boolean isEnabled(@Nonnull AnActionEvent e) {
+        protected boolean isEnabled(AnActionEvent e) {
             return e.hasData(VcsDataKeys.CURRENT_CHANGE) && super.isEnabled(e);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Change change = e.getRequiredData(VcsDataKeys.CURRENT_CHANGE);
             askAndMove(myProject, Collections.singletonList(change), Collections.<VirtualFile>emptyList());
         }

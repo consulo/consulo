@@ -10,8 +10,7 @@ import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -23,12 +22,12 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   private final boolean myNodeWrapper;
   public static final Object TREE_WRAPPER_VALUE = ObjectUtil.sentinel("TreeNode.TREE_WRAPPER_VALUE");
 
-  protected TreeNode(@Nonnull T value) {
+  protected TreeNode(T value) {
     super(null);
     myNodeWrapper = setInternalValue(value);
   }
 
-  @Nonnull
+ 
   public abstract Collection<? extends TreeNode> getChildren();
 
   protected boolean hasProblemFileBeneath() {
@@ -48,11 +47,11 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   }
 
   @Override
-  protected void postprocess(@Nonnull PresentationData presentation) {
+  protected void postprocess(PresentationData presentation) {
     setForcedForeground(presentation);
   }
 
-  protected void setForcedForeground(@Nonnull PresentationData presentation) {
+  protected void setForcedForeground(PresentationData presentation) {
   }
 
   @Override
@@ -60,7 +59,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
     return getEqualityObject() != null;
   }
 
-  @Nonnull
+ 
   @Override
   public LeafState getLeafState() {
     if (isAlwaysShowPlus()) return LeafState.NEVER;
@@ -138,7 +137,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
    * @param value a new value to set
    * @return {@code true} if the specified value is {@code null} and the anchor is not changed
    */
-  private boolean setInternalValue(@Nonnull T value) {
+  private boolean setInternalValue(T value) {
     if (value == TREE_WRAPPER_VALUE) return true;
     myValue = TreeAnchorizer.getService().createAnchorValue(value);
     return false;
@@ -150,7 +149,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
 
   @Nullable
   @TestOnly
-  public String toTestString(@Nullable Queryable.PrintInfo printInfo) {
+  public String toTestString(Queryable.@Nullable PrintInfo printInfo) {
     if (getValue() instanceof Queryable) {
       String text = Queryable.Util.print((Queryable)getValue(), printInfo, this);
       if (text != null) return text;
@@ -160,7 +159,7 @@ public abstract class TreeNode<T> extends PresentableNodeDescriptor<TreeNode<T>>
   }
 
   @Override
-  public void apply(@Nonnull Map<String, String> info) {
+  public void apply(Map<String, String> info) {
   }
 
   /**

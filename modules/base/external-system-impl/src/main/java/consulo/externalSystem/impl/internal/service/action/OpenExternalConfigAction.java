@@ -21,8 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Denis Zhdanov
@@ -35,7 +34,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ProjectSystemId externalSystemId = e.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId != null) {
             LocalizeValue displayName = externalSystemId.getDisplayName();
@@ -56,7 +55,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -72,7 +71,7 @@ public class OpenExternalConfigAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    private static VirtualFile getExternalConfig(@Nonnull DataContext context) {
+    private static VirtualFile getExternalConfig(DataContext context) {
         ProjectSystemId externalSystemId = context.getData(ExternalSystemDataKeys.EXTERNAL_SYSTEM_ID);
         if (externalSystemId == null) {
             return null;

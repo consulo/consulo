@@ -28,7 +28,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Print")
 public class PrintAction extends AnAction implements DumbAware {
@@ -38,7 +37,7 @@ public class PrintAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredReadAction
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -47,7 +46,7 @@ public class PrintAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         VirtualFile file = ReadAction.compute(() -> e.getData(VirtualFile.KEY));
         if (file != null && file.isDirectory()) {

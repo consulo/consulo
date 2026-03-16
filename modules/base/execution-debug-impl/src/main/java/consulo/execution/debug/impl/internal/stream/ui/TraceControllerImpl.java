@@ -9,8 +9,7 @@ import consulo.execution.debug.stream.ui.TraceContainer;
 import consulo.execution.debug.stream.ui.TraceController;
 import consulo.execution.debug.stream.ui.ValuesSelectionListener;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +29,7 @@ public class TraceControllerImpl implements TraceController, Disposable {
     private TraceController myPrevListener = null;
     private TraceController myNextListener = null;
 
-    TraceControllerImpl(@Nonnull IntermediateState state) {
+    TraceControllerImpl(IntermediateState state) {
         myState = state;
         myToPrev = state instanceof PrevAwareState ? (PrevAwareState) state : null;
         myToNext = state instanceof NextAwareState ? (NextAwareState) state : null;
@@ -47,11 +46,11 @@ public class TraceControllerImpl implements TraceController, Disposable {
     public void dispose() {
     }
 
-    void setPreviousController(@Nonnull TraceController listener) {
+    void setPreviousController(TraceController listener) {
         myPrevListener = listener;
     }
 
-    void setNextController(@Nonnull TraceController listener) {
+    void setNextController(TraceController listener) {
         myNextListener = listener;
     }
 
@@ -61,7 +60,7 @@ public class TraceControllerImpl implements TraceController, Disposable {
     }
 
     @Override
-    public @Nonnull List<TraceElement> getTrace() {
+    public List<TraceElement> getTrace() {
         return myState.getTrace();
     }
 
@@ -76,17 +75,17 @@ public class TraceControllerImpl implements TraceController, Disposable {
     }
 
     @Override
-    public @Nonnull List<TraceElement> getNextValues(@Nonnull TraceElement element) {
+    public List<TraceElement> getNextValues(TraceElement element) {
         return myToNext == null ? Collections.emptyList() : myToNext.getNextValues(element);
     }
 
     @Override
-    public @Nonnull List<TraceElement> getPrevValues(@Nonnull TraceElement element) {
+    public List<TraceElement> getPrevValues(TraceElement element) {
         return myToPrev == null ? Collections.emptyList() : myToPrev.getPrevValues(element);
     }
 
     @Override
-    public boolean isSelectionExists(@Nonnull PropagationDirection direction) {
+    public boolean isSelectionExists(PropagationDirection direction) {
         for (TraceContainer container : myTraceContainers) {
             if (container.highlightedExists()) {
                 return true;
@@ -99,19 +98,19 @@ public class TraceControllerImpl implements TraceController, Disposable {
     }
 
     @Override
-    public void register(@Nonnull TraceContainer listener) {
+    public void register(TraceContainer listener) {
         myTraceContainers.add(listener);
         listener.addSelectionListener(mySelectionListener);
         Disposer.register(this, listener);
     }
 
     @Override
-    public void highlightingChanged(@Nonnull List<TraceElement> values, @Nonnull PropagationDirection direction) {
+    public void highlightingChanged(List<TraceElement> values, PropagationDirection direction) {
         highlightAll(values);
         propagate(values, direction);
     }
 
-    private void propagate(@Nonnull List<TraceElement> values, @Nonnull PropagationDirection direction) {
+    private void propagate(List<TraceElement> values, PropagationDirection direction) {
         if (direction.equals(PropagationDirection.BACKWARD)) {
             propagateBackward(values);
         }
@@ -120,7 +119,7 @@ public class TraceControllerImpl implements TraceController, Disposable {
         }
     }
 
-    private void propagateForward(@Nonnull List<TraceElement> values) {
+    private void propagateForward(List<TraceElement> values) {
         if (myNextListener == null) {
             return;
         }
@@ -129,7 +128,7 @@ public class TraceControllerImpl implements TraceController, Disposable {
         myNextListener.highlightingChanged(nextValues, PropagationDirection.FORWARD);
     }
 
-    private void propagateBackward(@Nonnull List<TraceElement> values) {
+    private void propagateBackward(List<TraceElement> values) {
         if (myPrevListener == null) {
             return;
         }
@@ -138,13 +137,13 @@ public class TraceControllerImpl implements TraceController, Disposable {
         myPrevListener.highlightingChanged(prevValues, PropagationDirection.BACKWARD);
     }
 
-    private void highlightAll(@Nonnull List<TraceElement> values) {
+    private void highlightAll(List<TraceElement> values) {
         for (final TraceContainer listener : myTraceContainers) {
             listener.highlight(values);
         }
     }
 
-    private void selectAll(@Nonnull List<TraceElement> values) {
+    private void selectAll(List<TraceElement> values) {
         for (final TraceContainer listener : myTraceContainers) {
             listener.select(values);
         }

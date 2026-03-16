@@ -29,8 +29,7 @@ import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -43,27 +42,27 @@ import java.util.regex.PatternSyntaxException;
  */
 @ExtensionImpl
 public class ResourceCompilerConfigurable implements ProjectConfigurable, Configurable.NoScroll {
-  @Nonnull
+  
   private final Project myProject;
   private ResourceCompilerConfiguration myResourceCompilerConfiguration;
 
   private CollectionListModel<String> myModel;
 
   @Inject
-  public ResourceCompilerConfigurable(@Nonnull Project project) {
+  public ResourceCompilerConfigurable(Project project) {
     myProject = project;
     myResourceCompilerConfiguration = ResourceCompilerConfiguration.getInstance(project);
 
     myModel = new CollectionListModel<String>(myResourceCompilerConfiguration.getResourceFilePatterns());
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return CompilerLocalize.resourceCompilerDescription();
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "project.propCompiler.resourceCompiler";
@@ -124,7 +123,7 @@ public class ResourceCompilerConfigurable implements ProjectConfigurable, Config
         return true;
       }
 
-      @jakarta.annotation.Nullable
+      @Nullable
       @Override
       public String getErrorText(String inputString) {
         try {

@@ -18,7 +18,6 @@ package consulo.ui.web.internal;
 import consulo.ui.ToggleSwitch;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public class WebToggleSwitchImpl extends WebCheckBoxImpl implements ToggleSwitch
 
   @RequiredUIAccess
   @Override
-  public void setValue(@Nonnull Boolean value) {
+  public void setValue(Boolean value) {
     WebToggleSwitchImpl.this.setValue(value, true);
   }
 }

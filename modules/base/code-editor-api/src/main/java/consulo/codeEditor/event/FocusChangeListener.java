@@ -2,7 +2,6 @@
 package consulo.codeEditor.event;
 
 import consulo.codeEditor.Editor;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.FocusEvent;
 import java.util.EventListener;
@@ -11,16 +10,16 @@ import java.util.EventListener;
  * @author max
  */
 public interface FocusChangeListener extends EventListener {
-  void focusGained(@Nonnull Editor editor);
+  void focusGained(Editor editor);
 
-  default void focusLost(@Nonnull Editor editor) {
+  default void focusLost(Editor editor) {
   }
 
-  default void focusLost(@Nonnull Editor editor, @SuppressWarnings("unused") @Nonnull FocusEvent event) {
+  default void focusLost(Editor editor, @SuppressWarnings("unused") FocusEvent event) {
     focusLost(editor);
   }
 
-  default void focusGained(@Nonnull Editor editor, @SuppressWarnings("unused") @Nonnull FocusEvent event) {
+  default void focusGained(Editor editor, @SuppressWarnings("unused") FocusEvent event) {
     focusGained(editor);
   }
 }

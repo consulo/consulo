@@ -7,7 +7,6 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.language.psi.search.TodoItem;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public final class SmartTodoItemPointer {
   private final RangeMarker myRangeMarker;
   private final List<RangeMarker> myAdditionalRangeMarkers;
 
-  public SmartTodoItemPointer(@Nonnull TodoItem todoItem, @Nonnull Document document) {
+  public SmartTodoItemPointer(TodoItem todoItem, Document document) {
     myTodoItem = todoItem;
     myDocument = document;
     TextRange textRange = myTodoItem.getTextRange();
@@ -40,7 +39,7 @@ public final class SmartTodoItemPointer {
     return myRangeMarker;
   }
 
-  @Nonnull
+  
   public List<RangeMarker> getAdditionalRangeMarkers() {
     return myAdditionalRangeMarkers;
   }

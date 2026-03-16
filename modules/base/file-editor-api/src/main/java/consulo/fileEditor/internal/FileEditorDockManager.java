@@ -20,14 +20,13 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 15-Jul-24
  */
 public interface FileEditorDockManager {
-  @Nonnull
-  Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(@Nonnull VirtualFile file,
-                                                                     @Nonnull FileEditorManager fileEditorManager);
+  
+  Pair<FileEditor[], FileEditorProvider[]> createNewDockContainerFor(VirtualFile file,
+                                                                     FileEditorManager fileEditorManager);
 }

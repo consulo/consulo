@@ -21,12 +21,11 @@ import consulo.project.PluginAdvertiser;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class PluginAdvertiserActivity implements BackgroundStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         PluginAdvertiser advertiser = project.getInstance(PluginAdvertiser.class);
 
         advertiser.scheduleSuggestion();

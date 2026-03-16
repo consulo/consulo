@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ide.errorTreeView.actions;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.project.Project;
 import consulo.ui.ex.errorTreeView.ErrorTreeView;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Eugene Zhuravlev
@@ -29,7 +28,7 @@ public class TestNewErrorViewAction extends TestErrorViewAction{
     return new NewErrorTreeViewPanelImpl(project, null);
   }
 
-  @NonNls
+  
   protected String getContentName() {
     return "NewView";
   }

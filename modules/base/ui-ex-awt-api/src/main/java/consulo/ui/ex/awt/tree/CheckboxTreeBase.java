@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.TreeNode;
 
 public class CheckboxTreeBase extends CheckboxTreeNoPolicy {

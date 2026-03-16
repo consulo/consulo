@@ -19,8 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -67,7 +66,7 @@ public class FileReferenceUtil {
   }
 
   @Nullable
-  public static PsiFileReference findFileReference(@Nonnull PsiElement element) {
+  public static PsiFileReference findFileReference(PsiElement element) {
     PsiReference[] references = element.getReferences();
     for (int i = references.length - 1; i >= 0; i--) {
       PsiReference ref = references[i];

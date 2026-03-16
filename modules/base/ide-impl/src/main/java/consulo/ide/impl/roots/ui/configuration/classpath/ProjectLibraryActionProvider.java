@@ -31,8 +31,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -66,27 +65,27 @@ public class ProjectLibraryActionProvider implements AddModuleDependencyActionPr
     }
   }
 
-  @Nonnull
+  
   @Override
-  public LocalizeValue getActionName(@Nonnull ModuleRootLayer layer) {
+  public LocalizeValue getActionName(ModuleRootLayer layer) {
     return LocalizeValue.localizeTODO("Library");
   }
 
-  @Nonnull
+  
   @Override
-  public Image getIcon(@Nonnull ModuleRootLayer layer) {
+  public Image getIcon(ModuleRootLayer layer) {
     return AllIcons.Nodes.PpLib;
   }
 
   @Override
-  public ProjectLibraryContext createContext(@Nonnull ClasspathPanel classpathPanel, @Nonnull ModulesConfigurator modulesConfigurator, @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public ProjectLibraryContext createContext(ClasspathPanel classpathPanel, ModulesConfigurator modulesConfigurator, LibrariesConfigurator librariesConfigurator) {
     return new ProjectLibraryContext(classpathPanel, modulesConfigurator, librariesConfigurator);
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public AsyncResult<List<Library>> invoke(@Nonnull ProjectLibraryContext context) {
+  public AsyncResult<List<Library>> invoke(ProjectLibraryContext context) {
     return new ChooseLibrariesDialogImpl(context.getProject(), context.getLibrariesConfigurator(), context.getItems()).showAsync2();
   }
 }

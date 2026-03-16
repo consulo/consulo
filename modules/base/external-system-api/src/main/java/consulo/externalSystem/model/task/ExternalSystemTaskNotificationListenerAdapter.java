@@ -1,6 +1,5 @@
 package consulo.externalSystem.model.task;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -8,34 +7,34 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class ExternalSystemTaskNotificationListenerAdapter implements ExternalSystemTaskNotificationListener {
 
-  @Nonnull
+  
   public static final ExternalSystemTaskNotificationListener NULL_OBJECT = new ExternalSystemTaskNotificationListenerAdapter() { };
 
   @Override
-  public void onQueued(@Nonnull ExternalSystemTaskId id) {
+  public void onQueued(ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onStart(@Nonnull ExternalSystemTaskId id) {
+  public void onStart(ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onStatusChange(@Nonnull ExternalSystemTaskNotificationEvent event) {
+  public void onStatusChange(ExternalSystemTaskNotificationEvent event) {
   }
 
   @Override
-  public void onTaskOutput(@Nonnull ExternalSystemTaskId id, @Nonnull String text, boolean stdOut) {
+  public void onTaskOutput(ExternalSystemTaskId id, String text, boolean stdOut) {
   }
 
   @Override
-  public void onEnd(@Nonnull ExternalSystemTaskId id) {
+  public void onEnd(ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onSuccess(@Nonnull ExternalSystemTaskId id) {
+  public void onSuccess(ExternalSystemTaskId id) {
   }
 
   @Override
-  public void onFailure(@Nonnull ExternalSystemTaskId id, @Nonnull Exception e) {
+  public void onFailure(ExternalSystemTaskId id, Exception e) {
   }
 }

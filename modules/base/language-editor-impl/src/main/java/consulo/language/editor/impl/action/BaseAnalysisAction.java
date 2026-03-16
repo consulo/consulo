@@ -49,34 +49,30 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class BaseAnalysisAction extends AnAction {
-    @Nonnull
     private final LocalizeValue myTitle;
-    @Nonnull
     private final LocalizeValue myAnalysisNoon;
     private static final Logger LOG = Logger.getInstance(BaseAnalysisAction.class);
 
     protected BaseAnalysisAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue analysisNoon
+        LocalizeValue text,
+        LocalizeValue description,
+        LocalizeValue title,
+        LocalizeValue analysisNoon
     ) {
         super(text, description);
         myTitle = title;
         myAnalysisNoon = analysisNoon;
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return OptionalReadLock.apply(o -> {
             Presentation presentation = event.getPresentation();
             DataContext dataContext = event.getDataContext();
@@ -89,7 +85,7 @@ public abstract class BaseAnalysisAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         final Project project = e.getRequiredData(Project.KEY);
         final Module module = e.getData(Module.KEY);
@@ -110,7 +106,7 @@ public abstract class BaseAnalysisAction extends AnAction {
         ) {
             @Override
             @RequiredUIAccess
-            protected void extendMainLayout(@Nonnull VerticalLayout layout, @Nonnull Project project) {
+            protected void extendMainLayout(VerticalLayout layout, Project project) {
                 BaseAnalysisAction.this.extendMainLayout(this, layout, project);
             }
 
@@ -120,7 +116,6 @@ public abstract class BaseAnalysisAction extends AnAction {
                 HelpManager.getInstance().invokeHelp(getHelpTopic());
             }
 
-            @Nonnull
             @Override
             protected Action[] createActions() {
                 return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -149,11 +144,11 @@ public abstract class BaseAnalysisAction extends AnAction {
     protected void canceled() {
     }
 
-    protected abstract void analyze(@Nonnull Project project, @Nonnull AnalysisScope scope);
+    protected abstract void analyze(Project project, AnalysisScope scope);
 
     @Nullable
     @RequiredReadAction
-    private AnalysisScope getInspectionScope(@Nonnull DataContext dataContext) {
+    private AnalysisScope getInspectionScope(DataContext dataContext) {
         if (!dataContext.hasData(Project.KEY)) {
             return null;
         }
@@ -165,7 +160,7 @@ public abstract class BaseAnalysisAction extends AnAction {
 
     @Nullable
     @RequiredReadAction
-    private AnalysisScope getInspectionScopeImpl(@Nonnull DataContext dataContext) {
+    private AnalysisScope getInspectionScopeImpl(DataContext dataContext) {
         //Possible scopes: file, directory, package, project, module.
         Project projectContext = dataContext.getData(PlatformDataKeys.PROJECT_CONTEXT);
         if (projectContext != null) {

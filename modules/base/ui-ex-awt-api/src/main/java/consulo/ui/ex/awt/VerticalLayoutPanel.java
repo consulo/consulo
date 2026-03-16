@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -30,7 +29,7 @@ public class VerticalLayoutPanel extends JBPanel<VerticalLayoutPanel> {
     super(new VerticalFlowLayout(JBUI.scale(hgap), JBUI.scale(vgap)));
   }
 
-  @Nonnull
+  
   public VerticalLayoutPanel addComponent(Component comp) {
     add(comp);
     return this;

@@ -8,29 +8,28 @@ import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface VcsIgnoreManager {
-  static VcsIgnoreManager getInstance(@Nonnull Project project) {
+  static VcsIgnoreManager getInstance(Project project) {
     return project.getInstance(VcsIgnoreManager.class);
   }
 
   @Deprecated
   @DeprecationInfo("Not Implemented")
-  default boolean isDirectoryVcsIgnored(@Nonnull String dirPath) {
+  default boolean isDirectoryVcsIgnored(String dirPath) {
     return false;
   }
 
   @Deprecated
   @DeprecationInfo("Not Implemented")
-  default boolean isRunConfigurationVcsIgnored(@Nonnull String configurationName) {
+  default boolean isRunConfigurationVcsIgnored(String configurationName) {
     return false;
   }
 
   @Deprecated
   @DeprecationInfo("Not Implemented")
-  default void removeRunConfigurationFromVcsIgnore(@Nonnull String configurationName) {
+  default void removeRunConfigurationFromVcsIgnore(String configurationName) {
   }
 
   /**
@@ -40,9 +39,9 @@ public interface VcsIgnoreManager {
    * @param file to check
    * @return true if the file is potentially ignored
    */
-  default boolean isPotentiallyIgnoredFile(@Nonnull VirtualFile file) {
+  default boolean isPotentiallyIgnoredFile(VirtualFile file) {
     return isPotentiallyIgnoredFile(VcsUtil.getFilePath(file));
   }
 
-  boolean isPotentiallyIgnoredFile(@Nonnull FilePath filePath);
+  boolean isPotentiallyIgnoredFile(FilePath filePath);
 }

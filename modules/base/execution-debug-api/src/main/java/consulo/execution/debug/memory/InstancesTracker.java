@@ -13,8 +13,7 @@ import consulo.execution.debug.memory.event.InstancesTrackerListener;
 import consulo.project.Project;
 import consulo.proxy.EventDispatcher;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.HashMap;
@@ -29,11 +28,11 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
     private final EventDispatcher<InstancesTrackerListener> myDispatcher = EventDispatcher.create(InstancesTrackerListener.class);
     private MyState myState = new MyState();
 
-    public static InstancesTracker getInstance(@Nonnull Project project) {
+    public static InstancesTracker getInstance(Project project) {
         return project.getInstance(InstancesTracker.class);
     }
 
-    public boolean isTracked(@Nonnull String className) {
+    public boolean isTracked(String className) {
         return myState.classes.containsKey(className);
     }
 
@@ -42,16 +41,16 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
     }
 
     @Nullable
-    public TrackingType getTrackingType(@Nonnull String className) {
+    public TrackingType getTrackingType(String className) {
         return myState.classes.getOrDefault(className, null);
     }
 
-    @Nonnull
+    
     public Map<String, TrackingType> getTrackedClasses() {
         return new HashMap<>(myState.classes);
     }
 
-    public void add(@Nonnull String name, @Nonnull TrackingType type) {
+    public void add(String name, TrackingType type) {
         if (type.equals(myState.classes.getOrDefault(name, null))) {
             return;
         }
@@ -60,22 +59,22 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
         myDispatcher.getMulticaster().classChanged(name, type);
     }
 
-    public void remove(@Nonnull String name) {
+    public void remove(String name) {
         TrackingType removed = myState.classes.remove(name);
         if (removed != null) {
             myDispatcher.getMulticaster().classRemoved(name);
         }
     }
 
-    public void addTrackerListener(@Nonnull InstancesTrackerListener listener) {
+    public void addTrackerListener(InstancesTrackerListener listener) {
         myDispatcher.addListener(listener);
     }
 
-    public void addTrackerListener(@Nonnull InstancesTrackerListener listener, @Nonnull Disposable parentDisposable) {
+    public void addTrackerListener(InstancesTrackerListener listener, Disposable parentDisposable) {
         myDispatcher.addListener(listener, parentDisposable);
     }
 
-    public void removeTrackerListener(@Nonnull InstancesTrackerListener listener) {
+    public void removeTrackerListener(InstancesTrackerListener listener) {
         myDispatcher.removeListener(listener);
     }
 
@@ -94,7 +93,7 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
     }
 
     @Override
-    public void loadState(@Nonnull MyState state) {
+    public void loadState(MyState state) {
         myState = new MyState(state);
     }
 
@@ -107,7 +106,7 @@ public class InstancesTracker implements PersistentStateComponent<InstancesTrack
         MyState() {
         }
 
-        MyState(@Nonnull MyState state) {
+        MyState(MyState state) {
             isBackgroundTrackingEnabled = state.isBackgroundTrackingEnabled;
             classes.putAll(state.classes);
         }

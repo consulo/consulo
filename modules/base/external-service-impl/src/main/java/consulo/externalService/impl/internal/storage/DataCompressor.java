@@ -19,7 +19,6 @@ import consulo.util.io.StreamUtil;
 import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 
@@ -81,7 +80,7 @@ public class DataCompressor {
     /**
      * @return pair bytes and modification count
      */
-    public static Pair<byte[], Integer> uncompress(@Nonnull InputStream stream) throws IOException {
+    public static Pair<byte[], Integer> uncompress(InputStream stream) throws IOException {
         try (DataInputStream inputStream = new DataInputStream(stream)) {
             byte version = inputStream.readByte();
             int modCount = inputStream.readInt();

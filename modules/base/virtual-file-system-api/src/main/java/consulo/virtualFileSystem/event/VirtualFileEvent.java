@@ -18,8 +18,7 @@ package consulo.virtualFileSystem.event;
 import consulo.virtualFileSystem.SavingRequestor;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.EventObject;
 
 /**
@@ -36,12 +35,12 @@ public class VirtualFileEvent extends EventObject {
   private final long myOldModificationStamp;
   private final long myNewModificationStamp;
 
-  public VirtualFileEvent(@Nullable Object requestor, @Nonnull VirtualFile file, @Nonnull String fileName, @Nullable VirtualFile parent) {
+  public VirtualFileEvent(@Nullable Object requestor, VirtualFile file, String fileName, @Nullable VirtualFile parent) {
     this(requestor, file, fileName, parent,0,0);
   }
 
   public VirtualFileEvent(@Nullable Object requestor,
-                          @Nonnull VirtualFile file,
+                          VirtualFile file,
                           @Nullable VirtualFile parent,
                           long oldModificationStamp,
                           long newModificationStamp) {
@@ -49,8 +48,8 @@ public class VirtualFileEvent extends EventObject {
   }
 
   private VirtualFileEvent(@Nullable Object requestor,
-                          @Nonnull VirtualFile file,
-                          @Nonnull String fileName,
+                          VirtualFile file,
+                          String fileName,
                           @Nullable VirtualFile parent,
                           long oldModificationStamp,
                           long newModificationStamp) {
@@ -68,7 +67,7 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the changed file.
    */
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }
@@ -78,7 +77,7 @@ public class VirtualFileEvent extends EventObject {
    *
    * @return the name of the changed file.
    */
-  @Nonnull
+  
   public String getFileName() {
     return myFileName;
   }

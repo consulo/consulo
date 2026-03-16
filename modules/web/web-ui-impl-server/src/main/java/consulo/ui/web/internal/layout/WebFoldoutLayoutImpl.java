@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.FoldoutLayout;
 import consulo.ui.web.internal.base.WebUnsupportedComponent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,22 +27,22 @@ import jakarta.annotation.Nonnull;
  */
 public class WebFoldoutLayoutImpl extends WebUnsupportedComponent implements FoldoutLayout {
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public FoldoutLayout setState(boolean showing) {
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public FoldoutLayout setTitle(@Nonnull LocalizeValue title) {
+  public FoldoutLayout setTitle(LocalizeValue title) {
     return this;
   }
 
-  @Nonnull
+  
   @Override
-  public Disposable addStateListener(@Nonnull StateListener stateListener) {
+  public Disposable addStateListener(StateListener stateListener) {
     return () -> {
     };
   }

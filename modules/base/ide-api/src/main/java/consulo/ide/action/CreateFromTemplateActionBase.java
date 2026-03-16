@@ -34,20 +34,19 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
 
 public abstract class CreateFromTemplateActionBase extends AnAction {
-    public CreateFromTemplateActionBase(@Nonnull LocalizeValue title, @Nonnull LocalizeValue description, Image icon) {
+    public CreateFromTemplateActionBase(LocalizeValue title, LocalizeValue description, Image icon) {
         super(title, description, icon);
     }
 
     @RequiredUIAccess
     @Override
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         IdeView view = dataContext.getData(IdeView.KEY);
         if (view == null) {
@@ -83,11 +82,11 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
         }
     }
 
-    public static void startLiveTemplate(@Nonnull PsiFile file) {
+    public static void startLiveTemplate(PsiFile file) {
         EditorFileTemplateUtil.startLiveTemplate(file, Map.of());
     }
 
-    public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
+    public static void startLiveTemplate(PsiFile file, Map<String, String> defaultValues) {
         EditorFileTemplateUtil.startLiveTemplate(file, defaultValues);
     }
 
@@ -112,7 +111,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
     }
 
     @Nullable
-    protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @Nonnull PsiFile file) {
+    protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, PsiFile file) {
         return null;
     }
 }

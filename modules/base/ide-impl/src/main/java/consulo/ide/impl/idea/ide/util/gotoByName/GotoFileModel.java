@@ -22,8 +22,7 @@ import consulo.util.collection.JBIterable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Collection;
 import java.util.Comparator;
@@ -34,7 +33,7 @@ import java.util.Comparator;
 public class GotoFileModel extends FilteringGotoByModel<FileType> implements DumbAware, Comparator<Object> {
   private final int myMaxSize;
 
-  public GotoFileModel(@Nonnull Project project) {
+  public GotoFileModel(Project project) {
     super(project, project.getApplication().getExtensionList(GotoFileContributor.class));
     myMaxSize = project.getApplication().isUnitTestMode() ? Integer.MAX_VALUE : WindowManagerEx.getInstanceEx().getFrame(project).getSize().width;
   }
@@ -43,7 +42,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public ChooseByNameItemProvider getItemProvider(@Nullable PsiElement context) {
     return new GotoFileItemProvider(myProject, context, this);
@@ -84,13 +83,13 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
     return IdeLocalize.checkboxIncludeNonProjectFiles();
   }
 
-  @Nonnull
+  
   @Override
   public String getNotInMessage() {
     return "";
   }
 
-  @Nonnull
+  
   @Override
   public String getNotFoundMessage() {
     return IdeLocalize.labelNoFilesFound().get();
@@ -110,13 +109,13 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
     }
   }
 
-  @Nonnull
+  
   @Override
   public PsiElementListCellRenderer getListCellRenderer() {
     return new GotoFileCellRenderer(myMaxSize) {
-      @Nonnull
+      
       @Override
-      protected ItemMatchers getItemMatchers(@Nonnull JList list, @Nonnull Object value) {
+      protected ItemMatchers getItemMatchers(JList list, Object value) {
         ItemMatchers defaultMatchers = super.getItemMatchers(list, value);
         if (!(value instanceof PsiFileSystemItem)) return defaultMatchers;
 
@@ -132,18 +131,18 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
 
   @Override
   @Nullable
-  public String getFullName(@Nonnull Object element) {
+  public String getFullName(Object element) {
     return element instanceof PsiFileSystemItem ? getFullName(((PsiFileSystemItem)element).getVirtualFile()) : getElementName(element);
   }
 
   @Nullable
-  public String getFullName(@Nonnull VirtualFile file) {
+  public String getFullName(VirtualFile file) {
     VirtualFile root = getTopLevelRoot(file);
     return root != null ? GotoFileCellRenderer.getRelativePathFromRoot(file, root) : GotoFileCellRenderer.getRelativePath(file, myProject);
   }
 
   @Nullable
-  public VirtualFile getTopLevelRoot(@Nonnull VirtualFile file) {
+  public VirtualFile getTopLevelRoot(VirtualFile file) {
     VirtualFile root = getContentRoot(file);
     return root == null ? null : JBIterable.generate(root, r -> getContentRoot(r.getParent())).last();
   }
@@ -153,7 +152,7 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
   }
 
   @Override
-  @Nonnull
+  
   public String[] getSeparators() {
     return new String[]{"/", "\\"};
   }
@@ -168,9 +167,9 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
     return true;
   }
 
-  @Nonnull
+  
   @Override
-  public String removeModelSpecificMarkup(@Nonnull String pattern) {
+  public String removeModelSpecificMarkup(String pattern) {
     if (pattern.endsWith("/") || pattern.endsWith("\\")) {
       return pattern.substring(0, pattern.length() - 1);
     }
@@ -185,11 +184,11 @@ public class GotoFileModel extends FilteringGotoByModel<FileType> implements Dum
     return 0;
   }
 
-  @Nonnull
+  
   public static PsiElementListCellRenderer.ItemMatchers convertToFileItemMatchers(
-    @Nonnull PsiElementListCellRenderer.ItemMatchers defaultMatchers,
-    @Nonnull PsiFileSystemItem value,
-    @Nonnull GotoFileModel model
+    PsiElementListCellRenderer.ItemMatchers defaultMatchers,
+    PsiFileSystemItem value,
+    GotoFileModel model
   ) {
     String shortName = model.getElementName(value);
     String fullName = model.getFullName(value);

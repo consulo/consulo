@@ -24,7 +24,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -44,7 +43,7 @@ public class RunnerLayoutSettings implements PersistentStateComponent<Element> {
 
   private final Map<String, RunnerLayoutImpl> myRunnerId2Settings = new LinkedHashMap<String, RunnerLayoutImpl>();
 
-  public RunnerLayoutImpl getLayout(@Nonnull String id) {
+  public RunnerLayoutImpl getLayout(String id) {
     RunnerLayoutImpl layout = myRunnerId2Settings.get(id);
     if (layout == null) {
       layout = new RunnerLayoutImpl(id);

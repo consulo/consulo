@@ -11,8 +11,7 @@ import consulo.project.ui.util.AppUIUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentationData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,30 +26,30 @@ public abstract class ServiceViewItem implements ColoredItem {
   private volatile boolean myRemoved;
   private PresentationData myPresentation;
 
-  ServiceViewItem(@Nonnull Object value, @Nullable ServiceViewItem parent, @Nonnull ServiceViewContributor<?> contributor,
-                  @Nonnull ServiceViewDescriptor viewDescriptor) {
+  ServiceViewItem(Object value, @Nullable ServiceViewItem parent, ServiceViewContributor<?> contributor,
+                  ServiceViewDescriptor viewDescriptor) {
     myValue = value;
     myParent = parent;
     myContributor = contributor;
     myViewDescriptor = viewDescriptor;
   }
 
-  @Nonnull
+  
   Object getValue() {
     return myValue;
   }
 
-  @Nonnull
+  
   ServiceViewContributor<?> getContributor() {
     return myContributor;
   }
 
-  @Nonnull
+  
   ServiceViewContributor<?> getRootContributor() {
     return myParent == null ? myContributor : myParent.getRootContributor();
   }
 
-  @Nonnull
+  
   ServiceViewDescriptor getViewDescriptor() {
     if (!myPresentationUpdated) {
       myPresentationUpdated = true;
@@ -61,7 +60,7 @@ public abstract class ServiceViewItem implements ColoredItem {
     return myViewDescriptor;
   }
 
-  void setViewDescriptor(@Nonnull ServiceViewDescriptor viewDescriptor) {
+  void setViewDescriptor(ServiceViewDescriptor viewDescriptor) {
     AppUIUtil.invokeOnEdt(() -> {
       myViewDescriptor = viewDescriptor;
       myPresentationUpdated = false;
@@ -77,7 +76,7 @@ public abstract class ServiceViewItem implements ColoredItem {
     myParent = parent;
   }
 
-  @Nonnull
+  
   List<ServiceViewItem> getChildren() {
     return myChildren;
   }
@@ -97,7 +96,7 @@ public abstract class ServiceViewItem implements ColoredItem {
     return myRemoved || myParent != null && myParent.isRemoved();
   }
 
-  ItemPresentation getItemPresentation(@Nullable ServiceViewOptions viewOptions, @Nonnull ServiceViewItemState state) {
+  ItemPresentation getItemPresentation(@Nullable ServiceViewOptions viewOptions, ServiceViewItemState state) {
     if (isRemoved()) return myPresentation;
 
     ItemPresentation presentation =

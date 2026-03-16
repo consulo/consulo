@@ -38,7 +38,6 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -67,7 +66,7 @@ public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater 
 
     @RequiredReadAction
     @Override
-    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
+    public void updateIcon(IconDescriptor iconDescriptor, PsiElement element, int flags) {
         if (element instanceof PsiDirectory) {
             PsiDirectory psiDirectory = (PsiDirectory) element;
             VirtualFile virtualFile = psiDirectory.getVirtualFile();

@@ -22,13 +22,12 @@ import consulo.execution.impl.internal.configuration.ProjectRunConfigurationMana
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ProjectRunConfigurationManagerStartupActivity implements PostStartupActivity, DumbAware {
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         // just initialize it project run manager (load shared runs)
         ProjectRunConfigurationManager manager = project.getInstance(ProjectRunConfigurationManager.class);
 

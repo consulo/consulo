@@ -4,8 +4,7 @@ package consulo.language.editor.template.context;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.lazy.ClearableLazyValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -15,17 +14,17 @@ import java.util.function.Supplier;
  */
 public abstract class BaseTemplateContextType implements TemplateContextType {
 
-  @Nonnull
+  
   private final String myContextId;
-  @Nonnull
+  
   private final LocalizeValue myPresentableName;
   private final ClearableLazyValue<? extends TemplateContextType> myBaseContextType;
 
-  protected BaseTemplateContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName) {
+  protected BaseTemplateContextType(String id, LocalizeValue presentableName) {
     this(id, presentableName, EverywhereContextType.class);
   }
 
-  protected BaseTemplateContextType(@Nonnull String id, @Nonnull LocalizeValue presentableName, @Nullable Class<? extends TemplateContextType> baseContextType) {
+  protected BaseTemplateContextType(String id, LocalizeValue presentableName, @Nullable Class<? extends TemplateContextType> baseContextType) {
     myContextId = id;
     myPresentableName = presentableName;
     myBaseContextType = ClearableLazyValue.nullable((Supplier<? extends TemplateContextType>)() -> baseContextType == null ? null : EP_NAME.findExtensionOrFail(baseContextType));
@@ -35,7 +34,7 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
    * @return context presentable name for templates editor
    */
   @Override
-  @Nonnull
+  
   public LocalizeValue getPresentableName() {
     return myPresentableName;
   }
@@ -44,7 +43,7 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
    * @return unique ID to be used on configuration files to flag if this context is enabled for particular template
    */
   @Override
-  @Nonnull
+  
   public String getContextId() {
     return myContextId;
   }
@@ -54,7 +53,7 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
    */
   @Override
   @Deprecated(forRemoval = true)
-  public boolean isInContext(@Nonnull PsiFile file, int offset) {
+  public boolean isInContext(PsiFile file, int offset) {
     throw new RuntimeException("Please, implement isInContext(TemplateActionContext) method and don't invoke this method directly");
   }
 
@@ -62,7 +61,7 @@ public abstract class BaseTemplateContextType implements TemplateContextType {
    * @return true iff this context type permits using template associated with it according to {@code templateActionContext}
    */
   @Override
-  public boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+  public boolean isInContext(TemplateActionContext templateActionContext) {
     return isInContext(templateActionContext.getFile(), templateActionContext.getStartOffset());
   }
 

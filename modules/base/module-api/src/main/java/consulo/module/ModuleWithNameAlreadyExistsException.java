@@ -15,7 +15,6 @@
  */
 package consulo.module;
 
-import jakarta.annotation.Nonnull;
 
 public class ModuleWithNameAlreadyExistsException extends Exception {
   private final String myModuleName;
@@ -25,7 +24,7 @@ public class ModuleWithNameAlreadyExistsException extends Exception {
     myModuleName = moduleName;
   }
 
-  @Nonnull
+  
   public String getModuleName() {
     return myModuleName;
   }

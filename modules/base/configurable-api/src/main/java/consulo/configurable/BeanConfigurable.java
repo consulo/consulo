@@ -23,9 +23,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -94,7 +92,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
       }
     }
 
-    @NonNls
+    
     protected String getterName() {
       return "get" + StringUtil.capitalize(myFieldName);
     }
@@ -167,7 +165,7 @@ public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
 
   @RequiredUIAccess
   @Override
-  public Component createUIComponent(@Nonnull Disposable uiDisposable) {
+  public Component createUIComponent(Disposable uiDisposable) {
     VerticalLayout panel = VerticalLayout.create();
     for (BeanField field : myFields) {
       panel.add(field.getComponent());

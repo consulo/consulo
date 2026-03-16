@@ -23,7 +23,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -32,15 +31,15 @@ import jakarta.annotation.Nonnull;
 public class DefaultRunExecutor extends Executor implements RunCurrentFileExecutor {
     public static final String EXECUTOR_ID = ToolWindowId.RUN;
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getStartActionText() {
         return ExecutionLocalize.defaultRunnerStartActionText();
     }
 
-    @Nonnull
+    
     @Override
-    public LocalizeValue getStartActiveText(@Nonnull String configurationName) {
+    public LocalizeValue getStartActiveText(String configurationName) {
         return ExecutionLocalize.defaultRunnerStartActionText0(configurationName);
     }
 
@@ -55,30 +54,30 @@ public class DefaultRunExecutor extends Executor implements RunCurrentFileExecut
     }
 
     @Override
-    @Nonnull
+    
     public Image getIcon() {
         return PlatformIconGroup.actionsExecute();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return ExecutionLocalize.standardRunnerDescription();
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getActionName() {
         return ExecutionLocalize.toolWindowNameRun();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return EXECUTOR_ID;
     }
 
-    @Nonnull
+    
     @Override
     public String getContextActionId() {
         return "RunClass";

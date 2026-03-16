@@ -28,8 +28,7 @@ import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -38,19 +37,19 @@ import jakarta.annotation.Nullable;
 public class DummyWindow implements Window {
     @RequiredUIAccess
     @Override
-    public void setTitle(@Nonnull String title) {
+    public void setTitle(String title) {
 
     }
 
     @RequiredUIAccess
     @Override
-    public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
+    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width) {
 
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    public void removeBorder(BorderPosition borderPosition) {
 
     }
 
@@ -84,35 +83,32 @@ public class DummyWindow implements Window {
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size2D size) {
+    public void setSize(Size2D size) {
     }
 
-    @Nonnull
     @Override
     public Font getFont() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
 
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         throw new UnsupportedOperationException();
     }
 
     @RequiredUIAccess
     @Override
-    public void setContent(@Nonnull Component content) {
+    public void setContent(Component content) {
 
     }
 
@@ -141,12 +137,12 @@ public class DummyWindow implements Window {
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         return null;
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
 
     }
 

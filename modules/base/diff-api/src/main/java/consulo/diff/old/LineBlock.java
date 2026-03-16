@@ -16,7 +16,6 @@
 package consulo.diff.old;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -72,7 +71,7 @@ public class LineBlock {
     return myType;
   }
 
-  protected void setType(@Nonnull TextDiffTypeEnum type) {
+  protected void setType(TextDiffTypeEnum type) {
     myType = type;
   }
 

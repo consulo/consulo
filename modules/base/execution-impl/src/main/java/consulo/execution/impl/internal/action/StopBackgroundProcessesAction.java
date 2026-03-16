@@ -25,8 +25,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -41,13 +40,13 @@ public class StopBackgroundProcessesAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(!getCancellableProcesses(e.getData(Project.KEY)).isEmpty());
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
         Project project = e.getData(Project.KEY);
         List<StopAction.HandlerItem> handlerItems = getItemsList(getCancellableProcesses(project));
@@ -58,15 +57,13 @@ public class StopBackgroundProcessesAction extends DumbAwareAction {
 
         JBList<StopAction.HandlerItem> list = new JBList<>(handlerItems);
         list.setCellRenderer(new GroupedItemsListRenderer<>(new ListItemDescriptorAdapter<>() {
-            @Nullable
             @Override
-            public String getTextFor(StopAction.HandlerItem item) {
+            public String getTextFor(StopAction.@Nullable HandlerItem item) {
                 return item.displayName;
             }
 
-            @Nullable
             @Override
-            public Image getIconFor(StopAction.HandlerItem item) {
+            public Image getIconFor(StopAction.@Nullable HandlerItem item) {
                 return item.icon;
             }
 
@@ -109,7 +106,7 @@ public class StopBackgroundProcessesAction extends DumbAwareAction {
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private static List<Pair<TaskInfo, ProgressIndicator>> getCancellableProcesses(@Nullable Project project) {
         IdeFrame frame = WindowManagerEx.getInstanceEx().findFrameFor(project);
@@ -124,8 +121,8 @@ public class StopBackgroundProcessesAction extends DumbAwareAction {
         );
     }
 
-    @Nonnull
-    private static List<StopAction.HandlerItem> getItemsList(@Nonnull List<? extends Pair<TaskInfo, ProgressIndicator>> tasks) {
+    
+    private static List<StopAction.HandlerItem> getItemsList(List<? extends Pair<TaskInfo, ProgressIndicator>> tasks) {
         List<StopAction.HandlerItem> items = new ArrayList<>(tasks.size());
         for (final Pair<TaskInfo, ProgressIndicator> eachPair : tasks) {
             items.add(new StopAction.HandlerItem(eachPair.first.getTitle(), PlatformIconGroup.processStep_passive(), false) {

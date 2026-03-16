@@ -21,7 +21,6 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public class ElementChooserImpl<T extends ChooserOption> implements ElementChoos
     private final Editor myEditor;
     private final TextAttributes myAttributes;
 
-    public ElementChooserImpl(@Nonnull Editor editor) {
+    public ElementChooserImpl(Editor editor) {
         myEditor = editor;
         TextAttributes searchResultAttributes =
             EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
@@ -48,7 +47,7 @@ public class ElementChooserImpl<T extends ChooserOption> implements ElementChoos
     }
 
     @Override
-    public void show(@Nonnull List<T> options, @Nonnull CallBack<T> callBack) {
+    public void show(List<T> options, CallBack<T> callBack) {
         DefaultListModel<T> model = new DefaultListModel<>();
         int maxOffset = -1;
         for (T option : options) {
@@ -88,7 +87,7 @@ public class ElementChooserImpl<T extends ChooserOption> implements ElementChoos
             .setItemChosenCallback((v) -> callBack.chosen(v))
             .addListener(new JBPopupListener() {
                 @Override
-                public void onClosed(@Nonnull LightweightWindowEvent event) {
+                public void onClosed(LightweightWindowEvent event) {
                     dropHighlighters();
                 }
             })

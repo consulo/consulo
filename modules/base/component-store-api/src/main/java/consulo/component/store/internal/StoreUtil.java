@@ -25,8 +25,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ShutDownTracker;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -36,7 +35,7 @@ public final class StoreUtil {
   private StoreUtil() {
   }
 
-  public static void save(@Nonnull IComponentStore stateStore, @Nonnull UIAccess uiAccess, boolean force, @Nullable ComponentManager project) {
+  public static void save(IComponentStore stateStore, UIAccess uiAccess, boolean force, @Nullable ComponentManager project) {
     ShutDownTracker.getInstance().registerStopperThread(Thread.currentThread());
     try {
       stateStore.save(uiAccess, force, new ArrayList<>());

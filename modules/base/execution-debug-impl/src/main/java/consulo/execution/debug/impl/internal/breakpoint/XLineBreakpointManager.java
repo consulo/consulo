@@ -63,7 +63,6 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -111,7 +110,7 @@ public class XLineBreakpointManager {
         }
 
         @Override
-        public void fileDeleted(@Nonnull VirtualFileEvent event) {
+        public void fileDeleted(VirtualFileEvent event) {
           List<XBreakpoint<?>> toRemove = new SmartList<>();
           for (XLineBreakpointImpl breakpoint : myBreakpoints.keySet()) {
             if (breakpoint.getFileUrl().equals(event.getFile().getUrl())) {
@@ -155,7 +154,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  @Nonnull
+  
   public Collection<XLineBreakpointImpl> getDocumentBreakpoints(Document document) {
     Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
     if (breakpoints == null) {
@@ -164,7 +163,7 @@ public class XLineBreakpointManager {
     return breakpoints;
   }
 
-  private void updateBreakpoints(@Nonnull Document document) {
+  private void updateBreakpoints(Document document) {
     Collection<XLineBreakpointImpl> breakpoints = myBreakpoints.getKeysByValue(document);
     if (breakpoints == null) {
       return;
@@ -209,7 +208,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  public void queueBreakpointUpdate(@Nonnull XLineBreakpointImpl<?> breakpoint) {
+  public void queueBreakpointUpdate(XLineBreakpointImpl<?> breakpoint) {
     myBreakpointsUpdateQueue.queue(() -> breakpoint.updateUI());
   }
 
@@ -302,7 +301,7 @@ public class XLineBreakpointManager {
     }
   }
 
-  private boolean isFromMyProject(@Nonnull Editor editor) {
+  private boolean isFromMyProject(Editor editor) {
     if (myProject == editor.getProject()) {
       return true;
     }

@@ -20,7 +20,6 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -43,8 +42,8 @@ public class RollbackUtil {
    * @param vcses affected VCSs.
    * @return name for the "rollback" operation to be used in the UI.
    */
-  @Nonnull
-  public static String getRollbackOperationName(@Nonnull Collection<AbstractVcs> vcses) {
+  
+  public static String getRollbackOperationName(Collection<AbstractVcs> vcses) {
     String operationName = null;
     for (AbstractVcs vcs : vcses) {
       RollbackEnvironment rollbackEnvironment = vcs.getRollbackEnvironment();
@@ -65,8 +64,8 @@ public class RollbackUtil {
    * Finds the appropriate name for the "rollback" operation, looking through all VCSs registered in the project.
    * @see #getRollbackOperationName(java.util.Collection)
    */
-  @Nonnull
-  public static String getRollbackOperationName(@Nonnull Project project) {
+  
+  public static String getRollbackOperationName(Project project) {
     return getRollbackOperationName(asList(ProjectLevelVcsManager.getInstance(project).getAllActiveVcss()));
   }
 

@@ -17,8 +17,7 @@ package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.FilePath;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author spLeaner
@@ -37,6 +36,6 @@ public abstract class VcsFileRevisionEx implements VcsFileRevision {
   /**
    * Returns the path of the file as it were in this revision
    */
-  @Nonnull
+  
   public abstract FilePath getPath();
 }

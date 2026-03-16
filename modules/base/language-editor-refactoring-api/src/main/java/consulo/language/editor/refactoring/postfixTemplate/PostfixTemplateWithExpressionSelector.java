@@ -14,13 +14,12 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class PostfixTemplateWithExpressionSelector extends PostfixTemplate {
-    @Nonnull
+    
     private final PostfixTemplateExpressionSelector mySelector;
 
     /**
@@ -28,10 +27,10 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
      */
     @Deprecated(forRemoval = true)
     protected PostfixTemplateWithExpressionSelector(
-        @Nonnull String name,
-        @Nonnull String key,
-        @Nonnull String example,
-        @Nonnull PostfixTemplateExpressionSelector selector
+        String name,
+        String key,
+        String example,
+        PostfixTemplateExpressionSelector selector
     ) {
         this(null, name, key, example, selector, null);
     }
@@ -41,18 +40,18 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
      */
     @Deprecated(forRemoval = true)
     protected PostfixTemplateWithExpressionSelector(
-        @Nonnull String name,
-        @Nonnull String example,
-        @Nonnull PostfixTemplateExpressionSelector selector
+        String name,
+        String example,
+        PostfixTemplateExpressionSelector selector
     ) {
         this(null, name, example, selector, null);
     }
 
     protected PostfixTemplateWithExpressionSelector(
         @Nullable String id,
-        @Nonnull String name,
-        @Nonnull String example,
-        @Nonnull PostfixTemplateExpressionSelector selector,
+        String name,
+        String example,
+        PostfixTemplateExpressionSelector selector,
         @Nullable PostfixTemplateProvider provider
     ) {
         super(id, name, example, provider);
@@ -61,10 +60,10 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
 
     protected PostfixTemplateWithExpressionSelector(
         @Nullable String id,
-        @Nonnull String name,
-        @Nonnull String key,
-        @Nonnull String example,
-        @Nonnull PostfixTemplateExpressionSelector selector,
+        String name,
+        String key,
+        String example,
+        PostfixTemplateExpressionSelector selector,
         @Nullable PostfixTemplateProvider provider
     ) {
         super(id, name, key, example, provider);
@@ -72,13 +71,13 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
     }
 
     @Override
-    public boolean isApplicable(@Nonnull PsiElement context, @Nonnull Document copyDocument, int newOffset) {
+    public boolean isApplicable(PsiElement context, Document copyDocument, int newOffset) {
         return mySelector.hasExpression(context, copyDocument, newOffset);
     }
 
     @Override
     @RequiredUIAccess
-    public final void expand(@Nonnull PsiElement context, @Nonnull Editor editor) {
+    public final void expand(PsiElement context, Editor editor) {
         List<PsiElement> expressions = mySelector.getExpressions(
             context,
             editor.getDocument(),
@@ -114,7 +113,7 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
     }
 
     @RequiredUIAccess
-    protected void prepareAndExpandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
+    protected void prepareAndExpandForChooseExpression(PsiElement expression, Editor editor) {
         CommandProcessor.getInstance().newCommand()
             .project(expression.getProject())
             .name(CodeInsightLocalize.commandExpandPostfixTemplate())
@@ -128,5 +127,5 @@ public abstract class PostfixTemplateWithExpressionSelector extends PostfixTempl
         return false;
     }
 
-    protected abstract void expandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor);
+    protected abstract void expandForChooseExpression(PsiElement expression, Editor editor);
 }

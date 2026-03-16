@@ -16,17 +16,16 @@
 package consulo.diff.old;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 @Deprecated
 public class FormattingOld extends Word {
   @TestOnly
-  public FormattingOld(@Nonnull String baseText, @Nonnull TextRange range) {
+  public FormattingOld(String baseText, TextRange range) {
     this(DiffString.create(baseText), range);
   }
 
-  public FormattingOld(@Nonnull DiffString text, @Nonnull TextRange range) {
+  public FormattingOld(DiffString text, TextRange range) {
     super(text, range);
   }
 

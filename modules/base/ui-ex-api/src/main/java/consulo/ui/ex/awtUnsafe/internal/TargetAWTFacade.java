@@ -24,8 +24,7 @@ import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.Cursor;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -36,11 +35,11 @@ import java.awt.*;
  * @since 2019-02-16
  */
 public interface TargetAWTFacade {
-    @Nonnull
-    Dimension to(@Nonnull Size2D size);
+   
+    Dimension to(Size2D size);
 
-    @Nonnull
-    Color to(@Nonnull RGBColor color);
+   
+    Color to(RGBColor color);
 
     @Contract("null -> null")
     Color to(@Nullable ColorValue colorValue);
@@ -52,10 +51,10 @@ public interface TargetAWTFacade {
     java.awt.Component to(@Nullable Component component);
 
     @Contract("null -> null")
-    Component from(@Nullable java.awt.Component component);
+    Component from(java.awt.@Nullable Component component);
 
-    @Nonnull
-    default Component wrap(@Nonnull java.awt.Component component) {
+   
+    default Component wrap(java.awt.Component component) {
         throw new UnsupportedOperationException();
     }
 
@@ -63,7 +62,7 @@ public interface TargetAWTFacade {
     java.awt.Window to(@Nullable Window component);
 
     @Contract("null -> null")
-    Window from(@Nullable java.awt.Window component);
+    Window from(java.awt.@Nullable Window component);
 
     @Contract("null -> null")
     Rectangle2D from(@Nullable Rectangle rectangle);
@@ -77,10 +76,10 @@ public interface TargetAWTFacade {
     @Contract("null -> null")
     Image from(@Nullable Icon icon);
 
-    @Nonnull
-    java.awt.Font to(@Nonnull Font font);
+   
+    java.awt.Font to(Font font);
 
-    default java.awt.Image toAWTImage(@Nonnull Image image) {
+    default java.awt.Image toAWTImage(Image image) {
         throw new AbstractMethodError();
     }
 
@@ -92,7 +91,7 @@ public interface TargetAWTFacade {
         throw new AbstractMethodError();
     }
 
-    default Image wrap(@Nonnull Icon icon) {
+    default Image wrap(Icon icon) {
         throw new AbstractMethodError();
     }
 }

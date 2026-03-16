@@ -30,7 +30,6 @@ import consulo.versionControlSystem.log.impl.internal.ui.VcsLogInternalDataKeys;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.log.util.VcsLogUtil;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Log.Refresh", shortcutFrom = @ActionRef(id = IdeActions.ACTION_REFRESH))
 public class RefreshLogAction extends RefreshAction {
@@ -46,7 +45,7 @@ public class RefreshLogAction extends RefreshAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VcsLogUtil.triggerUsage(e);
 
         VcsLogManager logManager = e.getRequiredData(VcsLogInternalDataKeys.LOG_MANAGER);
@@ -71,7 +70,7 @@ public class RefreshLogAction extends RefreshAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(VcsLogInternalDataKeys.LOG_MANAGER) && e.hasData(VcsLogUi.KEY));
     }
 }

@@ -26,8 +26,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.ImageKey;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,14 +45,14 @@ import java.util.function.Consumer;
  */
 public class ArrangementAtomMatchConditionComponent implements ArrangementUiComponent {
 
-    @Nonnull
+    
     private static final BorderStrategy TEXT_BORDER_STRATEGY = new NameBorderStrategy();
-    @Nonnull
+    
     private static final BorderStrategy PREDEFINED_BORDER_STRATEGY = new PredefinedConditionBorderStrategy();
 
-    @Nonnull
+    
     private final SimpleColoredComponent myTextControl = new SimpleColoredComponent() {
-        @Nonnull
+        
         @Override
         public Dimension getMinimumSize() {
             return getPreferredSize();
@@ -64,7 +63,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
             return getPreferredSize();
         }
 
-        @Nonnull
+        
         @Override
         public Dimension getPreferredSize() {
             return myTextControlSize == null ? super.getPreferredSize() : myTextControlSize;
@@ -76,20 +75,20 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         }
     };
 
-    @Nonnull
+    
     private final Set<ArrangementSettingsToken> myAvailableTokens = new HashSet<>();
 
-    @Nonnull
+    
     private final BorderStrategy myBorderStrategy;
-    @Nonnull
+    
     private final String myText;
-    @Nonnull
+    
     private final ArrangementColorsProvider myColorsProvider;
-    @Nonnull
+    
     private final RoundedLineBorder myBorder;
-    @Nonnull
+    
     private final ArrangementAtomMatchCondition myCondition;
-    @Nonnull
+    
     private final ArrangementAnimationPanel myAnimationPanel;
 
     @Nullable
@@ -99,7 +98,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     @Nullable
     private final Consumer<ArrangementAtomMatchConditionComponent> myCloseCallback;
 
-    @Nonnull
+    
     private ColorValue myBackgroundColor;
 
     @Nullable
@@ -120,9 +119,9 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     @Nullable
     private String myInvertedText;
 
-    public ArrangementAtomMatchConditionComponent(@Nonnull ArrangementStandardSettingsManager manager,
-                                                  @Nonnull ArrangementColorsProvider colorsProvider,
-                                                  @Nonnull ArrangementAtomMatchCondition condition,
+    public ArrangementAtomMatchConditionComponent(ArrangementStandardSettingsManager manager,
+                                                  ArrangementColorsProvider colorsProvider,
+                                                  ArrangementAtomMatchCondition condition,
                                                   @Nullable Consumer<ArrangementAtomMatchConditionComponent> closeCallback) {
         myColorsProvider = colorsProvider;
         myCondition = condition;
@@ -237,7 +236,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         setData(myCondition.getValue());
     }
 
-    @Nonnull
+    
     @Override
     public ArrangementAtomMatchCondition getMatchCondition() {
         if (Boolean.valueOf(myInverted).equals(myCondition.getValue())) {
@@ -250,14 +249,14 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     }
 
     @Override
-    public void setData(@Nonnull Object data) {
+    public void setData(Object data) {
         if (data instanceof Boolean && myCondition.getType() instanceof InvertibleArrangementSettingsToken) {
             myInverted = !((Boolean) data);
             updateComponentText(mySelected);
         }
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getUiComponent() {
         return myAnimationPanel;
@@ -286,7 +285,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         }
     }
 
-    @Nonnull
+    
     private TextAttributes updateComponentText(boolean selected) {
         myTextControl.clear();
         TextAttributes attributes = myColorsProvider.getTextAttributes(myCondition.getType(), selected);
@@ -326,7 +325,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
 
     @Nullable
     @Override
-    public Rectangle onMouseMove(@Nonnull MouseEvent event) {
+    public Rectangle onMouseMove(MouseEvent event) {
         Rectangle buttonBounds = getCloseButtonScreenBounds();
         if (buttonBounds == null) {
             return null;
@@ -340,7 +339,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     }
 
     @Override
-    public void onMouseRelease(@Nonnull MouseEvent event) {
+    public void onMouseRelease(MouseEvent event) {
         Rectangle buttonBounds = getCloseButtonScreenBounds();
         if (buttonBounds != null && myCloseCallback != null && buttonBounds.contains(event.getLocationOnScreen())) {
             myCloseCallback.accept(this);
@@ -349,7 +348,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     }
 
     @Override
-    public Rectangle onMouseEntered(@Nonnull MouseEvent e) {
+    public Rectangle onMouseEntered(MouseEvent e) {
         if (myCloseButton != null) {
             myCloseButton.setVisible(true);
             return getCloseButtonScreenBounds();
@@ -381,7 +380,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         return buttonBounds;
     }
 
-    @Nonnull
+    
     public ArrangementAnimationPanel getAnimationPanel() {
         return myAnimationPanel;
     }
@@ -391,20 +390,20 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         return getComponentText();
     }
 
-    @Nonnull
+    
     @Override
     public ArrangementSettingsToken getToken() {
         return myCondition.getType();
     }
 
-    @Nonnull
+    
     @Override
     public Set<ArrangementSettingsToken> getAvailableTokens() {
         return myAvailableTokens;
     }
 
     @Override
-    public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
+    public void chooseToken(ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
@@ -426,7 +425,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public void setListener(@Nonnull Listener listener) {
+    public void setListener(Listener listener) {
         myListener = listener;
     }
 
@@ -446,7 +445,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
     private interface BorderStrategy {
         RoundedLineBorder create();
 
-        void setup(@Nonnull Graphics2D g);
+        void setup(Graphics2D g);
     }
 
     private static class PredefinedConditionBorderStrategy implements BorderStrategy {
@@ -456,13 +455,13 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         }
 
         @Override
-        public void setup(@Nonnull Graphics2D g) {
+        public void setup(Graphics2D g) {
         }
     }
 
     private static class NameBorderStrategy implements BorderStrategy {
 
-        @Nonnull
+        
         private final BasicStroke myStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 1, new float[]{5, 5}, 0);
 
         @Override
@@ -471,7 +470,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
         }
 
         @Override
-        public void setup(@Nonnull Graphics2D g) {
+        public void setup(Graphics2D g) {
             g.setStroke(myStroke);
         }
     }

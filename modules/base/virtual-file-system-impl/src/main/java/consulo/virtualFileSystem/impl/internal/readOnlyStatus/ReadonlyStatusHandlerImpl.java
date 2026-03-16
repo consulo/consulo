@@ -32,8 +32,7 @@ import consulo.virtualFileSystem.VirtualFileDelegate;
 import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -43,7 +42,7 @@ import java.util.*;
 @State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @ServiceImpl
 public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal, PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
-    @Nonnull
+    
     private final Project myProject;
     private final List<WritingAccessProvider> myAccessProviders;
 
@@ -54,7 +53,7 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
     private State myState = new State();
 
     @Inject
-    public ReadonlyStatusHandlerImpl(@Nonnull Project project) {
+    public ReadonlyStatusHandlerImpl(Project project) {
         myProject = project;
         myAccessProviders = myProject.isDefault() ? List.of() : WritingAccessProvider.getProvidersForProject(myProject);
     }
@@ -81,7 +80,7 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
 
     @Override
     @RequiredUIAccess
-    public OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files) {
+    public OperationStatus ensureFilesWritable(VirtualFile... files) {
         if (files.length == 0) {
             return new OperationStatusImpl(VirtualFile.EMPTY_ARRAY);
         }
@@ -177,7 +176,7 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
         }
 
         @Override
-        @Nonnull
+        
         public VirtualFile[] getReadonlyFiles() {
             return myReadonlyFiles;
         }
@@ -188,7 +187,7 @@ public class ReadonlyStatusHandlerImpl implements ReadonlyStatusHandlerInternal,
         }
 
         @Override
-        @Nonnull
+        
         public String getReadonlyFilesMessage() {
             if (hasReadonlyFiles()) {
                 StringBuilder buf = new StringBuilder();

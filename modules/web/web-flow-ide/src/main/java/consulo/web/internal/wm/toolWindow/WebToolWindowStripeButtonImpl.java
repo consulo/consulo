@@ -28,7 +28,6 @@ import consulo.ui.image.Image;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
 import consulo.web.internal.ui.image.WebImageConverter;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -71,7 +70,7 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
       mySelected = selected;
     }
 
-    @Nonnull
+    
     @Override
     public WebToolWindowStripeButtonImpl toUIComponent() {
       return WebToolWindowStripeButtonImpl.this;
@@ -93,14 +92,14 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     });
   }
 
-  @Nonnull
+  
   @Override
   public WindowInfo getWindowInfo() {
     return myDecorator.getWindowInfo();
   }
 
   @Override
-  public void apply(@Nonnull WindowInfo info) {
+  public void apply(WindowInfo info) {
     setSelected(info.isVisible() || info.isActive());
     updateState();
   }
@@ -128,13 +127,13 @@ public class WebToolWindowStripeButtonImpl extends VaadinComponentDelegate<WebTo
     getVaadinComponent().setSelected(selected);
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 
-  @Nonnull
+  
   @Override
   public Component getComponent() {
     return this;

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.util.io.FileTooBigException;
 import consulo.virtualFileSystem.RawFileLoader;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -33,9 +32,9 @@ import java.nio.file.Files;
 @Singleton
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightRawFileLoader implements RawFileLoader {
-    @Nonnull
+    
     @Override
-    public byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException {
+    public byte[] loadFileBytes(File file) throws IOException, FileTooBigException {
         return Files.readAllBytes(file.toPath());
     }
 

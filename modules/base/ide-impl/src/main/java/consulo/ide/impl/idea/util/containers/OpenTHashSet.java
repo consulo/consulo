@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.containers;
 
 import gnu.trove.THashSet;
 import gnu.trove.TObjectHashingStrategy;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;

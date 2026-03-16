@@ -22,8 +22,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface FileChooserDialog {
   Key<Boolean> PREFER_LAST_OVER_TO_SELECT = PathChooserDialog.PREFER_LAST_OVER_EXPLICIT;
@@ -33,7 +32,7 @@ public interface FileChooserDialog {
    * it supports several selections
    */
   @Deprecated
-  @Nonnull
+  
   default VirtualFile[] choose(@Nullable VirtualFile toSelect, @Nullable ComponentManager project) {
     return toSelect == null ? choose(project) : choose(project, toSelect);
   }
@@ -45,10 +44,10 @@ public interface FileChooserDialog {
    * @param toSelect files to be selected automatically.
    * @return files chosen by user
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Use #chooseAsync")
-  default VirtualFile[] choose(@Nullable ComponentManager project, @Nonnull VirtualFile... toSelect) {
+  default VirtualFile[] choose(@Nullable ComponentManager project, VirtualFile... toSelect) {
     throw new UnsupportedOperationException("desktop only");
   }
 
@@ -59,8 +58,8 @@ public interface FileChooserDialog {
    * @param toSelect files to be selected automatically.
    */
   @RequiredUIAccess
-  @Nonnull
-  default AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
+  
+  default AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
     throw new AbstractMethodError();
   }
 }

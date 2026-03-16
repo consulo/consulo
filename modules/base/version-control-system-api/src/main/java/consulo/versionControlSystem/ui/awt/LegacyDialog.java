@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.ui.awt;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,5 +26,5 @@ public interface LegacyDialog {
 
     void show();
 
-    void setTitle(@Nonnull LocalizeValue title);
+    void setTitle(LocalizeValue title);
 }

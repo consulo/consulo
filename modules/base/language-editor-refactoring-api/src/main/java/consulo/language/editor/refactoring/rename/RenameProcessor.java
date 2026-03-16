@@ -45,8 +45,7 @@ import consulo.usage.*;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -57,7 +56,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     protected final Map<PsiElement, String> myAllRenames = new LinkedHashMap<>();
 
-    @Nonnull
+    
     private PsiElement myPrimaryElement;
     private String myNewName = null;
 
@@ -65,7 +64,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     private boolean mySearchTextOccurrences;
     protected boolean myForceShowPreview;
 
-    @Nonnull
+    
     private LocalizeValue myCommandName;
 
     private NonCodeUsageInfo[] myNonCodeUsages = new NonCodeUsageInfo[0];
@@ -76,8 +75,8 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     @RequiredReadAction
     public RenameProcessor(
         Project project,
-        @Nonnull PsiElement element,
-        @Nonnull String newName,
+        PsiElement element,
+        String newName,
         boolean isSearchInComments,
         boolean isSearchTextOccurrences
     ) {
@@ -123,7 +122,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     }
 
     public void prepareRenaming(
-        @Nonnull PsiElement element,
+        PsiElement element,
         String newName,
         Map<PsiElement, String> allRenames
     ) {
@@ -144,7 +143,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredUIAccess
-    public boolean preprocessUsages(@Nonnull SimpleReference<UsageInfo[]> refUsages) {
+    public boolean preprocessUsages(SimpleReference<UsageInfo[]> refUsages) {
         UsageInfo[] usagesIn = refUsages.get();
         MultiMap<PsiElement, LocalizeValue> conflicts = new MultiMap<>();
 
@@ -295,13 +294,13 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         return dialog.showAndGet();
     }
 
-    public void addElement(@Nonnull PsiElement element, @Nonnull String newName) {
+    public void addElement(PsiElement element, String newName) {
         assertNonCompileElement(element);
         myAllRenames.put(element, newName);
     }
 
     @RequiredReadAction
-    private void setNewName(@Nonnull String newName) {
+    private void setNewName(String newName) {
         myNewName = newName;
         myAllRenames.put(myPrimaryElement, newName);
         myCommandName = RefactoringLocalize.renaming01To2(
@@ -311,14 +310,14 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         );
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    protected UsageViewDescriptor createUsageViewDescriptor(@Nonnull UsageInfo[] usages) {
+    protected UsageViewDescriptor createUsageViewDescriptor(UsageInfo[] usages) {
         return new RenameViewDescriptor(myAllRenames);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public UsageInfo[] findUsages() {
@@ -358,7 +357,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     }
 
     @Override
-    protected void refreshElements(@Nonnull PsiElement[] elements) {
+    protected void refreshElements(PsiElement[] elements) {
         LOG.assertTrue(elements.length > 0);
         myPrimaryElement = elements[0];
 
@@ -373,7 +372,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredReadAction
-    protected boolean isPreviewUsages(@Nonnull UsageInfo[] usages) {
+    protected boolean isPreviewUsages(UsageInfo[] usages) {
         return myForceShowPreview || super.isPreviewUsages(usages) || UsageViewUtil.reportNonRegularUsages(usages, myProject);
     }
 
@@ -393,7 +392,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
     @Nullable
     @Override
-    protected RefactoringEventData getAfterData(@Nonnull UsageInfo[] usages) {
+    protected RefactoringEventData getAfterData(UsageInfo[] usages) {
         RefactoringEventData data = new RefactoringEventData();
         data.addElement(myPrimaryElement);
         return data;
@@ -402,7 +401,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     @Override
     @RequiredUIAccess
     @RequiredWriteAction
-    public void performRefactoring(@Nonnull UsageInfo[] usages) {
+    public void performRefactoring(UsageInfo[] usages) {
         List<Runnable> postRenameCallbacks = new ArrayList<>();
 
         MultiMap<PsiElement, UsageInfo> classified = classifyUsages(myAllRenames.keySet(), usages);
@@ -481,7 +480,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         RenameUtil.renameNonCodeUsages(myProject, myNonCodeUsages);
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getCommandName() {
         return myCommandName;
@@ -538,7 +537,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         return mySearchTextOccurrences;
     }
 
-    public void setCommandName(@Nonnull LocalizeValue commandName) {
+    public void setCommandName(LocalizeValue commandName) {
         myCommandName = commandName;
     }
 }

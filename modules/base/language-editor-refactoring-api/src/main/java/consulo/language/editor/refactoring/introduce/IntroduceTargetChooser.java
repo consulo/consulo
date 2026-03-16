@@ -22,8 +22,7 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -36,37 +35,37 @@ public final class IntroduceTargetChooser {
     private IntroduceTargetChooser() {
     }
 
-    public static <T extends PsiElement> void showChooser(@Nonnull Editor editor,
-                                                          @Nonnull List<? extends T> expressions,
-                                                          @Nonnull Consumer<? super T> callback,
-                                                          @Nonnull Function<? super T, String> renderer) {
+    public static <T extends PsiElement> void showChooser(Editor editor,
+                                                          List<? extends T> expressions,
+                                                          Consumer<? super T> callback,
+                                                          Function<? super T, String> renderer) {
         showChooser(editor, expressions, callback, renderer, RefactoringBundle.message("introduce.target.chooser.expressions.title"));
     }
 
-    public static <T extends PsiElement> void showChooser(@Nonnull Editor editor,
-                                                          @Nonnull List<? extends T> expressions,
-                                                          @Nonnull Consumer<? super T> callback,
-                                                          @Nonnull Function<? super T, String> renderer,
-                                                          @Nonnull String title) {
+    public static <T extends PsiElement> void showChooser(Editor editor,
+                                                          List<? extends T> expressions,
+                                                          Consumer<? super T> callback,
+                                                          Function<? super T, String> renderer,
+                                                          String title) {
         showChooser(editor, expressions, callback, renderer, title, ScopeHighlighter.NATURAL_RANGER);
     }
 
-    public static <T extends PsiElement> void showChooser(@Nonnull Editor editor,
-                                                          @Nonnull List<? extends T> expressions,
-                                                          @Nonnull Consumer<? super T> callback,
-                                                          @Nonnull Function<? super T, String> renderer,
-                                                          @Nonnull String title,
-                                                          @Nonnull Function<? super PsiElement, ? extends TextRange> ranger) {
+    public static <T extends PsiElement> void showChooser(Editor editor,
+                                                          List<? extends T> expressions,
+                                                          Consumer<? super T> callback,
+                                                          Function<? super T, String> renderer,
+                                                          String title,
+                                                          Function<? super PsiElement, ? extends TextRange> ranger) {
         showChooser(editor, expressions, callback, renderer, title, -1, ranger);
     }
 
-    public static <T extends PsiElement> void showChooser(@Nonnull Editor editor,
-                                                          @Nonnull List<? extends T> expressions,
-                                                          @Nonnull Consumer<? super T> callback,
-                                                          @Nonnull Function<? super T, String> renderer,
-                                                          @Nonnull String title,
+    public static <T extends PsiElement> void showChooser(Editor editor,
+                                                          List<? extends T> expressions,
+                                                          Consumer<? super T> callback,
+                                                          Function<? super T, String> renderer,
+                                                          String title,
                                                           int selection,
-                                                          @Nonnull Function<? super PsiElement, ? extends TextRange> ranger) {
+                                                          Function<? super PsiElement, ? extends TextRange> ranger) {
 
         ReadAction.nonBlocking(() -> ContainerUtil.map(expressions, t -> new MyIntroduceTarget<>(t, ranger.apply(t), renderer.apply(t))))
             .finishOnUiThread(Application::getNoneModalityState, targets ->
@@ -75,18 +74,18 @@ public final class IntroduceTargetChooser {
             .submit(AppExecutorUtil.getAppExecutorService());
     }
 
-    public static <T extends IntroduceTarget> void showIntroduceTargetChooser(@Nonnull Editor editor,
-                                                                              @Nonnull List<? extends T> expressions,
-                                                                              @Nonnull Consumer<? super T> callback,
-                                                                              @Nonnull String title,
+    public static <T extends IntroduceTarget> void showIntroduceTargetChooser(Editor editor,
+                                                                              List<? extends T> expressions,
+                                                                              Consumer<? super T> callback,
+                                                                              String title,
                                                                               int selection) {
         showIntroduceTargetChooser(editor, expressions, callback, title, null, selection);
     }
 
-    public static <T extends IntroduceTarget> void showIntroduceTargetChooser(@Nonnull Editor editor,
-                                                                              @Nonnull List<? extends T> expressions,
-                                                                              @Nonnull Consumer<? super T> callback,
-                                                                              @Nonnull String title,
+    public static <T extends IntroduceTarget> void showIntroduceTargetChooser(Editor editor,
+                                                                              List<? extends T> expressions,
+                                                                              Consumer<? super T> callback,
+                                                                              String title,
                                                                               @Nullable JComponent southComponent,
                                                                               int selection) {
         AtomicReference<ScopeHighlighter> highlighter = new AtomicReference<>(new ScopeHighlighter(editor));
@@ -115,7 +114,7 @@ public final class IntroduceTargetChooser {
             })
             .addListener(new JBPopupListener() {
                 @Override
-                public void onClosed(@Nonnull LightweightWindowEvent event) {
+                public void onClosed(LightweightWindowEvent event) {
                     highlighter.getAndSet(null).dropHighlight();
                 }
             })
@@ -146,7 +145,7 @@ public final class IntroduceTargetChooser {
         private final TextRange myTextRange;
         private final String myText;
 
-        MyIntroduceTarget(@Nonnull T psi, @Nonnull TextRange range, @Nonnull String text) {
+        MyIntroduceTarget(T psi, TextRange range, String text) {
             super(psi);
             myTextRange = range;
             myText = text;
@@ -154,13 +153,13 @@ public final class IntroduceTargetChooser {
 
         @RequiredReadAction
         @Override
-        public @Nonnull TextRange getTextRange() {
+        public TextRange getTextRange() {
             return myTextRange;
         }
 
         @RequiredReadAction
         @Override
-        public @Nonnull String render() {
+        public String render() {
             return myText;
         }
 

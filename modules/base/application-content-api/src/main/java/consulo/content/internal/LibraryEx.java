@@ -18,8 +18,7 @@ package consulo.content.internal;
 
 import consulo.component.ComponentManager;
 import consulo.content.library.Library;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *  @author dsl
@@ -29,7 +28,7 @@ public interface LibraryEx extends Library {
 
   boolean isDisposed();
 
-  @Nonnull
+  
   @Override
   ModifiableModelEx getModifiableModel();
 

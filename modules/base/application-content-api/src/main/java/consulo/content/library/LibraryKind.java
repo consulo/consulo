@@ -15,7 +15,6 @@
  */
 package consulo.content.library;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,7 +25,7 @@ public class LibraryKind {
     /**
      * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
      */
-    public LibraryKind(@Nonnull String kindId) {
+    public LibraryKind(String kindId) {
         myKindId = kindId;
     }
 
@@ -43,8 +42,8 @@ public class LibraryKind {
      * @param kindId must be unique among all {@link LibraryType} and {@link LibraryPresentationProvider} implementations
      * @return new {@link LibraryKind} instance
      */
-    @Nonnull
-    public static LibraryKind create(@Nonnull String kindId) {
+    
+    public static LibraryKind create(String kindId) {
         return new LibraryKind(kindId);
     }
 }

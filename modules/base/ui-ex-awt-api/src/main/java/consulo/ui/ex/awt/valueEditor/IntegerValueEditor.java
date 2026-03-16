@@ -4,8 +4,7 @@ package consulo.ui.ex.awt.valueEditor;
 import consulo.ui.ex.UIBundle;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public class IntegerValueEditor extends TextFieldValueEditor<Integer> {
@@ -13,11 +12,11 @@ public class IntegerValueEditor extends TextFieldValueEditor<Integer> {
   private int myMaxValue;
   private boolean myCanBeEmpty;
 
-  public IntegerValueEditor(@Nonnull JTextField field, @Nullable String valueName, @Nonnull Integer defaultValue) {
+  public IntegerValueEditor(JTextField field, @Nullable String valueName, Integer defaultValue) {
     super(field, valueName, defaultValue);
   }
 
-  @Nonnull
+  
   @Override
   public Integer parseValue(@Nullable String text) throws ValueValidationException {
     try {
@@ -39,7 +38,7 @@ public class IntegerValueEditor extends TextFieldValueEditor<Integer> {
   }
 
   @Override
-  public String valueToString(@Nonnull Integer value) {
+  public String valueToString(Integer value) {
     if (myCanBeEmpty && value.equals(getDefaultValue())) {
       return "";
     }
@@ -47,7 +46,7 @@ public class IntegerValueEditor extends TextFieldValueEditor<Integer> {
   }
 
   @Override
-  public boolean isValid(@Nonnull Integer value) {
+  public boolean isValid(Integer value) {
     return value >= myMinValue && value <= myMaxValue;
   }
 

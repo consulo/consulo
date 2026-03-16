@@ -19,7 +19,6 @@ import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.impl.internal.XDebuggerUtilImpl;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -31,11 +30,11 @@ public class XDebuggerRunToCursorActionHandler extends XDebuggerSuspendedActionH
     myIgnoreBreakpoints = ignoreBreakpoints;
   }
 
-  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && XDebuggerUtilImpl.getCaretPosition(session.getProject(), dataContext) != null;
   }
 
-  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected void perform(XDebugSession session, DataContext dataContext) {
     XSourcePosition position = XDebuggerUtilImpl.getCaretPosition(session.getProject(), dataContext);
     if (position != null) {
       session.runToPosition(position, myIgnoreBreakpoints);

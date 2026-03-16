@@ -18,19 +18,18 @@ package consulo.configurable;
 import consulo.annotation.DeprecationInfo;
 import consulo.configurable.localize.ConfigurableLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 public class ConfigurationException extends Exception {
     public static final LocalizeValue DEFAULT_TITLE = ConfigurableLocalize.cannotSaveSettingsDefaultDialogTitle();
-    @Nonnull
+    
     private LocalizeValue myTitle = DEFAULT_TITLE;
     private Runnable myQuickFix;
 
-    public ConfigurationException(@Nonnull LocalizeValue message) {
+    public ConfigurationException(LocalizeValue message) {
         this(message, LocalizeValue.empty());
     }
 
-    public ConfigurationException(@Nonnull LocalizeValue message, @Nonnull LocalizeValue titleValue) {
+    public ConfigurationException(LocalizeValue message, LocalizeValue titleValue) {
         super(message.get());
         myTitle = titleValue.orIfEmpty(DEFAULT_TITLE);
     }
@@ -48,7 +47,7 @@ public class ConfigurationException extends Exception {
     }
 
     //TODO: rename into getTitle after deprecation removal
-    @Nonnull
+    
     public LocalizeValue getTitleValue() {
         return myTitle;
     }

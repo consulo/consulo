@@ -23,13 +23,12 @@ import consulo.language.codeStyle.IndentInside;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 
-import jakarta.annotation.Nonnull;
 
 public class FormatProcessorUtils {
     private static int calcShift(
-        @Nonnull IndentInside oldIndent,
-        @Nonnull IndentInside newIndent,
-        @Nonnull CommonCodeStyleSettings.IndentOptions options
+        IndentInside oldIndent,
+        IndentInside newIndent,
+        CommonCodeStyleSettings.IndentOptions options
     ) {
         if (oldIndent.equals(newIndent)) {
             return 0;
@@ -39,7 +38,7 @@ public class FormatProcessorUtils {
 
     public static int replaceWhiteSpace(
         FormattingModel model,
-        @Nonnull LeafBlockWrapper block,
+        LeafBlockWrapper block,
         int shift,
         CharSequence _newWhiteSpace,
         CommonCodeStyleSettings.IndentOptions options

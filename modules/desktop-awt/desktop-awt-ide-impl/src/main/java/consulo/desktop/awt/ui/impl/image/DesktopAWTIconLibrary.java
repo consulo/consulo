@@ -24,8 +24,7 @@ import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;
 import consulo.ui.impl.image.ImageReference;
 import consulo.util.io.UnsyncByteArrayInputStream;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -42,9 +41,9 @@ public class DesktopAWTIconLibrary extends BaseIconLibraryImpl {
     super(id, baseIconLibraryManager);
   }
 
-  @Nonnull
+  
   @Override
-  protected ImageReference createImageReference(@Nonnull byte[] _1xData,
+  protected ImageReference createImageReference(byte[] _1xData,
                                                 @Nullable byte[] _2xdata,
                                                 boolean isSVG,
                                                 String groupId,

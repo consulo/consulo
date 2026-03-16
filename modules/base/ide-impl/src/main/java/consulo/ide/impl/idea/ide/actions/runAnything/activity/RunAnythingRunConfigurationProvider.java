@@ -13,21 +13,20 @@ import consulo.ide.localize.IdeLocalize;
 import consulo.ide.runAnything.RunAnythingProviderBase;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction.EXECUTOR_KEY;
 import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetchProject;
 
 public abstract class RunAnythingRunConfigurationProvider extends RunAnythingProviderBase<ChooseRunConfigurationPopup.ItemWrapper> {
-    @Nonnull
+    
     @Override
-    public String getCommand(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
+    public String getCommand(ChooseRunConfigurationPopup.ItemWrapper value) {
         return value.getText();
     }
 
     @Override
-    public void execute(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper wrapper) {
+    public void execute(DataContext dataContext, ChooseRunConfigurationPopup.ItemWrapper wrapper) {
         Executor executor = dataContext.getData(EXECUTOR_KEY);
         assert executor != null;
 
@@ -39,9 +38,8 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
         wrapper.perform(fetchProject(dataContext), executor, dataContext);
     }
 
-    @Nullable
     @Override
-    public Image getIcon(@Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
+    public Image getIcon(ChooseRunConfigurationPopup.@Nullable ItemWrapper value) {
         return value.getIcon();
     }
 
@@ -52,9 +50,9 @@ public abstract class RunAnythingRunConfigurationProvider extends RunAnythingPro
             IdeLocalize.runAnythingAdRunWithDebug(RunAnythingUtil.SHIFT_SHORTCUT_TEXT);
     }
 
-    @Nonnull
+    
     @Override
-    public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull ChooseRunConfigurationPopup.ItemWrapper value) {
+    public RunAnythingItem getMainListItem(DataContext dataContext, ChooseRunConfigurationPopup.ItemWrapper value) {
         return new RunAnythingRunConfigurationItem(value, value.getIcon());
     }
 }

@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -60,7 +59,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
     private final Action myShutdownAction;
     private final Action myHeapDumpAction;
 
-    public OutOfMemoryDialog(@Nonnull MemoryKind memoryKind) {
+    public OutOfMemoryDialog(MemoryKind memoryKind) {
         super(false);
         myMemoryKind = memoryKind;
         setTitle(ExternalServiceLocalize.diagnosticOutOfMemoryTitle());
@@ -230,7 +229,7 @@ public class OutOfMemoryDialog extends DialogWrapper {
         return myContentPane;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return myHeapDumpAction != null

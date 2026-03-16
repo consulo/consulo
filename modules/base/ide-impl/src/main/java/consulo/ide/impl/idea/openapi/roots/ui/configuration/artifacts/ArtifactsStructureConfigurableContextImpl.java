@@ -33,8 +33,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,13 +88,13 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   //}
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
 
   @Override
-  @Nonnull
+  
   public ArtifactModel getArtifactModel() {
     if (myModifiableModel != null) {
       return myModifiableModel;
@@ -104,8 +103,8 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @Nonnull
-  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
+  
+  public Artifact getOriginalArtifact(Artifact artifact) {
     if (myModifiableModel != null) {
       return myModifiableModel.getOriginalArtifact(artifact);
     }
@@ -123,7 +122,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  public CompositePackagingElement<?> getRootElement(@Nonnull Artifact artifact) {
+  public CompositePackagingElement<?> getRootElement(Artifact artifact) {
     artifact = getOriginalArtifact(artifact);
     if (myModifiableModel != null) {
       Artifact modifiableArtifact = myModifiableModel.getModifiableCopy(artifact);
@@ -144,7 +143,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  public void editLayout(@Nonnull Artifact artifact, Runnable action) {
+  public void editLayout(Artifact artifact, Runnable action) {
     Artifact originalArtifact = getOriginalArtifact(artifact);
     WriteAction.run(() -> {
       ModifiableArtifact modifiableArtifact = getOrCreateModifiableArtifactModel().getOrCreateModifiableArtifact(originalArtifact);
@@ -181,7 +180,7 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @Nonnull
+  
   public ModifiableArtifactModel getOrCreateModifiableArtifactModel() {
     if (myModifiableModel == null) {
       myModifiableModel = myArtifactManager.createModifiableModel();
@@ -196,13 +195,13 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @Nonnull
+  
   public ModulesProvider getModulesProvider() {
     return myModulesConfigurator;
   }
 
   @Override
-  public Library findLibrary(@Nonnull String level, @Nonnull String libraryName) {
+  public Library findLibrary(String level, String libraryName) {
     Library library = DefaultPackagingElementResolvingContext.findLibrary(myProject, level, libraryName);
     return library != null ? myLibrariesConfigurator.getLibraryModel(library) : myLibrariesConfigurator.getLibrary(libraryName, level);
   }
@@ -237,8 +236,8 @@ public class ArtifactsStructureConfigurableContextImpl implements ArtifactsStruc
   }
 
   @Override
-  @Nonnull
-  public ArtifactProjectStructureElement getOrCreateArtifactElement(@Nonnull Artifact artifact) {
+  
+  public ArtifactProjectStructureElement getOrCreateArtifactElement(Artifact artifact) {
     ArtifactProjectStructureElement element = myArtifactElements.get(getOriginalArtifact(artifact));
     if (element == null) {
       element = new ArtifactProjectStructureElement(this, artifact);

@@ -17,13 +17,12 @@ package consulo.language.psi.path;
 
 import consulo.language.psi.PsiFileSystemItem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 public interface FileReferenceResolver {
   @Nullable
-  PsiFileSystemItem resolveFileReference(@Nonnull FileReference reference, @Nonnull String name);
+  PsiFileSystemItem resolveFileReference(FileReference reference, String name);
 
-  Collection<Object> getVariants(@Nonnull FileReference reference);
+  Collection<Object> getVariants(FileReference reference);
 }

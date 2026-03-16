@@ -17,16 +17,14 @@ package consulo.language.ast;
 
 import consulo.language.Language;
 import consulo.language.util.CharTable;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
  */
 public abstract class CustomParsingType extends IElementType implements ICustomParsingType {
-    public CustomParsingType(@Nonnull @NonNls String debugName, @Nullable Language language) {
+    public CustomParsingType(String debugName, @Nullable Language language) {
         super(debugName, language);
     }
 

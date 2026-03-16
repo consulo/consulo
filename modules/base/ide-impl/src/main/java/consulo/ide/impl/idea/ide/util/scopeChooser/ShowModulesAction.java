@@ -21,7 +21,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -40,13 +39,13 @@ public final class ShowModulesAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return DependencyUISettings.getInstance().UI_SHOW_MODULES;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean flag) {
+    public void setSelected(AnActionEvent e, boolean flag) {
         DependencyUISettings.getInstance().UI_SHOW_MODULES = flag;
         myUpdate.run();
     }

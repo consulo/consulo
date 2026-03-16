@@ -6,22 +6,21 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfigurationExtensionBase;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class DeployToServerRunConfigurationExtension extends RunConfigurationExtensionBase<DeployToServerRunConfiguration<?, ?>> {
-    public void patchDeploymentTask(@Nonnull DeployToServerRunConfiguration<?, ?> runConfiguration,
-                                    @Nonnull DeploymentTask<?> deploymentTask) {
+    public void patchDeploymentTask(DeployToServerRunConfiguration<?, ?> runConfiguration,
+                                    DeploymentTask<?> deploymentTask) {
         //
     }
 
     @Override
-    protected void extendCreatedConfiguration(@Nonnull DeployToServerRunConfiguration<?, ?> configuration,
-                                              @Nonnull Location location) {
+    protected void extendCreatedConfiguration(DeployToServerRunConfiguration<?, ?> configuration,
+                                              Location location) {
         extendCreatedConfiguration(configuration);
     }
 
-    public void extendCreatedConfiguration(@Nonnull DeployToServerRunConfiguration<?, ?> configuration) {
+    public void extendCreatedConfiguration(DeployToServerRunConfiguration<?, ?> configuration) {
         //
     }
 }

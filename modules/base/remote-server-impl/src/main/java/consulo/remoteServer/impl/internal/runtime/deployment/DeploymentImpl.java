@@ -10,21 +10,19 @@ import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 import consulo.remoteServer.runtime.deployment.DeploymentStatus;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class DeploymentImpl<D extends DeploymentConfiguration> implements Deployment {
     private final ServerConnectionImpl<D> myConnection;
     private final String myName;
     private final DeploymentTask<D> myDeploymentTask;
     private volatile DeploymentState myState;
-    private @Nls String myPresentableName;
+    private String myPresentableName;
 
-    public DeploymentImpl(@Nonnull ServerConnectionImpl<D> connection,
-                          @Nonnull String name,
-                          @Nonnull DeploymentStatus status,
-                          @Nullable @Nls String statusText,
+    public DeploymentImpl(ServerConnectionImpl<D> connection,
+                          String name,
+                          DeploymentStatus status,
+                          @Nullable String statusText,
                           @Nullable DeploymentRuntime runtime,
                           @Nullable DeploymentTask<D> deploymentTask) {
         myConnection = connection;
@@ -34,17 +32,17 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public @Nonnull String getName() {
+    public String getName() {
         return myName;
     }
 
     @Override
-    public @Nonnull DeploymentStatus getStatus() {
+    public DeploymentStatus getStatus() {
         return myState.getStatus();
     }
 
     @Override
-    public @Nonnull @Nls String getStatusText() {
+    public String getStatusText() {
         String statusText = myState.getStatusText();
         return statusText != null ? statusText : myState.getStatus().getPresentableText().get();
     }
@@ -60,7 +58,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public @Nonnull DeploymentLogManager getOrCreateLogManager(@Nonnull Project project) {
+    public DeploymentLogManager getOrCreateLogManager(Project project) {
         return myConnection.getOrCreateLogManager(project, this);
     }
 
@@ -69,12 +67,12 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public void setStatus(@Nonnull DeploymentStatus status, @Nullable @Nls String statusText) {
+    public void setStatus(DeploymentStatus status, @Nullable String statusText) {
         myConnection.changeDeploymentState(this, getRuntime(), myState.getStatus(), status, statusText);
     }
 
     @Override
-    public @Nonnull ServerConnection<?> getConnection() {
+    public ServerConnection<?> getConnection() {
         return myConnection;
     }
 
@@ -84,9 +82,9 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
         return runtime == null ? null : runtime.getParent();
     }
 
-    public boolean changeState(@Nonnull DeploymentStatus oldStatus,
-                               @Nonnull DeploymentStatus newStatus,
-                               @Nullable @Nls String statusText,
+    public boolean changeState(DeploymentStatus oldStatus,
+                               DeploymentStatus newStatus,
+                               @Nullable String statusText,
                                @Nullable DeploymentRuntime runtime) {
         if (myState.getStatus() == oldStatus) {
             myState = new DeploymentState(newStatus, statusText, runtime);
@@ -96,30 +94,30 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public @Nonnull String getPresentableName() {
+    public String getPresentableName() {
         return myPresentableName == null ? getName() : myPresentableName;
     }
 
-    public void setPresentableName(@Nls String presentableName) {
+    public void setPresentableName(String presentableName) {
         myPresentableName = presentableName;
     }
 
     protected static final class DeploymentState {
         private final DeploymentStatus myStatus;
-        private final @Nls String myStatusText;
+        private final String myStatusText;
         private final DeploymentRuntime myRuntime;
 
-        private DeploymentState(@Nonnull DeploymentStatus status, @Nullable @Nls String statusText, @Nullable DeploymentRuntime runtime) {
+        private DeploymentState(DeploymentStatus status, @Nullable String statusText, @Nullable DeploymentRuntime runtime) {
             myStatus = status;
             myStatusText = statusText;
             myRuntime = runtime;
         }
 
-        public @Nonnull DeploymentStatus getStatus() {
+        public DeploymentStatus getStatus() {
             return myStatus;
         }
 
-        public @Nullable @Nls String getStatusText() {
+        public @Nullable String getStatusText() {
             return myStatusText;
         }
 

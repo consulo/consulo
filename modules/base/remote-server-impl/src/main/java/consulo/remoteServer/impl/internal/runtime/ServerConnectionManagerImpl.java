@@ -9,8 +9,7 @@ import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.runtime.ServerConnection;
 import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -26,7 +25,7 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     private final ServerConnectionEventDispatcher myEventDispatcher = new ServerConnectionEventDispatcher();
 
     @Override
-    public @Nonnull <C extends ServerConfiguration> ServerConnection<?> getOrCreateConnection(@Nonnull RemoteServer<C> server) {
+    public <C extends ServerConfiguration> ServerConnection<?> getOrCreateConnection(RemoteServer<C> server) {
         UIAccess.assertIsUIThread();
         ServerConnection<?> connection = myConnections.get(server);
         if (connection == null) {
@@ -38,18 +37,18 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     }
 
     @Override
-    public @Nonnull <C extends ServerConfiguration> ServerConnection<?> createTemporaryConnection(@Nonnull RemoteServer<C> server) {
+    public <C extends ServerConfiguration> ServerConnection<?> createTemporaryConnection(RemoteServer<C> server) {
         return doCreateConnection(server, null);
     }
 
-    private <C extends ServerConfiguration> ServerConnection<?> doCreateConnection(@Nonnull RemoteServer<C> server,
+    private <C extends ServerConfiguration> ServerConnection<?> doCreateConnection(RemoteServer<C> server,
                                                                                    ServerConnectionManagerImpl manager) {
         ServerTaskExecutorImpl executor = new ServerTaskExecutorImpl();
         return new ServerConnectionImpl<>(server, server.getType().createConnector(server, executor), manager, getEventDispatcher());
     }
 
     @Override
-    public @Nullable <C extends ServerConfiguration> ServerConnection<?> getConnection(@Nonnull RemoteServer<C> server) {
+    public @Nullable <C extends ServerConfiguration> ServerConnection<?> getConnection(RemoteServer<C> server) {
         return myConnections.get(server);
     }
 
@@ -63,14 +62,14 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     }
 
     @Override
-    public @Nonnull Collection<ServerConnection<?>> getConnections() {
+    public Collection<ServerConnection<?>> getConnections() {
         ApplicationManager.getApplication().assertWriteAccessAllowed();
         return Collections.unmodifiableCollection(myConnections.values());
     }
 
     public static class DisconnectFromRemovedServer implements RemoteServerListener {
         @Override
-        public void serverRemoved(@Nonnull RemoteServer<?> server) {
+        public void serverRemoved(RemoteServer<?> server) {
             ServerConnectionManagerImpl impl = (ServerConnectionManagerImpl) ServerConnectionManager.getInstance();
             ServerConnection<?> connection = impl.getConnection(server);
             if (connection != null) {
@@ -79,7 +78,7 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
         }
 
         @Override
-        public void serverAdded(@Nonnull RemoteServer<?> server) {
+        public void serverAdded(RemoteServer<?> server) {
             //
         }
     }

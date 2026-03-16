@@ -17,13 +17,12 @@ package consulo.language.extension;
 
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 24-Jun-22
  */
 public interface LanguageExtension {
-  @Nonnull
+  
   Language getLanguage();
 }

@@ -18,10 +18,8 @@ package consulo.language.pattern;
 import consulo.application.progress.ProgressManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.lang.StringUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Pattern;
@@ -38,7 +36,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
 
 
     @Override
-    public void append(@Nonnull @NonNls StringBuilder builder, String indent) {
+    public void append(StringBuilder builder, String indent) {
       builder.append("string()");
     }
   };
@@ -47,42 +45,42 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     super(CONDITION);
   }
 
-  @Nonnull
-  public StringPattern startsWith(@NonNls @Nonnull final String s) {
+  
+  public StringPattern startsWith(final String s) {
     return with(new PatternCondition<String>("startsWith") {
       @Override
-      public boolean accepts(@Nonnull String str, ProcessingContext context) {
+      public boolean accepts(String str, ProcessingContext context) {
         return str.startsWith(s);
       }
     });
   }
 
-  @Nonnull
-  public StringPattern endsWith(@NonNls @Nonnull final String s) {
+  
+  public StringPattern endsWith(final String s) {
     return with(new PatternCondition<String>("endsWith") {
       @Override
-      public boolean accepts(@Nonnull String str, ProcessingContext context) {
+      public boolean accepts(String str, ProcessingContext context) {
         return str.endsWith(s);
       }
     });
   }
 
-  @Nonnull
-  public StringPattern contains(@NonNls @Nonnull final String s) {
+  
+  public StringPattern contains(final String s) {
     return with(new PatternCondition<String>("contains") {
       @Override
-      public boolean accepts(@Nonnull String str, ProcessingContext context) {
+      public boolean accepts(String str, ProcessingContext context) {
         return str.contains(s);
       }
 
     });
   }
 
-  @Nonnull
-  public StringPattern containsChars(@NonNls @Nonnull final String s) {
+  
+  public StringPattern containsChars(final String s) {
     return with(new PatternCondition<String>("containsChars") {
       @Override
-      public boolean accepts(@Nonnull String str, ProcessingContext context) {
+      public boolean accepts(String str, ProcessingContext context) {
         for (int i=0, len=s.length(); i<len; i++) {
           if (str.indexOf(s.charAt(i))>-1) return true;
         }
@@ -91,8 +89,8 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     });
   }
 
-  @Nonnull
-  public StringPattern matches(@NonNls @Nonnull final String s) {
+  
+  public StringPattern matches(final String s) {
     String escaped = StringUtil.escapeToRegexp(s);
     if (escaped.equals(s)) {
       return equalTo(s);
@@ -101,7 +99,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     final Pattern pattern = Pattern.compile(s);
     return with(new ValuePatternCondition<String>("matches") {
       @Override
-      public boolean accepts(@Nonnull String str, ProcessingContext context) {
+      public boolean accepts(String str, ProcessingContext context) {
         return pattern.matcher(newBombedCharSequence(str)).matches();
       }
 
@@ -112,11 +110,11 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
     });
   }
 
-  @Nonnull
-  public StringPattern contains(@NonNls @Nonnull final ElementPattern<Character> pattern) {
+  
+  public StringPattern contains(final ElementPattern<Character> pattern) {
     return with(new PatternCondition<String>("contains") {
       @Override
-      public boolean accepts(@Nonnull String str, ProcessingContext context) {
+      public boolean accepts(String str, ProcessingContext context) {
         for (int i = 0; i < str.length(); i++) {
           if (pattern.accepts(str.charAt(i))) return true;
         }
@@ -128,7 +126,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
   public StringPattern longerThan(final int minLength) {
     return with(new PatternCondition<String>("longerThan") {
       @Override
-      public boolean accepts(@Nonnull String s, ProcessingContext context) {
+      public boolean accepts(String s, ProcessingContext context) {
         return s.length() > minLength;
       }
     });
@@ -136,7 +134,7 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
   public StringPattern shorterThan(final int maxLength) {
     return with(new PatternCondition<String>("shorterThan") {
       @Override
-      public boolean accepts(@Nonnull String s, ProcessingContext context) {
+      public boolean accepts(String s, ProcessingContext context) {
         return s.length() < maxLength;
       }
     });
@@ -144,31 +142,31 @@ public class StringPattern extends ObjectPattern<String, StringPattern> {
   public StringPattern withLength(final int length) {
     return with(new PatternCondition<String>("withLength") {
       @Override
-      public boolean accepts(@Nonnull String s, ProcessingContext context) {
+      public boolean accepts(String s, ProcessingContext context) {
         return s.length() == length;
       }
     });
   }
 
   @Override
-  @Nonnull
-  public StringPattern oneOf(@NonNls String... values) {
+  
+  public StringPattern oneOf(String... values) {
     return super.oneOf(values);
   }
 
-  @Nonnull
-  public StringPattern oneOfIgnoreCase(@NonNls String... values) {
+  
+  public StringPattern oneOfIgnoreCase(String... values) {
     return with(new CaseInsensitiveValuePatternCondition("oneOfIgnoreCase", values));
   }
 
   @Override
-  @Nonnull
+  
   public StringPattern oneOf(Collection<String> set) {
     return super.oneOf(set);
   }
 
-  @Nonnull
-  public static CharSequence newBombedCharSequence(@Nonnull CharSequence sequence) {
+  
+  public static CharSequence newBombedCharSequence(CharSequence sequence) {
     return new StringUtil.BombedCharSequence(sequence) {
       @Override
       protected void checkCanceled() {

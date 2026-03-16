@@ -27,7 +27,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
 
 import static consulo.ui.ex.awt.FontUtil.spaceAndThinSpace;
 
@@ -38,7 +37,7 @@ public class ChangesBrowserFileNode extends ChangesBrowserNode<VirtualFile> impl
   private final Project myProject;
   private final String myName;
 
-  public ChangesBrowserFileNode(Project project, @Nonnull VirtualFile userObject) {
+  public ChangesBrowserFileNode(Project project, VirtualFile userObject) {
     super(userObject);
     myName = StringUtil.toLowerCase(userObject.getName());
     myProject = project;

@@ -20,7 +20,6 @@ import consulo.content.internal.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.OrderEnumerator;
@@ -30,9 +29,8 @@ import consulo.project.Project;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,7 +91,7 @@ public class LibraryUtil {
     return null;
   }
 
-  public static Library createLibrary(LibraryTable libraryTable, @NonNls String baseName) {
+  public static Library createLibrary(LibraryTable libraryTable, String baseName) {
     String name = baseName;
     int count = 2;
     while (libraryTable.getLibraryByName(name) != null) {
@@ -115,7 +113,7 @@ public class LibraryUtil {
   }
 
   @Nullable
-  public static Library findLibrary(@Nonnull Module module, @Nonnull String name) {
+  public static Library findLibrary(Module module, String name) {
     Ref<Library> result = Ref.create(null);
     OrderEnumerator.orderEntries(module).forEachLibrary(library -> {
       if (name.equals(library.getName())) {
@@ -132,8 +130,8 @@ public class LibraryUtil {
     return ModuleContentLibraryUtil.findLibraryEntry(file, project);
   }
 
-  @Nonnull
-  public static String getPresentableName(@Nonnull Library library) {
+  
+  public static String getPresentableName(Library library) {
     String name = library.getName();
     if (name != null) {
       return name;
@@ -143,7 +141,7 @@ public class LibraryUtil {
     }
     String[] urls = library.getUrls(BinariesOrderRootType.getInstance());
     if (urls.length > 0) {
-      return PathUtil.getFileName(VfsUtilCore.urlToPath(urls[0]));
+      return PathUtil.getFileName(VirtualFileUtil.urlToPath(urls[0]));
     }
     return "Empty Library";
   }

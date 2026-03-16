@@ -22,7 +22,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.task.TaskManager;
 import consulo.ui.UIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class TaskManagerStartActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     if (project.isDefault()) {
       return;
     }

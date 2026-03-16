@@ -12,8 +12,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,9 +28,9 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
-  public Object[] getChildElements(@Nonnull Object element) {
+  public Object[] getChildElements(Object element) {
     LOG.assertTrue(element instanceof AbstractTreeNode, element.getClass().getName());
     AbstractTreeNode<?> treeNode = (AbstractTreeNode)element;
     Collection<? extends AbstractTreeNode> elements = treeNode.getChildren();
@@ -61,12 +60,12 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   }
 
   @Override
-  public boolean isValid(@Nonnull Object element) {
+  public boolean isValid(Object element) {
     return element instanceof AbstractTreeNode;
   }
 
   @Override
-  public Object getParentElement(@Nonnull Object element) {
+  public Object getParentElement(Object element) {
     if (element instanceof AbstractTreeNode) {
       return ((AbstractTreeNode)element).getParent();
     }
@@ -74,8 +73,8 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   }
 
   @Override
-  @Nonnull
-  public NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+  
+  public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
     return (NodeDescriptor)element;
   }
 
@@ -83,7 +82,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
   public abstract List<TreeStructureProvider> getProviders();
 
   @Nullable
-  public Object getDataFromProviders(@Nonnull List<AbstractTreeNode> selectedNodes, @Nonnull Key dataId) {
+  public Object getDataFromProviders(List<AbstractTreeNode> selectedNodes, Key dataId) {
     List<TreeStructureProvider> providers = getProvidersDumbAware();
     if (!providers.isEmpty()) {
       for (TreeStructureProvider treeStructureProvider : providers) {
@@ -96,7 +95,7 @@ public abstract class AbstractTreeStructureBase extends AbstractTreeStructure {
     return null;
   }
 
-  @Nonnull
+  
   private List<TreeStructureProvider> getProvidersDumbAware() {
     if (myProject == null) {
       return Collections.emptyList();

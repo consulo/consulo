@@ -18,7 +18,6 @@ package consulo.language.sem;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,13 +32,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SemKey<T extends SemElement> {
   private static final AtomicInteger counter = new AtomicInteger(0);
   private final String myDebugName;
-  @Nonnull
+  
   private final SemKey<? super T>[] mySupers;
   private final List<SemKey> myInheritors = Lists.newLockFreeCopyOnWriteList();
   private final int myUniqueId;
 
   @SafeVarargs
-  private SemKey(String debugName, @Nonnull SemKey<? super T>... supers) {
+  private SemKey(String debugName, SemKey<? super T>... supers) {
     myDebugName = debugName;
     mySupers = supers;
     myUniqueId = counter.getAndIncrement();
@@ -54,7 +53,7 @@ public class SemKey<T extends SemElement> {
     }
   }
 
-  @Nonnull
+  
   public SemKey<? super T>[] getSupers() {
     return mySupers;
   }
@@ -79,7 +78,7 @@ public class SemKey<T extends SemElement> {
   }
 
   @SafeVarargs
-  public static <T extends SemElement> SemKey<T> createKey(String debugName, @Nonnull SemKey<? super T>... supers) {
+  public static <T extends SemElement> SemKey<T> createKey(String debugName, SemKey<? super T>... supers) {
     return new SemKey<>(debugName, supers);
   }
 
@@ -93,7 +92,7 @@ public class SemKey<T extends SemElement> {
   }
 
   @SafeVarargs
-  public final <K extends T> SemKey<K> subKey(String debugName, @Nonnull SemKey<? super T>... otherSupers) {
+  public final <K extends T> SemKey<K> subKey(String debugName, SemKey<? super T>... otherSupers) {
     if (otherSupers.length == 0) {
       return new SemKey<>(debugName, this);
     }

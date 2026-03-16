@@ -31,7 +31,6 @@ import consulo.language.psi.search.PsiSearchHelper;
 import consulo.logging.Logger;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfoFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -42,10 +41,10 @@ public class FindUsagesHelper {
 
     @RequiredReadAction
     public static boolean processUsagesInText(
-        @Nonnull PsiElement element,
-        @Nonnull Collection<String> stringToSearch,
-        @Nonnull GlobalSearchScope searchScope,
-        @Nonnull Predicate<UsageInfo> processor
+        PsiElement element,
+        Collection<String> stringToSearch,
+        GlobalSearchScope searchScope,
+        Predicate<UsageInfo> processor
     ) {
         TextRange elementTextRange = Application.get().runReadAction(
             (Supplier<TextRange>)() -> !element.isValid() || element instanceof PsiCompiledElement ? null : element.getTextRange()
@@ -86,11 +85,11 @@ public class FindUsagesHelper {
     }
 
     public static boolean processTextOccurrences(
-        @Nonnull PsiElement element,
-        @Nonnull String stringToSearch,
-        @Nonnull GlobalSearchScope searchScope,
-        @Nonnull Predicate<UsageInfo> processor,
-        @Nonnull UsageInfoFactory factory
+        PsiElement element,
+        String stringToSearch,
+        GlobalSearchScope searchScope,
+        Predicate<UsageInfo> processor,
+        UsageInfoFactory factory
     ) {
         ThrowableComputable<PsiSearchHelper, RuntimeException> action1 = () -> PsiSearchHelper.getInstance(element.getProject());
         PsiSearchHelper helper = AccessRule.read(action1);

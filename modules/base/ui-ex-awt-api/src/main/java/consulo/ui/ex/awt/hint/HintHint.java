@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.IdeTooltipManager;
 import consulo.ui.ex.popup.Balloon;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;

@@ -18,18 +18,17 @@ package consulo.document.impl;
 import consulo.document.DocumentReference;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class DocumentReferenceByDocument implements DocumentReference {
   private final Document myDocument;
 
-  DocumentReferenceByDocument(@Nonnull Document document) {
+  DocumentReferenceByDocument(Document document) {
     myDocument = document;
   }
 
   @Override
-  @Nonnull
+  
   public Document getDocument() {
     return myDocument;
   }

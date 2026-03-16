@@ -39,7 +39,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.ProjectView;
 import consulo.project.ui.view.tree.*;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -165,7 +164,7 @@ public class PsiPackageFavoriteNodeProvider implements BookmarkNodeProvider {
   }
 
   @Override
-  @Nonnull
+  
   public String getFavoriteTypeId() {
     return "package";
   }

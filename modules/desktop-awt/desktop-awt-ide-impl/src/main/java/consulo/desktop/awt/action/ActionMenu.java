@@ -39,8 +39,7 @@ import consulo.ui.ex.internal.LocalizeValueWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.util.TextWithMnemonic;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -74,7 +73,7 @@ public final class ActionMenu extends JMenu {
     private final boolean myEnableIcons;
 
     public ActionMenu(DataContext context,
-                      @Nonnull String place,
+                      String place,
                       ActionGroup group,
                       PresentationFactory presentationFactory,
                       boolean enableMnemonics,

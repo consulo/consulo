@@ -21,8 +21,7 @@ import org.intellij.lang.annotations.JdkConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -42,7 +41,7 @@ public class TextAttributes implements Cloneable {
     private boolean myEnforceEmpty;
 
     @SuppressWarnings({"NullableProblems", "NotNullFieldNotInitialized"})
-    @Nonnull
+    
     private AttributesFlyweight myAttrs;
 
     /**
@@ -79,15 +78,15 @@ public class TextAttributes implements Cloneable {
         this(DEFAULT_FLYWEIGHT);
     }
 
-    private TextAttributes(@Nonnull AttributesFlyweight attributesFlyweight) {
+    private TextAttributes(AttributesFlyweight attributesFlyweight) {
         myAttrs = attributesFlyweight;
     }
 
-    public TextAttributes(@Nonnull Element element) {
+    public TextAttributes(Element element) {
         readExternal(element);
     }
 
-    private TextAttributes(@Nonnull AttributesFlyweight attributesFlyweight, boolean enforced) {
+    private TextAttributes(AttributesFlyweight attributesFlyweight, boolean enforced) {
         myAttrs = attributesFlyweight;
         myEnforceEmpty = enforced;
     }
@@ -102,7 +101,7 @@ public class TextAttributes implements Cloneable {
         setAttributes(foregroundColor, backgroundColor, effectColor, null, effectType, fontType);
     }
 
-    public void copyFrom(@Nonnull TextAttributes other) {
+    public void copyFrom(TextAttributes other) {
         myAttrs = other.myAttrs;
     }
 
@@ -123,7 +122,7 @@ public class TextAttributes implements Cloneable {
         ColorValue effectColor,
         ColorValue errorStripeColor,
         EffectType effectType,
-        @Nonnull Map<EffectType, ColorValue> additionalEffects,
+        Map<EffectType, ColorValue> additionalEffects,
         @JdkConstants.FontStyle int fontType
     ) {
         myAttrs = AttributesFlyweight.create(
@@ -163,13 +162,13 @@ public class TextAttributes implements Cloneable {
         return getForegroundColor() == null && getBackgroundColor() == null && getEffectColor() == null && getFontType() == Font.PLAIN;
     }
 
-    @Nonnull
+    
     public AttributesFlyweight getFlyweight() {
         return myAttrs;
     }
 
-    @Nonnull
-    public static TextAttributes fromFlyweight(@Nonnull AttributesFlyweight flyweight) {
+    
+    public static TextAttributes fromFlyweight(AttributesFlyweight flyweight) {
         return new TextAttributes(flyweight);
     }
 
@@ -217,7 +216,7 @@ public class TextAttributes implements Cloneable {
      *
      * @param effectsMap map of effect types and colors to use.
      */
-    public void setAdditionalEffects(@Nonnull Map<EffectType, ColorValue> effectsMap) {
+    public void setAdditionalEffects(Map<EffectType, ColorValue> effectsMap) {
         myAttrs = myAttrs.withAdditionalEffects(effectsMap);
     }
 
@@ -226,7 +225,7 @@ public class TextAttributes implements Cloneable {
      *
      * @see TextAttributes#setAdditionalEffects(Map)
      */
-    public void withAdditionalEffect(@Nonnull EffectType effectType, @Nonnull ColorValue color) {
+    public void withAdditionalEffect(EffectType effectType, ColorValue color) {
         withAdditionalEffects(Collections.singletonMap(effectType, color));
     }
 
@@ -236,7 +235,7 @@ public class TextAttributes implements Cloneable {
      * @see TextAttributes#setAdditionalEffects(Map)
      * @see TextAttributesEffectsBuilder
      */
-    public void withAdditionalEffects(@Nonnull Map<EffectType, ColorValue> effectsMap) {
+    public void withAdditionalEffects(Map<EffectType, ColorValue> effectsMap) {
         if (effectsMap.isEmpty()) {
             return;
         }
@@ -249,11 +248,11 @@ public class TextAttributes implements Cloneable {
         return myAttrs.getEffectType();
     }
 
-    public void forEachAdditionalEffect(@Nonnull BiConsumer<? super EffectType, ? super ColorValue> consumer) {
+    public void forEachAdditionalEffect(BiConsumer<? super EffectType, ? super ColorValue> consumer) {
         myAttrs.getAdditionalEffects().forEach(consumer);
     }
 
-    public void forEachEffect(@Nonnull BiConsumer<? super EffectType, ? super ColorValue> consumer) {
+    public void forEachEffect(BiConsumer<? super EffectType, ? super ColorValue> consumer) {
         myAttrs.getAllEffects().forEach(consumer);
     }
 
@@ -296,7 +295,7 @@ public class TextAttributes implements Cloneable {
         return myAttrs.hashCode();
     }
 
-    public void readExternal(@Nonnull Element element) {
+    public void readExternal(Element element) {
         myAttrs = AttributesFlyweight.create(element);
 
         if (isEmpty()) {

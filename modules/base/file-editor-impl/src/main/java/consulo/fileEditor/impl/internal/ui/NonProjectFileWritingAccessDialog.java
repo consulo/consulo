@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.util.FileListRenderer;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,15 +45,15 @@ public class NonProjectFileWritingAccessDialog extends DialogWrapper {
     private JRadioButton myUnlockDirButton;
     private JRadioButton myUnlockAllButton;
 
-    public NonProjectFileWritingAccessDialog(@Nonnull Project project, @Nonnull List<VirtualFile> nonProjectFiles) {
+    public NonProjectFileWritingAccessDialog(Project project, List<VirtualFile> nonProjectFiles) {
         this(project, nonProjectFiles, "Non-Project Files");
     }
 
     @RequiredUIAccess
     public NonProjectFileWritingAccessDialog(
-        @Nonnull Project project,
-        @Nonnull List<VirtualFile> nonProjectFiles,
-        @Nonnull String filesType
+        Project project,
+        List<VirtualFile> nonProjectFiles,
+        String filesType
     ) {
         super(project);
         setTitle(filesType + " Protection");
@@ -103,7 +102,7 @@ public class NonProjectFileWritingAccessDialog extends DialogWrapper {
         init();
     }
 
-    @Nonnull
+    
     public static String getTheseFilesMessage(Collection<VirtualFile> files) {
         boolean dirsOnly = true;
         for (VirtualFile each : files) {
@@ -140,7 +139,7 @@ public class NonProjectFileWritingAccessDialog extends DialogWrapper {
         return myPanel;
     }
 
-    @Nonnull
+    
     public NonProjectFileWritingAccessProvider.UnlockOption getUnlockOption() {
         if (myUnlockAllButton.isSelected()) {
             return NonProjectFileWritingAccessProvider.UnlockOption.UNLOCK_ALL;

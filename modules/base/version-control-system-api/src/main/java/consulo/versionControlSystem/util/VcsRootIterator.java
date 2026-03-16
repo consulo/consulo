@@ -13,8 +13,7 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -145,15 +144,15 @@ public class VcsRootIterator {
     public void iterate() {
       VirtualFileUtil.visitChildrenRecursively(myRoot, new VirtualFileVisitor<Void>(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
         @Override
-        public void afterChildrenVisited(@Nonnull VirtualFile file) {
+        public void afterChildrenVisited(VirtualFile file) {
           if (myDirectoryFilter != null) {
             myDirectoryFilter.afterChildrenVisited(file);
           }
         }
 
-        @Nonnull
+        
         @Override
-        public Result visitFileEx(@Nonnull VirtualFile file) {
+        public Result visitFileEx(VirtualFile file) {
           if (isIgnoredByVcs(myVcsManager, myProject, file)) return SKIP_CHILDREN;
           if (myRootPresentFilter != null && !myRootPresentFilter.accept(file)) return SKIP_CHILDREN;
           if (myProject.isDisposed() || !process(file)) return skipTo(myRoot);
@@ -179,7 +178,7 @@ public class VcsRootIterator {
    * For recursively dirty directories all children are processed.
    */
   @SuppressWarnings("ReturnValueIgnored")
-  public static void iterate(@Nonnull VcsDirtyScope scope, @Nonnull Predicate<? super FilePath> iterator) {
+  public static void iterate(VcsDirtyScope scope, Predicate<? super FilePath> iterator) {
     Project project = scope.getProject();
     if (project.isDisposed()) return;
 
@@ -202,7 +201,7 @@ public class VcsRootIterator {
   }
 
   @SuppressWarnings("ReturnValueIgnored")
-  public static void iterateExistingInsideScope(@Nonnull VcsDirtyScope scope, @Nonnull Predicate<? super VirtualFile> iterator) {
+  public static void iterateExistingInsideScope(VcsDirtyScope scope, Predicate<? super VirtualFile> iterator) {
     Project project = scope.getProject();
     if (project.isDisposed()) return;
 

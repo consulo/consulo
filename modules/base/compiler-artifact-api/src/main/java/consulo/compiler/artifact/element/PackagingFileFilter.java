@@ -19,11 +19,10 @@ package consulo.compiler.artifact.element;
 import consulo.compiler.CompileContext;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public abstract class PackagingFileFilter {
-  public abstract boolean accept(@Nonnull VirtualFile virtualFile, @Nonnull CompileContext context);
+  public abstract boolean accept(VirtualFile virtualFile, CompileContext context);
 }

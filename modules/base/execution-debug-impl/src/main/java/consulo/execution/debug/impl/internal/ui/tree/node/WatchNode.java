@@ -17,7 +17,6 @@ package consulo.execution.debug.impl.internal.ui.tree.node;
 
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.breakpoint.XExpression;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.tree.TreeNode;
 
@@ -27,7 +26,7 @@ import javax.swing.tree.TreeNode;
  * @deprecated to be removed
  */
 public interface WatchNode extends TreeNode, Obsolescent {
-  @Nonnull
+  
   XExpression getExpression();
 
   void setObsolete();

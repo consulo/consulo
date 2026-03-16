@@ -46,8 +46,7 @@ import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +72,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
         myUpdateHistory = updateHistory;
     }
 
-    @Nonnull
+    
     @Override
     public JComponent getComponent() {
         myLoadingPanel = new JBLoadingPanel(new BorderLayout(), this);
@@ -221,7 +220,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
                 nameTd = nameTd.child(HtmlChunk.span("font-weight: bold; font-size: " + font.getSize()).addText(pluginName));
 
                 StringBuilder versionHistorySpan = new StringBuilder();
-                String historyVersion = myUpdateHistory.getHistoryVersion(key, pluginVersion);
+                String historyVersion = myUpdateHistory.getHistoryVersion(key, StringUtil.notNullize(pluginVersion, "N/A"));
                 if (!historyVersion.equals(pluginVersion)) {
                     versionHistorySpan.append("#");
                     versionHistorySpan.append(historyVersion);

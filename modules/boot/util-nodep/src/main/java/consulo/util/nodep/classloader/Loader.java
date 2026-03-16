@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.nodep.classloader;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -13,7 +15,7 @@ import java.net.URL;
 abstract class Loader {
   private final URL myURL;
   private final int myIndex;
-  protected ClasspathCache.NameFilter myLoadingFilter;
+  protected ClasspathCache.@Nullable NameFilter myLoadingFilter = null;
 
   Loader(URL url, int index) {
     myURL = url;
@@ -27,6 +29,7 @@ abstract class Loader {
   void close() throws Exception {
   }
 
+  @Nullable
   abstract Resource getResource(String name);
 
   abstract ClasspathCache.LoaderData buildData() throws IOException;
@@ -43,7 +46,7 @@ abstract class Loader {
       return true;
   }
 
-  boolean containsName(String name, String shortName) {
+  boolean containsName(@Nullable String name, String shortName) {
     if (name == null || name.isEmpty()) return true;
     ClasspathCache.NameFilter filter = myLoadingFilter;
     return filter == null || filter.maybeContains(shortName);

@@ -3,12 +3,11 @@ package consulo.ui.ex.awt.util;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.awt.event.ActionListener;
 
 public final class TimerUtil {
-  @Nonnull
-  public static javax.swing.Timer createNamedTimer(@Nonnull String name, int delay, @Nonnull @RequiredUIAccess ActionListener listener) {
+  
+  public static javax.swing.Timer createNamedTimer(String name, int delay, @RequiredUIAccess ActionListener listener) {
     return new javax.swing.Timer(delay, listener) {
       @Override
       public String toString() {
@@ -17,8 +16,8 @@ public final class TimerUtil {
     };
   }
 
-  @Nonnull
-  public static javax.swing.Timer createNamedTimer(@Nonnull String name, int delay) {
+  
+  public static javax.swing.Timer createNamedTimer(String name, int delay) {
     return new javax.swing.Timer(delay, null) {
       @Override
       public String toString() {

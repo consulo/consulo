@@ -10,8 +10,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -22,10 +21,10 @@ public interface IndexPatternBuilder {
   ExtensionPointName<IndexPatternBuilder> EP_NAME = ExtensionPointName.create(IndexPatternBuilder.class);
 
   @Nullable
-  Lexer getIndexingLexer(@Nonnull PsiFile file);
+  Lexer getIndexingLexer(PsiFile file);
 
   @Nullable
-  TokenSet getCommentTokenSet(@Nonnull PsiFile file);
+  TokenSet getCommentTokenSet(PsiFile file);
 
   int getCommentStartDelta(IElementType tokenType);
 
@@ -35,12 +34,12 @@ public interface IndexPatternBuilder {
    * Characters (in addition to whitespace) which can be present in the indent section of pattern occurrence's continuation
    * on subsequent line
    */
-  @Nonnull
-  default String getCharsAllowedInContinuationPrefix(@Nonnull IElementType tokenType) {
+  
+  default String getCharsAllowedInContinuationPrefix(IElementType tokenType) {
     return "";
   }
 
-  default int getCommentStartDelta(@Nonnull IElementType tokenType, @Nonnull CharSequence tokenText) {
+  default int getCommentStartDelta(IElementType tokenType, CharSequence tokenText) {
     return getCommentStartDelta(tokenType);
   }
 }

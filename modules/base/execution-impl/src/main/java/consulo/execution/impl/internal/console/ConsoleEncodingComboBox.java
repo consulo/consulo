@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingReference;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.nio.charset.Charset;
@@ -36,7 +35,7 @@ import java.util.*;
  */
 public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.EncodingItem> {
     public static abstract class EncodingItem {
-        @Nonnull
+        
         public abstract LocalizeValue getDisplayName();
     }
 
@@ -51,7 +50,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
             this(new EncodingReference(charset));
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             Locale locale = LocalizeManager.get().getLocale();
@@ -88,14 +87,14 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
     }
 
     public static class SeparatorItem extends EncodingItem {
-        @Nonnull
+        
         private final LocalizeValue myText;
 
-        public SeparatorItem(@Nonnull LocalizeValue text) {
+        public SeparatorItem(LocalizeValue text) {
             myText = text;
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getDisplayName() {
             return myText;
@@ -115,7 +114,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
     public ConsoleEncodingComboBox() {
         setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, EncodingItem value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, EncodingItem value, int index, boolean selected, boolean hasFocus) {
                 if (value == null) {
                     append("");
                 }
@@ -150,7 +149,7 @@ public class ConsoleEncodingComboBox extends ComboBox<ConsoleEncodingComboBox.En
         setSelectedItem(new CharsetItem(reference));
     }
 
-    @Nonnull
+    
     public EncodingReference getSelectedEncodingReference() {
         Object selectedItem = getSelectedItem();
         if (selectedItem instanceof CharsetItem charsetItem) {

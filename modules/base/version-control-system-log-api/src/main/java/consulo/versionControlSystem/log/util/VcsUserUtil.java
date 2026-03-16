@@ -17,47 +17,46 @@ package consulo.versionControlSystem.log.util;
 
 import consulo.util.lang.Couple;
 import consulo.versionControlSystem.log.VcsUser;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VcsUserUtil {
-  @Nonnull
+  
   private static final Pattern NAME_PATTERN = Pattern.compile("(\\w+)[\\W_](\\w+)");
-  @Nonnull
+  
   private static final Pattern PRINTABLE_ASCII_PATTERN = Pattern.compile("[ -~]*");
 
-  @Nonnull
-  public static String toExactString(@Nonnull VcsUser user) {
+  
+  public static String toExactString(VcsUser user) {
     return getString(user.getName(), user.getEmail());
   }
 
-  @Nonnull
-  private static String getString(@Nonnull String name, @Nonnull String email) {
+  
+  private static String getString(String name, String email) {
     if (name.isEmpty()) return email;
     if (email.isEmpty()) return name;
     return name + " <" + email + ">";
   }
 
-  public static boolean isSamePerson(@Nonnull VcsUser user1, @Nonnull VcsUser user2) {
+  public static boolean isSamePerson(VcsUser user1, VcsUser user2) {
     return getNameInStandardForm(getName(user1)).equals(getNameInStandardForm(getName(user2)));
   }
 
-  @Nonnull
-  public static String getShortPresentation(@Nonnull VcsUser user) {
+  
+  public static String getShortPresentation(VcsUser user) {
     return getName(user);
   }
 
-  @Nonnull
-  private static String getName(@Nonnull VcsUser user) {
+  
+  private static String getName(VcsUser user) {
     return getUserName(user.getName(), user.getEmail());
   }
 
-  @Nonnull
-  public static String getUserName(@Nonnull String name, @Nonnull String email) {
+  
+  public static String getUserName(String name, String email) {
     if (!name.isEmpty()) return name;
     String emailNamePart = getNameFromEmail(email);
     if (emailNamePart != null) return emailNamePart;
@@ -65,7 +64,7 @@ public class VcsUserUtil {
   }
 
   @Nullable
-  public static String getNameFromEmail(@Nonnull String email) {
+  public static String getNameFromEmail(String email) {
     int at = email.indexOf('@');
     String emailNamePart = null;
     if (at > 0) {
@@ -74,8 +73,8 @@ public class VcsUserUtil {
     return emailNamePart;
   }
 
-  @Nonnull
-  public static String getNameInStandardForm(@Nonnull String name) {
+  
+  public static String getNameInStandardForm(String name) {
     Couple<String> firstAndLastName = getFirstAndLastName(name);
     if (firstAndLastName != null) {
       return firstAndLastName.first.toLowerCase(Locale.ENGLISH) + " " + firstAndLastName.second.toLowerCase(Locale.ENGLISH); // synonyms detection is currently english-only
@@ -84,7 +83,7 @@ public class VcsUserUtil {
   }
 
   @Nullable
-  public static Couple<String> getFirstAndLastName(@Nonnull String name) {
+  public static Couple<String> getFirstAndLastName(String name) {
     Matcher matcher = NAME_PATTERN.matcher(name);
     if (matcher.matches()) {
       return Couple.of(matcher.group(1), matcher.group(2));
@@ -92,21 +91,21 @@ public class VcsUserUtil {
     return null;
   }
 
-  @Nonnull
-  public static String nameToLowerCase(@Nonnull String name) {
+  
+  public static String nameToLowerCase(String name) {
     if (!PRINTABLE_ASCII_PATTERN.matcher(name).matches()) return name;
     return name.toLowerCase(Locale.ENGLISH);
   }
 
-  @Nonnull
-  public static String capitalizeName(@Nonnull String name) {
+  
+  public static String capitalizeName(String name) {
     if (name.isEmpty()) return name;
     if (!PRINTABLE_ASCII_PATTERN.matcher(name).matches()) return name;
     return name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
   }
 
-  @Nonnull
-  public static String emailToLowerCase(@Nonnull String email) {
+  
+  public static String emailToLowerCase(String email) {
     return email.toLowerCase(Locale.ENGLISH);
   }
 }

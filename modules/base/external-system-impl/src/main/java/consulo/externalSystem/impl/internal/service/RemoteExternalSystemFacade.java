@@ -6,7 +6,6 @@ import consulo.externalSystem.impl.internal.service.remote.RemoteExternalSystemT
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
-import jakarta.annotation.Nonnull;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -27,7 +26,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
 
   /** <a href="http://en.wikipedia.org/wiki/Null_Object_pattern">Null object</a> for {@link RemoteExternalSystemFacade}. */
   RemoteExternalSystemFacade<?> NULL_OBJECT = new RemoteExternalSystemFacade<ExternalSystemExecutionSettings>() {
-    @Nonnull
+    
     @Override
     public RemoteExternalSystemProjectResolver<ExternalSystemExecutionSettings> getResolver()
       throws RemoteException, IllegalStateException
@@ -36,31 +35,31 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
     }
 
 
-    @Nonnull
+    
     @Override
     public RemoteExternalSystemTaskManager<ExternalSystemExecutionSettings> getTaskManager() throws RemoteException {
       return RemoteExternalSystemTaskManager.NULL_OBJECT;
     }
 
     @Override
-    public void applySettings(@Nonnull ExternalSystemExecutionSettings settings) throws RemoteException {
+    public void applySettings(ExternalSystemExecutionSettings settings) throws RemoteException {
     }
 
     @Override
-    public void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
+    public void applyProgressManager(RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
     }
 
     @Override
-    public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+    public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
     @Override
-    public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+    public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException {
       return false;
     }
 
-    @Nonnull
+    
     @Override
     public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
       return Collections.emptyMap();
@@ -74,7 +73,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @throws RemoteException        in case of unexpected I/O exception during processing
    * @throws IllegalStateException  in case of inability to create the service
    */
-  @Nonnull
+  
   RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException;
 
   /**
@@ -83,7 +82,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @return external system build manager
    * @throws RemoteException  in case of inability to create the service
    */
-  @Nonnull
+  
   RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException;
 
   /**
@@ -92,7 +91,7 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @param settings            settings to apply
    * @throws RemoteException    in case of unexpected I/O exception during processing
    */
-  void applySettings(@Nonnull S settings) throws RemoteException;
+  void applySettings(S settings) throws RemoteException;
 
   /**
    * Asks remote external system process to use given progress manager.
@@ -100,5 +99,5 @@ public interface RemoteExternalSystemFacade<S extends ExternalSystemExecutionSet
    * @param progressManager  progress manager to use
    * @throws RemoteException    in case of unexpected I/O exception during processing
    */
-  void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException;
+  void applyProgressManager(RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException;
 }

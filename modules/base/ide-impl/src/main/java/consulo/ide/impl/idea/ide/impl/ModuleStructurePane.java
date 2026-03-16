@@ -23,7 +23,6 @@ import consulo.ide.impl.idea.ide.projectView.impl.nodes.StructureViewModuleNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -36,7 +35,7 @@ public class ModuleStructurePane extends ProjectViewPaneImpl {
         myModule = module;
     }
 
-    @Nonnull
+    
     @Override
     public ProjectAbstractTreeStructureBase createStructure() {
         return new ProjectTreeStructure(myProject, ID) {
@@ -46,7 +45,7 @@ public class ModuleStructurePane extends ProjectViewPaneImpl {
             }
 
             @Override
-            public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+            public boolean isToBuildChildrenInBackground(Object element) {
                 return false;
             }
         };

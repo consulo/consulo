@@ -16,12 +16,11 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 @DeprecationInfo("Use Supplier")
 public interface NotNullProducer<T> extends Producer<T> {
   @Override
-  @Nonnull
+  
   T produce();
 }

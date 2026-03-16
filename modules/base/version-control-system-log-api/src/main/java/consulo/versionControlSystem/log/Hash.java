@@ -1,6 +1,5 @@
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * <p>Represents a unique reference to a VCS commit.</p>
@@ -16,7 +15,7 @@ public interface Hash {
   /**
    * Returns the String representation of this hash.
    */
-  @Nonnull
+  
   String asString();
 
   /**
@@ -27,6 +26,6 @@ public interface Hash {
    * <p>
    * <p>Usually (e.g. it is default for Git) the short hash is 7 symbols long.</p>
    */
-  @Nonnull
+  
   String toShortString();
 }

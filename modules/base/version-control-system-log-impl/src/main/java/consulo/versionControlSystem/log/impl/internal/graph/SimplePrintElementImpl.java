@@ -20,14 +20,13 @@ import consulo.versionControlSystem.log.graph.GraphElement;
 import consulo.versionControlSystem.log.graph.NodePrintElement;
 import consulo.versionControlSystem.log.graph.PrintElementManager;
 import consulo.versionControlSystem.log.graph.PrintElementWithGraphElement;
-import jakarta.annotation.Nonnull;
 
 public class SimplePrintElementImpl extends PrintElementWithGraphElement implements NodePrintElement {
 
   public SimplePrintElementImpl(int rowIndex,
                                 int positionInCurrentRow,
-                                @Nonnull GraphElement graphElement,
-                                @Nonnull PrintElementManager printElementManager) {
+                                GraphElement graphElement,
+                                PrintElementManager printElementManager) {
     super(rowIndex, positionInCurrentRow, graphElement, printElementManager);
   }
 

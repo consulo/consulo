@@ -16,7 +16,6 @@ import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -50,7 +49,7 @@ public class TaskConfigurable extends BindableConfigurable implements Configurab
 
   private final Project myProject;
   private final NotNullLazyValue<ControlBinder> myControlBinder = new NotNullLazyValue<ControlBinder>() {
-    @Nonnull
+    
     @Override
     protected ControlBinder compute() {
       return new ControlBinder(getConfig());
@@ -106,7 +105,7 @@ public class TaskConfigurable extends BindableConfigurable implements Configurab
            TaskSettings.getInstance().CONNECTION_TIMEOUT != Integer.valueOf(myConnectionTimeout.getText());
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Tasks");
@@ -125,7 +124,7 @@ public class TaskConfigurable extends BindableConfigurable implements Configurab
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return StandardConfigurableIds.TASKS_GROUP;
   }

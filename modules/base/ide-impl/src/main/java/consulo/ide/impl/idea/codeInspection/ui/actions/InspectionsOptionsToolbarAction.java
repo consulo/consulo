@@ -25,8 +25,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DefaultActionGroup options = new DefaultActionGroup();
         List<AnAction> actions = createActions();
         for (AnAction action : actions) {
@@ -71,7 +70,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (!myView.isSingleToolInSelection()) {
             e.getPresentation().setEnabled(false);
             return;
@@ -88,7 +87,7 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         e.getPresentation().setDescriptionValue(text);
     }
 
-    @Nonnull
+    
     private static LocalizeValue getToolOptions(@Nullable InspectionToolWrapper toolWrapper) {
         return InspectionLocalize.inspectionsViewOptionsTitle(toolWrapper != null ? toolWrapper.getDisplayName() : "");
     }
@@ -110,14 +109,14 @@ public class InspectionsOptionsToolbarAction extends AnAction {
         result.add(new AnAction(InspectionLocalize.runInspectionOnFileIntentionText()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 PsiElement psiElement = getPsiElement(tree);
                 assert psiElement != null;
                 new RunInspectionIntention(toolWrapper).invoke(myView.getProject(), null, psiElement.getContainingFile());
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(getPsiElement(tree) != null);
             }
 

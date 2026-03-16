@@ -9,8 +9,7 @@ import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -42,23 +41,21 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     init();
   }
 
-  public JBList(@Nonnull ListModel<E> dataModel) {
+  public JBList(ListModel<E> dataModel) {
     super(dataModel);
     init();
   }
 
-  public JBList(@Nonnull E... listData) {
+  public JBList(E... listData) {
     super(createDefaultListModel(listData));
     init();
   }
 
-  @Nonnull
-  public static <T> DefaultListModel<T> createDefaultListModel(@Nonnull T... items) {
+  public static <T> DefaultListModel<T> createDefaultListModel(T... items) {
     return createDefaultListModel(Arrays.asList(items));
   }
 
-  @Nonnull
-  public static <T> DefaultListModel<T> createDefaultListModel(@Nonnull Iterable<? extends T> items) {
+  public static <T> DefaultListModel<T> createDefaultListModel(Iterable<? extends T> items) {
     DefaultListModel<T> model = new DefaultListModel<>();
     for (T item : items) {
       model.add(model.getSize(), item);
@@ -66,7 +63,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     return model;
   }
 
-  public JBList(@Nonnull Collection<? extends E> items) {
+  public JBList(Collection<? extends E> items) {
     this(createDefaultListModel(items));
   }
 
@@ -228,23 +225,20 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     return model == null ? 0 : model.getSize();
   }
 
-  @Nonnull
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
   }
 
-  public void setEmptyText(@Nonnull String text) {
+  public void setEmptyText(String text) {
     myEmptyText.setText(text);
   }
 
   @Override
-  @Nonnull
   public ExpandableItemsHandler<Integer> getExpandableItemsHandler() {
     return myExpandableItemsHandler;
   }
 
-  @Nonnull
   protected ExpandableItemsHandler<Integer> createExpandableItemsHandler() {
     return ExpandableItemsHandlerFactory.install(this);
   }
@@ -255,7 +249,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
   }
 
   @Override
-  public void setCellRenderer(@Nonnull ListCellRenderer<? super E> cellRenderer) {
+  public void setCellRenderer(ListCellRenderer<? super E> cellRenderer) {
     // myExpandableItemsHandler may not yeb be initialized
     if (myExpandableItemsHandler == null) {
       super.setCellRenderer(cellRenderer);
@@ -264,7 +258,7 @@ public class JBList<E> extends JList<E> implements ComponentWithEmptyText, Compo
     super.setCellRenderer(new ExpandedItemListCellRendererWrapper<>(cellRenderer, myExpandableItemsHandler));
   }
 
-  public void installCellRenderer(@Nonnull Function<? super E, ? extends JComponent> fun) {
+  public void installCellRenderer(Function<? super E, ? extends JComponent> fun) {
     setCellRenderer(new SelectionAwareListCellRenderer<>(fun));
   }
 

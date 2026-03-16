@@ -16,12 +16,11 @@
 package consulo.project.internal;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public interface ProjectEx extends Project {
     int REGULAR_PROJECT = 1 << 30;
     int DEFAULT_PROJECT = 1 << 31;
     int WELCOME_PROJECT = 1 << 29;
 
-    void setProjectName(@Nonnull String name);
+    void setProjectName(String name);
 }

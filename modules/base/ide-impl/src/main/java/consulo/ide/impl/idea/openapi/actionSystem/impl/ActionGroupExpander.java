@@ -22,7 +22,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,22 +40,20 @@ public class ActionGroupExpander {
      *
      * @return future with actions from the given and nested non-popup groups that are visible after updating
      */
-    @Nonnull
-    public static CompletableFuture<List<AnAction>> expandActionGroup(@Nonnull ActionGroup group,
+    public static CompletableFuture<List<AnAction>> expandActionGroup(ActionGroup group,
                                                                       PresentationFactory presentationFactory,
-                                                                      @Nonnull DataContext context,
-                                                                      @Nonnull String place,
-                                                                      @Nonnull Predicate<AnAction> filter) {
+                                                                      DataContext context,
+                                                                      String place,
+                                                                      Predicate<AnAction> filter) {
         return expandActionGroup(group, presentationFactory, context, place, filter, new EmptyProgressIndicator());
     }
 
-    @Nonnull
-    public static CompletableFuture<List<AnAction>> expandActionGroup(@Nonnull ActionGroup group,
+    public static CompletableFuture<List<AnAction>> expandActionGroup(ActionGroup group,
                                                                       PresentationFactory presentationFactory,
-                                                                      @Nonnull DataContext context,
-                                                                      @Nonnull String place,
-                                                                      @Nonnull Predicate<AnAction> filter,
-                                                                      @Nonnull ProgressIndicator indicator) {
+                                                                      DataContext context,
+                                                                      String place,
+                                                                      Predicate<AnAction> filter,
+                                                                      ProgressIndicator indicator) {
         DataContext asyncContext = context instanceof AsyncDataContext
             ? context
             : DataManager.getInstance().createAsyncDataContext(context);
@@ -101,20 +98,18 @@ public class ActionGroupExpander {
         });
     }
 
-    @Nonnull
-    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(@Nonnull ActionGroup group,
+    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
                                                                                      PresentationFactory presentationFactory,
-                                                                                     @Nonnull DataContext context,
+                                                                                     DataContext context,
                                                                                      String place) {
         return expandActionGroupAsync(group, presentationFactory, context, place, new EmptyProgressIndicator());
     }
 
-    @Nonnull
-    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(@Nonnull ActionGroup group,
+    public static CompletableFuture<List<? extends AnAction>> expandActionGroupAsync(ActionGroup group,
                                                                                      PresentationFactory presentationFactory,
-                                                                                     @Nonnull DataContext context,
+                                                                                     DataContext context,
                                                                                      String place,
-                                                                                     @Nonnull ProgressIndicator indicator) {
+                                                                                     ProgressIndicator indicator) {
         if (!(context instanceof AsyncDataContext)) {
             context = DataManager.getInstance().createAsyncDataContext(context);
         }

@@ -19,22 +19,20 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.versionControlSystem.log.impl.internal.VcsLogManager;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
 public class VcsLogPanel extends JBPanel implements UiDataProvider {
-  @Nonnull
   private final VcsLogManager myManager;
 
-  public VcsLogPanel(@Nonnull VcsLogManager manager, @Nonnull VcsLogUiImpl logUi) {
+  public VcsLogPanel(VcsLogManager manager, VcsLogUiImpl logUi) {
     super(new BorderLayout());
     myManager = manager;
     add(logUi.getMainFrame().getMainComponent(), BorderLayout.CENTER);
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(VcsLogInternalDataKeys.LOG_MANAGER, myManager);
   }
 }

@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl.internal;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev

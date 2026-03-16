@@ -18,7 +18,6 @@ package consulo.language.version;
 import consulo.annotation.DeprecationInfo;
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public class BaseLanguageVersion<T extends Language> extends LanguageVersion {
     super(name, name, language);
   }
 
-  @Nonnull
+  
   @Override
   public T getLanguage() {
     return (T)super.getLanguage();

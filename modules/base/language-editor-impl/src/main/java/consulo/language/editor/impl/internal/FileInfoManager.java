@@ -30,8 +30,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -48,7 +47,7 @@ public class FileInfoManager implements Disposable {
     private final Map<FileType, FileLookupInfoProvider> myFileType2InfoProvider = new HashMap<>();
 
     @Inject
-    public FileInfoManager(@Nonnull Application application) {
+    public FileInfoManager(Application application) {
         for (FileLookupInfoProvider provider : FileLookupInfoProvider.EP_NAME.getExtensionList(application)) {
             FileType[] types = provider.getFileTypes();
             for (FileType type : types) {
@@ -103,7 +102,7 @@ public class FileInfoManager implements Disposable {
         return getFileInfoManager()._getLookupItem((PsiFile)psiElement, encoded, icon);
     }
 
-    public LookupElementBuilder _getLookupItem(@Nonnull PsiFile file, String name, Image icon) {
+    public LookupElementBuilder _getLookupItem(PsiFile file, String name, Image icon) {
         LookupElementBuilder builder = LookupElementBuilder.create(file, name).withIcon(icon);
 
         String info = _getInfo(file);

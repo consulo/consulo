@@ -21,8 +21,7 @@ import consulo.ui.Component;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.TextFieldWithHistory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ import java.util.List;
 public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<String, DesktopTextBoxWithHistoryImpl.MyTextFieldWithHistory> implements TextBoxWithHistory {
     public class MyTextFieldWithHistory extends TextFieldWithHistory implements FromSwingComponentWrapper {
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopTextBoxWithHistoryImpl.this;
@@ -65,9 +64,9 @@ public class DesktopTextBoxWithHistoryImpl extends SwingValidableComponent<Strin
         return component;
     }
 
-    @Nonnull
+    
     @Override
-    public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
+    public TextBoxWithHistory setHistory(List<String> history) {
         toAWTComponent().setHistory(history);
         return this;
     }

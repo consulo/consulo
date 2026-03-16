@@ -19,8 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.FList;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
@@ -148,7 +147,7 @@ public abstract class ListCellRendererWrapper<T> implements ListCellRenderer<T> 
         myFont = font;
     }
 
-    public final void setClientProperty(@Nonnull Object key, @Nullable Object value) {
+    public final void setClientProperty(Object key, @Nullable Object value) {
         myProperties = myProperties.prepend(pair(key, value));
     }
 }

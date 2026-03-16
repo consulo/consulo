@@ -17,18 +17,16 @@ package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 class DeletedTemplatesManager implements JDOMExternalizable {
   public JDOMExternalizableStringList DELETED_DEFAULT_TEMPLATES = new JDOMExternalizableStringList();
 
-  public void addName(@Nonnull @NonNls String nameWithExtension) {
+  public void addName(String nameWithExtension) {
     DELETED_DEFAULT_TEMPLATES.remove(nameWithExtension);
     DELETED_DEFAULT_TEMPLATES.add(nameWithExtension);
   }
 
-  public boolean contains(@Nonnull @NonNls String nameWithExtension) {
+  public boolean contains(String nameWithExtension) {
     return DELETED_DEFAULT_TEMPLATES.contains(nameWithExtension);
   }
 

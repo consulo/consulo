@@ -37,9 +37,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -99,7 +97,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     }
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         PsiElement element = adjustForRename(dataContext, PsiElementRenameHandler.getElement(dataContext));
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
         PsiElement nameSuggestionContext = file.findElementAt(editor.getCaretModel().getOffset());
@@ -107,7 +105,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     }
 
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         PsiElement element = elements.length == 1 ? elements[0] : null;
         if (element == null) {
             element = PsiElementRenameHandler.getElement(dataContext);
@@ -119,7 +117,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
         doRename(element, project, nameSuggestionContext, editor);
     }
 
-    @NonNls
+    
     private void doRename(PsiElement element, Project project, PsiElement nameSuggestionContext, Editor editor) {
         PsiDirectory psiDirectory = (PsiDirectory) element;
         T aPackage = getPackage(psiDirectory);
@@ -246,7 +244,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionTitleValue() {
         return RefactoringLocalize.renameDirectoryTitle();

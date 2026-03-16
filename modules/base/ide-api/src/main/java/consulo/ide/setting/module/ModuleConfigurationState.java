@@ -19,13 +19,12 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
 
 public interface ModuleConfigurationState extends UserDataHolder {
-  @Nonnull
+  
   ModulesConfigurator getModulesConfigurator();
 
-  @Nonnull
+  
   LibrariesConfigurator getLibrariesConfigurator();
 
   ModifiableRootModel getRootModel();

@@ -27,7 +27,6 @@ import consulo.versionControlSystem.internal.CheckinHandlersManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +67,7 @@ public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
     }
 
     @Override
-    public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(@Nonnull List<AbstractVcs> vcsList) {
+    public List<VcsCheckinHandlerFactory> getMatchingVcsFactories(List<AbstractVcs> vcsList) {
         List<VcsCheckinHandlerFactory> result = new SmartList<>();
         for (AbstractVcs vcs : vcsList) {
             Collection<VcsCheckinHandlerFactory> factories = myVcsMap.get(vcs.getKeyInstanceMethod());

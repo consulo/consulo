@@ -20,8 +20,7 @@ import consulo.execution.unscramble.StacktraceAnalyzer;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardAnalyzeListener;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 public class StacktraceAnalyzerListener extends ClipboardAnalyzeListener<StacktraceAnalyzer> {
 
   @Override
-  protected void handle(@Nonnull Project project, @Nonnull String value, @Nonnull StacktraceAnalyzer stacktraceAnalyzer) {
+  protected void handle(Project project, String value, StacktraceAnalyzer stacktraceAnalyzer) {
     UnscrambleDialog dialog = new UnscrambleDialog(project, stacktraceAnalyzer);
     dialog.createNormalizeTextAction().actionPerformed(null);
     dialog.doOKAction();
@@ -37,7 +36,7 @@ public class StacktraceAnalyzerListener extends ClipboardAnalyzeListener<Stacktr
 
   @Override
   @Nullable
-  public StacktraceAnalyzer canHandle(@Nonnull String value) {
+  public StacktraceAnalyzer canHandle(String value) {
     for (StacktraceAnalyzer stacktraceAnalyzer : Application.get().getExtensionList(StacktraceAnalyzer.class)) {
         if (stacktraceAnalyzer.isStacktrace(value)) {
           return stacktraceAnalyzer;

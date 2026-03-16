@@ -1,13 +1,11 @@
 package consulo.remoteServer.runtime;
 
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 public interface RemoteOperationCallback {
-    void errorOccurred(@Nonnull @Nls String errorMessage);
+    void errorOccurred(String errorMessage);
 
-    default void errorOccurred(@Nonnull @Nls String errorMessage, DeploymentRuntime failedDeployment) {
+    default void errorOccurred(String errorMessage, DeploymentRuntime failedDeployment) {
         errorOccurred(errorMessage);
     }
 }

@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.project.ProjectOpenContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,11 +29,11 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProjectFrameAllocator {
     @RequiredUIAccess
-    Object allocateFrame(@Nonnull Project project, @Nonnull ProjectOpenContext context);
+    Object allocateFrame(Project project, ProjectOpenContext context);
 
-    <I, O extends Project> Coroutine<I, O> allocateFrame(@Nonnull ProjectOpenContext context, @Nonnull Coroutine<I, O> in);
+    <I, O extends Project> Coroutine<I, O> allocateFrame(ProjectOpenContext context, Coroutine<I, O> in);
 
-    <I, O> Coroutine<I, O> initializeSteps(@Nonnull Project project, @Nonnull Coroutine<I, O> in);
+    <I, O> Coroutine<I, O> initializeSteps(Project project, Coroutine<I, O> in);
 
-    <I, O> Coroutine<I, O> postSteps(@Nonnull Project project, @Nonnull Coroutine<I, O> in);
+    <I, O> Coroutine<I, O> postSteps(Project project, Coroutine<I, O> in);
 }

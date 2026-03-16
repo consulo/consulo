@@ -22,7 +22,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -39,7 +38,7 @@ public class ChooseByNameFactoryImpl extends ChooseByNameFactory {
   }
 
   @Override
-  public ChooseByNamePopup createChooseByNamePopupComponent(@Nonnull ChooseByNameModel model) {
+  public ChooseByNamePopup createChooseByNamePopupComponent(ChooseByNameModel model) {
     return ChooseByNamePopup.createPopup(myProject, model, GotoActionBase.getPsiContext(myProject));  
   }
 }

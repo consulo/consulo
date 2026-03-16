@@ -27,8 +27,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.function.Supplier;
@@ -53,7 +52,7 @@ public class RunContentDescriptor implements Disposable {
 
   private Content myContent;
   private String myContentToolWindowId;
-  @Nonnull
+  
   private final AnAction[] myRestartActions;
 
   @Nullable
@@ -61,7 +60,7 @@ public class RunContentDescriptor implements Disposable {
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
                               @Nullable ProcessHandler processHandler,
-                              @Nonnull JComponent component,
+                              JComponent component,
                               String displayName,
                               @Nullable Image icon,
                               @Nullable Runnable activationCallback) {
@@ -70,7 +69,7 @@ public class RunContentDescriptor implements Disposable {
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
                               @Nullable ProcessHandler processHandler,
-                              @Nonnull JComponent component,
+                              JComponent component,
                               String displayName,
                               @Nullable Image icon,
                               @Nullable Runnable activationCallback,
@@ -95,7 +94,7 @@ public class RunContentDescriptor implements Disposable {
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
                               @Nullable ProcessHandler processHandler,
-                              @Nonnull JComponent component,
+                              JComponent component,
                               String displayName,
                               @Nullable Image icon) {
     this(executionConsole, processHandler, component, displayName, icon, null, null);
@@ -103,12 +102,12 @@ public class RunContentDescriptor implements Disposable {
 
   public RunContentDescriptor(@Nullable ExecutionConsole executionConsole,
                               @Nullable ProcessHandler processHandler,
-                              @Nonnull JComponent component,
+                              JComponent component,
                               String displayName) {
     this(executionConsole, processHandler, component, displayName, null, null, null);
   }
 
-  public RunContentDescriptor(@Nonnull RunProfile profile, @Nonnull ExecutionResult executionResult, @Nonnull RunnerLayoutUi ui) {
+  public RunContentDescriptor(RunProfile profile, ExecutionResult executionResult, RunnerLayoutUi ui) {
     this(executionResult.getExecutionConsole(), executionResult.getProcessHandler(), ui.getComponent(), profile.getName(), profile.getIcon(), null,
          executionResult instanceof DefaultExecutionResult ? ((DefaultExecutionResult)executionResult).getRestartActions() : null);
     myRunnerLayoutUi = ui;
@@ -121,7 +120,7 @@ public class RunContentDescriptor implements Disposable {
   /**
    * @return actions to restart or rerun
    */
-  @Nonnull
+  
   public AnAction[] getRestartActions() {
     return myRestartActions.length == 0 ? AnAction.EMPTY_ARRAY : myRestartActions.clone();
   }
@@ -178,7 +177,7 @@ public class RunContentDescriptor implements Disposable {
     return myContent;
   }
 
-  public void setAttachedContent(@Nonnull Content content) {
+  public void setAttachedContent(Content content) {
     myContent = content;
   }
 

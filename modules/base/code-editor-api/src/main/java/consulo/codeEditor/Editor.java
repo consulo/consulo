@@ -34,8 +34,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -59,7 +58,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the document instance.
      */
-    @Nonnull
+    
     Document getDocument();
 
     /**
@@ -81,7 +80,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    @Nonnull
+    
     default JComponent getComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -93,7 +92,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    @Nonnull
+    
     default Component getUIComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -105,7 +104,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    @Nonnull
+    
     default JComponent getContentComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -117,7 +116,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the component instance.
      */
-    @Nonnull
+    
     default Component getContentUIComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -139,7 +138,7 @@ public interface Editor extends UserDataHolder {
      * @return the selection model instance.
      * @see #getCaretModel()
      */
-    @Nonnull
+    
     SelectionModel getSelectionModel();
 
     /**
@@ -152,7 +151,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the markup model instance.
      */
-    @Nonnull
+    
     MarkupModel getMarkupModel();
 
     /**
@@ -161,7 +160,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the folding model instance.
      */
-    @Nonnull
+    
     FoldingModel getFoldingModel();
 
     /**
@@ -170,7 +169,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the scrolling model instance.
      */
-    @Nonnull
+    
     ScrollingModel getScrollingModel();
 
     /**
@@ -179,7 +178,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the caret model instance.
      */
-    @Nonnull
+    
     CaretModel getCaretModel();
 
     /**
@@ -188,10 +187,10 @@ public interface Editor extends UserDataHolder {
      *
      * @return the soft wrap model instance
      */
-    @Nonnull
+    
     SoftWrapModel getSoftWrapModel();
 
-    @Nonnull
+    
     default FocusModeModel getFocusModeModel() {
         return EmptyFocusModeModel.INSTANCE;
     }
@@ -202,7 +201,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the settings instance.
      */
-    @Nonnull
+    
     EditorSettings getSettings();
 
     /**
@@ -211,7 +210,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the color scheme instance.
      */
-    @Nonnull
+    
     EditorColorsScheme getColorsScheme();
 
     /**
@@ -227,8 +226,8 @@ public interface Editor extends UserDataHolder {
      * @param pos the logical position.
      * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      */
-    @Nonnull
-    default Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
+    
+    default Point logicalPositionToXY(LogicalPosition pos) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -238,7 +237,7 @@ public interface Editor extends UserDataHolder {
      * @param pos the logical position.
      * @return the corresponding offset in the document.
      */
-    int logicalPositionToOffset(@Nonnull LogicalPosition pos);
+    int logicalPositionToOffset(LogicalPosition pos);
 
     /**
      * Maps a logical position in the editor (the line and column ignoring folding) to
@@ -247,8 +246,8 @@ public interface Editor extends UserDataHolder {
      * @param logicalPos the logical position.
      * @return the corresponding visual position.
      */
-    @Nonnull
-    VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition logicalPos);
+    
+    VisualPosition logicalToVisualPosition(LogicalPosition logicalPos);
 
     /**
      * Maps a visual position in the editor to pixel coordinates.
@@ -256,16 +255,16 @@ public interface Editor extends UserDataHolder {
      * @param visible the visual position.
      * @return the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      */
-    @Nonnull
-    default Point visualPositionToXY(@Nonnull VisualPosition visible) {
+    
+    default Point visualPositionToXY(VisualPosition visible) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
     /**
      * Same as {@link #visualPositionToXY(VisualPosition)}, but returns potentially more precise result.
      */
-    @Nonnull
-    default Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos) {
+    
+    default Point2D visualPositionToPoint2D(VisualPosition pos) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -276,8 +275,8 @@ public interface Editor extends UserDataHolder {
      * @param visiblePos the visual position.
      * @return the corresponding logical position.
      */
-    @Nonnull
-    LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition visiblePos);
+    
+    LogicalPosition visualToLogicalPosition(VisualPosition visiblePos);
 
     /**
      * Maps an offset in the document to a logical position.
@@ -288,7 +287,7 @@ public interface Editor extends UserDataHolder {
      * @param offset the offset in the document.
      * @return the corresponding logical position.
      */
-    @Nonnull
+    
     LogicalPosition offsetToLogicalPosition(int offset);
 
     /**
@@ -302,7 +301,7 @@ public interface Editor extends UserDataHolder {
      * @param offset the offset in the document.
      * @return the corresponding visual position.
      */
-    @Nonnull
+    
     VisualPosition offsetToVisualPosition(int offset);
 
     /**
@@ -316,7 +315,7 @@ public interface Editor extends UserDataHolder {
      *                       at line following the wrap.
      * @return the corresponding visual position.
      */
-    @Nonnull
+    
     VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap);
 
     /**
@@ -325,8 +324,8 @@ public interface Editor extends UserDataHolder {
      * @param p the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      * @return the corresponding logical position.
      */
-    @Nonnull
-    default LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
+    
+    default LogicalPosition xyToLogicalPosition(Point p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -337,8 +336,8 @@ public interface Editor extends UserDataHolder {
      * @param p the coordinates relative to the top left corner of the {@link #getContentComponent() content component}.
      * @return the corresponding visual position.
      */
-    @Nonnull
-    default VisualPosition xyToVisualPosition(@Nonnull Point p) {
+    
+    default VisualPosition xyToVisualPosition(Point p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -346,15 +345,15 @@ public interface Editor extends UserDataHolder {
     /**
      * Same as {{@link #xyToVisualPosition(Point)}}, but allows to specify target point with higher precision.
      */
-    @Nonnull
-    default VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
+    
+    default VisualPosition xyToVisualPosition(Point2D p) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
     /**
      * @since 2017.2
      */
-    @Nonnull
+    
     default Point offsetToXY(int offset) {
         return offsetToXY(offset, false, false);
     }
@@ -363,7 +362,7 @@ public interface Editor extends UserDataHolder {
      * @see #offsetToVisualPosition(int, boolean, boolean)
      * @since 2017.2
      */
-    @Nonnull
+    
     default Point offsetToXY(int offset, boolean leanForward, boolean beforeSoftWrap) {
         VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
         return visualPositionToXY(visualPosition);
@@ -372,7 +371,7 @@ public interface Editor extends UserDataHolder {
     /**
      * @since 2017.2
      */
-    @Nonnull
+    
     default Point2D offsetToPoint2D(int offset) {
         return offsetToPoint2D(offset, false, false);
     }
@@ -381,7 +380,7 @@ public interface Editor extends UserDataHolder {
      * @see #offsetToVisualPosition(int, boolean, boolean)
      * @since 2017.2
      */
-    @Nonnull
+    
     default Point2D offsetToPoint2D(int offset, boolean leanForward, boolean beforeSoftWrap) {
         VisualPosition visualPosition = offsetToVisualPosition(offset, leanForward, beforeSoftWrap);
         return visualPositionToPoint2D(visualPosition);
@@ -401,7 +400,7 @@ public interface Editor extends UserDataHolder {
      *
      * @param listener the listener instance.
      */
-    void addEditorMouseListener(@Nonnull EditorMouseListener listener);
+    void addEditorMouseListener(EditorMouseListener listener);
 
     /**
      * Adds a listener for receiving notifications about mouse clicks in the editor and
@@ -411,7 +410,7 @@ public interface Editor extends UserDataHolder {
      * @param listener         the listener instance.
      * @param parentDisposable the parent Disposable instance.
      */
-    default void addEditorMouseListener(@Nonnull EditorMouseListener listener, @Nonnull Disposable parentDisposable) {
+    default void addEditorMouseListener(EditorMouseListener listener, Disposable parentDisposable) {
         addEditorMouseListener(listener);
         Disposer.register(parentDisposable, () -> removeEditorMouseListener(listener));
     }
@@ -422,21 +421,21 @@ public interface Editor extends UserDataHolder {
      *
      * @param listener the listener instance.
      */
-    void removeEditorMouseListener(@Nonnull EditorMouseListener listener);
+    void removeEditorMouseListener(EditorMouseListener listener);
 
     /**
      * Adds a listener for receiving notifications about mouse movement in the editor.
      *
      * @param listener the listener instance.
      */
-    void addEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
+    void addEditorMouseMotionListener(EditorMouseMotionListener listener);
 
     /**
      * Removes a listener for receiving notifications about mouse movement in the editor.
      *
      * @param listener the listener instance.
      */
-    void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener);
+    void removeEditorMouseMotionListener(EditorMouseMotionListener listener);
 
     /**
      * Checks if this editor instance has been disposed.
@@ -480,7 +479,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return the gutter instance.
      */
-    @Nonnull
+    
     EditorGutter getGutter();
 
     /**
@@ -491,7 +490,7 @@ public interface Editor extends UserDataHolder {
      * @return the editor area, or null if the event occurred over an unknown area.
      */
     @Nullable
-    default EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
+    default EditorMouseEventArea getMouseEventArea(MouseEvent e) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -518,13 +517,13 @@ public interface Editor extends UserDataHolder {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
-    @Nonnull
+    
     IndentsModel getIndentsModel();
 
-    @Nonnull
+    
     InlayModel getInlayModel();
 
-    @Nonnull
+    
     EditorKind getEditorKind();
 
     /**
@@ -536,7 +535,7 @@ public interface Editor extends UserDataHolder {
         return (int) (getContentComponent().getFontMetrics(getColorsScheme().getFont(EditorFontType.PLAIN)).getAscent() * getColorsScheme().getLineSpacing());
     }
 
-    default void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
+    default void showPopupInBestPositionFor(JBPopup popup) {
         EditorPopupHelper.getInstance().showPopupInBestPositionFor(this, popup);
     }
 
@@ -550,10 +549,10 @@ public interface Editor extends UserDataHolder {
         return getCaretModel().getOffset();
     }
 
-    @Nonnull
+    
     DataContext getDataContext();
 
-    @Nonnull
+    
     default EditorHighlighter getHighlighter() {
         return CodeEditorInternalHelper.getInstance().createEmptyHighlighter(getProject(), getDocument());
     }
@@ -568,7 +567,7 @@ public interface Editor extends UserDataHolder {
         return null;
     }
 
-    default int visualPositionToOffset(@Nonnull VisualPosition pos) {
+    default int visualPositionToOffset(VisualPosition pos) {
         return logicalPositionToOffset(visualToLogicalPosition(pos));
     }
 
@@ -577,7 +576,7 @@ public interface Editor extends UserDataHolder {
      *
      * @return array of length 2, containing boundaries of the target Y range
      */
-    @Nonnull
+    
     default int[] visualLineToYRange(int visualLine) {
         int startY = visualLineToY(visualLine);
         int startOffset = visualPositionToOffset(new VisualPosition(visualLine, 0));

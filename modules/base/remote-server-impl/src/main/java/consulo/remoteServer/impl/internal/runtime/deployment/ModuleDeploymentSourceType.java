@@ -23,7 +23,6 @@ import consulo.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.remoteServer.configuration.deployment.ModuleDeploymentSource;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -36,14 +35,14 @@ public class ModuleDeploymentSourceType extends DeploymentSourceType<ModuleDeplo
     super("module");
   }
 
-  @Nonnull
+  
   @Override
-  public ModuleDeploymentSource load(@Nonnull Element tag, @Nonnull Project project) {
+  public ModuleDeploymentSource load(Element tag, Project project) {
     return new ModuleDeploymentSourceImpl(ReadAction.compute(() -> ModuleUtilCore.createPointer(project, tag.getAttributeValue(NAME_ATTRIBUTE))));
   }
 
   @Override
-  public void save(@Nonnull ModuleDeploymentSource source, @Nonnull Element tag) {
+  public void save(ModuleDeploymentSource source, Element tag) {
     tag.setAttribute(NAME_ATTRIBUTE, source.getModulePointer().getName());
   }
 }

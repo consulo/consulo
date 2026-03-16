@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.action.ActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -29,20 +28,20 @@ import java.util.function.Function;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface FileSystemTreeFactory {
-    @Nonnull
+    
     static FileSystemTreeFactory getInstance() {
         return Application.get().getInstance(FileSystemTreeFactory.class);
     }
 
-    @Nonnull
+    
     FileSystemTree createFileSystemTree(@Nullable ComponentManager project, FileChooserDescriptor fileChooserDescriptor);
 
-    @Nonnull
+    
     FileSystemTree createFileSystemTree(@Nullable ComponentManager project,
                                         FileChooserDescriptor descriptor,
                                         Object tree,
                                         @Nullable TreeCellRenderer renderer,
                                         @Nullable Function<? super TreePath, String> speedSearchConverter);
-    @Nonnull
+    
     ActionGroup createDefaultFileSystemActions(FileSystemTree fileSystemTree);
 }

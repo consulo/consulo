@@ -28,7 +28,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -56,13 +55,13 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     // guarded by this
     private boolean myPostStartupActivitiesPassed;
 
-    @Nonnull
+    
     private final Application myApplication;
     private final Project myProject;
     private ScheduledFuture<?> myBackgroundPostStartupScheduledFuture;
 
     @Inject
-    public StartupManagerImpl(@Nonnull Application application, @Nonnull Project project) {
+    public StartupManagerImpl(Application application, Project project) {
         myApplication = application;
         myProject = project;
     }
@@ -72,7 +71,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
 
     @Override
-    public synchronized void registerPostStartupActivity(@Nonnull StartupActivity consumer) {
+    public synchronized void registerPostStartupActivity(StartupActivity consumer) {
         checkNonDefaultProject();
         if (myPostStartupActivitiesPassed) {
             LOG.error("Registering post-startup activity that will never be run:" + " disposed=" + myProject.isDisposed() + "; open=" + myProject.isOpen());
@@ -135,7 +134,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
 
         //StartupActivity.POST_STARTUP_ACTIVITY.addExtensionPointListener(new ExtensionPointListener<StartupActivity>() {
         //  @Override
-        //  public void extensionAdded(@Nonnull StartupActivity extension, @Nonnull PluginDescriptor pluginDescriptor) {
+        //  public void extensionAdded(StartupActivity extension, PluginDescriptor pluginDescriptor) {
         //    if (DumbService.isDumbAware(extension)) {
         //      runActivity(new AtomicBoolean(), extension, pluginDescriptor);
         //    }
@@ -146,7 +145,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         //}, this);
     }
 
-    private void runActivity(@Nonnull AtomicBoolean uiFreezeWarned, @Nonnull UIAccess uiAccess, @Nonnull StartupActivity extension, @Nonnull PluginDescriptor pluginDescriptor) {
+    private void runActivity(AtomicBoolean uiFreezeWarned, UIAccess uiAccess, StartupActivity extension, PluginDescriptor pluginDescriptor) {
         ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
         if (indicator != null) {
             indicator.pushState();
@@ -174,7 +173,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         }
     }
 
-    private void reportUiFreeze(@Nonnull AtomicBoolean uiFreezeWarned) {
+    private void reportUiFreeze(AtomicBoolean uiFreezeWarned) {
         Application app = myApplication;
         if (!app.isUnitTestMode() && app.isDispatchThread() && uiFreezeWarned.compareAndSet(false, true)) {
             LOG.info("Some post-startup activities freeze UI for noticeable time. Please consider making them DumbAware to run them in background" +
@@ -227,7 +226,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         });
     }
 
-    @Nonnull
+    
     private List<StartupActivity> takeDumbUnawareStartupActivities() {
         synchronized (myLock) {
             if (myNotDumbAwarePostStartupActivities.isEmpty()) {
@@ -241,7 +240,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
 
 
-    private void runActivities(@Nonnull UIAccess uiAccess, @Nonnull Deque<StartupActivity> activities, @Nonnull String phaseName) {
+    private void runActivities(UIAccess uiAccess, Deque<StartupActivity> activities, String phaseName) {
         Activity activity = StartUpMeasurer.startMainActivity(phaseName);
 
         while (true) {
@@ -267,7 +266,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         activity.end();
     }
 
-    public final void scheduleBackgroundPostStartupActivities(@Nonnull UIAccess uiAccess) {
+    public final void scheduleBackgroundPostStartupActivities(UIAccess uiAccess) {
         if (myProject.isDisposedOrDisposeInProgress()) {
             return;
         }
@@ -280,7 +279,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
             List<BackgroundStartupActivity> activities = myApplication.getExtensionPoint(BackgroundStartupActivity.class).getExtensionList();
             //StartupActivity.BACKGROUND_POST_STARTUP_ACTIVITY.addExtensionPointListener(new ExtensionPointListener<StartupActivity.Background>() {
             //  @Override
-            //  public void extensionAdded(@Nonnull StartupActivity.Background extension, @Nonnull PluginDescriptor pluginDescriptor) {
+            //  public void extensionAdded(StartupActivity.Background extension, PluginDescriptor pluginDescriptor) {
             //    extension.runActivity(myProject);
             //  }
             //}, this);
@@ -306,7 +305,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         }
     }
 
-    private void runActivity(@Nonnull UIAccess uiAccess, @Nonnull StartupActivity startupActivity) {
+    private void runActivity(UIAccess uiAccess, StartupActivity startupActivity) {
         ProgressManager.checkCanceled();
         try {
             startupActivity.runActivity(myProject, uiAccess);
@@ -320,7 +319,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
 
     @Override
-    public void runWhenProjectIsInitialized(@Nonnull StartupActivity startupActivity) {
+    public void runWhenProjectIsInitialized(StartupActivity startupActivity) {
         Application application = myProject.getApplication();
 
         Runnable runnable = () -> {
@@ -350,7 +349,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     }
 
     @Override
-    public void runAfterOpened(@Nonnull StartupActivity startupActivity) {
+    public void runAfterOpened(StartupActivity startupActivity) {
         checkNonDefaultProject();
 
         if (!myPostStartupActivitiesPassed) {

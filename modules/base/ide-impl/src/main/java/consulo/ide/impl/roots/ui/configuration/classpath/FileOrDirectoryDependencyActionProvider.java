@@ -30,7 +30,6 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,33 +38,33 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class FileOrDirectoryDependencyActionProvider implements AddModuleDependencyActionProvider<VirtualFile[], FileOrDirectoryDependencyContext> {
   @Override
-  public boolean isAvailable(@Nonnull FileOrDirectoryDependencyContext context) {
+  public boolean isAvailable(FileOrDirectoryDependencyContext context) {
     return true;
   }
 
   @Override
-  public FileOrDirectoryDependencyContext createContext(@Nonnull ClasspathPanel classpathPanel,
-                                                        @Nonnull ModulesConfigurator modulesConfigurator,
-                                                        @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public FileOrDirectoryDependencyContext createContext(ClasspathPanel classpathPanel,
+                                                        ModulesConfigurator modulesConfigurator,
+                                                        LibrariesConfigurator librariesConfigurator) {
     return new FileOrDirectoryDependencyContext(classpathPanel, modulesConfigurator, librariesConfigurator);
   }
 
-  @Nonnull
+  
   @Override
-  public LocalizeValue getActionName(@Nonnull ModuleRootLayer layer) {
+  public LocalizeValue getActionName(ModuleRootLayer layer) {
     return LocalizeValue.localizeTODO("File or Directory");
   }
 
-  @Nonnull
+  
   @Override
-  public Image getIcon(@Nonnull ModuleRootLayer layer) {
+  public Image getIcon(ModuleRootLayer layer) {
     return AllIcons.Nodes.Folder;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public AsyncResult<VirtualFile[]> invoke(@Nonnull FileOrDirectoryDependencyContext context) {
+  public AsyncResult<VirtualFile[]> invoke(FileOrDirectoryDependencyContext context) {
     FileChooserDescriptor descriptor = context.getFileChooserDescriptor();
     ClasspathPanel classpathPanel = context.getClasspathPanel();
     return FileChooser.chooseFiles(descriptor, classpathPanel.getComponent(), context.getProject(), classpathPanel.getRootModel().getModule().getModuleDir());

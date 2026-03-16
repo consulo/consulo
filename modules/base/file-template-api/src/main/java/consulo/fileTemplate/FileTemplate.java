@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
@@ -53,33 +52,33 @@ public interface FileTemplate extends Cloneable {
   /**
    * Name without extension
    */
-  @Nonnull
+  
   String getName();
 
-  void setName(@Nonnull String name);
+  void setName(String name);
 
   boolean isTemplateOfType(FileType fType);
 
   boolean isDefault();
 
-  @Nonnull
+  
   String getDescription();
 
-  @Nonnull
+  
   String getText();
 
   void setText(String text);
 
-  @Nonnull
+  
   String getText(Map attributes) throws IOException;
 
-  @Nonnull
+  
   String getText(Properties attributes) throws IOException;
 
-  @Nonnull
+  
   String getExtension();
 
-  void setExtension(@Nonnull String extension);
+  void setExtension(String extension);
 
   boolean isReformatCode();
 
@@ -91,23 +90,23 @@ public interface FileTemplate extends Cloneable {
 
   FileTemplate clone();
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("getUnsetAttributes")
-  String[] getUnsetAttributes(@Nonnull Properties properties, boolean includeDummies, Project project) throws FileTemplateParseException;
+  String[] getUnsetAttributes(Properties properties, boolean includeDummies, Project project) throws FileTemplateParseException;
 
-  @Nonnull
-  String[] getUnsetAttributes(@Nonnull Map<String, Object> properties, boolean includeDummies, Project project) throws FileTemplateParseException;
+  
+  String[] getUnsetAttributes(Map<String, Object> properties, boolean includeDummies, Project project) throws FileTemplateParseException;
 
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("getUnsetAttributes")
-  default String[] getUnsetAttributes(@Nonnull Properties properties, Project project) throws FileTemplateParseException {
+  default String[] getUnsetAttributes(Properties properties, Project project) throws FileTemplateParseException {
     return getUnsetAttributes(properties, false, project);
   }
 
-  @Nonnull
-  default String[] getUnsetAttributes(@Nonnull Map<String, Object> properties, Project project) throws FileTemplateParseException {
+  
+  default String[] getUnsetAttributes(Map<String, Object> properties, Project project) throws FileTemplateParseException {
     return getUnsetAttributes(properties, false, project);
   }
 }

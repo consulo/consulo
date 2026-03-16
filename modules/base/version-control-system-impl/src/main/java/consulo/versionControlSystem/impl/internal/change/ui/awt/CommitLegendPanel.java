@@ -22,23 +22,22 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class CommitLegendPanel {
 
-  @Nonnull
+  
   private final SimpleColoredComponent myRootPanel;
-  @Nonnull
+  
   private final InfoCalculator myInfoCalculator;
 
-  public CommitLegendPanel(@Nonnull InfoCalculator infoCalculator) {
+  public CommitLegendPanel(InfoCalculator infoCalculator) {
     myInfoCalculator = infoCalculator;
     myRootPanel = new SimpleColoredComponent();
   }
 
-  @Nonnull
+  
   public JComponent getComponent() {
     return myRootPanel;
   }
@@ -52,7 +51,7 @@ public class CommitLegendPanel {
                VcsBundle.message("commit.legend.unversioned"));
   }
 
-  protected void appendText(int total, int included, @Nonnull FileStatus fileStatus, @Nonnull String labelName) {
+  protected void appendText(int total, int included, FileStatus fileStatus, String labelName) {
     if (total > 0) {
       if (!isPanelEmpty()) {
         appendSpace();

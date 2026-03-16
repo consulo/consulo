@@ -37,8 +37,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author oleg
@@ -80,9 +79,9 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
     }
 
     protected Result shouldSkipWithResult(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull DataContext dataContext
+        PsiFile file,
+        Editor editor,
+        DataContext dataContext
     ) {
         Project project = dataContext.getData(Project.KEY);
         if (project == null) {
@@ -116,11 +115,11 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
 
     @Override
     public Result preprocessEnter(
-        @Nonnull PsiFile file,
-        @Nonnull Editor editor,
-        @Nonnull SimpleReference<Integer> caretOffset,
-        @Nonnull SimpleReference<Integer> caretAdvance,
-        @Nonnull DataContext dataContext,
+        PsiFile file,
+        Editor editor,
+        SimpleReference<Integer> caretOffset,
+        SimpleReference<Integer> caretAdvance,
+        DataContext dataContext,
         EditorActionHandler originalHandler
     ) {
         Result res = shouldSkipWithResult(file, editor, dataContext);
@@ -173,7 +172,7 @@ public class BaseIndentEnterHandler extends EnterHandlerDelegateAdapter {
         }
     }
 
-    protected String getNewIndent(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull CharSequence oldIndent) {
+    protected String getNewIndent(PsiFile file, Document document, CharSequence oldIndent) {
         CharSequence nonEmptyIndent = oldIndent;
         CharSequence editorCharSequence = document.getCharsSequence();
         int nLines = document.getLineCount();

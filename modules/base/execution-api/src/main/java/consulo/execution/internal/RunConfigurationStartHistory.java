@@ -18,7 +18,6 @@ package consulo.execution.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -28,14 +27,14 @@ import java.util.Set;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RunConfigurationStartHistory {
-    static RunConfigurationStartHistory getInstance(@Nonnull Project project) {
+    static RunConfigurationStartHistory getInstance(Project project) {
         return project.getInstance(RunConfigurationStartHistory.class);
     }
 
-    @Nonnull
+    
     Set<String> getPinned();
 
-    @Nonnull
+    
     Set<String> getHistory();
 
     boolean isAllConfigurationsExpanded();

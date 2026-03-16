@@ -24,7 +24,6 @@ import consulo.module.extension.MutableModuleExtension;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,33 +31,33 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class SandModuleExtensionProvider implements ModuleExtensionProvider<SandModuleExtension> {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "sand";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getName() {
     return LocalizeValue.localizeTODO("Sand");
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return PlatformIconGroup.nodesStatic();
   }
 
-  @Nonnull
+  
   @Override
-  public ModuleExtension<SandModuleExtension> createImmutableExtension(@Nonnull ModuleRootLayer layer) {
+  public ModuleExtension<SandModuleExtension> createImmutableExtension(ModuleRootLayer layer) {
     return new SandModuleExtension(getId(), layer);
   }
 
-  @Nonnull
+  
   @Override
-  public MutableModuleExtension<SandModuleExtension> createMutableExtension(@Nonnull ModuleRootLayer layer) {
+  public MutableModuleExtension<SandModuleExtension> createMutableExtension(ModuleRootLayer layer) {
     return new SandMutableModuleExtension(getId(), layer);
   }
 }

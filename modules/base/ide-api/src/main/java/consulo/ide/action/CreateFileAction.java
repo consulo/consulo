@@ -43,8 +43,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -64,11 +63,11 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         super(text, description, icon);
     }
 
-    public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    public CreateFileAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    public CreateFileAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public CreateFileAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -77,10 +76,10 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         return CreateFileAction.class.equals(getClass());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    protected void invokeDialog(@Nonnull Project project, PsiDirectory directory, @Nonnull Consumer<PsiElement[]> elementsConsumer) {
+    protected void invokeDialog(Project project, PsiDirectory directory, Consumer<PsiElement[]> elementsConsumer) {
         MyInputValidator validator = new MyValidator(project, directory);
         if (project.getApplication().isUnitTestMode()) {
             try {
@@ -120,7 +119,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         return popup;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     protected PsiElement[] create(String newName, PsiDirectory directory) throws Exception {
@@ -128,7 +127,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         return new PsiElement[]{WriteAction.compute(() -> mkdirs.directory.createFile(getFileName(mkdirs.newName)))};
     }
 
-    public static PsiDirectory findOrCreateSubdirectory(@Nonnull PsiDirectory parent, @Nonnull String subdirName) {
+    public static PsiDirectory findOrCreateSubdirectory(PsiDirectory parent, String subdirName) {
         PsiDirectory sub = parent.findSubdirectory(subdirName);
         return sub == null ? WriteAction.compute(() -> parent.createSubdirectory(subdirName)) : sub;
     }
@@ -138,7 +137,7 @@ public class CreateFileAction extends CreateElementActionBase implements DumbAwa
         public final PsiDirectory directory;
 
         @RequiredReadAction
-        public MkDirs(@Nonnull String newName, @Nonnull PsiDirectory directory) {
+        public MkDirs(String newName, PsiDirectory directory) {
             if (Platform.current().os().isWindows()) {
                 newName = newName.replace('\\', '/');
             }

@@ -22,7 +22,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.Transferable;
 import java.util.function.Consumer;
@@ -38,7 +37,7 @@ public class CopyPasteUtil {
     return elts != null ? elts : PsiElement.EMPTY_ARRAY;
   }
 
-  public static void addDefaultListener(@Nonnull Disposable parent, @Nonnull Consumer<? super PsiElement> consumer) {
+  public static void addDefaultListener(Disposable parent, Consumer<? super PsiElement> consumer) {
     CopyPasteManager.getInstance().addContentChangedListener(new DefaultCopyPasteListener(consumer), parent);
   }
 
@@ -50,7 +49,7 @@ public class CopyPasteUtil {
       this(element -> updater.addSubtreeToUpdateByElement(element));
     }
 
-    private DefaultCopyPasteListener(@Nonnull Consumer<? super PsiElement> consumer) {
+    private DefaultCopyPasteListener(Consumer<? super PsiElement> consumer) {
       this.consumer = consumer;
     }
 

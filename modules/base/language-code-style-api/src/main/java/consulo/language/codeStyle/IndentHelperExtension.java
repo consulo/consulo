@@ -21,7 +21,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,8 +32,8 @@ public interface IndentHelperExtension {
 
     int TOO_BIG_WALK_THRESHOLD = 450;
 
-    boolean isAvailable(@Nonnull PsiFile file);
+    boolean isAvailable(PsiFile file);
 
     @RequiredReadAction
-    int getIndentInner(@Nonnull PsiFile file, @Nonnull ASTNode element, boolean includeNonSpace, int recursionLevel);
+    int getIndentInner(PsiFile file, ASTNode element, boolean includeNonSpace, int recursionLevel);
 }

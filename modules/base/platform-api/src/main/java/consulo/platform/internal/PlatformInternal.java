@@ -18,7 +18,6 @@ package consulo.platform.internal;
 import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.platform.Platform;
 
-import jakarta.annotation.Nonnull;
 import java.util.ServiceLoader;
 
 /**
@@ -29,11 +28,11 @@ public abstract class PlatformInternal {
   private static final PlatformInternal ourPlatformInternal = PlatformServiceLoader.findImplementation(PlatformInternal.class, ServiceLoader::load);
   private static final Platform ourCurrentPlatform = ourPlatformInternal.createCurrent();
 
-  @Nonnull
+  
   public static Platform current() {
     return ourCurrentPlatform;
   }
 
-  @Nonnull
+  
   public abstract Platform createCurrent();
 }

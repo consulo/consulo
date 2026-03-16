@@ -18,7 +18,6 @@ package consulo.language.codeStyle.impl.internal;
 import consulo.document.Document;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 
-import jakarta.annotation.Nonnull;
 
 public class TimeStampedIndentOptions extends CommonCodeStyleSettings.IndentOptions {
   private long myTimeStamp;
@@ -43,7 +42,7 @@ public class TimeStampedIndentOptions extends CommonCodeStyleSettings.IndentOpti
     myOriginalIndentOptionsHash = originalIndentOptionsHash;
   }
 
-  public boolean isOutdated(@Nonnull Document document, @Nonnull CommonCodeStyleSettings.IndentOptions defaultForFile) {
+  public boolean isOutdated(Document document, CommonCodeStyleSettings.IndentOptions defaultForFile) {
     return document.getModificationStamp() != myTimeStamp || defaultForFile.hashCode() != myOriginalIndentOptionsHash;
   }
 

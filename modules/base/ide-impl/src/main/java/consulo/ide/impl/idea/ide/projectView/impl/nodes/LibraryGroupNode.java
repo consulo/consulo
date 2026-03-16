@@ -24,7 +24,6 @@ import consulo.content.internal.LibraryKindRegistry;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
@@ -46,7 +45,7 @@ import consulo.project.ui.view.tree.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +63,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Collection<AbstractTreeNode> getChildren() {
         Module module = getValue().getModule();
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
@@ -132,7 +131,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         ProjectFileIndex index = ProjectRootManager.getInstance(getProject()).getFileIndex();
         //noinspection SimplifiableIfStatement
         if (!index.isInLibrarySource(file) && !index.isInLibraryClasses(file)) {
@@ -162,8 +161,8 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         ProjectSettingsService.getInstance(myProject).openModuleLibrarySettings(module);
     }
 
-    @Nonnull
-    static VirtualFile[] getLibraryRoots(@Nonnull LibraryOrderEntry orderEntry) {
+    
+    static VirtualFile[] getLibraryRoots(LibraryOrderEntry orderEntry) {
         Library library = orderEntry.getLibrary();
         if (library == null) {
             return VirtualFile.EMPTY_ARRAY;
@@ -185,6 +184,6 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
         for (OrderRootType rootType : rootTypes) {
             files.addAll(Arrays.asList(library.getFiles(rootType)));
         }
-        return VfsUtilCore.toVirtualFileArray(files);
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
 }

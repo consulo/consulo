@@ -28,7 +28,6 @@ import consulo.util.lang.ObjectUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
 
 import java.util.Map;
 import java.util.Objects;
@@ -52,14 +51,14 @@ public abstract class WebLayoutImpl<C extends Component & HasComponents & FromVa
     }
 
     @Override
-    public void remove(@Nonnull consulo.ui.Component component) {
+    public void remove(consulo.ui.Component component) {
         if (component.getParent() == this) {
             toVaadinComponent().remove(TargetVaddin.to(component));
         }
     }
 
     @Override
-    public void forEachChild(@Nonnull Consumer<consulo.ui.Component> consumer) {
+    public void forEachChild(Consumer<consulo.ui.Component> consumer) {
         C c = toVaadinComponent();
 
         c.getChildren()

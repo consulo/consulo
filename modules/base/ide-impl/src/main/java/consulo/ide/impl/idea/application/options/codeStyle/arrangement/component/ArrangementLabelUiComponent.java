@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.application.options.codeStyle.arrangement.componen
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -28,29 +27,29 @@ import javax.swing.*;
  */
 public class ArrangementLabelUiComponent extends AbstractArrangementUiComponent {
 
-  @Nonnull
+  
   private final ArrangementAtomMatchCondition myCondition;
-  @Nonnull
+  
   private final JLabel                        myLabel;
 
-  public ArrangementLabelUiComponent(@Nonnull ArrangementSettingsToken token) {
+  public ArrangementLabelUiComponent(ArrangementSettingsToken token) {
     super(token);
     myCondition = new ArrangementAtomMatchCondition(token);
     myLabel = new JLabel(token.getRepresentationValue());
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementSettingsToken getToken() {
     return myCondition.getType();
   }
 
   @Override
-  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws UnsupportedOperationException {
+  public void chooseToken(ArrangementSettingsToken data) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     return myCondition;

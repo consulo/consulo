@@ -17,8 +17,6 @@ package consulo.language.editor.completion.lookup;
 
 import consulo.language.editor.completion.AutoCompletionPolicy;
 import consulo.language.editor.completion.CompletionResultSet;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -27,30 +25,30 @@ import javax.swing.*;
  */
 public abstract class MutableLookupElement<T> extends LookupElement {
   @Override
-  @Nonnull
+  
   public abstract T getObject();
 
   public abstract MutableLookupElement<T> setBold();
 
   public abstract MutableLookupElement<T> setAutoCompletionPolicy(AutoCompletionPolicy policy);
 
-  @Nonnull
+  
   public abstract MutableLookupElement<T> setIcon(Icon icon);
 
-  @Nonnull
+  
   public abstract MutableLookupElement<T> setPriority(double priority);
 
-  @Nonnull
-  public abstract MutableLookupElement<T> setPresentableText(@Nonnull String displayText);
+  
+  public abstract MutableLookupElement<T> setPresentableText(String displayText);
 
-  @Nonnull
+  
   public abstract MutableLookupElement<T> setTypeText(String text);
 
-  @Nonnull
+  
   public abstract MutableLookupElement<T> setTailText(String text, boolean grayed);
 
-  @Nonnull
-  public abstract MutableLookupElement<T> setTailType(@Nonnull TailType type);
+  
+  public abstract MutableLookupElement<T> setTailType(TailType type);
 
   /**
    * Use {@link CompletionResultSet#caseInsensitive()} instead
@@ -58,10 +56,10 @@ public abstract class MutableLookupElement<T> extends LookupElement {
    * @return
    */
   @Deprecated
-  @Nonnull
+  
   public abstract MutableLookupElement<T> setCaseSensitive(boolean caseSensitive);
 
-  public abstract MutableLookupElement<T> addLookupStrings(@NonNls String... additionalLookupStrings);
+  public abstract MutableLookupElement<T> addLookupStrings(String... additionalLookupStrings);
 
   public abstract MutableLookupElement<T> setInsertHandler(InsertHandler<? extends LookupElement> insertHandler);
 

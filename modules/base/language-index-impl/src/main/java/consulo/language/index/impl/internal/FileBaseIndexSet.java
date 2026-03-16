@@ -20,7 +20,6 @@ import consulo.language.psi.stub.IndexableFileSet;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,15 +33,15 @@ public class FileBaseIndexSet implements IndexableFileSet {
     }
 
     @Override
-    public boolean isInSet(@Nonnull VirtualFile file) {
+    public boolean isInSet(VirtualFile file) {
         return myCollector.shouldCollect(file);
     }
 
     @Override
-    public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull final ContentIterator iterator) {
+    public void iterateIndexableFilesIn(VirtualFile file, final ContentIterator iterator) {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
 
                 if (!isInSet(file)) return false;
                 iterator.processFile(file);

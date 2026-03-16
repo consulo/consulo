@@ -23,8 +23,7 @@ import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.vaadin.BorderLayoutEx;
 import consulo.web.internal.ui.vaadin.VaadinSizeUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -42,15 +41,15 @@ public class WebDockLayoutImpl extends WebLayoutImpl<WebDockLayoutImpl.Vaadin, S
         }
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
-    @Nonnull
+    
     @Override
-    public Layout<StaticPosition> add(@Nonnull Component component, @Nonnull StaticPosition constraint) {
+    public Layout<StaticPosition> add(Component component, StaticPosition constraint) {
         BorderLayoutEx.Constraint constraintEx;
         switch (constraint) {
             case TOP:

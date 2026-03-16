@@ -20,7 +20,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to register activities which are run during project loading.
@@ -35,7 +34,7 @@ public abstract class StartupManager {
    */
   @Deprecated
   @DeprecationInfo("Use constructor injecting")
-  public static StartupManager getInstance(@Nonnull Project project) {
+  public static StartupManager getInstance(Project project) {
     return project.getInstance(StartupManager.class);
   }
 
@@ -45,7 +44,7 @@ public abstract class StartupManager {
    *
    * @param runnable the activity to execute.
    */
-  public abstract void registerPostStartupActivity(@Nonnull StartupActivity activity);
+  public abstract void registerPostStartupActivity(StartupActivity activity);
 
   /**
    * Registers activity that is executed on pooled thread after project is opened.
@@ -53,7 +52,7 @@ public abstract class StartupManager {
    * <p>
    * See https://github.com/JetBrains/intellij-community/blob/master/platform/service-container/overview.md#startup-activity.
    */
-  public abstract void runAfterOpened(@Nonnull StartupActivity activity);
+  public abstract void runAfterOpened(StartupActivity activity);
 
   /**
    * Executes the specified runnable immediately if the initialization of the current project
@@ -61,13 +60,13 @@ public abstract class StartupManager {
    *
    * @param runnable the activity to execute.
    */
-  public abstract void runWhenProjectIsInitialized(@Nonnull StartupActivity startupActivity);
+  public abstract void runWhenProjectIsInitialized(StartupActivity startupActivity);
 
   public abstract boolean postStartupActivityPassed();
 
   // region Deprecated Staff
   @Deprecated
-  public final void registerPostStartupActivity(@Nonnull Runnable runnable) {
+  public final void registerPostStartupActivity(Runnable runnable) {
     if (runnable instanceof DumbAware) {
       registerPostStartupActivity((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
     }
@@ -83,7 +82,7 @@ public abstract class StartupManager {
    * @param runnable the activity to execute.
    */
   @Deprecated
-  public void runWhenProjectIsInitialized(@Nonnull Runnable runnable) {
+  public void runWhenProjectIsInitialized(Runnable runnable) {
     if (runnable instanceof DumbAware) {
       runWhenProjectIsInitialized((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
     }
@@ -93,7 +92,7 @@ public abstract class StartupManager {
   }
 
   @Deprecated
-  public  void runAfterOpened(@Nonnull Runnable runnable) {
+  public  void runAfterOpened(Runnable runnable) {
     if (runnable instanceof DumbAware) {
       runAfterOpened((StartupActivity.DumbAware)(project, uiAccess) -> runnable.run());
     }

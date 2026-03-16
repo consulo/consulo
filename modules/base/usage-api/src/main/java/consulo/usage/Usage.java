@@ -18,8 +18,7 @@ package consulo.usage;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.navigation.Navigatable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -27,7 +26,7 @@ import jakarta.annotation.Nullable;
 public interface Usage extends Navigatable {
     Usage[] EMPTY_ARRAY = new Usage[0];
 
-    @Nonnull
+    
     UsagePresentation getPresentation();
 
     boolean isValid();

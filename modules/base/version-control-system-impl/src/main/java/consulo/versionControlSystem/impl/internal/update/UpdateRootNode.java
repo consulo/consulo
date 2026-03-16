@@ -24,6 +24,7 @@ import consulo.versionControlSystem.update.UpdatedFiles;
 
 import java.util.Collections;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public class UpdateRootNode extends GroupTreeNode {
 
@@ -45,7 +46,7 @@ public class UpdateRootNode extends GroupTreeNode {
     }
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   private GroupTreeNode addFileGroup(FileGroup fileGroup, AbstractTreeNode parent, ActionInfo actionInfo) {
     if (fileGroup.isEmpty()) {
       return null;

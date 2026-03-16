@@ -19,13 +19,12 @@ package consulo.ide.impl.idea.find;
 import consulo.find.localize.FindLocalize;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
  */
 public class FindProgressIndicator extends BackgroundableProcessIndicator {
-    public FindProgressIndicator(@Nonnull Project project, String scopeString) {
+    public FindProgressIndicator(Project project, String scopeString) {
         super(
             project,
             FindLocalize.findProgressSearchingMessage(scopeString),

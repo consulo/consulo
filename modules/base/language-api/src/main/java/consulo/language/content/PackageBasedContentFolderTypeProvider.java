@@ -25,8 +25,7 @@ import consulo.language.psi.PsiPackageManager;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,13 +44,13 @@ public abstract class PackageBasedContentFolderTypeProvider extends ContentFolde
    * @return icon of child directory
    */
   @Override
-  @Nonnull
+  
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable VirtualFile file, @Nullable ComponentManager project) {
     return getChildDirectoryIcon(file, project, null);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable PsiDirectory psiDirectory, @Nullable PsiPackageManager oldPsiPackageManager) {
     Project project = psiDirectory == null ? null : psiDirectory.getProject();
@@ -59,7 +58,7 @@ public abstract class PackageBasedContentFolderTypeProvider extends ContentFolde
     return getChildDirectoryIcon(virtualFile, project, oldPsiPackageManager);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public final Image getChildDirectoryIcon(@Nullable VirtualFile file, @Nullable ComponentManager project, @Nullable PsiPackageManager oldPsiPackageManager) {
     Image packageIcon = getChildPackageIcon();

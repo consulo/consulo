@@ -20,7 +20,6 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.FocusManager;
 import consulo.ui.event.GlobalFocusListener;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,9 +44,9 @@ public class WebFocusManagerImpl implements FocusManager {
     myListeners.getMulticaster().focusChanged();
   }
 
-  @Nonnull
+  
   @Override
-  public Disposable addListener(@Nonnull GlobalFocusListener focusListener) {
+  public Disposable addListener(GlobalFocusListener focusListener) {
     Disposable disposable = Disposable.newDisposable();
     myListeners.addListener(focusListener, disposable);
     return disposable;

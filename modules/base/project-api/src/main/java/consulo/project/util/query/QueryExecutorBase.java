@@ -6,7 +6,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.util.query.QueryExecutor;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -42,7 +41,7 @@ public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor
     }
 
     @Override
-    public final boolean execute(@Nonnull Params queryParameters, @Nonnull Predicate<? super Result> consumer) {
+    public final boolean execute(Params queryParameters, Predicate<? super Result> consumer) {
         AtomicBoolean toContinue = new AtomicBoolean(true);
         Predicate<Result> wrapper = result -> {
             if (!toContinue.get()) {
@@ -83,5 +82,5 @@ public abstract class QueryExecutorBase<Result, Params> implements QueryExecutor
     /**
      * Find some results according to queryParameters and feed them to consumer. If consumer returns false, stop.
      */
-    public abstract void processQuery(@Nonnull Params queryParameters, @Nonnull Predicate<? super Result> consumer);
+    public abstract void processQuery(Params queryParameters, Predicate<? super Result> consumer);
 }

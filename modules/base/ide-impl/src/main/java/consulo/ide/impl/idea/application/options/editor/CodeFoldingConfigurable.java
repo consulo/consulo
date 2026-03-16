@@ -37,8 +37,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ import java.util.List;
  */
 @ExtensionImpl
 public class CodeFoldingConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editor.preferences.folding";
@@ -60,7 +59,7 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
     return StandardConfigurableIds.EDITOR_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return ApplicationLocalize.groupCodeFolding();
@@ -72,9 +71,9 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     VerticalLayout verticalLayout = VerticalLayout.create();
 
     CheckBox outlineBox = CheckBox.create(ApplicationLocalize.checkboxShowCodeFoldingOutline());

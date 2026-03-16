@@ -11,8 +11,7 @@ import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerSupplier;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -28,26 +27,26 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
   private volatile boolean myShowGroups;
   private volatile boolean myShowContributorRoots;
 
-  protected ServiceViewModel(@Nonnull ServiceModel model,
-                             @Nonnull ServiceModelFilter modelFilter,
-                             @Nonnull ServiceModelFilter.ServiceViewFilter filter) {
+  protected ServiceViewModel(ServiceModel model,
+                             ServiceModelFilter modelFilter,
+                             ServiceModelFilter.ServiceViewFilter filter) {
     myModel = model;
     myModelFilter = modelFilter;
     myFilter = filter;
     myModel.addEventListener(this);
   }
 
-  @Nonnull
+ 
   List<? extends ServiceViewItem> getRoots() {
     return getRoots(false);
   }
 
-  @Nonnull
+ 
   List<? extends ServiceViewItem> getVisibleRoots() {
     return getRoots(true);
   }
 
-  @Nonnull
+ 
   private List<? extends ServiceViewItem> getRoots(boolean visible) {
     List<? extends ServiceViewItem> roots = processGroups(doGetRoots(), visible);
     if (roots.stream().anyMatch(ContributorNode.class::isInstance)) {
@@ -63,7 +62,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     return roots;
   }
 
-  @Nonnull
+ 
   protected abstract List<? extends ServiceViewItem> doGetRoots();
 
   void saveState(ServiceViewState viewState) {
@@ -75,23 +74,23 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     notifyListeners();
   }
 
-  @Nonnull
+ 
   ServiceModelFilter.ServiceViewFilter getFilter() {
     return myFilter;
   }
 
-  @Nonnull
-  List<? extends ServiceViewItem> getChildren(@Nonnull ServiceViewItem parent) {
+ 
+  List<? extends ServiceViewItem> getChildren(ServiceViewItem parent) {
     return getChildren(parent, true);
   }
 
-  @Nonnull
-  protected List<? extends ServiceViewItem> getChildren(@Nonnull ServiceViewItem parent, boolean visible) {
+ 
+  protected List<? extends ServiceViewItem> getChildren(ServiceViewItem parent, boolean visible) {
     return processGroups(myModelFilter.filter(parent.getChildren(), myFilter), visible);
   }
 
   @Nullable
-  protected ServiceViewItem findItemSafe(@Nonnull ServiceViewItem item) {
+  protected ServiceViewItem findItemSafe(ServiceViewItem item) {
     ServiceViewItem updatedItem = findItem(item, myModel.getRoots());
     if (updatedItem != null) {
       return updatedItem;
@@ -99,11 +98,11 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     return myModel.findItemSafe(item.getValue(), item.getRootContributor().getClass());
   }
 
-  void addModelListener(@Nonnull ServiceViewModelListener listener) {
+  void addModelListener(ServiceViewModelListener listener) {
     myListeners.add(listener);
   }
 
-  void removeModelListener(@Nonnull ServiceViewModelListener listener) {
+  void removeModelListener(ServiceViewModelListener listener) {
     myListeners.remove(listener);
   }
 
@@ -146,14 +145,14 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     myModel.removeEventListener(this);
   }
 
-  @Nonnull
+ 
   @Override
   public Invoker getInvoker() {
     return myModel.getInvoker();
   }
 
-  @Nonnull
-  private List<? extends ServiceViewItem> processGroups(@Nonnull List<? extends ServiceViewItem> items, boolean visible) {
+ 
+  private List<? extends ServiceViewItem> processGroups(List<? extends ServiceViewItem> items, boolean visible) {
     if (visible) {
       items = ContainerUtil.filter(items, item -> item.getViewDescriptor().isVisible());
     }
@@ -165,17 +164,17 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
                 .collect(Collectors.toList());
   }
 
-  @Nonnull
-  private List<? extends ServiceViewItem> filterEmptyGroups(@Nonnull List<? extends ServiceViewItem> items, boolean visible) {
+ 
+  private List<? extends ServiceViewItem> filterEmptyGroups(List<? extends ServiceViewItem> items, boolean visible) {
     return ContainerUtil.filter(items, item -> !(item instanceof ServiceGroupNode) ||
       !filterEmptyGroups(getChildren(item, visible), visible).isEmpty());
   }
 
-  static ServiceViewModel createModel(@Nonnull List<ServiceViewItem> items,
+  static ServiceViewModel createModel(List<ServiceViewItem> items,
                                       @Nullable ServiceViewContributor<?> contributor,
-                                      @Nonnull ServiceModel model,
-                                      @Nonnull ServiceModelFilter modelFilter,
-                                      @Nullable ServiceModelFilter.ServiceViewFilter parentFilter) {
+                                      ServiceModel model,
+                                      ServiceModelFilter modelFilter,
+                                      ServiceModelFilter.@Nullable ServiceViewFilter parentFilter) {
     if (contributor != null && items.size() > 1) {
       ServiceViewItem contributorRoot = null;
       for (ServiceViewItem root : model.getRoots()) {
@@ -216,11 +215,11 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
   }
 
   @Nullable
-  static ServiceViewModel loadModel(@Nonnull ServiceViewState viewState,
-                                    @Nonnull ServiceModel model,
-                                    @Nonnull ServiceModelFilter modelFilter,
-                                    @Nullable ServiceModelFilter.ServiceViewFilter parentFilter,
-                                    @Nonnull Map<String, ServiceViewContributor<?>> contributors) {
+  static ServiceViewModel loadModel(ServiceViewState viewState,
+                                    ServiceModel model,
+                                    ServiceModelFilter modelFilter,
+                                    ServiceModelFilter.@Nullable ServiceViewFilter parentFilter,
+                                    Map<String, ServiceViewContributor<?>> contributors) {
     switch (viewState.viewType) {
       case ContributorModel.TYPE: {
         ServiceViewState.ServiceState serviceState = ContainerUtil.getOnlyItem(viewState.roots);
@@ -313,8 +312,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     return path;
   }
 
-  @Nullable
-  private static ServiceViewState.ServiceState getState(@Nullable ServiceViewItem item) {
+  private static ServiceViewState.@Nullable ServiceState getState(@Nullable ServiceViewItem item) {
     if (item == null) return null;
 
     List<String> path = getIdPath(item);
@@ -327,7 +325,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
   }
 
   interface ServiceViewModelListener {
-    default void eventProcessed(@Nonnull ServiceEventListener.ServiceEvent e) {
+    default void eventProcessed(ServiceEventListener.ServiceEvent e) {
       structureChanged();
     }
 
@@ -335,8 +333,8 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
   }
 
   static final class AllServicesModel extends ServiceViewModel {
-    AllServicesModel(@Nonnull ServiceModel model, @Nonnull ServiceModelFilter modelFilter,
-                     @Nonnull Collection<ServiceViewContributor<?>> contributors) {
+    AllServicesModel(ServiceModel model, ServiceModelFilter modelFilter,
+                     Collection<ServiceViewContributor<?>> contributors) {
       super(model, modelFilter, new ServiceModelFilter.ServiceViewFilter(null) {
         @Override
         public boolean test(ServiceViewItem item) {
@@ -346,7 +344,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
     }
 
     @Override
-    @Nonnull
+   
     protected List<? extends ServiceViewItem> doGetRoots() {
       return myModelFilter.filter(ContainerUtil.filter(myModel.getRoots(), getFilter()), getFilter());
     }
@@ -362,8 +360,8 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
 
     private final ServiceViewContributor<?> myContributor;
 
-    ContributorModel(@Nonnull ServiceModel model, @Nonnull ServiceModelFilter modelFilter, @Nonnull ServiceViewContributor<?> contributor,
-                     @Nullable ServiceModelFilter.ServiceViewFilter parentFilter) {
+    ContributorModel(ServiceModel model, ServiceModelFilter modelFilter, ServiceViewContributor<?> contributor,
+                     ServiceModelFilter.@Nullable ServiceViewFilter parentFilter) {
       super(model, modelFilter, new ServiceModelFilter.ServiceViewFilter(parentFilter) {
         @Override
         public boolean test(ServiceViewItem item) {
@@ -373,7 +371,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
       myContributor = contributor;
     }
 
-    @Nonnull
+   
     @Override
     protected List<? extends ServiceViewItem> doGetRoots() {
       return myModelFilter.filter(ContainerUtil.filter(myModel.getRoots(), getFilter()), getFilter());
@@ -405,8 +403,8 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
 
     private final AtomicReference<ServiceGroupNode> myGroupRef;
 
-    GroupModel(@Nonnull ServiceModel model, @Nonnull ServiceModelFilter modelFilter,
-               @Nonnull AtomicReference<ServiceGroupNode> groupRef, @Nullable ServiceModelFilter.ServiceViewFilter parentFilter) {
+    GroupModel(ServiceModel model, ServiceModelFilter modelFilter,
+               AtomicReference<ServiceGroupNode> groupRef, ServiceModelFilter.@Nullable ServiceViewFilter parentFilter) {
       super(model, modelFilter, new ServiceModelFilter.ServiceViewFilter(parentFilter) {
         @Override
         public boolean test(ServiceViewItem item) {
@@ -418,7 +416,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
       myGroupRef = groupRef;
     }
 
-    @Nonnull
+   
     @Override
     protected List<? extends ServiceViewItem> doGetRoots() {
       ServiceGroupNode group = myGroupRef.get();
@@ -451,8 +449,8 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
 
     private final AtomicReference<ServiceViewItem> myServiceRef;
 
-    SingeServiceModel(@Nonnull ServiceModel model, @Nonnull ServiceModelFilter modelFilter,
-                      @Nonnull AtomicReference<ServiceViewItem> serviceRef, @Nullable ServiceModelFilter.ServiceViewFilter parentFilter) {
+    SingeServiceModel(ServiceModel model, ServiceModelFilter modelFilter,
+                      AtomicReference<ServiceViewItem> serviceRef, ServiceModelFilter.@Nullable ServiceViewFilter parentFilter) {
       super(model, modelFilter, new ServiceModelFilter.ServiceViewFilter(parentFilter) {
         @Override
         public boolean test(ServiceViewItem item) {
@@ -462,7 +460,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
       myServiceRef = serviceRef;
     }
 
-    @Nonnull
+   
     @Override
     protected List<? extends ServiceViewItem> doGetRoots() {
       ServiceViewItem service = myServiceRef.get();
@@ -495,8 +493,8 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
 
     private final List<ServiceViewItem> myRoots;
 
-    ServiceListModel(@Nonnull ServiceModel model, @Nonnull ServiceModelFilter modelFilter, @Nonnull List<ServiceViewItem> roots,
-                     @Nullable ServiceModelFilter.ServiceViewFilter parentFilter) {
+    ServiceListModel(ServiceModel model, ServiceModelFilter modelFilter, List<ServiceViewItem> roots,
+                     ServiceModelFilter.@Nullable ServiceViewFilter parentFilter) {
       super(model, modelFilter, new ServiceModelFilter.ServiceViewFilter(parentFilter) {
         @Override
         public boolean test(ServiceViewItem item) {
@@ -506,7 +504,7 @@ public abstract class ServiceViewModel implements Disposable, InvokerSupplier, S
       myRoots = new CopyOnWriteArrayList<>(roots);
     }
 
-    @Nonnull
+   
     @Override
     protected List<? extends ServiceViewItem> doGetRoots() {
       return myModelFilter.filter(myRoots, getFilter());

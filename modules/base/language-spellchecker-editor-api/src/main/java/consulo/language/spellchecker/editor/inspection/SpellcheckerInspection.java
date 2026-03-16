@@ -29,8 +29,7 @@ import consulo.language.spellchecker.editor.SpellcheckerSeverities;
 import consulo.language.spellcheker.SpellcheckingStrategy;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,13 +44,13 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
         mySpellcheckerEngineId = spellcheckerEngineId;
     }
 
-    @Nonnull
+    
     public final String getSpellcheckerEngineId() {
         return mySpellcheckerEngineId;
     }
 
     @RequiredReadAction
-    protected static SpellcheckingStrategy getSpellcheckingStrategy(@Nonnull PsiElement element) {
+    protected static SpellcheckingStrategy getSpellcheckingStrategy(PsiElement element) {
         for (SpellcheckingStrategy strategy : SpellcheckingStrategy.forLanguage(element.getLanguage())) {
             if (strategy.isMyContext(element)) {
                 return strategy;
@@ -60,19 +59,19 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
         return null;
     }
 
-    @Nonnull
+    
     @Override
-    public final PsiElementVisitor buildVisitor(@Nonnull ProblemsHolder holder, boolean isOnTheFly) {
+    public final PsiElementVisitor buildVisitor(ProblemsHolder holder, boolean isOnTheFly) {
         return super.buildVisitor(holder, isOnTheFly);
     }
 
-    @Nonnull
+    
     @Override
     public final PsiElementVisitor buildVisitor(
-        @Nonnull ProblemsHolder holder,
+        ProblemsHolder holder,
         boolean isOnTheFly,
-        @Nonnull LocalInspectionToolSession session,
-        @Nonnull Object state
+        LocalInspectionToolSession session,
+        Object state
     ) {
         SpellcheckerEngine engine = mySpellcheckerEngineManager.getActiveEngine();
         if (engine == null || !mySpellcheckerEngineId.equals(engine.getId())) {
@@ -82,15 +81,15 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
         return buildVisitorImpl(holder, isOnTheFly, session, state);
     }
 
-    @Nonnull
+    
     public abstract PsiElementVisitor buildVisitorImpl(
-        @Nonnull ProblemsHolder holder,
+        ProblemsHolder holder,
         boolean isOnTheFly,
-        @Nonnull LocalInspectionToolSession session,
-        @Nonnull Object state
+        LocalInspectionToolSession session,
+        Object state
     );
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getGroupDisplayName() {
         return LocalizeValue.localizeTODO("Spelling");
@@ -102,12 +101,12 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
     }
 
     @Override
-    @Nonnull
+    
     public final HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.find(SpellcheckerSeverities.TYPO);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element) {
@@ -119,7 +118,7 @@ public abstract class SpellcheckerInspection extends LocalInspectionTool {
 
     @Override
     @RequiredReadAction
-    public boolean isSuppressedFor(@Nonnull PsiElement element) {
+    public boolean isSuppressedFor(PsiElement element) {
         if (getSpellcheckingStrategy(element) instanceof SuppressibleSpellcheckingStrategy strategy) {
             return strategy.isSuppressedFor(element, getShortName());
         }

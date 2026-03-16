@@ -17,8 +17,7 @@ package consulo.language.codeStyle.setting;
 
 import consulo.application.ApplicationBundle;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,33 +60,33 @@ public class CodeStyleSettingPresentation {
     }
   }
 
-  @Nonnull
+  
   protected String myFieldName;
 
-  @Nonnull
+  
   protected String myUiName;
 
-  public CodeStyleSettingPresentation(@Nonnull String fieldName, @Nonnull String uiName) {
+  public CodeStyleSettingPresentation(String fieldName, String uiName) {
     myFieldName = fieldName;
     myUiName = uiName;
   }
 
-  @Nonnull
+  
   public String getFieldName() {
     return myFieldName;
   }
 
-  @Nonnull
+  
   public String getUiName() {
     return myUiName;
   }
 
-  public void setUiName(@Nonnull String newName) {
+  public void setUiName(String newName) {
     myUiName = newName;
   }
 
-  @Nonnull
-  public String getValueUiName(@Nonnull Object value) {
+  
+  public String getValueUiName(Object value) {
     return value.toString();
   }
 
@@ -101,9 +100,9 @@ public class CodeStyleSettingPresentation {
     return myFieldName.hashCode();
   }
 
-  protected static void putGroupTop(@Nonnull Map<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> result,
-                                    @Nonnull String fieldName,
-                                    @Nonnull String uiName,
+  protected static void putGroupTop(Map<CodeStyleSettingPresentation.SettingsGroup, List<CodeStyleSettingPresentation>> result,
+                                    String fieldName,
+                                    String uiName,
                                     int[] values,
                                     String[] valueUiNames) {
     result.put(new SettingsGroup(null), List.of(new CodeStyleSelectSettingPresentation(fieldName, uiName, values, valueUiNames)));
@@ -394,7 +393,7 @@ public class CodeStyleSettingPresentation {
    * @param settingsType type to get standard settings for
    * @return mapping setting groups to contained setting presentations
    */
-  @Nonnull
+  
   public static Map<SettingsGroup, List<CodeStyleSettingPresentation>> getStandardSettings(LanguageCodeStyleSettingsProvider.SettingsType settingsType) {
     switch (settingsType) {
       case BLANK_LINES_SETTINGS:

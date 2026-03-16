@@ -43,8 +43,7 @@ import consulo.ui.style.StyleManager;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,7 +224,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             };
         }
 
-        private LocalizeValue textForAntialiasingType(@Nonnull AntialiasingType type) {
+        private LocalizeValue textForAntialiasingType(AntialiasingType type) {
             return switch (type) {
                 case SUBPIXEL -> LocalizeValue.localizeTODO("Subpixel");
                 case GREYSCALE -> LocalizeValue.localizeTODO("Greyscale");
@@ -234,14 +233,14 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
             };
         }
 
-        @Nonnull
+        
         @Override
         public Layout get() {
             return myPanel;
         }
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "appearance";
@@ -253,22 +252,22 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         return StandardConfigurableIds.GENERAL_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Appearance");
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected LayoutImpl createPanel(@Nonnull Disposable uiDisposable) {
+    protected LayoutImpl createPanel(Disposable uiDisposable) {
         return new LayoutImpl();
     }
 
     @RequiredUIAccess
     @Override
-    protected void disposeUIResources(@Nonnull LayoutImpl component) {
+    protected void disposeUIResources(LayoutImpl component) {
         super.disposeUIResources(component);
 
         StyleManager styleManager = StyleManager.get();
@@ -283,7 +282,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
     @RequiredUIAccess
     @Override
-    protected boolean isModified(@Nonnull LayoutImpl component) {
+    protected boolean isModified(LayoutImpl component) {
         UISettings settings = UISettings.getInstance();
         UIFontManager uiFontManager = UIFontManager.getInstance();
 
@@ -329,7 +328,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
     @RequiredUIAccess
     @Override
-    protected void reset(@Nonnull LayoutImpl component) {
+    protected void reset(LayoutImpl component) {
         UISettings settings = UISettings.getInstance();
         UIFontManager uiFontManager = UIFontManager.getInstance();
 
@@ -381,7 +380,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
 
     @RequiredUIAccess
     @Override
-    protected void apply(@Nonnull LayoutImpl component) throws ConfigurationException {
+    protected void apply(LayoutImpl component) throws ConfigurationException {
         component.myApplied = true;
 
         UISettings settings = UISettings.getInstance();
@@ -501,7 +500,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
         });
     }
 
-    @Nonnull
+    
     private static Object getActiveIconLibraryOrNull() {
         IconLibraryManager iconLibraryManager = IconLibraryManager.get();
 

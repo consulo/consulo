@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt.dnd;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
@@ -38,7 +37,7 @@ public enum DnDAction {
   Cursor myRejectCursor;
 
 
-  DnDAction(@NonNls String name, int actionId, Cursor cursor, Cursor rejectCursor) {
+  DnDAction(String name, int actionId, Cursor cursor, Cursor rejectCursor) {
    myName = name;
    myActionId = actionId;
    myCursor = cursor;

@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Gregory.Shrago
@@ -27,6 +26,6 @@ public interface ContributedReferenceHost extends PsiElement {
    * @return {@link PsiReferenceService#getContributedReferences(PsiElement)}
    */
   @Override
-  @Nonnull
+  
   PsiReference[] getReferences();
 }

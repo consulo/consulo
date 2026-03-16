@@ -3,23 +3,22 @@ package consulo.ide.impl.idea.model.search.impl;
 import consulo.ide.impl.psi.impl.search.LeafOccurrence;
 import consulo.application.util.query.Query;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 // from kotlin
 public class RequestsKt {
-    @Nonnull
-    public static <T> Requests<T> decompose(@Nonnull Query<T> query) {
+    
+    public static <T> Requests<T> decompose(Query<T> query) {
         return query instanceof DecomposableQuery
             ? ((DecomposableQuery<T>) query).decompose()
             : new Requests<>(List.of(), List.of(new QueryRequest<>(query, TransformationKt.<T>idTransform())), List.of());
     }
 
-    @Nonnull
+    
     public static <B, R> Requests<R> andThen(
-        @Nonnull Requests<? extends B> thisRequest,
-        @Nonnull XTransformation<? super B, ? extends R> transformation
+        Requests<? extends B> thisRequest,
+        XTransformation<? super B, ? extends R> transformation
     ) {
         List<ParametersRequest<?, ? extends R>> params =
             ContainerUtil.map(thisRequest.getParametersRequests(), it -> RequestsKt.andThen(it, transformation));
@@ -30,10 +29,10 @@ public class RequestsKt {
         return new Requests<>(params, queries, wordRequests);
     }
 
-    @Nonnull
+    
     public static <B, R> WordRequest<R> andThen(
-        @Nonnull WordRequest<? extends B> thisWordRequest,
-        @Nonnull XTransformation<? super B, ? extends R> t
+        WordRequest<? extends B> thisWordRequest,
+        XTransformation<? super B, ? extends R> t
     ) {
         return new WordRequest<>(
             thisWordRequest.getSearchWordRequest(),
@@ -42,18 +41,18 @@ public class RequestsKt {
         );
     }
 
-    @Nonnull
+    
     public static <B, R, I> QueryRequest<B, R> andThen(
-        @Nonnull QueryRequest<B, ? extends I> thisQuery,
-        @Nonnull XTransformation<? super I, ? extends R> t
+        QueryRequest<B, ? extends I> thisQuery,
+        XTransformation<? super I, ? extends R> t
     ) {
         return new QueryRequest<>(thisQuery.getQuery(), TransformationKt.<B, I, R>karasique(thisQuery.getTransformation(), t));
     }
 
-    @Nonnull
+    
     public static <B, R, I> ParametersRequest<B, R> andThen(
-        @Nonnull ParametersRequest<B, ? extends I> thisParameters,
-        @Nonnull XTransformation<? super I, ? extends R> t
+        ParametersRequest<B, ? extends I> thisParameters,
+        XTransformation<? super I, ? extends R> t
     ) {
         return new ParametersRequest<>(
             thisParameters.getParams(),

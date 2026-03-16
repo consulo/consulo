@@ -20,17 +20,16 @@ import consulo.language.editor.AutoPopupController;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.spellchecker.editor.SpellcheckingEditorCustomizationProvider;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TextFieldWithCompletion extends LanguageTextField {
     private final boolean myForceAutoPopup;
     private final boolean myShowHint;
 
     public TextFieldWithCompletion(
-        @Nonnull Project project,
-        @Nonnull TextCompletionProvider provider,
-        @Nonnull String value,
+        Project project,
+        TextCompletionProvider provider,
+        String value,
         boolean oneLineMode,
         boolean forceAutoPopup,
         boolean showHint
@@ -40,8 +39,8 @@ public class TextFieldWithCompletion extends LanguageTextField {
 
     public TextFieldWithCompletion(
         @Nullable Project project,
-        @Nonnull TextCompletionProvider provider,
-        @Nonnull String value,
+        TextCompletionProvider provider,
+        String value,
         boolean oneLineMode,
         boolean autoPopup,
         boolean forceAutoPopup,

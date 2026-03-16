@@ -17,24 +17,23 @@ package consulo.ide.impl.idea.find.editorHeaderActions;
 
 import consulo.find.FindSearchContext;
 import consulo.fileEditor.impl.internal.search.SearchSession;
-import jakarta.annotation.Nonnull;
 
 public class EditorHeaderSetSearchContextAction extends EditorHeaderToggleAction {
     private final FindSearchContext myContext;
 
-    protected EditorHeaderSetSearchContextAction(@Nonnull String text, @Nonnull FindSearchContext context) {
+    protected EditorHeaderSetSearchContextAction(String text, FindSearchContext context) {
         super(text);
 
         myContext = context;
     }
 
     @Override
-    protected boolean isSelected(@Nonnull SearchSession session) {
+    protected boolean isSelected(SearchSession session) {
         return session.getFindModel().getSearchContext() == myContext;
     }
 
     @Override
-    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+    protected void setSelected(SearchSession session, boolean selected) {
         session.getFindModel().setSearchContext(selected ? myContext : FindSearchContext.ANY);
     }
 }

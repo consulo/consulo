@@ -18,7 +18,6 @@ package consulo.language.internal;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.util.lang.function.ThrowableRunnable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,8 +27,8 @@ public class PomAspectGuard {
   private static volatile boolean allowPsiModification = true;
 
   @RequiredWriteAction
-  public static <T extends Throwable> void guardPsiModificationsIn(@Nonnull Application application,
-                                                                   @Nonnull ThrowableRunnable<T> runnable) throws T {
+  public static <T extends Throwable> void guardPsiModificationsIn(Application application,
+                                                                   ThrowableRunnable<T> runnable) throws T {
     application.assertWriteAccessAllowed();
     boolean old = allowPsiModification;
     try {

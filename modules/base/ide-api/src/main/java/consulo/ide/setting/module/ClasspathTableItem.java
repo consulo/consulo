@@ -21,19 +21,18 @@ import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class ClasspathTableItem<T extends OrderEntry> {
-  @Nonnull
+  
   @SuppressWarnings("unchecked")
-  public static ClasspathTableItem<?> createItem(@Nonnull OrderEntry orderEntry,
-                                                 @Nonnull Project project,
-                                                 @Nonnull ModulesConfigurator modulesConfigurator,
-                                                 @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public static ClasspathTableItem<?> createItem(OrderEntry orderEntry,
+                                                 Project project,
+                                                 ModulesConfigurator modulesConfigurator,
+                                                 LibrariesConfigurator librariesConfigurator) {
     OrderEntryType<?> type = orderEntry.getType();
 
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());
@@ -43,10 +42,10 @@ public class ClasspathTableItem<T extends OrderEntry> {
     return new ClasspathTableItem<>(orderEntry);
   }
 
-  @Nonnull
+  
   protected final T myEntry;
 
-  public ClasspathTableItem(@Nonnull T entry) {
+  public ClasspathTableItem(T entry) {
     myEntry = entry;
   }
 
@@ -75,7 +74,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
     }
   }
 
-  @Nonnull
+  
   public final T getEntry() {
     return myEntry;
   }

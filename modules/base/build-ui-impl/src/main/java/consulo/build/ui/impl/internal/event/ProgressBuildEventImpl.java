@@ -17,8 +17,7 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.ProgressBuildEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -29,7 +28,7 @@ public class ProgressBuildEventImpl extends AbstractBuildEvent implements Progre
   private final long myProgress;
   private final String myUnit;
 
-  public ProgressBuildEventImpl(@Nonnull Object eventId, @Nullable Object parentId, long eventTime, @Nonnull String message, long total, long progress, @Nonnull String unit) {
+  public ProgressBuildEventImpl(Object eventId, @Nullable Object parentId, long eventTime, String message, long total, long progress, String unit) {
     super(eventId, parentId, eventTime, message);
     myTotal = total;
     myProgress = progress;

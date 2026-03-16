@@ -5,10 +5,9 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface SilentChangeVetoer {
-    @Nonnull
-    ThreeState canChangeFileSilently(@Nonnull VirtualFile virtualFile);
+    
+    ThreeState canChangeFileSilently(VirtualFile virtualFile);
 }

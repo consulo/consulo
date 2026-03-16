@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.ui.HoverHyperlinkLabel;
 import consulo.ide.impl.idea.ui.roots.FilePathClipper;
 import consulo.ide.impl.idea.ui.roots.ResizingWrapper;
@@ -38,7 +37,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -124,7 +123,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
         String title,
         List<ContentFolder> folders,
         Color foregroundColor,
-        @Nonnull ContentFolderTypeProvider editor
+        ContentFolderTypeProvider editor
     ) {
         JPanel rowsPanel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 4, true, false));
         rowsPanel.setBorder(JBUI.Borders.emptyLeft(14));
@@ -166,7 +165,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
         String properties = "";
         if (folderFile != null && contentEntryFile != null) {
             String path =
-                folderFile.equals(contentEntryFile) ? "." : VfsUtilCore.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
+                folderFile.equals(contentEntryFile) ? "." : VirtualFileUtil.getRelativePath(folderFile, contentEntryFile, File.separatorChar);
             HoverHyperlinkLabel hyperlinkLabel = new HoverHyperlinkLabel(path + properties, foreground);
             hyperlinkLabel.setMinimumSize(new Dimension(0, 0));
             hyperlinkLabel.addHyperlinkListener(e -> myCallback.navigateFolder(getContentEntry(), folder));
@@ -198,7 +197,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
     }
 
     @RequiredUIAccess
-    private Button createChangeOptionsAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
+    private Button createChangeOptionsAction(ContentFolder folder, ContentFolderTypeProvider editor) {
         Button button = Button.create(LocalizeValue.empty());
         button.setToolTipText(ProjectLocalize.modulePathsPropertiesTooltip());
         button.addStyle(ButtonStyle.INPLACE);
@@ -208,7 +207,7 @@ public class FolderContentRootPanel extends ContentRootPanel {
     }
 
     @RequiredUIAccess
-    private Button createFolderDeleteAction(ContentFolder folder, @Nonnull ContentFolderTypeProvider editor) {
+    private Button createFolderDeleteAction(ContentFolder folder, ContentFolderTypeProvider editor) {
         LocalizeValue tooltipText;
         if (folder.getFile() != null && getContentEntry().getFile() != null) {
             tooltipText = ProjectLocalize.modulePathsUnmark0Tooltip(editor.getName());

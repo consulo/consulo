@@ -18,7 +18,6 @@ import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,12 +33,12 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
 
   private final Alarm myAlarm;
 
-  public static void disableForEditor(@Nonnull Editor editor) {
+  public static void disableForEditor(Editor editor) {
     editor.putUserData(DISABLED, Boolean.TRUE);
     TooltipController.getInstance().cancelTooltip(FOLDING_TOOLTIP_GROUP, null, true);
   }
 
-  public static void enableForEditor(@Nonnull Editor editor) {
+  public static void enableForEditor(Editor editor) {
     editor.putUserData(DISABLED, null);
   }
 
@@ -51,7 +50,7 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
 
   @RequiredUIAccess
   @Override
-  public void mouseMoved(@Nonnull EditorMouseEvent e) {
+  public void mouseMoved(EditorMouseEvent e) {
     myAlarm.cancelAllRequests();
     Editor editor = e.getEditor();
     if (editor.getUserData(DISABLED) != null) return;
@@ -74,8 +73,8 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
     }
   }
 
-  @Nonnull
-  private static DocumentFragment createDocumentFragment(@Nonnull FoldRegion fold) {
+  
+  private static DocumentFragment createDocumentFragment(FoldRegion fold) {
     CodeEditorBase editor = (CodeEditorBase)fold.getEditor();
     Document document = editor.getDocument();
     FoldingGroup group = fold.getGroup();
@@ -91,7 +90,7 @@ public class FoldingPopupManager implements EditorMouseListener, EditorMouseMoti
   }
 
   @Override
-  public void mouseExited(@Nonnull EditorMouseEvent e) {
+  public void mouseExited(EditorMouseEvent e) {
     myAlarm.cancelAllRequests();
     if (e.getEditor().getUserData(DISABLED) != null) return;
     TooltipController.getInstance().cancelTooltip(FOLDING_TOOLTIP_GROUP, e.getMouseEvent(), true);

@@ -18,27 +18,26 @@ package consulo.remoteServer.configuration.deployment;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, S extends ServerConfiguration> {
-    @Nonnull
+    
     public abstract List<DeploymentSource> getAvailableDeploymentSources();
 
-    @Nonnull
-    public abstract D createDefaultConfiguration(@Nonnull DeploymentSource source);
+    
+    public abstract D createDefaultConfiguration(DeploymentSource source);
 
     @Nullable
-    public abstract SettingsEditor<D> createEditor(@Nonnull DeploymentSource source, @Nullable RemoteServer<S> server);
+    public abstract SettingsEditor<D> createEditor(DeploymentSource source, @Nullable RemoteServer<S> server);
 
     /**
      * @see LocatableConfiguration#isGeneratedName()
      */
-    public boolean isGeneratedConfigurationName(@Nonnull String name,
-                                                @Nonnull DeploymentSource deploymentSource,
-                                                @Nonnull D deploymentConfiguration) {
+    public boolean isGeneratedConfigurationName(String name,
+                                                DeploymentSource deploymentSource,
+                                                D deploymentConfiguration) {
         return false;
     }
 
@@ -46,7 +45,7 @@ public abstract class DeploymentConfigurator<D extends DeploymentConfiguration, 
      * @see LocatableConfiguration#suggestedName()
      */
     @Nullable
-    public String suggestConfigurationName(@Nonnull DeploymentSource deploymentSource, @Nonnull D deploymentConfiguration) {
+    public String suggestConfigurationName(DeploymentSource deploymentSource, D deploymentConfiguration) {
         return null;
     }
 }

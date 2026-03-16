@@ -23,7 +23,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ public class ContextFilterActionGroup extends DefaultActionGroup implements Dumb
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
 
         SearchSession search = e.getData(SearchSession.KEY);

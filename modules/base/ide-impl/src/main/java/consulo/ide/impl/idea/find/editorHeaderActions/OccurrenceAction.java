@@ -23,17 +23,16 @@ import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class OccurrenceAction extends DumbAwareAction implements ShortcutProvider {
-  protected OccurrenceAction(@Nonnull String baseActionId, @Nonnull Image icon) {
+  protected OccurrenceAction(String baseActionId, Image icon) {
     copyFrom(ActionManager.getInstance().getAction(baseActionId));
     getTemplatePresentation().setIcon(icon);
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
     if (search == null) {
       e.getPresentation().setEnabledAndVisible(false);

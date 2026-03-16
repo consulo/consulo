@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.SwingActionDelegate;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.JList;
 
@@ -25,7 +24,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class Home extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectFirstRow";
 
         public Home() {
@@ -34,7 +33,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftHome extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectFirstRowExtendSelection";
 
         public ShiftHome() {
@@ -43,7 +42,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class End extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectLastRow";
 
         public End() {
@@ -52,7 +51,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftEnd extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectLastRowExtendSelection";
 
         public ShiftEnd() {
@@ -61,7 +60,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class Up extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectPreviousRow";
 
         public Up() {
@@ -70,7 +69,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftUp extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectPreviousRowExtendSelection";
 
         public ShiftUp() {
@@ -79,7 +78,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class Down extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectNextRow";
 
         public Down() {
@@ -88,7 +87,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftDown extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectNextRowExtendSelection";
 
         public ShiftDown() {
@@ -97,7 +96,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class Left extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectPreviousColumn";
 
         public Left() {
@@ -106,7 +105,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftLeft extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectPreviousColumnExtendSelection";
 
         public ShiftLeft() {
@@ -115,7 +114,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class Right extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectNextColumn";
 
         public Right() {
@@ -124,7 +123,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftRight extends ListActions {
-        @NonNls
+        
         public static final String ID = "selectNextColumnExtendSelection";
 
         public ShiftRight() {
@@ -133,7 +132,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class PageUp extends ListActions {
-        @NonNls
+        
         public static final String ID = "scrollUp";
 
         public PageUp() {
@@ -142,7 +141,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftPageUp extends ListActions {
-        @NonNls
+        
         public static final String ID = "scrollUpExtendSelection";
 
         public ShiftPageUp() {
@@ -151,7 +150,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class PageDown extends ListActions {
-        @NonNls
+        
         public static final String ID = "scrollDown";
 
         public PageDown() {
@@ -160,7 +159,7 @@ public abstract class ListActions extends SwingActionDelegate {
     }
 
     public static final class ShiftPageDown extends ListActions {
-        @NonNls
+        
         public static final String ID = "scrollDownExtendSelection";
 
         public ShiftPageDown() {

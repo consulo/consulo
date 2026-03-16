@@ -25,7 +25,6 @@ import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,7 +79,7 @@ public class LookupActionsStep extends BaseListPopupStep<LookupElementAction> im
         return LookupIconUtil.augmentIcon(myLookup.getEditor(), aValue.getIcon(), myEmptyIcon);
     }
 
-    @Nonnull
+    
     @Override
     public String getTextFor(LookupElementAction value) {
         return value.getText();

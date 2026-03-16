@@ -22,8 +22,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -163,7 +162,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         return myDownloadUrls;
     }
 
-    @Nonnull
+    
     @Override
     public Set<String> getTags() {
         return myTags;
@@ -171,7 +170,7 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
 
     @Nullable
     @Override
-    public PluginPermissionDescriptor getPermissionDescriptor(@Nonnull PluginPermissionType permissionType) {
+    public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
         return myPermissions.get(permissionType);
     }
 
@@ -229,13 +228,13 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
         return description;
     }
 
-    @Nonnull
+    
     @Override
     public List<ExtensionPreview> getExtensionPreviews() {
         return myPluginExtensionPreviews;
     }
 
-    @Nonnull
+    
     @Override
     public byte[] getIconBytes(boolean isDarkTheme) {
         if (isDarkTheme && myIconDarkBytes.length > 0) {
@@ -352,20 +351,20 @@ public class PluginNode extends PluginDescriptorStub implements PluginDescriptor
     /**
      * Methods below implement PluginDescriptor and IdeaPluginDescriptor interface
      */
-    @Nonnull
+    
     @Override
     public PluginId getPluginId() {
         return id;
     }
 
     @Override
-    @Nonnull
+    
     public PluginId[] getDependentPluginIds() {
         return myDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myDependencies.toArray(new PluginId[myDependencies.size()]);
     }
 
     @Override
-    @Nonnull
+    
     public PluginId[] getOptionalDependentPluginIds() {
         return myOptionalDependencies.isEmpty() ? PluginId.EMPTY_ARRAY : myOptionalDependencies.toArray(new PluginId[myOptionalDependencies.size()]);
     }

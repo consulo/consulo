@@ -18,49 +18,48 @@ package consulo.content.scope;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NamedScope {
     private final String myScopeId;
-    @Nonnull
+    
     private final LocalizeValue myPresentableName;
-    @Nonnull
+    
     private final Image myIcon;
     private final PackageSet myValue;
 
     @Deprecated
-    public NamedScope(@Nonnull String scopeId, @Nonnull Image icon, @Nullable PackageSet value) {
+    public NamedScope(String scopeId, Image icon, @Nullable PackageSet value) {
         this(scopeId, LocalizeValue.of(scopeId), icon, value);
     }
 
     @Deprecated
-    public NamedScope(@Nonnull String scopeId, @Nullable PackageSet value) {
+    public NamedScope(String scopeId, @Nullable PackageSet value) {
         this(scopeId, LocalizeValue.of(scopeId), PlatformIconGroup.ideLocalscope(), value);
     }
 
-    public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nonnull Image icon, @Nullable PackageSet value) {
+    public NamedScope(String scopeId, LocalizeValue presentableName, Image icon, @Nullable PackageSet value) {
         myScopeId = scopeId;
         myIcon = icon;
         myValue = value;
         myPresentableName = presentableName;
     }
 
-    public NamedScope(@Nonnull String scopeId, @Nonnull LocalizeValue presentableName, @Nullable PackageSet value) {
+    public NamedScope(String scopeId, LocalizeValue presentableName, @Nullable PackageSet value) {
         this(scopeId, presentableName, PlatformIconGroup.ideLocalscope(), value);
     }
 
-    @Nonnull
+    
     public Image getIcon() {
         return myIcon;
     }
 
-    @Nonnull
+    
     public String getScopeId() {
         return myScopeId;
     }
 
-    @Nonnull
+    
     public LocalizeValue getPresentableName() {
         return myPresentableName;
     }
@@ -69,7 +68,7 @@ public class NamedScope {
      * @deprecated please use {@link NamedScope#getScopeId()} for search/serialization/mappings and
      * {@link #getPresentableName()} to display in UI
      */
-    @Nonnull
+    
     @Deprecated
     public String getName() {
         return myScopeId;
@@ -90,7 +89,7 @@ public class NamedScope {
     }
 
     public static class UnnamedScope extends NamedScope {
-        public UnnamedScope(@Nonnull PackageSet value) {
+        public UnnamedScope(PackageSet value) {
             super(value.getText(), LocalizeValue.of(value.getText()), value);
         }
     }

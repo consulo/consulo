@@ -24,7 +24,6 @@ import consulo.versionControlSystem.log.VcsFullCommitDetails;
 import consulo.versionControlSystem.log.VcsUser;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -35,18 +34,18 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
 
   private static final Logger LOG = Logger.getInstance(VcsChangesLazilyParsedDetails.class);
 
-  @Nonnull
+  
   protected final ThrowableComputable<Collection<Change>, ? extends Exception> myChangesGetter;
 
-  public VcsChangesLazilyParsedDetails(@Nonnull Hash hash, @Nonnull List<Hash> parents, long commitTime, @Nonnull VirtualFile root,
-                                       @Nonnull String subject, @Nonnull VcsUser author, @Nonnull String message,
-                                       @Nonnull VcsUser committer, long authorTime,
-                                       @Nonnull ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
+  public VcsChangesLazilyParsedDetails(Hash hash, List<Hash> parents, long commitTime, VirtualFile root,
+                                       String subject, VcsUser author, String message,
+                                       VcsUser committer, long authorTime,
+                                       ThrowableComputable<Collection<Change>, ? extends Exception> changesGetter) {
     super(hash, parents, commitTime, root, subject, author, message, committer, authorTime);
     myChangesGetter = changesGetter;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<Change> getChanges() {
     try {
@@ -58,7 +57,7 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
     }
   }
 
-  @Nonnull
+  
   public Collection<String> getModifiedPaths() {
     Set<String> changedPaths = new HashSet<>();
     for (Change change : getChanges()) {
@@ -68,7 +67,7 @@ public class VcsChangesLazilyParsedDetails extends VcsCommitMetadataImpl impleme
     return changedPaths;
   }
 
-  @Nonnull
+  
   public Collection<Couple<String>> getRenamedPaths() {
     Set<Couple<String>> renames = new HashSet<>();
     for (Change change : getChanges()) {

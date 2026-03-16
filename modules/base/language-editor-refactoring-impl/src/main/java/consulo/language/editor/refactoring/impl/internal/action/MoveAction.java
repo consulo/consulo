@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.move.MoveHandler;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Move")
 public class MoveAction extends BaseRefactoringAction {
@@ -44,7 +43,7 @@ public class MoveAction extends BaseRefactoringAction {
     }
 
     @Override
-    public boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    public boolean isEnabledOnElements(PsiElement[] elements) {
         return MoveHandler.canMove(elements, null);
     }
 
@@ -54,7 +53,7 @@ public class MoveAction extends BaseRefactoringAction {
     }
 
     @Override
-    public RefactoringActionHandler getHandler(@Nonnull DataContext dataContext) {
+    public RefactoringActionHandler getHandler(DataContext dataContext) {
         return new MoveHandler();
     }
 }

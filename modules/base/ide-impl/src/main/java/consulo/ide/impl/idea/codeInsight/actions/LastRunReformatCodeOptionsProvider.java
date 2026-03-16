@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 public class LastRunReformatCodeOptionsProvider {
 
@@ -28,11 +27,11 @@ public class LastRunReformatCodeOptionsProvider {
 
   private final PropertiesComponent myPropertiesComponent;
 
-  public LastRunReformatCodeOptionsProvider(@Nonnull PropertiesComponent propertiesComponent) {
+  public LastRunReformatCodeOptionsProvider(PropertiesComponent propertiesComponent) {
     myPropertiesComponent = propertiesComponent;
   }
 
-  public ReformatCodeRunOptions getLastRunOptions(@Nonnull PsiFile file) {
+  public ReformatCodeRunOptions getLastRunOptions(PsiFile file) {
     Language language = file.getLanguage();
 
     ReformatCodeRunOptions settings = new ReformatCodeRunOptions(getLastTextRangeType());
@@ -42,7 +41,7 @@ public class LastRunReformatCodeOptionsProvider {
     return settings;
   }
 
-  public void saveRearrangeState(@Nonnull Language language, boolean value) {
+  public void saveRearrangeState(Language language, boolean value) {
     String key = getRearrangeCodeKeyFor(language);
     myPropertiesComponent.setValue(key, Boolean.toString(value));
   }
@@ -73,12 +72,12 @@ public class LastRunReformatCodeOptionsProvider {
     return myPropertiesComponent.getBoolean(REARRANGE_ENTRIES_KEY);
   }
 
-  public boolean isRearrangeCode(@Nonnull Language language) {
+  public boolean isRearrangeCode(Language language) {
     String key = getRearrangeCodeKeyFor(language);
     return myPropertiesComponent.getBoolean(key);
   }
 
-  private static String getRearrangeCodeKeyFor(@Nonnull Language language) {
+  private static String getRearrangeCodeKeyFor(Language language) {
     return REARRANGE_ENTRIES_KEY + language.getID();
   }
 

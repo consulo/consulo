@@ -50,8 +50,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -84,9 +83,9 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     private boolean myDisposed;
 
     public ArtifactEditorImpl(
-        @Nonnull ArtifactsStructureConfigurableContext context,
-        @Nonnull Artifact artifact,
-        @Nonnull ArtifactEditorSettings settings
+        ArtifactsStructureConfigurableContext context,
+        Artifact artifact,
+        ArtifactEditorSettings settings
     ) {
         $$$setupUI$$$();
         myContext = createArtifactEditorContext(context);
@@ -350,7 +349,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
-    public void addNewPackagingElement(@Nonnull PackagingElementType<?> type) {
+    public void addNewPackagingElement(PackagingElementType<?> type) {
         myLayoutTreeComponent.addNewPackagingElement(type);
         mySourceItemsTree.rebuildTree();
     }
@@ -361,20 +360,20 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
-    public void removePackagingElement(@Nonnull String pathToParent, @Nonnull PackagingElement<?> element) {
+    public void removePackagingElement(String pathToParent, PackagingElement<?> element) {
         doReplaceElement(pathToParent, element, null);
     }
 
     @Override
-    public void replacePackagingElement(@Nonnull String pathToParent,
-                                        @Nonnull PackagingElement<?> element,
-                                        @Nonnull PackagingElement<?> replacement) {
+    public void replacePackagingElement(String pathToParent,
+                                        PackagingElement<?> element,
+                                        PackagingElement<?> replacement) {
         doReplaceElement(pathToParent, element, replacement);
     }
 
     private void doReplaceElement(
-        @Nonnull String pathToParent,
-        @Nonnull PackagingElement<?> element,
+        String pathToParent,
+        PackagingElement<?> element,
         @Nullable PackagingElement replacement
     ) {
         myLayoutTreeComponent.editLayout(() -> {
@@ -429,7 +428,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
         return myLayoutTreeComponent;
     }
 
-    public void updateOutputPath(@Nonnull String oldArtifactName, @Nonnull String newArtifactName) {
+    public void updateOutputPath(String oldArtifactName, String newArtifactName) {
         String oldDefaultPath = ArtifactUtil.getDefaultArtifactOutputPath(oldArtifactName, myProject);
         if (Comparing.equal(oldDefaultPath, getConfiguredOutputPath())) {
             setOutputPath(ArtifactUtil.getDefaultArtifactOutputPath(newArtifactName, myProject));
@@ -457,7 +456,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
     }
 
     @Override
-    public void putLibraryIntoDefaultLocation(@Nonnull Library library) {
+    public void putLibraryIntoDefaultLocation(Library library) {
         myLayoutTreeComponent.putIntoDefaultLocations(Collections.singletonList(new LibrarySourceItem(library)));
     }
 
@@ -607,7 +606,7 @@ public class ArtifactEditorImpl implements ArtifactEditorEx {
 
     private class MyDataProvider implements UiDataProvider {
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(ArtifactEditorEx.ARTIFACTS_EDITOR_KEY, ArtifactEditorImpl.this);
         }
     }

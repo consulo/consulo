@@ -10,33 +10,32 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.util.dataholder.Key;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 
 public interface RefManagerExtension<T> {
-  @Nonnull
+  
   Key<T> getID();
 
-  @Nonnull
+  
   default Collection<Language> getLanguages() {
     return Collections.singleton(getLanguage());
   }
 
   @Deprecated
-  @Nonnull
+  
   Language getLanguage();
 
-  void iterate(@Nonnull RefVisitor visitor);
+  void iterate(RefVisitor visitor);
 
   void cleanup();
 
-  void removeReference(@Nonnull RefElement refElement);
+  void removeReference(RefElement refElement);
 
   @Nullable
-  RefElement createRefElement(@Nonnull PsiElement psiElement);
+  RefElement createRefElement(PsiElement psiElement);
 
   /**
    * The method finds problem container (ex: method, class, file) that used to be shown as inspection view tree node.
@@ -46,7 +45,7 @@ public interface RefManagerExtension<T> {
    * @return container element for given psiElement
    */
   @Nullable
-  default PsiNamedElement getElementContainer(@Nonnull PsiElement psiElement) {
+  default PsiNamedElement getElementContainer(PsiElement psiElement) {
     return null;
   }
 
@@ -54,32 +53,32 @@ public interface RefManagerExtension<T> {
   RefEntity getReference(String type, String fqName);
 
   @Nullable
-  String getType(@Nonnull RefEntity entity);
+  String getType(RefEntity entity);
 
-  @Nonnull
-  RefEntity getRefinedElement(@Nonnull RefEntity ref);
+  
+  RefEntity getRefinedElement(RefEntity ref);
 
-  void visitElement(@Nonnull PsiElement element);
+  void visitElement(PsiElement element);
 
   @Nullable
-  String getGroupName(@Nonnull RefEntity entity);
+  String getGroupName(RefEntity entity);
 
-  boolean belongsToScope(@Nonnull PsiElement psiElement);
+  boolean belongsToScope(PsiElement psiElement);
 
-  void export(@Nonnull RefEntity refEntity, @Nonnull Element element);
+  void export(RefEntity refEntity, Element element);
 
-  void onEntityInitialized(@Nonnull RefElement refEntity, @Nonnull PsiElement psiElement);
+  void onEntityInitialized(RefElement refEntity, PsiElement psiElement);
 
-  default boolean shouldProcessExternalFile(@Nonnull PsiFile file) {
+  default boolean shouldProcessExternalFile(PsiFile file) {
     return false;
   }
 
-  @Nonnull
-  default Stream<? extends PsiElement> extractExternalFileImplicitReferences(@Nonnull PsiFile psiFile) {
+  
+  default Stream<? extends PsiElement> extractExternalFileImplicitReferences(PsiFile psiFile) {
     return Stream.empty();
   }
 
-  default void markExternalReferencesProcessed(@Nonnull RefElement file) {
+  default void markExternalReferencesProcessed(RefElement file) {
 
   }
 }

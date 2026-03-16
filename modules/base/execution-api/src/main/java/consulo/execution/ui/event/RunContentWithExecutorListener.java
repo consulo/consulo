@@ -20,14 +20,13 @@ import consulo.annotation.component.TopicAPI;
 import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface RunContentWithExecutorListener {
-  void contentSelected(RunContentDescriptor descriptor, @Nonnull Executor executor);
+  void contentSelected(RunContentDescriptor descriptor, Executor executor);
 
-  void contentRemoved(RunContentDescriptor descriptor, @Nonnull Executor executor);
+  void contentRemoved(RunContentDescriptor descriptor, Executor executor);
 }

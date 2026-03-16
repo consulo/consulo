@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -37,8 +36,8 @@ public abstract class Statistician<T, Loc, Stat extends Statistician<T, Loc, Sta
     return map;
   });
 
-  @Nonnull
-  public static Collection<Statistician> forKey(@Nonnull Key<? extends Statistician> key) {
+  
+  public static Collection<Statistician> forKey(Key<? extends Statistician> key) {
     MultiMap<Key, Statistician> map = Application.get().getExtensionPoint(Statistician.class).getOrBuildCache(CACHE_KEY);
     return map.get(key);
   }
@@ -46,6 +45,6 @@ public abstract class Statistician<T, Loc, Stat extends Statistician<T, Loc, Sta
   @Nullable
   public abstract StatisticsInfo serialize(T element, Loc location);
 
-  @Nonnull
+  
   public abstract Key<Stat> getKey();
 }

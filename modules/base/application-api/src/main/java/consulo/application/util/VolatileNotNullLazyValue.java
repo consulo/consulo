@@ -18,7 +18,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -29,7 +28,7 @@ public abstract class VolatileNotNullLazyValue<T> extends NotNullLazyValue<T> {
 
   private volatile T myValue;
 
-  @Nonnull
+  
   public final T getValue() {
     T value = myValue;
     if (value != null) {

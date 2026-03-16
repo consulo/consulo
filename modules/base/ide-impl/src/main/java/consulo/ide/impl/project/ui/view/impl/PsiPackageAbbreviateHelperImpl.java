@@ -24,7 +24,6 @@ import consulo.project.ui.view.internal.PsiPackageAbbreviateHelper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -49,7 +48,7 @@ public class PsiPackageAbbreviateHelperImpl implements PsiPackageAbbreviateHelpe
     });
   }
 
-  private static boolean scanPackages(@Nonnull PsiPackage p, int packageNameOccurrencesFound) {
+  private static boolean scanPackages(PsiPackage p, int packageNameOccurrencesFound) {
     PsiPackage[] subPackages = p.getSubPackages();
     packageNameOccurrencesFound += subPackages.length;
     if (packageNameOccurrencesFound > SUBPACKAGE_LIMIT) {
@@ -64,7 +63,7 @@ public class PsiPackageAbbreviateHelperImpl implements PsiPackageAbbreviateHelpe
   }
 
   @Override
-  public boolean shouldAbbreviateName(@Nonnull PsiPackage aPackage) {
+  public boolean shouldAbbreviateName(PsiPackage aPackage) {
     return myShouldAbbreviateNameMap.computeIfAbsent(aPackage, psiPackage -> scanPackages(psiPackage, 1));
   }
 

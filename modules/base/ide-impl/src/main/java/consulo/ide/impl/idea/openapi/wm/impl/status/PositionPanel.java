@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.FocusUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -43,12 +42,12 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
 
     private String myText;
 
-    public PositionPanel(@Nonnull Project project, @Nonnull StatusBarWidgetFactory factory) {
+    public PositionPanel(Project project, StatusBarWidgetFactory factory) {
         super(project, factory);
     }
 
     @Override
-    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+    public void selectionChanged(FileEditorManagerEvent event) {
         updatePosition(getEditor());
     }
 
@@ -63,7 +62,7 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
     }
 
     @Override
-    @Nonnull
+    
     public String getText() {
         return myText == null ? "" : myText;
     }
@@ -73,13 +72,13 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
         return Component.CENTER_ALIGNMENT;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipText() {
         return UILocalize.goToLineCommandName();
     }
 
-    @Nonnull
+    
     @Override
     public String getShortcutText() {
         return KeymapUtil.getFirstKeyboardShortcutText("GotoLine");
@@ -106,7 +105,7 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
     }
 
     @Override
-    public void install(@Nonnull StatusBar statusBar) {
+    public void install(StatusBar statusBar) {
         super.install(statusBar);
         myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, this);
         EditorEventMulticaster multicaster = EditorFactory.getInstance().getEventMulticaster();
@@ -118,7 +117,7 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
     }
 
     @Override
-    public void selectionChanged(@Nonnull SelectionEvent e) {
+    public void selectionChanged(SelectionEvent e) {
         Editor editor = e.getEditor();
         if (isFocusedEditor(editor)) {
             updatePosition(editor);
@@ -126,7 +125,7 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
     }
 
     @Override
-    public void caretPositionChanged(@Nonnull CaretEvent e) {
+    public void caretPositionChanged(CaretEvent e) {
         Editor editor = e.getEditor();
         // When multiple carets exist in editor, we don't show information about caret positions
         if (editor.getCaretModel().getCaretCount() == 1 && isFocusedEditor(editor)) {
@@ -135,17 +134,17 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
     }
 
     @Override
-    public void caretAdded(@Nonnull CaretEvent e) {
+    public void caretAdded(CaretEvent e) {
         updatePosition(e.getEditor());
     }
 
     @Override
-    public void caretRemoved(@Nonnull CaretEvent e) {
+    public void caretRemoved(CaretEvent e) {
         updatePosition(e.getEditor());
     }
 
     @Override
-    public void afterDocumentChange(@Nonnull Document document) {
+    public void afterDocumentChange(Document document) {
         Editor[] editors = EditorFactory.getInstance().getEditors(document);
         for (Editor editor : editors) {
             if (isFocusedEditor(editor)) {
@@ -188,7 +187,7 @@ public final class PositionPanel extends EditorBasedWidget implements StatusBarW
         }
     }
 
-    private String getPositionText(@Nonnull Editor editor) {
+    private String getPositionText(Editor editor) {
         myCountTask = null;
 
         if (editor.isDisposed() || myAlarm.isDisposed()) {

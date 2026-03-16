@@ -30,8 +30,7 @@ import consulo.ui.layout.*;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.TimeoutUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -47,9 +46,9 @@ public class UITester {
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
-        public Component createCenterComponent(@Nonnull Disposable uiDisposable) {
+        public Component createCenterComponent(Disposable uiDisposable) {
             TabbedLayout tabbedLayout = TabbedLayout.create();
 
             tabbedLayout.addTab("Layouts", layouts(uiDisposable)).setCloseHandler((tab, component) -> {

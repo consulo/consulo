@@ -4,7 +4,6 @@ package consulo.ide.impl.idea.codeInsight.hints;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.inlay.*;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -89,7 +88,7 @@ public class PresentationTreeBuilderImpl implements DeclarativeCollapsiblePresen
     }
 
     @Override
-    public void icon(@Nonnull Image image) {
+    public void icon(Image image) {
         context.incrementTextElementCount();
 
         context.addNode(index, InlayTags.ICON_TAG, image);

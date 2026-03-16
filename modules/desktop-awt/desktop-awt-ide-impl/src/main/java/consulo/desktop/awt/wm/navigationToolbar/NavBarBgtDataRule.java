@@ -31,7 +31,6 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.ui.ex.DeleteProvider;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +48,7 @@ import java.util.Objects;
 @ExtensionImpl
 public class NavBarBgtDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         Project project = snapshot.get(Project.KEY);
         if (project == null) {
             return;

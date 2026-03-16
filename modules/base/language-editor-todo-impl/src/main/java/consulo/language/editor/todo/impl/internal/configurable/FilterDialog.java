@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.table.JBTable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -117,7 +116,7 @@ class FilterDialog extends DialogWrapper {
     }
 
     @Override
-    @Nonnull
+    
     protected Action[] createActions() {
         return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
     }

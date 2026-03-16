@@ -15,7 +15,6 @@
  */
 package consulo.logging.internal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ public interface LoggerFactoryProvider {
     static int DEFAULT_PRIORITY = 1;
     static int DISABLE_PRIORITY = -100;
 
-    @Nonnull
+    
     LoggerFactory create();
 
     default int getPriority() {

@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -39,15 +38,15 @@ public class PlaceInProjectStructureBase extends PlaceInProjectStructure {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public ProjectStructureElement getContainingElement() {
     return myElement;
   }
 
-  @Nonnull
+  
   @Override
-  public AsyncResult<Void> navigate(@Nonnull Project project) {
+  public AsyncResult<Void> navigate(Project project) {
     return myNavigator.apply(project);
   }
 }

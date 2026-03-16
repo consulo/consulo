@@ -34,7 +34,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.EmptyRunnable;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -60,11 +59,11 @@ public class IdePsiSearchHelperImpl extends PsiSearchHelperImpl {
   // When encounters write action request, stops all threads, waits for write action to finish and re-starts all threads again.
   // {@code localProcessor} must be as idempotent as possible.
   @Override
-  public boolean processFilesConcurrentlyDespiteWriteActions(@Nonnull Project project,
-                                                             @Nonnull List<? extends VirtualFile> files,
-                                                             @Nonnull ProgressIndicator progress,
-                                                             @Nonnull AtomicBoolean stopped,
-                                                             @Nonnull Predicate<? super VirtualFile> localProcessor) {
+  public boolean processFilesConcurrentlyDespiteWriteActions(Project project,
+                                                             List<? extends VirtualFile> files,
+                                                             ProgressIndicator progress,
+                                                             AtomicBoolean stopped,
+                                                             Predicate<? super VirtualFile> localProcessor) {
     ApplicationEx app = (ApplicationEx)project.getApplication();
     if (!app.isDispatchThread()) {
       CoreProgressManager.assertUnderProgress(progress);
@@ -75,7 +74,7 @@ public class IdePsiSearchHelperImpl extends PsiSearchHelperImpl {
       ProgressIndicator wrapper = new SensitiveProgressWrapper(progress);
       ApplicationListener listener = new ApplicationListener() {
         @Override
-        public void beforeWriteActionStart(@Nonnull Object action) {
+        public void beforeWriteActionStart(Object action) {
           wrapper.cancel();
         }
       };

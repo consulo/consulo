@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTree;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapGroupImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -53,7 +52,8 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -565,7 +565,7 @@ public class CustomizableActionsPanel implements Disposable {
             if (StringUtil.isNotEmpty(path)) {
                 Image image = null;
                 try {
-                    image = Image.fromUrl(VfsUtil.convertToURL(VfsUtil.pathToUrl(path.replace(File.separatorChar, '/'))));
+                    image = Image.fromUrl(VirtualFileUtil.convertToURL(VirtualFileUtil.pathToUrl(path.replace(File.separatorChar, '/'))));
                 }
                 catch (IOException e) {
                     LOG.debug(e);

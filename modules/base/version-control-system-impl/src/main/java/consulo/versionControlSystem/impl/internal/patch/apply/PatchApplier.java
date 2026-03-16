@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.patch.apply;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.localHistory.Label;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryException;
@@ -44,28 +43,28 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * for patches. for shelve.
  */
 public class PatchApplier<BinaryType extends FilePatch> {
-    @Nonnull
+    
     private final Project myProject;
     private final VirtualFile myBaseDirectory;
-    @Nonnull
+    
     private final List<FilePatch> myPatches;
     private final CustomBinaryPatchApplier<BinaryType> myCustomForBinaries;
     private final CommitContext myCommitContext;
     private final Consumer<Collection<FilePath>> myToTargetListsMover;
-    @Nonnull
+    
     private final List<FilePatch> myRemainingPatches;
-    @Nonnull
+    
     private final List<FilePatch> myFailedPatches;
     private final PathsVerifier<BinaryType> myVerifier;
     private boolean mySystemOperation;
@@ -77,9 +76,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
     private final String myRightConflictPanelTitle;
 
     public PatchApplier(
-        @Nonnull Project project,
+        Project project,
         VirtualFile baseDirectory,
-        @Nonnull List<FilePatch> patches,
+        List<FilePatch> patches,
         @Nullable Consumer<Collection<FilePath>> toTargetListsMover,
         CustomBinaryPatchApplier<BinaryType> customForBinaries,
         CommitContext commitContext,
@@ -115,7 +114,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     public PatchApplier(
         Project project,
         VirtualFile baseDirectory,
-        @Nonnull List<FilePatch> patches,
+        List<FilePatch> patches,
         LocalChangeList targetChangeList,
         CustomBinaryPatchApplier<BinaryType> customForBinaries,
         CommitContext commitContext,
@@ -143,7 +142,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     public PatchApplier(
         Project project,
         VirtualFile baseDirectory,
-        @Nonnull List<FilePatch> patches,
+        List<FilePatch> patches,
         LocalChangeList targetChangeList,
         CustomBinaryPatchApplier<BinaryType> customForBinaries,
         CommitContext commitContext
@@ -164,17 +163,17 @@ public class PatchApplier<BinaryType extends FilePatch> {
         return new FilesMover(clm, targetChangeList);
     }
 
-    @Nonnull
+    
     public List<FilePatch> getPatches() {
         return myPatches;
     }
 
-    @Nonnull
+    
     private Collection<FilePatch> getFailedPatches() {
         return myFailedPatches;
     }
 
-    @Nonnull
+    
     public List<BinaryType> getBinaryPatches() {
         return ContainerUtil.mapNotNull(myVerifier.getBinaryPatches(), patchInfo -> patchInfo.getSecond().getPatch());
     }
@@ -221,9 +220,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
             refreshFiles(trigger.getAffected());
         }
 
-        @Nonnull
+        
         @RequiredUIAccess
-        private ApplyPatchStatus getApplyPatchStatus(@Nonnull TriggerAdditionOrDeletion trigger) {
+        private ApplyPatchStatus getApplyPatchStatus(TriggerAdditionOrDeletion trigger) {
             SimpleReference<ApplyPatchStatus> refStatus = SimpleReference.create(null);
             try {
                 setConfirmationToDefault();
@@ -353,7 +352,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     @RequiredUIAccess
-    private static void suggestRollback(@Nonnull Project project, @Nonnull Collection<PatchApplier> group, @Nonnull Label beforeLabel) {
+    private static void suggestRollback(Project project, Collection<PatchApplier> group, Label beforeLabel) {
         Collection<FilePatch> allFailed = ContainerUtil.concat(group, PatchApplier::getFailedPatches);
         boolean shouldInformAboutBinaries = ContainerUtil.exists(group, applier -> !applier.getBinaryPatches().isEmpty());
         UndoApplyPatchDialog undoApplyPatchDialog = new UndoApplyPatchDialog(
@@ -374,9 +373,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     private static void rollbackUnderProgress(
-        @Nonnull Project project,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Label labelToRevert
+        Project project,
+        VirtualFile virtualFile,
+        Label labelToRevert
     ) {
         ProgressManager.getInstance().runProcessWithProgressSynchronously(
             () -> {
@@ -409,7 +408,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
         trigger.addDeleted(myVerifier.getToBeDeleted());
     }
 
-    @Nonnull
+    
     public ApplyPatchStatus nonWriteActionPreCheck() {
         List<FilePatch> failedPreCheck = myVerifier.nonWriteActionPreCheck();
         myFailedPatches.addAll(failedPreCheck);
@@ -447,10 +446,10 @@ public class PatchApplier<BinaryType extends FilePatch> {
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private ApplyPatchStatus createFiles() {
-        Boolean isSuccess = myProject.getApplication().runWriteAction((Computable<Boolean>)() -> {
+        Boolean isSuccess = myProject.getApplication().runWriteAction((Supplier<Boolean>)() -> {
             List<FilePatch> filePatches = myVerifier.execute();
             myFailedPatches.addAll(filePatches);
             myPatches.removeAll(filePatches);
@@ -482,7 +481,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     public static void refreshPassedFilesAndMoveToChangelist(
-        @Nonnull Project project,
+        Project project,
         Collection<FilePath> directlyAffected,
         Collection<VirtualFile> indirectlyAffected,
         Consumer<Collection<FilePath>> targetChangelistMover
@@ -511,9 +510,9 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     private static void markDirty(
-        @Nonnull VcsDirtyScopeManager vcsDirtyScopeManager,
-        @Nonnull Collection<FilePath> directlyAffected,
-        @Nonnull Collection<VirtualFile> indirectlyAffected
+        VcsDirtyScopeManager vcsDirtyScopeManager,
+        Collection<FilePath> directlyAffected,
+        Collection<VirtualFile> indirectlyAffected
     ) {
         vcsDirtyScopeManager.filePathsDirty(directlyAffected, null);
         vcsDirtyScopeManager.filesDirty(indirectlyAffected, null);
@@ -603,7 +602,7 @@ public class PatchApplier<BinaryType extends FilePatch> {
     }
 
     @RequiredUIAccess
-    protected static void showApplyStatus(@Nonnull Project project, ApplyPatchStatus status) {
+    protected static void showApplyStatus(Project project, ApplyPatchStatus status) {
         if (status == ApplyPatchStatus.ALREADY_APPLIED) {
             showError(project, VcsLocalize.patchApplyAlreadyApplied().get(), false);
         }
@@ -618,12 +617,12 @@ public class PatchApplier<BinaryType extends FilePatch> {
         }
     }
 
-    @Nonnull
+    
     public List<FilePatch> getRemainingPatches() {
         return myRemainingPatches;
     }
 
-    private ReadonlyStatusHandler.OperationStatus getReadOnlyFilesStatus(@Nonnull List<VirtualFile> filesToMakeWritable) {
+    private ReadonlyStatusHandler.OperationStatus getReadOnlyFilesStatus(List<VirtualFile> filesToMakeWritable) {
         VirtualFile[] fileArray = VirtualFileUtil.toVirtualFileArray(filesToMakeWritable);
         return ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(fileArray);
     }

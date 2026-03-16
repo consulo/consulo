@@ -24,8 +24,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public interface LanguageBraceMatcher extends BraceMatcher, LanguageExtension {
   ExtensionPointCacheKey<LanguageBraceMatcher, ByLanguageValue<LanguageBraceMatcher>> KEY = ExtensionPointCacheKey.create("LanguageBraceMatcher", LanguageOneToOne.build());
 
   @Nullable
-  static LanguageBraceMatcher forLanguage(@Nonnull Language language) {
+  static LanguageBraceMatcher forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageBraceMatcher.class).getOrBuildCache(KEY).get(language);
   }
 }

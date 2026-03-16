@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class PsiUtilBase extends PsiUtilCore {
@@ -69,12 +68,12 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language getLanguageInEditor(@Nonnull Editor editor, @Nonnull Project project) {
+  public static Language getLanguageInEditor(Editor editor, Project project) {
     return getLanguageInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
   @Nullable
-  public static Language getLanguageInEditor(@Nonnull Caret caret, @Nonnull Project project) {
+  public static Language getLanguageInEditor(Caret caret, Project project) {
     Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
@@ -95,7 +94,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static PsiElement getElementAtCaret(@Nonnull Editor editor) {
+  public static PsiElement getElementAtCaret(Editor editor) {
     Project project = editor.getProject();
     if (project == null) return null;
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -103,12 +102,12 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static PsiFile getPsiFileInEditor(@Nonnull Editor editor, @Nonnull Project project) {
+  public static PsiFile getPsiFileInEditor(Editor editor, Project project) {
     return getPsiFileInEditor(editor.getCaretModel().getCurrentCaret(), project);
   }
 
   @Nullable
-  public static PsiFile getPsiFileInEditor(@Nonnull Caret caret, @Nonnull Project project) {
+  public static PsiFile getPsiFileInEditor(Caret caret, Project project) {
     Editor editor = caret.getEditor();
     PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     if (file == null) return null;
@@ -133,7 +132,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language reallyEvaluateLanguageInRange(int start, int end, @Nonnull PsiFile file) {
+  public static Language reallyEvaluateLanguageInRange(int start, int end, PsiFile file) {
     if (file instanceof PsiBinaryFile) {
       return file.getLanguage();
     }
@@ -164,7 +163,7 @@ public class PsiUtilBase extends PsiUtilCore {
   }
 
   @Nullable
-  public static Language evaluateLanguageInRange(int start, int end, @Nonnull PsiFile file) {
+  public static Language evaluateLanguageInRange(int start, int end, PsiFile file) {
     PsiElement elt = getElementAtOffset(file, start);
 
     TextRange selectionRange = new TextRange(start, end);
@@ -187,8 +186,8 @@ public class PsiUtilBase extends PsiUtilCore {
     return reallyEvaluateLanguageInRange(start, end, file);
   }
 
-  @Nonnull
-  public static ASTNode getRoot(@Nonnull ASTNode node) {
+  
+  public static ASTNode getRoot(ASTNode node) {
     ASTNode child = node;
     do {
       ASTNode parent = child.getTreeParent();
@@ -214,11 +213,11 @@ public class PsiUtilBase extends PsiUtilCore {
    * @see {@link consulo.ide.impl.idea.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement}
    */
   @Nullable
-  public static Editor findEditor(@Nonnull PsiElement element) {
+  public static Editor findEditor(PsiElement element) {
     return PsiEditorUtil.findEditor(element);
   }
 
-  public static boolean isSymLink(@Nonnull PsiFileSystemItem element) {
+  public static boolean isSymLink(PsiFileSystemItem element) {
     VirtualFile virtualFile = element.getVirtualFile();
     return virtualFile != null && virtualFile.is(VFileProperty.SYMLINK);
   }

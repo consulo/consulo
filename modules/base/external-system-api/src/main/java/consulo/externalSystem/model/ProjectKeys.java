@@ -19,7 +19,6 @@ import consulo.externalSystem.model.project.*;
 import consulo.externalSystem.model.task.TaskData;
 import consulo.externalSystem.service.project.ProjectData;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Holds common project entity {@link Key keys}.
@@ -29,20 +28,20 @@ import jakarta.annotation.Nonnull;
  */
 public class ProjectKeys {
 
-  @Nonnull
+  
   public static final Key<ProjectData>           PROJECT            = Key.create(ProjectData.class, 50);
-  @Nonnull
+  
   public static final Key<ModuleData>            MODULE             = Key.create(ModuleData.class, 70);
-  @Nonnull
+  
   public static final Key<LibraryData>           LIBRARY            = Key.create(LibraryData.class, 90);
-  @Nonnull
+  
   public static final Key<ContentRootData>       CONTENT_ROOT       = Key.create(ContentRootData.class, 110);
-  @Nonnull
+  
   public static final Key<ModuleDependencyData>  MODULE_DEPENDENCY  = Key.create(ModuleDependencyData.class, 130);
-  @Nonnull
+  
   public static final Key<LibraryDependencyData> LIBRARY_DEPENDENCY = Key.create(LibraryDependencyData.class, 150);
 
-  @Nonnull
+  
   public static final Key<TaskData> TASK = Key.create(TaskData.class, 250);
 
   private ProjectKeys() {

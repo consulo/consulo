@@ -6,7 +6,6 @@ import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedArrayLen
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueException;
 import consulo.execution.debug.stream.trace.impl.interpret.ex.UnexpectedValueTypeException;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -21,7 +20,7 @@ public class DistinctCallTraceInterpreter implements CallTraceInterpreter {
   }
 
   @Override
-  public @Nonnull TraceInfo resolve(@Nonnull StreamCall call, @Nonnull Value value) {
+  public TraceInfo resolve(StreamCall call, Value value) {
     if (value instanceof ArrayReference) {
       final Value peekTrace = ((ArrayReference)value).getValue(0);
       final Value trace = ((ArrayReference)value).getValue(1);
@@ -37,9 +36,9 @@ public class DistinctCallTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueException("distinct trace must be an array value");
   }
 
-  private static @Nonnull Map<TraceElement, List<TraceElement>> resolve(@Nonnull Value value,
-                                                                        @Nonnull TraceInfo order,
-                                                                        @Nonnull Direction direction) {
+  private static Map<TraceElement, List<TraceElement>> resolve(Value value,
+                                                                        TraceInfo order,
+                                                                        Direction direction) {
     if (value instanceof ArrayReference convertedMap) {
       final Value keys = convertedMap.getValue(0);
       final Value values = convertedMap.getValue(1);
@@ -55,9 +54,9 @@ public class DistinctCallTraceInterpreter implements CallTraceInterpreter {
     throw new UnexpectedValueException("value must be an array reference");
   }
 
-  private static @Nonnull Map<TraceElement, List<TraceElement>> resolveDirectTrace(@Nonnull ArrayReference keys,
-                                                                                   @Nonnull ArrayReference values,
-                                                                                   @Nonnull TraceInfo order) {
+  private static Map<TraceElement, List<TraceElement>> resolveDirectTrace(ArrayReference keys,
+                                                                                   ArrayReference values,
+                                                                                   TraceInfo order) {
     final int size = keys.length();
     if (size != values.length()) {
       throw new UnexpectedArrayLengthException("length of keys array should be same with values array");
@@ -80,9 +79,9 @@ public class DistinctCallTraceInterpreter implements CallTraceInterpreter {
     return result;
   }
 
-  private static @Nonnull Map<TraceElement, List<TraceElement>> resolveReverseTrace(@Nonnull ArrayReference keys,
-                                                                                    @Nonnull ArrayReference values,
-                                                                                    @Nonnull TraceInfo order) {
+  private static Map<TraceElement, List<TraceElement>> resolveReverseTrace(ArrayReference keys,
+                                                                                    ArrayReference values,
+                                                                                    TraceInfo order) {
     final int size = keys.length();
     if (size != values.length()) {
       throw new UnexpectedArrayLengthException("length of keys array should be same with values array");
@@ -105,7 +104,7 @@ public class DistinctCallTraceInterpreter implements CallTraceInterpreter {
     return result;
   }
 
-  private static int extractIntValue(@Nonnull Value value) {
+  private static int extractIntValue(Value value) {
     if (value instanceof IntegerValue) {
       return ((IntegerValue)value).value();
     }

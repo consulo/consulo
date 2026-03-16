@@ -24,8 +24,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.editor.internal.PairedBraceMatcherAdapter;
 import consulo.language.plain.PlainTextLanguage;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.language.internal.custom.CustomHighlighterTokenType.*;
 
@@ -47,7 +46,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
   }
 
   @Override
-  public boolean isPairedBracesAllowedBeforeType(@Nonnull IElementType lbraceType, @Nullable IElementType contextType) {
+  public boolean isPairedBracesAllowedBeforeType(IElementType lbraceType, @Nullable IElementType contextType) {
     return contextType == PUNCTUATION ||
            contextType == WHITESPACE ||
            isRBraceToken(contextType);
@@ -60,7 +59,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
     return false;
   }
 
-  @Nonnull
+  
   public static PairedBraceMatcherAdapter createBraceMatcher() {
     return new PairedBraceMatcherAdapter(new CustomFileTypeBraceMatcher(), IDENTIFIER.getLanguage()) {
       @Override
@@ -71,7 +70,7 @@ public class CustomFileTypeBraceMatcher implements PairedBraceMatcher {
     };
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return PlainTextLanguage.INSTANCE;

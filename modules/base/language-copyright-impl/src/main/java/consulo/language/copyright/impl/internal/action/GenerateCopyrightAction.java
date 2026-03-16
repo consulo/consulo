@@ -36,8 +36,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "GenerateCopyright", parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_GENERATE)))
 public class GenerateCopyrightAction extends AnAction {
@@ -46,7 +45,7 @@ public class GenerateCopyrightAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (Boolean.TRUE) {
             e.getPresentation().setEnabledAndVisible(false);
             return;
@@ -78,7 +77,7 @@ public class GenerateCopyrightAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Module module = e.getData(Module.KEY);
         PsiDocumentManager.getInstance(project).commitAllDocuments();

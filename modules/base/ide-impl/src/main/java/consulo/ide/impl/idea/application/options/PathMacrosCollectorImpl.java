@@ -23,8 +23,7 @@ import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,8 +38,8 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
   private static final String FILE_PROTOCOL = "file:";
   private static final String JAR_PROTOCOL = "jar:";
 
-  @Nonnull
-  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {
+  
+  public static Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, PathMacros pathMacros) {
     PathMacrosCollectorImpl collector = new PathMacrosCollectorImpl();
     collector.substitute(root, true, false, filter);
     HashSet<String> result = new HashSet<>(collector.myMacroMap.keySet());

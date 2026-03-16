@@ -26,8 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Set;
@@ -60,7 +59,7 @@ public abstract class PatternDialectProvider {
 
     public abstract String getDisplayName();
 
-    @Nonnull
+    
     public abstract String getId();
 
     public abstract AnAction[] createActions(Project project, Runnable update);

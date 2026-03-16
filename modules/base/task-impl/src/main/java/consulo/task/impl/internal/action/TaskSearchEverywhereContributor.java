@@ -29,8 +29,7 @@ import consulo.task.localize.TaskLocalize;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -53,7 +52,7 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public String getSearchProviderId() {
         return ID;
@@ -64,7 +63,7 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupName() {
         return "Tasks";
@@ -80,9 +79,9 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public List<AnAction> getActions(@Nonnull Runnable onChanged) {
+    public List<AnAction> getActions(Runnable onChanged) {
         return Collections.singletonList(new CheckBoxSearchEverywhereToggleAction(TaskLocalize.labelIncludeClosedTasks()) {
             @Override
             public boolean isEverywhere() {
@@ -99,7 +98,7 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
 
 
     @Override
-    public void fetchElements(@Nonnull String pattern, @Nonnull ProgressIndicator progressIndicator, @Nonnull Predicate<? super Object> predicate) {
+    public void fetchElements(String pattern, ProgressIndicator progressIndicator, Predicate<? super Object> predicate) {
         myNewTaskAction.setTaskName(pattern);
 
         predicate.test(myNewTaskAction);
@@ -138,7 +137,7 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
     }
 
     @Override
-    public boolean processSelectedItem(@Nonnull Object element, int modifiers, @Nonnull String searchText) {
+    public boolean processSelectedItem(Object element, int modifiers, String searchText) {
         TaskManager taskManager = TaskManager.getManager(myProject);
         if (element instanceof TaskPsiElement taskPsiElem) {
             Task task = taskPsiElem.getTask();
@@ -159,13 +158,13 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
         return true;
     }
 
-    private static void showOpenTaskDialog(@Nonnull Project project, Task task) {
+    private static void showOpenTaskDialog(Project project, Task task) {
         IdeEventQueueProxy.getInstance().closeAllPopups();
 
         project.getApplication().invokeLater(() -> new OpenTaskDialog(project, task).show());
     }
 
-    @Nonnull
+    
     @Override
     public ListCellRenderer<? super Object> getElementsRenderer() {
         return new TaskCellRenderer(myProject);
@@ -173,7 +172,7 @@ public class TaskSearchEverywhereContributor implements SearchEverywhereContribu
 
     @Nullable
     @Override
-    public Object getDataForItem(@Nonnull Object element, @Nonnull Key dataId) {
+    public Object getDataForItem(Object element, Key dataId) {
         return null;
     }
 }

@@ -28,7 +28,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.*;
@@ -44,11 +43,11 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     protected final Project myProject;
     private final List<? extends ChooseByNameContributor> myContributors;
 
-    protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull ChooseByNameContributor[] contributors) {
+    protected ContributorsBasedGotoByModel(Project project, ChooseByNameContributor[] contributors) {
         this(project, Arrays.asList(contributors));
     }
 
-    protected ContributorsBasedGotoByModel(@Nonnull Project project, @Nonnull List<? extends ChooseByNameContributor> contributors) {
+    protected ContributorsBasedGotoByModel(Project project, List<? extends ChooseByNameContributor> contributors) {
         myProject = project;
         myContributors = contributors;
         assert !contributors.contains(null);
@@ -59,7 +58,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
         return ContainerUtil.find(getContributorList(), DumbService::isDumbAware) != null;
     }
 
-    @Nonnull
+    
     @Override
     public ListCellRenderer getListCellRenderer() {
         return new NavigationItemListCellRenderer();
@@ -73,14 +72,14 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
         ContainerUtil.createConcurrentWeakMap();
 
     @Override
-    public void processNames(@Nonnull Predicate<? super String> nameProcessor, @Nonnull FindSymbolParameters parameters) {
+    public void processNames(Predicate<? super String> nameProcessor, FindSymbolParameters parameters) {
         long start = System.currentTimeMillis();
         List<? extends ChooseByNameContributor> contributors = filterDumb(getContributorList());
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         Predicate<ChooseByNameContributor> processor = new ReadActionProcessor<>() {
             @Override
             @RequiredReadAction
-            public boolean processInReadAction(@Nonnull ChooseByNameContributor contributor) {
+            public boolean processInReadAction(ChooseByNameContributor contributor) {
                 try {
                     if (!myProject.isDisposed()) {
                         long contributorStarted = System.currentTimeMillis();
@@ -113,9 +112,9 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     }
 
     public void processContributorNames(
-        @Nonnull ChooseByNameContributor contributor,
-        @Nonnull FindSymbolParameters parameters,
-        @Nonnull Predicate<? super String> nameProcessor
+        ChooseByNameContributor contributor,
+        FindSymbolParameters parameters,
+        Predicate<? super String> nameProcessor
     ) {
         TIntHashSet filter = new TIntHashSet(1000);
         if (contributor instanceof ChooseByNameContributorEx chooseByNameContributorEx) {
@@ -145,7 +144,7 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
         return IdFilter.getProjectIdFilter(myProject, withLibraries);
     }
 
-    @Nonnull
+    
     @Override
     public String[] getNames(boolean checkBoxState) {
         Set<String> allNames = new HashSet<>();
@@ -172,11 +171,11 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
         return answer;
     }
 
-    @Nonnull
+    
     public Object[] getElementsByName(
-        @Nonnull String name,
-        @Nonnull FindSymbolParameters parameters,
-        @Nonnull ProgressIndicator canceled
+        String name,
+        FindSymbolParameters parameters,
+        ProgressIndicator canceled
     ) {
         long elementByNameStarted = System.currentTimeMillis();
         List<NavigationItem> items = Collections.synchronizedList(new ArrayList<>());
@@ -268,14 +267,14 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
      * @return a list of navigation items from contributors for
      * which {@link #acceptItem(NavigationItem) returns true.
      */
-    @Nonnull
+    
     @Override
-    public Object[] getElementsByName(@Nonnull String name, boolean checkBoxState, @Nonnull String pattern) {
+    public Object[] getElementsByName(String name, boolean checkBoxState, String pattern) {
         return getElementsByName(name, FindSymbolParameters.wrap(pattern, myProject, checkBoxState), new ProgressIndicatorBase());
     }
 
     @Override
-    public String getElementName(@Nonnull Object element) {
+    public String getElementName(Object element) {
         if (element instanceof NavigationItem navigationItem) {
             return navigationItem.getName();
         }
@@ -308,12 +307,12 @@ public abstract class ContributorsBasedGotoByModel implements ChooseByNameModelE
     }
 
     public
-    @Nonnull
-    String removeModelSpecificMarkup(@Nonnull String pattern) {
+    
+    String removeModelSpecificMarkup(String pattern) {
         return pattern;
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }

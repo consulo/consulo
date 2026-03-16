@@ -19,7 +19,6 @@ package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import jakarta.annotation.Nonnull;
 
 abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId {
   private final DummyFileSystem myFileSystem;
@@ -40,7 +39,7 @@ abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId 
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFileSystem getFileSystem() {
     return myFileSystem;
   }
@@ -55,7 +54,7 @@ abstract class VirtualFileImpl extends VirtualFile implements VirtualFileWithId 
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }

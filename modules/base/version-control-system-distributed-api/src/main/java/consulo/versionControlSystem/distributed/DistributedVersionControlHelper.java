@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -31,8 +30,8 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DistributedVersionControlHelper {
-    @Nonnull
-    LegacyDialog createPushDialog(@Nonnull Project project,
-                                  @Nonnull List<? extends Repository> selectedRepositories,
+    
+    LegacyDialog createPushDialog(Project project,
+                                  List<? extends Repository> selectedRepositories,
                                   @Nullable Repository currentRepo);
 }

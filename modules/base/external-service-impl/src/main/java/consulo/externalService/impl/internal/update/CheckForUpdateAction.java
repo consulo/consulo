@@ -29,7 +29,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -44,7 +43,7 @@ public class CheckForUpdateAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         String place = e.getPlace();
 
         Presentation presentation = e.getPresentation();
@@ -62,7 +61,7 @@ public class CheckForUpdateAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         actionPerformed(project, myUpdateSettingsProvider.get(), UIAccess.current());

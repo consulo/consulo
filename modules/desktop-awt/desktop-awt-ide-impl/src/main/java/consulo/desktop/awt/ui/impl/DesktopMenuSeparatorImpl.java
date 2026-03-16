@@ -29,8 +29,7 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -39,7 +38,6 @@ import jakarta.annotation.Nullable;
 class DesktopMenuSeparatorImpl implements MenuSeparator {
     public static final DesktopMenuSeparatorImpl INSTANCE = new DesktopMenuSeparatorImpl();
 
-    @Nonnull
     @Override
     public LocalizeValue getText() {
         return LocalizeValue.empty();
@@ -52,13 +50,13 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
     @RequiredUIAccess
     @Override
-    public void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, ColorValue colorValue, int width) {
+    public void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, ColorValue colorValue, int width) {
         throw new UnsupportedOperationException();
     }
 
     @RequiredUIAccess
     @Override
-    public void removeBorder(@Nonnull BorderPosition borderPosition) {
+    public void removeBorder(BorderPosition borderPosition) {
         throw new UnsupportedOperationException();
     }
 
@@ -92,41 +90,38 @@ class DesktopMenuSeparatorImpl implements MenuSeparator {
 
     @RequiredUIAccess
     @Override
-    public void setSize(@Nonnull Size2D size) {
+    public void setSize(Size2D size) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
     public Font getFont() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setFont(@Nonnull Font font) {
+    public void setFont(Font font) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass) {
+    public <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass) {
         throw new UnsupportedOperationException();
     }
 
-    @Nonnull
     @Override
-    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(@Nonnull Class<? extends E> eventClass, @Nonnull ComponentEventListener<C, E> listener) {
+    public <C extends Component, E extends ComponentEvent<C>> Disposable addListener(Class<? extends E> eventClass, ComponentEventListener<C, E> listener) {
         throw new UnsupportedOperationException();
     }
 
     @Nullable
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         throw new UnsupportedOperationException();
     }
 }

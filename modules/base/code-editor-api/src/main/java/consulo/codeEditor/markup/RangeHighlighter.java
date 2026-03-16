@@ -20,8 +20,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.document.RangeMarker;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Comparator;
@@ -70,7 +69,7 @@ public interface RangeHighlighter extends RangeMarker {
      *
      * @param textAttributesKey a text attributes key.
      */
-    void setTextAttributesKey(@Nonnull TextAttributesKey textAttributesKey);
+    void setTextAttributesKey(TextAttributesKey textAttributesKey);
 
     /**
      * @deprecated Use the overload with {@link EditorColorsScheme} and prefer using {@link #getTextAttributesKey()}
@@ -235,14 +234,14 @@ public interface RangeHighlighter extends RangeMarker {
      * @param filter the filter controlling the highlighter availability, or MarkupEditorFilter.EMPTY if
      *               highlighter is available in all editors.
      */
-    void setEditorFilter(@Nonnull MarkupEditorFilter filter);
+    void setEditorFilter(MarkupEditorFilter filter);
 
     /**
      * Gets the filter which can disable the highlighter in specific editor instances.
      *
      * @return the filter controlling the highlighter availability. Default availability is controlled by MarkupEditorFilter.EMPTY
      */
-    @Nonnull
+    
     MarkupEditorFilter getEditorFilter();
 
     boolean isAfterEndOfLine();

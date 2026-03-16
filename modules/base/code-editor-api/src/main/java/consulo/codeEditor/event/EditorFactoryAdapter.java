@@ -15,7 +15,6 @@
  */
 package consulo.codeEditor.event;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -23,10 +22,10 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 public abstract class EditorFactoryAdapter implements EditorFactoryListener {
   @Override
-  public void editorCreated(@Nonnull EditorFactoryEvent event) {
+  public void editorCreated(EditorFactoryEvent event) {
   }
 
   @Override
-  public void editorReleased(@Nonnull EditorFactoryEvent event) {
+  public void editorReleased(EditorFactoryEvent event) {
   }
 }

@@ -19,7 +19,6 @@ import consulo.ui.ValueComponent;
 import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -33,7 +32,7 @@ public class DesktopSwtBoolValueGroup extends ButtonGroup implements ValueGroup<
 
   }
 
-  @Nonnull
+  
   @Override
   public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
     return this;

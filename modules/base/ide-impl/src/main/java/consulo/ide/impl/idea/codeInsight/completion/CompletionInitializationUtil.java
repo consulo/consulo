@@ -31,7 +31,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 
@@ -41,9 +40,9 @@ import java.util.Objects;
 public class CompletionInitializationUtil {
     private static final Logger LOG = Logger.getInstance(CompletionInitializationUtil.class);
 
-    static CompletionInitializationContextImpl createCompletionInitializationContext(@Nonnull Project project,
-                                                                                     @Nonnull Editor editor,
-                                                                                     @Nonnull Caret caret,
+    static CompletionInitializationContextImpl createCompletionInitializationContext(Project project,
+                                                                                     Editor editor,
+                                                                                     Caret caret,
                                                                                      int invocationCount,
                                                                                      CompletionType completionType) {
         return WriteAction.compute(() -> {
@@ -60,13 +59,13 @@ public class CompletionInitializationUtil {
         });
     }
 
-    private static CompletionInitializationContextImpl runContributorsBeforeCompletion(Editor editor, PsiFile psiFile, int invocationCount, @Nonnull Caret caret, CompletionType completionType) {
+    private static CompletionInitializationContextImpl runContributorsBeforeCompletion(Editor editor, PsiFile psiFile, int invocationCount, Caret caret, CompletionType completionType) {
         final Ref<CompletionContributor> current = Ref.create(null);
         CompletionInitializationContextImpl context = new CompletionInitializationContextImpl(editor, caret, psiFile, completionType, invocationCount) {
             CompletionContributor dummyIdentifierChanger;
 
             @Override
-            public void setDummyIdentifier(@Nonnull String dummyIdentifier) {
+            public void setDummyIdentifier(String dummyIdentifier) {
                 super.setDummyIdentifier(dummyIdentifier);
 
                 if (dummyIdentifierChanger != null) {
@@ -85,7 +84,7 @@ public class CompletionInitializationUtil {
         return context;
     }
 
-    @Nonnull
+    
     static CompletionParameters createCompletionParameters(CompletionInitializationContext initContext, CompletionProcessEx indicator, OffsetsInFile finalOffsets) {
         int offset = finalOffsets.getOffsets().getOffset(CompletionInitializationContext.START_OFFSET);
         PsiFile fileCopy = finalOffsets.getFile();
@@ -150,7 +149,7 @@ public class CompletionInitializationUtil {
         return hostCopyOffsets;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     private static PsiElement findCompletionPositionLeaf(OffsetsInFile offsets, int offset, PsiFile originalFile) {
         PsiElement insertedElement = offsets.getFile().findElementAt(offset);
@@ -192,7 +191,7 @@ public class CompletionInitializationUtil {
 
     private static final Key<SoftReference<Pair<PsiFile, Document>>> FILE_COPY_KEY = Key.create("CompletionFileCopy");
 
-    private static boolean isCopyUpToDate(Document document, @Nonnull PsiFile copyFile, @Nonnull PsiFile originalFile) {
+    private static boolean isCopyUpToDate(Document document, PsiFile copyFile, PsiFile originalFile) {
         if (!copyFile.getClass().equals(originalFile.getClass()) || !copyFile.isValid() || !copyFile.getName().equals(originalFile.getName())) {
             return false;
         }

@@ -20,7 +20,6 @@ import consulo.ui.ex.localize.ShortcutLocalize;
 import consulo.ui.ex.localize.UnicodeShortcutLocalize;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
 
@@ -33,7 +32,7 @@ import static java.awt.event.KeyEvent.*;
  * Some some code from Swing {@link KeyEvent#getKeyText(int)}
  */
 public class ShortcutLocalizeHolder {
-    private record ShortcutInfo(@Nonnull LocalizeValue textShortcut, @Nonnull LocalizeValue unicodeShortcut) {
+    private record ShortcutInfo(LocalizeValue textShortcut, LocalizeValue unicodeShortcut) {
     }
 
     private static final Int2ObjectMap<ShortcutInfo> cache = new Int2ObjectLinkedOpenHashMap<>();
@@ -250,7 +249,7 @@ public class ShortcutLocalizeHolder {
         cache.put(keyCode, new ShortcutInfo(textLocalize, unicodeLocalize));
     }
 
-    @Nonnull
+    
     public static LocalizeValue getKeyText(int keyCode, boolean unicodeShortcut) {
         ShortcutInfo info = cache.get(keyCode);
         if (info != null) {

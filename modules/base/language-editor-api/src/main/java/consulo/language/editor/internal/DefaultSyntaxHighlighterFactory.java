@@ -22,19 +22,18 @@ import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public class DefaultSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
-  @Nonnull
+  
   public SyntaxHighlighter getSyntaxHighlighter(Project project, VirtualFile virtualFile) {
     return new DefaultSyntaxHighlighter();
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.versionControlSystem.CommitMessage;
 import consulo.versionControlSystem.CommitMessageFactory;
 import consulo.versionControlSystem.impl.internal.commit.CommitMessageImpl;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -38,7 +37,7 @@ public class CommitMessageFactoryImpl implements CommitMessageFactory {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public CommitMessage create(boolean withSeparator) {
         return new CommitMessageImpl(myProject, withSeparator);

@@ -25,8 +25,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -49,7 +48,7 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         PluginTab tab = e.getRequiredData(PluginTab.KEY);
 
         Presentation presentation = e.getPresentation();

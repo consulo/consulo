@@ -9,7 +9,6 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ public class TaskChangeListDecorator implements ChangeListDecorator {
   }
 
   @Override
-  public void decorateChangeList(@Nonnull LocalChangeList changeList, @Nonnull ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus) {
+  public void decorateChangeList(LocalChangeList changeList, ColoredTreeCellRenderer cellRenderer, boolean selected, boolean expanded, boolean hasFocus) {
     LocalTask task = TaskManager.getManager(myProject).getAssociatedTask(changeList);
     if (task != null && task.isIssue()) {
       cellRenderer.setIcon(task.getIcon());

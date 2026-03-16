@@ -5,8 +5,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.TokenSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -19,10 +18,10 @@ public abstract class EquivalenceDescriptorProvider {
     // for using in tests only !!!
     public static boolean ourUseDefaultEquivalence = false;
 
-    public abstract boolean isMyContext(@Nonnull PsiElement context);
+    public abstract boolean isMyContext(PsiElement context);
 
     @Nullable
-    public abstract EquivalenceDescriptor buildDescriptor(@Nonnull PsiElement element);
+    public abstract EquivalenceDescriptor buildDescriptor(PsiElement element);
 
     // by default only PsiWhitespace ignored
     public TokenSet getIgnoredTokens() {
@@ -30,7 +29,7 @@ public abstract class EquivalenceDescriptorProvider {
     }
 
     @Nullable
-    public static EquivalenceDescriptorProvider getInstance(@Nonnull PsiElement context) {
+    public static EquivalenceDescriptorProvider getInstance(PsiElement context) {
         if (ourUseDefaultEquivalence) {
             return null;
         }

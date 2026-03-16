@@ -19,7 +19,6 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,38 +30,38 @@ import java.util.Map;
  */
 public abstract class CompletionFinalSorter {
 
-  @Nonnull
-  public abstract Iterable<? extends LookupElement> sort(@Nonnull Iterable<? extends LookupElement> initial, @Nonnull CompletionParameters parameters);
+  
+  public abstract Iterable<? extends LookupElement> sort(Iterable<? extends LookupElement> initial, CompletionParameters parameters);
 
   /**
    * For debugging purposes, provide weights by which completion will be sorted.
    */
-  @Nonnull
-  public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> elements);
+  
+  public abstract Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> elements);
 
 
   //@ApiStatus.Internal
   public interface Factory {
-    @Nonnull
+    
     CompletionFinalSorter newSorter();
   }
 
-  @Nonnull
+  
   public static CompletionFinalSorter newSorter() {
     return EMPTY_SORTER;
   }
 
 
   private static final CompletionFinalSorter EMPTY_SORTER = new CompletionFinalSorter() {
-    @Nonnull
+    
     @Override
-    public Iterable<? extends LookupElement> sort(@Nonnull Iterable<? extends LookupElement> initial, @Nonnull CompletionParameters parameters) {
+    public Iterable<? extends LookupElement> sort(Iterable<? extends LookupElement> initial, CompletionParameters parameters) {
       return initial;
     }
 
-    @Nonnull
+    
     @Override
-    public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(@Nonnull Iterable<LookupElement> elements) {
+    public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(Iterable<LookupElement> elements) {
       return Collections.emptyMap();
     }
   };

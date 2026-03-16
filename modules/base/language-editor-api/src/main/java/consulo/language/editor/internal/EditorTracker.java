@@ -18,8 +18,7 @@ import consulo.util.collection.SmartList;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +26,8 @@ import java.util.Map;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class EditorTracker implements Disposable {
-  @Nonnull
-  public static EditorTracker getInstance(@Nonnull Project project) {
+  
+  public static EditorTracker getInstance(Project project) {
     return project.getInstance(EditorTracker.class);
   }
 
@@ -44,11 +43,11 @@ public abstract class EditorTracker implements Disposable {
   protected final Map<Editor, Runnable> myExecuteOnEditorRelease = new HashMap<>();
 
   @Inject
-  public EditorTracker(@Nonnull Project project, @Nonnull Provider<WindowManager> windowManagerProvider) {
+  public EditorTracker(Project project, Provider<WindowManager> windowManagerProvider) {
     myProject = project;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   public List<Editor> getActiveEditors() {
     UIAccess.assertIsUIThread();
@@ -75,7 +74,7 @@ public abstract class EditorTracker implements Disposable {
   }
 
   @RequiredUIAccess
-  public void setActiveEditors(@Nonnull List<Editor> editors) {
+  public void setActiveEditors(List<Editor> editors) {
     UIAccess.assertIsUIThread();
     if (editors.equals(myActiveEditors)) {
       return;
@@ -97,11 +96,11 @@ public abstract class EditorTracker implements Disposable {
   }
 
   @RequiredUIAccess
-  protected abstract void editorCreated(@Nonnull EditorFactoryEvent event);
+  protected abstract void editorCreated(EditorFactoryEvent event);
 
   protected abstract void unregisterEditor(Editor editor);
 
-  protected void editorReleased(@Nonnull EditorFactoryEvent event) {
+  protected void editorReleased(EditorFactoryEvent event) {
     Editor editor = event.getEditor();
     if (editor.getProject() != null && editor.getProject() != myProject) return;
     unregisterEditor(editor);

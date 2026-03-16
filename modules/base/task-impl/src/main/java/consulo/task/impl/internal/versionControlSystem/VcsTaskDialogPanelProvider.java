@@ -23,8 +23,7 @@ import consulo.task.ui.TaskDialogPanel;
 import consulo.task.ui.TaskDialogPanelProvider;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -33,13 +32,13 @@ import jakarta.annotation.Nullable;
 public class VcsTaskDialogPanelProvider extends TaskDialogPanelProvider {
   @Nullable
   @Override
-  public TaskDialogPanel getOpenTaskPanel(@Nonnull Project project, @Nonnull Task task) {
+  public TaskDialogPanel getOpenTaskPanel(Project project, Task task) {
     return TaskManager.getManager(project).isVcsEnabled() ? new VcsOpenTaskPanel(project, task) : null;
   }
 
   @Nullable
   @Override
-  public TaskDialogPanel getCloseTaskPanel(@Nonnull Project project, @Nonnull LocalTask task) {
+  public TaskDialogPanel getCloseTaskPanel(Project project, LocalTask task) {
     return TaskManager.getManager(project).isVcsEnabled() ? new VcsCloseTaskPanel(project, task) : null;
   }
 }

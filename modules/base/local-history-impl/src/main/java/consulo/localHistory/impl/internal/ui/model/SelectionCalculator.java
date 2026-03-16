@@ -22,7 +22,7 @@ import consulo.localHistory.impl.internal.Content;
 import consulo.localHistory.impl.internal.IdeaGateway;
 import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.tree.Entry;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;

@@ -37,8 +37,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -51,24 +50,23 @@ import java.util.function.Function;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageEditorInternalHelper {
-    @Nonnull
     static LanguageEditorInternalHelper getInstance() {
         return Application.get().getInstance(LanguageEditorInternalHelper.class);
     }
 
-    void doWrapLongLinesIfNecessary(@Nonnull Editor editor,
-                                    @Nonnull Project project,
-                                    @Nonnull Language language,
-                                    @Nonnull Document document,
+    void doWrapLongLinesIfNecessary(Editor editor,
+                                    Project project,
+                                    Language language,
+                                    Document document,
                                     int startOffset,
                                     int endOffset,
                                     List<? extends TextRange> enabledRanges);
 
-    default void appendFragmentsForSpeedSearch(@Nonnull JComponent speedSearchEnabledComponent,
-                                               @Nonnull String text,
-                                               @Nonnull SimpleTextAttributes attributes,
+    default void appendFragmentsForSpeedSearch(JComponent speedSearchEnabledComponent,
+                                               String text,
+                                               SimpleTextAttributes attributes,
                                                boolean selected,
-                                               @Nonnull ColoredTextContainer simpleColoredComponent) {
+                                               ColoredTextContainer simpleColoredComponent) {
         // [VISTALL] hack due we don't have hard dependency to AWT impl
     }
 
@@ -77,32 +75,31 @@ public interface LanguageEditorInternalHelper {
     }
 
     @RequiredUIAccess
-    default void showInspectionsSettings(@Nonnull Project project) {
+    default void showInspectionsSettings(Project project) {
     }
 
-    @Nonnull
-    default List<Annotation> runAnnotator(@Nonnull Language language,
-                                          @Nonnull Annotator annotator,
+    default List<Annotation> runAnnotator(Language language,
+                                          Annotator annotator,
                                           PsiFile file,
                                           PsiElement context,
                                           boolean batchMode) {
         return List.of();
     }
 
-    default int adjustLineIndentNoCommit(Language language, @Nonnull Document document, @Nonnull Editor editor, int offset) {
+    default int adjustLineIndentNoCommit(Language language, Document document, Editor editor, int offset) {
         return -1;
     }
 
-    default boolean isInlineRefactoringActive(@Nonnull Editor editor) {
+    default boolean isInlineRefactoringActive(Editor editor) {
         return false;
     }
 
     @RequiredReadAction
-    default void setHighlightersToEditor(@Nonnull Project project,
-                                         @Nonnull Document document,
+    default void setHighlightersToEditor(Project project,
+                                         Document document,
                                          int startOffset,
                                          int endOffset,
-                                         @Nonnull Collection<HighlightInfo> highlights,
+                                         Collection<HighlightInfo> highlights,
                                          // if null global scheme will be used
                                          @Nullable EditorColorsScheme colorsScheme,
                                          int group) {

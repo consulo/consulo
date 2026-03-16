@@ -31,7 +31,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -52,8 +51,8 @@ import java.util.Map;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public class TranslationCompilerProjectMonitor {
-    @Nonnull
-    public static TranslationCompilerProjectMonitor getInstance(@Nonnull Project project) {
+    
+    public static TranslationCompilerProjectMonitor getInstance(Project project) {
         return project.getInstance(TranslationCompilerProjectMonitor.class);
     }
 
@@ -96,7 +95,7 @@ public class TranslationCompilerProjectMonitor {
         }
     }
 
-    @Nonnull
+    
     public Map<String, Couple<String>> getLastOutputRootsLayout() {
         File file = getOutputUrlsFile();
 
@@ -143,7 +142,7 @@ public class TranslationCompilerProjectMonitor {
         return map;
     }
 
-    @Nonnull
+    
     private File getOutputUrlsFile() {
         File dir = CompilerPaths.getCompilerSystemDirectory(myProject);
         return new File(dir, "outputs.xml");

@@ -16,7 +16,6 @@
 package consulo.virtualFileSystem.http.event;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -25,6 +24,6 @@ import java.util.EventListener;
  */
 public interface HttpVirtualFileListener extends EventListener {
 
-  void fileDownloaded(@Nonnull VirtualFile file);
+  void fileDownloaded(VirtualFile file);
 
 }

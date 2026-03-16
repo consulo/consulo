@@ -16,19 +16,18 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class XEvaluateInConsoleFromEditorActionHandler extends XAddToWatchesFromEditorActionHandler {
   @Override
-  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && getConsoleExecuteAction(session) != null;
   }
 
   @Nullable
-  private static ConsoleExecuteAction getConsoleExecuteAction(@Nonnull XDebugSession session) {
+  private static ConsoleExecuteAction getConsoleExecuteAction(XDebugSession session) {
     return getConsoleExecuteAction(session.getConsoleView());
   }
 
@@ -44,7 +43,7 @@ public class XEvaluateInConsoleFromEditorActionHandler extends XAddToWatchesFrom
   }
 
   @Override
-  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected void perform(XDebugSession session, DataContext dataContext) {
     Editor editor = dataContext.getData(Editor.KEY);
     if (editor == null || !(editor instanceof EditorEx)) {
       return;

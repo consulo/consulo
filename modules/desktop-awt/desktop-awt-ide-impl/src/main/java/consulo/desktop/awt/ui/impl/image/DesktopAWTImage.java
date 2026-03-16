@@ -16,14 +16,13 @@
 package consulo.desktop.awt.ui.impl.image;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 26.05.2024
  */
 public interface DesktopAWTImage extends Image {
-    @Nonnull
+    
     DesktopAWTImage copyWithNewSize(int width, int height);
 
     default DesktopAWTImage copyWithNewScale(float scale) {
@@ -32,10 +31,10 @@ public interface DesktopAWTImage extends Image {
         return copyWithNewSize(width, height);
     }
 
-    @Nonnull
+    
     DesktopAWTImage copyWithForceLibraryId(String libraryId);
 
-    static Image copyWithForceLibraryId(@Nonnull Image image, String forceLibraryId) {
+    static Image copyWithForceLibraryId(Image image, String forceLibraryId) {
         if (image instanceof DesktopAWTImage awt) {
             return awt.copyWithForceLibraryId(forceLibraryId);
         }

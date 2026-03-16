@@ -4,7 +4,6 @@ package consulo.ui.ex.awt.internal;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +16,7 @@ import java.util.Map;
 public final class DetectRetinaKit {
   private static final Map<GraphicsDevice, Boolean> devicesToRetinaSupportCacheMap = ContainerUtil.createWeakMap();
 
-  @Nonnull
+  
   // cannot be static because logging maybe not configured yet
   private static Logger getLogger() {
     return Logger.getInstance(DetectRetinaKit.class);
@@ -77,7 +76,7 @@ public final class DetectRetinaKit {
    * @return false if the device of the Graphics2D is not a retina device,
    * jdk is an Apple JDK or Oracle API has been changed.
    */
-  public static boolean isMacRetina(@Nonnull Graphics2D g) {
+  public static boolean isMacRetina(Graphics2D g) {
     GraphicsConfiguration configuration = g.getDeviceConfiguration();
     if (configuration == null) {
       return false;

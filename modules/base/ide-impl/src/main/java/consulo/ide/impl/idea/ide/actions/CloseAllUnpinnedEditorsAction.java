@@ -26,7 +26,6 @@ import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +45,7 @@ public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
         return !window.isFilePinned(editor.getFile());
     }
 
-    @Nonnull
+    
     @Override
     protected LocalizeValue getPresentationText(boolean inSplitter) {
         return inSplitter ? IdeLocalize.actionCloseAllUnpinnedEditorsInTabGroup() : IdeLocalize.actionCloseAllUnpinnedEditors();

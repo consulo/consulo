@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -54,7 +53,7 @@ public class ValueLookupManagerImpl implements ValueLookupManager, EditorMouseLi
     private boolean myListening;
 
     @Inject
-    public ValueLookupManagerImpl(@Nonnull Project project) {
+    public ValueLookupManagerImpl(Project project) {
         myProject = project;
         myAlarm = new Alarm(project);
     }
@@ -104,7 +103,7 @@ public class ValueLookupManagerImpl implements ValueLookupManager, EditorMouseLi
         }
     }
 
-    private void requestHint(QuickEvaluateHandler handler, Editor editor, Point point, @Nonnull ValueHintType type) {
+    private void requestHint(QuickEvaluateHandler handler, Editor editor, Point point, ValueHintType type) {
         Rectangle area = editor.getScrollingModel().getVisibleArea();
         myAlarm.cancelAllRequests();
         if (type == ValueHintType.MOUSE_OVER_HINT) {
@@ -136,7 +135,7 @@ public class ValueLookupManagerImpl implements ValueLookupManager, EditorMouseLi
         }
     }
 
-    public void showHint(@Nonnull QuickEvaluateHandler handler, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type) {
+    public void showHint(QuickEvaluateHandler handler, Editor editor, Point point, ValueHintType type) {
         myAlarm.cancelAllRequests();
         if (editor.isDisposed() || !handler.canShowHint(myProject)) {
             return;

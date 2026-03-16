@@ -15,8 +15,7 @@ import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
             }
         }
 
-        @Nonnull
+        
         @Override
         public Component get() {
             return myWholePanel;
@@ -104,7 +103,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "coverage";
@@ -116,22 +115,22 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ExecutionCoverageLocalize.configurableCoverageoptionsconfigurableDisplayName();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    protected Panel createPanel(@Nonnull Disposable uiDisposable) {
+    protected Panel createPanel(Disposable uiDisposable) {
         return new Panel(myProject, uiDisposable);
     }
 
     @Override
     @RequiredUIAccess
-    protected void apply(@Nonnull Panel panel) throws ConfigurationException {
+    protected void apply(Panel panel) throws ConfigurationException {
         myManager.setOptionsToReplace(getSelectedValue(panel));
         myManager.setActivateViewOnRun(panel.myActivateCoverageViewCB.getValueOrError());
 
@@ -142,7 +141,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
 
     @Override
     @RequiredUIAccess
-    protected void reset(@Nonnull Panel panel) {
+    protected void reset(Panel panel) {
         int addOrReplace = myManager.getOptionToReplace();
         switch (addOrReplace) {
             case 0 -> panel.myReplaceRB.setValue(true);
@@ -160,7 +159,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
 
     @Override
     @RequiredUIAccess
-    protected boolean isModified(@Nonnull Panel panel) {
+    protected boolean isModified(Panel panel) {
         if (myManager.getOptionToReplace() != getSelectedValue(panel)) {
             return true;
         }
@@ -179,7 +178,7 @@ public class CoverageOptionsConfigurable extends SimpleConfigurable<CoverageOpti
 
     @Override
     @RequiredUIAccess
-    protected void disposeUIResources(@Nonnull Panel panel) {
+    protected void disposeUIResources(Panel panel) {
         for (Configurable child : panel.myChildren) {
             child.disposeUIResources();
         }

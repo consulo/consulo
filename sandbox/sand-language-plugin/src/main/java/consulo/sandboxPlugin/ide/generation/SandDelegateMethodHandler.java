@@ -26,7 +26,6 @@ import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.ui.Alerts;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -41,11 +40,11 @@ public class SandDelegateMethodHandler implements DelegateMethodHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     Alerts.okInfo(LocalizeValue.localizeTODO("delegate methods called")).showAsync();
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return SandLanguage.INSTANCE;

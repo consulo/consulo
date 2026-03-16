@@ -18,7 +18,6 @@ package consulo.application.impl.internal.progress;
 import consulo.application.progress.ProgressBuilder;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -46,14 +45,14 @@ public abstract class BaseProgressBuilderImpl implements ProgressBuilder {
         throw new IllegalArgumentException("Duplicate using of builder");
     }
 
-    @Nonnull
+    
     @Override
     public ProgressBuilder modal() {
         myModal = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public ProgressBuilder cancelable() {
         myCancelable = true;

@@ -24,7 +24,6 @@ import consulo.find.FindInProjectSettings;
 import consulo.find.FindSettings;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
@@ -39,20 +38,20 @@ public final class FindInProjectRecents extends FindInProjectSettingsBase implem
     }
 
     @Override
-    @Nonnull
+    
     public List<String> getRecentDirectories() {
         List<String> strings = new ArrayList<>(FindSettings.getInstance().getRecentDirectories());
         strings.addAll(super.getRecentDirectories());
         return strings;
     }
 
-    @Nonnull
+    
     @Override
     public String[] getRecentFindStrings() {
         return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentFindStrings(), super.getRecentFindStrings());
     }
 
-    @Nonnull
+    
     @Override
     public String[] getRecentReplaceStrings() {
         return ArrayUtil.mergeArrays(FindSettings.getInstance().getRecentReplaceStrings(), super.getRecentReplaceStrings());

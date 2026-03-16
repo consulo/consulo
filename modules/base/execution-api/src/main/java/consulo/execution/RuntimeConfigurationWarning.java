@@ -18,14 +18,13 @@ package consulo.execution;
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 public class RuntimeConfigurationWarning extends RuntimeConfigurationException {
-    public RuntimeConfigurationWarning(@Nonnull LocalizeValue message) {
+    public RuntimeConfigurationWarning(LocalizeValue message) {
         this(message, null);
     }
 
-    public RuntimeConfigurationWarning(@Nonnull LocalizeValue message, Runnable quickFix) {
+    public RuntimeConfigurationWarning(LocalizeValue message, Runnable quickFix) {
         super(message, ExecutionLocalize.warningCommonTitle());
         setQuickFix(quickFix);
     }

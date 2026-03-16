@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.WholeWestDialogWrapper;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -42,13 +41,13 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
     @Nullable
     private final Project myProject;
     private final List<PluginDescriptor> myToInstallPlugins;
-    @Nonnull
+    
     private final List<PluginDescriptor> myAllPlugins;
 
     public PluginsAdvertiserDialog(
         @Nullable Project project,
-        @Nonnull List<PluginDescriptor> allPlugins,
-        @Nonnull List<PluginDescriptor> toInstallPlugins
+        List<PluginDescriptor> allPlugins,
+        List<PluginDescriptor> toInstallPlugins
     ) {
         super(project);
         myAllPlugins = allPlugins;
@@ -59,7 +58,7 @@ public class PluginsAdvertiserDialog extends WholeWestDialogWrapper {
         init();
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public Couple<JComponent> createSplitterComponents(JPanel rootPanel) {

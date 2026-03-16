@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -59,7 +58,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
     private LocalFileSystem.WatchRequest myCompilerOutputWatchRequest;
 
     @Inject
-    public CompilerConfigurationImpl(@Nonnull Project project, @Nonnull ModuleManager moduleManager) {
+    public CompilerConfigurationImpl(Project project, ModuleManager moduleManager) {
         myProject = project;
         myModuleManager = moduleManager;
     }
@@ -79,7 +78,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
         return myOutputDirPointer.getFile();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     protected Set<String> getRootsToWatch() {
         Set<String> rootsToWatch = new HashSet<>();
@@ -98,7 +97,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
         return rootsToWatch;
     }
 
-    @Nonnull
+    
     @Override
     public String getCompilerOutputUrl() {
         if (myOutputDirPointer == null) {

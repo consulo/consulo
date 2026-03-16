@@ -17,7 +17,6 @@ package consulo.localization.internal;
 
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -27,28 +26,22 @@ import java.util.function.Function;
  * @since 2020-07-30
  */
 public final class MappedLocalizedValue extends CachingLocalizedValue {
-    @Nonnull
     private final LocalizedValue myDelegate;
-    @Nonnull
     private final Function<String, String> myMapper;
 
     public MappedLocalizedValue(
-        @Nonnull LocalizationManager manager,
-        @Nonnull LocalizedValue delegate,
-        @Nonnull Function<String, String> mapper
+        LocalizationManager manager,
+        LocalizedValue delegate,
+        Function<String, String> mapper
     ) {
         super(manager);
         myDelegate = delegate;
         myMapper = mapper;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return myDelegate.getId() + "->" + Objects.toIdentityString(myMapper);
     }
-
-    @Nonnull
     @Override
     protected String calcValue() {
         return myMapper.apply(myDelegate.getValue());

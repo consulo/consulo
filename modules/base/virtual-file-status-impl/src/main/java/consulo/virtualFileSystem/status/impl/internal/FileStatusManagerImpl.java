@@ -35,7 +35,6 @@ import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusProvider;
 import consulo.virtualFileSystem.status.internal.FileStatusFacade;
 import consulo.virtualFileSystem.status.internal.FileStatusManagerInternal;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -60,7 +59,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     private static class FileStatusNull implements FileStatus {
         private static final FileStatus INSTANCE = new FileStatusNull();
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getText() {
             throw new AssertionError("Should not be called");
@@ -71,13 +70,13 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
             throw new AssertionError("Should not be called");
         }
 
-        @Nonnull
+        
         @Override
         public EditorColorKey getColorKey() {
             throw new AssertionError("Should not be called");
         }
 
-        @Nonnull
+        
         @Override
         public String getId() {
             throw new AssertionError("Should not be called");
@@ -95,7 +94,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
         myFileStatusProvider = fileStatusProvider;
     }
 
-    public FileStatus calcStatus(@Nonnull VirtualFile virtualFile) {
+    public FileStatus calcStatus(VirtualFile virtualFile) {
         FileStatus fileStatus = myProject.getExtensionPoint(FileStatusProvider.class).computeSafeIfAny(f -> f.getFileStatus(virtualFile));
         if (fileStatus != null) {
             return fileStatus;
@@ -109,8 +108,8 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    @Nonnull
-    public FileStatus getDefaultStatus(@Nonnull VirtualFile file) {
+    
+    public FileStatus getDefaultStatus(VirtualFile file) {
         return file.isValid() && file.is(VFileProperty.SPECIAL) ? FileStatus.IGNORED : FileStatus.NOT_CHANGED;
     }
 
@@ -121,12 +120,12 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
 
 
     @Override
-    public void addFileStatusListener(@Nonnull FileStatusListener listener) {
+    public void addFileStatusListener(FileStatusListener listener) {
         myListeners.add(listener);
     }
 
     @Override
-    public void addFileStatusListener(@Nonnull FileStatusListener listener, @Nonnull Disposable parentDisposable) {
+    public void addFileStatusListener(FileStatusListener listener, Disposable parentDisposable) {
         addFileStatusListener(listener);
         Disposer.register(parentDisposable, () -> removeFileStatusListener(listener));
     }
@@ -198,7 +197,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    public FileStatus getStatus(@Nonnull VirtualFile file) {
+    public FileStatus getStatus(VirtualFile file) {
         if (file.getFileSystem() instanceof NonPhysicalFileSystem) {
             return FileStatus.SUPPRESSED;  // do not leak light files via cache
         }
@@ -218,18 +217,18 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
     }
 
     @Override
-    public void removeFileStatusListener(@Nonnull FileStatusListener listener) {
+    public void removeFileStatusListener(FileStatusListener listener) {
         myListeners.remove(listener);
     }
 
     @Override
-    public ColorValue getNotChangedDirectoryColor(@Nonnull VirtualFile file) {
+    public ColorValue getNotChangedDirectoryColor(VirtualFile file) {
         return getRecursiveStatus(file).getColor();
     }
 
-    @Nonnull
+    
     @Override
-    public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {
+    public FileStatus getRecursiveStatus(VirtualFile file) {
         FileStatus status = FileStatusManagerInternal.super.getRecursiveStatus(file);
         if (status != FileStatus.NOT_CHANGED || !file.isValid() || !file.isDirectory()) {
             return status;

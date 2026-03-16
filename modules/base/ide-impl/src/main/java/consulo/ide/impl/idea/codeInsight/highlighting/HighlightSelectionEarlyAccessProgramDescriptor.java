@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInsight.highlighting;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,13 +25,13 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class HighlightSelectionEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return LocalizeValue.localizeTODO("Highlight Selection");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Highlight All Text Occurrence from Text Selection");

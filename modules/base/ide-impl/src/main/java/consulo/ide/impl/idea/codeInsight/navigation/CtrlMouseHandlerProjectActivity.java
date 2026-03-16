@@ -26,7 +26,6 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class CtrlMouseHandlerProjectActivity implements PostStartupActivity, DumbAware {
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         CtrlMouseHandler handler = project.getInstance(CtrlMouseHandler.class);
 
         EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
@@ -45,14 +44,14 @@ public class CtrlMouseHandlerProjectActivity implements PostStartupActivity, Dum
         eventMulticaster.addEditorMouseMotionListener(handler.getEditorMouseMotionListener(), project);
         eventMulticaster.addCaretListener(new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent e) {
+            public void caretPositionChanged(CaretEvent e) {
                 handler.caretPositionChanged();
             }
         }, project);
 
         project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+            public void selectionChanged(FileEditorManagerEvent event) {
                 handler.disposeHighlighter();
                 handler.cancelPreviousTooltip();
             }

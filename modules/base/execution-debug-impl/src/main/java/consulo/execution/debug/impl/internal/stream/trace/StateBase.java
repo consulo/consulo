@@ -4,8 +4,7 @@ package consulo.execution.debug.impl.internal.stream.trace;
 import consulo.execution.debug.stream.trace.IntermediateState;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.Value;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,12 +14,12 @@ import java.util.List;
 abstract class StateBase implements IntermediateState {
   private final List<TraceElement> myElements;
 
-  StateBase(@Nonnull List<TraceElement> elements) {
+  StateBase(List<TraceElement> elements) {
     myElements = List.copyOf(elements);
   }
 
   @Override
-  public @Nonnull List<TraceElement> getTrace() {
+  public List<TraceElement> getTrace() {
     return myElements;
   }
 

@@ -44,8 +44,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -83,7 +82,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     Position position;
     StatusBarWidget widget;
 
-    static WidgetBean create(@Nonnull StatusBarWidget widget, @Nonnull Position position, @Nonnull PseudoComponent component) {
+    static WidgetBean create(StatusBarWidget widget, Position position, PseudoComponent component) {
       WidgetBean bean = new WidgetBean();
       bean.widget = widget;
       bean.position = position;
@@ -123,14 +122,14 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     myComponent.addBorder(BorderPosition.TOP, BorderStyle.LINE, ComponentColors.BORDER, 1);
   }
 
-  private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Position pos) {
+  private void addWidget(StatusBarWidget widget, Position pos) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, pos, List.of()));
   }
 
   @Override
-  public void addWidget(@Nonnull StatusBarWidget widget, @Nonnull List<String> order, @Nonnull Disposable parentDisposable) {
+  public void addWidget(StatusBarWidget widget, List<String> order, Disposable parentDisposable) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
 
     uiAccess.giveIfNeed(() -> addWidget(widget, Position.RIGHT, order));
@@ -139,7 +138,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @RequiredUIAccess
-  private void addWidget(@Nonnull StatusBarWidget widget, @Nonnull Position position, @Nonnull List<String> order) {
+  private void addWidget(StatusBarWidget widget, Position position, List<String> order) {
     UIAccess.assertIsUIThread();
     PseudoComponent c = wrap(widget);
     HorizontalLayout panel = getTargetPanel(position);
@@ -181,7 +180,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     return UnifiedStatusBarWidgetWrapper.wrap(widget);
   }
 
-  //private int getPositionIndex(@Nonnull Position position, @Nonnull String anchor) {
+  //private int getPositionIndex(Position position, String anchor) {
   //  if (Position.RIGHT == position && myRightPanel.getComponentCount() > 0) {
   //    WidgetBean widgetAnchor = null;
   //    boolean before = false;
@@ -205,9 +204,8 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   //  return -1;
   //}
 
-  @Nonnull
   @RequiredUIAccess
-  private HorizontalLayout getTargetPanel(@Nonnull Position position) {
+  private HorizontalLayout getTargetPanel(Position position) {
     if (position == Position.RIGHT) {
       return rightPanel();
     }
@@ -245,11 +243,10 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void removeWidget(@Nonnull String id) {
+  public void removeWidget(String id) {
 
   }
 
-  @Nonnull
   @Override
   public consulo.ui.Component getUIComponent() {
     return myComponent;
@@ -261,13 +258,13 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
+  public BalloonHandler notifyProgressByBalloon(NotificationType type, String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
     return () -> {
     };
   }
 
   @Override
-  public void fireNotificationPopup(@Nonnull JComponent content, Color backgroundColor) {
+  public void fireNotificationPopup(JComponent content, Color backgroundColor) {
 
   }
 
@@ -313,7 +310,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void addProgress(@Nonnull ProgressIndicator indicator, @Nonnull TaskInfo info) {
+  public void addProgress(ProgressIndicator indicator, TaskInfo info) {
 
   }
 
@@ -333,7 +330,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void updateWidget(@Nonnull String id) {
+  public void updateWidget(String id) {
     UIAccess uiAccess = myApplication.getLastUIAccess();
     uiAccess.giveIfNeed(() -> {
       PseudoComponent widgetComponent = getWidgetComponent(id);
@@ -349,10 +346,9 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     });
   }
 
-  @Nonnull
   @Override
   @SuppressWarnings("unchecked")
-  public <W extends StatusBarWidget> Optional<W> findWidget(@Nonnull Predicate<StatusBarWidget> predicate) {
+  public <W extends StatusBarWidget> Optional<W> findWidget(Predicate<StatusBarWidget> predicate) {
     return myWidgetMap
       .values()
       .stream()
@@ -362,7 +358,7 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   }
 
   @Override
-  public void updateWidget(@Nonnull Predicate<StatusBarWidget> widgetPredicate) {
+  public void updateWidget(Predicate<StatusBarWidget> widgetPredicate) {
     myWidgetMap
       .entrySet()
       .stream()

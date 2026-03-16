@@ -24,8 +24,7 @@ import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.execution.debug.breakpoint.ui.XBreakpointsGroupingPriorities;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -41,7 +40,7 @@ public class XBreakpointFileGroupingRule<B> extends XBreakpointGroupingRule<B, X
     return XBreakpointsGroupingPriorities.BY_FILE;
   }
 
-  public XBreakpointFileGroup getGroup(@Nonnull B breakpoint, @Nonnull Collection<XBreakpointFileGroup> groups) {
+  public XBreakpointFileGroup getGroup(B breakpoint, Collection<XBreakpointFileGroup> groups) {
     if (!(breakpoint instanceof XLineBreakpoint)) {
       return null;
     }

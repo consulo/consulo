@@ -17,17 +17,16 @@ package consulo.versionControlSystem.log;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Map;
 
 public interface VcsLogDataPack {
 
-  @Nonnull
+  
   Map<VirtualFile, VcsLogProvider> getLogProviders();
 
-  @Nonnull
+  
   VcsLogRefs getRefs();
 
-  @Nonnull
+  
   VcsLogFilterCollection getFilters();
 }

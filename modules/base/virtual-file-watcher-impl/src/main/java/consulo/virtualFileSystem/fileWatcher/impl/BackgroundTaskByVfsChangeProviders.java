@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +28,8 @@ import java.util.List;
  * @since 01.05.14
  */
 public class BackgroundTaskByVfsChangeProviders {
-  @Nonnull
-  public static List<BackgroundTaskByVfsChangeProvider> getProviders(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
+  
+  public static List<BackgroundTaskByVfsChangeProvider> getProviders(Project project, VirtualFile virtualFile) {
     List<BackgroundTaskByVfsChangeProvider> providers = new ArrayList<>();
     project.getApplication().getExtensionPoint(BackgroundTaskByVfsChangeProvider.class).forEachExtensionSafe(provider -> {
       if (provider.validate(project, virtualFile)) {

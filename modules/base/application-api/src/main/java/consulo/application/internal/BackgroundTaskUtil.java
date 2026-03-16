@@ -31,8 +31,7 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -65,9 +64,9 @@ public class BackgroundTaskUtil {
    * will lead to "Loading..." visible between current moment and execution of invokeLater() event.
    * This period can be very short and looks like 'jumping' if background operation is fast.
    */
-  @Nonnull
+  
   @RequiredUIAccess
-  public static ProgressIndicator executeAndTryWait(@Nonnull Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask,
+  public static ProgressIndicator executeAndTryWait(Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask,
                                                     @Nullable Runnable onSlowAction,
                                                     long waitMillis,
                                                     boolean forceEDT) {
@@ -109,7 +108,7 @@ public class BackgroundTaskUtil {
   }
 
   @RequiredUIAccess
-  private static void finish(@Nonnull Runnable result, @Nonnull ProgressIndicator indicator) {
+  private static void finish(Runnable result, ProgressIndicator indicator) {
     if (!indicator.isCanceled()) result.run();
   }
 
@@ -122,7 +121,7 @@ public class BackgroundTaskUtil {
    */
   @Nullable
   @RequiredUIAccess
-  public static <T> T tryComputeFast(@Nonnull Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
+  public static <T> T tryComputeFast(Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
     Pair<T, ProgressIndicator> pair = computeInBackgroundAndTryWait(backgroundTask, (result, indicator) -> {
     }, Application.get().getDefaultModalityState(), waitMillis);
 
@@ -134,7 +133,7 @@ public class BackgroundTaskUtil {
   }
 
   @Nullable
-  public static <T> T computeInBackgroundAndTryWait(@Nonnull Supplier<T> computable, @Nonnull Consumer<T> asyncCallback, long waitMillis) {
+  public static <T> T computeInBackgroundAndTryWait(Supplier<T> computable, Consumer<T> asyncCallback, long waitMillis) {
     Pair<T, ProgressIndicator> pair =
       computeInBackgroundAndTryWait(indicator -> computable.get(),
                                     (result, indicator) -> asyncCallback.accept(result),
@@ -151,10 +150,10 @@ public class BackgroundTaskUtil {
    * </ul>
    * Callback will be executed on the same thread as the background task.
    */
-  @Nonnull
-  private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(@Nonnull Function<ProgressIndicator, T> task,
-                                                                              @Nonnull BiConsumer<T, ProgressIndicator> asyncCallback,
-                                                                              @Nonnull ModalityState modality,
+  
+  private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(Function<ProgressIndicator, T> task,
+                                                                              BiConsumer<T, ProgressIndicator> asyncCallback,
+                                                                              ModalityState modality,
                                                                               long waitMillis) {
     ProgressIndicator indicator = new EmptyProgressIndicator(modality);
 
@@ -189,8 +188,8 @@ public class BackgroundTaskUtil {
    * This allows to stop a lengthy background activity by calling {@link ProgressManager#checkCanceled()}
    * and avoid Already Disposed exceptions (in particular, because checkCanceled() is called in {@link ServiceManager#getService(Class)}.
    */
-  @Nonnull
-  public static ProgressIndicator executeOnPooledThread(@Nonnull Disposable parent, @Nonnull Runnable runnable) {
+  
+  public static ProgressIndicator executeOnPooledThread(Disposable parent, Runnable runnable) {
     ProgressIndicator indicator = new EmptyProgressIndicator();
     indicator.start();
 
@@ -226,14 +225,14 @@ public class BackgroundTaskUtil {
     return indicator;
   }
 
-  public static void runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Runnable task) {
+  public static void runUnderDisposeAwareIndicator(Disposable parent, Runnable task) {
     runUnderDisposeAwareIndicator(parent, () -> {
       task.run();
       return null;
     });
   }
 
-  public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Supplier<T> task) {
+  public static <T> T runUnderDisposeAwareIndicator(Disposable parent, Supplier<T> task) {
     ProgressIndicator indicator = new EmptyProgressIndicator(Application.get().getDefaultModalityState());
     indicator.start();
 
@@ -254,7 +253,7 @@ public class BackgroundTaskUtil {
     }
   }
 
-  private static boolean registerIfParentNotDisposed(@Nonnull Disposable parent, @Nonnull Disposable disposable) {
+  private static boolean registerIfParentNotDisposed(Disposable parent, Disposable disposable) {
     return AccessRule.read(() -> {
       if (Disposer.isDisposed(parent)) return false;
       try {
@@ -275,8 +274,8 @@ public class BackgroundTaskUtil {
    *
    * @see #syncPublisher(Class)
    */
-  @Nonnull
-  public static <L> L syncPublisher(@Nonnull ComponentManager project, @Nonnull Class<L> topic) throws ProcessCanceledException {
+  
+  public static <L> L syncPublisher(ComponentManager project, Class<L> topic) throws ProcessCanceledException {
     return AccessRule.read(() -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return project.getMessageBus().syncPublisher(topic);
@@ -290,8 +289,8 @@ public class BackgroundTaskUtil {
    *
    * @see #syncPublisher(ComponentManager, Class)
    */
-  @Nonnull
-  public static <L> L syncPublisher(@Nonnull Class<L> topic) throws ProcessCanceledException {
+  
+  public static <L> L syncPublisher(Class<L> topic) throws ProcessCanceledException {
     return AccessRule.read(() -> {
       if (ApplicationManager.getApplication().isDisposed()) throw new ProcessCanceledException();
       return ApplicationManager.getApplication().getMessageBus().syncPublisher(topic);

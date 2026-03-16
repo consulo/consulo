@@ -28,8 +28,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -52,7 +51,7 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
         protected Component createCenterComponent(Disposable uiDisposable) {
             setOKEnabled(false);
@@ -102,12 +101,12 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
     @Nullable
     private Project myProject;
 
-    public UnifiedChooserDialog(@Nullable Project project, @Nonnull FileChooserDescriptor descriptor) {
+    public UnifiedChooserDialog(@Nullable Project project, FileChooserDescriptor descriptor) {
         myDescriptor = descriptor;
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
@@ -115,9 +114,9 @@ public class UnifiedChooserDialog implements PathChooserDialog, FileChooserDialo
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, @Nonnull VirtualFile[] toSelect) {
+    public AsyncResult<VirtualFile[]> chooseAsync(@Nullable ComponentManager project, VirtualFile[] toSelect) {
         AsyncResult<VirtualFile[]> result = AsyncResult.undefined();
         DialogImpl dialog = new DialogImpl((Project) project, myDescriptor, result);
         dialog.showAsync();

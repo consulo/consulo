@@ -16,6 +16,7 @@
 package consulo.container.internal;
 
 import consulo.container.plugin.PluginDescriptor;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -29,7 +30,9 @@ public interface PluginManagerInternal {
 
   boolean isInitialized();
 
+  @Nullable
   File getPluginPath(Class<?> pluginClass);
 
+  @Nullable
   PluginDescriptor getPlugin(Class<?> pluginClass);
 }

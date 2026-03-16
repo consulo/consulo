@@ -30,8 +30,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -50,54 +49,54 @@ public class ProjectFileIndexFacade extends FileIndexFacade {
   }
 
   @Override
-  public boolean isInContent(@Nonnull VirtualFile file) {
+  public boolean isInContent(VirtualFile file) {
     return myFileIndex.isInContent(file);
   }
 
   @Override
-  public boolean isInSource(@Nonnull VirtualFile file) {
+  public boolean isInSource(VirtualFile file) {
     return myFileIndex.isInSource(file);
   }
 
   @Override
-  public boolean isInSourceContent(@Nonnull VirtualFile file) {
+  public boolean isInSourceContent(VirtualFile file) {
     return myFileIndex.isInSourceContent(file);
   }
 
   @Override
-  public boolean isInLibraryClasses(@Nonnull VirtualFile file) {
+  public boolean isInLibraryClasses(VirtualFile file) {
     return myFileIndex.isInLibraryClasses(file);
   }
 
   @Override
-  public boolean isInLibrarySource(@Nonnull VirtualFile file) {
+  public boolean isInLibrarySource(VirtualFile file) {
     return myFileIndex.isInLibrarySource(file);
   }
 
   @Override
-  public boolean isExcludedFile(@Nonnull VirtualFile file) {
+  public boolean isExcludedFile(VirtualFile file) {
     return myFileIndex.isExcluded(file);
   }
 
   @Override
-  public boolean isUnderIgnored(@Nonnull VirtualFile file) {
+  public boolean isUnderIgnored(VirtualFile file) {
     return myFileIndex.isUnderIgnored(file);
   }
 
   @Nullable
   @Override
-  public Module getModuleForFile(@Nonnull VirtualFile file) {
+  public Module getModuleForFile(VirtualFile file) {
     return myFileIndex.getModuleForFile(file);
   }
 
-  @Nonnull
+  
   @Override
   public ModificationTracker getRootModificationTracker() {
     return ProjectRootManager.getInstance(myProject);
   }
 
   @Override
-  public boolean isValidAncestor(@Nonnull VirtualFile baseDir, @Nonnull VirtualFile childDir) {
+  public boolean isValidAncestor(VirtualFile baseDir, VirtualFile childDir) {
     if (!childDir.isDirectory()) {
       childDir = childDir.getParent();
     }

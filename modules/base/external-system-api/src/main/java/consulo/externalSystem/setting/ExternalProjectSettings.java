@@ -18,8 +18,7 @@ package consulo.externalSystem.setting;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +36,7 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
   @Nullable
   private Set<String> myModules = new HashSet<String>();
 
-  @Nonnull
+  
   public Set<String> getModules() {
     return myModules == null ? Collections.<String>emptySet() : myModules;
   }
@@ -53,7 +52,7 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
     return myExternalProjectPath;
   }
 
-  public void setExternalProjectPath(@Nonnull String externalProjectPath) {
+  public void setExternalProjectPath(String externalProjectPath) {
     myExternalProjectPath = externalProjectPath;
   }
 
@@ -74,7 +73,7 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
   }
 
   @Override
-  public int compareTo(@Nonnull ExternalProjectSettings that) {
+  public int compareTo(ExternalProjectSettings that) {
     return Comparing.compare(myExternalProjectPath, that.myExternalProjectPath);
   }
 
@@ -98,10 +97,10 @@ public abstract class ExternalProjectSettings implements Comparable<ExternalProj
     return myExternalProjectPath;
   }
 
-  @Nonnull
+  
   public abstract ExternalProjectSettings clone();
 
-  protected void copyTo(@Nonnull ExternalProjectSettings receiver) {
+  protected void copyTo(ExternalProjectSettings receiver) {
     receiver.myExternalProjectPath = myExternalProjectPath;
     receiver.myModules = new HashSet<String>(myModules);
     receiver.myUseAutoImport = myUseAutoImport;

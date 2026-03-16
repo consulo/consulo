@@ -3,7 +3,6 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.util.concurrent.Promise;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.TreePath;
 import java.util.function.Function;
 
@@ -12,8 +11,8 @@ public interface TreeVisitor {
    * @param path a currently visited path
    * @return an action that controls visiting a tree
    */
-  @Nonnull
-  Action visit(@Nonnull TreePath path);
+  
+  Action visit(TreePath path);
 
   enum Action {
     /**
@@ -43,8 +42,8 @@ public interface TreeVisitor {
      * @param visitor an object that controls visiting a tree structure
      * @return a promise that will be resolved when visiting is finished
      */
-    @Nonnull
-    Promise<TreePath> accept(@Nonnull TreeVisitor visitor);
+    
+    Promise<TreePath> accept(TreeVisitor visitor);
   }
 
 
@@ -52,18 +51,18 @@ public interface TreeVisitor {
     private final Function<TreePath, T> converter;
     private final C component;
 
-    public ByComponent(@Nonnull C component, @Nonnull Function<Object, ? extends T> converter) {
+    public ByComponent(C component, Function<Object, ? extends T> converter) {
       this.converter = currentPath -> converter.apply(currentPath.getLastPathComponent());
       this.component = component;
     }
 
-    public ByComponent(@Nonnull C component, @Nonnull Class<? extends T> type) {
+    public ByComponent(C component, Class<? extends T> type) {
       this(component, object -> type.isInstance(object) ? type.cast(object) : null);
     }
 
-    @Nonnull
+    
     @Override
-    public Action visit(@Nonnull TreePath path) {
+    public Action visit(TreePath path) {
       return visit(converter.apply(path));
     }
 
@@ -71,7 +70,7 @@ public interface TreeVisitor {
      * @param component a last component of the current path
      * @return an action that controls visiting a tree
      */
-    @Nonnull
+    
     protected Action visit(T component) {
       if (component == null) return Action.SKIP_CHILDREN;
       if (matches(component, this.component)) return Action.INTERRUPT;
@@ -84,7 +83,7 @@ public interface TreeVisitor {
      * @param thisComponent a seeking component
      * @return {@code true} if both components match each other
      */
-    protected boolean matches(@Nonnull T pathComponent, @Nonnull C thisComponent) {
+    protected boolean matches(T pathComponent, C thisComponent) {
       return pathComponent.equals(thisComponent);
     }
 
@@ -93,7 +92,7 @@ public interface TreeVisitor {
      * @param thisComponent a seeking component
      * @return {@code true} if the first component may contain the second one
      */
-    protected abstract boolean contains(@Nonnull T pathComponent, @Nonnull C thisComponent);
+    protected abstract boolean contains(T pathComponent, C thisComponent);
   }
 
 
@@ -103,20 +102,20 @@ public interface TreeVisitor {
     private final TreePath path;
     private final int count;
 
-    public ByTreePath(@Nonnull TreePath path, @Nonnull Function<Object, ? extends T> converter) {
+    public ByTreePath(TreePath path, Function<Object, ? extends T> converter) {
       this(false, path, converter);
     }
 
-    public ByTreePath(boolean ignoreRoot, @Nonnull TreePath path, @Nonnull Function<Object, ? extends T> converter) {
+    public ByTreePath(boolean ignoreRoot, TreePath path, Function<Object, ? extends T> converter) {
       this.converter = currentPath -> converter.apply(currentPath.getLastPathComponent());
       this.ignoreRoot = ignoreRoot;
       this.path = path;
       this.count = ignoreRoot ? path.getPathCount() + 1 : path.getPathCount();
     }
 
-    @Nonnull
+    
     @Override
-    public Action visit(@Nonnull TreePath path) {
+    public Action visit(TreePath path) {
       return ignoreRoot && null == path.getParentPath() ? Action.CONTINUE : visit(path, converter.apply(path));
     }
 
@@ -125,8 +124,8 @@ public interface TreeVisitor {
      * @param component a corresponding component
      * @return an action that controls visiting a tree
      */
-    @Nonnull
-    protected Action visit(@Nonnull TreePath path, T component) {
+    
+    protected Action visit(TreePath path, T component) {
       if (component == null) return Action.SKIP_CHILDREN;
       int count = path.getPathCount();
       if (count < this.count) {
@@ -147,9 +146,9 @@ public interface TreeVisitor {
      * @param depth     a depth starting from the found node
      * @return an action that controls visiting a tree
      */
-    @Nonnull
+    
     @SuppressWarnings("unused")
-    protected Action visit(@Nonnull TreePath path, @Nonnull T component, int depth) {
+    protected Action visit(TreePath path, T component, int depth) {
       return depth == 0 ? Action.INTERRUPT : Action.SKIP_CHILDREN;
     }
 
@@ -158,7 +157,7 @@ public interface TreeVisitor {
      * @param thisComponent a component of the seeking path at the same level
      * @return {@code true} if both components match each other
      */
-    protected boolean matches(@Nonnull T pathComponent, @Nonnull Object thisComponent) {
+    protected boolean matches(T pathComponent, Object thisComponent) {
       return pathComponent.equals(thisComponent);
     }
   }

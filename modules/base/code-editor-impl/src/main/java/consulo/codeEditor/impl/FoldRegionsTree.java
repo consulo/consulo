@@ -15,15 +15,14 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.IntPair;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class FoldRegionsTree {
     private final RangeMarkerTree<FoldRegionImpl> myMarkerTree;
-    @Nonnull
+    
     private volatile CachedData myCachedData = new CachedData();
 
     private static final Comparator<FoldRegion> BY_END_OFFSET = Comparator.comparingInt(RangeMarker::getEndOffset);
@@ -41,7 +40,7 @@ public abstract class FoldRegionsTree {
         }
     };
 
-    public FoldRegionsTree(@Nonnull RangeMarkerTree<FoldRegionImpl> markerTree) {
+    public FoldRegionsTree(RangeMarkerTree<FoldRegionImpl> markerTree) {
         myMarkerTree = markerTree;
     }
 
@@ -74,7 +73,7 @@ public abstract class FoldRegionsTree {
             FoldRegionImpl lastCollapsedRegion;
 
             @Override
-            public boolean process(int offset, @Nonnull FoldRegionImpl region, boolean atStart, @Nonnull Collection<FoldRegionImpl> overlapping) {
+            public boolean process(int offset, FoldRegionImpl region, boolean atStart, Collection<FoldRegionImpl> overlapping) {
                 if (atStart) {
                     if (lastCollapsedRegion == null || region.getEndOffset() > lastCollapsedRegion.getEndOffset()) {
                         if (!region.isExpanded()) {
@@ -106,8 +105,8 @@ public abstract class FoldRegionsTree {
         return updateCachedAndSortOffsets(visibleRegions, true);
     }
 
-    @Nonnull
-    private static FoldRegion[] toFoldArray(@Nonnull List<FoldRegion> topLevels) {
+    
+    private static FoldRegion[] toFoldArray(List<FoldRegion> topLevels) {
         return topLevels.isEmpty() ? FoldRegion.EMPTY_ARRAY : topLevels.toArray(FoldRegion.EMPTY_ARRAY);
     }
 
@@ -242,7 +241,7 @@ public abstract class FoldRegionsTree {
         return region.getStartOffset() < offset && offset < region.getEndOffset();
     }
 
-    @Nonnull
+    
     public FoldRegion[] fetchCollapsedAt(int offset) {
         if (!isFoldingEnabled()) {
             return FoldRegion.EMPTY_ARRAY;
@@ -268,7 +267,7 @@ public abstract class FoldRegionsTree {
         });
     }
 
-    @Nonnull
+    
     public FoldRegion[] fetchAllRegions() {
         if (!isFoldingEnabled()) {
             return FoldRegion.EMPTY_ARRAY;
@@ -278,7 +277,7 @@ public abstract class FoldRegionsTree {
         return toFoldArray(regions);
     }
 
-    private void forEach(@Nonnull Consumer<? super FoldRegion> consumer) {
+    private void forEach(Consumer<? super FoldRegion> consumer) {
         myMarkerTree.processAll(region -> {
             consumer.accept(region);
             return true;
@@ -358,7 +357,7 @@ public abstract class FoldRegionsTree {
     /**
      * @return (prevAdjustment, curAdjustment)
      */
-    @Nonnull
+    
     IntPair getCustomRegionsYAdjustment(int offset, int idx) {
         if (!isFoldingEnabled()) {
             return new IntPair(0, 0);
@@ -406,12 +405,12 @@ public abstract class FoldRegionsTree {
             topCustomYAdjustment = null;
         }
 
-        private CachedData(@Nonnull FoldRegion[] visibleRegions,
-                           @Nonnull FoldRegion[] topLevelRegions,
-                           @Nonnull int[] topStartOffsets,
-                           @Nonnull int[] topEndOffsets,
-                           @Nonnull int[] topFoldedLines,
-                           @Nonnull int[] topCustomYAdjustment) {
+        private CachedData(FoldRegion[] visibleRegions,
+                           FoldRegion[] topLevelRegions,
+                           int[] topStartOffsets,
+                           int[] topEndOffsets,
+                           int[] topFoldedLines,
+                           int[] topCustomYAdjustment) {
             this.visibleRegions = visibleRegions;
             this.topLevelRegions = topLevelRegions;
             this.topStartOffsets = topStartOffsets;

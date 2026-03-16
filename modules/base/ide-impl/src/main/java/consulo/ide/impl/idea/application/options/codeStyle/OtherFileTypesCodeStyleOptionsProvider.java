@@ -21,7 +21,6 @@ import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Contains settings for non-language options, for example, text files.
@@ -31,13 +30,13 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(order = "last")
 public class OtherFileTypesCodeStyleOptionsProvider extends CodeStyleSettingsProvider {
 
-  @Nonnull
+  
   @Override
   public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings clonedSettings) {
     return new OtherFileTypesCodeStyleConfigurable(settings, clonedSettings);
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getConfigurableDisplayName() {
     return ApplicationLocalize.codeStyleOtherFileTypes();

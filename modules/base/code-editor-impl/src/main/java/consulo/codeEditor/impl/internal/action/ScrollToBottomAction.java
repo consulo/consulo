@@ -21,7 +21,6 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * Scrolls to the top of the target editor without changing its caret position.
@@ -33,7 +32,7 @@ import jakarta.annotation.Nonnull;
 public class ScrollToBottomAction extends InactiveEditorAction {
     private static class Handler extends EditorActionHandler {
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             editor.getScrollingModel().scrollTo(editor.offsetToLogicalPosition(editor.getDocument().getTextLength()), ScrollType.CENTER);
         }
     }

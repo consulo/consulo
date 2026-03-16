@@ -21,25 +21,24 @@ import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
 */
 public class XDebuggerPauseActionHandler extends XDebuggerActionHandler {
   @Override
-  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected void perform(XDebugSession session, DataContext dataContext) {
     session.pause();
   }
 
   @Override
-  public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
+  public boolean isHidden(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session == null || !((XDebugSessionImpl)session).isPauseActionSupported();
   }
 
   @Override
-  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return !session.isPaused();
   }
 }

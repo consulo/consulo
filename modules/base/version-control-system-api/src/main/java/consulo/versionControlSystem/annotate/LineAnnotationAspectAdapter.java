@@ -17,7 +17,6 @@ package consulo.versionControlSystem.annotate;
 
 import consulo.codeEditor.EditorGutterAction;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -41,7 +40,7 @@ public abstract class LineAnnotationAspectAdapter implements LineAnnotationAspec
         myShowByDefault = showByDefault;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipValue(int line) {
         return LocalizeValue.empty();

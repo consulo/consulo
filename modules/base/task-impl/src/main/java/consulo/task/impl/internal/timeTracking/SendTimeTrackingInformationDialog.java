@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.ValidationInfo;
 import consulo.task.LocalTask;
 import consulo.task.TaskRepository;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Date;
 import java.util.regex.Matcher;

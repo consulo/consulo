@@ -38,7 +38,6 @@ import consulo.versionControlSystem.history.VcsRevisionDescription;
 import consulo.versionControlSystem.internal.BackgroundFromStartOption;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +54,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull VcsContext vcsContext) {
+    protected void actionPerformed(VcsContext vcsContext) {
         AbstractVcs vcs = AbstractShowDiffAction.isEnabled(vcsContext, null);
         if (vcs == null) {
             return;
@@ -91,7 +90,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
         }
 
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
             DiffProvider diffProvider = vcs.getDiffProvider();
             if (diffProvider == null) {
                 return;
@@ -133,7 +132,7 @@ public class ShowBaseRevisionAction extends AbstractVcsAction {
     }
 
     @Override
-    protected void update(@Nonnull VcsContext vcsContext, @Nonnull Presentation presentation) {
+    protected void update(VcsContext vcsContext, Presentation presentation) {
         AbstractVcs vcs = AbstractShowDiffAction.isEnabled(vcsContext, null);
         presentation.setEnabled(vcs != null);
     }

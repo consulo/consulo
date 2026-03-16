@@ -5,8 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.remoteServer.ServerType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -18,19 +17,19 @@ public abstract class RemoteServersManager {
 
     public abstract List<RemoteServer<?>> getServers();
 
-    public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(@Nonnull ServerType<C> type);
+    public abstract <C extends ServerConfiguration> List<RemoteServer<C>> getServers(ServerType<C> type);
 
     @Nullable
-    public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(@Nonnull String name, @Nonnull ServerType<C> type);
+    public abstract <C extends ServerConfiguration> RemoteServer<C> findByName(String name, ServerType<C> type);
 
-    @Nonnull
-    public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type, @Nonnull String name);
+    
+    public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(ServerType<C> type, String name);
 
     /**
      * Creates new server with unique name derived from {@link ServerType#getPresentableName()}
      */
-    @Nonnull
-    public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(@Nonnull ServerType<C> type);
+    
+    public abstract <C extends ServerConfiguration> RemoteServer<C> createServer(ServerType<C> type);
 
     public abstract void addServer(RemoteServer<?> server);
 

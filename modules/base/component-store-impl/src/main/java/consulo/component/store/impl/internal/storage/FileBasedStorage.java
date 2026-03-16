@@ -17,15 +17,14 @@ package consulo.component.store.impl.internal.storage;
 
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2024-08-10
  */
 public interface FileBasedStorage {
-    @Nonnull
+    
     String getFilePath();
 
     @Nullable

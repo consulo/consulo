@@ -20,8 +20,7 @@ import consulo.ui.ex.awt.SimpleListCellRenderer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -33,7 +32,7 @@ public class VcsScopeItemPresenter implements ModelScopeItemPresenter {
     return AnalysisScope.UNCOMMITTED_FILES;
   }
 
-  @Nonnull
+  
   @Override
   public RadioButton getButton(ModelScopeItem m) {
     return RadioButton.create(AnalysisScopeLocalize.scopeOptionUncommittedFiles());
@@ -50,7 +49,7 @@ public class VcsScopeItemPresenter implements ModelScopeItemPresenter {
     }
 
     ComboBox<LocalChangeList> comboBox = new ComboBox<>();
-    comboBox.setRenderer(SimpleListCellRenderer.create((@Nonnull JBLabel label, @Nullable LocalChangeList value, int index) -> {
+    comboBox.setRenderer(SimpleListCellRenderer.create((JBLabel label, @Nullable LocalChangeList value, int index) -> {
       int availableWidth = comboBox.getWidth(); // todo, is it correct?
       if (availableWidth <= 0) {
         availableWidth = JBUIScale.scale(200);
@@ -78,8 +77,8 @@ public class VcsScopeItemPresenter implements ModelScopeItemPresenter {
 
   @Override
   @Nullable
-  public ModelScopeItem tryCreate(@Nonnull Project project,
-                                            @Nonnull AnalysisScope scope,
+  public ModelScopeItem tryCreate(Project project,
+                                            AnalysisScope scope,
                                             @Nullable Module module,
                                             @Nullable PsiElement context) {
     return VcsScopeItem.createIfHasVCS(project);

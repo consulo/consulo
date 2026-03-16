@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 public interface ContextAwareActionHandler {
   /**
@@ -32,5 +31,5 @@ public interface ContextAwareActionHandler {
    * @return It's assumed that handler is valid for file. Still should be lightweight, because is invoked from action update.
    * false - if action won't proceed
    */
-  boolean isAvailableForQuickList(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull DataContext dataContext);
+  boolean isAvailableForQuickList(Editor editor, PsiFile file, DataContext dataContext);
 }

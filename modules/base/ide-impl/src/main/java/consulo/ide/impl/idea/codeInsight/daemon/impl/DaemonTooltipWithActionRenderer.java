@@ -39,8 +39,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,17 +66,17 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myCurrentWidth > 0;
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myTooltipReloader.reload(state);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myEnabled);
             super.update(e);
         }
@@ -94,18 +93,18 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return TooltipActionProvider.isShowActions();
         }
 
         @Override
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             TooltipActionProvider.setShowActions(state);
             myTooltipReloader.reload(myCurrentWidth > 0);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myEnabled);
             super.update(e);
         }
@@ -118,7 +117,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
             myActions = new AnAction[]{new SettingsActionGroup(actions)};
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions;
@@ -126,7 +125,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     }
 
     private static class SettingsActionGroup extends DefaultActionGroup implements HintManagerImpl.ActionToIgnore, DumbAware {
-        private SettingsActionGroup(@Nonnull List<? extends AnAction> actions) {
+        private SettingsActionGroup(List<? extends AnAction> actions) {
             super(actions);
 
             setPopup(true);
@@ -153,9 +152,9 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         this.tooltipAction = tooltipAction;
     }
 
-    @Nonnull
+    
     @Override
-    protected String dressDescription(@Nonnull Editor editor, @Nonnull String tooltipText, boolean expand) {
+    protected String dressDescription(Editor editor, String tooltipText, boolean expand) {
         if (!LineTooltipRenderer.isActiveHtml(myText) || expand) {
             return super.dressDescription(editor, tooltipText, expand);
         }
@@ -177,9 +176,9 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         return text.toString();
     }
 
-    @Nonnull
+    
     @Override
-    protected String getHtmlForProblemWithLink(@Nonnull String problem) {
+    protected String getHtmlForProblemWithLink(String problem) {
         //remove "more... (keymap)" info
 
         Html html = new Html(problem).setKeepFont(true);
@@ -203,11 +202,11 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     }
 
     @Override
-    public LightweightHintImpl createHint(@Nonnull Editor editor,
-                                          @Nonnull Point p,
+    public LightweightHintImpl createHint(Editor editor,
+                                          Point p,
                                           boolean alignToRight,
-                                          @Nonnull TooltipGroup group,
-                                          @Nonnull HintHint hintHint,
+                                          TooltipGroup group,
+                                          HintHint hintHint,
                                           boolean newLayout,
                                           boolean highlightActions,
                                           boolean limitWidthToScreen,
@@ -221,19 +220,19 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
         return super.isContentAction(dressedText) || tooltipAction != null;
     }
 
-    @Nonnull
+    
     @Override
     public LineTooltipRenderer createRenderer(@Nullable String text, int width) {
         return new DaemonTooltipWithActionRenderer(text, tooltipAction, width, getEqualityObjects());
     }
 
     @Override
-    protected void fillPanel(@Nonnull Editor editor,
-                             @Nonnull JPanel grid,
-                             @Nonnull LightweightHintImpl hint,
-                             @Nonnull HintHint hintHint,
-                             @Nonnull List<? super AnAction> actions,
-                             @Nonnull TooltipReloader tooltipReloader,
+    protected void fillPanel(Editor editor,
+                             JPanel grid,
+                             LightweightHintImpl hint,
+                             HintHint hintHint,
+                             List<? super AnAction> actions,
+                             TooltipReloader tooltipReloader,
                              boolean newLayout,
                              boolean highlightActions) {
         super.fillPanel(editor, grid, hint, hintHint, actions, tooltipReloader, newLayout, highlightActions);
@@ -301,7 +300,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 runFixAction.accept(e.getInputEvent());
             }
         });
@@ -313,7 +312,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
 
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 showAllFixes.accept(e.getInputEvent());
             }
         });

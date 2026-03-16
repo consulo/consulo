@@ -18,7 +18,6 @@ package consulo.compiler;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface DependencyCacheFactory {
-    @Nonnull
-    DependencyCache create(@Nonnull String cacheDir);
+    
+    DependencyCache create(String cacheDir);
 }

@@ -15,7 +15,6 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.impl.internal.FileDocumentManagerImpl;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.localize.LocalizeValue;
@@ -43,9 +42,9 @@ import consulo.virtualFileSystem.internal.InternalNewVirtualFile;
 import consulo.virtualFileSystem.pointer.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -85,7 +84,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     private volatile Charset myProjectCharset;
 
     @Inject
-    public EncodingProjectManagerImpl(@Nonnull Project project, @Nonnull ApplicationEncodingManager applicationEncodingManager) {
+    public EncodingProjectManagerImpl(Project project, ApplicationEncodingManager applicationEncodingManager) {
         myProject = project;
         myIdeEncodingManager = (EncodingManagerImpl) applicationEncodingManager;
     }
@@ -134,7 +133,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public void loadState(@Nonnull Element element) {
+    public void loadState(Element element) {
         myMapping.clear();
         List<Element> files = element.getChildren("file");
         if (!files.isEmpty()) {
@@ -198,7 +197,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    @Nonnull
+    
     public ModificationTracker getModificationTracker() {
         return myModificationTracker;
     }
@@ -230,15 +229,15 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         }
     }
 
-    private static void clearAndReload(@Nonnull VirtualFile virtualFileOrDir, @Nonnull Project project) {
+    private static void clearAndReload(VirtualFile virtualFileOrDir, Project project) {
         virtualFileOrDir.setCharset(null);
         reload(virtualFileOrDir, project, (FileDocumentManagerImpl) FileDocumentManager.getInstance());
     }
 
     private static void reload(
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Project project,
-        @Nonnull FileDocumentManagerImpl documentManager
+        VirtualFile virtualFile,
+        Project project,
+        FileDocumentManagerImpl documentManager
     ) {
         WriteAction.runLater(() -> ProjectLocator.computeWithPreferredProject(
             virtualFile,
@@ -251,7 +250,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    @Nonnull
+    
     public Collection<Charset> getFavorites() {
         Set<Charset> result = widelyKnownCharsets();
         result.addAll(myMapping.values());
@@ -259,7 +258,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         return result;
     }
 
-    @Nonnull
+    
     static Set<Charset> widelyKnownCharsets() {
         Set<Charset> result = new HashSet<>();
         result.add(StandardCharsets.UTF_8);
@@ -278,13 +277,13 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
      * @return readonly map of current mappings. to modify mappings use {@link #setMapping(Map)}
      */
     @Override
-    @Nonnull
+    
     public Map<? extends VirtualFile, ? extends Charset> getAllMappings() {
         return myMapping.entrySet().stream().map(e -> Pair.create(e.getKey().getFile(), e.getValue())).filter(e -> e.getFirst() != null)
             .collect(Collectors.toMap(p -> p.getFirst(), p -> p.getSecond(), (c1, c2) -> c1));
     }
 
-    public void setMapping(@Nonnull Map<? extends VirtualFile, ? extends Charset> mapping) {
+    public void setMapping(Map<? extends VirtualFile, ? extends Charset> mapping) {
         Application app = myProject.getApplication();
         app.assertIsWriteThread();
         FileDocumentManager.getInstance().saveAllDocuments(UIAccess.current());  // consider all files as unmodified
@@ -368,7 +367,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
                         continue;
                     }
                     for (VirtualFile processedFile : processed) {
-                        if (VfsUtilCore.isAncestor(processedFile, changedFile, false)) {
+                        if (VirtualFileUtil.isAncestor(processedFile, changedFile, false)) {
                             continue next;
                         }
                     }
@@ -381,8 +380,8 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         myModificationTracker.incModificationCount();
     }
 
-    @Nonnull
-    private static Predicate<VirtualFile> createChangeCharsetProcessor(@Nonnull Project project) {
+    
+    private static Predicate<VirtualFile> createChangeCharsetProcessor(Project project) {
         return file -> {
             if (file.isDirectory()) {
                 return true;
@@ -408,7 +407,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
      * @param processor
      * @return
      */
-    private boolean processSubFiles(@Nullable VirtualFile file, @Nonnull Predicate<? super VirtualFile> processor) {
+    private boolean processSubFiles(@Nullable VirtualFile file, Predicate<? super VirtualFile> processor) {
         if (file == null) {
             for (VirtualFile virtualFile : ProjectRootManager.getInstance(myProject).getContentRoots()) {
                 if (!processSubFiles(virtualFile, processor)) {
@@ -418,9 +417,9 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             return true;
         }
 
-        return VirtualFileVisitor.CONTINUE == VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
+        return VirtualFileVisitor.CONTINUE == VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor<Void>() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 return processor.test(file);
             }
         });
@@ -428,7 +427,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
     //retrieves encoding for the Project node
     @Override
-    @Nonnull
+    
     public Charset getDefaultCharset() {
         Charset charset = myProjectCharset;
         // if the project charset was not specified, use the IDE encoding, save this back
@@ -442,7 +441,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
     private static final ThreadLocal<Boolean> SUPPRESS_RELOAD = new ThreadLocal<>();
 
-    static void suppressReloadDuring(@Nonnull Runnable action) {
+    static void suppressReloadDuring(Runnable action) {
         Boolean old = SUPPRESS_RELOAD.get();
         try {
             SUPPRESS_RELOAD.set(Boolean.TRUE);
@@ -453,7 +452,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         }
     }
 
-    private void tryStartReloadWithProgress(@Nonnull Runnable reloadAction) {
+    private void tryStartReloadWithProgress(Runnable reloadAction) {
         Boolean suppress = SUPPRESS_RELOAD.get();
         if (Objects.equals(suppress, Boolean.TRUE)) {
             return;
@@ -486,7 +485,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public boolean isNative2Ascii(@Nonnull VirtualFile virtualFile) {
+    public boolean isNative2Ascii(VirtualFile virtualFile) {
         return FileTypeRegistry.getInstance()
             .isFileOfType(virtualFile, InternalStdFileTypes.PROPERTIES) && myNative2AsciiForPropertiesFiles;
     }
@@ -504,7 +503,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         }
     }
 
-    @Nonnull // empty means system default
+    // empty means system default
     @Override
     public String getDefaultCharsetName() {
         Charset charset = getEncoding(null, false);
@@ -512,7 +511,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    public void setDefaultCharsetName(@Nonnull String name) {
+    public void setDefaultCharsetName(String name) {
         setEncoding(null, name.isEmpty() ? null : CharsetToolkit.forName(name));
     }
 
@@ -532,13 +531,13 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
     }
 
     @Override
-    @Nonnull
+    
     public Charset getDefaultConsoleEncoding() {
         return myIdeEncodingManager.getDefaultConsoleEncoding();
     }
 
     @Nullable
-    public Charset getCachedCharsetFromContent(@Nonnull Document document) {
+    public Charset getCachedCharsetFromContent(Document document) {
         return myIdeEncodingManager.getCachedCharsetFromContent(document);
     }
 
@@ -549,7 +548,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
 
         private final String name;
 
-        BOMForNewUTF8Files(@Nonnull String name) {
+        BOMForNewUTF8Files(String name) {
             this.name = name;
         }
 
@@ -558,7 +557,7 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
             return name;
         }
 
-        @Nonnull
+        
         private static BOMForNewUTF8Files getByNameOrDefault(@Nullable String name) {
             if (!StringUtil.isEmpty(name)) {
                 for (BOMForNewUTF8Files value : values()) {
@@ -571,11 +570,11 @@ public final class EncodingProjectManagerImpl implements EncodingProjectManager,
         }
     }
 
-    public void setBOMForNewUtf8Files(@Nonnull BOMForNewUTF8Files option) {
+    public void setBOMForNewUtf8Files(BOMForNewUTF8Files option) {
         myBomForNewUtf8Files = option;
     }
 
-    @Nonnull
+    
     BOMForNewUTF8Files getBOMForNewUTF8Files() {
         return myBomForNewUtf8Files;
     }

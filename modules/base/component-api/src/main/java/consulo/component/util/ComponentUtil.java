@@ -18,7 +18,6 @@ package consulo.component.util;
 import consulo.component.ComponentManager;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
 /**
@@ -26,7 +25,7 @@ import java.util.function.Function;
  * @since 19/01/2022
  */
 public final class ComponentUtil {
-  public static <I, C extends ComponentManager> Function<C, I> createLazyInject(@Nonnull Class<I> instanceClass) {
+  public static <I, C extends ComponentManager> Function<C, I> createLazyInject(Class<I> instanceClass) {
     return new Function<>() {
       private final Key<I> myKey = Key.create(instanceClass.getName());
 

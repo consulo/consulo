@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.JTextComponent;
@@ -78,7 +77,7 @@ public class JBTextField extends JTextField implements ComponentWithEmptyText {
     UIUtil.resetUndoRedoActions(this);
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;

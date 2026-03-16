@@ -4,7 +4,7 @@ package consulo.execution.dashboard;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.content.Content;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author konstantin.aleev

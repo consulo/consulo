@@ -16,8 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nullable;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -33,11 +32,11 @@ public class CollectionComboBoxModel<T> extends CollectionListModel<T> implement
         mySelection = null;
     }
 
-    public CollectionComboBoxModel(@Nonnull List<T> items) {
+    public CollectionComboBoxModel(List<T> items) {
         this(items, ContainerUtil.getFirstItem(items));
     }
 
-    public CollectionComboBoxModel(@Nonnull List<T> items, @Nullable T selection) {
+    public CollectionComboBoxModel(List<T> items, @Nullable T selection) {
         super(items, true);
         mySelection = selection;
     }

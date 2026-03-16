@@ -19,7 +19,6 @@ import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxRpc;
 import consulo.web.gwt.shared.ui.state.checkbox.CheckBoxState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public abstract class VaadinBooleanValueComponentBase extends VaadinComponent {
     return (CheckBoxState)super.getState();
   }
 
-  @Nonnull
+  
   @Override
   public WebBooleanValueComponentBase toUIComponent() {
     return (WebBooleanValueComponentBase)super.toUIComponent();

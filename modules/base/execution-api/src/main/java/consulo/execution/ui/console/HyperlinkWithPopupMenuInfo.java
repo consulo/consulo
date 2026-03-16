@@ -17,8 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.ui.ex.action.ActionGroup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.event.MouseEvent;
 
 /**
@@ -26,5 +25,5 @@ import java.awt.event.MouseEvent;
  */
 public interface HyperlinkWithPopupMenuInfo extends HyperlinkInfo {
   @Nullable
-  ActionGroup getPopupMenuGroup(@Nonnull MouseEvent event);
+  ActionGroup getPopupMenuGroup(MouseEvent event);
 }

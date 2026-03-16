@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,17 +40,17 @@ import java.util.function.Predicate;
 public abstract class FileBasedIndex {
     private static final PerApplicationInstance<FileBasedIndex> ourInstance = PerApplicationInstance.of(FileBasedIndex.class);
 
-    @Nonnull
+    
     public static FileBasedIndex getInstance() {
         return ourInstance.get();
     }
 
-    public abstract void iterateIndexableFiles(@Nonnull ContentIterator processor, @Nonnull Project project, ProgressIndicator indicator);
+    public abstract void iterateIndexableFiles(ContentIterator processor, Project project, ProgressIndicator indicator);
 
     public void iterateIndexableFilesConcurrently(
-        @Nonnull ContentIterator processor,
-        @Nonnull Project project,
-        @Nonnull ProgressIndicator indicator
+        ContentIterator processor,
+        Project project,
+        ProgressIndicator indicator
     ) {
         iterateIndexableFiles(processor, project, indicator);
     }
@@ -67,11 +66,11 @@ public abstract class FileBasedIndex {
         throw new UnsupportedOperationException();
     }
 
-    public abstract void registerIndexableSet(@Nonnull IndexableFileSet set, @Nullable Project project);
+    public abstract void registerIndexableSet(IndexableFileSet set, @Nullable Project project);
 
-    public abstract void removeIndexableSet(@Nonnull IndexableFileSet set);
+    public abstract void removeIndexableSet(IndexableFileSet set);
 
-    public static int getFileId(@Nonnull VirtualFile file) {
+    public static int getFileId(VirtualFile file) {
         if (file instanceof VirtualFileWithId) {
             return ((VirtualFileWithId)file).getId();
         }
@@ -84,18 +83,18 @@ public abstract class FileBasedIndex {
     // note: upsource implementation requires access to Project here, please don't remove
     public abstract VirtualFile findFileById(Project project, int id);
 
-    public void requestRebuild(@Nonnull ID<?, ?> indexId) {
+    public void requestRebuild(ID<?, ?> indexId) {
         requestRebuild(indexId, new Throwable());
     }
 
-    @Nonnull
-    public abstract <K, V> List<V> getValues(@Nonnull ID<K, V> indexId, @Nonnull K dataKey, @Nonnull SearchScope filter);
+    
+    public abstract <K, V> List<V> getValues(ID<K, V> indexId, K dataKey, SearchScope filter);
 
-    @Nonnull
+    
     public abstract <K, V> Collection<VirtualFile> getContainingFiles(
-        @Nonnull ID<K, V> indexId,
-        @Nonnull K dataKey,
-        @Nonnull SearchScope filter
+        ID<K, V> indexId,
+        K dataKey,
+        SearchScope filter
     );
 
     /**
@@ -103,11 +102,11 @@ public abstract class FileBasedIndex {
      * {@code true} otherwise or if ValueProcessor was not called at all
      */
     public abstract <K, V> boolean processValues(
-        @Nonnull ID<K, V> indexId,
-        @Nonnull K dataKey,
+        ID<K, V> indexId,
+        K dataKey,
         @Nullable VirtualFile inFile,
-        @Nonnull ValueProcessor<? super V> processor,
-        @Nonnull SearchScope filter
+        ValueProcessor<? super V> processor,
+        SearchScope filter
     );
 
     /**
@@ -115,51 +114,51 @@ public abstract class FileBasedIndex {
      * {@code true} otherwise or if ValueProcessor was not called at all
      */
     public <K, V> boolean processValues(
-        @Nonnull ID<K, V> indexId,
-        @Nonnull K dataKey,
+        ID<K, V> indexId,
+        K dataKey,
         @Nullable VirtualFile inFile,
-        @Nonnull ValueProcessor<? super V> processor,
-        @Nonnull SearchScope filter,
+        ValueProcessor<? super V> processor,
+        SearchScope filter,
         @Nullable IdFilter idFilter
     ) {
         return processValues(indexId, dataKey, inFile, processor, filter);
     }
 
-    public abstract <K, V> long getIndexModificationStamp(@Nonnull ID<K, V> indexId, @Nonnull Project project);
+    public abstract <K, V> long getIndexModificationStamp(ID<K, V> indexId, Project project);
 
     public abstract <K, V> boolean processFilesContainingAllKeys(
-        @Nonnull ID<K, V> indexId,
-        @Nonnull Collection<? extends K> dataKeys,
-        @Nonnull SearchScope filter,
+        ID<K, V> indexId,
+        Collection<? extends K> dataKeys,
+        SearchScope filter,
         @Nullable Predicate<? super V> valueChecker,
-        @Nonnull Predicate<? super VirtualFile> processor
+        Predicate<? super VirtualFile> processor
     );
 
     /**
      * It is guaranteed to return data which is up-to-date within the given project.
      * Keys obtained from the files which do not belong to the project specified may not be up-to-date or even exist.
      */
-    @Nonnull
-    public abstract <K> Collection<K> getAllKeys(@Nonnull ID<K, ?> indexId, @Nonnull Project project);
+    
+    public abstract <K> Collection<K> getAllKeys(ID<K, ?> indexId, Project project);
 
     /**
      * DO NOT CALL DIRECTLY IN CLIENT CODE
      * The method is internal to indexing engine end is called internally. The method is public due to implementation details
      */
     //@ApiStatus.Internal
-    public abstract <K> void ensureUpToDate(@Nonnull ID<K, ?> indexId, @Nullable Project project, @Nullable SearchScope filter);
+    public abstract <K> void ensureUpToDate(ID<K, ?> indexId, @Nullable Project project, @Nullable SearchScope filter);
 
-    public abstract void requestRebuild(@Nonnull ID<?, ?> indexId, Throwable throwable);
+    public abstract void requestRebuild(ID<?, ?> indexId, Throwable throwable);
 
-    public abstract <K> void scheduleRebuild(@Nonnull ID<K, ?> indexId, @Nonnull Throwable e);
+    public abstract <K> void scheduleRebuild(ID<K, ?> indexId, Throwable e);
 
-    public abstract void requestReindex(@Nonnull VirtualFile file);
+    public abstract void requestReindex(VirtualFile file);
 
     public abstract <K, V> boolean getFilesWithKey(
-        @Nonnull ID<K, V> indexId,
-        @Nonnull Set<? extends K> dataKeys,
-        @Nonnull Predicate<? super VirtualFile> processor,
-        @Nonnull SearchScope filter
+        ID<K, V> indexId,
+        Set<? extends K> dataKeys,
+        Predicate<? super VirtualFile> processor,
+        SearchScope filter
     );
 
     /**
@@ -172,7 +171,7 @@ public abstract class FileBasedIndex {
      * @param command            - a command to execute
      * @param dumbModeAccessType - defines in which manner command should be executed. Does a client expect only reliable data
      */
-    public void ignoreDumbMode(@Nonnull Runnable command, @Nonnull DumbModeAccessType dumbModeAccessType) {
+    public void ignoreDumbMode(Runnable command, DumbModeAccessType dumbModeAccessType) {
         ignoreDumbMode(dumbModeAccessType, () -> {
             command.run();
             return null;
@@ -180,8 +179,8 @@ public abstract class FileBasedIndex {
     }
 
     public <T, E extends Throwable> T ignoreDumbMode(
-        @Nonnull DumbModeAccessType dumbModeAccessType,
-        @Nonnull ThrowableComputable<T, E> computable
+        DumbModeAccessType dumbModeAccessType,
+        ThrowableComputable<T, E> computable
     ) throws E {
         throw new UnsupportedOperationException();
     }
@@ -190,27 +189,27 @@ public abstract class FileBasedIndex {
      * It is guaranteed to return data which is up-to-date within the given project.
      */
     public abstract <K> boolean processAllKeys(
-        @Nonnull ID<K, ?> indexId,
-        @Nonnull Predicate<? super K> processor,
+        ID<K, ?> indexId,
+        Predicate<? super K> processor,
         @Nullable Project project
     );
 
     public <K> boolean processAllKeys(
-        @Nonnull ID<K, ?> indexId,
-        @Nonnull Predicate<? super K> processor,
-        @Nonnull SearchScope scope,
+        ID<K, ?> indexId,
+        Predicate<? super K> processor,
+        SearchScope scope,
         @Nullable IdFilter idFilter
     ) {
         return processAllKeys(indexId, processor, ((ProjectAwareSearchScope)scope).getProject());
     }
 
     //@ApiStatus.Experimental
-    @Nonnull
-    public abstract <K, V> Map<K, V> getFileData(@Nonnull ID<K, V> id, @Nonnull VirtualFile virtualFile, @Nonnull Project project);
+    
+    public abstract <K, V> Map<K, V> getFileData(ID<K, V> id, VirtualFile virtualFile, Project project);
 
     public static void iterateRecursively(
         @Nullable final VirtualFile root,
-        @Nonnull final ContentIterator processor,
+        final ContentIterator processor,
         @Nullable final ProgressIndicator indicator,
         @Nullable final Set<? super VirtualFile> visitedRoots,
         @Nullable final ProjectFileIndex projectFileIndex
@@ -221,7 +220,7 @@ public abstract class FileBasedIndex {
 
         VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor<Void>() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (!acceptsFile(file)) {
                     return false;
                 }
@@ -245,7 +244,7 @@ public abstract class FileBasedIndex {
                 return true;
             }
 
-            private boolean acceptsFile(@Nonnull VirtualFile file) {
+            private boolean acceptsFile(VirtualFile file) {
                 if (visitedRoots != null && !root.equals(file) && file.isDirectory() && !visitedRoots.add(file)) {
                     return false;
                 }
@@ -258,7 +257,7 @@ public abstract class FileBasedIndex {
         throw new IncorrectOperationException();
     }
 
-    public abstract boolean isIndexingCandidate(@Nonnull VirtualFile file, @Nonnull ID<?, ?> indexId);
+    public abstract boolean isIndexingCandidate(VirtualFile file, ID<?, ?> indexId);
 
     @Nullable
     public abstract IdFilter createProjectIndexableFiles(@Nullable Project project);
@@ -270,19 +269,19 @@ public abstract class FileBasedIndex {
          * @param file  the file the value came from
          * @return {@code false} if no further processing is needed, {@code true} otherwise
          */
-        boolean process(@Nonnull VirtualFile file, V value);
+        boolean process(VirtualFile file, V value);
     }
 
     @FunctionalInterface
     public interface InputFilter {
-        boolean acceptInput(@Nullable Project project, @Nonnull VirtualFile file);
+        boolean acceptInput(@Nullable Project project, VirtualFile file);
     }
 
     /**
      * @see DefaultFileTypeSpecificInputFilter
      */
     public interface FileTypeSpecificInputFilter extends InputFilter {
-        void registerFileTypesUsedForIndexing(@Nonnull Consumer<FileType> fileTypeSink);
+        void registerFileTypesUsedForIndexing(Consumer<FileType> fileTypeSink);
     }
 
     /**

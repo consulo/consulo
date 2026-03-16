@@ -20,13 +20,12 @@ import consulo.project.Project;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public interface StructureProblemsSettings {
-  public static StructureProblemsSettings getProjectInstance(@Nonnull Project project) {
+  public static StructureProblemsSettings getProjectInstance(Project project) {
     return ServiceManager.getService(project, ProjectStructureProblemsSettings.class);
   }
 
@@ -34,7 +33,7 @@ public interface StructureProblemsSettings {
     return ServiceManager.getService(ApplicationStructureProblemsSettings.class);
   }
 
-  boolean isIgnored(@Nonnull ProjectStructureProblemDescription description);
+  boolean isIgnored(ProjectStructureProblemDescription description);
 
-  void setIgnored(@Nonnull ProjectStructureProblemDescription description, boolean ignored);
+  void setIgnored(ProjectStructureProblemDescription description, boolean ignored);
 }

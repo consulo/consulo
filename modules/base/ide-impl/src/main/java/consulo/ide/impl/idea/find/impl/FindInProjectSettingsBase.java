@@ -21,7 +21,6 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -69,43 +68,43 @@ public class FindInProjectSettingsBase implements PersistentStateComponent<FindI
         return this;
     }
 
-    public void addDirectory(@Nonnull String s) {
+    public void addDirectory(String s) {
         if (s.isEmpty()) {
             return;
         }
         addRecentStringToList(s, dirStrings);
     }
 
-    @Nonnull
+    
     public List<String> getRecentDirectories() {
         return new ArrayList<>(dirStrings);
     }
 
-    public void addStringToFind(@Nonnull String s) {
+    public void addStringToFind(String s) {
         if (s.indexOf('\r') >= 0 || s.indexOf('\n') >= 0) {
             return;
         }
         addRecentStringToList(s, findStrings);
     }
 
-    public void addStringToReplace(@Nonnull String s) {
+    public void addStringToReplace(String s) {
         if (s.indexOf('\r') >= 0 || s.indexOf('\n') >= 0) {
             return;
         }
         addRecentStringToList(s, replaceStrings);
     }
 
-    @Nonnull
+    
     public String[] getRecentFindStrings() {
         return ArrayUtil.toStringArray(findStrings);
     }
 
-    @Nonnull
+    
     public String[] getRecentReplaceStrings() {
         return ArrayUtil.toStringArray(replaceStrings);
     }
 
-    static void addRecentStringToList(@Nonnull String str, @Nonnull List<String> list) {
+    static void addRecentStringToList(String str, List<String> list) {
         if (list.contains(str)) {
             list.remove(str);
         }

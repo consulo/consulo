@@ -26,7 +26,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;
 
@@ -147,7 +146,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     @Override
-    public void visibleAreaChanged(@Nonnull VisibleAreaEvent e) {
+    public void visibleAreaChanged(VisibleAreaEvent e) {
         checkFontRenderContext(null);
     }
 
@@ -161,34 +160,30 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         return myMapper.visualLineToY(line);
     }
 
-    @Nonnull
     public LogicalPosition offsetToLogicalPosition(int offset) {
         UIAccess.assertIsUIThread();
         return myMapper.offsetToLogicalPosition(offset);
     }
 
-    public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+    public int logicalPositionToOffset(LogicalPosition pos) {
         UIAccess.assertIsUIThread();
         return myMapper.logicalPositionToOffset(pos);
     }
 
-    @Nonnull
-    public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition pos, boolean beforeSoftWrap) {
+    public VisualPosition logicalToVisualPosition(LogicalPosition pos, boolean beforeSoftWrap) {
         UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.logicalToVisualPosition(pos, beforeSoftWrap);
     }
 
-    @Nonnull
-    public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition pos) {
+    public LogicalPosition visualToLogicalPosition(VisualPosition pos) {
         UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.visualToLogicalPosition(pos);
     }
 
-    @Nonnull
     public VisualPosition offsetToVisualPosition(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
         UIAccess.assertIsUIThread();
         assertNotInBulkMode();
@@ -218,23 +213,20 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         return myMapper.visualLineToOffset(visualLine);
     }
 
-    @Nonnull
-    public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
+    public VisualPosition xyToVisualPosition(Point2D p) {
         UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.xyToVisualPosition(p);
     }
 
-    @Nonnull
-    public Point2D visualPositionToXY(@Nonnull VisualPosition pos) {
+    public Point2D visualPositionToXY(VisualPosition pos) {
         UIAccess.assertIsUIThread();
         assertNotInBulkMode();
         myEditor.getSoftWrapModel().prepareToMapping();
         return myMapper.visualPositionToXY(pos);
     }
 
-    @Nonnull
     public Point2D offsetToXY(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
         UIAccess.assertIsUIThread();
         assertNotInBulkMode();
@@ -380,7 +372,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         mySizeManager.reset();
     }
 
-    public boolean isRtlLocation(@Nonnull VisualPosition visualPosition) {
+    public boolean isRtlLocation(VisualPosition visualPosition) {
         UIAccess.assertIsUIThread();
         if (myDocument.getTextLength() == 0) {
             return false;
@@ -405,7 +397,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         return layout.isRtlLocation(offset - myDocument.getLineStartOffset(line), logicalPosition.leansForward);
     }
 
-    public boolean isAtBidiRunBoundary(@Nonnull VisualPosition visualPosition) {
+    public boolean isAtBidiRunBoundary(VisualPosition visualPosition) {
         UIAccess.assertIsUIThread();
         int offset = visualPositionToOffset(visualPosition);
         int otherSideOffset = visualPositionToOffset(visualPosition.leanRight(!visualPosition.leansRight));
@@ -608,7 +600,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         return c1.getTransform().equals(c2.getTransform()) && c1.getAntiAliasingHint().equals(c2.getAntiAliasingHint());
     }
 
-    public int offsetToVisualColumnInFoldRegion(@Nonnull FoldRegion region, int offset, boolean leanTowardsLargerOffsets) {
+    public int offsetToVisualColumnInFoldRegion(FoldRegion region, int offset, boolean leanTowardsLargerOffsets) {
         if (offset < 0 || offset == 0 && !leanTowardsLargerOffsets) {
             return 0;
         }
@@ -630,7 +622,7 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
         return maxColumn;
     }
 
-    public int visualColumnToOffsetInFoldRegion(@Nonnull FoldRegion region, int visualColumn, boolean leansRight) {
+    public int visualColumnToOffsetInFoldRegion(FoldRegion region, int visualColumn, boolean leansRight) {
         if (visualColumn < 0 || visualColumn == 0 && !leansRight) {
             return 0;
         }
@@ -679,13 +671,12 @@ public class EditorViewImpl implements RealEditorView, TextDrawingCallback, Disp
     }
 
     @Override
-    public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, Object f) {
+    public void drawChars(Graphics g, char[] data, int start, int end, int x, int y, Color color, Object f) {
         FontInfo fontInfo = (FontInfo) f;
 
         myPainter.drawChars(g, data, start, end, x, y, color, fontInfo);
     }
 
-    @Nonnull
     @Override
     public String dumpState() {
         String prefixText = myPrefixText;

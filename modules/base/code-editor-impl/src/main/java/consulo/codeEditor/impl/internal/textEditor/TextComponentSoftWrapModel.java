@@ -18,8 +18,7 @@ package consulo.codeEditor.impl.internal.textEditor;
 import consulo.codeEditor.SoftWrap;
 import consulo.codeEditor.SoftWrapModel;
 import consulo.codeEditor.VisualPosition;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,13 +40,13 @@ public class TextComponentSoftWrapModel implements SoftWrapModel {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends SoftWrap> getSoftWrapsForLine(int documentLine) {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends SoftWrap> getSoftWrapsForRange(int start, int end) {
     return Collections.emptyList();
@@ -63,12 +62,12 @@ public class TextComponentSoftWrapModel implements SoftWrapModel {
   }
 
   @Override
-  public boolean isInsideSoftWrap(@Nonnull VisualPosition position) {
+  public boolean isInsideSoftWrap(VisualPosition position) {
     return false;
   }
 
   @Override
-  public boolean isInsideOrBeforeSoftWrap(@Nonnull VisualPosition visual) {
+  public boolean isInsideOrBeforeSoftWrap(VisualPosition visual) {
     return false;
   }
 

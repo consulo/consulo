@@ -29,7 +29,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {
@@ -100,7 +99,7 @@ public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHa
     return true;
   }
 
-  private static int getWidth(@Nonnull String indent, int tabSize) {
+  private static int getWidth(String indent, int tabSize) {
     int width = 0;
     for (int i = 0; i < indent.length(); i++) {
       char c = indent.charAt(i);

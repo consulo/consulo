@@ -24,8 +24,7 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implement this class to describe some particular context that the user may associate with a live template, e.g., "Java String Start".
@@ -39,17 +38,17 @@ import jakarta.annotation.Nullable;
 public interface TemplateContextType {
     public static final ExtensionPointName<TemplateContextType> EP_NAME = ExtensionPointName.create(TemplateContextType.class);
 
-    @Nonnull
+    
     LocalizeValue getPresentableName();
 
-    @Nonnull
+    
     String getContextId();
 
-    default boolean isInContext(@Nonnull TemplateActionContext templateActionContext) {
+    default boolean isInContext(TemplateActionContext templateActionContext) {
         return isInContext(templateActionContext.getFile(), templateActionContext.getStartOffset());
     }
 
-    default boolean isInContext(@Nonnull PsiFile file, int offset) {
+    default boolean isInContext(PsiFile file, int offset) {
         throw new RuntimeException("Please, implement isInContext(TemplateActionContext) method and don't invoke this method directly");
     }
 

@@ -24,7 +24,6 @@ import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.model.ListModel;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -34,11 +33,10 @@ import java.util.function.Function;
  */
 class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements ListBox<E> {
     class MyJBList<T> extends JBList<T> implements FromSwingComponentWrapper {
-        MyJBList(@Nonnull javax.swing.ListModel<T> dataModel) {
+        MyJBList(javax.swing.ListModel<T> dataModel) {
             super(dataModel);
         }
 
-        @Nonnull
         @Override
         public Component toUIComponent() {
             return DesktopListBoxImpl.this;
@@ -61,7 +59,6 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         return component;
     }
 
-    @Nonnull
     @Override
     public ListModel<E> getListModel() {
         return myModel;
@@ -69,7 +66,7 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
 
     @Override
     @SuppressWarnings("unchecked")
-    public void setRenderer(@Nonnull ItemRenderer<E> renderer) {
+    public void setRenderer(ItemRenderer<E> renderer) {
         if (renderer instanceof TextItemRenderer textItemRenderer) {
             toAWTComponent().setCellRenderer(new DesktopListRender<>(() -> textItemRenderer));
         }
@@ -86,16 +83,14 @@ class DesktopListBoxImpl<E> extends SwingComponentDelegate<JBList<E>> implements
         toAWTComponent().setSelectedValue(value, true);
     }
 
-    @Nonnull
     @Override
-    public Disposable addValueListener(@Nonnull ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
+    public Disposable addValueListener(ComponentEventListener<ValueComponent<E>, ValueComponentEvent<E>> valueListener) {
         DesktopValueListenerAsListSelectionListener<E> listener = new DesktopValueListenerAsListSelectionListener<>(this, toAWTComponent(), valueListener);
         toAWTComponent().addListSelectionListener(listener);
         return () -> toAWTComponent().removeListSelectionListener(listener);
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
     @Override
     public E getValue() {
         return toAWTComponent().getSelectedValue();

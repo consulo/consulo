@@ -13,7 +13,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -28,7 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class EditorMouseHoverPopupControl {
-    @Nonnull
+    
     public static EditorMouseHoverPopupControl getInstance() {
         return Application.get().getInstance(EditorMouseHoverPopupControl.class);
     }
@@ -37,32 +36,32 @@ public class EditorMouseHoverPopupControl {
     private static final Key<Integer> MOUSE_TRACKING_DISABLED_COUNT = Key.create("MOUSE_TRACKING_DISABLED_COUNT");
     private final Collection<Runnable> myListeners = new CopyOnWriteArrayList<>();
 
-    public static void disablePopups(@Nonnull Editor editor) {
+    public static void disablePopups(Editor editor) {
         setTrackingDisabled(editor, true);
     }
 
-    public static void enablePopups(@Nonnull Editor editor) {
+    public static void enablePopups(Editor editor) {
         setTrackingDisabled(editor, false);
     }
 
-    public static void disablePopups(@Nonnull Document document) {
+    public static void disablePopups(Document document) {
         setTrackingDisabled(document, true);
     }
 
-    public static void enablePopups(@Nonnull Document document) {
+    public static void enablePopups(Document document) {
         setTrackingDisabled(document, false);
     }
 
-    public static void disablePopups(@Nonnull Project project) {
+    public static void disablePopups(Project project) {
         setTrackingDisabled(project, true);
     }
 
-    public static void enablePopups(@Nonnull Project project) {
+    public static void enablePopups(Project project) {
         setTrackingDisabled(project, false);
     }
 
     @RequiredUIAccess
-    private static void setTrackingDisabled(@Nonnull UserDataHolder holder, boolean value) {
+    private static void setTrackingDisabled(UserDataHolder holder, boolean value) {
         UIAccess.assertIsUIThread();
 
         Integer userData = holder.getUserData(MOUSE_TRACKING_DISABLED_COUNT);
@@ -81,7 +80,7 @@ public class EditorMouseHoverPopupControl {
     }
 
     @RequiredUIAccess
-    public static boolean arePopupsDisabled(@Nonnull Editor editor) {
+    public static boolean arePopupsDisabled(Editor editor) {
         UIAccess.assertIsUIThread();
 
         Project project = editor.getProject();
@@ -90,7 +89,7 @@ public class EditorMouseHoverPopupControl {
             project != null && project.getUserData(MOUSE_TRACKING_DISABLED_COUNT) != null;
     }
 
-    public void addListener(@Nonnull Runnable listener) {
+    public void addListener(Runnable listener) {
         myListeners.add(listener);
     }
 }

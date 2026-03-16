@@ -31,8 +31,7 @@ import consulo.ui.ex.internal.ToolWindowEx;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
     protected ResizeToolWindowAction() {
     }
 
-    protected ResizeToolWindowAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ResizeToolWindowAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
@@ -121,7 +120,7 @@ public abstract class ResizeToolWindowAction extends AnAction implements DumbAwa
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         actionPerformed(e, myLastWindow, myLastManager);
     }
 

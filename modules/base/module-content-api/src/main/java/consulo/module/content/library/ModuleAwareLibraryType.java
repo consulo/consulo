@@ -20,18 +20,17 @@ import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.module.content.layer.ModuleRootLayer;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 24/01/2022
  */
 public abstract class ModuleAwareLibraryType<P extends LibraryProperties> extends LibraryType<P> {
-  public ModuleAwareLibraryType(@Nonnull PersistentLibraryKind<P> libraryKind) {
+  public ModuleAwareLibraryType(PersistentLibraryKind<P> libraryKind) {
     super(libraryKind);
   }
 
-  public abstract boolean isAvailable(@Nonnull ModuleRootLayer model);
+  public abstract boolean isAvailable(ModuleRootLayer model);
 
   @Override
   public boolean isAvailable() {

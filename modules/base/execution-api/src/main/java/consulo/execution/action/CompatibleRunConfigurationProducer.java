@@ -19,10 +19,9 @@ import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 public abstract class CompatibleRunConfigurationProducer<T extends RunConfiguration> extends RunConfigurationProducer<T> {
-    protected CompatibleRunConfigurationProducer(@Nonnull ConfigurationType configurationType) {
+    protected CompatibleRunConfigurationProducer(ConfigurationType configurationType) {
         super(configurationType);
     }
 
@@ -37,9 +36,9 @@ public abstract class CompatibleRunConfigurationProducer<T extends RunConfigurat
     }
 
     protected abstract boolean setupConfigurationFromCompatibleContext(
-        @Nonnull T configuration,
-        @Nonnull ConfigurationContext context,
-        @Nonnull SimpleReference<PsiElement> sourceElement
+        T configuration,
+        ConfigurationContext context,
+        SimpleReference<PsiElement> sourceElement
     );
 
     @Override
@@ -48,9 +47,9 @@ public abstract class CompatibleRunConfigurationProducer<T extends RunConfigurat
             && isConfigurationFromCompatibleContext(configuration, context);
     }
 
-    protected abstract boolean isConfigurationFromCompatibleContext(@Nonnull T configuration, @Nonnull ConfigurationContext context);
+    protected abstract boolean isConfigurationFromCompatibleContext(T configuration, ConfigurationContext context);
 
-    protected boolean isContextCompatible(@Nonnull ConfigurationContext context) {
+    protected boolean isContextCompatible(ConfigurationContext context) {
         ConfigurationType type = getConfigurationType();
         return context.isCompatibleWithOriginalRunConfiguration(type);
     }

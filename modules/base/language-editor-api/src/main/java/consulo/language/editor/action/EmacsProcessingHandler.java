@@ -29,7 +29,6 @@ import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This interface is assumed to define general contract for Emacs-like functionality.
@@ -42,7 +41,7 @@ public interface EmacsProcessingHandler extends LanguageExtension {
     ExtensionPointCacheKey<EmacsProcessingHandler, ByLanguageValue<EmacsProcessingHandler>> KEY =
         ExtensionPointCacheKey.create("EmacsProcessingHandler", LanguageOneToOne.build(new DefaultEmacsProcessingHandler()));
 
-    @Nonnull
+    
     static EmacsProcessingHandler forLanguage(Language language) {
         ExtensionPoint<EmacsProcessingHandler> extensionPoint = Application.get().getExtensionPoint(EmacsProcessingHandler.class);
         ByLanguageValue<EmacsProcessingHandler> map = extensionPoint.getOrBuildCache(KEY);
@@ -78,6 +77,6 @@ public interface EmacsProcessingHandler extends LanguageExtension {
      * @param file    current file
      * @return processing result
      */
-    @Nonnull
-    Result changeIndent(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
+    
+    Result changeIndent(Project project, Editor editor, PsiFile file);
 }

@@ -7,8 +7,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -37,13 +36,13 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
   }
 
   @Override
-  public final void update(@Nonnull AnActionEvent event) {
+  public final void update(AnActionEvent event) {
     event.getPresentation().setEnabled(null != getSwingAction(getComponent(event)));
   }
 
   @Override
   @RequiredUIAccess
-  public final void actionPerformed(@Nonnull AnActionEvent event) {
+  public final void actionPerformed(AnActionEvent event) {
     JComponent component = getComponent(event);
     Action action = getSwingAction(component);
     if (action != null) action.actionPerformed(new ActionEvent(component, ActionEvent.ACTION_PERFORMED, mySwingActionId));
@@ -61,7 +60,7 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
    *                  or {@code null} to remove mapping for the given base component
    */
   //@ApiStatus.Experimental
-  public static void configureMapping(@Nonnull JComponent component, @Nullable Function<String, JComponent> mapping) {
+  public static void configureMapping(JComponent component, @Nullable Function<String, JComponent> mapping) {
     component.putClientProperty(FUNCTION, mapping);
   }
 
@@ -71,7 +70,7 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
    * @param actions   a list of supported actions
    */
   //@ApiStatus.Experimental
-  public static void configureMapping(@Nonnull JComponent base, @Nonnull JComponent dependant, @Nonnull String... actions) {
+  public static void configureMapping(JComponent base, JComponent dependant, String... actions) {
     Map<String, JComponent> map = new HashMap<>();
     for (String action : actions) map.put(action, dependant);
     configureMapping(base, map::get);
@@ -81,7 +80,7 @@ public class SwingActionDelegate extends AnAction implements DumbAware {
    * @param component the base component that should not perform actions
    */
   //@ApiStatus.Experimental
-  public static void disableFor(@Nonnull JComponent component) {
+  public static void disableFor(JComponent component) {
     configureMapping(component, action -> null);
   }
 }

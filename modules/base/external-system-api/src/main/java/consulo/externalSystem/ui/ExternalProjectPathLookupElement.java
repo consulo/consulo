@@ -23,7 +23,6 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -31,17 +30,17 @@ import jakarta.annotation.Nonnull;
  */
 public class ExternalProjectPathLookupElement extends LookupElement {
   
-  @Nonnull
+  
   private final String myProjectName;
-  @Nonnull
+  
   private final String myProjectPath;
 
-  public ExternalProjectPathLookupElement(@Nonnull String projectName, @Nonnull String projectPath) {
+  public ExternalProjectPathLookupElement(String projectName, String projectPath) {
     myProjectName = projectName;
     myProjectPath = projectPath;
   }
 
-  @Nonnull
+  
   @Override
   public String getLookupString() {
     return myProjectName;

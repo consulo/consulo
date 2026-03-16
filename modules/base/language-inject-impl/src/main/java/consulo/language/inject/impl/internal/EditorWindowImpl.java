@@ -32,8 +32,7 @@ import consulo.ui.ex.PasteProvider;
 import consulo.util.collection.UnsafeWeakList;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 
 import javax.swing.*;
@@ -62,8 +61,8 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   private final SoftWrapModelWindow mySoftWrapModel;
   private final InlayModelWindow myInlayModel;
 
-  @Nonnull
-  static Editor create(@Nonnull DocumentWindowImpl documentRange, @Nonnull RealEditor editor, @Nonnull PsiFile injectedFile) {
+  
+  static Editor create(DocumentWindowImpl documentRange, RealEditor editor, PsiFile injectedFile) {
     assert documentRange.isValid();
     assert injectedFile.isValid();
     EditorWindowImpl window;
@@ -83,7 +82,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     return window;
   }
 
-  private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow, @Nonnull RealEditor delegate, @Nonnull PsiFile injectedFile, boolean oneLine) {
+  private EditorWindowImpl(DocumentWindowImpl documentWindow, RealEditor delegate, PsiFile injectedFile, boolean oneLine) {
     myDocumentWindow = documentWindow;
     myDelegate = delegate;
     myInjectedFile = injectedFile;
@@ -111,14 +110,14 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     }
   }
 
-  private static void disposeEditor(@Nonnull EditorWindow editorWindow) {
+  private static void disposeEditor(EditorWindow editorWindow) {
     EditorWindowImpl impl = (EditorWindowImpl)editorWindow;
     impl.dispose();
 
     InjectedLanguageUtil.clearCaches(impl.myInjectedFile, impl.getDocument());
   }
 
-  static void disposeEditorFor(@Nonnull DocumentWindow documentWindow) {
+  static void disposeEditorFor(DocumentWindow documentWindow) {
     synchronized (allEditors) {
       for (Iterator<EditorWindowImpl> iterator = allEditors.iterator(); iterator.hasNext(); ) {
         EditorWindowImpl editor = iterator.next();
@@ -150,14 +149,14 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
+  
   public PsiFile getInjectedFile() {
     return myInjectedFile;
   }
 
   @Override
-  @Nonnull
-  public LogicalPosition hostToInjected(@Nonnull LogicalPosition hPos) {
+  
+  public LogicalPosition hostToInjected(LogicalPosition hPos) {
     checkValid();
     Document hostDocument = myDelegate.getDocument();
     int hLineEndOffset = hPos.line >= hostDocument.getLineCount() ? hostDocument.getTextLength() : hostDocument.getLineEndOffset(hPos.line);
@@ -176,8 +175,8 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
-  public LogicalPosition injectedToHost(@Nonnull LogicalPosition pos) {
+  
+  public LogicalPosition injectedToHost(LogicalPosition pos) {
     checkValid();
 
     int offset = logicalPositionToOffset(pos);
@@ -253,60 +252,60 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
+  
   public SelectionModel getSelectionModel() {
     return mySelectionModelDelegate;
   }
 
   @Override
-  @Nonnull
+  
   public MarkupModelEx getMarkupModel() {
     return myMarkupModelDelegate;
   }
 
-  @Nonnull
+  
   @Override
   public MarkupModelEx getFilteredDocumentMarkupModel() {
     return myDocumentMarkupModelDelegate;
   }
 
   @Override
-  @Nonnull
+  
   public FoldingModelEx getFoldingModel() {
     return myFoldingModelWindow;
   }
 
   @Override
-  @Nonnull
+  
   public CaretModel getCaretModel() {
     return myCaretModelDelegate;
   }
 
   @Override
-  @Nonnull
+  
   public ScrollingModelEx getScrollingModel() {
     return myDelegate.getScrollingModel();
   }
 
   @Override
-  @Nonnull
+  
   public SoftWrapModelEx getSoftWrapModel() {
     return mySoftWrapModel;
   }
 
   @Override
-  @Nonnull
+  
   public EditorSettings getSettings() {
     return myDelegate.getSettings();
   }
 
-  @Nonnull
+  
   @Override
   public InlayModel getInlayModel() {
     return myInlayModel;
   }
 
-  @Nonnull
+  
   @Override
   public EditorKind getEditorKind() {
     return myDelegate.getEditorKind();
@@ -323,11 +322,11 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void setHighlighter(@Nonnull EditorHighlighter highlighter) {
+  public void setHighlighter(EditorHighlighter highlighter) {
     myDelegate.setHighlighter(highlighter);
   }
 
-  @Nonnull
+  
   @Override
   public EditorHighlighter getHighlighter() {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
@@ -349,29 +348,29 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getContentComponent() {
     return myDelegate.getContentComponent();
   }
 
-  @Nonnull
+  
   @Override
   public EditorGutterComponentEx getGutterComponentEx() {
     return myDelegate.getGutterComponentEx();
   }
 
   @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
     myDelegate.addPropertyChangeListener(listener);
   }
 
   @Override
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable) {
+  public void addPropertyChangeListener(PropertyChangeListener listener, Disposable parentDisposable) {
     myDelegate.addPropertyChangeListener(listener, parentDisposable);
   }
 
   @Override
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
     myDelegate.removePropertyChangeListener(listener);
   }
 
@@ -396,14 +395,14 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
-  public VisualPosition xyToVisualPosition(@Nonnull Point p) {
+  
+  public VisualPosition xyToVisualPosition(Point p) {
     return logicalToVisualPosition(xyToLogicalPosition(p));
   }
 
-  @Nonnull
+  
   @Override
-  public VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
+  public VisualPosition xyToVisualPosition(Point2D p) {
     checkValid();
     Point2D pp = p.getX() >= 0 && p.getY() >= 0 ? p : new Point2D.Double(Math.max(p.getX(), 0), Math.max(p.getY(), 0));
     LogicalPosition hostPos = myDelegate.visualToLogicalPosition(myDelegate.xyToVisualPosition(pp));
@@ -411,19 +410,19 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
+  
   public VisualPosition offsetToVisualPosition(int offset) {
     return logicalToVisualPosition(offsetToLogicalPosition(offset));
   }
 
   @Override
-  @Nonnull
+  
   public VisualPosition offsetToVisualPosition(int offset, boolean leanForward, boolean beforeSoftWrap) {
     return logicalToVisualPosition(offsetToLogicalPosition(offset).leanForward(leanForward));
   }
 
   @Override
-  @Nonnull
+  
   public LogicalPosition offsetToLogicalPosition(int offset) {
     checkValid();
     int lineNumber = myDocumentWindow.getLineNumber(offset);
@@ -432,38 +431,38 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     return new LogicalPosition(lineNumber, column);
   }
 
-  @Nonnull
+  
   @Override
   public EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme) {
     return myDelegate.createBoundColorSchemeDelegate(customGlobalScheme);
   }
 
   @Override
-  @Nonnull
-  public LogicalPosition xyToLogicalPosition(@Nonnull Point p) {
+  
+  public LogicalPosition xyToLogicalPosition(Point p) {
     checkValid();
     LogicalPosition hostPos = myDelegate.xyToLogicalPosition(p);
     return hostToInjected(hostPos);
   }
 
   @Override
-  @Nonnull
-  public Point logicalPositionToXY(@Nonnull LogicalPosition pos) {
+  
+  public Point logicalPositionToXY(LogicalPosition pos) {
     checkValid();
     LogicalPosition hostPos = injectedToHost(pos);
     return myDelegate.logicalPositionToXY(hostPos);
   }
 
   @Override
-  @Nonnull
-  public Point visualPositionToXY(@Nonnull VisualPosition pos) {
+  
+  public Point visualPositionToXY(VisualPosition pos) {
     checkValid();
     return logicalPositionToXY(visualToLogicalPosition(pos));
   }
 
-  @Nonnull
+  
   @Override
-  public Point2D visualPositionToPoint2D(@Nonnull VisualPosition pos) {
+  public Point2D visualPositionToPoint2D(VisualPosition pos) {
     checkValid();
     LogicalPosition hostLogical = injectedToHost(visualToLogicalPosition(pos));
     VisualPosition hostVisual = myDelegate.logicalToVisualPosition(hostLogical);
@@ -477,13 +476,13 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  @Nonnull
+  
   public DocumentWindowImpl getDocument() {
     return myDocumentWindow;
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getComponent() {
     return myDelegate.getComponent();
   }
@@ -491,31 +490,31 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   private final ListenerWrapperMap<EditorMouseListener> myEditorMouseListeners = new ListenerWrapperMap<>();
 
   @Override
-  public void addEditorMouseListener(@Nonnull final EditorMouseListener listener) {
+  public void addEditorMouseListener(final EditorMouseListener listener) {
     checkValid();
     EditorMouseListener wrapper = new EditorMouseListener() {
       @Override
-      public void mousePressed(@Nonnull EditorMouseEvent e) {
+      public void mousePressed(EditorMouseEvent e) {
         listener.mousePressed(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
 
       @Override
-      public void mouseClicked(@Nonnull EditorMouseEvent e) {
+      public void mouseClicked(EditorMouseEvent e) {
         listener.mouseClicked(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
 
       @Override
-      public void mouseReleased(@Nonnull EditorMouseEvent e) {
+      public void mouseReleased(EditorMouseEvent e) {
         listener.mouseReleased(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
 
       @Override
-      public void mouseEntered(@Nonnull EditorMouseEvent e) {
+      public void mouseEntered(EditorMouseEvent e) {
         listener.mouseEntered(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
 
       @Override
-      public void mouseExited(@Nonnull EditorMouseEvent e) {
+      public void mouseExited(EditorMouseEvent e) {
         listener.mouseExited(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
     };
@@ -525,7 +524,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void removeEditorMouseListener(@Nonnull EditorMouseListener listener) {
+  public void removeEditorMouseListener(EditorMouseListener listener) {
     EditorMouseListener wrapper = myEditorMouseListeners.removeWrapper(listener);
     // HintManager might have an old editor instance
     if (wrapper != null) {
@@ -536,18 +535,18 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   private final ListenerWrapperMap<EditorMouseMotionListener> myEditorMouseMotionListeners = new ListenerWrapperMap<>();
 
   @Override
-  public void addEditorMouseMotionListener(@Nonnull final EditorMouseMotionListener listener) {
+  public void addEditorMouseMotionListener(final EditorMouseMotionListener listener) {
     checkValid();
     EditorMouseMotionListener wrapper = new EditorMouseMotionListener() {
       @RequiredUIAccess
       @Override
-      public void mouseMoved(@Nonnull EditorMouseEvent e) {
+      public void mouseMoved(EditorMouseEvent e) {
         listener.mouseMoved(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
 
       @RequiredUIAccess
       @Override
-      public void mouseDragged(@Nonnull EditorMouseEvent e) {
+      public void mouseDragged(EditorMouseEvent e) {
         listener.mouseDragged(new EditorMouseEvent(EditorWindowImpl.this, e.getMouseEvent(), e.getArea()));
       }
     };
@@ -556,7 +555,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void removeEditorMouseMotionListener(@Nonnull EditorMouseMotionListener listener) {
+  public void removeEditorMouseMotionListener(EditorMouseMotionListener listener) {
     EditorMouseMotionListener wrapper = myEditorMouseMotionListeners.removeWrapper(listener);
     if (wrapper != null) {
       myDelegate.removeEditorMouseMotionListener(wrapper);
@@ -573,7 +572,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     myDelegate.setBackgroundColor(color);
   }
 
-  @Nonnull
+  
   @Override
   public ColorValue getBackgroundColor() {
     return myDelegate.getBackgroundColor();
@@ -594,7 +593,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     return myDelegate.getContentSize();
   }
 
-  @Nonnull
+  
   @Override
   public JScrollPane getScrollPane() {
     return myDelegate.getScrollPane();
@@ -611,7 +610,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+  public int logicalPositionToOffset(LogicalPosition pos) {
     int lineStartOffset = myDocumentWindow.getLineStartOffset(pos.line);
     return calcOffset(pos.column, pos.line, lineStartOffset);
   }
@@ -647,27 +646,27 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
 
   // assuming there is no folding in injected documents
   @Override
-  @Nonnull
-  public VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition pos) {
+  
+  public VisualPosition logicalToVisualPosition(LogicalPosition pos) {
     checkValid();
     return new VisualPosition(pos.line, pos.column);
   }
 
   @Override
-  @Nonnull
-  public LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition pos) {
+  
+  public LogicalPosition visualToLogicalPosition(VisualPosition pos) {
     checkValid();
     return new LogicalPosition(pos.line, pos.column);
   }
 
-  @Nonnull
+  
   @Override
   public DataContext getDataContext() {
     return myDelegate.getDataContext();
   }
 
   @Override
-  public EditorMouseEventArea getMouseEventArea(@Nonnull MouseEvent e) {
+  public EditorMouseEventArea getMouseEventArea(MouseEvent e) {
     return myDelegate.getMouseEventArea(e);
   }
 
@@ -682,12 +681,12 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void addFocusListener(@Nonnull FocusChangeListener listener) {
+  public void addFocusListener(FocusChangeListener listener) {
     myDelegate.addFocusListener(listener);
   }
 
   @Override
-  public void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable) {
+  public void addFocusListener(FocusChangeListener listener, Disposable parentDisposable) {
     myDelegate.addFocusListener(listener, parentDisposable);
   }
 
@@ -742,12 +741,12 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void setColorsScheme(@Nonnull EditorColorsScheme scheme) {
+  public void setColorsScheme(EditorColorsScheme scheme) {
     myDelegate.setColorsScheme(scheme);
   }
 
   @Override
-  @Nonnull
+  
   public EditorColorsScheme getColorsScheme() {
     return myDelegate.getColorsScheme();
   }
@@ -773,12 +772,12 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public boolean processKeyTyped(@Nonnull KeyEvent e) {
+  public boolean processKeyTyped(KeyEvent e) {
     return myDelegate.processKeyTyped(e);
   }
 
   @Override
-  @Nonnull
+  
   public EditorGutter getGutter() {
     return myDelegate.getGutter();
   }
@@ -799,13 +798,13 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     return myDocumentWindow.hashCode();
   }
 
-  @Nonnull
+  
   @Override
   public Editor getDelegate() {
     return myDelegate;
   }
 
-  @Nonnull
+  
   @Override
   public IndentsModel getIndentsModel() {
     return myDelegate.getIndentsModel();
@@ -883,17 +882,17 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   }
 
   @Override
-  public void installPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+  public void installPopupHandler(EditorPopupHandler popupHandler) {
     myDelegate.installPopupHandler(popupHandler);
   }
 
   @Override
-  public void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler) {
+  public void uninstallPopupHandler(EditorPopupHandler popupHandler) {
     myDelegate.installPopupHandler(popupHandler);
   }
 
   @Override
-  public void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor) {
+  public void setCustomCursor(Object requestor, @Nullable Cursor cursor) {
     myDelegate.setCustomCursor(requestor, cursor);
   }
 

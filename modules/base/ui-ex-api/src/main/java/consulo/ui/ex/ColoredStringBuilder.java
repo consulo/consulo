@@ -17,14 +17,13 @@ package consulo.ui.ex;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public  class ColoredStringBuilder implements ColoredTextContainer {
   private final StringBuilder myBuilder = new StringBuilder();
   private Image myIcon;
 
-  public void appendTo(@Nonnull StringBuilder... subBuilders) {
+  public void appendTo(StringBuilder... subBuilders) {
     for (StringBuilder subBuilder : subBuilders) {
       subBuilder.append(myBuilder);
     }
@@ -32,12 +31,12 @@ public  class ColoredStringBuilder implements ColoredTextContainer {
   }
 
   @Override
-  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
+  public void append(String fragment, SimpleTextAttributes attributes) {
     myBuilder.append(fragment);
   }
 
   @Override
-  public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
+  public void append(String fragment, SimpleTextAttributes attributes, Object tag) {
     myBuilder.append(fragment);
   }
 
@@ -50,13 +49,13 @@ public  class ColoredStringBuilder implements ColoredTextContainer {
   public void setToolTipText(@Nullable String text) {
   }
 
-  @Nonnull
+  
   @Override
   public CharSequence getCharSequence(boolean mainOnly) {
     return myBuilder;
   }
 
-  @Nonnull
+  
   @Override
   public ColoredIterator iterator() {
     throw new UnsupportedOperationException();

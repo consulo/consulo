@@ -23,8 +23,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -38,7 +37,7 @@ public class ProjectFilesScope extends NamedScope {
     public ProjectFilesScope() {
         super(ID, LocalizeValue.localizeTODO("Project Files"), new AbstractPackageSet("ProjectFiles") {
             @Override
-            public boolean contains(VirtualFile file, @Nonnull Project project, @Nullable NamedScopesHolder holder) {
+            public boolean contains(VirtualFile file, Project project, @Nullable NamedScopesHolder holder) {
                 if (file == null) {
                     return false;
                 }

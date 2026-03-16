@@ -19,8 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.text.CodeFoldingState;
 import consulo.language.editor.folding.CodeFoldingManager;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,12 +29,12 @@ import java.util.List;
  */
 public class RestoreFoldArrangementCallback implements ArrangementCallback {
 
-  @Nonnull
+  
   private final  Editor           myEditor;
   @Nullable
   private final CodeFoldingState myCodeFoldingState;
 
-  public RestoreFoldArrangementCallback(@Nonnull Editor editor) {
+  public RestoreFoldArrangementCallback(Editor editor) {
     myEditor = editor;
 
     Project project = editor.getProject();
@@ -49,7 +48,7 @@ public class RestoreFoldArrangementCallback implements ArrangementCallback {
   }
 
   @Override
-  public void afterArrangement(@Nonnull List<ArrangementMoveInfo> moveInfos) {
+  public void afterArrangement(List<ArrangementMoveInfo> moveInfos) {
     // Restore state for the PSI elements not affected by arrangement.
     Project project = myEditor.getProject();
     if (myCodeFoldingState != null && project != null) {

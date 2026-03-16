@@ -29,16 +29,15 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
 
 class ScopeColorsPageFactory implements ColorAndFontPanelFactory, ConfigurableWeight {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
+    public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
         final JPanel scopePanel = createChooseScopePanel();
         return NewColorAndFontPanel.create(
             new PreviewPanel.Empty() {
@@ -54,7 +53,7 @@ class ScopeColorsPageFactory implements ColorAndFontPanelFactory, ConfigurableWe
         );
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPanelDisplayName() {
         return ApplicationLocalize.titleScopeBased();

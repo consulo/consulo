@@ -25,7 +25,6 @@ import consulo.ui.ex.action.*;
 import consulo.ide.impl.idea.ide.util.ExportToFileUtil;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_EXPORT_TO_TEXT_FILE)
 public class ExportToTextFileAction extends AnAction {
@@ -35,7 +34,7 @@ public class ExportToTextFileAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ExporterToTextFile exporterToTextFile = getExporter(e.getDataContext());
         if (exporterToTextFile == null) {
@@ -66,7 +65,7 @@ public class ExportToTextFileAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         ExporterToTextFile exporterToTextFile = getExporter(e.getDataContext());
         presentation.setEnabled(e.hasData(Project.KEY) && exporterToTextFile != null && exporterToTextFile.canExport());

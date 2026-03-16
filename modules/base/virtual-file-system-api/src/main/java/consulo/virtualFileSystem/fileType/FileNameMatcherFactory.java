@@ -20,20 +20,19 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class FileNameMatcherFactory {
-  @Nonnull
+  
   public static FileNameMatcherFactory getInstance() {
     return Application.get().getInstance(FileNameMatcherFactory.class);
   }
 
-  @Nonnull
-  public final FileNameMatcher createMatcher(@Nonnull String pattern) {
+  
+  public final FileNameMatcher createMatcher(String pattern) {
     if (pattern.startsWith("*.") && pattern.indexOf('*', 2) < 0 && pattern.indexOf('.', 2) < 0 && pattern.indexOf('?', 2) < 0) {
       return createExtensionFileNameMatcher(StringUtil.toLowerCase(pattern.substring(2)));
     }
@@ -45,17 +44,17 @@ public abstract class FileNameMatcherFactory {
     return createExactFileNameMatcher(pattern);
   }
 
-  @Nonnull
-  public FileNameMatcher createExactFileNameMatcher(@Nonnull String fileName) {
+  
+  public FileNameMatcher createExactFileNameMatcher(String fileName) {
     return createExactFileNameMatcher(fileName, false);
   }
 
-  @Nonnull
-  public abstract FileNameMatcher createExtensionFileNameMatcher(@Nonnull String extension);
+  
+  public abstract FileNameMatcher createExtensionFileNameMatcher(String extension);
 
-  @Nonnull
-  public abstract FileNameMatcher createExactFileNameMatcher(@Nonnull String fileName, boolean ignoreCase);
+  
+  public abstract FileNameMatcher createExactFileNameMatcher(String fileName, boolean ignoreCase);
 
-  @Nonnull
-  public abstract FileNameMatcher createWildcardFileNameMatcher(@Nonnull String pattern);
+  
+  public abstract FileNameMatcher createWildcardFileNameMatcher(String pattern);
 }

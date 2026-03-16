@@ -10,8 +10,7 @@ import consulo.project.Project;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -23,7 +22,7 @@ public class FileNavigatable implements Navigatable {
   private final Supplier<OpenFileDescriptor> myValue;
   private final FilePosition myFilePosition;
 
-  public FileNavigatable(@Nonnull Project project, @Nonnull FilePosition filePosition) {
+  public FileNavigatable(Project project, FilePosition filePosition) {
     myProject = project;
     myFilePosition = filePosition;
     myValue = LazyValue.nullable(this::createDescriptor);
@@ -48,7 +47,7 @@ public class FileNavigatable implements Navigatable {
     return myValue.get();
   }
 
-  @Nonnull
+  
   public FilePosition getFilePosition() {
     return myFilePosition;
   }

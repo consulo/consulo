@@ -18,7 +18,6 @@ package consulo.colorScheme;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,6 +25,6 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface BundledColorSchemeProvider {
-    @Nonnull
+    
     String[] getColorSchemeFiles();
 }

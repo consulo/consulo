@@ -11,8 +11,7 @@ import consulo.ui.ex.awt.JBOptionButton;
 import consulo.ui.ex.awt.OptionAction;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +21,7 @@ import java.util.Collection;
 // Public API for assigning touchbar actions to ui-component
 //
 public final class Touchbar {
-    public static @Nullable ActionGroup getActions(@Nonnull JComponent component) {
+    public static @Nullable ActionGroup getActions(JComponent component) {
         return ClientProperty.get(component, ACTION_GROUP_KEY);
     }
 
@@ -31,22 +30,22 @@ public final class Touchbar {
     // Linked group will be shown in touchbar when JComponent gains focus.
     //
 
-    public static void setActions(@Nonnull JComponent component, @Nullable ActionGroup group) {
+    public static void setActions(JComponent component, @Nullable ActionGroup group) {
         if (!SystemInfo.isMac || ApplicationManager.getApplication() == null) {
             return;
         }
         component.putClientProperty(ACTION_GROUP_KEY, group);
     }
 
-    public static void setActions(@Nonnull JComponent component, @Nullable AnAction action) {
+    public static void setActions(JComponent component, @Nullable AnAction action) {
         setActions(component, action == null ? null : new DefaultActionGroup(action));
     }
 
-    public static void setActions(@Nonnull JComponent component, @Nonnull String actionId) {
+    public static void setActions(JComponent component, String actionId) {
         setActions(component, ActionManager.getInstance().getAction(actionId));
     }
 
-    public static void addActions(@Nonnull JComponent component, @Nullable ActionGroup group) {
+    public static void addActions(JComponent component, @Nullable ActionGroup group) {
         if (!SystemInfo.isMac || ApplicationManager.getApplication() == null) {
             return;
         }
@@ -60,14 +59,14 @@ public final class Touchbar {
         }
     }
 
-    public static void setButtonActions(@Nonnull JComponent component,
+    public static void setButtonActions(JComponent component,
                                         Collection<? extends JButton> buttons,
                                         Collection<? extends JButton> principal,
                                         JButton defaultButton) {
         setButtonActions(component, buttons, principal, defaultButton, null);
     }
 
-    public static void setButtonActions(@Nonnull JComponent component,
+    public static void setButtonActions(JComponent component,
                                         Collection<? extends JButton> buttons,
                                         Collection<? extends JButton> principal,
                                         JButton defaultButton,
@@ -96,7 +95,7 @@ public final class Touchbar {
     private static final Key<ActionGroup> ACTION_GROUP_KEY = Key.create("Touchbar.ActionGroup.key");
     private static final boolean EXPAND_OPTION_BUTTONS = Boolean.getBoolean("Touchbar.expand.option.button");
 
-    private static @Nonnull DefaultActionGroup buildActionsFromButtons(Collection<? extends JButton> buttons,
+    private static DefaultActionGroup buildActionsFromButtons(Collection<? extends JButton> buttons,
                                                                        JButton defaultButton,
                                                                        boolean isPrincipal) {
         DefaultActionGroup result = new DefaultActionGroup();
@@ -145,7 +144,7 @@ public final class Touchbar {
     }
 
     private static AnAction _createActionFromButton(@Nullable Action action,
-                                                    @Nonnull JButton button,
+                                                    JButton button,
                                                     boolean useTextFromAction /*for optional buttons*/) {
         Object anAct = action == null ? null : action.getValue(OptionAction.AN_ACTION);
         if (anAct == null) {
@@ -162,9 +161,9 @@ public final class Touchbar {
 
         final boolean useTextFromAction;
         final @Nullable Action action;
-        final @Nonnull JButton button;
+        final JButton button;
 
-        MyAction(boolean useTextFromAction, @Nullable Action action, @Nonnull JButton button) {
+        MyAction(boolean useTextFromAction, @Nullable Action action, JButton button) {
             this.useTextFromAction = useTextFromAction;
             this.action = action;
             this.button = button;
@@ -176,13 +175,13 @@ public final class Touchbar {
         }
 
         @Override
-        public @Nonnull Object getDelegate() {
+        public Object getDelegate() {
             return action == null ? button : action;
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (action == null) {
                 button.doClick();
                 return;
@@ -192,7 +191,7 @@ public final class Touchbar {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(action == null ? button.isEnabled() : action.isEnabled());
             if (!useTextFromAction) {
                 e.getPresentation().setTextValue(LocalizeValue.of(TextWithMnemonic.parse(button.getText()).getText()));

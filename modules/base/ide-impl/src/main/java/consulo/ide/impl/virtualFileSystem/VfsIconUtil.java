@@ -34,8 +34,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.virtualFileSystem.WritingAccessProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -44,7 +43,7 @@ import jakarta.annotation.Nullable;
 public class VfsIconUtil {
     private static final Key<Boolean> PROJECT_WAS_EVER_INITIALIZED = Key.create("iconDeferrer:projectWasEverInitialized");
 
-    private static boolean wasEverInitialized(@Nonnull Project project) {
+    private static boolean wasEverInitialized(Project project) {
         Boolean was = project.getUserData(PROJECT_WAS_EVER_INITIALIZED);
         if (was == null) {
             if (project.isInitialized()) {
@@ -95,8 +94,7 @@ public class VfsIconUtil {
         return icon;
     }
 
-    @Nullable
-    public static Image getIcon(@Nonnull VirtualFile file, @Iconable.IconFlags int flags, @Nullable Project project) {
+    public static @Nullable Image getIcon(VirtualFile file, @Iconable.IconFlags int flags, @Nullable Project project) {
         Image icon = Iconable.LastComputedIcon.get(file, flags);
         if (icon == null) {
             icon = VirtualFilePresentation.getIcon(file);
@@ -109,9 +107,9 @@ public class VfsIconUtil {
         );
     }
 
-    @Nonnull
+   
     @RequiredReadAction
-    public static Image getIconNoDefer(@Nonnull VirtualFile file, @Iconable.IconFlags int flags, @Nullable ComponentManager project) {
+    public static Image getIconNoDefer(VirtualFile file, @Iconable.IconFlags int flags, @Nullable ComponentManager project) {
         UIAccess.assetIsNotUIThread();
 
         Image image = requestIcon((Project) project, file, flags);

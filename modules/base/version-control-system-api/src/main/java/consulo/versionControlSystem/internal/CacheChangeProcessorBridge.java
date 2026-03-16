@@ -17,8 +17,7 @@ package consulo.versionControlSystem.internal;
 
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -27,7 +26,7 @@ import javax.swing.*;
  * @since 06-Jul-24
  */
 public interface CacheChangeProcessorBridge extends Disposable {
-  <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value);
+  <T> void putContextUserData(Key<T> key, @Nullable T value);
 
   void refresh();
 

@@ -15,7 +15,6 @@
  */
 package consulo.platform;
 
-import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 
 /**
@@ -25,10 +24,10 @@ import java.nio.file.Path;
 public interface PlatformUser {
   boolean superUser();
 
-  @Nonnull
+  
   String name();
 
-  @Nonnull
+  
   Path homePath();
 
   default boolean darkTheme() {

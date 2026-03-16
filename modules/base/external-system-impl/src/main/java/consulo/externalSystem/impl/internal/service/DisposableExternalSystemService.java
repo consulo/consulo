@@ -17,7 +17,6 @@ package consulo.externalSystem.impl.internal.service;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -33,5 +32,5 @@ public interface DisposableExternalSystemService {
    * @param externalSystemId  target external system id
    * @param ideProject        target ide project
    */
-  void onExternalSystemUnlinked(@Nonnull ProjectSystemId externalSystemId, @Nonnull Project ideProject);
+  void onExternalSystemUnlinked(ProjectSystemId externalSystemId, Project ideProject);
 }

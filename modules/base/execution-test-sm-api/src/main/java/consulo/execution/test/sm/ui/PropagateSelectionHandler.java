@@ -17,8 +17,7 @@ package consulo.execution.test.sm.ui;
 
 import consulo.execution.test.sm.runner.SMTestProxy;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Roman Chernyatchik
@@ -29,7 +28,7 @@ import jakarta.annotation.Nullable;
 public interface PropagateSelectionHandler {
     void handlePropagateSelectionRequest(
         @Nullable SMTestProxy selectedTestProxy,
-        @Nonnull Object sender,
+        Object sender,
         boolean requestFocus
     );
 }

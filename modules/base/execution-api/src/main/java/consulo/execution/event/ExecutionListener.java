@@ -22,7 +22,6 @@ import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ProcessHandler;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -31,23 +30,23 @@ import java.util.EventListener;
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface ExecutionListener extends EventListener {
 
-  default void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {
+  default void processStartScheduled(String executorId, ExecutionEnvironment env) {
   }
 
-  default void processStarting(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {
+  default void processStarting(String executorId, ExecutionEnvironment env) {
   }
 
-  default void processNotStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {
+  default void processNotStarted(String executorId, ExecutionEnvironment env) {
   }
 
-  default void processStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler) {
+  default void processStarted(String executorId, ExecutionEnvironment env, ProcessHandler handler) {
   }
 
-  default void processTerminating(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler) {
+  default void processTerminating(String executorId, ExecutionEnvironment env, ProcessHandler handler) {
     processTerminating(env.getRunProfile(), handler);
   }
 
-  default void processTerminated(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, @Nonnull ProcessHandler handler, int exitCode) {
+  default void processTerminated(String executorId, ExecutionEnvironment env, ProcessHandler handler, int exitCode) {
     processTerminated(env.getRunProfile(), handler);
   }
 
@@ -55,13 +54,13 @@ public interface ExecutionListener extends EventListener {
    * @deprecated use {@link #processTerminating(String, ExecutionEnvironment, ProcessHandler)}
    */
   @Deprecated
-  default void processTerminating(@Nonnull RunProfile runProfile, @Nonnull ProcessHandler handler) {
+  default void processTerminating(RunProfile runProfile, ProcessHandler handler) {
   }
 
   /**
    * @deprecated use {@link #processTerminated(String, ExecutionEnvironment, ProcessHandler, int)}
    */
   @Deprecated
-  default void processTerminated(@Nonnull RunProfile runProfile, @Nonnull ProcessHandler handler) {
+  default void processTerminated(RunProfile runProfile, ProcessHandler handler) {
   }
 }

@@ -6,7 +6,6 @@ import consulo.application.util.SystemInfo;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.impl.internal.util.RecursiveFilePathSet;
 import consulo.versionControlSystem.internal.VcsFileListenerContextHelper;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -22,35 +21,35 @@ public class VcsFileListenerContextHelperImpl implements VcsFileListenerContextH
   private final RecursiveFilePathSet myIgnoredAddedRecursive = new RecursiveFilePathSet(SystemInfo.isFileSystemCaseSensitive);
 
   @Override
-  public void ignoreDeleted(@Nonnull Collection<? extends FilePath> filePath) {
+  public void ignoreDeleted(Collection<? extends FilePath> filePath) {
     synchronized (LOCK) {
       myIgnoredDeleted.addAll(filePath);
     }
   }
 
   @Override
-  public boolean isDeletionIgnored(@Nonnull FilePath filePath) {
+  public boolean isDeletionIgnored(FilePath filePath) {
     synchronized (LOCK) {
       return myIgnoredDeleted.contains(filePath);
     }
   }
 
   @Override
-  public void ignoreAdded(@Nonnull Collection<? extends FilePath> filePaths) {
+  public void ignoreAdded(Collection<? extends FilePath> filePaths) {
     synchronized (LOCK) {
       myIgnoredAdded.addAll(filePaths);
     }
   }
 
   @Override
-  public void ignoreAddedRecursive(@Nonnull Collection<? extends FilePath> filePaths) {
+  public void ignoreAddedRecursive(Collection<? extends FilePath> filePaths) {
     synchronized (LOCK) {
       myIgnoredAddedRecursive.addAll(filePaths);
     }
   }
 
   @Override
-  public boolean isAdditionIgnored(@Nonnull FilePath filePath) {
+  public boolean isAdditionIgnored(FilePath filePath) {
     synchronized (LOCK) {
       return myIgnoredAdded.contains(filePath) ||
         myIgnoredAddedRecursive.hasAncestor(filePath);

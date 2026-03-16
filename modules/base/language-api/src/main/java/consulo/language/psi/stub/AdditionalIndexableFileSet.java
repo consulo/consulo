@@ -20,7 +20,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,7 +75,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     }
 
     @Override
-    public boolean isInSet(@Nonnull VirtualFile file) {
+    public boolean isInSet(VirtualFile file) {
         for (VirtualFile root : getDirectories()) {
             if (VirtualFileUtil.isAncestor(root, file, false)) {
                 return true;
@@ -86,10 +85,10 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     }
 
     @Override
-    public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator) {
+    public void iterateIndexableFilesIn(VirtualFile file, ContentIterator iterator) {
         VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (!isInSet(file)) {
                     return false;
                 }

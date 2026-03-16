@@ -16,7 +16,6 @@
 package consulo.language.codeStyle.impl.internal.autoDetect;
 
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import jakarta.annotation.Nonnull;
 
 class IndentOptionsAdjusterImpl implements IndentOptionsAdjuster {
   private static final double RATE_THRESHOLD = 0.8;
@@ -29,7 +28,7 @@ class IndentOptionsAdjusterImpl implements IndentOptionsAdjuster {
   }
 
   @Override
-  public void adjust(@Nonnull CommonCodeStyleSettings.IndentOptions indentOptions) {
+  public void adjust(CommonCodeStyleSettings.IndentOptions indentOptions) {
     boolean isTabsUsed = isTabsUsed(myStats);
     boolean isSpacesUsed = isSpacesUsed(myStats);
     int newIndentSize = isSpacesUsed ? getPositiveIndentSize(myStats) : 0;
@@ -45,7 +44,7 @@ class IndentOptionsAdjusterImpl implements IndentOptionsAdjuster {
     }
   }
 
-  private static void adjustForTabUsage(@Nonnull CommonCodeStyleSettings.IndentOptions indentOptions) {
+  private static void adjustForTabUsage(CommonCodeStyleSettings.IndentOptions indentOptions) {
     if (indentOptions.USE_TAB_CHARACTER) return;
 
     int continuationRatio = indentOptions.INDENT_SIZE == 0 ? 1 : indentOptions.CONTINUATION_INDENT_SIZE / indentOptions.INDENT_SIZE;
@@ -65,7 +64,7 @@ class IndentOptionsAdjusterImpl implements IndentOptionsAdjuster {
     return stats.getTotalLinesWithLeadingTabs() > stats.getTotalLinesWithLeadingSpaces();
   }
 
-  private static int getPositiveIndentSize(@Nonnull IndentUsageStatistics stats) {
+  private static int getPositiveIndentSize(IndentUsageStatistics stats) {
     int totalIndentSizesDetected = stats.getTotalIndentSizesDetected();
     if (totalIndentSizesDetected == 0) return -1;
 

@@ -9,8 +9,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -52,7 +51,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
         }
     };
 
-    public static HttpConfirmingTrustManagerImplHttp createForStorage(@Nonnull String path, @Nonnull String password) {
+    public static HttpConfirmingTrustManagerImplHttp createForStorage(String path, String password) {
         return new HttpConfirmingTrustManagerImplHttp(getSystemDefault(), new MutableTrustManagerHttp(path, password));
     }
 
@@ -179,7 +178,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
 
         private final EventDispatcher<CertificateListener> myDispatcher = EventDispatcher.create(CertificateListener.class);
 
-        private MutableTrustManagerHttp(@Nonnull String path, @Nonnull String password) {
+        private MutableTrustManagerHttp(String path, String password) {
             myPath = path;
             myPassword = password;
             // initialization step
@@ -203,7 +202,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
             }
         }
 
-        private static KeyStore createKeyStore(@Nonnull String path, @Nonnull String password) {
+        private static KeyStore createKeyStore(String path, String password) {
             KeyStore keyStore;
             try {
                 keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -240,7 +239,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @param certificate server's certificate
          * @return whether the operation was successful
          */
-        public boolean addCertificate(@Nonnull X509Certificate certificate) {
+        public boolean addCertificate(X509Certificate certificate) {
             myWriteLock.lock();
             try {
                 if (isBroken()) {
@@ -268,12 +267,12 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @param path path to file containing certificate
          * @return whether the operation was successful
          */
-        public boolean addCertificate(@Nonnull String path) {
+        public boolean addCertificate(String path) {
             X509Certificate certificate = CertificateUtil.loadX509Certificate(path);
             return certificate != null && addCertificate(certificate);
         }
 
-        private static String createAlias(@Nonnull X509Certificate certificate) {
+        private static String createAlias(X509Certificate certificate) {
             return CertificateUtil.getCommonName(certificate);
         }
 
@@ -283,7 +282,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @param certificate certificate alias
          * @return whether the operation was successful
          */
-        public boolean removeCertificate(@Nonnull X509Certificate certificate) {
+        public boolean removeCertificate(X509Certificate certificate) {
             return removeCertificate(createAlias(certificate));
         }
 
@@ -293,7 +292,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @param alias certificate's alias
          * @return true if removal operation was successful and false otherwise
          */
-        public boolean removeCertificate(@Nonnull String alias) {
+        public boolean removeCertificate(String alias) {
             myWriteLock.lock();
             try {
                 if (isBroken()) {
@@ -328,7 +327,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @return certificate or null if it's not present
          */
         @Nullable
-        public X509Certificate getCertificate(@Nonnull String alias) {
+        public X509Certificate getCertificate(String alias) {
             myReadLock.lock();
             try {
                 return (X509Certificate)myKeyStore.getCertificate(alias);
@@ -370,7 +369,7 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
          * @param alias - certificate's alias to be checked
          * @return - whether certificate is in storage
          */
-        public boolean containsCertificate(@Nonnull String alias) {
+        public boolean containsCertificate(String alias) {
             myReadLock.lock();
             try {
                 return myKeyStore.containsAlias(alias);
@@ -422,11 +421,11 @@ public class HttpConfirmingTrustManagerImplHttp implements HttpConfirmingTrustMa
             }
         }
 
-        public void addListener(@Nonnull CertificateListener listener) {
+        public void addListener(CertificateListener listener) {
             myDispatcher.addListener(listener);
         }
 
-        public void removeListener(@Nonnull CertificateListener listener) {
+        public void removeListener(CertificateListener listener) {
             myDispatcher.removeListener(listener);
         }
 

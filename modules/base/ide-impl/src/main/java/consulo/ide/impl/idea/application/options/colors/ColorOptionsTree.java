@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.*;
 import java.util.*;
@@ -40,7 +39,7 @@ public class ColorOptionsTree extends Tree {
 
   private static final Comparator<EditorSchemeAttributeDescriptor> ATTR_COMPARATOR = (o1, o2) -> StringUtil.naturalCompare(o1.toString(), o2.toString());
 
-  public ColorOptionsTree(@Nonnull LocalizeValue categoryName) {
+  public ColorOptionsTree(LocalizeValue categoryName) {
     super(createTreeModel());
     myTreeModel = (DefaultTreeModel)getModel();
     setRootVisible(false);
@@ -54,7 +53,7 @@ public class ColorOptionsTree extends Tree {
     return myCategoryName.get().equals(groupAsString);
   }
 
-  public void fillOptions(@Nonnull ColorAndFontOptions options) {
+  public void fillOptions(ColorAndFontOptions options) {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     for (EditorSchemeAttributeDescriptor description : getOrderedDescriptors(options)) {
       if (!isMyDescriptor(description)) continue;
@@ -74,7 +73,7 @@ public class ColorOptionsTree extends Tree {
     return new DefaultTreeModel(new DefaultMutableTreeNode());
   }
 
-  private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(@Nonnull ColorAndFontOptions options) {
+  private Collection<EditorSchemeAttributeDescriptor> getOrderedDescriptors(ColorAndFontOptions options) {
     ArrayList<EditorSchemeAttributeDescriptor> list = new ArrayList<>();
     for (EditorSchemeAttributeDescriptor description : options.getCurrentDescriptions()) {
       if (!isMyDescriptor(description)) continue;
@@ -99,7 +98,7 @@ public class ColorOptionsTree extends Tree {
     return null;
   }
 
-  public void selectOptionByType(@Nonnull String attributeType) {
+  public void selectOptionByType(String attributeType) {
     selectPath(findOption(myTreeModel.getRoot(), data -> {
       if (data instanceof EditorSchemeAttributeDescriptor) {
         return attributeType.equals(((EditorSchemeAttributeDescriptor)data).getType());
@@ -108,12 +107,12 @@ public class ColorOptionsTree extends Tree {
     }));
   }
 
-  public void selectOptionByName(@Nonnull String optionName) {
+  public void selectOptionByName(String optionName) {
     selectPath(findOption(myTreeModel.getRoot(), data -> !optionName.isEmpty() && StringUtil.containsIgnoreCase(data.toString(), optionName)));
   }
 
   @Nullable
-  private TreePath findOption(@Nonnull Object nodeObject, @Nonnull DescriptorMatcher matcher) {
+  private TreePath findOption(Object nodeObject, DescriptorMatcher matcher) {
     for (int i = 0; i < myTreeModel.getChildCount(nodeObject); i ++) {
       Object childObject = myTreeModel.getChild(nodeObject, i);
       if (childObject instanceof MyTreeNode) {
@@ -136,7 +135,7 @@ public class ColorOptionsTree extends Tree {
   }
 
   @Nullable
-  private static List<String> extractPath(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
+  private static List<String> extractPath(EditorSchemeAttributeDescriptor descriptor) {
     if (descriptor instanceof ColorAndFontDescription) {
       String name = descriptor.toString();
       List<String> path = new ArrayList<>();
@@ -158,17 +157,17 @@ public class ColorOptionsTree extends Tree {
   private static class MyTreeNode extends DefaultMutableTreeNode {
     private final String myName;
 
-    public MyTreeNode(@Nonnull EditorSchemeAttributeDescriptor descriptor, @Nonnull String name) {
+    public MyTreeNode(EditorSchemeAttributeDescriptor descriptor, String name) {
       super(descriptor);
       myName = name;
     }
 
-    public MyTreeNode(@Nonnull EditorSchemeAttributeDescriptor descriptor) {
+    public MyTreeNode(EditorSchemeAttributeDescriptor descriptor) {
       super(descriptor);
       myName = descriptor.toString();
     }
 
-    public MyTreeNode(@Nonnull String groupName) {
+    public MyTreeNode(String groupName) {
       super(groupName);
       myName = groupName;
     }
@@ -181,10 +180,10 @@ public class ColorOptionsTree extends Tree {
   }
 
   private interface DescriptorMatcher {
-    boolean matches(@Nonnull Object data);
+    boolean matches(Object data);
   }
 
-  private static MyTreeNode ensureGroup(@Nonnull DefaultMutableTreeNode root, @Nonnull List<String> path, int index) {
+  private static MyTreeNode ensureGroup(DefaultMutableTreeNode root, List<String> path, int index) {
     String groupName = path.get(index ++);
     for (int i = 0; i < root.getChildCount(); i ++) {
       TreeNode child = root.getChildAt(i);

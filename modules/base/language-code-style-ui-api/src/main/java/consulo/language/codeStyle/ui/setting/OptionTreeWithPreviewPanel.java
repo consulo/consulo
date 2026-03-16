@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -221,7 +220,7 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
 
         new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+            public boolean onClick(MouseEvent e, int clickCount) {
                 if (!optionsTree.isEnabled()) {
                     return false;
                 }
@@ -534,11 +533,11 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
     }
 
     private static class CustomBooleanOptionInfo {
-        @Nonnull
+        
         final Class<? extends CustomCodeStyleSettings> settingClass;
-        @Nonnull
+        
         final String fieldName;
-        @Nonnull
+        
         final String title;
         @Nullable
         final String groupName;
@@ -548,9 +547,9 @@ public abstract class OptionTreeWithPreviewPanel extends CustomizableLanguageCod
         final String anchorFieldName;
 
         private CustomBooleanOptionInfo(
-            @Nonnull Class<? extends CustomCodeStyleSettings> settingClass,
-            @Nonnull String fieldName,
-            @Nonnull String title,
+            Class<? extends CustomCodeStyleSettings> settingClass,
+            String fieldName,
+            String title,
             @Nullable String groupName,
             @Nullable OptionAnchor anchor,
             @Nullable String anchorFieldName

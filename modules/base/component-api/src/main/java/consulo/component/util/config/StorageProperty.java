@@ -16,14 +16,13 @@
 
 package consulo.component.util.config;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.util.Iterator;
 
 public class StorageProperty extends AbstractProperty<Storage> {
   private final String myName;
 
-  public StorageProperty(@NonNls String name) {
+  public StorageProperty(String name) {
     myName = name;
   }
 

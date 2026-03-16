@@ -24,7 +24,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ExtensionImpl(id = "gutter", order = "after dontShow")
 public class GutterIntentionMenuContributor implements IntentionMenuContributor {
     @Override
-    public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
+    public void collectActions(Editor hostEditor, PsiFile hostFile, IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {
         Project project = hostFile.getProject();
         Document hostDocument = hostEditor.getDocument();
         int line = hostDocument.getLineNumber(offset);
@@ -49,10 +48,10 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
         }
     }
 
-    private static void addActions(@Nonnull Project project,
-                                   @Nonnull RangeHighlighterEx info,
-                                   @Nonnull List<? super IntentionActionDescriptor> descriptors,
-                                   @Nonnull DataContext dataContext) {
+    private static void addActions(Project project,
+                                   RangeHighlighterEx info,
+                                   List<? super IntentionActionDescriptor> descriptors,
+                                   DataContext dataContext) {
         GutterIconRenderer r = info.getGutterIconRenderer();
         if (r == null || DumbService.isDumb(project) && !DumbService.isDumbAware(r)) {
             return;
@@ -71,11 +70,11 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
         descriptors.addAll(list);
     }
 
-    private static void addActions(@Nonnull AnAction action,
-                                   @Nonnull List<? super IntentionActionDescriptor> descriptors,
-                                   @Nonnull GutterIconRenderer renderer,
+    private static void addActions(AnAction action,
+                                   List<? super IntentionActionDescriptor> descriptors,
+                                   GutterIconRenderer renderer,
                                    AtomicInteger order,
-                                   @Nonnull DataContext dataContext) {
+                                   DataContext dataContext) {
         // TODO: remove this hack as soon as IDEA-207986 will be fixed
         // i'm afraid to fix this method for all possible ActionGroups,
         // however i need ExecutorGroup's children to be flatten and shown right after run/debug executors action
@@ -105,7 +104,7 @@ public class GutterIntentionMenuContributor implements IntentionMenuContributor 
             return;
         }
         descriptors.add(new IntentionActionDescriptor(gutterAction, Collections.emptyList(), LocalizeValue.empty(), icon) {
-            @Nonnull
+            
             @Override
             public LocalizeValue getDisplayName() {
                 return gutterAction.getText();

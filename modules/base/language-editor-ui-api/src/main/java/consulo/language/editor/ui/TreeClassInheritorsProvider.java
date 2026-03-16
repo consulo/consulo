@@ -19,7 +19,6 @@ import consulo.application.util.query.Query;
 import consulo.language.psi.PsiNamedElement;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -42,7 +41,7 @@ public abstract class TreeClassInheritorsProvider<T extends PsiNamedElement> {
     return myScope;
   }
 
-  @Nonnull
+  
   public abstract Query<T> searchForInheritors(T baseClass, ProjectAwareSearchScope searchScope, boolean checkDeep);
 
   public abstract boolean isInheritor(T clazz, T baseClass, boolean checkDeep);

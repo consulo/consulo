@@ -31,7 +31,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 abstract public class SelectOccurrencesActionHandler extends EditorActionHandler {
     private static final Key<Boolean> NOT_FOUND = Key.create("select.next.occurence.not.found");

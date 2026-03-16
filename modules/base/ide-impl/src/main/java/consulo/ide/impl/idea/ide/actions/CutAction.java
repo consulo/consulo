@@ -24,7 +24,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CutProvider;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_CUT)
 public class CutAction extends AnAction implements DumbAware {
@@ -38,13 +37,13 @@ public class CutAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         CutProvider provider = e.getRequiredData(CutProvider.KEY);
         provider.performCut(e.getDataContext());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         CutProvider provider = event.getData(CutProvider.KEY);

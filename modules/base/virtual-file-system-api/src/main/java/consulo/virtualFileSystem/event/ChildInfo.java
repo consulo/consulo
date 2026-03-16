@@ -3,8 +3,7 @@ package consulo.virtualFileSystem.event;
 
 import consulo.util.io.FileAttributes;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An internal class for data transfer from refresh worker to persistent FS impl, do not use.
@@ -14,7 +13,7 @@ public interface ChildInfo {
 
   int getId();
 
-  @Nonnull
+  
   CharSequence getName();
 
   int getNameId();

@@ -18,7 +18,6 @@ package consulo.ide.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,8 +27,8 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface RunAnythingContextRecentDirectoryCache {
-    @Nonnull
-    static RunAnythingContextRecentDirectoryCache getInstance(@Nonnull Project project) {
+    
+    static RunAnythingContextRecentDirectoryCache getInstance(Project project) {
         return project.getInstance(RunAnythingContextRecentDirectoryCache.class);
     }
 

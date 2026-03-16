@@ -23,8 +23,7 @@ import consulo.language.util.ProcessingContext;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Maps;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,8 +54,8 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
   });
 
   @Override
-  public <T extends PsiElement> void registerReferenceProvider(@Nonnull ElementPattern<T> pattern,
-                                                               @Nonnull PsiReferenceProvider provider,
+  public <T extends PsiElement> void registerReferenceProvider(ElementPattern<T> pattern,
+                                                               PsiReferenceProvider provider,
                                                                double priority) {
     myKnownSupers.clear(); // we should clear the cache
     Class scope = pattern.getCondition().getInitialCondition().getAcceptedClass();
@@ -95,13 +94,13 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
     }
   }
 
-  private void registerNamedReferenceProvider(@Nonnull String[] names,
+  private void registerNamedReferenceProvider(String[] names,
                                               final PsiNamePatternCondition<?> nameCondition,
-                                              @Nonnull Class scopeClass,
+                                              Class scopeClass,
                                               boolean caseSensitive,
-                                              @Nonnull PsiReferenceProvider provider,
+                                              PsiReferenceProvider provider,
                                               double priority,
-                                              @Nonnull ElementPattern pattern) {
+                                              ElementPattern pattern) {
     NamedObjectProviderBinding<PsiReferenceProvider> providerBinding = myNamedBindingsMap.get(scopeClass);
 
     if (providerBinding == null) {
@@ -116,9 +115,9 @@ public class PsiReferenceRegistrarImpl extends PsiReferenceRegistrar {
     providerBinding.registerProvider(names, pattern, caseSensitive, provider, priority);
   }
 
-  @Nonnull
-  List<ProviderBinding.ProviderInfo<PsiReferenceProvider,ProcessingContext>> getPairsByElement(@Nonnull PsiElement element,
-                                                                                               @Nonnull PsiReferenceService.Hints hints) {
+  
+  List<ProviderBinding.ProviderInfo<PsiReferenceProvider,ProcessingContext>> getPairsByElement(PsiElement element,
+                                                                                               PsiReferenceService.Hints hints) {
     Class<? extends PsiElement> clazz = element.getClass();
     List<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> ret = null;
 

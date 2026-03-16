@@ -23,19 +23,18 @@ import consulo.execution.ui.console.UrlFilter;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class UrlFilterProvider implements ConsoleFilterProviderEx {
   @Override
-  @Nonnull
-  public Filter[] getDefaultFilters(@Nonnull Project project, @Nonnull SearchScope scope) {
+  
+  public Filter[] getDefaultFilters(Project project, SearchScope scope) {
     return new Filter[]{new UrlFilter(project)};
   }
 
-  @Nonnull
+  
   @Override
-  public Filter[] getDefaultFilters(@Nonnull Project project) {
+  public Filter[] getDefaultFilters(Project project) {
     return getDefaultFilters(project, GlobalSearchScope.allScope(project));
   }
 }

@@ -20,8 +20,7 @@ import consulo.platform.Platform;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.plaf.ComboBoxUI;
@@ -139,7 +138,7 @@ public class ComboBox<E> extends ComboBoxWithWidePopup<E> implements AWTEventLis
     registerCancelOnEscape();
   }
 
-  public ComboBox(@Nonnull E[] items) {
+  public ComboBox(E[] items) {
     this(items, -1);
   }
 

@@ -25,8 +25,7 @@ import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -37,18 +36,18 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P> {
-    @Nonnull
+    
     public static OrderRootType[] getDefaultExternalRootTypes() {
         return new OrderRootType[]{BinariesOrderRootType.getInstance()};
     }
 
     private final PersistentLibraryKind<P> myKind;
 
-    protected LibraryType(@Nonnull PersistentLibraryKind<P> libraryKind) {
+    protected LibraryType(PersistentLibraryKind<P> libraryKind) {
         myKind = libraryKind;
     }
 
-    @Nonnull
+    
     @Override
     public final PersistentLibraryKind<P> getKind() {
         return myKind;
@@ -65,9 +64,9 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
      */
     @Nullable
     public NewLibraryConfiguration createNewLibrary(
-        @Nonnull JComponent parentComponent,
+        JComponent parentComponent,
         @Nullable VirtualFile contextDirectory,
-        @Nonnull Project project
+        Project project
     ) {
         LibraryRootsComponentDescriptor descriptor = createLibraryRootsComponentDescriptor();
         if (descriptor == null) {
@@ -91,10 +90,10 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
     }
 
     @Nullable
-    public abstract LibraryPropertiesEditor createPropertiesEditor(@Nonnull LibraryEditorComponent<P> editorComponent);
+    public abstract LibraryPropertiesEditor createPropertiesEditor(LibraryEditorComponent<P> editorComponent);
 
     @Override
-    public P detect(@Nonnull List<VirtualFile> classesRoots) {
+    public P detect(List<VirtualFile> classesRoots) {
         return null;
     }
 

@@ -7,8 +7,7 @@ import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,9 +18,9 @@ public final class JBAnimatorHelper {
   private static final boolean DEFAULT_VALUE = ApplicationManager.getApplication().isInternal() && Platform.current().os().isWindows();
   private static final int PERIOD = 1;
 
-  private final @Nonnull
+  private final 
   Set<JBAnimator> requestors;
-  private final @Nonnull
+  private final 
   WinMM lib;
 
   private static
@@ -35,7 +34,7 @@ public final class JBAnimatorHelper {
   /**
    * Used internally only, do not call it until it's really necessary.
    */
-  public static void requestHighPrecisionTimer(@Nonnull JBAnimator requestor) {
+  public static void requestHighPrecisionTimer(JBAnimator requestor) {
     if (isAvailable()) {
       var helper = getInstance();
       if (helper.requestors.add(requestor)) {
@@ -47,7 +46,7 @@ public final class JBAnimatorHelper {
   /**
    * Used internally only, do not call it until it's really necessary.
    */
-  public static void cancelHighPrecisionTimer(@Nonnull JBAnimator requestor) {
+  public static void cancelHighPrecisionTimer(JBAnimator requestor) {
     if (isAvailable()) {
       var helper = getInstance();
       if (helper.requestors.remove(requestor)) {

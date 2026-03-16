@@ -33,8 +33,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -53,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 class LookupUi {
     private static final Logger LOG = Logger.getInstance(LookupUi.class);
 
-    @Nonnull
+    
     private final LookupImpl myLookup;
     private final Advertiser myAdvertiser;
     private final JBList myList;
@@ -69,7 +68,7 @@ class LookupUi {
     private AtomicBoolean myHintCalculating = new AtomicBoolean(true);
 
     @RequiredUIAccess
-    LookupUi(@Nonnull LookupImpl lookup, Advertiser advertiser, JBList list) {
+    LookupUi(LookupImpl lookup, Advertiser advertiser, JBList list) {
         myLookup = lookup;
         myAdvertiser = advertiser;
         myList = list;
@@ -88,7 +87,7 @@ class LookupUi {
             moreActionGroup.add(new ChangeSortingAction());
             moreActionGroup.add(new DelegatedAction(actionManager.getAction(IdeActions.ACTION_QUICK_JAVADOC)) {
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     e.getPresentation().setVisible(!CodeInsightSettings.getInstance().AUTO_POPUP_JAVADOC_INFO);
                 }
             });
@@ -327,13 +326,13 @@ class LookupUi {
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setVisible(!myHintCalculating.get());
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myLookup.showElementActions(e.getInputEvent());
         }
     }
@@ -349,7 +348,7 @@ class LookupUi {
             myActions.add(action);
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myActions.toArray(AnAction[]::new);
@@ -373,13 +372,13 @@ class LookupUi {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return UISettings.getInstance().getSortLookupElementsLexicographically();
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CHANGE_SORTING);
             
             UISettings.getInstance().setSortLookupElementsLexicographically(state);
@@ -399,7 +398,7 @@ class LookupUi {
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             if (e.getPlace() == ActionPlaces.EDITOR_POPUP) {
                 delegateAction.actionPerformed(e);
             }

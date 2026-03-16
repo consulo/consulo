@@ -16,7 +16,6 @@
 package consulo.language.editor.impl.internal.completion;
 
 import consulo.language.statistician.StatisticsInfo;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -25,7 +24,7 @@ public class StatisticsComparable implements Comparable<StatisticsComparable> {
   private final int myScalar;
   private final StatisticsInfo myStatisticsInfo;
 
-  public StatisticsComparable(int scalar, @Nonnull StatisticsInfo statisticsInfo) {
+  public StatisticsComparable(int scalar, StatisticsInfo statisticsInfo) {
     myScalar = scalar;
     myStatisticsInfo = statisticsInfo;
   }
@@ -34,7 +33,7 @@ public class StatisticsComparable implements Comparable<StatisticsComparable> {
     return myScalar;
   }
 
-  @Nonnull
+  
   public StatisticsInfo getStatisticsInfo() {
     return myStatisticsInfo;
   }

@@ -31,7 +31,6 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Function;
@@ -139,7 +138,7 @@ public class TriggerAdditionOrDeletion {
         }
     }
 
-    private void notifyAndLogFiles(@Nonnull String topic, @Nonnull List<FilePath> incorrectFilePath) {
+    private void notifyAndLogFiles(String topic, List<FilePath> incorrectFilePath) {
         String message =
             "The following " + StringUtil.pluralize("file", incorrectFilePath.size()) + " may be processed incorrectly by VCS.\n" +
                 "Please check it manually: " + incorrectFilePath;
@@ -227,8 +226,8 @@ public class TriggerAdditionOrDeletion {
 
     private void askUserIfNeeded(
         AbstractVcs vcs,
-        @Nonnull List<FilePath> filePaths,
-        @Nonnull VcsConfiguration.StandardConfirmation type
+        List<FilePath> filePaths,
+        VcsConfiguration.StandardConfirmation type
     ) {
         if (mySilentAddDelete) {
             return;

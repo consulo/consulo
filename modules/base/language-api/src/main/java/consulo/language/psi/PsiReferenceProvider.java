@@ -18,7 +18,6 @@ package consulo.language.psi;
 
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to inject additional references into an element that supports reference contributors.
@@ -34,15 +33,15 @@ import jakarta.annotation.Nonnull;
 public abstract class PsiReferenceProvider {
   public static final PsiReferenceProvider[] EMPTY_ARRAY = new PsiReferenceProvider[0];
 
-  @Nonnull
-  public abstract PsiReference[] getReferencesByElement(@Nonnull PsiElement element, @Nonnull ProcessingContext context);
+  
+  public abstract PsiReference[] getReferencesByElement(PsiElement element, ProcessingContext context);
 
-  public boolean acceptsHints(@Nonnull PsiElement element, @Nonnull PsiReferenceService.Hints hints) {
+  public boolean acceptsHints(PsiElement element, PsiReferenceService.Hints hints) {
     PsiElement target = hints.target;
     return target == null || acceptsTarget(target);
   }
 
-  public boolean acceptsTarget(@Nonnull PsiElement target) {
+  public boolean acceptsTarget(PsiElement target) {
     return true;
   }
 }

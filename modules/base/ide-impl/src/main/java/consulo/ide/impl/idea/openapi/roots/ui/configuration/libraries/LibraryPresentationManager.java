@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -39,20 +38,20 @@ public abstract class LibraryPresentationManager {
     return ServiceManager.getService(LibraryPresentationManager.class);
   }
 
-  @Nonnull
-  public abstract Image getNamedLibraryIcon(@Nonnull Library library, @Nullable LibrariesConfigurator context);
+  
+  public abstract Image getNamedLibraryIcon(Library library, @Nullable LibrariesConfigurator context);
 
   @Nullable
-  public abstract Image getCustomIcon(@Nonnull Library library, @Nullable LibrariesConfigurator context);
+  public abstract Image getCustomIcon(Library library, @Nullable LibrariesConfigurator context);
 
-  @Nonnull
-  public abstract List<Image> getCustomIcons(@Nonnull Library library, @Nullable LibrariesConfigurator context);
+  
+  public abstract List<Image> getCustomIcons(Library library, @Nullable LibrariesConfigurator context);
 
-  @Nonnull
-  public abstract List<String> getDescriptions(@Nonnull Library library, LibrariesConfigurator context);
+  
+  public abstract List<String> getDescriptions(Library library, LibrariesConfigurator context);
 
-  @Nonnull
-  public abstract List<String> getDescriptions(@Nonnull VirtualFile[] classRoots, Set<LibraryKind> excludedKinds);
+  
+  public abstract List<String> getDescriptions(VirtualFile[] classRoots, Set<LibraryKind> excludedKinds);
 
-  public abstract List<Library> getLibraries(@Nonnull Set<LibraryKind> kinds, @Nonnull Project project, @Nullable LibrariesConfigurator context);
+  public abstract List<Library> getLibraries(Set<LibraryKind> kinds, Project project, @Nullable LibrariesConfigurator context);
 }

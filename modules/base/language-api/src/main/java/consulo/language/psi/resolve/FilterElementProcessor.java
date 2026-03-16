@@ -19,7 +19,6 @@ package consulo.language.psi.resolve;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class FilterElementProcessor implements PsiElementProcessor{
   }
 
   @Override
-  public boolean execute(@Nonnull PsiElement element){
+  public boolean execute(PsiElement element){
     if(myFilter.isClassAcceptable(element.getClass()) && myFilter.isAcceptable(element, element.getParent())){
       if(myProcessor != null){
         return myProcessor.execute(element);

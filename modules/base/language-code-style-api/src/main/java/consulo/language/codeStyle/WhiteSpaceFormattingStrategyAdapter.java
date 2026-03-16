@@ -19,7 +19,6 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormattingStrategy {
     private final WhiteSpaceFormattingStrategy DELEGATE = new StaticSymbolWhiteSpaceDefinitionStrategy(' ', '\t', '\n') {
-        @Nonnull
+        
         @Override
         public Language getLanguage() {
             return WhiteSpaceFormattingStrategyAdapter.this.getLanguage();
@@ -35,12 +34,12 @@ public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceF
     };
 
     @Override
-    public int check(@Nonnull CharSequence text, int start, int end) {
+    public int check(CharSequence text, int start, int end) {
         return DELEGATE.check(text, start, end);
     }
 
     @Override
-    public boolean containsWhitespacesOnly(@Nonnull ASTNode node) {
+    public boolean containsWhitespacesOnly(ASTNode node) {
         return false;
     }
 
@@ -49,11 +48,11 @@ public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceF
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
-        @Nonnull CharSequence text,
+        CharSequence whiteSpaceText,
+        CharSequence text,
         int startOffset,
         int endOffset,
         CodeStyleSettings codeStyleSettings,
@@ -64,8 +63,8 @@ public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceF
 
     @Override
     public CharSequence adjustWhiteSpaceIfNecessary(
-        @Nonnull CharSequence whiteSpaceText,
-        @Nonnull PsiElement startElement,
+        CharSequence whiteSpaceText,
+        PsiElement startElement,
         int startOffset,
         int endOffset,
         CodeStyleSettings codeStyleSettings
@@ -74,7 +73,7 @@ public abstract class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceF
     }
 
     @Override
-    public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
+    public boolean addWhitespace(ASTNode treePrev, ASTNode whiteSpaceElement) {
         return false;
     }
 }

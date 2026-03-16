@@ -34,8 +34,7 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListI
 import consulo.versionControlSystem.impl.internal.change.ui.awt.TreeModelBuilder;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ import java.util.List;
  * @author yole
  */
 public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> implements LegacyDialog {
-    @Nonnull
+    
     private final VirtualFileListImpl myFileList;
     private final boolean myDeletableFiles;
 
@@ -61,7 +60,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> im
         myFileList.setChangesToDisplay(originalFiles);
     }
 
-    @Nonnull
+    
     public static SelectFilesDialog init(
         Project project, List<VirtualFile> originalFiles, String prompt,
         VcsShowConfirmationOption confirmationOption,
@@ -78,17 +77,17 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> im
         return myFileList.getIncludedChanges();
     }
 
-    public void setSelectedFiles(@Nonnull Collection<VirtualFile> selected) {
+    public void setSelectedFiles(Collection<VirtualFile> selected) {
         myFileList.setIncludedChanges(selected);
     }
 
-    @Nonnull
+    
     @Override
     protected ChangesTreeListImpl getFileList() {
         return myFileList;
     }
 
-    @Nonnull
+    
     @Override
     protected DefaultActionGroup createToolbarActions() {
         DefaultActionGroup defaultGroup = super.createToolbarActions();
@@ -96,7 +95,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> im
             AnAction deleteAction = new DeleteUnversionedFilesAction() {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     super.actionPerformed(e);
                     myFileList.refresh();
                 }
@@ -137,7 +136,7 @@ public class SelectFilesDialog extends AbstractSelectFilesDialog<VirtualFile> im
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             super.uiDataSnapshot(sink);
             if (myDeleteProvider != null) {
                 sink.set(DeleteProvider.KEY, myDeleteProvider);

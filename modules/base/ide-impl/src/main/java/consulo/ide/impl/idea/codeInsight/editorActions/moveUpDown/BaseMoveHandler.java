@@ -28,8 +28,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.util.PsiUtilBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import consulo.annotation.access.RequiredWriteAction;
 
 /**
@@ -64,7 +63,7 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   }
 
   @Override
-  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     if (editor.isViewer() || editor.isOneLineMode()) return false;
     Project project = editor.getProject();
     if (project == null || project.isDisposed()) return false;
@@ -72,7 +71,7 @@ public abstract class BaseMoveHandler extends EditorWriteActionHandler {
   }
 
   @Nullable
-  protected abstract MoverWrapper getSuitableMover(@Nonnull Editor editor, @Nonnull PsiFile file);
+  protected abstract MoverWrapper getSuitableMover(Editor editor, PsiFile file);
 
   @Nullable
   private static PsiFile getRoot(PsiFile file, Editor editor) {

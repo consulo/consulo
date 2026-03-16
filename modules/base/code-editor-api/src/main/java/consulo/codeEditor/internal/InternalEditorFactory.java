@@ -18,13 +18,12 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 28-Mar-22
  */
 public abstract class InternalEditorFactory extends EditorFactory {
-  @Nonnull
+  
   public abstract Document createDocument(boolean allowUpdatesWithoutWriteAction);
 }

@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.model.TableModel;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -37,7 +36,7 @@ class DesktopTableModelImpl<Item> extends ListTableModel<Item> implements TableM
     return getRowCount();
   }
 
-  @Nonnull
+  
   @Override
   public Item get(int index) {
     return getItem(index);

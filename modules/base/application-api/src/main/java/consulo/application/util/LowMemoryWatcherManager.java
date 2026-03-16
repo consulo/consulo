@@ -6,7 +6,6 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.util.concurrent.ConcurrencyUtil;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
 
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
@@ -20,20 +19,20 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 public final class LowMemoryWatcherManager implements Disposable {
-  @Nonnull
+  
   private static Logger getLogger() {
     return Logger.getInstance(LowMemoryWatcherManager.class);
   }
 
   private static final long MEM_THRESHOLD = 5 /*MB*/ * 1024 * 1024;
-  @Nonnull
+  
   private final ExecutorService myExecutorService;
 
   private Future<?> mySubmitted; // guarded by ourJanitor
   private final Future<?> myMemoryPoolMXBeansFuture;
   private final Consumer<Boolean> myJanitor = new Consumer<>() {
     @Override
-    public void accept(@Nonnull Boolean afterGc) {
+    public void accept(Boolean afterGc) {
       // null mySubmitted before all listeners called to avoid data race when listener added in the middle of the execution and is lost
       // this may however cause listeners to execute more than once (potentially even in parallel)
       synchronized (myJanitor) {
@@ -43,7 +42,7 @@ public final class LowMemoryWatcherManager implements Disposable {
     }
   };
 
-  public LowMemoryWatcherManager(@Nonnull ExecutorService backendExecutorService, ApplicationConcurrency applicationConcurrency) {
+  public LowMemoryWatcherManager(ExecutorService backendExecutorService, ApplicationConcurrency applicationConcurrency) {
     // whether LowMemoryWatcher runnables should be executed on the same thread that the low memory events come
     myExecutorService = Boolean.getBoolean("low.memory.watcher.sync")
                         ? ConcurrencyUtil.newSameThreadExecutorService()
@@ -52,8 +51,8 @@ public final class LowMemoryWatcherManager implements Disposable {
     myMemoryPoolMXBeansFuture = initializeMXBeanListenersLater(backendExecutorService);
   }
 
-  @Nonnull
-  private Future<?> initializeMXBeanListenersLater(@Nonnull ExecutorService backendExecutorService) {
+  
+  private Future<?> initializeMXBeanListenersLater(ExecutorService backendExecutorService) {
     // do it in the other thread to get it out of the way during startup
     return backendExecutorService.submit(() -> {
       try {

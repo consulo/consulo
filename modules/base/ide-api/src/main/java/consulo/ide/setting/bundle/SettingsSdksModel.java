@@ -22,7 +22,7 @@ import consulo.content.bundle.SdkTypeId;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Map;
 import java.util.function.Consumer;

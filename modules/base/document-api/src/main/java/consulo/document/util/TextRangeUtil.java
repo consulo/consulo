@@ -17,7 +17,6 @@ package consulo.document.util;
 
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,7 +46,7 @@ public class TextRangeUtil {
    * @param excludedRanges The list of ranges to exclude.
    * @return A list of ranges after excluded ranges have been applied.
    */
-  public static Iterable<TextRange> excludeRanges(@Nonnull TextRange original, @Nonnull List<? extends TextRange> excludedRanges) {
+  public static Iterable<TextRange> excludeRanges(TextRange original, List<? extends TextRange> excludedRanges) {
     if (!excludedRanges.isEmpty()) {
       if (excludedRanges.size() > 1) {
         excludedRanges.sort(RANGE_COMPARATOR);
@@ -78,8 +77,8 @@ public class TextRangeUtil {
    * @param textRanges The list of ranges to process
    * @return least text range that contains all of passed text ranges
    */
-  @Nonnull
-  public static TextRange getEnclosingTextRange(@Nonnull List<? extends TextRange> textRanges) {
+  
+  public static TextRange getEnclosingTextRange(List<? extends TextRange> textRanges) {
     if (textRanges.isEmpty()) return TextRange.EMPTY_RANGE;
     int lowerBound = textRanges.get(0).getStartOffset();
     int upperBound = textRanges.get(0).getEndOffset();
@@ -123,7 +122,7 @@ public class TextRangeUtil {
     return rangesContain(ranges, startIndex, midIndex, offset) || rangesContain(ranges, midIndex + 1, endIndex, offset);
   }
 
-  public static int getDistance(@Nonnull Segment r2, @Nonnull Segment r1) {
+  public static int getDistance(Segment r2, Segment r1) {
     int s1 = r1.getStartOffset();
     int e1 = r1.getEndOffset();
     int s2 = r2.getStartOffset();
@@ -131,9 +130,9 @@ public class TextRangeUtil {
     return Math.max(s1, s2) <= Math.min(e1, e2) ? 0 : Math.min(Math.abs(s1 - e2), Math.abs(s2 - e1));
   }
 
-  @Nonnull
+  
   @Contract(pure = true)
-  public static List<TextRange> getWordIndicesIn(@Nonnull String text) {
+  public static List<TextRange> getWordIndicesIn(String text) {
     List<TextRange> result = new ArrayList<>();
     int start = -1;
     for (int i = 0; i < text.length(); i++) {

@@ -16,12 +16,11 @@
 package consulo.build.ui.event;
 
 import consulo.build.ui.BuildDescriptor;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface StartBuildEvent extends StartEvent {
-  @Nonnull
+  
   BuildDescriptor getBuildDescriptor();
 }

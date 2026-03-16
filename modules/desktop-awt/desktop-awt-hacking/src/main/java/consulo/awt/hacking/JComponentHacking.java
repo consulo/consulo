@@ -17,7 +17,7 @@ package consulo.awt.hacking;
 
 import consulo.awt.hacking.util.FieldAccessor;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;

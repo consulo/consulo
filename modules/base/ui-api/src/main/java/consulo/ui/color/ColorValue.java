@@ -15,7 +15,6 @@
  */
 package consulo.ui.color;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -23,37 +22,25 @@ import java.util.function.Supplier;
  * @since 12-Oct-17
  */
 public interface ColorValue {
-  @Nonnull
-  static ColorValue lazy(@Nonnull Supplier<? extends ColorValue> getter) {
+  static ColorValue lazy(Supplier<? extends ColorValue> getter) {
     return new LazyColorValue(getter);
   }
-
-  @Nonnull
-  static ColorValue dummy(@Nonnull String errorMessage) {
+  static ColorValue dummy(String errorMessage) {
     return new ColorValue() {
-      @Nonnull
       @Override
       public RGBColor toRGB() {
         throw new UnsupportedOperationException(errorMessage);
       }
-
-      @Nonnull
       @Override
       public ColorValue withAlpha(int value) {
         throw new UnsupportedOperationException(errorMessage);
       }
     };
   }
-
-  @Nonnull
   RGBColor toRGB();
-
-  @Nonnull
   default ColorValue withAlpha(float value) {
     return new WithAlphaColorValue(this, (int)(value * 255 + 0.5f));
   }
-
-  @Nonnull
   default ColorValue withAlpha(int value) {
     return new WithAlphaColorValue(this, value);
   }

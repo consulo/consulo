@@ -20,7 +20,6 @@ import consulo.document.Document;
 import consulo.language.codeStyle.Alignment;
 import consulo.language.codeStyle.internal.*;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -161,7 +160,7 @@ public class ExpandChildrenIndentState extends State {
         return false;
     }
 
-    private static int finMinNewLineIndent(@Nonnull Collection<AbstractBlockWrapper> wrappers) {
+    private static int finMinNewLineIndent(Collection<AbstractBlockWrapper> wrappers) {
         int totalMinimum = Integer.MAX_VALUE;
         for (AbstractBlockWrapper wrapper : wrappers) {
             int minNewLineIndent = findMinNewLineIndent(wrapper);
@@ -172,7 +171,7 @@ public class ExpandChildrenIndentState extends State {
         return totalMinimum;
     }
 
-    private static int findMinNewLineIndent(@Nonnull AbstractBlockWrapper block) {
+    private static int findMinNewLineIndent(AbstractBlockWrapper block) {
         if (block instanceof LeafBlockWrapper && block.getWhiteSpace().containsLineFeeds()) {
             return block.getNumberOfSymbolsBeforeBlock().getTotalSpaces();
         }
@@ -200,7 +199,7 @@ public class ExpandChildrenIndentState extends State {
     }
 
     @RequiredReadAction
-    private void reindentNewLineChildren(@Nonnull AbstractBlockWrapper block) {
+    private void reindentNewLineChildren(AbstractBlockWrapper block) {
         if (block instanceof LeafBlockWrapper leafBlockWrapper) {
             WhiteSpace space = block.getWhiteSpace();
 

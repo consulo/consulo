@@ -15,7 +15,6 @@
  */
 package consulo.compiler.artifact.element;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,13 +25,13 @@ import java.io.InputStream;
  * @since 13.04.2016
  */
 public interface ArchivePackageWriter<ArchiveObject> {
-  @Nonnull
-  ArchiveObject createArchiveObject(@Nonnull File tempFile) throws IOException;
+  
+  ArchiveObject createArchiveObject(File tempFile) throws IOException;
 
-  void addDirectory(@Nonnull ArchiveObject archiveObject, @Nonnull String relativePath) throws IOException;
+  void addDirectory(ArchiveObject archiveObject, String relativePath) throws IOException;
 
-  void addFile(@Nonnull ArchiveObject archiveObject, @Nonnull InputStream stream, @Nonnull String relativePath, long fileLength, long lastModified)
+  void addFile(ArchiveObject archiveObject, InputStream stream, String relativePath, long fileLength, long lastModified)
           throws IOException;
 
-  void close(@Nonnull ArchiveObject archiveObject) throws IOException;
+  void close(ArchiveObject archiveObject) throws IOException;
 }

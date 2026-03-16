@@ -52,8 +52,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.MasterDetailsState;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -72,26 +71,26 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
 
     public static final String ID = "project.artifacts";
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ArtifactManager myArtifactManager;
-    @Nonnull
+    
     private final ArtifactPointerManager myArtifactPointerManager;
-    @Nonnull
+    
     private final ShowSettingsUtil myShowSettingsUtil;
     @Nullable
     private ArtifactsStructureConfigurableContextImpl myPackagingEditorContext;
-    @Nonnull
+    
     private final ArtifactEditorSettings myDefaultSettings;
 
     @Inject
     public ArtifactsStructureConfigurable(
-        @Nonnull Project project,
-        @Nonnull ArtifactManager artifactManager,
-        @Nonnull ArtifactPointerManager artifactPointerManager,
-        @Nonnull ShowSettingsUtil showSettingsUtil,
-        @Nonnull Provider<MasterDetailsStateService> masterDetailsStateService
+        Project project,
+        ArtifactManager artifactManager,
+        ArtifactPointerManager artifactPointerManager,
+        ShowSettingsUtil showSettingsUtil,
+        Provider<MasterDetailsStateService> masterDetailsStateService
     ) {
         super(masterDetailsStateService, new ArtifactStructureConfigurableState());
         myProject = project;
@@ -136,7 +135,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
             myDefaultSettings,
             new ArtifactListener() {
                 @Override
-                public void artifactAdded(@Nonnull Artifact artifact) {
+                public void artifactAdded(Artifact artifact) {
                     MyNode node = addArtifactNode(artifact);
                     selectNodeInTree(node);
                     // todo myContext.getDaemonAnalyzer().queueUpdate(myPackagingEditorContext.getOrCreateArtifactElement(artifact));
@@ -172,7 +171,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
             LibraryElementType.getInstance(),
             new PackagingElementProcessor<>() {
                 @Override
-                public boolean process(@Nonnull LibraryPackagingElement element, @Nonnull PackagingElementPath path) {
+                public boolean process(LibraryPackagingElement element, PackagingElementPath path) {
                     return !isResolvedToLibrary(element, library, oldName);
                 }
             },
@@ -192,7 +191,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
                     LibraryElementType.getInstance(),
                     new PackagingElementProcessor<>() {
                         @Override
-                        public boolean process(@Nonnull LibraryPackagingElement element, @Nonnull PackagingElementPath path) {
+                        public boolean process(LibraryPackagingElement element, PackagingElementPath path) {
                             if (isResolvedToLibrary(element, library, oldName)) {
                                 element.setLibraryName(newName);
                             }
@@ -241,7 +240,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         myDefaultSettings.loadState(((ArtifactStructureConfigurableState)myState).getDefaultArtifactSettings());
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return ProjectLocalize.displayNameArtifacts();
@@ -256,7 +255,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         }
     }
 
-    @Nonnull
+    
     @Override
     protected Collection<? extends ProjectStructureElement> getProjectStructureElements() {
         List<ProjectStructureElement> elements = new ArrayList<>();
@@ -305,7 +304,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
     @Override
     protected AbstractAddGroup createAddAction() {
         return new AbstractAddGroup(ProjectLocalize.addNewHeaderText()) {
-            @Nonnull
+            
             @Override
             public AnAction[] getChildren(@Nullable AnActionEvent e) {
                 ProjectStructureSettingsUtil showSettingsUtil = ShowSettingsUtil.getInstance();
@@ -319,7 +318,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         };
     }
 
-    private AnAction createAddArtifactAction(@Nonnull ArtifactType type) {
+    private AnAction createAddArtifactAction(ArtifactType type) {
         List<? extends ArtifactTemplate> templates = type.getNewArtifactTemplates(myPackagingEditorContext);
         ArtifactTemplate emptyTemplate = new ArtifactTemplate() {
             @Override
@@ -351,7 +350,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         return group;
     }
 
-    private void addArtifact(@Nonnull ArtifactType type, @Nonnull ArtifactTemplate artifactTemplate) {
+    private void addArtifact(ArtifactType type, ArtifactTemplate artifactTemplate) {
         ArtifactTemplate.NewArtifactConfiguration configuration = artifactTemplate.createArtifact();
         if (configuration == null) {
             return;
@@ -424,7 +423,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return ID;
     }
@@ -439,9 +438,9 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
         private final ArtifactTemplate myArtifactTemplate;
 
         public AddArtifactAction(
-            @Nonnull ArtifactType type,
-            @Nonnull ArtifactTemplate artifactTemplate,
-            @Nonnull LocalizeValue actionText,
+            ArtifactType type,
+            ArtifactTemplate artifactTemplate,
+            LocalizeValue actionText,
             Image icon
         ) {
             super(actionText, LocalizeValue.empty(), icon);
@@ -451,7 +450,7 @@ public class ArtifactsStructureConfigurable extends BaseStructureConfigurable
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             addArtifact(myType, myArtifactTemplate);
         }
     }

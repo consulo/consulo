@@ -16,7 +16,6 @@
 package consulo.language.editor.inspection.reference;
 
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author anna
@@ -24,10 +23,10 @@ import org.jetbrains.annotations.NonNls;
  */
 public interface SmartRefElementPointer {
 
-  @NonNls String FILE = "file";
-  @NonNls String MODULE = "module";
-  @NonNls String PROJECT = "project";
-  @NonNls String DIR = "dir";
+  String FILE = "file";
+  String MODULE = "module";
+  String PROJECT = "project";
+  String DIR = "dir";
 
   boolean isPersistent();
 

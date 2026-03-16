@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.diagnostic.OutOfMemoryDialog;
 import consulo.ide.impl.idea.diagnostic.VMOptions.MemoryKind;
 import consulo.logging.internal.FatalErrorReporter;
 import consulo.logging.internal.IdeaLoggingEvent;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 

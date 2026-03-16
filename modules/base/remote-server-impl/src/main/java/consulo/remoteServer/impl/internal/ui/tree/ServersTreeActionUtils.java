@@ -2,8 +2,7 @@
 package consulo.remoteServer.impl.internal.ui.tree;
 
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.execution.service.ServiceViewActionUtils.getTarget;
 
@@ -11,8 +10,7 @@ public final class ServersTreeActionUtils {
     private ServersTreeActionUtils() {
     }
 
-    @Nullable
-    public static ServersTreeStructure.RemoteServerNode getRemoteServerTarget(@Nonnull AnActionEvent e) {
+    public static ServersTreeStructure.@Nullable RemoteServerNode getRemoteServerTarget(AnActionEvent e) {
         return getTarget(e, ServersTreeStructure.RemoteServerNode.class);
     }
 }

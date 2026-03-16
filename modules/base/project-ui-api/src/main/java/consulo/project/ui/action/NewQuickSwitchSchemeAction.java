@@ -27,7 +27,6 @@ import consulo.ui.ex.popup.SimpleListPopupStepBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +41,21 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
     private record Item<K>(LocalizeValue actionText, K value) {
     }
 
-    public NewQuickSwitchSchemeAction(@Nonnull LocalizeValue actionText) {
+    public NewQuickSwitchSchemeAction(LocalizeValue actionText) {
         super(actionText, actionText);
     }
 
-    public abstract void fill(@Nonnull BiConsumer<LocalizeValue, T> itemsAcceptor);
+    public abstract void fill(BiConsumer<LocalizeValue, T> itemsAcceptor);
 
-    @Nonnull
+    
     public abstract T getCurrentValue();
 
-    public abstract void changeSchemeTo(@Nonnull T value);
+    public abstract void changeSchemeTo(T value);
 
     @Override
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         T oldValue = getCurrentValue();
 
         Project project = e.getRequiredData(Project.KEY);
@@ -87,7 +86,7 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
         listPopup.setHandleAutoSelectionBeforeShow(true);
         listPopup.addListener(new JBPopupListener() {
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 if (!event.isOk()) {
                     changeSchemeTo(oldValue);
                 }
@@ -105,7 +104,7 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(e.hasData(Project.KEY) && isEnabled());
     }

@@ -15,14 +15,13 @@
  */
 package consulo.process;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 05-Sep-22
  */
 public class ProcessHandlerStopper {
-  public static void stop(@Nonnull ProcessHandler processHandler) {
+  public static void stop(ProcessHandler processHandler) {
     processHandler.putUserData(BaseProcessHandler.TERMINATION_REQUESTED, Boolean.TRUE);
 
     if (processHandler instanceof KillableProcessHandler && processHandler.isProcessTerminating()) {

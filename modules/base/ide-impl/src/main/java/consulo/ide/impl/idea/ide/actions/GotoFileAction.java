@@ -38,7 +38,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,12 +60,12 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         showInSearchEverywherePopup(FileSearchEverywhereContributor.class.getSimpleName(), e, true, true);
     }
 
     @Override
-    public void gotoActionPerformed(@Nonnull AnActionEvent e) {
+    public void gotoActionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -77,7 +76,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
         GotoFileModel gotoFileModel = new GotoFileModel(project);
         GotoActionCallback<FileType> callback = new GotoActionCallback<>() {
             @Override
-            protected ChooseByNameFilter<FileType> createFilter(@Nonnull ChooseByNamePopup popup) {
+            protected ChooseByNameFilter<FileType> createFilter(ChooseByNamePopup popup) {
                 return new GotoFileFilter(popup, gotoFileModel, project);
             }
 
@@ -121,7 +120,7 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
         }
 
         @Override
-        @Nonnull
+        
         protected List<FileType> getAllFilterValues() {
             List<FileType> elements = new ArrayList<>();
             ContainerUtil.addAll(elements, FileTypeManager.getInstance().getRegisteredFileTypes());
@@ -130,12 +129,12 @@ public class GotoFileAction extends GotoActionBase implements DumbAware {
         }
 
         @Override
-        protected String textForFilterValue(@Nonnull FileType value) {
+        protected String textForFilterValue(FileType value) {
             return value.getDisplayName().get();
         }
 
         @Override
-        protected Image iconForFilterValue(@Nonnull FileType value) {
+        protected Image iconForFilterValue(FileType value) {
             return value.getIcon();
         }
     }

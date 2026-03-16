@@ -45,8 +45,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.util.lang.function.Predicates;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import javax.swing.*;
@@ -98,7 +97,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         return myManager.getCopyrights().contains(o);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Copyright Profiles");
@@ -161,7 +160,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent event) {
+            public void actionPerformed(AnActionEvent event) {
                 String name = askForProfileName("Create Copyright Profile", "");
                 if (name == null) {
                     return;
@@ -178,7 +177,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent event) {
+            public void actionPerformed(AnActionEvent event) {
                 String profileName = askForProfileName("Copy Copyright Profile", "");
                 if (profileName == null) {
                     return;
@@ -190,7 +189,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
             }
 
             @Override
-            public void update(@Nonnull AnActionEvent event) {
+            public void update(AnActionEvent event) {
                 super.update(event);
                 event.getPresentation().setEnabled(getSelectedObject() != null);
             }
@@ -198,7 +197,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         result.add(new AnAction("Import", "Import", PlatformIconGroup.actionsImport()) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent event) {
+            public void actionPerformed(AnActionEvent event) {
                 FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor();
                 descriptor.withFileFilter(file -> "xml".equals(file.getExtension()));
                 descriptor.setTitle("Choose file containing copyright notice");
@@ -223,7 +222,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
                                     return doFinalStep(() -> importProfile(selectedValue));
                                 }
 
-                                @Nonnull
+                                
                                 @Override
                                 public String getTextFor(CopyrightProfile value) {
                                     return value.getName();
@@ -329,7 +328,7 @@ public class CopyrightProfilesPanel extends MasterDetailsComponent
         });
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "copyright.profiles";

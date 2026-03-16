@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.test.sm.TestsLocationProviderUtil;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,6 +29,6 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface SMTestHelper {
-    @Nonnull
+    
     List<TestsLocationProviderUtil.FileInfo> collectCandidates(Project project, String fileName, boolean includeNonProjectItems);
 }

@@ -20,7 +20,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.openapi.roots.libraries.LibraryUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.editor.scope.localize.AnalysisScopeLocalize;
 import consulo.language.psi.PsiFile;
@@ -44,9 +43,9 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -213,12 +212,12 @@ public class TreeModelBuilder {
         return new TreeModel(myRoot, myTotalFileCount, myMarkedFileCount);
     }
 
-    private void processFilesRecursively(@Nonnull VirtualFile file) {
-        VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
+    private void processFilesRecursively(VirtualFile file) {
+        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             private PackageDependenciesNode parent = null;
 
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     parent = null;
                 }
@@ -229,7 +228,7 @@ public class TreeModelBuilder {
             }
 
             @Override
-            public void afterChildrenVisited(@Nonnull VirtualFile file) {
+            public void afterChildrenVisited(VirtualFile file) {
                 if (file.isDirectory()) {
                     parent = null;
                 }
@@ -238,9 +237,9 @@ public class TreeModelBuilder {
     }
 
     private void countFilesRecursively(VirtualFile file) {
-        VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
+        VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (!file.isDirectory()) {
                     counting();
                 }
@@ -479,7 +478,7 @@ public class TreeModelBuilder {
     }
 
 
-    @Nonnull
+    
     private PackageDependenciesNode getRootNode(ScopeType scopeType) {
         if (!myGroupByScopeType) {
             return myRoot;

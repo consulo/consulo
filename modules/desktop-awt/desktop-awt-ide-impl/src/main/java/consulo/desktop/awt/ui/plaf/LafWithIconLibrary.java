@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-10-02
  */
 public interface LafWithIconLibrary {
-  @Nonnull
+  
   String getIconLibraryId();
 }

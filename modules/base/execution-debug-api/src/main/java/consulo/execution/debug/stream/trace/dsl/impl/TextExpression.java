@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.trace.dsl.impl;
 
 import consulo.execution.debug.stream.trace.dsl.Expression;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
@@ -10,13 +9,13 @@ import jakarta.annotation.Nonnull;
 public class TextExpression implements Expression {
   private final String myText;
 
-  public TextExpression(@Nonnull String text) {
+  public TextExpression(String text) {
     myText = text;
   }
 
-  @Nonnull
+  
   @Override
-  public Expression call(@Nonnull String callName, @Nonnull Expression... args) {
+  public Expression call(String callName, Expression... args) {
     StringBuilder sb = new StringBuilder();
     sb.append(myText).append(".").append(callName).append("(");
     for (int i = 0; i < args.length; i++) {
@@ -34,7 +33,7 @@ public class TextExpression implements Expression {
     return toCode(0);
   }
 
-  @Nonnull
+  
   @Override
   public String toCode(int indent) {
     return withIndent(myText, indent);

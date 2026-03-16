@@ -23,7 +23,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -42,20 +41,20 @@ public class PrevOccurrenceAction extends PrevNextOccurrenceAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         SearchSession session = e.getRequiredData(SearchSession.KEY);
         if (session.hasMatches()) {
             session.searchBackward();
         }
     }
 
-    @Nonnull
+    
     @Override
     protected List<Shortcut> getDefaultShortcuts() {
         return SearchUtils.shortcutsOf(IdeActions.ACTION_FIND_PREVIOUS);
     }
 
-    @Nonnull
+    
     @Override
     protected List<Shortcut> getSingleLineShortcuts() {
         List<Shortcut> shortcuts = SearchUtils.shortcutsOf(IdeActions.ACTION_EDITOR_MOVE_CARET_UP);

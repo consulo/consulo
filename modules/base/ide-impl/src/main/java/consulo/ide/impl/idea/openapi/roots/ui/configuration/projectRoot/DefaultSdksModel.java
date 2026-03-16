@@ -42,8 +42,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 
 import javax.swing.*;
@@ -71,7 +70,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
         this(SdkTable::getInstance);
     }
 
-    public DefaultSdksModel(@Nonnull Provider<SdkTable> sdkTableProvider) {
+    public DefaultSdksModel(Provider<SdkTable> sdkTableProvider) {
         mySdkTableProvider = sdkTableProvider;
     }
 
@@ -92,7 +91,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     }
 
     @Override
-    public void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
+    public void forEachBundle(Consumer<Sdk> sdkConsumer) {
         for (Sdk sdk : mySdks.values()) {
             sdkConsumer.accept(sdk);
         }
@@ -299,7 +298,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
             AnAction addAction = new DumbAwareAction(type.getDisplayName(), type.getDisplayName(), type.getIcon()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     doAdd(parent, type, updateTree);
                 }
             };
@@ -340,7 +339,7 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
 
         new Task.Modal(null, "Setuping SDK...", false) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 SdkType sdkType = (SdkType)newSdk.getSdkType();
                 sdkType.setupSdkPaths(newSdk);
 

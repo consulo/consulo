@@ -17,8 +17,7 @@ package consulo.versionControlSystem.impl.internal.util;
 
 import consulo.platform.Platform;
 import consulo.versionControlSystem.VcsBundle;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -37,7 +36,7 @@ public class RelativePathCalculator {
     myBase = base;
   }
 
-  private static boolean stringEqual(@Nonnull String s1, @Nonnull String s2) {
+  private static boolean stringEqual(String s1, String s2) {
     return Platform.current().fs().isCaseSensitive() ? s1.equals(s2) : s1.equalsIgnoreCase(s2);
   }
 

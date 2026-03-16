@@ -8,8 +8,7 @@ import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.rt.model.ExternalSystemException;
 import consulo.externalSystem.service.project.ProjectData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.rmi.RemoteException;
 
@@ -27,20 +26,20 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
   implements RemoteExternalSystemProjectResolver<S>
 {
 
-  @Nonnull
+  
   private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-  public ExternalSystemProjectResolverWrapper(@Nonnull RemoteExternalSystemProjectResolver<S> delegate,
-                                              @Nonnull RemoteExternalSystemProgressNotificationManager progressManager)
+  public ExternalSystemProjectResolverWrapper(RemoteExternalSystemProjectResolver<S> delegate,
+                                              RemoteExternalSystemProgressNotificationManager progressManager)
   {
     super(delegate);
     myProgressManager = progressManager;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
-  public DataNode<ProjectData> resolveProjectInfo(@Nonnull ExternalSystemTaskId id,
-                                                    @Nonnull String projectPath,
+  public DataNode<ProjectData> resolveProjectInfo(ExternalSystemTaskId id,
+                                                    String projectPath,
                                                     boolean isPreviewMode,
                                                     @Nullable S settings)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException, RemoteException
@@ -65,7 +64,7 @@ public class ExternalSystemProjectResolverWrapper<S extends ExternalSystemExecut
   }
 
   @Override
-  public boolean cancelTask(@Nonnull ExternalSystemTaskId id)
+  public boolean cancelTask(ExternalSystemTaskId id)
     throws ExternalSystemException, IllegalArgumentException, IllegalStateException, RemoteException {
     myProgressManager.onQueued(id);
     try {

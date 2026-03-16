@@ -16,7 +16,6 @@
 package consulo.usage;
 
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -26,7 +25,7 @@ public class ReadWriteAccessUsageInfo2UsageAdapter extends UsageInfo2UsageAdapte
     private final boolean myAccessedForReading;
     private final boolean myAccessedForWriting;
 
-    public ReadWriteAccessUsageInfo2UsageAdapter(@Nonnull UsageInfo usageInfo, boolean accessedForReading, boolean accessedForWriting) {
+    public ReadWriteAccessUsageInfo2UsageAdapter(UsageInfo usageInfo, boolean accessedForReading, boolean accessedForWriting) {
         super(usageInfo);
         myAccessedForReading = accessedForReading;
         myAccessedForWriting = accessedForWriting;

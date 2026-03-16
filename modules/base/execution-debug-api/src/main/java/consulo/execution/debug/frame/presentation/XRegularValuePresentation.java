@@ -17,8 +17,7 @@ package consulo.execution.debug.frame.presentation;
 
 import consulo.execution.debug.frame.XValueNode;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Renders a value using default color. If you only need to show {@code value} and {@code type}
@@ -31,11 +30,11 @@ public class XRegularValuePresentation extends XValuePresentation {
   private final String myValue;
   private final String mySeparator;
 
-  public XRegularValuePresentation(@Nonnull String value, @Nullable String type) {
+  public XRegularValuePresentation(String value, @Nullable String type) {
     this(value, type, DEFAULT_SEPARATOR);
   }
 
-  public XRegularValuePresentation(@Nonnull String value, @Nullable String type, @Nonnull String separator) {
+  public XRegularValuePresentation(String value, @Nullable String type, String separator) {
     myValue = value;
     myType = type;
     mySeparator = separator;
@@ -45,14 +44,14 @@ public class XRegularValuePresentation extends XValuePresentation {
     return myType;
   }
 
-  @Nonnull
+  
   @Override
   public String getSeparator() {
     return mySeparator;
   }
 
   @Override
-  public void renderValue(@Nonnull XValueTextRenderer renderer) {
+  public void renderValue(XValueTextRenderer renderer) {
     renderer.renderValue(myValue);
   }
 }

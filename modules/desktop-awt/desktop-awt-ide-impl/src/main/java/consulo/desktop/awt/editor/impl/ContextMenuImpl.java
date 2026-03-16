@@ -13,8 +13,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +34,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
   private boolean myDisposed;
   private ActionToolbar myActionToolbar;
 
-  public ContextMenuImpl(@Nonnull final JScrollPane container, @Nonnull DesktopEditorImpl editor) {
+  public ContextMenuImpl(final JScrollPane container, DesktopEditorImpl editor) {
     setLayout(new BorderLayout());
     myEditor = editor;
 
@@ -43,7 +42,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
 
     editor.addEditorMouseListener(new EditorMouseListener() {
       @Override
-      public void mouseExited(@Nonnull EditorMouseEvent e) {
+      public void mouseExited(EditorMouseEvent e) {
         if (!isInsideActivationArea(container, e.getMouseEvent().getPoint())) {
           toggleContextToolbar(false);
         }
@@ -53,7 +52,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
     editor.addEditorMouseMotionListener(new EditorMouseMotionListener() {
       @RequiredUIAccess
       @Override
-      public void mouseMoved(@Nonnull EditorMouseEvent e) {
+      public void mouseMoved(EditorMouseEvent e) {
         toggleContextToolbar(isInsideActivationArea(container, e.getMouseEvent().getPoint()));
       }
     });

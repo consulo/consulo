@@ -25,23 +25,22 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface InspectionSuppressor extends LanguageExtension {
   ExtensionPointCacheKey<InspectionSuppressor, ByLanguageValue<List<InspectionSuppressor>>> KEY = ExtensionPointCacheKey.create("InspectionSuppressor", LanguageOneToMany.build(false));
 
-  @Nonnull
-  static List<InspectionSuppressor> forLanguage(@Nonnull Language language) {
+  
+  static List<InspectionSuppressor> forLanguage(Language language) {
     return Application.get().getExtensionPoint(InspectionSuppressor.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   /**
    * @see CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
    */
-  boolean isSuppressedFor(@Nonnull PsiElement element, String toolId);
+  boolean isSuppressedFor(PsiElement element, String toolId);
 
   /**
    * @see BatchSuppressableTool#getBatchSuppressActions(PsiElement)

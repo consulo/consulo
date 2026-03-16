@@ -21,8 +21,7 @@ import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchConditio
 import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.ui.internal.arrangement.ArrangementAtomMatchConditionComponent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -34,10 +33,10 @@ public class DefaultArrangementUiComponentFactory implements ArrangementUiCompon
 
   @Nullable
   @Override
-  public ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
-                                      @Nonnull List<ArrangementSettingsToken> tokens,
-                                      @Nonnull ArrangementColorsProvider colorsProvider,
-                                      @Nonnull ArrangementStandardSettingsManager settingsManager) {
+  public ArrangementUiComponent build(StdArrangementTokenUiRole role,
+                                      List<ArrangementSettingsToken> tokens,
+                                      ArrangementColorsProvider colorsProvider,
+                                      ArrangementStandardSettingsManager settingsManager) {
     switch (role) {
       case CHECKBOX:
         if (tokens.size() != 1) {

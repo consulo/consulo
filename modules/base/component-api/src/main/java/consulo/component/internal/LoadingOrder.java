@@ -8,8 +8,7 @@ import consulo.component.util.graph.GraphGenerator;
 import consulo.component.util.graph.InboundSemiGraph;
 import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -46,13 +45,13 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
         return parse(AFTER_STR + id);
     }
 
-    public static void sort(@Nonnull Orderable[] orderable) {
+    public static void sort(Orderable[] orderable) {
         if (orderable.length > 1) {
             sort(Arrays.asList(orderable));
         }
     }
 
-    public static void sort(@Nonnull List<? extends Orderable> orderable) {
+    public static void sort(List<? extends Orderable> orderable) {
         if (orderable.size() < 2) {
             return;
         }
@@ -87,7 +86,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
         }
 
         InboundSemiGraph<Orderable> graph = new InboundSemiGraph<>() {
-            @Nonnull
+            
             @Override
             public Collection<Orderable> getNodes() {
                 List<Orderable> list = new ArrayList<>(orderable);
@@ -95,7 +94,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
                 return list;
             }
 
-            @Nonnull
+            
             @Override
             public Iterator<Orderable> getIn(Orderable n) {
                 LoadingOrder order = cachedMap.getOrDefault(n, ANY);
@@ -145,7 +144,7 @@ public record LoadingOrder(String name, boolean first, boolean last, Set<String>
         orderable.sort(builder.comparator());
     }
 
-    @Nonnull
+    
     public static LoadingOrder readOrder(@Nullable String orderAttr) {
         if (StringUtil.isEmptyOrSpaces(orderAttr)) {
             return ANY;

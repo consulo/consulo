@@ -15,6 +15,8 @@
  */
 package consulo.util.nodep.xml.node;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +37,7 @@ public final class SimpleXmlElement {
   private final Map<String, String> myAttributes;
   private final List<SimpleXmlElement> myChildren;
 
-  public SimpleXmlElement(String name, String text, List<SimpleXmlElement> children, Map<String, String> attributes) {
+  public SimpleXmlElement(String name, @Nullable String text, List<SimpleXmlElement> children, Map<String, String> attributes) {
     myName = name;
     myText = text == null ? EMPTY_TEXT : text;
     myAttributes = attributes;
@@ -47,6 +49,7 @@ public final class SimpleXmlElement {
     return child == null ? EMPTY_TEXT : child.getText();
   }
 
+  @Nullable
   public SimpleXmlElement getChild(String tagName) {
     if (myChildren.isEmpty()) {
       return null;
@@ -68,7 +71,7 @@ public final class SimpleXmlElement {
       return Collections.emptyList();
     }
 
-    List<SimpleXmlElement> list = new ArrayList<SimpleXmlElement>();
+    List<SimpleXmlElement> list = new ArrayList<>();
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < myChildren.size(); i++) {
       SimpleXmlElement element = myChildren.get(i);
@@ -88,13 +91,13 @@ public final class SimpleXmlElement {
     return myChildren;
   }
 
+  @Nullable
   public String getAttributeValue(String value) {
     return myAttributes.get(value);
   }
 
-  public String getAttributeValue(String value, String defaultvalue) {
-    String attrValue = myAttributes.get(value);
-    return attrValue == null ? defaultvalue : attrValue;
+  public String getAttributeValue(String value, String defaultValue) {
+    return myAttributes.getOrDefault(value, defaultValue);
   }
 
   public Map<String, String> getAttributes() {

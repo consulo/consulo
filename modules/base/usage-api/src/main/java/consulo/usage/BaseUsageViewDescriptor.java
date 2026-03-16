@@ -17,8 +17,7 @@ package consulo.usage;
 
 import consulo.language.psi.PsiElement;
 import consulo.usage.localize.UsageLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -31,7 +30,7 @@ public class BaseUsageViewDescriptor implements UsageViewDescriptor {
     myElements = elements;
   }
 
-  @Nonnull
+  
   @Override
   public PsiElement[] getElements() {
     return myElements;

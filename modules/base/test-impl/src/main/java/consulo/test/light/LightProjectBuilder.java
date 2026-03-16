@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.test.light.impl.LightApplication;
 import consulo.test.light.impl.LightExtensionRegistrator;
 import consulo.test.light.impl.LightProject;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,13 +29,13 @@ public class LightProjectBuilder {
   public static class DefaultRegistrator extends LightExtensionRegistrator {
   }
 
-  @Nonnull
-  public static LightProjectBuilder create(@Nonnull Application application) {
+  
+  public static LightProjectBuilder create(Application application) {
     return create(application, new DefaultRegistrator());
   }
 
-  @Nonnull
-  public static LightProjectBuilder create(@Nonnull Application application, @Nonnull DefaultRegistrator registrator) {
+  
+  public static LightProjectBuilder create(Application application, DefaultRegistrator registrator) {
     return new LightProjectBuilder(application, registrator);
   }
 
@@ -48,7 +47,7 @@ public class LightProjectBuilder {
     myRegistrator = registrator;
   }
 
-  @Nonnull
+  
   public Project build() {
     LightApplication application = (LightApplication)myApplication;
     return new LightProject(myApplication, "LightProjectBuilder:" + hashCode(), application.getComponentBinding(), myRegistrator);

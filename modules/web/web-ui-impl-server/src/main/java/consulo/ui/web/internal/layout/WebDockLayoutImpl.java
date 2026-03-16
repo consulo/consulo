@@ -25,7 +25,6 @@ import consulo.ui.web.internal.base.VaadinComponentContainer;
 import consulo.ui.web.internal.border.WebBorderBuilder;
 import consulo.web.gwt.shared.ui.state.layout.DockLayoutState;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -52,7 +51,7 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
       return (DockLayoutState)super.getState();
     }
 
-    void placeAt(@Nonnull Component uiComponent, DockLayoutState.Constraint constraint) {
+    void placeAt(Component uiComponent, DockLayoutState.Constraint constraint) {
       com.vaadin.ui.Component component = TargetVaddin.to(uiComponent);
 
       Component parentComponent = uiComponent.getParent();
@@ -107,7 +106,7 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
     }
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();
@@ -120,46 +119,46 @@ public class WebDockLayoutImpl extends VaadinComponentDelegate<WebDockLayoutImpl
   }
 
   @Override
-  public void remove(@Nonnull Component component) {
+  public void remove(Component component) {
     getVaadinComponent().removeComponent(TargetVaddin.to(component));
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public DockLayout top(@Nonnull Component component) {
+  public DockLayout top(Component component) {
     getVaadinComponent().placeAt(component, DockLayoutState.Constraint.TOP);
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public DockLayout bottom(@Nonnull Component component) {
+  public DockLayout bottom(Component component) {
     getVaadinComponent().placeAt(component, DockLayoutState.Constraint.BOTTOM);
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public DockLayout center(@Nonnull Component component) {
+  public DockLayout center(Component component) {
     getVaadinComponent().placeAt(component, DockLayoutState.Constraint.CENTER);
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public DockLayout left(@Nonnull Component component) {
+  public DockLayout left(Component component) {
     getVaadinComponent().placeAt(component, DockLayoutState.Constraint.LEFT);
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public DockLayout right(@Nonnull Component component) {
+  public DockLayout right(Component component) {
     getVaadinComponent().placeAt(component, DockLayoutState.Constraint.RIGHT);
     return this;
   }

@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.builtinWebServer.http.HttpRequest;
 import consulo.builtinWebServer.http.HttpResponse;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -37,6 +36,6 @@ public interface XmlRpcServer {
 
   void removeHandler(String name);
 
-  @Nonnull
-  HttpResponse process(@Nonnull String path, @Nonnull HttpRequest request, @Nullable Map<String, Object> handlers);
+  
+  HttpResponse process(String path, HttpRequest request, @Nullable Map<String, Object> handlers);
 }

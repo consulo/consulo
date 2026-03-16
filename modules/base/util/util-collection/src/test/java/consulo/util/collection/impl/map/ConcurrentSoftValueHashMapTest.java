@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.util.collection.impl.map;
+
+import consulo.util.collection.impl.map.base.ConcurrentRefValueMapTestBase;
 
 /**
- * Xml wrapper over builtin xml reader, more simplified for usage
+ * @author UNV
+ * @since 2026-03-15
  */
-package consulo.util.nodep.xml;
+public class ConcurrentSoftValueHashMapTest extends ConcurrentRefValueMapTestBase {
+    @Override
+    protected <K, V> ConcurrentSoftValueHashMap<K, V> emptyMap() {
+        return new ConcurrentSoftValueHashMap<>();
+    }
+}

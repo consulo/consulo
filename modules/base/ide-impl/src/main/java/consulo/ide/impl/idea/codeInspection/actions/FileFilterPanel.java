@@ -24,8 +24,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,17 +56,17 @@ class FileFilterPanel {
         Predicate<CharSequence> patternCondition = FindInProjectUtil.createFileMaskCondition(text);
         return new GlobalSearchScope() {
             @Override
-            public boolean contains(@Nonnull VirtualFile file) {
+            public boolean contains(VirtualFile file) {
                 return patternCondition.test(file.getNameSequence());
             }
 
             @Override
-            public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+            public int compare(VirtualFile file1, VirtualFile file2) {
                 return 0;
             }
 
             @Override
-            public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+            public boolean isSearchInModuleContent(Module aModule) {
                 return true;
             }
 

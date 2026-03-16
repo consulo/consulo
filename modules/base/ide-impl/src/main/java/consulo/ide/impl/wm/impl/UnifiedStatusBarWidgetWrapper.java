@@ -26,7 +26,6 @@ import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.WrappedLayout;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -57,7 +56,7 @@ public class UnifiedStatusBarWidgetWrapper {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public Component getComponent() {
       return myLayout;
@@ -81,7 +80,7 @@ public class UnifiedStatusBarWidgetWrapper {
       myWrappedLayout.addBorder(BorderPosition.RIGHT, BorderStyle.EMPTY, null, 4);
     }
 
-    @Nonnull
+    
     @Override
     public StatusBarWidget.WidgetPresentation getPresentation() {
       return myWidgetPresentation;
@@ -97,7 +96,7 @@ public class UnifiedStatusBarWidgetWrapper {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public Component getComponent() {
       return myWrappedLayout;

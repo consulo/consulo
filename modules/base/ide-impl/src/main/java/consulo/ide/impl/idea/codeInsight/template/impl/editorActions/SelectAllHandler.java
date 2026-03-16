@@ -26,8 +26,7 @@ import consulo.language.editor.impl.internal.template.TemplateManagerImpl;
 import consulo.language.editor.impl.internal.template.TemplateStateImpl;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class SelectAllHandler extends EditorActionHandler implements ExtensionEditorActionHandler {
@@ -52,7 +51,7 @@ public class SelectAllHandler extends EditorActionHandler implements ExtensionEd
     myOriginalHandler = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_SELECT_ALL;

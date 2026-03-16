@@ -21,8 +21,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import gnu.trove.TIntHashSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -62,7 +61,7 @@ public class DocPreviewUtil {
    */
   private static final Comparator<String> REPLACEMENTS_COMPARATOR = new Comparator<>() {
     @Override
-    public int compare(@Nonnull String o1, @Nonnull String o2) {
+    public int compare(String o1, String o2) {
       String shortName1 = extractShortName(o1);
       String shortName2 = extractShortName(o2);
       if (!shortName1.equals(shortName2)) {
@@ -79,7 +78,7 @@ public class DocPreviewUtil {
       }
     }
 
-    private String extractShortName(@Nonnull String s) {
+    private String extractShortName(String s) {
       int i = s.lastIndexOf('.');
       return i > 0 && i < s.length() - 1 ? s.substring(i + 1) : s;
     }
@@ -99,8 +98,8 @@ public class DocPreviewUtil {
    *                                   element with the given qualified name is added to the preview's end if the qName is provided then
    * @param fullText                   full documentation text (if available)
    */
-  @Nonnull
-  public static String buildPreview(@Nonnull String header, @Nullable String qName, @Nullable String fullText) {
+  
+  public static String buildPreview(String header, @Nullable String qName, @Nullable String fullText) {
     if (fullText == null) {
       return header;
     }
@@ -152,7 +151,7 @@ public class DocPreviewUtil {
    * @return      short name derived from the given full name if possible; <code>null</code> otherwise
    */
   @Nullable
-  private static String parseShortName(@Nonnull String name) {
+  private static String parseShortName(String name) {
     int i = name.lastIndexOf('.');
     return i > 0 && i < name.length() - 1 ? name.substring(i + 1) : null;
   }
@@ -167,7 +166,7 @@ public class DocPreviewUtil {
    * @return            long name derived from the given arguments (if any); <code>null</code> otherwise
    */
   @Nullable
-  private static String parseLongName(@Nonnull String shortName, @Nonnull String address) {
+  private static String parseLongName(String shortName, String address) {
     String pureAddress = address;
     int i = pureAddress.lastIndexOf("//");
     if (i > 0 && i < pureAddress.length() - 2) {
@@ -177,10 +176,10 @@ public class DocPreviewUtil {
     return (pureAddress.equals(shortName) || !pureAddress.endsWith(shortName)) ? null : pureAddress;
   }
 
-  private static void replace(@Nonnull StringBuilder text,
-                              @Nonnull String replaceFrom,
-                              @Nonnull String replaceTo,
-                              @Nonnull List<TextRange> readOnlyChanges)
+  private static void replace(StringBuilder text,
+                              String replaceFrom,
+                              String replaceTo,
+                              List<TextRange> readOnlyChanges)
   {
     for (int i = text.indexOf(replaceFrom); i >= 0 && i < text.length() - 1; i = text.indexOf(replaceFrom, i + 1)) {
       int end = i + replaceFrom.length();
@@ -210,7 +209,7 @@ public class DocPreviewUtil {
     }
   }
   
-  private static boolean intersects(@Nonnull List<TextRange> ranges, int start, int end) {
+  private static boolean intersects(List<TextRange> ranges, int start, int end) {
     for (TextRange range : ranges) {
       if (range.intersectsStrict(start, end)) {
         return true;
@@ -222,7 +221,7 @@ public class DocPreviewUtil {
   private enum State {TEXT, INSIDE_OPEN_TAG, INSIDE_CLOSE_TAG}
   
   @SuppressWarnings("AssignmentToForLoopParameter")
-  private static int process(@Nonnull String text, @Nonnull Callback callback) {
+  private static int process(String text, Callback callback) {
     State state = State.TEXT;
     int dataStartOffset = 0;
     int tagNameStartOffset = 0;
@@ -302,26 +301,26 @@ public class DocPreviewUtil {
   }
 
   private interface Callback {
-    boolean onOpenTag(@Nonnull String name, @Nonnull String text);
-    boolean onCloseTag(@Nonnull String name, @Nonnull String text);
-    boolean onStandaloneTag(@Nonnull String name, @Nonnull String text);
-    boolean onText(@Nonnull String text);
+    boolean onOpenTag(String name, String text);
+    boolean onCloseTag(String name, String text);
+    boolean onStandaloneTag(String name, String text);
+    boolean onText(String text);
   }
 
   private static class LinksCollector implements Callback {
 
     private static final Pattern HREF_PATTERN = Pattern.compile("href=[\"']([^\"']+)");
 
-    @Nonnull
+    
     private final Map<String, String> myLinks;
     private                String              myHref;
 
-    LinksCollector(@Nonnull Map<String, String> links) {
+    LinksCollector(Map<String, String> links) {
       myLinks = links;
     }
 
     @Override
-    public boolean onOpenTag(@Nonnull String name, @Nonnull String text) {
+    public boolean onOpenTag(String name, String text) {
       if (!"a".equals(name)) {
         return true;
       }
@@ -333,7 +332,7 @@ public class DocPreviewUtil {
     }
 
     @Override
-    public boolean onCloseTag(@Nonnull String name, @Nonnull String text) {
+    public boolean onCloseTag(String name, String text) {
       if ("a".equals(name)) {
         myHref = null;
       }
@@ -341,12 +340,12 @@ public class DocPreviewUtil {
     }
 
     @Override
-    public boolean onStandaloneTag(@Nonnull String name, @Nonnull String text) {
+    public boolean onStandaloneTag(String name, String text) {
       return true;
     }
 
     @Override
-    public boolean onText(@Nonnull String text) {
+    public boolean onText(String text) {
       if (myHref != null) {
         myLinks.put(text, myHref);
         myHref = null;

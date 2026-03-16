@@ -20,7 +20,6 @@ import consulo.language.editor.internal.inspection.AnnotatorBasedInspection;
 import consulo.language.localize.LanguageLocalize;
 import consulo.localize.LocalizeKey;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class AnnotatorBasedInspectionImpl extends DefaultHighlightVisitorBasedInspection implements AnnotatorBasedInspection {
@@ -33,20 +32,20 @@ public class AnnotatorBasedInspectionImpl extends DefaultHighlightVisitorBasedIn
         super(false, true);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return DESCRIPTION_KEY.getValue();
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Annotator");
     }
 
     @Override
-    @Nonnull
+    
     public String getShortName() {
         return ANNOTATOR_SHORT_NAME;
     }

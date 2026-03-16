@@ -18,17 +18,16 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.versionControlSystem.internal.VcsRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
-  @Nonnull
+  
   private final LineStatusTracker myTracker;
   @Nullable private final Editor myEditor;
-  @Nonnull
+  
   private final VcsRange myRange;
 
-  public RollbackLineStatusRangeAction(@Nonnull LineStatusTracker tracker, @Nonnull VcsRange range, @Nullable Editor editor) {
+  public RollbackLineStatusRangeAction(LineStatusTracker tracker, VcsRange range, @Nullable Editor editor) {
     ActionUtil.copyFrom(this, IdeActions.SELECTED_CHANGES_ROLLBACK);
 
     myTracker = tracker;
@@ -37,13 +36,13 @@ public class RollbackLineStatusRangeAction extends RollbackLineStatusAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setEnabledAndVisible(true);
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     rollback(myTracker, myEditor, myRange);
   }
 }

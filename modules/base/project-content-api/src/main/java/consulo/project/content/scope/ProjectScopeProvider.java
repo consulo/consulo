@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -30,21 +29,21 @@ public interface ProjectScopeProvider {
     return project.getInstance(ProjectScopeProvider.class);
   }
 
-  @Nonnull
+  
   ProjectAwareSearchScope getEverythingScope();
 
-  @Nonnull
+  
   ProjectAwareSearchScope getLibrariesScope();
 
   /**
    * @return Scope for all things inside the project: files in the project content plus files in libraries/libraries sources
    */
-  @Nonnull
+  
   ProjectAwareSearchScope getAllScope();
 
-  @Nonnull
+  
   ProjectAwareSearchScope getProjectScope();
 
-  @Nonnull
+  
   ProjectAwareSearchScope getContentScope();
 }

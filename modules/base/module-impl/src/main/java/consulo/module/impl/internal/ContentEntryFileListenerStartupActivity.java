@@ -22,7 +22,6 @@ import consulo.project.ProjectLocator;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.virtualFileSystem.VirtualFileManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -41,7 +40,7 @@ public class ContentEntryFileListenerStartupActivity implements PostStartupActiv
     }
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         myVirtualFileManager.addAsyncFileListener(new ContentEntryDeleteFileListener(myProjectLocator, project), project);
     }
 }

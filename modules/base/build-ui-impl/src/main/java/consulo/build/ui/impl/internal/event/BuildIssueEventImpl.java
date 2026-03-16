@@ -9,8 +9,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -19,31 +18,31 @@ public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssu
   private final BuildIssue myIssue;
   private final Kind myKind;
 
-  public BuildIssueEventImpl(@Nonnull Object parentId, @Nonnull BuildIssue buildIssue, @Nonnull Kind kind) {
+  public BuildIssueEventImpl(Object parentId, BuildIssue buildIssue, Kind kind) {
     super(new Object(), parentId, System.currentTimeMillis(), buildIssue.getTitle());
     myIssue = buildIssue;
     myKind = kind;
   }
 
-  @Nonnull
+  
   @Override
   public final String getDescription() {
     return myIssue.getDescription();
   }
 
-  @Nonnull
+  
   @Override
   public BuildIssue getIssue() {
     return myIssue;
   }
 
-  @Nonnull
+  
   @Override
   public Kind getKind() {
     return myKind;
   }
 
-  @Nonnull
+  
   @Override
   public NotificationGroup getGroup() {
     return BuildNotificationsGroups.BUILD_ISSUES;
@@ -51,7 +50,7 @@ public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssu
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@Nonnull Project project) {
+  public Navigatable getNavigatable(Project project) {
     return myIssue.getNavigatable(project);
   }
 
@@ -63,7 +62,7 @@ public class BuildIssueEventImpl extends AbstractBuildEvent implements BuildIssu
         return myKind;
       }
 
-      @Nonnull
+      
       @Override
       public String getDetails() {
         return myIssue.getDescription();

@@ -37,8 +37,7 @@ import consulo.ui.model.MutableListModel;
 import consulo.ui.model.TableModel;
 import consulo.ui.style.StyleManager;
 import consulo.web.internal.ui.image.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -148,7 +147,6 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebProgressBarImpl();
   }
 
-  @Nonnull
   @Override
   public IntBox _Components_intBox(int value) {
     return new WebIntBoxImpl(value);
@@ -159,7 +157,6 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebListBoxImpl<>(model);
   }
 
-  @Nonnull
   @Override
   public RadioButton _Components_radioButton(LocalizeValue text, boolean selected) {
     return new WebRadioButtonImpl(selected, text);
@@ -215,17 +212,17 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public Image _ImageEffects_transparent(@Nonnull Image original, float alpha) {
+  public Image _ImageEffects_transparent(Image original, float alpha) {
     return new WebTransparentImageImpl(original, alpha);
   }
 
   @Override
-  public Image _ImageEffects_grayed(@Nonnull Image original) {
+  public Image _ImageEffects_grayed(Image original) {
     return original;
   }
 
   @Override
-  public Image _ImageEffects_appendRight(@Nonnull Image i0, @Nonnull Image i1) {
+  public Image _ImageEffects_appendRight(Image i0, Image i1) {
     throw notSupported();
   }
 
@@ -278,7 +275,6 @@ public class WebUIInternalImpl extends UIInternal {
 
       }
 
-      @Nonnull
       @Override
       public ValueGroup<Boolean> add(ValueComponent<Boolean> component) {
         return this;
@@ -291,19 +287,16 @@ public class WebUIInternalImpl extends UIInternal {
     return new WebMenuBarImpl();
   }
 
-  @Nonnull
   @Override
   public StyleManager _StyleManager_get() {
     return WebStyleManagerImpl.ourInstance;
   }
 
-  @Nonnull
   @Override
   public FontManager _FontManager_get() {
     return WebFontManagerImpl.ourInstance;
   }
 
-  @Nonnull
   @Override
   public Window _Window_create(String title, WindowOptions options) {
     WebWindowImpl window = new WebWindowImpl(true, options);
@@ -339,7 +332,6 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @RequiredUIAccess
-  @Nonnull
   @Override
   public UIAccess _UIAccess_get() {
     UI ui = UI.getCurrent();
@@ -360,14 +352,13 @@ public class WebUIInternalImpl extends UIInternal {
     return UI.getCurrent() != null;
   }
 
-  @Nonnull
   @Override
   public IconLibraryManager _IconLibraryManager_get() {
     return WebIconLibraryManagerImpl.ourInstance;
   }
 
   @Override
-  public ImageKey _ImageKey_of(@Nonnull String groupId, @Nonnull String imageId, int width, int height) {
+  public ImageKey _ImageKey_of(String groupId, String imageId, int width, int height) {
     return new WebImageKeyImpl(groupId, imageId, width, height);
   }
 
@@ -397,7 +388,6 @@ public class WebUIInternalImpl extends UIInternal {
     //return new WebToggleSwitchImpl(selected);
   }
 
-  @Nonnull
   @Override
   public PasswordBox _Components_passwordBox(@Nullable String passwordText) {
     throw notSupported();
@@ -405,7 +395,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public <T> Table<T> _Table_create(@Nonnull Iterable<? extends TableColumn> columns, @Nonnull TableModel<T> model) {
+  public <T> Table<T> _Table_create(Iterable<? extends TableColumn> columns, TableModel<T> model) {
     throw notSupported();
     //return new WebTableImpl<>();
   }
@@ -433,7 +423,6 @@ public class WebUIInternalImpl extends UIInternal {
     return WebFocusManagerImpl.ourInstance;
   }
 
-  @Nonnull
   @Override
   public PopupMenu _PopupMenu_create(Component target) {
     throw notSupported();
@@ -441,7 +430,7 @@ public class WebUIInternalImpl extends UIInternal {
   }
 
   @Override
-  public void _ShowNotifier_once(@Nonnull Component component, @Nonnull Runnable action) {
+  public void _ShowNotifier_once(Component component, Runnable action) {
     action.run();
 
     // TODO [VISTALL] logic for this notifier is not fully correct. Run only on first attach to parent, not on visible

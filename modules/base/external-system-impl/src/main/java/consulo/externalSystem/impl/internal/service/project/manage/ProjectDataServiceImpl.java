@@ -30,7 +30,6 @@ import consulo.externalSystem.util.Order;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -42,14 +41,14 @@ import java.util.Collection;
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 public class ProjectDataServiceImpl implements ProjectDataService<ProjectData, Project> {
   
-  @Nonnull
+  
   @Override
   public Key<ProjectData> getTargetDataKey() {
     return ProjectKeys.PROJECT;
   }
 
   @Override
-  public void importData(@Nonnull Collection<DataNode<ProjectData>> toImport, @Nonnull Project project, boolean synchronous) {
+  public void importData(Collection<DataNode<ProjectData>> toImport, Project project, boolean synchronous) {
     if (toImport.size() != 1) {
       throw new IllegalArgumentException(String.format("Expected to get a single project but got %d: %s", toImport.size(), toImport));
     }
@@ -66,13 +65,13 @@ public class ProjectDataServiceImpl implements ProjectDataService<ProjectData, P
   }
 
   @Override
-  public void removeData(@Nonnull Collection<? extends Project> toRemove, @Nonnull Project project, boolean synchronous) {
+  public void removeData(Collection<? extends Project> toRemove, Project project, boolean synchronous) {
   }
 
   @SuppressWarnings("MethodMayBeStatic")
-  public void renameProject(@Nonnull final String newName,
-                            @Nonnull final ProjectSystemId externalSystemId,
-                            @Nonnull final Project project,
+  public void renameProject(final String newName,
+                            final ProjectSystemId externalSystemId,
+                            final Project project,
                             boolean synchronous)
   {
     if (!(project instanceof ProjectEx) || newName.equals(project.getName())) {

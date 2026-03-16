@@ -17,7 +17,6 @@ package consulo.document.impl;
 
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.util.Comparator;
@@ -28,12 +27,12 @@ import java.util.function.IntFunction;
  * N.B. internal array is exposed for faster iterating listeners in to- and reverse order, so care should be taken for not mutating it by clients
  */
 class LockFreeCOWSortedArray<T> {
-  @Nonnull
+  
   private final Comparator<? super T> comparator;
   private final IntFunction<T[]> arrayFactory;
   /** changed by {@link #UPDATER} only */
   @SuppressWarnings("FieldMayBeFinal")
-  @Nonnull
+  
   private volatile T[] listeners;
   
   private static  VarHandle UPDATER;
@@ -47,14 +46,14 @@ class LockFreeCOWSortedArray<T> {
     }
   }
 
-  LockFreeCOWSortedArray(@Nonnull Comparator<? super T> comparator, @Nonnull IntFunction<T[]> arrayFactory) {
+  LockFreeCOWSortedArray(Comparator<? super T> comparator, IntFunction<T[]> arrayFactory) {
     this.comparator = comparator;
     this.arrayFactory = arrayFactory;
     listeners = arrayFactory.apply(0);
   }
 
   // returns true if changed
-  void add(@Nonnull T listener) {
+  void add(T listener) {
     while (true) {
       T[] oldListeners = listeners;
       int i = insertionIndex(oldListeners, listener);
@@ -63,7 +62,7 @@ class LockFreeCOWSortedArray<T> {
     }
   }
 
-  boolean remove(@Nonnull T listener) {
+  boolean remove(T listener) {
     while (true) {
       T[] oldListeners = listeners;
       T[] newListeners = ArrayUtil.remove(oldListeners, listener, arrayFactory);
@@ -74,7 +73,7 @@ class LockFreeCOWSortedArray<T> {
     return true;
   }
 
-  private int insertionIndex(@Nonnull T[] elements, @Nonnull T e) {
+  private int insertionIndex(T[] elements, T e) {
     for (int i=0; i<elements.length; i++) {
       T element = elements[i];
       if (comparator.compare(e, element) < 0) {
@@ -84,7 +83,7 @@ class LockFreeCOWSortedArray<T> {
     return elements.length;
   }
 
-  @Nonnull
+  
   T[] getArray() {
     return listeners;
   }

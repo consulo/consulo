@@ -18,8 +18,7 @@ package consulo.compiler.artifact;
 import consulo.compiler.artifact.element.*;
 import consulo.util.collection.SmartList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -43,17 +42,17 @@ public class PackagingElementPath {
     return new PackagingElementPath(this, element);
   }
 
-  @Nonnull
+  
   public String getPathString() {
     return getPathString("/");
   }
 
-  @Nonnull
+  
   public String getPathString(String separator) {
     return getPathStringFrom(separator, null);
   }
 
-  @Nonnull
+  
   public String getPathStringFrom(String separator, @Nullable CompositePackagingElement<?> ancestor) {
     StringBuilder builder = new StringBuilder();
     List<CompositePackagingElement<?>> parents = getParentsFrom(ancestor);
@@ -117,7 +116,7 @@ public class PackagingElementPath {
     return null;
   }
 
-  public static PackagingElementPath createPath(@Nonnull List<PackagingElement<?>> elements) {
+  public static PackagingElementPath createPath(List<PackagingElement<?>> elements) {
     PackagingElementPath path = EMPTY;
     for (PackagingElement<?> element : elements) {
       path = new PackagingElementPath(path, element);

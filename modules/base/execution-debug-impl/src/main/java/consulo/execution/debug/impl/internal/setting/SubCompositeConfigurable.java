@@ -22,8 +22,7 @@ import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -77,14 +76,14 @@ abstract class SubCompositeConfigurable implements SearchableConfigurable.Parent
   @Nullable
   protected abstract DataViewsConfigurableUi createRootUi();
 
-  @Nonnull
+  
   protected abstract DebuggerSettingsCategory getCategory();
 
   private boolean isChildrenMerged() {
     return children != null && children.length == 1;
   }
 
-  @Nonnull
+  
   @Override
   public final Configurable[] getConfigurables() {
     if (children == null) {

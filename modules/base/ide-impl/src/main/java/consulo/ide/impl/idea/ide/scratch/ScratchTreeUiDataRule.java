@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.util.collection.JBIterable;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,7 +34,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class ScratchTreeUiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         AbstractTreeNode<?> node = JBIterable.of(snapshot.get(PlatformDataKeys.SELECTED_ITEMS))
             .filter(AbstractTreeNode.class)
             .single();

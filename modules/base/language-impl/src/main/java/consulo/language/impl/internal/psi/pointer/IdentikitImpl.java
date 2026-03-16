@@ -13,8 +13,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.util.interner.Interner;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -27,12 +26,12 @@ public abstract class IdentikitImpl implements Identikit {
     private static final Interner<ByTypeImpl> ourPlainInterner = Interner.createWeakInterner();
     private static final Interner<ByAnchor> ourAnchorInterner = Interner.createWeakInterner();
 
-    public static ByTypeImpl fromPsi(@Nonnull PsiElement element, @Nonnull Language fileLanguage) {
+    public static ByTypeImpl fromPsi(PsiElement element, Language fileLanguage) {
         return fromTypes(element.getClass(), PsiUtilCore.getElementType(element), fileLanguage);
     }
 
     @Nullable
-    static Pair<ByAnchor, PsiElement> withAnchor(@Nonnull PsiElement element, @Nonnull Language fileLanguage) {
+    static Pair<ByAnchor, PsiElement> withAnchor(PsiElement element, Language fileLanguage) {
         PsiUtilCore.ensureValid(element);
         if (element.isPhysical()) {
             for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
@@ -46,11 +45,11 @@ public abstract class IdentikitImpl implements Identikit {
         return null;
     }
 
-    @Nonnull
+    
     static ByTypeImpl fromTypes(
-        @Nonnull Class<? extends PsiElement> elementClass,
+        Class<? extends PsiElement> elementClass,
         @Nullable IElementType elementType,
-        @Nonnull Language fileLanguage
+        Language fileLanguage
     ) {
         return ourPlainInterner.intern(new ByTypeImpl(elementClass, elementType, fileLanguage));
     }
@@ -61,9 +60,9 @@ public abstract class IdentikitImpl implements Identikit {
         private final String myFileLanguageId;
 
         private ByTypeImpl(
-            @Nonnull Class<? extends PsiElement> elementClass,
+            Class<? extends PsiElement> elementClass,
             @Nullable IElementType elementType,
-            @Nonnull Language fileLanguage
+            Language fileLanguage
         ) {
             myElementClassName = elementClass.getName();
             myElementTypeId = elementType != null ? elementType.getIndex() : -1;
@@ -73,7 +72,7 @@ public abstract class IdentikitImpl implements Identikit {
         @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
+        public PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
             Language fileLanguage = Language.findLanguageByID(myFileLanguageId);
             if (fileLanguage == null) {
                 return null;   // plugin has been unloaded
@@ -87,7 +86,7 @@ public abstract class IdentikitImpl implements Identikit {
         }
 
         @RequiredReadAction
-        public PsiElement findInside(@Nonnull PsiElement element, int startOffset, int endOffset) {
+        public PsiElement findInside(PsiElement element, int startOffset, int endOffset) {
             // finds child in this tree only, unlike PsiElement.findElementAt()
             PsiElement anchor = AbstractFileViewProvider.findElementAt(element, startOffset);
             if (anchor == null && startOffset == element.getTextLength()) {
@@ -183,7 +182,7 @@ public abstract class IdentikitImpl implements Identikit {
             return elementType instanceof IFileElementType;
         }
 
-        private boolean isAcceptable(@Nonnull PsiElement element) {
+        private boolean isAcceptable(PsiElement element) {
             IElementType type = PsiUtilCore.getElementType(element);
             return myElementClassName.equals(element.getClass().getName()) && type != null && myElementTypeId == type.getIndex();
         }
@@ -194,7 +193,7 @@ public abstract class IdentikitImpl implements Identikit {
         private final ByTypeImpl myAnchorInfo;
         private final SmartPointerAnchorProvider myAnchorProvider;
 
-        ByAnchor(@Nonnull ByTypeImpl elementInfo, @Nonnull ByTypeImpl anchorInfo, @Nonnull SmartPointerAnchorProvider anchorProvider) {
+        ByAnchor(ByTypeImpl elementInfo, ByTypeImpl anchorInfo, SmartPointerAnchorProvider anchorProvider) {
             myElementInfo = elementInfo;
             myAnchorInfo = anchorInfo;
             myAnchorProvider = anchorProvider;
@@ -217,7 +216,7 @@ public abstract class IdentikitImpl implements Identikit {
         @Nullable
         @Override
         @RequiredReadAction
-        public PsiElement findPsiElement(@Nonnull PsiFile file, int startOffset, int endOffset) {
+        public PsiElement findPsiElement(PsiFile file, int startOffset, int endOffset) {
             PsiElement anchor = myAnchorInfo.findPsiElement(file, startOffset, endOffset);
             PsiElement element = anchor == null ? null : myAnchorProvider.restoreElement(anchor);
             return element != null && myElementInfo.isAcceptable(element) ? element : null;

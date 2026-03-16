@@ -18,8 +18,7 @@ package consulo.execution.test.sm.runner;
 import consulo.execution.test.sm.SMTestRunnerConnectionUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EmptyStackException;
 import java.util.Stack;
@@ -42,11 +41,11 @@ public class TestSuiteStack {
         this("<unspecified>");
     }
 
-    public TestSuiteStack(@Nonnull String testFrameworkName) {
+    public TestSuiteStack(String testFrameworkName) {
         myTestFrameworkName = testFrameworkName;
     }
 
-    public void pushSuite(@Nonnull SMTestProxy suite) {
+    public void pushSuite(SMTestProxy suite) {
         myStack.push(suite);
     }
 

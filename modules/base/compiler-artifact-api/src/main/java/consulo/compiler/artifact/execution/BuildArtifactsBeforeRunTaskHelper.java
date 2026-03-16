@@ -21,7 +21,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.dataContext.DataContext;
 import consulo.execution.configuration.RunConfiguration;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface BuildArtifactsBeforeRunTaskHelper {
-  void setBuildArtifactBeforeRunOption(@Nonnull DataContext dataContext, @Nonnull Artifact artifact, boolean enable);
+  void setBuildArtifactBeforeRunOption(DataContext dataContext, Artifact artifact, boolean enable);
 
-  void setBuildArtifactBeforeRun(@Nonnull RunConfiguration configuration, @Nonnull Artifact artifact);
+  void setBuildArtifactBeforeRun(RunConfiguration configuration, Artifact artifact);
 }

@@ -24,8 +24,7 @@ import consulo.component.util.graph.Graph;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,8 +41,8 @@ public abstract class ModuleManager {
    * @param project the project for which the module manager is requested.
    * @return the module manager instance.
    */
-  @Nonnull
-  public static ModuleManager getInstance(@Nonnull Project project) {
+  
+  public static ModuleManager getInstance(Project project) {
     return project.getComponent(ModuleManager.class);
   }
 
@@ -56,9 +55,9 @@ public abstract class ModuleManager {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  @Nonnull
+  
   @RequiredWriteAction
-  public abstract Module newModule(@Nonnull String name, @Nonnull String dirPath);
+  public abstract Module newModule(String name, String dirPath);
 
   /**
    * Disposes of the specified module and removes it from the project.
@@ -66,14 +65,14 @@ public abstract class ModuleManager {
    * @param module the module to remove.
    */
   @RequiredWriteAction
-  public abstract void disposeModule(@Nonnull Module module);
+  public abstract void disposeModule(Module module);
 
   /**
    * Returns the list of all modules in the project.
    *
    * @return the array of modules.
    */
-  @Nonnull
+  
   public abstract Module[] getModules();
 
   /**
@@ -84,7 +83,7 @@ public abstract class ModuleManager {
    */
   @Nullable
   @RequiredReadAction
-  public abstract Module findModuleByName(@Nonnull String name);
+  public abstract Module findModuleByName(String name);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend
@@ -93,7 +92,7 @@ public abstract class ModuleManager {
    *
    * @return the sorted array of modules.
    */
-  @Nonnull
+  
   @RequiredReadAction
   public abstract Module[] getSortedModules();
 
@@ -104,7 +103,7 @@ public abstract class ModuleManager {
    *
    * @return the module comparator instance.
    */
-  @Nonnull
+  
   @RequiredReadAction
   public abstract Comparator<Module> moduleDependencyComparator();
 
@@ -116,9 +115,9 @@ public abstract class ModuleManager {
    *
    * @see ModuleUtil#getAllDependentModules(Module)
    */
-  @Nonnull
+  
   @RequiredReadAction
-  public abstract List<Module> getModuleDependentModules(@Nonnull Module module);
+  public abstract List<Module> getModuleDependentModules(Module module);
 
   /**
    * Checks if one of the specified modules directly depends on the other module.
@@ -128,14 +127,14 @@ public abstract class ModuleManager {
    * @return true if <code>module</code> directly depends on <code>onModule</code>, false otherwise.
    */
   @RequiredReadAction
-  public abstract boolean isModuleDependent(@Nonnull Module module, @Nonnull Module onModule);
+  public abstract boolean isModuleDependent(Module module, Module onModule);
 
   /**
    * Returns the graph of dependencies between modules in the project.
    *
    * @return the module dependency graph.
    */
-  @Nonnull
+  
   @RequiredReadAction
   public abstract Graph<Module> moduleGraph();
 
@@ -146,7 +145,7 @@ public abstract class ModuleManager {
    * @return the module dependency graph.
    * @since 11.0
    */
-  @Nonnull
+  
   @RequiredReadAction
   public abstract Graph<Module> moduleGraph(boolean includeTests);
 
@@ -156,7 +155,7 @@ public abstract class ModuleManager {
    *
    * @return the modifiable model instance.
    */
-  @Nonnull
+  
   @RequiredReadAction
   public abstract ModifiableModuleModel getModifiableModel();
 
@@ -170,20 +169,20 @@ public abstract class ModuleManager {
    */
   @Nullable
   @RequiredReadAction
-  public abstract String[] getModuleGroupPath(@Nonnull Module module);
+  public abstract String[] getModuleGroupPath(Module module);
 
   @Nullable
-  public UnloadedModuleDescription getUnloadedModuleDescription(@Nonnull String name) {
+  public UnloadedModuleDescription getUnloadedModuleDescription(String name) {
     // we not support module unloading
     return null;
   }
 
-  @Nonnull
+  
   public Collection<UnloadedModuleDescription> getUnloadedModuleDescriptions() {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  
   @UsedInPlugin
   public abstract Image getModuleIcon(@Nullable Module module);
 }

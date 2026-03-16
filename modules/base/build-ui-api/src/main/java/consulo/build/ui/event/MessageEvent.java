@@ -5,8 +5,7 @@ import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -20,14 +19,14 @@ public interface MessageEvent extends BuildEvent {
         SIMPLE
     }
 
-    @Nonnull
+    
     Kind getKind();
 
-    @Nonnull
+    
     NotificationGroup getGroup();
 
     @Nullable
-    Navigatable getNavigatable(@Nonnull Project project);
+    Navigatable getNavigatable(Project project);
 
     MessageEventResult getResult();
 }

@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Predicate;
@@ -35,23 +34,23 @@ import java.util.function.Predicate;
  * Optimized version of {@link ContentEntryImpl} without supporting data inside
  */
 public class OptimizedSingleContentEntryImpl extends BaseModuleRootLayerChild implements ContentEntryEx {
-  @Nonnull
+  
   private final VirtualFilePointer myRoot;
 
-  public OptimizedSingleContentEntryImpl(@Nonnull VirtualFile file, @Nonnull ModuleRootLayerImpl m) {
+  public OptimizedSingleContentEntryImpl(VirtualFile file, ModuleRootLayerImpl m) {
     this(file.getUrl(), m);
   }
 
-  public OptimizedSingleContentEntryImpl(@Nonnull String url, @Nonnull ModuleRootLayerImpl m) {
+  public OptimizedSingleContentEntryImpl(String url, ModuleRootLayerImpl m) {
     super(m);
     myRoot = VirtualFilePointerManager.getInstance().create(url, this, null);
   }
 
-  public OptimizedSingleContentEntryImpl(@Nonnull Element e, @Nonnull ModuleRootLayerImpl m) {
+  public OptimizedSingleContentEntryImpl(Element e, ModuleRootLayerImpl m) {
     this(ContentEntryImpl.getUrlFrom(e), m);
   }
 
-  public void writeExternal(@Nonnull Element element) {
+  public void writeExternal(Element element) {
     assert !isDisposed();
     element.setAttribute(ContentEntryImpl.URL_ATTRIBUTE, myRoot.getUrl());
   }
@@ -62,49 +61,49 @@ public class OptimizedSingleContentEntryImpl extends BaseModuleRootLayerChild im
   }
 
   @Override
-  @Nonnull
+  
   public String getUrl() {
     return myRoot.getUrl();
   }
   
-  @Nonnull
+  
   @Override
-  public ContentFolder[] getFolders(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  public ContentFolder[] getFolders(Predicate<ContentFolderTypeProvider> predicate) {
     return ContentFolder.EMPTY_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
-  public VirtualFile[] getFolderFiles(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  public VirtualFile[] getFolderFiles(Predicate<ContentFolderTypeProvider> predicate) {
     return VirtualFile.EMPTY_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
-  public String[] getFolderUrls(@Nonnull Predicate<ContentFolderTypeProvider> predicate) {
+  public String[] getFolderUrls(Predicate<ContentFolderTypeProvider> predicate) {
     return ArrayUtil.EMPTY_STRING_ARRAY;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<ContentFolder> getContentFolders() {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  
   @Override
-  public ContentFolder addFolder(@Nonnull VirtualFile file, @Nonnull ContentFolderTypeProvider contentFolderType) {
+  public ContentFolder addFolder(VirtualFile file, ContentFolderTypeProvider contentFolderType) {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
-  public ContentFolder addFolder(@Nonnull String url, @Nonnull ContentFolderTypeProvider contentFolderType) {
+  public ContentFolder addFolder(String url, ContentFolderTypeProvider contentFolderType) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void removeFolder(@Nonnull ContentFolder contentFolder) {
+  public void removeFolder(ContentFolder contentFolder) {
     throw new UnsupportedOperationException();
   }
 

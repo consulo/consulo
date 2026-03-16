@@ -31,8 +31,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,10 +79,10 @@ public abstract class ChooseByNameFilter<T> {
      * @param project             a context project
      */
     public ChooseByNameFilter(
-        @Nonnull ChooseByNamePopup popup,
-        @Nonnull FilteringGotoByModel<T> model,
-        @Nonnull ChooseByNameFilterConfiguration<T> filterConfiguration,
-        @Nonnull Project project
+        ChooseByNamePopup popup,
+        FilteringGotoByModel<T> model,
+        ChooseByNameFilterConfiguration<T> filterConfiguration,
+        Project project
     ) {
         myParentPopup = popup;
         DefaultActionGroup actionGroup = new DefaultActionGroup("go.to.file.filter", false);
@@ -158,20 +157,20 @@ public abstract class ChooseByNameFilter<T> {
      * @param filterConfiguration
      * @return a created file chooser
      */
-    @Nonnull
+   
     protected ElementsChooser<T> createChooser(
-        @Nonnull final FilteringGotoByModel<T> model,
-        @Nonnull final ChooseByNameFilterConfiguration<T> filterConfiguration
+        final FilteringGotoByModel<T> model,
+        final ChooseByNameFilterConfiguration<T> filterConfiguration
     ) {
         List<T> elements = new ArrayList<T>(getAllFilterValues());
         final ElementsChooser<T> chooser = new ElementsChooser<T>(elements, true) {
             @Override
-            protected String getItemText(@Nonnull T value) {
+            protected String getItemText(T value) {
                 return textForFilterValue(value);
             }
 
             @Override
-            protected Image getItemIcon(@Nonnull T value) {
+            protected Image getItemIcon(T value) {
                 return iconForFilterValue(value);
             }
         };
@@ -194,12 +193,11 @@ public abstract class ChooseByNameFilter<T> {
         return chooser;
     }
 
-    protected abstract String textForFilterValue(@Nonnull T value);
+    protected abstract String textForFilterValue(T value);
 
-    @Nullable
-    protected abstract consulo.ui.image.Image iconForFilterValue(@Nonnull T value);
+    protected abstract consulo.ui.image.@Nullable Image iconForFilterValue(T value);
 
-    @Nonnull
+   
     protected abstract Collection<T> getAllFilterValues();
 
     /**
@@ -208,7 +206,7 @@ public abstract class ChooseByNameFilter<T> {
      * @param gotoFileModel a model
      * @param chooser       a file type chooser
      */
-    protected void updateModel(@Nonnull FilteringGotoByModel<T> gotoFileModel, @Nonnull ElementsChooser<T> chooser, boolean initial) {
+    protected void updateModel(FilteringGotoByModel<T> gotoFileModel, ElementsChooser<T> chooser, boolean initial) {
         List<T> markedElements = chooser.getMarkedElements();
         gotoFileModel.setFilterItems(markedElements);
         myParentPopup.rebuildList(initial);

@@ -22,14 +22,13 @@ import consulo.versionControlSystem.VcsProviderMarker;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public interface AnnotationProvider extends VcsProviderMarker {
-  @Nonnull
-  FileAnnotation annotate(@Nonnull VirtualFile file) throws VcsException;
+  
+  FileAnnotation annotate(VirtualFile file) throws VcsException;
 
-  @Nonnull
-  FileAnnotation annotate(@Nonnull VirtualFile file, VcsFileRevision revision) throws VcsException;
+  
+  FileAnnotation annotate(VirtualFile file, VcsFileRevision revision) throws VcsException;
 
   /**
    * Check whether the annotation retrieval is valid (or possible) for the
@@ -37,11 +36,11 @@ public interface AnnotationProvider extends VcsProviderMarker {
    * @param rev File revision to be checked.
    * @return true if annotation it valid for the given revision.
    */
-  default boolean isAnnotationValid(@Nonnull VcsFileRevision rev) { return true; }
+  default boolean isAnnotationValid(VcsFileRevision rev) { return true; }
 
   default boolean isCaching() { return false; }
 
-  @Nonnull
+  
   default LocalizeValue getActionName() {
     return ActionLocalize.actionAnnotateText();
   }

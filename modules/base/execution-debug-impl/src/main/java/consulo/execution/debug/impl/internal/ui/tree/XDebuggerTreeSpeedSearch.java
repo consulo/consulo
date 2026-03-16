@@ -5,8 +5,7 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XDebuggerTreeNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -148,10 +147,10 @@ class XDebuggerTreeSpeedSearch extends TreeSpeedSearch implements XDebuggerTreeL
   }
 
   @Override
-  public void nodeLoaded(@Nonnull RestorableStateNode node, String name) {
+  public void nodeLoaded(RestorableStateNode node, String name) {
   }
 
   @Override
-  public void childrenLoaded(@Nonnull XDebuggerTreeNode node, @Nonnull List<XValueContainerNode<?>> children, boolean last) {
+  public void childrenLoaded(XDebuggerTreeNode node, List<XValueContainerNode<?>> children, boolean last) {
   }
 }

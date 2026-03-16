@@ -22,8 +22,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,10 +33,10 @@ import java.awt.*;
 */
 final class ActionToolbarSeparator extends JComponent {
     private DesktopAWTActionToolbar myActionToolbar;
-    @Nonnull
+    
     private final LocalizeValue myTextValue;
 
-    ActionToolbarSeparator(DesktopAWTActionToolbar actionToolbar, @Nonnull LocalizeValue textValue) {
+    ActionToolbarSeparator(DesktopAWTActionToolbar actionToolbar, LocalizeValue textValue) {
         myActionToolbar = actionToolbar;
         myTextValue = textValue;
         setFont(JBUI.Fonts.toolbarSmallComboBoxFont());
@@ -103,7 +102,7 @@ final class ActionToolbarSeparator extends JComponent {
         }
     }
 
-    private int getTextWidth(@Nonnull FontMetrics fontMetrics, @Nonnull String text, @Nullable Graphics graphics) {
+    private int getTextWidth(FontMetrics fontMetrics, String text, @Nullable Graphics graphics) {
         if (graphics == null) {
             return fontMetrics.stringWidth(text);
         }

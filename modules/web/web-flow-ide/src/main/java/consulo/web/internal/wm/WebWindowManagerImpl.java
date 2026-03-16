@@ -31,8 +31,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -72,9 +71,8 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
 
   }
 
-  @Nullable
   @Override
-  public consulo.ui.Window suggestParentWindow(@Nullable Project project) {
+  public consulo.ui.@Nullable Window suggestParentWindow(@Nullable Project project) {
     return null;
   }
 
@@ -86,12 +84,12 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   }
 
   @Override
-  public StatusBar getStatusBar(@Nonnull Component c) {
+  public StatusBar getStatusBar(Component c) {
     return null;
   }
 
   @Override
-  public StatusBar getStatusBar(@Nonnull consulo.ui.Component c, @Nullable Project project) {
+  public StatusBar getStatusBar(consulo.ui.Component c, @Nullable Project project) {
     if(project == null) {
       return null;
     }
@@ -113,7 +111,7 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public IdeFrame[] getAllProjectFrames() {
     return new IdeFrame[0];
@@ -141,9 +139,9 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public IdeFrameEx allocateFrame(@Nonnull Project project, @Nullable IdeFrameState state) {
+  public IdeFrameEx allocateFrame(Project project, @Nullable IdeFrameState state) {
     UIAccess.assertIsUIThread();
 
     WebIdeFrameImpl frame = new WebIdeFrameImpl(project);
@@ -161,7 +159,7 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   }
 
   @Override
-  public Component getFocusedComponent(@Nonnull Window window) {
+  public Component getFocusedComponent(Window window) {
     return null;
   }
 
@@ -203,7 +201,7 @@ public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements Pe
   }
 
   @Override
-  public Rectangle getScreenBounds(@Nonnull Project project) {
+  public Rectangle getScreenBounds(Project project) {
     return null;
   }
 

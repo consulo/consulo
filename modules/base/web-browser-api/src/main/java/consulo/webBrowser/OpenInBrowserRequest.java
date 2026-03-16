@@ -6,8 +6,7 @@ import consulo.project.Project;
 import consulo.util.io.Url;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -15,7 +14,7 @@ public abstract class OpenInBrowserRequest {
     private Collection<Url> result;
     protected PsiFile file;
 
-    public OpenInBrowserRequest(@Nonnull PsiFile file) {
+    public OpenInBrowserRequest(PsiFile file) {
         this.file = file;
     }
 
@@ -23,14 +22,14 @@ public abstract class OpenInBrowserRequest {
     }
 
     @Nullable
-    public static OpenInBrowserRequest create(@Nonnull final PsiElement element) {
+    public static OpenInBrowserRequest create(final PsiElement element) {
         PsiFile psiFile = element.isValid() ? element.getContainingFile() : null;
         if (psiFile == null || psiFile.getVirtualFile() == null) {
             return null;
         }
 
         return new OpenInBrowserRequest(psiFile) {
-            @Nonnull
+            
             @Override
             public PsiElement getElement() {
                 return element;
@@ -38,25 +37,25 @@ public abstract class OpenInBrowserRequest {
         };
     }
 
-    @Nonnull
+    
     public PsiFile getFile() {
         return file;
     }
 
-    @Nonnull
+    
     public VirtualFile getVirtualFile() {
         return file.getVirtualFile();
     }
 
-    @Nonnull
+    
     public Project getProject() {
         return file.getProject();
     }
 
-    @Nonnull
+    
     public abstract PsiElement getElement();
 
-    public void setResult(@Nonnull Collection<Url> result) {
+    public void setResult(Collection<Url> result) {
         this.result = result;
     }
 

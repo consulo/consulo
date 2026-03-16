@@ -3,7 +3,7 @@ package consulo.usage;
 import consulo.navigation.NavigateOptions;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

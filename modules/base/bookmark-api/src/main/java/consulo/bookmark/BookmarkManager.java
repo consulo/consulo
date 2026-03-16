@@ -23,8 +23,7 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -33,18 +32,18 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public sealed interface BookmarkManager permits BookmarkManagerInternal {
-  @Nonnull
+  
   public static BookmarkManager getInstance(Project project) {
     return project.getInstance(BookmarkManager.class);
   }
 
-  void editDescription(@Nonnull Bookmark bookmark);
+  void editDescription(Bookmark bookmark);
 
-  void setDescription(@Nonnull Bookmark bookmark, String description);
+  void setDescription(Bookmark bookmark, String description);
 
-  void setMnemonic(@Nonnull Bookmark bookmark, char c);
+  void setMnemonic(Bookmark bookmark, char c);
 
-  void removeBookmark(@Nonnull Bookmark bookmark);
+  void removeBookmark(Bookmark bookmark);
 
   boolean hasBookmarksWithMnemonics();
 
@@ -52,15 +51,15 @@ public sealed interface BookmarkManager permits BookmarkManagerInternal {
   Bookmark findBookmarkForMnemonic(char m);
 
   @Nullable
-  Bookmark findFileBookmark(@Nonnull VirtualFile file);
+  Bookmark findFileBookmark(VirtualFile file);
 
   @Nullable
-  Bookmark findEditorBookmark(@Nonnull Document document, int line);
+  Bookmark findEditorBookmark(Document document, int line);
 
-  @Nonnull
+  
   List<Bookmark> getValidBookmarks();
 
-  @Nonnull
+  
   Bookmark addTextBookmark(VirtualFile file, int lineIndex, String description);
 
   @Nullable
@@ -69,14 +68,14 @@ public sealed interface BookmarkManager permits BookmarkManagerInternal {
   void addEditorBookmark(Editor editor, int lineIndex);
 
   @Nullable
-  Bookmark getNextBookmark(@Nonnull Editor editor, boolean isWrapped);
+  Bookmark getNextBookmark(Editor editor, boolean isWrapped);
 
   @Nullable
-  Bookmark getPreviousBookmark(@Nonnull Editor editor, boolean isWrapped);
+  Bookmark getPreviousBookmark(Editor editor, boolean isWrapped);
 
-  @Nonnull
-  List<? extends Bookmark> moveBookmarkDown(@Nonnull Bookmark bookmark);
+  
+  List<? extends Bookmark> moveBookmarkDown(Bookmark bookmark);
 
-  @Nonnull
-  List<? extends Bookmark> moveBookmarkUp(@Nonnull Bookmark bookmark);
+  
+  List<? extends Bookmark> moveBookmarkUp(Bookmark bookmark);
 }

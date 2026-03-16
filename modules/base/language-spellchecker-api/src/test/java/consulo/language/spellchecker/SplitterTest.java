@@ -21,7 +21,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.language.spellcheker.tokenizer.splitter.*;
 import consulo.util.io.StreamUtil;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -421,7 +420,7 @@ public class SplitterTest {
         return words;
     }
 
-    private static void correctListToCheck(TokenSplitter splitter, String text, @Nonnull String... expected) {
+    private static void correctListToCheck(TokenSplitter splitter, String text, String... expected) {
         assertThat(wordsToCheck(splitter, text))
             .isEqualTo(Arrays.asList(expected));
     }

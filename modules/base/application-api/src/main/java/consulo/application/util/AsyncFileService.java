@@ -18,7 +18,6 @@ package consulo.application.util;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
@@ -30,11 +29,11 @@ import java.util.concurrent.Future;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AsyncFileService {
-  @Nonnull
-  default Future<Void> asyncDelete(@Nonnull File file) {
+  
+  default Future<Void> asyncDelete(File file) {
     return asyncDelete(List.of(file));
   }
 
-  @Nonnull
-  Future<Void> asyncDelete(@Nonnull Collection<File> files);
+  
+  Future<Void> asyncDelete(Collection<File> files);
 }

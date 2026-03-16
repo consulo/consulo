@@ -5,8 +5,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ControlFlowProvider {
@@ -16,12 +15,12 @@ public interface ControlFlowProvider {
      * @return a control flow which contains the <code>element</code> or null if the <code>element</code> is not supported by provider
      */
     @Nullable
-    ControlFlow getControlFlow(@Nonnull PsiElement element);
+    ControlFlow getControlFlow(PsiElement element);
 
     /**
      * @param instruction belongs to a control flow which was created by the provider
      * @return an additional language-specific representation of the <code>instruction</code>
      */
     @Nullable
-    String getAdditionalInfo(@Nonnull Instruction instruction);
+    String getAdditionalInfo(Instruction instruction);
 }

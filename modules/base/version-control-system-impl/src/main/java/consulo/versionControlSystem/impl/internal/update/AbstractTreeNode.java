@@ -24,10 +24,8 @@ import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSetBase;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -122,23 +120,23 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
     return VcsBundle.message("update.tree.node.size.statistics", itemsCount);
   }
 
-  @Nonnull
+  
   protected abstract String getName();
 
   protected abstract int getItemsCount();
 
   protected abstract boolean showStatistics();
 
-  @NonNls
+  
   public abstract Image getIcon();
 
-  @Nonnull
+  
   public abstract Collection<VirtualFile> getVirtualFiles();
 
-  @Nonnull
+  
   public abstract Collection<File> getFiles();
 
-  @Nonnull
+  
   public abstract SimpleTextAttributes getAttributes();
 
   public abstract boolean getSupportsDeletion();

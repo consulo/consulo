@@ -22,8 +22,7 @@ import consulo.colorScheme.ModifiableFontPreferences;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +38,11 @@ import java.util.List;
  */
 public class FontPreferencesImpl implements ModifiableFontPreferences {
 
-  @Nonnull
+  
   private final ObjectIntMap<String> myFontSizes = ObjectMaps.newObjectIntHashMap();
-  @Nonnull
+  
   private final List<String> myEffectiveFontFamilies = new ArrayList<>();
-  @Nonnull
+  
   private final List<String> myRealFontFamilies = new ArrayList<>();
 
   private boolean myUseLigatures;
@@ -86,7 +85,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public boolean hasSize(@Nonnull String fontName) {
+  public boolean hasSize(String fontName) {
     return myFontSizes.containsKey(fontName);
   }
 
@@ -101,7 +100,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public int getSize(@Nonnull String fontFamily) {
+  public int getSize(String fontFamily) {
     int result = myFontSizes.getInt(fontFamily);
     if (result <= 0) {
       result = myTemplateFontSize;
@@ -109,7 +108,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
     return result > 0 ? result : FontPreferences.DEFAULT_FONT_SIZE;
   }
 
-  public void setSize(@Nonnull String fontFamily, int size) {
+  public void setSize(String fontFamily, int size) {
     myFontSizes.putInt(fontFamily, size);
     myTemplateFontSize = size;
     if (myChangeListener != null) {
@@ -128,7 +127,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    * @return effective font families to use
    */
   @Override
-  @Nonnull
+  
   public List<String> getEffectiveFontFamilies() {
     return myEffectiveFontFamilies;
   }
@@ -138,13 +137,13 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    * @see #getEffectiveFontFamilies()
    */
   @Override
-  @Nonnull
+  
   public List<String> getRealFontFamilies() {
     return myRealFontFamilies;
   }
 
   @Override
-  public void register(@Nonnull String fontFamily, int size) {
+  public void register(String fontFamily, int size) {
     String fallbackFontFamily = FontPreferences.getFallbackName(fontFamily, size, null);
     if (!myRealFontFamilies.contains(fontFamily)) {
       myRealFontFamilies.add(fontFamily);
@@ -161,13 +160,13 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
    * {@link #DEFAULT_FONT_NAME} otherwise
    */
   @Override
-  @Nonnull
+  
   public String getFontFamily() {
     return myEffectiveFontFamilies.isEmpty() ? FontPreferences.DEFAULT_FONT_NAME : myEffectiveFontFamilies.get(0);
   }
 
   @Override
-  public void addFontFamily(@Nonnull String fontFamily) {
+  public void addFontFamily(String fontFamily) {
     String fallbackFontFamily = FontPreferences.getFallbackName(fontFamily, FontPreferences.DEFAULT_FONT_SIZE, null);
     if (!myRealFontFamilies.contains(fontFamily)) {
       myRealFontFamilies.add(fontFamily);
@@ -182,7 +181,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void copyTo(@Nonnull FontPreferences preferences) {
+  public void copyTo(FontPreferences preferences) {
     if (preferences instanceof ModifiableFontPreferences) {
       ModifiableFontPreferences modifiablePreferences = (ModifiableFontPreferences)preferences;
       modifiablePreferences.setEffectiveFontFamilies(myEffectiveFontFamilies);
@@ -205,7 +204,7 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void setFontSize(@Nonnull String fontFamily, int size) {
+  public void setFontSize(String fontFamily, int size) {
     myFontSizes.putInt(fontFamily, size);
   }
 
@@ -215,13 +214,13 @@ public class FontPreferencesImpl implements ModifiableFontPreferences {
   }
 
   @Override
-  public void setEffectiveFontFamilies(@Nonnull List<String> fontFamilies) {
+  public void setEffectiveFontFamilies(List<String> fontFamilies) {
     myEffectiveFontFamilies.clear();
     myEffectiveFontFamilies.addAll(fontFamilies);
   }
 
   @Override
-  public void setRealFontFamilies(@Nonnull List<String> fontFamilies) {
+  public void setRealFontFamilies(List<String> fontFamilies) {
     myRealFontFamilies.clear();
     myRealFontFamilies.addAll(fontFamilies);
   }

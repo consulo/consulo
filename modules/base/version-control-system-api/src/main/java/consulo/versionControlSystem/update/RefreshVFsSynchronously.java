@@ -22,8 +22,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,7 +32,7 @@ public class RefreshVFsSynchronously {
   private RefreshVFsSynchronously() {
   }
 
-  public static void updateAllChanged(@Nonnull UpdatedFiles updatedFiles) {
+  public static void updateAllChanged(UpdatedFiles updatedFiles) {
     FilesToRefreshCollector callback = new FilesToRefreshCollector();
     UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(updatedFiles, callback);
 
@@ -41,8 +40,8 @@ public class RefreshVFsSynchronously {
     refreshFiles(callback.getToRefresh());
   }
 
-  @Nonnull
-  public static Collection<VirtualFile> refreshFiles(@Nonnull Collection<File> files) {
+  
+  public static Collection<VirtualFile> refreshFiles(Collection<File> files) {
     Collection<VirtualFile> filesToRefresh = new HashSet<>();
     for (File file : files) {
       VirtualFile vf = findFirstValidVirtualParent(file);
@@ -54,7 +53,7 @@ public class RefreshVFsSynchronously {
     return filesToRefresh;
   }
 
-  private static void refreshDeletedOrReplaced(@Nonnull Collection<File> deletedOrReplaced) {
+  private static void refreshDeletedOrReplaced(Collection<File> deletedOrReplaced) {
     Collection<VirtualFile> filesToRefresh = new HashSet<>();
     for (File file : deletedOrReplaced) {
       File parent = file.getParentFile();
@@ -190,12 +189,12 @@ public class RefreshVFsSynchronously {
       }
     }
 
-    @Nonnull
+    
     public Collection<File> getToRefresh() {
       return myToRefresh;
     }
 
-    @Nonnull
+    
     public Collection<File> getToRefreshDeletedOrReplaced() {
       return myToRefreshDeletedOrReplaced;
     }

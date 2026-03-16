@@ -20,7 +20,7 @@ import consulo.execution.test.sm.runner.SMTestProxy;
 import consulo.execution.test.sm.ui.TestsPresentationUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredTableCellRenderer;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +64,11 @@ public abstract class StubElementTypeHolder<T> {
   /**
    * Load serializer. By default use {@link #allFromStaticFields(Class, FieldValueGetter)}
    */
-  @Nonnull
+  
   public abstract List<ObjectStubSerializerProvider> loadSerializers();
 
-  @Nonnull
-  protected final List<ObjectStubSerializerProvider> allFromStaticFields(@Nonnull Class<T> clazz, @Nonnull FieldValueGetter fieldGetter) {
+  
+  protected final List<ObjectStubSerializerProvider> allFromStaticFields(Class<T> clazz, FieldValueGetter fieldGetter) {
     String externalIdPrefix = getExternalIdPrefix();
     boolean isLazy = externalIdPrefix != null;
     Field[] fields = clazz.getFields();

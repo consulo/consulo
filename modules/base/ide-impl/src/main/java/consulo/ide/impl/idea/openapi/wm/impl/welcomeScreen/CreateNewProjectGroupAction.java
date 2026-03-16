@@ -12,7 +12,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -25,7 +24,7 @@ public class CreateNewProjectGroupAction extends RecentProjectsWelcomeScreenActi
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         InputValidator validator = new InputValidator() {
             @Override
             @RequiredUIAccess

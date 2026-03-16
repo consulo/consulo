@@ -16,12 +16,11 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author Alexander.Chernikov
  */
 public interface HelpID {
-  @NonNls String EXPORT_TO_HTML = "reference.file.exportToHtml";
-  @NonNls String PRINT = "reference.file.print";
+  String EXPORT_TO_HTML = "reference.file.exportToHtml";
+  String PRINT = "reference.file.print";
 }

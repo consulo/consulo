@@ -24,8 +24,7 @@ import consulo.project.Project;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,8 +50,8 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
     public GeneralTestEventsProcessor(
         Project project,
-        @Nonnull String testFrameworkName,
-        @Nonnull SMTestProxy.SMRootTestProxy testsRootProxy
+        String testFrameworkName,
+        SMTestProxy.SMRootTestProxy testsRootProxy
     ) {
         myProject = project;
         myEventPublisher = project.getMessageBus().syncPublisher(SMTRunnerEventsListener.class);
@@ -157,7 +156,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onTestStarted(@Nonnull TestStartedEvent testStartedEvent);
+    public abstract void onTestStarted(TestStartedEvent testStartedEvent);
 
     protected void fireOnTestStarted(SMTestProxy testProxy) {
         myEventPublisher.onTestStarted(testProxy);
@@ -166,7 +165,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onTestFinished(@Nonnull TestFinishedEvent testFinishedEvent);
+    public abstract void onTestFinished(TestFinishedEvent testFinishedEvent);
 
     protected void fireOnTestFinished(SMTestProxy testProxy) {
         myEventPublisher.onTestFinished(testProxy);
@@ -175,7 +174,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onTestFailure(@Nonnull TestFailedEvent testFailedEvent);
+    public abstract void onTestFailure(TestFailedEvent testFailedEvent);
 
     protected void fireOnTestFailed(SMTestProxy testProxy) {
         myEventPublisher.onTestFailed(testProxy);
@@ -184,7 +183,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onTestIgnored(@Nonnull TestIgnoredEvent testIgnoredEvent);
+    public abstract void onTestIgnored(TestIgnoredEvent testIgnoredEvent);
 
     protected void fireOnTestIgnored(SMTestProxy testProxy) {
         myEventPublisher.onTestIgnored(testProxy);
@@ -193,9 +192,9 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onTestOutput(@Nonnull TestOutputEvent testOutputEvent);
+    public abstract void onTestOutput(TestOutputEvent testOutputEvent);
 
-    public abstract void onSuiteStarted(@Nonnull TestSuiteStartedEvent suiteStartedEvent);
+    public abstract void onSuiteStarted(TestSuiteStartedEvent suiteStartedEvent);
 
     protected void fireOnSuiteStarted(SMTestProxy newSuite) {
         myEventPublisher.onSuiteStarted(newSuite);
@@ -204,7 +203,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onSuiteFinished(@Nonnull TestSuiteFinishedEvent suiteFinishedEvent);
+    public abstract void onSuiteFinished(TestSuiteFinishedEvent suiteFinishedEvent);
 
     protected void fireOnSuiteFinished(SMTestProxy mySuite) {
         myEventPublisher.onSuiteFinished(mySuite);
@@ -213,9 +212,9 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
         }
     }
 
-    public abstract void onUncapturedOutput(@Nonnull String text, Key outputType);
+    public abstract void onUncapturedOutput(String text, Key outputType);
 
-    public abstract void onError(@Nonnull String localizedMessage, @Nullable String stackTrace, boolean isCritical);
+    public abstract void onError(String localizedMessage, @Nullable String stackTrace, boolean isCritical);
 
     protected static void fireOnTestsReporterAttached(SMTestProxy.SMRootTestProxy rootNode) {
         rootNode.setTestsReporterAttached();
@@ -278,15 +277,15 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
     public abstract void onTestsReporterAttached();
 
-    public void setLocator(@Nonnull SMTestLocator locator) {
+    public void setLocator(SMTestLocator locator) {
         myLocator = locator;
     }
 
-    public void addEventsListener(@Nonnull SMTRunnerEventsListener listener) {
+    public void addEventsListener(SMTRunnerEventsListener listener) {
         myListenerAdapters.add(listener);
     }
 
-    public abstract void setPrinterProvider(@Nonnull TestProxyPrinterProvider printerProvider);
+    public abstract void setPrinterProvider(TestProxyPrinterProvider printerProvider);
 
     @Override
     public void dispose() {

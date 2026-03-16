@@ -36,7 +36,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.ZipUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.awt.*;
@@ -53,13 +52,13 @@ import java.util.zip.ZipFile;
  */
 @ActionImpl(id = "ImportSettings")
 public class ImportSettingsAction extends AnAction implements DumbAware {
-    @Nonnull
+    
     private final Application myApplication;
-    @Nonnull
+    
     private final IApplicationStore myApplicationStore;
 
     @Inject
-    public ImportSettingsAction(@Nonnull Application application, @Nonnull IApplicationStore applicationStore) {
+    public ImportSettingsAction(Application application, IApplicationStore applicationStore) {
         super(ActionLocalize.actionImportsettingsText(), ActionLocalize.actionImportsettingsDescription());
         myApplication = application;
         myApplicationStore = applicationStore;
@@ -67,7 +66,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         ChooseComponentsToExportDialog.chooseSettingsFile(
             ContainerPathManager.get().getConfigPath(),
@@ -182,10 +181,10 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
         return IdeLocalize.messagePleaseEnsureCorrectSettings();
     }
 
-    @Nonnull
+    
     private static List<ExportSettingsAction.ExportableItem> getComponentsStored(
-        @Nonnull File zipFile,
-        @Nonnull Collection<? extends ExportSettingsAction.ExportableItem> registeredComponents
+        File zipFile,
+        Collection<? extends ExportSettingsAction.ExportableItem> registeredComponents
     ) throws IOException {
         File configPath = new File(ContainerPathManager.get().getConfigPath());
         List<ExportSettingsAction.ExportableItem> components = new ArrayList<>();

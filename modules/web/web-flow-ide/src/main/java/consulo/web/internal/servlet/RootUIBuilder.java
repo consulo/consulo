@@ -27,7 +27,6 @@ import consulo.ui.layout.DockLayout;
 import consulo.util.lang.TimeoutUtil;
 import consulo.web.application.WebApplication;
 import consulo.web.application.WebSession;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ import jakarta.annotation.Nonnull;
 public class RootUIBuilder implements UIBuilder {
   @RequiredUIAccess
   @Override
-  public void build(@Nonnull Window window) {
+  public void build(Window window) {
     Disposer.register(window, () -> {
       WebApplication application = WebApplication.getInstance();
       if (application == null || !((ApplicationEx)application).isLoaded()) {

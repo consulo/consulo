@@ -33,7 +33,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -169,7 +168,7 @@ class ExportToHTMLManager {
     return constructOutputDirectory(psiFile.getContainingDirectory(), outputDirectoryName);
   }
 
-  private static String constructOutputDirectory(@Nonnull PsiDirectory directory, String outputDirectoryName) {
+  private static String constructOutputDirectory(PsiDirectory directory, String outputDirectoryName) {
     String qualifiedName = PsiPackageHelper.getInstance(directory.getProject()).getQualifiedName(directory, false);
     String dirName = outputDirectoryName;
     if (qualifiedName.length() > 0) {

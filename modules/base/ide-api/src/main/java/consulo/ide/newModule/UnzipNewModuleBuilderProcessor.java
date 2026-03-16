@@ -21,7 +21,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.zip.ZipUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +41,7 @@ public abstract class UnzipNewModuleBuilderProcessor<C extends NewModuleWizardCo
     myPath = path;
   }
 
-  protected void unzip(@Nonnull ModifiableRootModel model) {
+  protected void unzip(ModifiableRootModel model) {
     InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(myPath);
     if (resourceAsStream == null) {
       LOG.error("Resource by path '" + myPath + "' not found");

@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -48,7 +47,7 @@ public class SeparatorWithText extends JComponent implements Accessible {
     return myTextForeground;
   }
 
-  public void setTextForeground(@Nonnull Color textForeground) {
+  public void setTextForeground(Color textForeground) {
     myTextForeground = textForeground;
   }
 

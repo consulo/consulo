@@ -22,7 +22,6 @@ import consulo.component.util.BusyObject;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -33,7 +32,7 @@ import jakarta.inject.Singleton;
 @ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
 public class LightUiActivityMonitor extends UiActivityMonitor {
   @Override
-  public BusyObject getBusy(@Nonnull ComponentManager project, UiActivity... toWatch) {
+  public BusyObject getBusy(ComponentManager project, UiActivity... toWatch) {
     return null;
   }
 
@@ -43,32 +42,32 @@ public class LightUiActivityMonitor extends UiActivityMonitor {
   }
 
   @Override
-  public void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity) {
+  public void addActivity(ComponentManager project, UiActivity activity) {
 
   }
 
   @Override
-  public void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState) {
+  public void addActivity(ComponentManager project, UiActivity activity, ModalityState effectiveModalityState) {
 
   }
 
   @Override
-  public void addActivity(@Nonnull UiActivity activity) {
+  public void addActivity(UiActivity activity) {
 
   }
 
   @Override
-  public void addActivity(@Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState) {
+  public void addActivity(UiActivity activity, ModalityState effectiveModalityState) {
 
   }
 
   @Override
-  public void removeActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity) {
+  public void removeActivity(ComponentManager project, UiActivity activity) {
 
   }
 
   @Override
-  public void removeActivity(@Nonnull UiActivity activity) {
+  public void removeActivity(UiActivity activity) {
 
   }
 

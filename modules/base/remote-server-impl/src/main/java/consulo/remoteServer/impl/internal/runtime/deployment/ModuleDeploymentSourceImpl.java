@@ -26,8 +26,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -37,12 +36,12 @@ import java.io.File;
 public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
     private final NamedPointer<Module> myPointer;
 
-    public ModuleDeploymentSourceImpl(@Nonnull NamedPointer<Module> pointer) {
+    public ModuleDeploymentSourceImpl(NamedPointer<Module> pointer) {
         myPointer = pointer;
     }
 
     @Override
-    @Nonnull
+    
     public NamedPointer<Module> getModulePointer() {
         return myPointer;
     }
@@ -83,7 +82,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return file.getAbsolutePath();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPresentableName() {
         return LocalizeValue.of(myPointer.getName());
@@ -117,7 +116,7 @@ public class ModuleDeploymentSourceImpl implements ModuleDeploymentSource {
         return myPointer.hashCode();
     }
 
-    @Nonnull
+    
     @Override
     public DeploymentSourceType<?> getType() {
         return DeploymentSourceType.EP_NAME.findExtensionOrFail(ModuleDeploymentSourceType.class);

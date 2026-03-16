@@ -56,8 +56,7 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.ui.util.LabeledComponents;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +68,9 @@ import java.util.List;
 @ExtensionImpl
 public class EditorGeneralConfigurable extends SimpleConfigurableByProperties implements Configurable, ApplicationConfigurable {
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
         CodeInsightSettings codeInsightSettings = CodeInsightSettings.getInstance();
         UISettings uiSettings = UISettings.getInstance();
@@ -466,7 +465,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         restartDaemons();
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "editor.general";
@@ -478,7 +477,7 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         return StandardConfigurableIds.EDITOR_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("General");

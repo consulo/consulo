@@ -18,7 +18,6 @@ package consulo.desktop.swt.ui.impl;
 import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
 
-import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,20 +30,20 @@ public class DesktopSwtStyleManagerImpl extends StyleManagerImpl  {
 
   private Style myCurrentStyle = new DesktopSwtStyleImpl("light", "Light");
 
-  @Nonnull
+  
   @Override
   public List<Style> getStyles() {
     return Arrays.asList(myCurrentStyle);
   }
 
-  @Nonnull
+  
   @Override
   public Style getCurrentStyle() {
     return myCurrentStyle;
   }
 
   @Override
-  public void setCurrentStyle(@Nonnull Style style) {
+  public void setCurrentStyle(Style style) {
     Style oldStyle = myCurrentStyle;
     myCurrentStyle = style;
     fireStyleChanged(oldStyle, style);

@@ -21,8 +21,7 @@ import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.fileEditor.internal.SearchReplaceComponentFactory;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -37,14 +36,14 @@ import java.util.function.BooleanSupplier;
 public class SearchReplaceComponentFactoryImpl implements SearchReplaceComponentFactory {
   @Override
   public SearchReplaceComponent create(@Nullable Project project,
-                                       @Nonnull JComponent targetComponent,
-                                       @Nonnull DefaultActionGroup searchToolbar1Actions,
-                                       @Nonnull BooleanSupplier searchToolbar1ModifiedFlagGetter,
-                                       @Nonnull DefaultActionGroup searchToolbar2Actions,
-                                       @Nonnull DefaultActionGroup searchFieldActions,
-                                       @Nonnull DefaultActionGroup replaceToolbar1Actions,
-                                       @Nonnull DefaultActionGroup replaceToolbar2Actions,
-                                       @Nonnull DefaultActionGroup replaceFieldActions,
+                                       JComponent targetComponent,
+                                       DefaultActionGroup searchToolbar1Actions,
+                                       BooleanSupplier searchToolbar1ModifiedFlagGetter,
+                                       DefaultActionGroup searchToolbar2Actions,
+                                       DefaultActionGroup searchFieldActions,
+                                       DefaultActionGroup replaceToolbar1Actions,
+                                       DefaultActionGroup replaceToolbar2Actions,
+                                       DefaultActionGroup replaceFieldActions,
                                        @Nullable Runnable replaceAction,
                                        @Nullable Runnable closeAction,
                                        @Nullable UiDataProvider dataProvider) {

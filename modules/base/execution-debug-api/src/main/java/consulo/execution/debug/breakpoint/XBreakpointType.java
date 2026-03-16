@@ -26,9 +26,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collections;
@@ -52,9 +50,9 @@ import java.util.List;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreakpointProperties> {
     public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create(XBreakpointType.class);
-    @Nonnull
+    
     private final String myId;
-    @Nonnull
+    
     private final String myTitle;
     private final boolean mySuspendThreadSupported;
 
@@ -62,7 +60,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @param id    an unique id of breakpoint type
      * @param title title of tab in the breakpoints dialog
      */
-    protected XBreakpointType(@Nonnull String id, @Nls @Nonnull String title) {
+    protected XBreakpointType(String id, String title) {
         this(id, title, false);
     }
 
@@ -71,7 +69,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @param title                  title of tab in the breakpoints dialog
      * @param suspendThreadSupported <code>true</code> if suspending only one thread is supported for this type of breakpoints
      */
-    protected XBreakpointType(@Nonnull String id, @Nls @Nonnull String title, boolean suspendThreadSupported) {
+    protected XBreakpointType(String id, String title, boolean suspendThreadSupported) {
         myId = id;
         myTitle = title;
         mySuspendThreadSupported = suspendThreadSupported;
@@ -103,32 +101,32 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
         return EnumSet.allOf(StandardPanels.class);
     }
 
-    @Nonnull
+    
     public final String getId() {
         return myId;
     }
 
-    @Nonnull
+    
     public String getTitle() {
         return myTitle;
     }
 
-    @Nonnull
+    
     public Image getEnabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpoint();
     }
 
-    @Nonnull
+    
     public Image getDisabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointdisabled();
     }
 
-    @Nonnull
+    
     public Image getMutedEnabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointmuted();
     }
 
-    @Nonnull
+    
     public Image getMutedDisabledIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointmuteddisabled();
     }
@@ -136,7 +134,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     /**
      * @return the icon which is shown for a dependent breakpoint until its master breakpoint is reached
      */
-    @Nonnull
+    
     public Image getInactiveDependentIcon() {
         return ExecutionDebugIconGroup.breakpointBreakpointdependent();
     }
@@ -149,22 +147,22 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     }
 
     @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(@Nonnull Project project) {
+    public XBreakpointCustomPropertiesPanel<B> createCustomPropertiesPanel(Project project) {
         return null;
     }
 
     @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(@Nonnull Project project) {
+    public XBreakpointCustomPropertiesPanel<B> createCustomRightPropertiesPanel(Project project) {
         return null;
     }
 
     @Nullable
-    public XBreakpointCustomPropertiesPanel<B> createCustomTopPropertiesPanel(@Nonnull Project project) {
+    public XBreakpointCustomPropertiesPanel<B> createCustomTopPropertiesPanel(Project project) {
         return null;
     }
 
     @Nullable
-    public XDebuggerEditorsProvider getEditorsProvider(@Nonnull B breakpoint, @Nonnull Project project) {
+    public XDebuggerEditorsProvider getEditorsProvider(B breakpoint, Project project) {
         return null;
     }
 
@@ -172,7 +170,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
         return Collections.emptyList();
     }
 
-    @Nonnull
+    
     public Comparator<B> getBreakpointComparator() {
         return (b, b1) -> (int) (b1.getTimeStamp() - b.getTimeStamp());
         //return XDebuggerUtil.getInstance().getDefaultBreakpointComparator(this);
@@ -207,11 +205,11 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * @return a default breakpoint or {@code null} if default breakpoint isn't supported
      */
     @Nullable
-    public XBreakpoint<P> createDefaultBreakpoint(@Nonnull XBreakpointCreator<P> creator) {
+    public XBreakpoint<P> createDefaultBreakpoint(XBreakpointCreator<P> creator) {
         return null;
     }
 
-    public boolean shouldShowInBreakpointsDialog(@Nonnull Project project) {
+    public boolean shouldShowInBreakpointsDialog(Project project) {
         return true;
     }
 
@@ -224,7 +222,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
      * Override this method to define source position for a breakpoint. It will be used e.g. by 'Go To' and 'View Source' buttons in 'Breakpoints' dialog
      */
     @Nullable
-    public XSourcePosition getSourcePosition(@Nonnull XBreakpoint<P> breakpoint) {
+    public XSourcePosition getSourcePosition(XBreakpoint<P> breakpoint) {
         return null;
     }
 
@@ -233,7 +231,7 @@ public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreak
     }
 
     public interface XBreakpointCreator<P extends XBreakpointProperties> {
-        @Nonnull
+        
         XBreakpoint<P> createBreakpoint(@Nullable P properties);
     }
 }

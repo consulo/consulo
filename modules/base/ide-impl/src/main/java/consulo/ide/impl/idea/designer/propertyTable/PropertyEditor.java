@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.designer.propertyTable;
 
 import consulo.ide.impl.idea.designer.model.PropertiesContainer;
 import consulo.ide.impl.idea.designer.model.PropertyContext;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -29,7 +28,7 @@ import javax.swing.event.EventListenerList;
 public abstract class PropertyEditor {
   private final EventListenerList myListenerList = new EventListenerList();
 
-  @Nonnull
+  
   public abstract JComponent getComponent(@Nullable PropertiesContainer container,
                                           @Nullable PropertyContext context,
                                           Object value,

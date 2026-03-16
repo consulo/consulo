@@ -34,8 +34,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +48,7 @@ public interface CodeEditorInternalHelper {
     public static class CaretDataContext extends DataContextWrapper {
         protected final Caret myCaret;
 
-        public CaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+        public CaretDataContext(DataContext delegate, Caret caret) {
             super(delegate);
             myCaret = caret;
         }
@@ -57,7 +56,7 @@ public interface CodeEditorInternalHelper {
         @Nullable
         @Override
         @SuppressWarnings("unchecked")
-        public <T> T getData(@Nonnull Key<T> dataId) {
+        public <T> T getData(Key<T> dataId) {
             if (Caret.KEY == dataId) {
                 return (T) myCaret;
             }
@@ -69,12 +68,12 @@ public interface CodeEditorInternalHelper {
         return Application.get().getInstance(CodeEditorInternalHelper.class);
     }
 
-    @Nonnull
-    default CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+    
+    default CaretDataContext createCaretDataContext(DataContext delegate, Caret caret) {
         return new CaretDataContext(delegate, caret);
     }
 
-    default boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
+    default boolean ensureInjectionUpToDate(Caret hostCaret) {
         return false;
     }
 
@@ -87,34 +86,34 @@ public interface CodeEditorInternalHelper {
         return !Objects.equals(leftTokenType, rightTokenType);
     }
 
-    default void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
+    default void rememberEditorHighlighterForCachesOptimization(Document document, EditorHighlighter highlighter) {
     }
 
     default void updateNotifications(Project project, VirtualFile file) {
     }
 
-    default boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
+    default boolean shouldUseSmartTabs(Project project, Editor editor) {
         return false;
     }
 
-    default int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
+    default int calcColumnNumber(Editor editor, CharSequence text, int start, int offset) {
         return calcColumnNumber(editor, text, start, offset, EditorUtil.getTabSize(editor));
     }
 
-    default int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, int start, int offset, int tabSize) {
+    default int calcColumnNumber(@Nullable Editor editor, CharSequence text, int start, int offset, int tabSize) {
         return 0;
     }
 
-    default int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
+    default int getLastVisualLineColumnNumber(Editor editor, int line) {
         return line;
     }
 
-    default int getSpaceWidth(@Nonnull Editor editor) {
+    default int getSpaceWidth(Editor editor) {
         return 1;
     }
 
     @Nullable
-    MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create);
+    MarkupModelEx forDocument(Document document, @Nullable Project project, boolean create);
 
     default boolean isShowMethodSeparators() {
         return false;
@@ -123,40 +122,40 @@ public interface CodeEditorInternalHelper {
     default void setShowMethodSeparators(boolean value) {
     }
 
-    @Nonnull
-    default LineWrapPositionStrategy getLineWrapPositionStrategy(@Nonnull Editor editor) {
+    
+    default LineWrapPositionStrategy getLineWrapPositionStrategy(Editor editor) {
         return new DefaultLineWrapPositionStrategy();
     }
 
-    @Nonnull
+    
     default EditorHighlighter createEmptyHighlighter(Project project, Document document) {
         throw new UnsupportedOperationException();
     }
 
-    default void updateFoldRegions(@Nonnull Project project, @Nonnull Editor editor) {
+    default void updateFoldRegions(Project project, Editor editor) {
     }
 
     @Nullable
-    default StickyLinesModel getStickyLinesModel(@Nonnull Project project, @Nonnull Document document) {
+    default StickyLinesModel getStickyLinesModel(Project project, Document document) {
         return null;
     }
 
-    @Nonnull
-    default StickyLinesModel getStickyLinesModel(@Nonnull MarkupModel markupModel) {
+    
+    default StickyLinesModel getStickyLinesModel(MarkupModel markupModel) {
         throw new UnsupportedOperationException();
     }
 
-    default void restartStickyPass(@Nonnull Project project, @Nonnull Document document) {
+    default void restartStickyPass(Project project, Document document) {
     }
 
-    default int compareByHighlightInfoSeverity(@Nonnull RangeHighlighterEx o1, @Nonnull RangeHighlighterEx o2) {
+    default int compareByHighlightInfoSeverity(RangeHighlighterEx o1, RangeHighlighterEx o2) {
         return 0;
     }
 
     default void hideCursorInEditor(Editor editor) {
     }
 
-    default void includeCurrentCommandAsNavigation(@Nonnull Project project) {
+    default void includeCurrentCommandAsNavigation(Project project) {
     }
 
     @RequiredReadAction

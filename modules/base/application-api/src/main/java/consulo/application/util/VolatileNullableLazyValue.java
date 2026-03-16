@@ -3,9 +3,8 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -47,8 +46,8 @@ public abstract class VolatileNullableLazyValue<T> extends NullableLazyValue<T> 
   }
 
   @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-  @Nonnull
-  public static <T> VolatileNullableLazyValue<T> createValue(@Nonnull final Supplier<? extends T> value) {
+  
+  public static <T> VolatileNullableLazyValue<T> createValue(final Supplier<? extends T> value) {
     return new VolatileNullableLazyValue<T>() {
 
       @Nullable

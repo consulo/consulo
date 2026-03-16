@@ -1,8 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,9 +14,9 @@ public class LabelBasedRenderer extends JLabel {
   public static class List<E> extends LabelBasedRenderer implements ListCellRenderer<E> {
     private static final Border EMPTY = JBUI.Borders.empty(1); // see DefaultListCellRenderer.getNoFocusBorder
 
-    @Nonnull
+    
     @Override
-    public Component getListCellRendererComponent(@Nonnull JList<? extends E> list, @Nullable E value, int index, boolean selected, boolean focused) {
+    public Component getListCellRendererComponent(JList<? extends E> list, @Nullable E value, int index, boolean selected, boolean focused) {
       configure(list, value);
       setForeground(UIUtil.getListForeground(selected, focused));
       setBackground(UIUtil.getListBackground(selected, focused));
@@ -29,9 +28,9 @@ public class LabelBasedRenderer extends JLabel {
   public static class Tree extends LabelBasedRenderer implements TreeCellRenderer {
     private static final Border EMPTY = JBUI.Borders.emptyRight(3); // see DefaultTreeCellRenderer.getPreferredSize
 
-    @Nonnull
+    
     @Override
-    public Component getTreeCellRendererComponent(@Nonnull JTree tree, @Nullable Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean focused) {
+    public Component getTreeCellRendererComponent(JTree tree, @Nullable Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean focused) {
       configure(tree, tree.convertValueToText(value, selected, expanded, leaf, row, focused));
       setForeground(UIUtil.getTreeForeground(selected, focused));
       setBackground(selected ? UIUtil.getTreeSelectionBackground(focused) : UIUtil.getTreeBackground());
@@ -40,7 +39,7 @@ public class LabelBasedRenderer extends JLabel {
     }
   }
 
-  void configure(@Nonnull Component component, @Nullable Object value) {
+  void configure(Component component, @Nullable Object value) {
     setComponentOrientation(component.getComponentOrientation());
     setEnabled(component.isEnabled());
     setFont(component.getFont());

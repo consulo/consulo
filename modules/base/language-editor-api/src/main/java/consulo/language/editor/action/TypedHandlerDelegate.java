@@ -11,7 +11,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * Handler, extending IDE behaviour on typing in editor.
@@ -30,8 +29,8 @@ public abstract class TypedHandlerDelegate {
      * If the specified character triggers auto-popup, schedules the auto-popup appearance. This method is called even
      * in overwrite mode, when the rest of typed handler delegate methods are not called. It is invoked only for the primary caret.
      */
-    @Nonnull
-    public Result checkAutoPopup(char charTyped, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    
+    public Result checkAutoPopup(char charTyped, Project project, Editor editor, PsiFile file) {
         return Result.CONTINUE;
     }
 
@@ -39,21 +38,21 @@ public abstract class TypedHandlerDelegate {
      * Called before selected text is deleted.
      * This method is supposed to be overridden by handlers having custom behaviour with respect to selection.
      */
-    @Nonnull
-    public Result beforeSelectionRemoved(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    
+    public Result beforeSelectionRemoved(char c, Project project, Editor editor, PsiFile file) {
         return Result.CONTINUE;
     }
 
     /**
      * Called before the specified character typed by the user is inserted in the editor.
      */
-    @Nonnull
+    
     public Result beforeCharTyped(
         char c,
-        @Nonnull Project project,
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
-        @Nonnull FileType fileType
+        Project project,
+        Editor editor,
+        PsiFile file,
+        FileType fileType
     ) {
         return Result.CONTINUE;
     }
@@ -61,12 +60,12 @@ public abstract class TypedHandlerDelegate {
     /**
      * Called after the specified character typed by the user has been inserted in the editor.
      */
-    @Nonnull
-    public Result charTyped(char c, @Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    
+    public Result charTyped(char c, Project project, Editor editor, PsiFile file) {
         return Result.CONTINUE;
     }
 
-    public boolean isImmediatePaintingEnabled(@Nonnull Editor editor, char c, @Nonnull DataContext context) {
+    public boolean isImmediatePaintingEnabled(Editor editor, char c, DataContext context) {
         return true;
     }
 

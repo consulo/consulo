@@ -18,7 +18,7 @@ package consulo.language.codeStyle.ui.internal.arrangement;
 import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Svetlana.Zemlyanskaya

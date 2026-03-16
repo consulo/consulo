@@ -22,8 +22,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.QuickActionProvider;
 import consulo.util.collection.JBIterable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerAdapter;
@@ -99,7 +98,7 @@ public class SimpleToolWindowPanel extends JBPanelWithEmptyText implements Quick
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     if (myProvideQuickActions) {
       sink.set(QuickActionProvider.KEY, this);
     }

@@ -28,8 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.ui.view.internal.ProjectSettingsService;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -58,7 +57,7 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
 
     @Override
     @RequiredUIAccess
-    public void openLibrary(@Nonnull Library library) {
+    public void openLibrary(Library library) {
         myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectProjectOrGlobalLibrary(library, true));
     }
 
@@ -95,14 +94,14 @@ public class ProjectSettingsServiceImpl extends ProjectSettingsService {
 
     @Override
     @RequiredUIAccess
-    public void openModuleDependenciesSettings(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
+    public void openModuleDependenciesSettings(Module module, @Nullable OrderEntry orderEntry) {
         myShowSettingsUtil.showProjectStructureDialog(myProject, c -> c.selectOrderEntry(module, orderEntry));
     }
 
     @Override
     @RequiredUIAccess
     @SuppressWarnings("unchecked")
-    public void openLibraryOrSdkSettings(@Nonnull OrderEntry orderEntry) {
+    public void openLibraryOrSdkSettings(OrderEntry orderEntry) {
         OrderEntryType type = orderEntry.getType();
 
         OrderEntryTypeEditor editor = OrderEntryTypeEditor.getEditor(type.getId());

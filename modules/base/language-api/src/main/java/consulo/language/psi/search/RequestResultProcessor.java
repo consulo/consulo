@@ -4,7 +4,6 @@ package consulo.language.psi.search;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -22,7 +21,7 @@ public abstract class RequestResultProcessor {
   /**
    * @param equality this processor's equals/hashCode will delegate to this object
    */
-  protected RequestResultProcessor(@Nonnull Object... equality) {
+  protected RequestResultProcessor(Object... equality) {
     myEquality = Arrays.asList(equality);
   }
 
@@ -50,7 +49,7 @@ public abstract class RequestResultProcessor {
    *
    * @return whether the consumer has returned false for any of the references (and thus stopped searching), false otherwise.
    */
-  public abstract boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull Predicate<? super PsiReference> consumer);
+  public abstract boolean processTextOccurrence(PsiElement element, int offsetInElement, Predicate<? super PsiReference> consumer);
 
   /**
    * A variant of {@link RequestResultProcessor} that processes all text occurrences at once, e.g. for performance purposes.
@@ -60,12 +59,12 @@ public abstract class RequestResultProcessor {
     public BulkResultProcessor() {
     }
 
-    public BulkResultProcessor(@Nonnull Object... equality) {
+    public BulkResultProcessor(Object... equality) {
       super(equality);
     }
 
     @Override
-    public boolean processTextOccurrence(@Nonnull PsiElement element, int offsetInElement, @Nonnull Predicate<? super PsiReference> consumer) {
+    public boolean processTextOccurrence(PsiElement element, int offsetInElement, Predicate<? super PsiReference> consumer) {
       return processTextOccurrences(element, new int[]{offsetInElement}, consumer);
     }
 
@@ -76,6 +75,6 @@ public abstract class RequestResultProcessor {
      *
      * @return whether the consumer has returned false for any of the references (and thus stopped searching), false otherwise.
      */
-    public abstract boolean processTextOccurrences(@Nonnull PsiElement scope, int[] offsetsInScope, @Nonnull Predicate<? super PsiReference> consumer);
+    public abstract boolean processTextOccurrences(PsiElement scope, int[] offsetsInScope, Predicate<? super PsiReference> consumer);
   }
 }

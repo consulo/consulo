@@ -26,8 +26,7 @@ import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -49,7 +48,7 @@ public interface CheckinEnvironment extends VcsProviderMarker {
     @Nullable
     String getHelpId();
 
-    @Nonnull
+    
     LocalizeValue getCheckinOperationName();
 
     @Nullable
@@ -59,7 +58,7 @@ public interface CheckinEnvironment extends VcsProviderMarker {
     List<VcsException> commit(
         List<Change> changes,
         String preparedComment,
-        @Nonnull Function<Object, Object> parametersHolder,
+        Function<Object, Object> parametersHolder,
         Set<String> feedback
     );
 

@@ -22,7 +22,6 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TokenWrapper;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -49,18 +48,18 @@ public class ForeignLeafPsiElement extends LeafPsiElement {
     }
 
     @Override
-    public boolean textMatches(@Nonnull CharSequence seq) {
+    public boolean textMatches(CharSequence seq) {
         return false;
     }
 
     @Override
-    public int textMatches(@Nonnull CharSequence buffer, int start) {
+    public int textMatches(CharSequence buffer, int start) {
         return start;
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return false;
     }
 

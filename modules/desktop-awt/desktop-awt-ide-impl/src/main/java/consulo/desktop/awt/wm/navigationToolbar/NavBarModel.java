@@ -26,8 +26,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -159,7 +158,7 @@ public class NavBarModel {
         @Nullable PsiElement element,
         @Nullable NavBarModelExtension ownerExtension,
         @Nullable Object object,
-        @Nonnull NavBarPresentation presentation
+        NavBarPresentation presentation
     ) {
         List<Object> modelElements;
 
@@ -483,11 +482,11 @@ public class NavBarModel {
         return result;
     }
 
-    private boolean processChildren(Object object, @Nonnull Predicate<Object> processor) {
+    private boolean processChildren(Object object, Predicate<Object> processor) {
         return processChildrenWithExtensions(object, (o, ext) -> processor.test(o));
     }
 
-    private boolean processChildrenWithExtensions(Object object, @Nonnull BiPredicate<Object, NavBarModelExtension> pairProcessor) {
+    private boolean processChildrenWithExtensions(Object object, BiPredicate<Object, NavBarModelExtension> pairProcessor) {
         if (!isValid(object)) {
             return true;
         }

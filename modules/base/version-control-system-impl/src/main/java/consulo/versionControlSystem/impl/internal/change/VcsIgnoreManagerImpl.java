@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.change.IgnoredFileProvider;
 import consulo.versionControlSystem.change.VcsIgnoreManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,7 +39,7 @@ public class VcsIgnoreManagerImpl implements VcsIgnoreManager {
   }
 
   @Override
-  public boolean isPotentiallyIgnoredFile(@Nonnull FilePath filePath) {
+  public boolean isPotentiallyIgnoredFile(FilePath filePath) {
     return ReadAction.compute(() -> {
       return myProject.getExtensionPoint(IgnoredFileProvider.class).findFirstSafe(it -> it.isIgnoredFilePath(filePath)) != null;
     });

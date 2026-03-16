@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,5 +27,5 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AnalyzeStacktraceService {
-  AnAction createAnnotateStackTraceAction(@Nonnull ConsoleView consoleView);
+  AnAction createAnnotateStackTraceAction(ConsoleView consoleView);
 }

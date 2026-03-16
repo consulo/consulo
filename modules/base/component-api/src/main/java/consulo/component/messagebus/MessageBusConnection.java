@@ -15,7 +15,6 @@
  */
 package consulo.component.messagebus;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Aggregates multiple topic subscriptions for particular {@link MessageBus message bus}. I.e. every time a client wants to
@@ -35,7 +34,7 @@ public interface MessageBusConnection {
    *                               Note that that previously registered handler is not replaced by the given one then
    * @see MessageBus#syncPublisher(Class)
    */
-  <L> void subscribe(@Nonnull Class<L> topicClass, @Nonnull L handler) throws IllegalStateException;
+  <L> void subscribe(Class<L> topicClass, L handler) throws IllegalStateException;
 
   /**
    * Forces to process any queued but not delivered events.

@@ -15,12 +15,11 @@
  */
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public class SmartDeltaCompressor implements IntList {
 
-  @Nonnull
-  public static SmartDeltaCompressor newInstance(@Nonnull IntList deltaList) {
+  
+  public static SmartDeltaCompressor newInstance(IntList deltaList) {
     if (deltaList.size() < 0) throw new NegativeArraySizeException("size < 0: " + deltaList.size());
 
     int bytesAfterCompression = ByteArrayUtils.countBytesAfterCompression(deltaList);

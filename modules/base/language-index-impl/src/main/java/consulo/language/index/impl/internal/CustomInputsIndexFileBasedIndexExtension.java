@@ -16,7 +16,6 @@
 package consulo.language.index.impl.internal;
 
 import consulo.index.io.data.DataExternalizer;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -24,6 +23,6 @@ import java.util.Collection;
  * @author max
  */
 public interface CustomInputsIndexFileBasedIndexExtension<K> {
-    @Nonnull
+    
     DataExternalizer<Collection<K>> createExternalizer();
 }

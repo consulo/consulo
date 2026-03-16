@@ -20,7 +20,6 @@ import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
-import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -34,35 +33,35 @@ public abstract class AbstractRemoteExternalSystemServiceWrapper<S extends Exter
   implements RemoteExternalSystemService<S>
 {
 
-  @Nonnull
+  
   private final T myDelegate;
 
-  public AbstractRemoteExternalSystemServiceWrapper(@Nonnull T delegate) {
+  public AbstractRemoteExternalSystemServiceWrapper(T delegate) {
     myDelegate = delegate;
   }
 
   @Override
-  public void setSettings(@Nonnull S settings) throws RemoteException {
+  public void setSettings(S settings) throws RemoteException {
     myDelegate.setSettings(settings);
   }
 
   @Override
-  public void setNotificationListener(@Nonnull ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
+  public void setNotificationListener(ExternalSystemTaskNotificationListener notificationListener) throws RemoteException {
     myDelegate.setNotificationListener(notificationListener);
   }
 
   @Override
-  public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
     return myDelegate.isTaskInProgress(id);
   }
 
   @Override
-  @Nonnull
+  
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
     return myDelegate.getTasksInProgress();
   }
 
-  @Nonnull
+  
   public T getDelegate() {
     return myDelegate;
   }

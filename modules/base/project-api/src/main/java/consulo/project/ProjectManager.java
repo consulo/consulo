@@ -24,8 +24,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.internal.ProjectCloseService;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -41,27 +40,23 @@ public interface ProjectManager {
      *
      * @return <code>ProjectManager</code> instance
      */
-    @Nonnull
     public static ProjectManager getInstance() {
         return Application.get().getInstance(ProjectManager.class);
     }
 
-    @Nonnull
     CompletableFuture<Project> openProjectAsync(
-        @Nonnull Path filePath,
-        @Nonnull UIAccess uiAccess,
-        @Nonnull ProjectOpenContext context
+        Path filePath,
+        UIAccess uiAccess,
+        ProjectOpenContext context
     );
 
-    @Nonnull
-    default CompletableFuture<Boolean> closeProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    default CompletableFuture<Boolean> closeProjectAsync(Project project, UIAccess uiAccess) {
         return closeProjectAsync(project, uiAccess, true, true, true);
     }
 
-    @Nonnull
     default CompletableFuture<Boolean> closeProjectAsync(
-        @Nonnull Project project,
-        @Nonnull UIAccess uiAccess,
+        Project project,
+        UIAccess uiAccess,
         boolean checkCanClose,
         boolean save,
         boolean dispose
@@ -78,7 +73,7 @@ public interface ProjectManager {
      * @param project  project to add listener to
      * @param listener listener to add
      */
-    void addProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
+    void addProjectManagerListener(Project project, ProjectManagerListener listener);
 
     /**
      * Removes listener from the specified project.
@@ -86,14 +81,13 @@ public interface ProjectManager {
      * @param project  project to remove listener from
      * @param listener listener to remove
      */
-    void removeProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener);
+    void removeProjectManagerListener(Project project, ProjectManagerListener listener);
 
     /**
      * Returns the list of currently opened projects.
      *
      * @return the array of currently opened projects.
      */
-    @Nonnull
     Project[] getOpenProjects();
 
     /**
@@ -103,7 +97,6 @@ public interface ProjectManager {
      *
      * @return the template project instance.
      */
-    @Nonnull
     default Project getDefaultProject() {
         return DefaultProjectFactory.getInstance().getDefaultProject();
     }
@@ -114,7 +107,7 @@ public interface ProjectManager {
      *
      * @param project the project to reload.
      */
-    void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess);
+    void reloadProject(Project project, UIAccess uiAccess);
 
     /**
      * Create new project in given location.
@@ -135,11 +128,11 @@ public interface ProjectManager {
      */
     @Deprecated
     @DeprecationInfo("Use ProjectManager#TOPIC")
-    void addProjectManagerListener(@Nonnull ProjectManagerListener listener);
+    void addProjectManagerListener(ProjectManagerListener listener);
 
     @Deprecated
     @DeprecationInfo("Use ProjectManager#TOPIC")
-    void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable);
+    void addProjectManagerListener(ProjectManagerListener listener, Disposable parentDisposable);
 
     /**
      * Removes global listener from all projects.
@@ -148,7 +141,7 @@ public interface ProjectManager {
      */
     @Deprecated
     @DeprecationInfo("Use ProjectManager#TOPIC")
-    void removeProjectManagerListener(@Nonnull ProjectManagerListener listener);
+    void removeProjectManagerListener(ProjectManagerListener listener);
 
     //endregion
 }

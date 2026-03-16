@@ -22,8 +22,7 @@ import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.UiDataRule;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,35 +45,35 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     private boolean mySnapshotCollected;
 
     @Override
-    public <T> void set(@Nonnull Key<T> key, @Nullable T data) {
+    public <T> void set(Key<T> key, @Nullable T data) {
         if (data != null) {
             myImmediateData.putIfAbsent(key, data);
         }
     }
 
     @Override
-    public <T> void lazy(@Nonnull Key<T> key, @Nonnull Supplier<T> dataSupplier) {
+    public <T> void lazy(Key<T> key, Supplier<T> dataSupplier) {
         if (!myImmediateData.containsKey(key) && !myLazyData.containsKey(key)) {
             myLazyData.put(key, dataSupplier);
         }
     }
 
     @Override
-    public <T> void lazyValue(@Nonnull Key<T> key, @Nonnull Function<DataSnapshot, T> dataFunction) {
+    public <T> void lazyValue(Key<T> key, Function<DataSnapshot, T> dataFunction) {
         if (!myImmediateData.containsKey(key) && !myLazyValueData.containsKey(key)) {
             myLazyValueData.put(key, dataFunction);
         }
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull UiDataProvider provider) {
+    public void uiDataSnapshot(UiDataProvider provider) {
         provider.uiDataSnapshot(this);
     }
 
     /**
      * Collects data from the provider and applies all registered {@link UiDataRule}s.
      */
-    public void collectFromProvider(@Nonnull UiDataProvider provider, @Nonnull List<UiDataRule> rules) {
+    public void collectFromProvider(UiDataProvider provider, List<UiDataRule> rules) {
         if (!mySnapshotCollected) {
             provider.uiDataSnapshot(this);
             for (UiDataRule rule : rules) {
@@ -95,7 +94,7 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
      */
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T> T resolve(@Nonnull Key<T> key) {
+    public <T> T resolve(Key<T> key) {
         // 1. Immediate data
         Object immediate = myImmediateData.get(key);
         if (immediate != null) {
@@ -125,7 +124,7 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
 
     @Override
     @Nullable
-    public <T> T get(@Nonnull Key<T> key) {
+    public <T> T get(Key<T> key) {
         // DataSnapshot only returns immediate (non-lazy) data
         @SuppressWarnings("unchecked")
         T result = (T) myImmediateData.get(key);
@@ -133,7 +132,7 @@ public class DataSinkImpl implements DataSink, DataSnapshot {
     }
 
     @Nullable
-    private <T> T resolveUnderReadAction(@Nonnull Supplier<T> computation) {
+    private <T> T resolveUnderReadAction(Supplier<T> computation) {
         SimpleReference<T> result = SimpleReference.create();
         Application.get().tryRunReadAction(() -> result.set(computation.get()));
         return result.get();

@@ -17,7 +17,6 @@ package consulo.externalService.impl.internal.statistic;
 
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.util.lang.Couple;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +43,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
     }
 
     @Override
-    public void persistPatch(@Nonnull Map<String, Set<PatchedUsage>> patchedDescriptorMap) {
+    public void persistPatch(Map<String, Set<PatchedUsage>> patchedDescriptorMap) {
         for (Map.Entry<String, Set<PatchedUsage>> entry : patchedDescriptorMap.entrySet()) {
             String groupDescriptor = entry.getKey();
             for (PatchedUsage patchedUsage : entry.getValue()) {
@@ -67,7 +66,7 @@ public class BasicSentUsagesPersistenceComponent extends SentUsagesPersistence {
 
 
     @Override
-    @Nonnull
+    
     public Map<String, Set<UsageDescriptor>> getSentUsages() {
         return mySentDescriptors;
     }

@@ -5,7 +5,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author traff
@@ -36,7 +35,7 @@ public class PsiReferenceWrapper implements PsiReference {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public String getCanonicalText() {
     return myOriginalPsiReference.getCanonicalText();
@@ -50,7 +49,7 @@ public class PsiReferenceWrapper implements PsiReference {
 
   @RequiredWriteAction
   @Override
-  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
     return myOriginalPsiReference.bindToElement(element);
   }
 
@@ -61,7 +60,7 @@ public class PsiReferenceWrapper implements PsiReference {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public Object[] getVariants() {
     return myOriginalPsiReference.getVariants();

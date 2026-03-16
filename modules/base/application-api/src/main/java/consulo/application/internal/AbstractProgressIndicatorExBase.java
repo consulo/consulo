@@ -22,7 +22,6 @@ import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.WeakList;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBase implements ProgressIndicatorEx {
@@ -63,7 +62,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void finish(@Nonnull TaskInfo task) {
+  public void finish(TaskInfo task) {
     WeakList<TaskInfo> finished = myFinished;
     if (finished == null) {
       synchronized (getLock()) {
@@ -79,7 +78,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public boolean isFinished(@Nonnull TaskInfo task) {
+  public boolean isFinished(TaskInfo task) {
     Collection<TaskInfo> list = myFinished;
     return list != null && list.contains(task);
   }
@@ -155,7 +154,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public void addListener(@Nonnull ProgressIndicatorListener listener) {
+  public void addListener(ProgressIndicatorListener listener) {
     addStateDelegate(new AbstractProgressIndicatorExBase() {
       @Override
       public void cancel() {
@@ -164,7 +163,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
       }
 
       @Override
-      public void finish(@Nonnull TaskInfo task) {
+      public void finish(TaskInfo task) {
         super.finish(task);
         listener.finished();
       }
@@ -184,7 +183,7 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
   }
 
   @Override
-  public final void addStateDelegate(@Nonnull ProgressIndicatorEx delegate) {
+  public final void addStateDelegate(ProgressIndicatorEx delegate) {
     synchronized (getLock()) {
       delegate.initStateFrom(this);
       ProgressIndicatorEx[] stateDelegates = myStateDelegates;
@@ -202,17 +201,17 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
     }
   }
 
-  protected void delegateProgressChange(@Nonnull IndicatorAction action) {
+  protected void delegateProgressChange(IndicatorAction action) {
     delegate(action);
     onProgressChange();
   }
 
-  protected void delegateRunningChange(@Nonnull IndicatorAction action) {
+  protected void delegateRunningChange(IndicatorAction action) {
     delegate(action);
     onRunningChange();
   }
 
-  private void delegate(@Nonnull IndicatorAction action) {
+  private void delegate(IndicatorAction action) {
     ProgressIndicatorEx[] list = myStateDelegates;
     if (list != null) {
       for (ProgressIndicatorEx each : list) {
@@ -236,6 +235,6 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
 
   @FunctionalInterface
   protected interface IndicatorAction {
-    void execute(@Nonnull ProgressIndicatorEx each);
+    void execute(ProgressIndicatorEx each);
   }
 }

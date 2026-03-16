@@ -28,20 +28,19 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class CompileActionBase extends AnAction implements DumbAware {
     protected CompileActionBase() {
     }
 
-    protected CompileActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CompileActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -58,11 +57,11 @@ public abstract class CompileActionBase extends AnAction implements DumbAware {
     protected abstract void doAction(DataContext dataContext, Project project);
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         regularUpdate(e);
     }
 
-    protected void regularUpdate(@Nonnull AnActionEvent e) {
+    protected void regularUpdate(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null || !project.isInitialized()) {
             e.getPresentation().setEnabled(false);

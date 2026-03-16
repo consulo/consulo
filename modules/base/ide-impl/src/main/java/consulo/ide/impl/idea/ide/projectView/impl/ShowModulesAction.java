@@ -8,7 +8,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 /**
 * @author anna
@@ -27,7 +26,7 @@ public abstract class ShowModulesAction extends ToggleAction {
   }
 
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent event) {
+  public boolean isSelected(AnActionEvent event) {
     return ProjectView.getInstance(myProject).isShowModules(getId());
   }
 
@@ -35,13 +34,13 @@ public abstract class ShowModulesAction extends ToggleAction {
 
   @Override
   @RequiredUIAccess
-  public void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+  public void setSelected(AnActionEvent event, boolean flag) {
     ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
     projectView.setShowModules(flag, getId());
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
     ProjectViewImpl projectView = (ProjectViewImpl)ProjectView.getInstance(myProject);
     e.getPresentation().setVisible(Comparing.strEqual(projectView.getCurrentViewId(), getId()));

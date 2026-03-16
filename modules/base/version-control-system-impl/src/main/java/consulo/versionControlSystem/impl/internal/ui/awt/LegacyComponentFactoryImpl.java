@@ -27,8 +27,7 @@ import consulo.versionControlSystem.ui.awt.LegacyComponentFactory;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -43,7 +42,7 @@ import java.util.List;
 @Singleton
 public class LegacyComponentFactoryImpl implements LegacyComponentFactory {
     @Override
-    public LegacyDialog createSelectFilePathsDialog(Project project, List<FilePath> originalFiles, String prompt, VcsShowConfirmationOption confirmationOption, @Nonnull LocalizeValue okActionName, @Nonnull LocalizeValue cancelActionName, boolean showDoNotAskOption) {
+    public LegacyDialog createSelectFilePathsDialog(Project project, List<FilePath> originalFiles, String prompt, VcsShowConfirmationOption confirmationOption, LocalizeValue okActionName, LocalizeValue cancelActionName, boolean showDoNotAskOption) {
         return new SelectFilePathsDialog(project, originalFiles, prompt, confirmationOption, okActionName, cancelActionName, showDoNotAskOption);
     }
 
@@ -65,7 +64,7 @@ public class LegacyComponentFactoryImpl implements LegacyComponentFactory {
                 init();
             }
             
-            @Nonnull
+            
             @Override
             protected Action[] createActions() {
                 return new Action[]{getOKAction()};
@@ -79,7 +78,7 @@ public class LegacyComponentFactoryImpl implements LegacyComponentFactory {
     }
 
     @Override
-    public ChangesBrowserTree<FilePath> createFilePathChangesTreeList(@Nonnull Project project, @Nonnull List<FilePath> originalFiles, boolean showCheckboxes, boolean highlightProblems, @Nullable Runnable inclusionListener) {
+    public ChangesBrowserTree<FilePath> createFilePathChangesTreeList(Project project, List<FilePath> originalFiles, boolean showCheckboxes, boolean highlightProblems, @Nullable Runnable inclusionListener) {
         return new FilePathChangesTreeListImpl(project, originalFiles, showCheckboxes, highlightProblems, inclusionListener, null);
     }
 

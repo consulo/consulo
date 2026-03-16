@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationWindowStateService extends WindowStateService {
-  @Nonnull
+  
   static ApplicationWindowStateService getInstance() {
     return Application.get().getInstance(ApplicationWindowStateService.class);
   }

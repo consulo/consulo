@@ -13,7 +13,6 @@ import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamChain;
 import consulo.execution.debug.stream.wrapper.TraceUtil;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +27,9 @@ public class TracingResultImpl implements TracingResult {
     private final boolean myIsResultException;
     private final StreamChain mySourceChain;
 
-    TracingResultImpl(@Nonnull StreamChain chain,
-                      @Nonnull TraceElement streamResult,
-                      @Nonnull List<TraceInfo> trace,
+    TracingResultImpl(StreamChain chain,
+                      TraceElement streamResult,
+                      List<TraceInfo> trace,
                       boolean isResultException) {
         myStreamResult = streamResult;
         myTrace = trace;
@@ -39,7 +38,7 @@ public class TracingResultImpl implements TracingResult {
     }
 
     @Override
-    public @Nonnull TraceElement getResult() {
+    public TraceElement getResult() {
         return myStreamResult;
     }
 
@@ -49,12 +48,12 @@ public class TracingResultImpl implements TracingResult {
     }
 
     @Override
-    public @Nonnull List<TraceInfo> getTrace() {
+    public List<TraceInfo> getTrace() {
         return myTrace;
     }
 
     @Override
-    public @Nonnull ResolvedTracingResult resolve(@Nonnull ResolverFactory resolverFactory) {
+    public ResolvedTracingResult resolve(ResolverFactory resolverFactory) {
         assert myTrace.size() == mySourceChain.length();
 
         List<ValuesOrderResolver.Result> resolvedTraces =
@@ -100,9 +99,9 @@ public class TracingResultImpl implements TracingResult {
         return new MyResolvedResult(chainBuilder.build());
     }
 
-    private ResolvedStreamCall.Terminator buildResolvedTerminationCall(@Nonnull TraceInfo terminatorTrace,
-                                                                       @Nonnull NextAwareState previousState,
-                                                                       @Nonnull Map<TraceElement, List<TraceElement>>
+    private ResolvedStreamCall.Terminator buildResolvedTerminationCall(TraceInfo terminatorTrace,
+                                                                       NextAwareState previousState,
+                                                                       Map<TraceElement, List<TraceElement>>
                                                                            terminationToPrevMapping) {
         List<TraceElement> after = TraceUtil.sortedByTime(terminatorTrace.getValuesOrderAfter().values());
         TerminationStateImpl terminatorState =
@@ -112,19 +111,19 @@ public class TracingResultImpl implements TracingResult {
 
     private class MyResolvedResult implements ResolvedTracingResult {
 
-        private final @Nonnull ResolvedStreamChain myChain;
+        private final ResolvedStreamChain myChain;
 
-        MyResolvedResult(@Nonnull ResolvedStreamChain resolvedStreamChain) {
+        MyResolvedResult(ResolvedStreamChain resolvedStreamChain) {
             myChain = resolvedStreamChain;
         }
 
         @Override
-        public @Nonnull ResolvedStreamChain getResolvedChain() {
+        public ResolvedStreamChain getResolvedChain() {
             return myChain;
         }
 
         @Override
-        public @Nonnull StreamChain getSourceChain() {
+        public StreamChain getSourceChain() {
             return mySourceChain;
         }
 
@@ -134,7 +133,7 @@ public class TracingResultImpl implements TracingResult {
         }
 
         @Override
-        public @Nonnull TraceElement getResult() {
+        public TraceElement getResult() {
             return myStreamResult;
         }
     }

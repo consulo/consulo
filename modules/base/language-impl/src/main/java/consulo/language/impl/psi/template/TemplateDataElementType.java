@@ -32,7 +32,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.reflect.ReflectionUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -42,19 +41,19 @@ import java.util.function.Supplier;
 public class TemplateDataElementType extends IFileElementType implements ITemplateDataElementType {
   private static final int CHECK_PROGRESS_AFTER_TOKENS = 1000;
 
-  @Nonnull
+  
   private final IElementType myTemplateElementType;
-  @Nonnull
+  
   final IElementType myOuterElementType;
 
-  public TemplateDataElementType(String debugName, Language language, @Nonnull IElementType templateElementType, @Nonnull IElementType outerElementType) {
+  public TemplateDataElementType(String debugName, Language language, IElementType templateElementType, IElementType outerElementType) {
     super(debugName, language);
     myTemplateElementType = templateElementType;
     myOuterElementType = outerElementType;
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
     Language baseLanguage = viewProvider.getBaseLanguage();
     LanguageVersion languageVersion = LanguageVersionResolver.forLanguage(baseLanguage).getLanguageVersion(baseLanguage, file);
@@ -66,7 +65,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   }
 
   @Override
-  public ASTNode parseContents(@Nonnull ASTNode chameleon) {
+  public ASTNode parseContents(ASTNode chameleon) {
     CharTable charTable = SharedImplUtil.findCharTableByTree(chameleon);
     FileElement fileElement = TreeUtil.getFileElement((TreeElement)chameleon);
     PsiFile psiFile = (PsiFile)fileElement.getPsi();
@@ -115,7 +114,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
                                        Language templateLanguage,
                                        CharSequence sourceCode,
                                        TemplateLanguageFileViewProvider viewProvider,
-                                       @Nonnull TemplateDataElementType.RangeCollector rangeCollector) {
+                                       TemplateDataElementType.RangeCollector rangeCollector) {
     CharSequence templateSourceCode = createTemplateText(sourceCode, createBaseLexer(psiFile, viewProvider), rangeCollector);
     if (rangeCollector instanceof RangeCollectorImpl rc) {
       rc.prepareFileForParsing(templateLanguage, sourceCode, templateSourceCode);
@@ -135,7 +134,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @param rangeCollector collector for ranges with non-template/additional symbols
    * @return template source code
    */
-  protected CharSequence createTemplateText(@Nonnull CharSequence sourceCode, @Nonnull Lexer baseLexer, @Nonnull TemplateDataElementType.RangeCollector rangeCollector) {
+  protected CharSequence createTemplateText(CharSequence sourceCode, Lexer baseLexer, TemplateDataElementType.RangeCollector rangeCollector) {
     if (REQUIRES_OLD_CREATE_TEMPLATE_TEXT.get()) {
       return oldCreateTemplateText(sourceCode, baseLexer, rangeCollector);
     }
@@ -149,7 +148,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     return implementationClass != TemplateDataElementType.class;
   });
 
-  private CharSequence oldCreateTemplateText(@Nonnull CharSequence sourceCode, @Nonnull Lexer baseLexer, @Nonnull RangeCollector rangeCollector) {
+  private CharSequence oldCreateTemplateText(CharSequence sourceCode, Lexer baseLexer, RangeCollector rangeCollector) {
     StringBuilder result = new StringBuilder(sourceCode.length());
     baseLexer.start(sourceCode);
 
@@ -186,8 +185,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @param baseLexer  base language lexer
    */
   protected
-  @Nonnull
-  TemplateDataModifications collectTemplateModifications(@Nonnull CharSequence sourceCode, @Nonnull Lexer baseLexer) {
+  
+  TemplateDataModifications collectTemplateModifications(CharSequence sourceCode, Lexer baseLexer) {
     TemplateDataModifications modifications = new TemplateDataModifications();
     baseLexer.start(sourceCode);
     TextRange currentRange = TextRange.EMPTY_RANGE;
@@ -218,8 +217,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
   }
 
 
-  @Nonnull
-  private static String getRangeDump(@Nonnull TextRange range, @Nonnull CharSequence sequence) {
+  
+  private static String getRangeDump(TextRange range, CharSequence sequence) {
     return "'" + StringUtil.escapeLineBreak(range.subSequence(sequence).toString()) + "' " + range;
   }
 
@@ -227,7 +226,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @deprecated Override {@link #appendCurrentTemplateToken(int, CharSequence)} instead.
    */
   @Deprecated
-  protected void appendCurrentTemplateToken(@Nonnull StringBuilder result, @Nonnull CharSequence buf, @Nonnull Lexer lexer, @Nonnull TemplateDataElementType.RangeCollector collector) {
+  protected void appendCurrentTemplateToken(StringBuilder result, CharSequence buf, Lexer lexer, TemplateDataElementType.RangeCollector collector) {
     result.append(buf, lexer.getTokenStart(), lexer.getTokenEnd());
   }
 
@@ -237,8 +236,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @return modifications need to be applied for the current token
    */
   protected
-  @Nonnull
-  TemplateDataModifications appendCurrentTemplateToken(int tokenEndOffset, @Nonnull CharSequence tokenText) {
+  
+  TemplateDataModifications appendCurrentTemplateToken(int tokenEndOffset, CharSequence tokenText) {
     return TemplateDataModifications.EMPTY;
   }
 
@@ -254,12 +253,12 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * @see RangeCollector#addOuterRange(TextRange, boolean)
    */
   protected
-  @Nonnull
+  
   TokenSet getTemplateDataInsertionTokens() {
     return TokenSet.EMPTY;
   }
 
-  protected OuterLanguageElementImpl createOuterLanguageElement(@Nonnull CharSequence internedTokenText, @Nonnull IElementType outerElementType) {
+  protected OuterLanguageElementImpl createOuterLanguageElement(CharSequence internedTokenText, IElementType outerElementType) {
     return new OuterLanguageElementImpl(outerElementType, internedTokenText);
   }
 
@@ -268,7 +267,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
 
     FileViewProvider viewProvider = new SingleRootFileViewProvider(manager, virtualFile, false) {
       @Override
-      @Nonnull
+      
       public Language getBaseLanguage() {
         return language;
       }
@@ -281,8 +280,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     return viewProvider.getPsi(language);
   }
 
-  @Nonnull
-  public static ASTNode parseWithOuterAndRemoveRangesApplied(@Nonnull ASTNode chameleon, @Nonnull Language language, @Nonnull Function<CharSequence, ASTNode> parser) {
+  
+  public static ASTNode parseWithOuterAndRemoveRangesApplied(ASTNode chameleon, Language language, Function<CharSequence, ASTNode> parser) {
     RangeCollectorImpl collector = chameleon.getUserData(RangeCollectorImpl.OUTER_ELEMENT_RANGES);
     return collector != null ? collector.applyRangeCollectorAndExpandChameleon(chameleon, language, parser) : parser.apply(chameleon.getChars());
   }
@@ -296,25 +295,25 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
     }
 
     @Override
-    @Nonnull
+    
     public String getDefaultExtension() {
       return "";
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getDescription() {
       return LocalizeValue.of("fake for language:" + myLanguage.getID());
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
       return myLanguage.getID();
     }
@@ -341,7 +340,7 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
      * After building the data template tree these ranges will be used for inserting outer language elements.
      * If it's known whether this template element adds some string to resulting text, consider using {@link #addOuterRange(TextRange, boolean)}.
      */
-    public void addOuterRange(@Nonnull TextRange newRange) {
+    public void addOuterRange(TextRange newRange) {
     }
 
     /**
@@ -351,13 +350,13 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
      * @param isInsertion <tt>true</tt> if element is expected to insert some text into template data fragment. For example, PHP's
      *                    <code><?= $myVar ?></code> are insertions, while <code><?php foo() ?></code> are not.
      */
-    public abstract void addOuterRange(@Nonnull TextRange newRange, boolean isInsertion);
+    public abstract void addOuterRange(TextRange newRange, boolean isInsertion);
 
     /**
      * Adds the fragment that must be removed from the tree on the stage inserting outer elements.
      * This method should be called after adding "fake" symbols inside the data language text for building syntax correct tree
      */
-    public void addRangeToRemove(@Nonnull TextRange rangeToRemove) {
+    public void addRangeToRemove(TextRange rangeToRemove) {
     }
   }
 
@@ -370,8 +369,8 @@ public class TemplateDataElementType extends IFileElementType implements ITempla
    * should be used.
    */
   public interface TemplateAwareElementType extends ILazyParseableElementTypeBase {
-    @Nonnull
-    TreeElement createTreeElement(@Nonnull CharSequence text);
+    
+    TreeElement createTreeElement(CharSequence text);
   }
 
 }

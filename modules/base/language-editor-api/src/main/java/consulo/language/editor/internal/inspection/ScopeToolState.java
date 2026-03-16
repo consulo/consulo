@@ -32,8 +32,7 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -41,7 +40,7 @@ import jakarta.annotation.Nullable;
  */
 public class ScopeToolState {
   private NamedScope myScope;
-  @Nonnull
+  
   private final String myScopeId;
   private InspectionToolWrapper<InspectionTool> myToolWrapper;
   private boolean myEnabled;
@@ -51,18 +50,18 @@ public class ScopeToolState {
 
   private static final Logger LOG = Logger.getInstance(ScopeToolState.class);
 
-  public ScopeToolState(@Nonnull NamedScope scope,
-                        @Nonnull InspectionToolWrapper toolWrapper,
+  public ScopeToolState(NamedScope scope,
+                        InspectionToolWrapper toolWrapper,
                         boolean enabled,
-                        @Nonnull HighlightDisplayLevel level) {
+                        HighlightDisplayLevel level) {
     this(scope.getScopeId(), toolWrapper, enabled, level);
     myScope = scope;
   }
 
-  public ScopeToolState(@Nonnull String scopeName,
-                        @Nonnull InspectionToolWrapper toolWrapper,
+  public ScopeToolState(String scopeName,
+                        InspectionToolWrapper toolWrapper,
                         boolean enabled,
-                        @Nonnull HighlightDisplayLevel level) {
+                        HighlightDisplayLevel level) {
     myScopeId = scopeName;
     myToolWrapper = toolWrapper;
     myEnabled = enabled;
@@ -79,12 +78,12 @@ public class ScopeToolState {
     return myScope;
   }
 
-  @Nonnull
+  
   public String getScopeId() {
     return myScopeId;
   }
 
-  @Nonnull
+  
   public InspectionToolWrapper getTool() {
     return myToolWrapper;
   }
@@ -93,7 +92,7 @@ public class ScopeToolState {
     return myEnabled;
   }
 
-  @Nonnull
+  
   public HighlightDisplayLevel getLevel() {
     return myLevel;
   }
@@ -102,13 +101,13 @@ public class ScopeToolState {
     myEnabled = enabled;
   }
 
-  public void setLevel(@Nonnull HighlightDisplayLevel level) {
+  public void setLevel(HighlightDisplayLevel level) {
     myLevel = level;
   }
 
   @Nullable
   @RequiredUIAccess
-  public Component getConfigurablePanel(@Nonnull Disposable parentDisposable) {
+  public Component getConfigurablePanel(Disposable parentDisposable) {
     if (myConfigurableRef != null) {
       UnnamedConfigurable unnamedConfigurable = myConfigurableRef.get();
       return unnamedConfigurable == null ? null : unnamedConfigurable.createUIComponent(parentDisposable);
@@ -168,11 +167,11 @@ public class ScopeToolState {
     }
   }
 
-  public void setTool(@Nonnull InspectionToolWrapper tool) {
+  public void setTool(InspectionToolWrapper tool) {
     myToolWrapper = tool;
   }
 
-  public boolean equalTo(@Nonnull ScopeToolState state2) {
+  public boolean equalTo(ScopeToolState state2) {
     if (isEnabled() != state2.isEnabled()) return false;
     if (getLevel() != state2.getLevel()) return false;
     InspectionToolWrapper toolWrapper = getTool();

@@ -25,13 +25,12 @@ import consulo.language.editor.moveUpDown.MethodUpDownUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class MethodUpHandler implements CodeInsightActionHandler {
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     LookupManager.getInstance(project).hideActiveLookup();
 
     PsiDocumentManager.getInstance(project).commitAllDocuments();

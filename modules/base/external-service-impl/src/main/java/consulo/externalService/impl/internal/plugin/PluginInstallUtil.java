@@ -27,8 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class PluginInstallUtil {
 
     @Messages.YesNoResult
     @RequiredUIAccess
-    private static int showShutDownDialog(@Nonnull LocalizeValue title) {
+    private static int showShutDownDialog(LocalizeValue title) {
         return Messages.showYesNoDialog(
             ExternalServiceLocalize.messageIdeaShutdownRequired(Application.get().getName()).get(),
             title.get(),
@@ -70,7 +69,7 @@ public class PluginInstallUtil {
 
     @Messages.YesNoResult
     @RequiredUIAccess
-    private static int showRestartDialog(@Nonnull LocalizeValue title) {
+    private static int showRestartDialog(LocalizeValue title) {
         return Messages.showYesNoDialog(
             ExternalServiceLocalize.messageIdeaRestartRequired(Application.get().getName()).get(),
             title.get(),
@@ -81,7 +80,7 @@ public class PluginInstallUtil {
     }
 
     @RequiredUIAccess
-    public static void shutdownOrRestartApp(@Nonnull LocalizeValue title) {
+    public static void shutdownOrRestartApp(LocalizeValue title) {
         ApplicationEx app = (ApplicationEx) Application.get();
         int response = app.isRestartCapable() ? showRestartDialog(title) : showShutDownDialog(title);
         if (response == Messages.YES) {
@@ -89,7 +88,7 @@ public class PluginInstallUtil {
         }
     }
 
-    @Nonnull
+    
     public static Set<PluginDescriptor> getPluginsForInstall(List<PluginDescriptor> pluginsToInstall, List<PluginDescriptor> allPlugins) {
         List<PluginId> pluginIds = new ArrayList<>();
         for (PluginDescriptor pluginNode : pluginsToInstall) {
@@ -113,10 +112,10 @@ public class PluginInstallUtil {
     }
 
     private static void collectDepends(
-        @Nonnull PluginDescriptor toInstall,
-        @Nonnull List<PluginId> toInstallOthers,
-        @Nonnull Set<PluginNode> depends,
-        @Nonnull List<PluginDescriptor> repoPlugins
+        PluginDescriptor toInstall,
+        List<PluginId> toInstallOthers,
+        Set<PluginNode> depends,
+        List<PluginDescriptor> repoPlugins
     ) {
         PluginId[] dependentPluginIds = toInstall.getDependentPluginIds();
         InstalledPluginsState pluginsState = InstalledPluginsState.getInstance();

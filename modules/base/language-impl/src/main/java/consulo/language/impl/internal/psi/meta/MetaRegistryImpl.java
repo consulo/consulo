@@ -34,8 +34,7 @@ import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -130,7 +129,7 @@ public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
         private final ElementFilter myFilter;
         private final Supplier<? extends PsiMetaData> myFactory;
 
-        public MyBinding(@Nonnull ElementFilter filter, @Nonnull Supplier<? extends PsiMetaData> factory) {
+        public MyBinding(ElementFilter filter, Supplier<? extends PsiMetaData> factory) {
             myFilter = filter;
             myFactory = factory;
         }

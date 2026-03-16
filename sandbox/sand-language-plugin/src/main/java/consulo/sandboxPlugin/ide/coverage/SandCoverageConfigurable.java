@@ -23,8 +23,6 @@ import consulo.ui.CheckBox;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.Nls;
 
 /**
  * @author VISTALL
@@ -32,15 +30,15 @@ import org.jetbrains.annotations.Nls;
  */
 public class SandCoverageConfigurable extends SimpleConfigurableByProperties implements Configurable {
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         VerticalLayout layout = VerticalLayout.create();
         layout.add(CheckBox.create(LocalizeValue.localizeTODO("Some sand option")));
         return layout;
     }
 
-    @Nls
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Sand options");

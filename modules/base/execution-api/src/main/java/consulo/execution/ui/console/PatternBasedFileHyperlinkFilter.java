@@ -17,8 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -26,16 +25,16 @@ public class PatternBasedFileHyperlinkFilter extends AbstractFileHyperlinkFilter
 
   private final PatternBasedFileHyperlinkRawDataFinder myFinder;
 
-  public PatternBasedFileHyperlinkFilter(@Nonnull Project project,
+  public PatternBasedFileHyperlinkFilter(Project project,
                                          @Nullable String baseDir,
-                                         @Nonnull PatternBasedFileHyperlinkRawDataFinder finder) {
+                                         PatternBasedFileHyperlinkRawDataFinder finder) {
     super(project, baseDir);
     myFinder = finder;
   }
 
-  @Nonnull
+  
   @Override
-  public List<FileHyperlinkRawData> parse(@Nonnull String line) {
+  public List<FileHyperlinkRawData> parse(String line) {
     return myFinder.find(line);
   }
 }

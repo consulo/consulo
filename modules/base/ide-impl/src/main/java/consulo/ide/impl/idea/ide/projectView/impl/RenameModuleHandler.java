@@ -38,8 +38,7 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
@@ -61,13 +60,13 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file, DataContext dataContext) {
+    public void invoke(Project project, Editor editor, PsiFile file, DataContext dataContext) {
         LOG.assertTrue(false);
     }
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, @Nonnull PsiElement[] elements, @Nonnull DataContext dataContext) {
+    public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
         LOG.assertTrue(module != null);
         Messages.showInputDialog(
@@ -80,7 +79,7 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
         );
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionTitleValue() {
         return RefactoringLocalize.renameModuleTitle();

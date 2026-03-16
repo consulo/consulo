@@ -17,7 +17,6 @@
 package consulo.versionControlSystem.log.impl.internal.util;
 
 import consulo.util.collection.primitive.ints.IntStack;
-import jakarta.annotation.Nonnull;
 
 public class DfsUtil {
   public DfsUtil() {
@@ -29,7 +28,7 @@ public class DfsUtil {
     int fun(int currentNode);
   }
 
-  public void nodeDfsIterator(int startRowIndex, @Nonnull NextNode nextNodeFun) {
+  public void nodeDfsIterator(int startRowIndex, NextNode nextNodeFun) {
     IntStack myStack = new IntStack();
     myStack.push(startRowIndex);
 

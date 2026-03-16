@@ -21,7 +21,6 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -32,34 +31,32 @@ import java.awt.*;
 public class ImaginaryScrollingModel implements ScrollingModel {
     private final ImaginaryEditor myEditor;
 
-    public ImaginaryScrollingModel(@Nonnull ImaginaryEditor editor) {
+    public ImaginaryScrollingModel(ImaginaryEditor editor) {
         myEditor = editor;
     }
 
-    @Nonnull
     @Override
     public Rectangle getVisibleArea() {
         return new Rectangle(0, 0);
     }
 
-    @Nonnull
     @Override
     public Rectangle getVisibleAreaOnScrollingFinished() {
         return new Rectangle(0, 0);
     }
 
     @Override
-    public void scrollToCaret(@Nonnull ScrollType scrollType) {
+    public void scrollToCaret(ScrollType scrollType) {
         // no-op
     }
 
     @Override
-    public void scrollTo(@Nonnull LogicalPosition pos, @Nonnull ScrollType scrollType) {
+    public void scrollTo(LogicalPosition pos, ScrollType scrollType) {
         // no-op
     }
 
     @Override
-    public void runActionOnScrollingFinished(@Nonnull Runnable action) {
+    public void runActionOnScrollingFinished(Runnable action) {
         action.run();
     }
 
@@ -99,17 +96,17 @@ public class ImaginaryScrollingModel implements ScrollingModel {
     }
 
     @Override
-    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+    public void addVisibleAreaListener(VisibleAreaListener listener) {
         // no-op
     }
 
     @Override
-    public void addVisibleAreaListener(@Nonnull VisibleAreaListener listener, @Nonnull Disposable disposable) {
+    public void addVisibleAreaListener(VisibleAreaListener listener, Disposable disposable) {
         // no-op
     }
 
     @Override
-    public void removeVisibleAreaListener(@Nonnull VisibleAreaListener listener) {
+    public void removeVisibleAreaListener(VisibleAreaListener listener) {
         // no-op
     }
 }

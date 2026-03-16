@@ -20,7 +20,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.scratch.ScratchFileService;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Mike
@@ -29,12 +28,12 @@ public abstract class BaseIntentionAction implements IntentionAction {
   private LocalizeValue myText = LocalizeValue.empty();
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return myText;
   }
 
-  protected void setText(@Nonnull LocalizeValue text) {
+  protected void setText(LocalizeValue text) {
     myText = text;
   }
 

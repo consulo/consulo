@@ -30,8 +30,7 @@ import consulo.ui.ex.content.AlertIcon;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeSupport;
 
 import javax.swing.*;
@@ -109,7 +108,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         return myChangeSupport;
     }
 
-    public TabInfo setText(@Nonnull LocalizeValue text) {
+    public TabInfo setText(LocalizeValue text) {
         List<SimpleTextAttributes> attributes = myText.getAttributes();
         TextAttributes textAttributes = attributes.size() == 1 ? TextAttributesUtil.toTextAttributes(attributes.get(0)) : null;
         TextAttributes defaultAttributes = TextAttributesUtil.toTextAttributes(getDefaultAttributes());
@@ -126,7 +125,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         return setText(LocalizeValue.ofNullable(text));
     }
 
-    @Nonnull
+    
     private SimpleTextAttributes getDefaultAttributes() {
         SimpleTextAttributes attributes = myDefaultAttributes;
         if (attributes == null) {
@@ -155,7 +154,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
         return this;
     }
 
-    @Nonnull
+    
     public TabInfo setIcon(consulo.ui.image.Image icon) {
         Image old = myIcon;
         if (!IconDeferrer.getInstance().equalIcons(old, icon)) {
@@ -398,7 +397,7 @@ public final class TabInfo implements Queryable, PlaceProvider<String> {
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         if (myQueryable != null) {
             myQueryable.putInfo(info);
         }

@@ -21,8 +21,7 @@ import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,11 +29,11 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CopyrightGenerator {
-  @Nonnull
-  static CopyrightGenerator getInstance(@Nonnull Project project) {
+  
+  static CopyrightGenerator getInstance(Project project) {
     return project.getInstance(CopyrightGenerator.class);
   }
 
-  @Nonnull
-  String generate(@Nullable PsiFile file, @Nullable Module module, @Nonnull String template) throws Exception;
+  
+  String generate(@Nullable PsiFile file, @Nullable Module module, String template) throws Exception;
 }

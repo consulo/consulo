@@ -30,7 +30,6 @@ import consulo.versionControlSystem.change.IgnoreSettingsType;
 import consulo.versionControlSystem.change.IgnoredFileBean;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -153,7 +152,7 @@ public class IgnoredSettingsPanel implements SearchableConfigurable, Configurabl
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "project.propVCSSupport.Ignored.Files";
   }

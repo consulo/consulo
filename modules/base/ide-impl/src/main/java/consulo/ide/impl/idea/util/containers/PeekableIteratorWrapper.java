@@ -17,18 +17,17 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.util.collection.PeekableIterator;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class PeekableIteratorWrapper<T> implements PeekableIterator<T> {
-  @Nonnull
+  
   private final Iterator<? extends T> myIterator;
   private T myValue = null;
   private boolean myValidValue = false;
 
-  public PeekableIteratorWrapper(@Nonnull Iterator<? extends T> iterator) {
+  public PeekableIteratorWrapper(Iterator<? extends T> iterator) {
     myIterator = iterator;
     advance();
   }

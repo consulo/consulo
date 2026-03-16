@@ -27,8 +27,7 @@ import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.LocalizeAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,12 +39,12 @@ import java.util.List;
 public class MergeWindow {
     @Nullable
     private final Project myProject;
-    @Nonnull
+    
     private final MergeRequest myMergeRequest;
 
     private MyDialog myWrapper;
 
-    public MergeWindow(@Nullable Project project, @Nonnull MergeRequest mergeRequest) {
+    public MergeWindow(@Nullable Project project, MergeRequest mergeRequest) {
         myProject = project;
         myMergeRequest = mergeRequest;
     }
@@ -60,7 +59,7 @@ public class MergeWindow {
             }
 
             @Override
-            protected void setWindowTitle(@Nonnull LocalizeValue title) {
+            protected void setWindowTitle(LocalizeValue title) {
                 myWrapper.setTitle(title);
             }
 
@@ -82,12 +81,12 @@ public class MergeWindow {
 
     // TODO: use WindowWrapper
     private static class MyDialog extends DialogWrapper {
-        @Nonnull
+        
         private final MergeRequestProcessor myProcessor;
-        @Nonnull
+        
         private final Wrapper mySouthPanel = new Wrapper();
 
-        public MyDialog(@Nonnull MergeRequestProcessor processor) {
+        public MyDialog(MergeRequestProcessor processor) {
             super(processor.getProject(), true);
             myProcessor = processor;
         }
@@ -130,7 +129,7 @@ public class MergeWindow {
             return StringUtil.notNullize(myProcessor.getContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY), "MergeDialog");
         }
 
-        @Nonnull
+        
         @Override
         protected LocalizeAction[] createActions() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -141,7 +140,7 @@ public class MergeWindow {
             return actions.toArray(new LocalizeAction[actions.size()]);
         }
 
-        @Nonnull
+        
         @Override
         protected LocalizeAction[] createLeftSideActions() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -149,7 +148,7 @@ public class MergeWindow {
             return actions.toArray(new LocalizeAction[actions.size()]);
         }
 
-        @Nonnull
+        
         @Override
         protected LocalizeAction getOKAction() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -159,7 +158,7 @@ public class MergeWindow {
             return super.getOKAction();
         }
 
-        @Nonnull
+        
         @Override
         protected LocalizeAction getCancelAction() {
             MergeRequestProcessor.BottomActions bottomActions = myProcessor.getBottomActions();
@@ -190,7 +189,7 @@ public class MergeWindow {
     }
 
     private static class MyPanel extends JPanel {
-        public MyPanel(@Nonnull JComponent content) {
+        public MyPanel(JComponent content) {
             super(new BorderLayout());
             add(content, BorderLayout.CENTER);
         }

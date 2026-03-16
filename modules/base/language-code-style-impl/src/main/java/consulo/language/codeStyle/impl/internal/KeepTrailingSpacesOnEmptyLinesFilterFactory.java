@@ -27,8 +27,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.document.StripTrailingSpacesFilter.ALL_LINES;
 
@@ -36,10 +35,10 @@ import static consulo.document.StripTrailingSpacesFilter.ALL_LINES;
 public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSpacesFilterFactory {
 
   private static class KeepTrailingSpacesOnEmptyLinesFilter extends SmartStripTrailingSpacesFilter {
-    private @Nonnull
+    private 
     Document myDocument;
 
-    public KeepTrailingSpacesOnEmptyLinesFilter(@Nonnull Document document) {
+    public KeepTrailingSpacesOnEmptyLinesFilter(Document document) {
       myDocument = document;
     }
 
@@ -51,7 +50,7 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
     }
 
 
-    private static boolean containsWhitespacesOnly(@Nonnull CharSequence chars, int start, int end) {
+    private static boolean containsWhitespacesOnly(CharSequence chars, int start, int end) {
       for (int i = start; i < end; i++) {
         char c = chars.charAt(i);
         if (c == ' ' || c == '\t' || c == '\n' || c == '\r') continue;
@@ -106,9 +105,9 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
   }
 
 
-  @Nonnull
+  
   @Override
-  public StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, @Nonnull Document document) {
+  public StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, Document document) {
     if (project != null && shouldKeepTrailingSpacesOnEmptyLines((Project)project, document)) {
       return new KeepTrailingSpacesOnEmptyLinesFilter(document);
     }
@@ -116,7 +115,7 @@ public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSp
   }
 
 
-  private static boolean shouldKeepTrailingSpacesOnEmptyLines(@Nonnull Project project, @Nonnull Document document) {
+  private static boolean shouldKeepTrailingSpacesOnEmptyLines(Project project, Document document) {
     PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
     if (file != null) {
       CommonCodeStyleSettings settings = CodeStyleSettingsManager.getSettings(project).getCommonSettings(file.getLanguage());

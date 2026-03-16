@@ -15,8 +15,7 @@
  */
 package consulo.virtualFileSystem.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -79,7 +78,7 @@ public final class IntObjectLRUMap<T> {
     }
   }
 
-  public MapEntry<T> putEntry(@Nonnull MapEntry<T> entry) {
+  public MapEntry<T> putEntry(MapEntry<T> entry) {
     removeEntry(entry.key);
 
     int index = getArrayIndex(entry.key);

@@ -25,7 +25,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,7 +38,6 @@ public class UnifiedDataManagerImpl extends BaseDataManager {
     super(application, windowManagerProvider);
   }
 
-  @Nonnull
   @Override
   public DataContext getDataContext() {
     return new MyUIDataContext(this, null);

@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -28,6 +28,5 @@ public interface SortableColumnModel {
 
   Object getRowValue(int row);
 
-  @Nullable
-  RowSorter.SortKey getDefaultSortKey();
+  RowSorter.@Nullable SortKey getDefaultSortKey();
 }

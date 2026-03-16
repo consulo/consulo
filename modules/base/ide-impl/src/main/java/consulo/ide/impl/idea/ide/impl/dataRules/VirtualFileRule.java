@@ -22,10 +22,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public final class VirtualFileRule {
-  static VirtualFile getData(@Nonnull DataSnapshot dataProvider) {
+  static VirtualFile getData(DataSnapshot dataProvider) {
     // Try to detect multiselection.
     PsiElement[] psiElements = dataProvider.get(PsiElement.KEY_OF_ARRAY);
     if (psiElements != null) {

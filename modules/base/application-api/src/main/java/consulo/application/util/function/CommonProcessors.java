@@ -21,8 +21,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -57,15 +56,15 @@ public class CommonProcessors {
       return true;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)")
-    public T[] toArray(@Nonnull T[] a) {
+    public T[] toArray(T[] a) {
       return myCollection.toArray(a);
     }
 
-    @Nonnull
-    public T[] toArray(@Nonnull IntFunction<T[]> factory) {
+    
+    public T[] toArray(IntFunction<T[]> factory) {
       return ContainerUtil.toArray(myCollection, factory);
     }
 
@@ -75,8 +74,8 @@ public class CommonProcessors {
 
   }
 
-  @Nonnull
-  public static <T> Processor<T> notNullProcessor(@Nonnull Predicate<T> processor) {
+  
+  public static <T> Processor<T> notNullProcessor(Predicate<T> processor) {
     return processor::test;
   }
 
@@ -93,15 +92,15 @@ public class CommonProcessors {
       return true;
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo(value = "Please use #toArray(@NotNull ArrayFactory<T>)")
-    public T[] toArray(@Nonnull T[] a) {
+    public T[] toArray(T[] a) {
       return myCollection.toArray(a);
     }
 
-    @Nonnull
-    public T[] toArray(@Nonnull ArrayFactory<T> factory) {
+    
+    public T[] toArray(ArrayFactory<T> factory) {
       return ContainerUtil.toArray(myCollection, factory);
     }
 

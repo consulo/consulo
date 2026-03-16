@@ -4,8 +4,7 @@ import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.TraceInfo;
 import consulo.execution.debug.stream.wrapper.StreamCall;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +19,9 @@ public class ValuesOrderInfo implements TraceInfo {
   private final Map<TraceElement, List<TraceElement>> reverse;
 
   public ValuesOrderInfo(
-    @Nonnull StreamCall streamCall,
-    @Nonnull Map<Integer, TraceElement> before,
-    @Nonnull Map<Integer, TraceElement> after,
+    StreamCall streamCall,
+    Map<Integer, TraceElement> before,
+    Map<Integer, TraceElement> after,
     @Nullable Map<TraceElement, List<TraceElement>> direct,
     @Nullable Map<TraceElement, List<TraceElement>> reverse
   ) {
@@ -34,26 +33,26 @@ public class ValuesOrderInfo implements TraceInfo {
   }
 
   public ValuesOrderInfo(
-    @Nonnull StreamCall call,
-    @Nonnull Map<Integer, TraceElement> before,
-    @Nonnull Map<Integer, TraceElement> after
+    StreamCall call,
+    Map<Integer, TraceElement> before,
+    Map<Integer, TraceElement> after
   ) {
     this(call, before, after, null, null);
   }
 
-  @Nonnull
+  
   @Override
   public StreamCall getCall() {
     return streamCall;
   }
 
-  @Nonnull
+  
   @Override
   public Map<Integer, TraceElement> getValuesOrderBefore() {
     return before;
   }
 
-  @Nonnull
+  
   @Override
   public Map<Integer, TraceElement> getValuesOrderAfter() {
     return after;
@@ -71,8 +70,8 @@ public class ValuesOrderInfo implements TraceInfo {
     return reverse;
   }
 
-  @Nonnull
-  public static TraceInfo empty(@Nonnull StreamCall call) {
+  
+  public static TraceInfo empty(StreamCall call) {
     return new ValuesOrderInfo(call, Collections.emptyMap(), Collections.emptyMap());
   }
 }

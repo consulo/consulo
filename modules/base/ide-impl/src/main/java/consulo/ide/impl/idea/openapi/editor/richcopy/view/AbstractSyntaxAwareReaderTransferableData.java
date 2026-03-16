@@ -21,8 +21,7 @@ import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
 import java.io.Reader;
@@ -38,15 +37,15 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
   private static final Logger LOG = Logger.getInstance(AbstractSyntaxAwareReaderTransferableData.class);
 
   protected String myRawText;
-  @Nonnull
+  
   protected final SyntaxInfo mySyntaxInfo;
-  @Nonnull
+  
   private final DataFlavor myDataFlavor;
 
   @Nullable
   private transient Reader myDelegate;
 
-  public AbstractSyntaxAwareReaderTransferableData(@Nonnull SyntaxInfo syntaxInfo, @Nonnull DataFlavor dataFlavor) {
+  public AbstractSyntaxAwareReaderTransferableData(SyntaxInfo syntaxInfo, DataFlavor dataFlavor) {
     mySyntaxInfo = syntaxInfo;
     myDataFlavor = dataFlavor;
   }
@@ -77,7 +76,7 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
   }
 
   @Override
-  public int read(@Nonnull char[] cbuf, int off, int len) throws IOException {
+  public int read(char[] cbuf, int off, int len) throws IOException {
     return getDelegate().read(cbuf, off, len);
   }
 
@@ -91,7 +90,7 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
     myRawText = rawText;
   }
 
-  @Nonnull
+  
   private Reader getDelegate() {
     if (myDelegate != null) {
       return myDelegate;
@@ -118,5 +117,5 @@ public abstract class AbstractSyntaxAwareReaderTransferableData extends Reader i
     }
   }
 
-  protected abstract void build(@Nonnull StringBuilder holder, int maxLength);
+  protected abstract void build(StringBuilder holder, int maxLength);
 }

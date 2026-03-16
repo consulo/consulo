@@ -25,8 +25,7 @@ import consulo.ui.Window;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +40,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   @Nullable
   @ReviewAfterMigrationToJRE(9)
-  public static IdeFrameDecorator decorate(@Nonnull IdeFrameEx frame) {
+  public static IdeFrameDecorator decorate(IdeFrameEx frame) {
     if (Platform.current().os().isXWindow() && X11UiUtil.isFullScreenSupported()) {
       return new EWMHFrameDecorator(frame);
     }
@@ -70,7 +69,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   public abstract boolean isInFullScreen();
 
-  @Nonnull
+  
   public abstract ActionCallback toggleFullScreen(boolean state);
 
   @Override
@@ -80,7 +79,7 @@ public abstract class IdeFrameDecorator implements Disposable {
 
   // AWT-based decorator
   private static class AWTFrameDecorator extends IdeFrameDecorator {
-    private AWTFrameDecorator(@Nonnull IdeFrameEx frame) {
+    private AWTFrameDecorator(IdeFrameEx frame) {
       super(frame);
     }
 
@@ -96,7 +95,7 @@ public abstract class IdeFrameDecorator implements Disposable {
       return device != null && device.getDefaultConfiguration().getBounds().equals(frameBounds) && jFrame.isUndecorated();
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
       JFrame jFrame = getJFrame();
@@ -158,7 +157,7 @@ public abstract class IdeFrameDecorator implements Disposable {
       return jFrame != null && X11Hacking.isInFullScreenMode(jFrame);
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback toggleFullScreen(boolean state) {
       JFrame jFrame = getJFrame();

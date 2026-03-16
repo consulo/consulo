@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.language.psi.PsiDocumentManager;
-import jakarta.annotation.Nonnull;
 
 public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeStructureBase implements ViewSettings {
     private final AbstractTreeNode myRoot;
@@ -37,16 +36,16 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
         return new ProjectViewProjectNode(myProject, this);
     }
 
-    @Nonnull
+    
     @Override
-    public <T> T getViewOption(@Nonnull KeyWithDefaultValue<T> option) {
+    public <T> T getViewOption(KeyWithDefaultValue<T> option) {
         return option.getDefaultValue();
     }
 
     @Override
     public abstract boolean isShowMembers();
 
-    @Nonnull
+    
     @Override
     public final Object getRootElement() {
         return myRoot;
@@ -57,7 +56,7 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
         PsiDocumentManager.getInstance(myProject).commitAllDocuments();
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback asyncCommit() {
         return PsiDocumentManager.asyncCommitDocuments(myProject);
@@ -75,7 +74,7 @@ public abstract class AbstractProjectTreeStructure extends ProjectAbstractTreeSt
     }
 
     @Override
-    public boolean isAlwaysLeaf(@Nonnull Object element) {
+    public boolean isAlwaysLeaf(Object element) {
         if (element instanceof ProjectViewNode projectViewNode) {
             return projectViewNode.isAlwaysLeaf();
         }

@@ -17,7 +17,6 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author dsl
@@ -28,6 +27,6 @@ public abstract class UnresolvableCollisionUsageInfo extends CollisionUsageInfo 
         super(element, referencedElement);
     }
 
-    @Nonnull
+    
     public abstract LocalizeValue getDescription();
 }

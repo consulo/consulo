@@ -18,7 +18,6 @@ package consulo.virtualFileSystem.event;
 import consulo.application.progress.ProgressIndicator;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -39,5 +38,5 @@ public interface AsyncVfsEventsListener {
    * The call happens on a pooled thread, under a special {@link ProgressIndicator} which is cancelled on project disposal,
    * thus one can call {@code ProgressManager.checkCancelled()} to cancel the background task when the project is disposed.
    */
-  void filesChanged(@Nonnull List<? extends VFileEvent> events);
+  void filesChanged(List<? extends VFileEvent> events);
 }

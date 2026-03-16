@@ -32,8 +32,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.function.Consumer;
@@ -55,7 +54,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
 
     @Nullable
     @Override
-    public BaseInjection findCommentInjection(@Nonnull PsiElement host, @Nullable Ref<PsiElement> commentRef) {
+    public BaseInjection findCommentInjection(PsiElement host, @Nullable Ref<PsiElement> commentRef) {
         return InjectorUtils.findCommentInjection(host, "comment", commentRef);
     }
 

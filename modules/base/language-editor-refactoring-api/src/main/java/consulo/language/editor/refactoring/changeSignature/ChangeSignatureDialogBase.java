@@ -50,8 +50,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -349,7 +348,7 @@ public abstract class ChangeSignatureDialogBase<
         ) {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 SimpleReference<CallerChooserBase<Method>> chooser = new SimpleReference<>();
                 Consumer<Set<Method>> callback = callers -> {
                     myMethodsToPropagateParameters = callers;
@@ -379,7 +378,7 @@ public abstract class ChangeSignatureDialogBase<
         return myVisibilityPanel;
     }
 
-    @Nonnull
+    
     protected List<Pair<String, JPanel>> createAdditionalPanels() {
         return Collections.emptyList();
     }
@@ -647,7 +646,7 @@ public abstract class ChangeSignatureDialogBase<
         return "refactoring.changeSignature";
     }
 
-    @Nonnull
+    
     public UpdateSignatureListener getSignatureUpdater() {
         return mySignatureUpdater;
     }

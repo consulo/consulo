@@ -4,12 +4,11 @@ package consulo.execution.debug.stream.lib;
 import consulo.execution.debug.stream.trace.IntermediateCallHandler;
 import consulo.execution.debug.stream.trace.dsl.Dsl;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface IntermediateOperation extends Operation {
-  @Nonnull
-  IntermediateCallHandler getTraceHandler(int callOrder, @Nonnull IntermediateStreamCall call, @Nonnull Dsl dsl);
+  
+  IntermediateCallHandler getTraceHandler(int callOrder, IntermediateStreamCall call, Dsl dsl);
 }

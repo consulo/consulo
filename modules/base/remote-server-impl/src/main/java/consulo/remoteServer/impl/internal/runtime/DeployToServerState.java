@@ -33,24 +33,23 @@ import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
 import consulo.remoteServer.runtime.ui.RemoteServersView;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 /**
  * @author nik
  */
 public class DeployToServerState<S extends ServerConfiguration, D extends DeploymentConfiguration> implements RunProfileState {
-  @Nonnull
+  
   private final RemoteServer<S> myServer;
-  @Nonnull
+  
   private final DeploymentSource mySource;
-  @Nonnull
+  
   private final D myConfiguration;
-  @Nonnull
+  
   private final ExecutionEnvironment myEnvironment;
 
-  public DeployToServerState(@Nonnull RemoteServer<S> server, @Nonnull DeploymentSource deploymentSource, @Nonnull D deploymentConfiguration, @Nonnull ExecutionEnvironment environment) {
+  public DeployToServerState(RemoteServer<S> server, DeploymentSource deploymentSource, D deploymentConfiguration, ExecutionEnvironment environment) {
     myServer = server;
     mySource = deploymentSource;
     myConfiguration = deploymentConfiguration;
@@ -59,7 +58,7 @@ public class DeployToServerState<S extends ServerConfiguration, D extends Deploy
 
   @Nullable
   @Override
-  public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+  public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
     final ServerConnection connection = ServerConnectionManager.getInstance().getOrCreateConnection(myServer);
     final Project project = myEnvironment.getProject();
     RemoteServersView.getInstance(project).showServerConnection(connection);

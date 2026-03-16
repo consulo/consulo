@@ -27,8 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The IDEA side of a custom language parser. Provides lexical analysis results to the
@@ -51,7 +50,7 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the text being parsed
      */
-    @Nonnull
+    
     CharSequence getOriginalText();
 
     /**
@@ -93,7 +92,7 @@ public interface PsiBuilder extends UserDataHolder {
     /**
      * @return true of elementType registered as comment/whitespace in parser definition
      */
-    boolean isWhitespaceOrCommentType(@Nonnull IElementType elementType);
+    boolean isWhitespaceOrCommentType(IElementType elementType);
 
     /**
      * See what token type is in <code>steps</code> ahead
@@ -216,7 +215,7 @@ public interface PsiBuilder extends UserDataHolder {
          * @param errorMessage for error element.
          */
         @Deprecated
-        @DeprecationInfo("Use #doneBefore(IElementType, Marker, @Nonnull LocalizeValue)")
+        @DeprecationInfo("Use #doneBefore(IElementType, Marker, LocalizeValue)")
         default void doneBefore(IElementType type, Marker before, String errorMessage) {
             doneBefore(type, before, LocalizeValue.of(errorMessage));
         }
@@ -229,7 +228,7 @@ public interface PsiBuilder extends UserDataHolder {
          * @param before       marker to complete this one before.
          * @param errorMessage for error element.
          */
-        void doneBefore(IElementType type, Marker before, @Nonnull LocalizeValue errorMessage);
+        void doneBefore(IElementType type, Marker before, LocalizeValue errorMessage);
 
         /**
          * Completes this marker and labels it as error element with specified message. Before calling this method,
@@ -249,7 +248,7 @@ public interface PsiBuilder extends UserDataHolder {
          *
          * @param message for error element.
          */
-        void error(@Nonnull LocalizeValue message);
+        void error(LocalizeValue message);
 
         /**
          * Like {@linkplain #error(String)}, but the marker is completed before specified one.
@@ -269,7 +268,7 @@ public interface PsiBuilder extends UserDataHolder {
          * @param message for error element.
          * @param before  marker to complete this one before.
          */
-        void errorBefore(@Nonnull LocalizeValue message, Marker before);
+        void errorBefore(LocalizeValue message, Marker before);
 
         /**
          * Allows to define custom edge token binders instead of default ones. If any of parameters is null
@@ -295,7 +294,7 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @param messageText the text of the error message displayed to the user.
      */
-    void error(@Nonnull LocalizeValue messageText);
+    void error(LocalizeValue messageText);
 
     /**
      * Adds an error marker with the specified message text at the current position in the tree.
@@ -305,7 +304,7 @@ public interface PsiBuilder extends UserDataHolder {
      */
     @Deprecated
     @DeprecationInfo("Use #error(LocalizeValue")
-    default void error(@Nonnull String messageText) {
+    default void error(String messageText) {
         error(LocalizeValue.of(messageText));
     }
 
@@ -321,7 +320,7 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the built tree.
      */
-    @Nonnull
+    
     ASTNode getTreeBuilt();
 
     /**
@@ -331,7 +330,7 @@ public interface PsiBuilder extends UserDataHolder {
      *
      * @return the light tree built.
      */
-    @Nonnull
+    
     FlyweightCapableTreeStructure<LighterASTNode> getLightTree();
 
     /**
@@ -353,18 +352,18 @@ public interface PsiBuilder extends UserDataHolder {
     /**
      * Return localize value for node, if node is error. If it's not error empty value {@link LocalizeValue#empty()}
      */
-    @Nonnull
-    LocalizeValue getErrorMessage(@Nonnull LighterASTNode node);
+    
+    LocalizeValue getErrorMessage(LighterASTNode node);
 
-    void setReparseMergeCustomComparator(@Nonnull ReparseMergeCustomComparator comparator);
+    void setReparseMergeCustomComparator(ReparseMergeCustomComparator comparator);
 
-    void setContainingFile(@Nonnull PsiFile containingFile);
+    void setContainingFile(PsiFile containingFile);
 
     @Nullable
     PsiFile getContainingFile();
 
-    @Nonnull
+    
     Lexer getLexer();
 
-    void registerWhitespaceToken(@Nonnull IElementType type);
+    void registerWhitespaceToken(IElementType type);
 }

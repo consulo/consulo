@@ -16,7 +16,6 @@
 package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 /**
  * {@linkplain RefactoringElementListenerProvider} receives a notification of what happened
@@ -26,18 +25,18 @@ import jakarta.annotation.Nonnull;
 public interface RefactoringElementListener {
   RefactoringElementListener DEAF = new RefactoringElementListener() {
     @Override
-    public void elementMoved(@Nonnull PsiElement newElement) {}
+    public void elementMoved(PsiElement newElement) {}
 
     @Override
-    public void elementRenamed(@Nonnull PsiElement newElement) {}
+    public void elementRenamed(PsiElement newElement) {}
   };
   
   /**
    * Invoked in write action and command.
    */
-  void elementMoved(@Nonnull PsiElement newElement);
+  void elementMoved(PsiElement newElement);
   /**
    * Invoked in write action and command.
    */
-  void elementRenamed(@Nonnull PsiElement newElement);
+  void elementRenamed(PsiElement newElement);
 }

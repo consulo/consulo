@@ -33,7 +33,6 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IdIndexEntry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -59,10 +58,10 @@ public class IndexCacheManagerImpl implements CacheManager {
   }
 
   @Override
-  @Nonnull
-  public PsiFile[] getFilesWithWord(@Nonnull String word,
+  
+  public PsiFile[] getFilesWithWord(String word,
                                     short occurenceMask,
-                                    @Nonnull GlobalSearchScope scope,
+                                    GlobalSearchScope scope,
                                     boolean caseSensitively) {
     if (myProject.isDefault()) {
       return PsiFile.EMPTY_ARRAY;
@@ -73,10 +72,10 @@ public class IndexCacheManagerImpl implements CacheManager {
   }
 
   @Override
-  @Nonnull
-  public VirtualFile[] getVirtualFilesWithWord(@Nonnull String word,
+  
+  public VirtualFile[] getVirtualFilesWithWord(String word,
                                                short occurenceMask,
-                                               @Nonnull GlobalSearchScope scope,
+                                               GlobalSearchScope scope,
                                                boolean caseSensitively) {
     if (myProject.isDefault()) {
       return VirtualFile.EMPTY_ARRAY;
@@ -91,9 +90,9 @@ public class IndexCacheManagerImpl implements CacheManager {
   // Since implementation of virtualFileProcessor.process() may call indices directly or indirectly,
   // we cannot call it inside FileBasedIndex.processValues() method except in collecting form
   // If we do, deadlocks are possible (IDEADEV-42137). Process the files without not holding indices' read lock.
-  private boolean collectVirtualFilesWithWord(@Nonnull final Predicate<VirtualFile> fileProcessor,
-                                              @Nonnull String word, final short occurrenceMask,
-                                              @Nonnull final GlobalSearchScope scope, boolean caseSensitively) {
+  private boolean collectVirtualFilesWithWord(final Predicate<VirtualFile> fileProcessor,
+                                              String word, final short occurrenceMask,
+                                              final GlobalSearchScope scope, boolean caseSensitively) {
     if (myProject.isDefault()) {
       return true;
     }
@@ -123,10 +122,10 @@ public class IndexCacheManagerImpl implements CacheManager {
   }
 
   @Override
-  public boolean processFilesWithWord(@Nonnull final Predicate<PsiFile> psiFileProcessor,
-                                      @Nonnull String word,
+  public boolean processFilesWithWord(final Predicate<PsiFile> psiFileProcessor,
+                                      String word,
                                       short occurrenceMask,
-                                      @Nonnull GlobalSearchScope scope,
+                                      GlobalSearchScope scope,
                                       boolean caseSensitively) {
     List<VirtualFile> vFiles = new ArrayList<>(5);
     collectVirtualFilesWithWord(new CommonProcessors.CollectProcessor<>(vFiles), word, occurrenceMask, scope, caseSensitively);

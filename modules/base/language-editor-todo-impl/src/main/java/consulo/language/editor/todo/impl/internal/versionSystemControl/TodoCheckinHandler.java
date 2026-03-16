@@ -54,8 +54,7 @@ import consulo.versionControlSystem.checkin.CheckinHandlerUtil;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.BiConsumer;
@@ -87,7 +86,7 @@ public class TodoCheckinHandler extends CheckinHandler {
         CheckBox checkBox = CheckBox.create(VcsLocalize.beforeCheckinNewTodoCheck(""));
         return new RefreshableOnComponent() {
             @RequiredUIAccess
-            @Nonnull
+            
             @Override
             public Component getUIComponent() {
                 HorizontalLayout panel = HorizontalLayout.create();
@@ -183,7 +182,7 @@ public class TodoCheckinHandler extends CheckinHandler {
         ProgressManager.getInstance().run(
                 new Task.Modal(myProject, LocalizeValue.localizeTODO("Looking for New and Edited TODO Items..."), true) {
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         indicator.setIndeterminate(true);
                         worker.execute();
                     }
@@ -229,13 +228,13 @@ public class TodoCheckinHandler extends CheckinHandler {
         return ReturnResult.CANCEL;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private ReturnResult askReviewOrCommit(
-            @Nonnull TodoCheckinHandlerWorker worker,
-            @Nonnull LocalizeValue commitButton,
-            @Nonnull LocalizeValue text,
-            @Nonnull String title
+            TodoCheckinHandlerWorker worker,
+            LocalizeValue commitButton,
+            LocalizeValue text,
+            String title
     ) {
         LocalizeValue yesButton = VcsLocalize.todoInNewReviewButton();
         int result = showYesNoCancelDialog(

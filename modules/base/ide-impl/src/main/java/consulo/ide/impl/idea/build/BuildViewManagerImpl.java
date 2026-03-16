@@ -10,7 +10,6 @@ import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -25,19 +24,19 @@ public class BuildViewManagerImpl extends AbstractViewManager implements BuildVi
         super(project, buildContentManager);
     }
 
-    @Nonnull
+    
     @Override
     public String getViewId() {
         return "BuildOutput";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getViewName() {
         return BuildLocalize.tabTitleBuildOutput();
     }
 
-    @Nonnull
+    
     @Override
     public BuildProgress<BuildProgressDescriptor> createBuildProgress() {
         BuildRootProgressImpl progress = new BuildRootProgressImpl();

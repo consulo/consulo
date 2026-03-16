@@ -18,7 +18,6 @@ package consulo.compiler.artifact.ui;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -41,16 +40,16 @@ public abstract class PackagingSourceItem {
   @Override
   public abstract int hashCode();
 
-  public abstract SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context);
+  public abstract SourceItemPresentation createPresentation(ArtifactEditorContext context);
 
-  @Nonnull
-  public abstract List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context);
+  
+  public abstract List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context);
 
   public boolean isProvideElements() {
     return myProvideElements;
   }
 
-  @Nonnull
+  
   public PackagingElementOutputKind getKindOfProducedElements() {
     return PackagingElementOutputKind.OTHER;
   }

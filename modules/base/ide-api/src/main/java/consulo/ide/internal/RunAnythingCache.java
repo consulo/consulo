@@ -18,7 +18,6 @@ package consulo.ide.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public interface RunAnythingCache {
         return project.getInstance(RunAnythingCache.class);
     }
 
-    boolean isGroupVisible(@Nonnull String key);
+    boolean isGroupVisible(String key);
 
-    void saveGroupVisibilityKey(@Nonnull String key, boolean visible);
+    void saveGroupVisibilityKey(String key, boolean visible);
 }

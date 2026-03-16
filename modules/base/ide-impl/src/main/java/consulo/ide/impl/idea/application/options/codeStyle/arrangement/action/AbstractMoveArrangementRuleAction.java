@@ -22,8 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -35,15 +34,15 @@ import java.util.List;
  */
 public abstract class AbstractMoveArrangementRuleAction extends AbstractArrangementRuleAction implements DumbAware {
     protected AbstractMoveArrangementRuleAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         @Nullable Image icon
     ) {
         super(text, description, icon);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         if (control == null) {
             e.getPresentation().setEnabled(false);
@@ -63,7 +62,7 @@ public abstract class AbstractMoveArrangementRuleAction extends AbstractArrangem
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ArrangementMatchingRulesControl control = getRulesControl(e);
         if (control == null) {
             return;
@@ -118,5 +117,5 @@ public abstract class AbstractMoveArrangementRuleAction extends AbstractArrangem
         control.repaintRows(0, control.getModel().getSize() - 1, true);
     }
 
-    protected abstract void fillMappings(@Nonnull ArrangementMatchingRulesControl control, @Nonnull List<int[]> mappings);
+    protected abstract void fillMappings(ArrangementMatchingRulesControl control, List<int[]> mappings);
 }

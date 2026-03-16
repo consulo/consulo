@@ -19,8 +19,7 @@ package consulo.codeEditor.imaginary;
 import consulo.codeEditor.*;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,13 +39,11 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         return myCaretModel.getEditor().notImplemented();
     }
 
-    @Nonnull
     @Override
     public Editor getEditor() {
         return myCaretModel.getEditor();
     }
 
-    @Nonnull
     @Override
     public CaretModel getCaretModel() {
         return myCaretModel;
@@ -76,12 +73,12 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+    public void moveToLogicalPosition(LogicalPosition pos) {
         moveToOffset(myCaretModel.getEditor().logicalPositionToOffset(pos));
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+    public void moveToVisualPosition(VisualPosition pos) {
         moveToOffset(myCaretModel.getEditor().visualPositionToOffset(pos));
     }
 
@@ -110,13 +107,11 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         return true;
     }
 
-    @Nonnull
     @Override
     public LogicalPosition getLogicalPosition() {
         return myCaretModel.getEditor().offsetToLogicalPosition(myPos);
     }
 
-    @Nonnull
     @Override
     public VisualPosition getVisualPosition() {
         return myCaretModel.getEditor().offsetToVisualPosition(myPos);
@@ -137,7 +132,6 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         return myStart;
     }
 
-    @Nonnull
     @Override
     public VisualPosition getSelectionStartPosition() {
         return myCaretModel.getEditor().offsetToVisualPosition(myStart);
@@ -148,7 +142,6 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         return myEnd;
     }
 
-    @Nonnull
     @Override
     public VisualPosition getSelectionEndPosition() {
         return myCaretModel.getEditor().offsetToVisualPosition(myEnd);
@@ -168,7 +161,6 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         return getOffset();
     }
 
-    @Nonnull
     @Override
     public VisualPosition getLeadSelectionPosition() {
         throw notImplemented();
@@ -264,14 +256,13 @@ public class ImaginaryCaret extends UserDataHolderBase implements Caret {
         throw notImplemented();
     }
 
-    @Nonnull
     @Override
     public CaretVisualAttributes getVisualAttributes() {
         throw notImplemented();
     }
 
     @Override
-    public void setVisualAttributes(@Nonnull CaretVisualAttributes attributes) {
+    public void setVisualAttributes(CaretVisualAttributes attributes) {
         throw notImplemented();
     }
 

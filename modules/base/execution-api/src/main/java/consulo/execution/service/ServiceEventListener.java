@@ -4,14 +4,13 @@ package consulo.execution.service;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_CHILDREN)
 public interface ServiceEventListener {
   Class<ServiceEventListener> TOPIC = ServiceEventListener.class;
 
-  void handle(@Nonnull ServiceEvent event);
+  void handle(ServiceEvent event);
 
   final class ServiceEvent {
     public final EventType type;
@@ -20,15 +19,15 @@ public interface ServiceEventListener {
 
     public final Object parent;
 
-    private ServiceEvent(@Nonnull EventType type,
-                         @Nonnull Object target,
-                         @Nonnull Class<?> contributorClass) {
+    private ServiceEvent(EventType type,
+                         Object target,
+                         Class<?> contributorClass) {
       this(type, target, contributorClass, null);
     }
 
-    private ServiceEvent(@Nonnull EventType type,
-                         @Nonnull Object target,
-                         @Nonnull Class<?> contributorClass,
+    private ServiceEvent(EventType type,
+                         Object target,
+                         Class<?> contributorClass,
                          @Nullable Object parent) {
       this.type = type;
       this.target = target;
@@ -42,22 +41,22 @@ public interface ServiceEventListener {
         (parent == null ? "" : "; parent: " + parent);
     }
 
-    public static ServiceEvent createEvent(@Nonnull EventType type,
-                                           @Nonnull Object target,
-                                           @Nonnull Class<?> rootContributorClass) {
+    public static ServiceEvent createEvent(EventType type,
+                                           Object target,
+                                           Class<?> rootContributorClass) {
       return new ServiceEvent(type, target, rootContributorClass);
     }
 
-    public static ServiceEvent createResetEvent(@Nonnull Class<?> rootContributorClass) {
+    public static ServiceEvent createResetEvent(Class<?> rootContributorClass) {
       return new ServiceEvent(EventType.RESET, rootContributorClass, rootContributorClass);
     }
 
-    public static ServiceEvent createUnloadSyncResetEvent(@Nonnull Class<?> rootContributorClass) {
+    public static ServiceEvent createUnloadSyncResetEvent(Class<?> rootContributorClass) {
       return new ServiceEvent(EventType.UNLOAD_SYNC_RESET, rootContributorClass, rootContributorClass);
     }
 
-    public static ServiceEvent createServiceAddedEvent(@Nonnull Object target,
-                                                       @Nonnull Class<?> contributorClass,
+    public static ServiceEvent createServiceAddedEvent(Object target,
+                                                       Class<?> contributorClass,
                                                        @Nullable Object parent) {
       return new ServiceEvent(EventType.SERVICE_ADDED, target, contributorClass, parent);
     }

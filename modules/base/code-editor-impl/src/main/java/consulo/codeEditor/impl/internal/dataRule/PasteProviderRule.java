@@ -19,10 +19,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.DataSnapshot;
 import consulo.ui.ex.PasteProvider;
-import jakarta.annotation.Nonnull;
 
 public final class PasteProviderRule {
-  static PasteProvider getData(@Nonnull DataSnapshot dataProvider) {
+  static PasteProvider getData(DataSnapshot dataProvider) {
     Editor editor = dataProvider.get(Editor.KEY);
     return editor instanceof EditorEx editorEx ? editorEx.getPasteProvider() : null;
   }

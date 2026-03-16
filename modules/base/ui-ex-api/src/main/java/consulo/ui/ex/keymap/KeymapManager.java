@@ -21,8 +21,7 @@ import consulo.application.util.PerApplicationInstance;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
@@ -36,7 +35,7 @@ public abstract class KeymapManager {
 
   private static final Supplier<KeymapManager> ourInstance = PerApplicationInstance.of(KeymapManager.class);
 
-  @Nonnull
+  
   public static KeymapManager getInstance() {
     return ourInstance.get();
   }
@@ -52,7 +51,7 @@ public abstract class KeymapManager {
   public abstract Keymap getDefaultKeymap();
 
   @Nullable
-  public abstract Keymap getKeymap(@Nonnull String name);
+  public abstract Keymap getKeymap(String name);
 
   public abstract void setActiveKeymap(Keymap activeKeymap);
 
@@ -60,9 +59,9 @@ public abstract class KeymapManager {
    * @deprecated use {@link KeymapManager#addKeymapManagerListener(KeymapManagerListener, Disposable)} instead
    */
   @Deprecated(forRemoval = true)
-  public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener);
+  public abstract void addKeymapManagerListener(KeymapManagerListener listener);
 
-  public abstract void addKeymapManagerListener(@Nonnull KeymapManagerListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void addKeymapManagerListener(KeymapManagerListener listener, Disposable parentDisposable);
 
-  public abstract void removeKeymapManagerListener(@Nonnull KeymapManagerListener listener);
+  public abstract void removeKeymapManagerListener(KeymapManagerListener listener);
 }

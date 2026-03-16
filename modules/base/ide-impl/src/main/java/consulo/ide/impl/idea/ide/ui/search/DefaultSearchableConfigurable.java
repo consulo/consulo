@@ -20,8 +20,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -37,7 +36,7 @@ public class DefaultSearchableConfigurable implements Configurable {
         myDelegate = delegate;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return myDelegate.getId();
@@ -53,7 +52,7 @@ public class DefaultSearchableConfigurable implements Configurable {
         }
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return myDelegate.getDisplayName();

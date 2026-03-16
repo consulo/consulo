@@ -26,8 +26,7 @@ import consulo.ui.ex.awt.JBCardLayout;
 import consulo.ui.ex.wizard.WizardSession;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,8 +49,8 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
 
     protected ModuleImportDialog(
         @Nullable Project project,
-        @Nonnull VirtualFile targetFile,
-        @Nonnull ModuleImportProvider<C> moduleImportProvider
+        VirtualFile targetFile,
+        ModuleImportProvider<C> moduleImportProvider
     ) {
         super(project);
 
@@ -80,12 +79,12 @@ public class ModuleImportDialog<C extends ModuleImportContext> extends DialogWra
         init();
     }
 
-    @Nonnull
+    
     public C getContext() {
         return myContext;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{getCancelAction(), getOKAction()};

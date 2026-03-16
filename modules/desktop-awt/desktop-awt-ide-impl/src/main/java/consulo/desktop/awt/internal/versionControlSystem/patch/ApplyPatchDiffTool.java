@@ -22,34 +22,33 @@ import consulo.diff.request.DiffRequest;
 import consulo.versionControlSystem.impl.internal.patch.tool.ApplyPatchDiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class ApplyPatchDiffTool implements FrameDiffTool {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public DiffViewer createComponent(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public DiffViewer createComponent(DiffContext context, DiffRequest request) {
         return new MyApplyPatchViewer(context, (ApplyPatchDiffRequest)request);
     }
 
     @Override
-    public boolean canShow(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public boolean canShow(DiffContext context, DiffRequest request) {
         return request instanceof ApplyPatchDiffRequest;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
         return VcsLocalize.patchApplySomehowDiffName().get();
     }
 
     private static class MyApplyPatchViewer extends ApplyPatchViewer implements DiffViewer {
-        public MyApplyPatchViewer(@Nonnull DiffContext context, @Nonnull ApplyPatchDiffRequest request) {
+        public MyApplyPatchViewer(DiffContext context, ApplyPatchDiffRequest request) {
             super(context, request);
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
         public ToolbarComponents init() {

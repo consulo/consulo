@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(value = ComponentScope.PROJECT, lazy = false)
 public interface ProjectUndoManager extends UndoManager {
-  static UndoManager getInstance(@Nonnull Project project) {
+  static UndoManager getInstance(Project project) {
     return project.getInstance(ProjectUndoManager.class);
   }
 }

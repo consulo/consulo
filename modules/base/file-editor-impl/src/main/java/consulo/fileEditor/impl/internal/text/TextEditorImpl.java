@@ -43,8 +43,7 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 
@@ -57,10 +56,8 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     public final Project myProject;
 
     private final PropertyChangeSupport myChangeSupport;
-    @Nonnull
     private final TextEditorComponent myComponent;
 
-    @Nonnull
     public final VirtualFile myFile;
 
     private final AsyncEditorLoaderImpl myAsyncLoader;
@@ -68,7 +65,7 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     protected final TextEditorComponentContainerFactory myTextEditorComponentContainerFactory;
 
     @RequiredUIAccess
-    public TextEditorImpl(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull Document document, TextEditorProviderImpl provider) {
+    public TextEditorImpl(Project project, VirtualFile file, Document document, TextEditorProviderImpl provider) {
         myProject = project;
         myFile = file;
         myChangeSupport = new PropertyChangeSupport(this);
@@ -80,7 +77,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         myAsyncLoader.start();
     }
 
-    @Nonnull
     public Runnable loadEditorInBackground() {
         EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
         EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(myFile, scheme, myProject);
@@ -89,8 +85,7 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
         return () -> editor.setHighlighter(highlighter);
     }
 
-    @Nonnull
-    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, @Nonnull Document document) {
+    protected TextEditorComponent createEditorComponent(Project project, VirtualFile file, Document document) {
         return new TextEditorComponent(project, file, document, this, myTextEditorComponentContainerFactory);
     }
 
@@ -99,7 +94,6 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    @Nonnull
     public JComponent getComponent() {
         return myComponent.getComponentContainer().getComponent();
     }
@@ -117,13 +111,11 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    @Nonnull
     public JComponent getPreferredFocusedComponent() {
         return getActiveEditor().getContentComponent();
     }
 
     @Override
-    @Nonnull
     public Editor getEditor() {
         return getActiveEditor();
     }
@@ -131,25 +123,22 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     /**
      * @see DesktopTextEditorComponent#getEditor()
      */
-    @Nonnull
     private Editor getActiveEditor() {
         return myComponent.getEditor();
     }
 
     @Override
-    @Nonnull
     public String getName() {
         return "Text";
     }
 
     @Override
-    @Nonnull
-    public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+    public FileEditorState getState(FileEditorStateLevel level) {
         return myAsyncLoader.getEditorState(level);
     }
 
     @Override
-    public void setState(@Nonnull FileEditorState state) {
+    public void setState(FileEditorState state) {
         myAsyncLoader.setEditorState((TextEditorState) state, true);
     }
 
@@ -182,12 +171,12 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         myChangeSupport.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         myChangeSupport.removePropertyChangeListener(listener);
     }
 
@@ -226,12 +215,12 @@ public class TextEditorImpl extends UserDataHolderBase implements RealTextEditor
     }
 
     @Override
-    public boolean canNavigateTo(@Nonnull Navigatable navigatable) {
+    public boolean canNavigateTo(Navigatable navigatable) {
         return navigatable instanceof OpenFileDescriptor && (((OpenFileDescriptor) navigatable).getLine() != -1 || ((OpenFileDescriptor) navigatable).getOffset() >= 0);
     }
 
     @Override
-    public void navigateTo(@Nonnull Navigatable navigatable) {
+    public void navigateTo(Navigatable navigatable) {
         ((OpenFileDescriptorImpl) navigatable).navigateIn(getEditor());
     }
 

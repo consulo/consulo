@@ -20,7 +20,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -34,7 +33,7 @@ final class VcsPostStartUpActivity implements PostStartupActivity, DumbAware {
   }
 
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     if (project.isDefault()) return;
     VcsInitialization vcsInitialization = project.getInstance(VcsInitialization.class);
     vcsInitialization.startInitialization();

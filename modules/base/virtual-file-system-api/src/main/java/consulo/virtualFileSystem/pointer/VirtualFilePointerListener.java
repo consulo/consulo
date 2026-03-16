@@ -18,13 +18,12 @@ package consulo.virtualFileSystem.pointer;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 
-import jakarta.annotation.Nonnull;
 
 @TopicAPI(ComponentScope.APPLICATION)
 public interface VirtualFilePointerListener {
-  default void beforeValidityChanged(@Nonnull VirtualFilePointer[] pointers) {
+  default void beforeValidityChanged(VirtualFilePointer[] pointers) {
   }
 
-  default void validityChanged(@Nonnull VirtualFilePointer[] pointers) {
+  default void validityChanged(VirtualFilePointer[] pointers) {
   }
 }

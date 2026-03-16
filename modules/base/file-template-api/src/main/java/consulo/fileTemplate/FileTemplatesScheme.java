@@ -20,7 +20,6 @@ import consulo.project.ProjectManager;
 import consulo.container.boot.ContainerPathManager;
 import consulo.component.util.pointer.Named;
 
-import jakarta.annotation.Nonnull;
 import java.io.File;
 
 /**
@@ -29,13 +28,13 @@ import java.io.File;
 public abstract class FileTemplatesScheme implements Named {
 
   public final static FileTemplatesScheme DEFAULT = new FileTemplatesScheme("Default") {
-    @Nonnull
+    
     @Override
     public String getTemplatesDir() {
       return new File(ContainerPathManager.get().getConfigPath(), TEMPLATES_DIR).getPath();
     }
 
-    @Nonnull
+    
     @Override
     public Project getProject() {
       return ProjectManager.getInstance().getDefaultProject();
@@ -46,19 +45,19 @@ public abstract class FileTemplatesScheme implements Named {
 
   private final String myName;
 
-  public FileTemplatesScheme(@Nonnull String name) {
+  public FileTemplatesScheme(String name) {
     myName = name;
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
 
-  @Nonnull
+  
   public abstract String getTemplatesDir();
 
-  @Nonnull
+  
   public abstract Project getProject();
 }

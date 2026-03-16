@@ -24,7 +24,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.update.Activatable;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

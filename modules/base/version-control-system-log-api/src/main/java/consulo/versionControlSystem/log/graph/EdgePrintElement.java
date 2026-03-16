@@ -15,16 +15,15 @@
  */
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 public interface EdgePrintElement extends PrintElement {
 
   int getPositionInOtherRow();
 
-  @Nonnull
+  
   Type getType();
 
-  @Nonnull
+  
   LineStyle getLineStyle();
 
   boolean hasArrow();

@@ -31,10 +31,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +49,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class XLineBreakpointType<P extends XBreakpointProperties> extends XBreakpointType<XLineBreakpoint<P>,P> {
-  protected XLineBreakpointType(@NonNls @Nonnull String id, @Nls @Nonnull String title) {
+  protected XLineBreakpointType(String id, String title) {
     super(id, title);
   }
 
@@ -61,7 +58,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * {@link XBreakpoint} instance and can be obtained by using {@link XBreakpoint#getProperties()} method
    */
   @Nullable
-  public abstract P createBreakpointProperties(@Nonnull VirtualFile file, int line);
+  public abstract P createBreakpointProperties(VirtualFile file, int line);
 
   @Override
   public String getDisplayText(XLineBreakpoint<P> breakpoint) {
@@ -76,7 +73,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * Source position for line breakpoint is determined by its file and line
    */
   @Override
-  public XSourcePosition getSourcePosition(@Nonnull XBreakpoint<P> breakpoint) {
+  public XSourcePosition getSourcePosition(XBreakpoint<P> breakpoint) {
     return null;
   }
 
@@ -89,15 +86,15 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
    * Default line breakpoints aren't supported
    */
   @Override
-  public final XLineBreakpoint<P> createDefaultBreakpoint(@Nonnull XBreakpointCreator<P> creator) {
+  public final XLineBreakpoint<P> createDefaultBreakpoint(XBreakpointCreator<P> creator) {
     return null;
   }
 
-  public List<? extends AnAction> getAdditionalPopupMenuActions(@Nonnull XLineBreakpoint<P> breakpoint, @jakarta.annotation.Nullable XDebugSession currentSession) {
+  public List<? extends AnAction> getAdditionalPopupMenuActions(XLineBreakpoint<P> breakpoint, @Nullable XDebugSession currentSession) {
     return Collections.emptyList();
   }
 
-  @Nonnull
+  
   public Image getTemporaryIcon() {
     return ExecutionDebugIconGroup.breakpointBreakpoint();
   }
@@ -130,14 +127,14 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   /**
    * Return a list of variants if there can be more than one breakpoint on the line
    */
-  @Nonnull
-  public List<? extends XLineBreakpointVariant> computeVariants(@Nonnull Project project, @Nonnull XSourcePosition position) {
+  
+  public List<? extends XLineBreakpointVariant> computeVariants(Project project, XSourcePosition position) {
     return Collections.emptyList();
   }
 
   public abstract class XLineBreakpointVariant {
     @RequiredReadAction
-    @Nonnull
+    
     public abstract String getText();
 
     @Nullable
@@ -155,11 +152,11 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   public class XLineBreakpointAllVariant extends XLineBreakpointVariant {
     protected final XSourcePosition mySourcePosition;
 
-    public XLineBreakpointAllVariant(@Nonnull XSourcePosition position) {
+    public XLineBreakpointAllVariant(XSourcePosition position) {
       mySourcePosition = position;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     @Override
     public String getText() {
@@ -192,7 +189,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
   public class XLinePsiElementBreakpointVariant extends XLineBreakpointAllVariant {
     private final PsiElement myElement;
 
-    public XLinePsiElementBreakpointVariant(@Nonnull XSourcePosition position, PsiElement element) {
+    public XLinePsiElementBreakpointVariant(XSourcePosition position, PsiElement element) {
       super(position);
 
       myElement = element;
@@ -204,7 +201,7 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
       return IconDescriptorUpdaters.getIcon(myElement, 0);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     @Override
     public String getText() {

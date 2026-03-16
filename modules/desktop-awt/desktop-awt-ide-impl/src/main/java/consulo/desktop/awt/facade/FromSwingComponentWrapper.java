@@ -17,13 +17,12 @@ package consulo.desktop.awt.facade;
 
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2019-02-16
  */
 public interface FromSwingComponentWrapper {
-  @Nonnull
+  
   Component toUIComponent();
 }

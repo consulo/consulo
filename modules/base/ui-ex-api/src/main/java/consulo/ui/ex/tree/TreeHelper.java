@@ -24,11 +24,10 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class TreeHelper {
-  public static <T> T calculateYieldingToWriteAction(@RequiredReadAction @Nonnull Supplier<? extends T> producer) throws ProcessCanceledException {
+  public static <T> T calculateYieldingToWriteAction(@RequiredReadAction Supplier<? extends T> producer) throws ProcessCanceledException {
     if (!Registry.is("ide.abstractTreeUi.BuildChildrenInBackgroundYieldingToWriteAction") || ApplicationManager.getApplication().isDispatchThread()) {
       return producer.get();
     }

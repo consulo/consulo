@@ -35,8 +35,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.dataContext.DataSink;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -50,10 +49,10 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
     @RequiredUIAccess
     public XDebuggerExpressionEditorImpl(
         Project project,
-        @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
+        XDebuggerEditorsProvider debuggerEditorsProvider,
         @Nullable String historyId,
         @Nullable XSourcePosition sourcePosition,
-        @Nonnull XExpression text,
+        XExpression text,
         final boolean multiline,
         boolean editorFont
     ) {
@@ -70,7 +69,7 @@ public class XDebuggerExpressionEditorImpl extends XDebuggerEditorBase implement
             }
 
             @Override
-            public void uiDataSnapshot(@Nonnull DataSink sink) {
+            public void uiDataSnapshot(DataSink sink) {
                 super.uiDataSnapshot(sink);
                 sink.set(LangDataKeys.CONTEXT_LANGUAGES, new Language[]{myExpression.getLanguage()});
                 sink.lazy(PsiFile.KEY, () -> PsiDocumentManager.getInstance(getProject()).getPsiFile(getDocument()));

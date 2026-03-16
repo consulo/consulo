@@ -3,13 +3,12 @@ package consulo.execution.debug.stream;
 
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.logging.attachment.RuntimeExceptionWithAttachments;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public abstract class TraceException extends RuntimeExceptionWithAttachments {
-  TraceException(@Nonnull String message, @Nonnull String traceExpression) {
+  TraceException(String message, String traceExpression) {
     super(message, AttachmentFactory.get().create("trace.txt", traceExpression));
   }
 }

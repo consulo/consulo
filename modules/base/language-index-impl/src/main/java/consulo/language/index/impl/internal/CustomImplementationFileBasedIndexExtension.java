@@ -6,7 +6,6 @@ import consulo.index.io.StorageException;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -14,6 +13,6 @@ import java.io.IOException;
  * @author max
  */
 public interface CustomImplementationFileBasedIndexExtension<K, V> {
-  @Nonnull
-  UpdatableIndex<K, V, FileContent> createIndexImplementation(@Nonnull FileBasedIndexExtension<K, V> extension, @Nonnull IndexStorage<K, V> storage) throws StorageException, IOException;
+  
+  UpdatableIndex<K, V, FileContent> createIndexImplementation(FileBasedIndexExtension<K, V> extension, IndexStorage<K, V> storage) throws StorageException, IOException;
 }

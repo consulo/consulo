@@ -26,8 +26,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.ui.ex.ColoredTextContainer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -36,28 +35,28 @@ public abstract class OrderEntryAppearanceService {
     return Application.get().getInstance(OrderEntryAppearanceService.class);
   }
 
-  @Nonnull
-  public abstract Consumer<ColoredTextContainer> getRenderForOrderEntry(@Nonnull OrderEntry orderEntry);
+  
+  public abstract Consumer<ColoredTextContainer> getRenderForOrderEntry(OrderEntry orderEntry);
 
-  @Nonnull
-  public Consumer<ColoredTextContainer> getRenderForModule(@Nonnull Module module) {
+  
+  public Consumer<ColoredTextContainer> getRenderForModule(Module module) {
     return it -> forModule(module).customize(it);
   }
 
-  @Nonnull
-  public Consumer<ColoredTextContainer> getRenderForLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots) {
+  
+  public Consumer<ColoredTextContainer> getRenderForLibrary(Project project, Library library, boolean hasInvalidRoots) {
     return it -> forLibrary(project, library, hasInvalidRoots).customize(it);
   }
 
-  @Nonnull
-  public abstract CellAppearanceEx forLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots);
+  
+  public abstract CellAppearanceEx forLibrary(Project project, Library library, boolean hasInvalidRoots);
 
-  @Nonnull
+  
   public abstract CellAppearanceEx forSdk(@Nullable Sdk jdk, boolean isInComboBox, boolean selected, boolean showVersion);
 
-  @Nonnull
-  public abstract CellAppearanceEx forContentFolder(@Nonnull ContentFolder folder);
+  
+  public abstract CellAppearanceEx forContentFolder(ContentFolder folder);
 
-  @Nonnull
-  public abstract CellAppearanceEx forModule(@Nonnull Module module);
+  
+  public abstract CellAppearanceEx forModule(Module module);
 }

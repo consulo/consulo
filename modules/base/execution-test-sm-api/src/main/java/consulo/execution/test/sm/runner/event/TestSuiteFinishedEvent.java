@@ -17,18 +17,17 @@ package consulo.execution.test.sm.runner.event;
 
 import jetbrains.buildServer.messages.serviceMessages.TestSuiteFinished;
 
-import jakarta.annotation.Nonnull;
 
 public class TestSuiteFinishedEvent extends TreeNodeEvent {
-    public TestSuiteFinishedEvent(@Nonnull TestSuiteFinished suiteFinished) {
+    public TestSuiteFinishedEvent(TestSuiteFinished suiteFinished) {
         super(suiteFinished.getSuiteName(), TreeNodeEvent.getNodeId(suiteFinished));
     }
 
-    public TestSuiteFinishedEvent(@Nonnull String name) {
+    public TestSuiteFinishedEvent(String name) {
         super(name, null);
     }
 
     @Override
-    protected void appendToStringInfo(@Nonnull StringBuilder buf) {
+    protected void appendToStringInfo(StringBuilder buf) {
     }
 }

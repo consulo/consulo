@@ -17,13 +17,12 @@ package consulo.ui.ex.awt.table;
 
 import consulo.ui.ex.awt.SortableColumnModel;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public abstract class TableViewModel<Item> extends AbstractTableModel implements SortableColumnModel {
-  public abstract void setItems(@Nonnull List<Item> items);
+  public abstract void setItems(List<Item> items);
 
-  @Nonnull
+  
   public abstract List<Item> getItems();
 }

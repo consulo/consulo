@@ -21,8 +21,7 @@ import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,14 +36,14 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
   private final List<RunDashboardCustomizer> myCustomizers;
   private final UserDataHolder myUserDataHolder = new UserDataHolderBase();
 
-  public RunConfigurationNode(Project project, @Nonnull RunDashboardManager.RunDashboardService service,
-                              @Nonnull List<RunDashboardCustomizer> customizers) {
+  public RunConfigurationNode(Project project, RunDashboardManager.RunDashboardService service,
+                              List<RunDashboardCustomizer> customizers) {
     super(project, service);
     myCustomizers = customizers;
   }
 
   @Override
-  @Nonnull
+  
   public RunnerAndConfigurationSettings getConfigurationSettings() {
     //noinspection ConstantConditions ???
     return getValue().getSettings();
@@ -65,7 +64,7 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
   }
 
   @Override
-  protected void update(@Nonnull PresentationData presentation) {
+  protected void update(PresentationData presentation) {
     RunnerAndConfigurationSettings configurationSettings = getConfigurationSettings();
     //noinspection ConstantConditions
     boolean isStored = RunManager.getInstance(getProject()).hasSettings(configurationSettings);
@@ -102,7 +101,7 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
     return icon;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<? extends AbstractTreeNode<?>> getChildren() {
     for (RunDashboardCustomizer customizer : myCustomizers) {
@@ -119,22 +118,22 @@ public final class RunConfigurationNode extends AbstractTreeNode<RunDashboardMan
 
   @Nullable
   @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     return myUserDataHolder.getUserData(key);
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(Key<T> key, @Nullable T value) {
     myUserDataHolder.putUserData(key, value);
   }
 
-  @Nonnull
+  
   @Override
   public List<RunDashboardCustomizer> getCustomizers() {
     return myCustomizers;
   }
 
-  @Nonnull
+  
   @Override
   public RunDashboardRunConfigurationStatus getStatus() {
     for (RunDashboardCustomizer customizer : myCustomizers) {

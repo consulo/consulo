@@ -17,7 +17,7 @@ package consulo.versionControlSystem.history;
 
 import consulo.versionControlSystem.VcsException;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 public interface VcsFileContent {

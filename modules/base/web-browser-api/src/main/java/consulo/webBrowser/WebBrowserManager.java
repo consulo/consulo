@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.util.ModificationTracker;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -37,22 +36,22 @@ public interface WebBrowserManager extends ModificationTracker {
         return Application.get().getInstance(WebBrowserManager.class);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     CompletableFuture<?> showSettings();
 
-    @Nonnull
+    
     List<WebBrowser> getBrowsers();
 
-    @Nonnull
-    List<WebBrowser> getBrowsers(@Nonnull Predicate<? super WebBrowser> condition);
+    
+    List<WebBrowser> getBrowsers(Predicate<? super WebBrowser> condition);
 
-    @Nonnull
+    
     List<WebBrowser> getActiveBrowsers();
 
-    boolean isActive(@Nonnull WebBrowser webBrowser);
+    boolean isActive(WebBrowser webBrowser);
 
-    @Nonnull
+    
     DefaultBrowserPolicy getDefaultBrowserPolicy();
 
     @Nullable
@@ -64,7 +63,7 @@ public interface WebBrowserManager extends ModificationTracker {
     @Nullable
     WebBrowser findBrowserById(@Nullable String idOrFamilyName);
 
-    @Nonnull
+    
     String getAlternativeBrowserPath();
 
     void setShowBrowserHover(boolean showBrowserHover);

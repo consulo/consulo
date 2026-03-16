@@ -41,8 +41,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -51,29 +50,23 @@ import java.util.List;
 public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     protected static final Logger LOG = Logger.getInstance(DiffViewerBase.class);
 
-    @Nonnull
     private final List<DiffViewerListener> myListeners = new SmartList<>();
 
     @Nullable
     protected final Project myProject;
-    @Nonnull
     protected final DiffContext myContext;
-    @Nonnull
     protected final ContentDiffRequest myRequest;
 
-    @Nonnull
     private final DiffTaskQueue myTaskExecutor = new DiffTaskQueue();
-    @Nonnull
     private final Alarm myTaskAlarm = new Alarm();
     private volatile boolean myDisposed;
 
-    public DiffViewerBase(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
+    public DiffViewerBase(DiffContext context, ContentDiffRequest request) {
         myProject = context.getProject();
         myContext = context;
         myRequest = request;
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     public final FrameDiffTool.ToolbarComponents init() {
@@ -183,12 +176,10 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
         return myProject;
     }
 
-    @Nonnull
     public ContentDiffRequest getRequest() {
         return myRequest;
     }
 
-    @Nonnull
     public DiffContext getContext() {
         return myContext;
     }
@@ -250,8 +241,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     }
 
     @CalledInBackground
-    @Nonnull
-    protected abstract Runnable performRediff(@Nonnull ProgressIndicator indicator);
+    protected abstract Runnable performRediff(ProgressIndicator indicator);
 
     @RequiredUIAccess
     protected void onDispose() {
@@ -268,23 +258,22 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     //
 
     @RequiredUIAccess
-    public void addListener(@Nonnull DiffViewerListener listener) {
+    public void addListener(DiffViewerListener listener) {
         myListeners.add(listener);
     }
 
     @RequiredUIAccess
-    public void removeListener(@Nonnull DiffViewerListener listener) {
+    public void removeListener(DiffViewerListener listener) {
         myListeners.remove(listener);
     }
 
-    @Nonnull
     @RequiredUIAccess
     protected List<DiffViewerListener> getListeners() {
         return myListeners;
     }
 
     @RequiredUIAccess
-    private void fireEvent(@Nonnull EventType type) {
+    private void fireEvent(EventType type) {
         for (DiffViewerListener listener : myListeners) {
             switch (type) {
                 case INIT:
@@ -311,7 +300,7 @@ public abstract class DiffViewerBase implements DiffViewer, UiDataProvider {
     //
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.lazy(DiffDataKeys.NAVIGATABLE, this::getNavigatable);
         sink.set(Project.KEY, myProject);
     }

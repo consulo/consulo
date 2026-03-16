@@ -26,8 +26,8 @@ import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.roots.ui.configuration.ProjectStructureElementConfigurable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -40,13 +40,12 @@ import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
     // todo myModulesConfigurator.addAllModuleChangeListener(moduleRootModel -> daemonAnalyzer.queueUpdate(mySettingsElement));
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return StandardConfigurableIds.PROJECT_GROUP;
@@ -88,10 +87,10 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
     return mySettingsElement;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
-  public Component createOptionsPanel(@Nonnull Disposable parentUIDisposable) {
+  public Component createOptionsPanel(Disposable parentUIDisposable) {
     init(parentUIDisposable);
     return myLayout;
   }
@@ -139,7 +138,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
 
       String compilerOutput = getModulesConfigurator().getCompilerOutputUrl();
       if (compilerOutput != null) {
-        myCompilerPathController.setValue(FileUtil.toSystemDependentName(VfsUtil.urlToPath(compilerOutput)));
+        myCompilerPathController.setValue(FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(compilerOutput)));
       }
       if (myProjectName != null) {
         myProjectName.setValue(myProject.getName(), false);
@@ -176,7 +175,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
           //file doesn't exist yet
         }
         canonicalPath = FileUtil.toSystemIndependentName(canonicalPath);
-        configuration.setCompilerOutputUrl(VfsUtil.pathToUrl(canonicalPath));
+        configuration.setCompilerOutputUrl(VirtualFileUtil.pathToUrl(canonicalPath));
       }
       else {
         configuration.setCompilerOutputUrl(null);
@@ -209,7 +208,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
   public boolean isModified() {
     String compilerOutput = CompilerConfiguration.getInstance(myProject).getCompilerOutputUrl();
     if (!Comparing.strEqual(
-      FileUtil.toSystemIndependentName(VfsUtil.urlToPath(compilerOutput)),
+      FileUtil.toSystemIndependentName(VirtualFileUtil.urlToPath(compilerOutput)),
       FileUtil.toSystemIndependentName(myCompilerPathController.getValue())
     )) {
       return true;
@@ -222,7 +221,7 @@ public class ProjectConfigurableGroup extends ProjectStructureElementConfigurabl
   }
 
   public String getCompilerOutputUrl() {
-    return VfsUtil.pathToUrl(myCompilerPathController.getValue().trim());
+    return VirtualFileUtil.pathToUrl(myCompilerPathController.getValue().trim());
   }
 
   @Override

@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -25,39 +24,39 @@ import java.util.List;
  * Internal interface for creating spacing instances.
  */
 public interface SpacingFactory {
-    @Nonnull
+    
     Spacing createSpacing(int minSpaces, int maxSpaces, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines);
 
-    @Nonnull
+    
     Spacing getReadOnlySpacing();
 
-    @Nonnull
+    
     Spacing createDependentLFSpacing(
         int minSpaces,
         int maxSpaces,
-        @Nonnull TextRange dependencyRange,
+        TextRange dependencyRange,
         boolean keepLineBreaks,
         int keepBlankLines,
-        @Nonnull DependentSpacingRule rule
+        DependentSpacingRule rule
     );
 
-    @Nonnull
+    
     Spacing createDependentLFSpacing(
         int minSpaces,
         int maxSpaces,
-        @Nonnull List<TextRange> dependencyRange,
+        List<TextRange> dependencyRange,
         boolean keepLineBreaks,
         int keepBlankLines,
-        @Nonnull DependentSpacingRule rule
+        DependentSpacingRule rule
     );
 
-    @Nonnull
+    
     Spacing createSafeSpacing(boolean keepLineBreaks, int keepBlankLines);
 
-    @Nonnull
+    
     Spacing createKeepingFirstColumnSpacing(int minSpaces, int maxSpaces, boolean keepLineBreaks, int keepBlankLines);
 
-    @Nonnull
+    
     Spacing createSpacing(
         int minSpaces,
         int maxSpaces,

@@ -56,8 +56,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.accessibility.*;
@@ -79,7 +78,7 @@ public class EditorComponentImpl extends JTextComponent
     implements EditorHolder, Scrollable, UiDataProvider, Queryable, TypingTarget, Accessible, IdeFocusTraversalPolicy.PassThroughComponent {
     private final DesktopEditorImpl myEditor;
 
-    public EditorComponentImpl(@Nonnull DesktopEditorImpl editor) {
+    public EditorComponentImpl(DesktopEditorImpl editor) {
         myEditor = editor;
         enableEvents(AWTEvent.KEY_EVENT_MASK | AWTEvent.INPUT_METHOD_EVENT_MASK);
         enableInputMethods(true);
@@ -116,7 +115,7 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    public void paint(@Nonnull Graphics g) {
+    public void paint(Graphics g) {
         if (!isEnabled()) {
             g = new Grayer((Graphics2D)g, getBackground());
         }
@@ -124,13 +123,12 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    @Nonnull
     public DesktopEditorImpl getEditor() {
         return myEditor;
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         if (myEditor.isDisposed() || myEditor.isRendererMode()) {
             return;
         }
@@ -282,7 +280,7 @@ public class EditorComponentImpl extends JTextComponent
     }
 
     @Override
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         myEditor.putInfo(info);
     }
 
@@ -457,8 +455,7 @@ public class EditorComponentImpl extends JTextComponent
     private class EditorAccessibilityDocument implements javax.swing.text.Document, javax.swing.text.Element {
         private List<javax.swing.event.DocumentListener> myListeners;
 
-        @Nullable
-        public List<javax.swing.event.DocumentListener> getListeners() {
+        public @Nullable List<javax.swing.event.DocumentListener> getListeners() {
             return myListeners;
         }
 

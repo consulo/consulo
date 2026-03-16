@@ -18,8 +18,7 @@ package consulo.component.store.impl.internal.storage.nio;
 import consulo.component.store.internal.ReadOnlyModificationException;
 import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.platform.LineSeparator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,7 +31,7 @@ import java.nio.file.Path;
  * @since 2024-08-10
  */
 public class PathStorageUtil {
-    public static void writeFile(@Nonnull Path file, @Nonnull byte[] content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
+    public static void writeFile(Path file, byte[] content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
         try {
 
             try (OutputStream out = Files.newOutputStream(file)) {

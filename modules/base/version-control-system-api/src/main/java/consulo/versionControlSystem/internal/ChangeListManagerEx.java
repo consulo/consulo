@@ -23,8 +23,7 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,20 +31,20 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public abstract class ChangeListManagerEx extends ChangeListManager {
-  @Nonnull
+  
   public static ChangeListManagerEx getInstanceEx(Project project) {
     return (ChangeListManagerEx)getInstance(project);
   }
 
-  @Nonnull
-  public abstract Collection<LocalChangeList> getAffectedLists(@Nonnull Collection<? extends Change> changes);
+  
+  public abstract Collection<LocalChangeList> getAffectedLists(Collection<? extends Change> changes);
 
   @Nullable
-  public abstract LocalChangeList getIdentityChangeList(@Nonnull Change change);
+  public abstract LocalChangeList getIdentityChangeList(Change change);
 
-  @Nonnull
-  public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(@Nonnull Collection<Change> changes,
-                                                                            @Nonnull List<Change> validChanges);
+  
+  public abstract Collection<LocalChangeList> getInvolvedListsFilterChanges(Collection<Change> changes,
+                                                                            List<Change> validChanges);
 
   /**
    * Blocks modal dialogs that we don't want to popup during some process, for example, above the commit dialog.
@@ -61,25 +60,25 @@ public abstract class ChangeListManagerEx extends ChangeListManager {
    * Temporarily disable CLM update
    * For example, to preserve DocumentFilePath->ChangeList mapping during "stash-do_smth-unstash" routine.
    */
-  public abstract void freeze(@Nonnull String reason);
+  public abstract void freeze(String reason);
 
   public abstract void unfreeze();
 
-  @Nonnull
+  
   public abstract List<VirtualFile> getIgnoredFiles();
 
-  @Nonnull
+  
   public abstract List<VirtualFile> getUnversionedFiles();
 
   public abstract void scheduleUpdateImpl();
 
     @Deprecated
-    @Nonnull
+    
     @RequiredUIAccess
     public abstract List<VcsException> addUnversionedFiles(
         LocalChangeList list,
-        @Nonnull List<VirtualFile> files,
-        @Nonnull Predicate<FileStatus> statusChecker,
+        List<VirtualFile> files,
+        Predicate<FileStatus> statusChecker,
         @Nullable Consumer<List<Change>> changesConsumer
     );
 }

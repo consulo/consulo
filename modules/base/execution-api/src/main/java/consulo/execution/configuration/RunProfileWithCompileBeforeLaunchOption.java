@@ -18,7 +18,6 @@ package consulo.execution.configuration;
 
 import consulo.module.Module;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -27,7 +26,7 @@ public interface RunProfileWithCompileBeforeLaunchOption extends RunProfile {
   /**
    * @return modules to compile before run. Empty list to build project
    */
-  @Nonnull
+  
   Module[] getModules();
 
   /**

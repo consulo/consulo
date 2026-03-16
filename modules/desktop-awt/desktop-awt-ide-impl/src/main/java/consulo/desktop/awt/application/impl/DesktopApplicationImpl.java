@@ -76,8 +76,7 @@ import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -97,7 +96,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     public DesktopApplicationImpl(
         ComponentBinding componentBinding,
         boolean isHeadless,
-        @Nonnull SimpleReference<? extends StartupProgress> splashRef
+        SimpleReference<? extends StartupProgress> splashRef
     ) {
         super(componentBinding, splashRef);
 
@@ -168,7 +167,7 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
+    protected void bootstrapInjectingContainer(InjectingContainerBuilder builder) {
         super.bootstrapInjectingContainer(builder);
     }
 
@@ -355,7 +354,6 @@ public class DesktopApplicationImpl extends BaseApplication {
                 return false;
             }
 
-            @Nonnull
             @Override
             public LocalizeValue getDoNotShowMessage() {
                 return LocalizeValue.localizeTODO("Do not ask me again");
@@ -416,7 +414,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         assertIsDispatchThread("Access is allowed from event dispatch thread only.");
     }
 
-    private void assertIsDispatchThread(@Nonnull String message) {
+    private void assertIsDispatchThread(String message) {
         if (isDispatchThread()) {
             return;
         }
@@ -461,7 +459,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         LOG.assertTrue(!isDispatchThread(), "This operation is time consuming and must not be called on EDT");
     }
 
-    @Nonnull
     @Override
     public UIAccess getLastUIAccess() {
         return AWTUIAccessImpl.ourInstance;

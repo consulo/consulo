@@ -18,7 +18,6 @@ package consulo.ui.style;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,20 +27,12 @@ public interface Style {
     static String LIGHT_ID = "light";
     static String SEMI_DARK = "semi_dark";
     static String DARK_ID = "dark";
-
-    @Nonnull
     String getId();
-
-    @Nonnull
     String getName();
-
-    @Nonnull
     default String getIconLibraryId() {
         return IconLibraryManager.LIGHT_LIBRARY_ID;
     }
-
-    @Nonnull
-    ColorValue getColorValue(@Nonnull StyleColorValue colorKey);
+    ColorValue getColorValue(StyleColorValue colorKey);
 
     /**
      * Try to modify source image to showing in current style. Can return same image. Also step into composite icons
@@ -49,8 +40,7 @@ public interface Style {
      * @param image source image
      * @return cloned image in current style, or source image
      */
-    @Nonnull
-    default Image getImage(@Nonnull Image image) {
+    default Image getImage(Image image) {
         return image;
     }
 

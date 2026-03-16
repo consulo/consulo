@@ -17,7 +17,6 @@ package consulo.language.codeStyle.arrangement.match;
 
 import consulo.language.codeStyle.arrangement.ArrangementEntry;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines a contract for strategy that determines if an {@link ArrangementMatchRule arrangement rule} matches particular
@@ -32,10 +31,10 @@ import jakarta.annotation.Nonnull;
  */
 public interface ArrangementEntryMatcher {
 
-  @Nonnull
+  
   ArrangementEntryMatcher EMPTY = new ArrangementEntryMatcher() {
     @Override
-    public boolean isMatched(@Nonnull ArrangementEntry entry) {
+    public boolean isMatched(ArrangementEntry entry) {
       return false;
     }
   };
@@ -48,5 +47,5 @@ public interface ArrangementEntryMatcher {
    * @param entry  entry to check
    * @return       <code>true</code> if given entry is matched by the current rule; <code>false</code> otherwise
    */
-  boolean isMatched(@Nonnull ArrangementEntry entry);
+  boolean isMatched(ArrangementEntry entry);
 }

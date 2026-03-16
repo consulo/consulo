@@ -27,8 +27,7 @@ import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 import consulo.versionControlSystem.checkin.CheckinHandlerFactory;
 import consulo.versionControlSystem.checkin.CheckinProjectPanel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Date;
@@ -39,7 +38,7 @@ import java.util.Date;
  */
 @ExtensionImpl
 public class TaskCheckinHandlerFactory extends CheckinHandlerFactory {
-    @Nonnull
+    
     @Override
     public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
         return new CheckinHandler() {

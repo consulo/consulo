@@ -24,7 +24,6 @@ import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -32,28 +31,28 @@ import java.awt.datatransfer.DataFlavor;
 
 public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransferableData {
 
-  @Nonnull
+  
   public static final DataFlavor FLAVOR = new DataFlavor("text/rtf;class=java.io.InputStream", "RTF text");
 
-  @Nonnull
+  
   private static final String HEADER_PREFIX = "{\\rtf1\\ansi\\deff0";
-  @Nonnull
+  
   private static final String HEADER_SUFFIX = "}";
-  @Nonnull
+  
   private static final String TAB           = "\\tab\n";
-  @Nonnull
+  
   private static final String NEW_LINE      = "\\line\n";
-  @Nonnull
+  
   private static final String BOLD          = "\\b";
-  @Nonnull
+  
   private static final String ITALIC        = "\\i";
 
-  public RtfTransferableData(@Nonnull SyntaxInfo syntaxInfo) {
+  public RtfTransferableData(SyntaxInfo syntaxInfo) {
     super(syntaxInfo, FLAVOR);
   }
 
   @Override
-  protected void build(@Nonnull StringBuilder holder, int maxLength) {
+  protected void build(StringBuilder holder, int maxLength) {
     holder.append(HEADER_PREFIX);
 
     holder.append("{\\colortbl;");
@@ -106,7 +105,7 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     return (int)(component * 255 + 0.5f);
   }
 
-  @Nonnull
+  
   @Override
   protected String getCharset() {
     return "US-ASCII";
@@ -118,9 +117,9 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
 
   private static class MyVisitor implements MarkupHandler {
 
-    @Nonnull
+    
     private final StringBuilder myBuffer;
-    @Nonnull
+    
     private final String        myRawText;
     private final int myMaxLength;
 
@@ -130,7 +129,7 @@ public class RtfTransferableData extends AbstractSyntaxAwareInputStreamTransfera
     private int myFontNameId   = -1;
     private int myFontStyle    = -1;
 
-    MyVisitor(@Nonnull StringBuilder buffer, @Nonnull String rawText, @Nonnull SyntaxInfo syntaxInfo, int maxLength) {
+    MyVisitor(StringBuilder buffer, String rawText, SyntaxInfo syntaxInfo, int maxLength) {
       myBuffer = buffer;
       myRawText = rawText;
       myMaxLength = maxLength;

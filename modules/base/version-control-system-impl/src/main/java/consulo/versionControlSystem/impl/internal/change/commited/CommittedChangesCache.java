@@ -20,8 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
-import consulo.application.util.function.Computable;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
@@ -50,11 +50,9 @@ import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -334,7 +332,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
   @Nullable
   public List<CommittedChangeList> getChanges(ChangeBrowserSettings settings,
                                               VirtualFile file,
-                                              @Nonnull AbstractVcs vcs,
+                                              AbstractVcs vcs,
                                               int maxCount,
                                               boolean cacheOnly,
                                               CommittedChangesProvider provider,
@@ -435,7 +433,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     final Ref<Boolean> resultRef = new Ref<>(Boolean.FALSE);
     myCachesHolder.iterateAllCaches(new Function<>() {
       @Override
-      @Nonnull
+      
       public Boolean apply(ChangesCacheFile changesCacheFile) {
         try {
           if (changesCacheFile.isEmpty() == emptiness) {
@@ -597,7 +595,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     return newLists;
   }
 
-  private static void debug(@NonNls String message) {
+  private static void debug(String message) {
     LOG.debug(message);
   }
 
@@ -618,19 +616,15 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
       changeList.getChanges();
     }
     final Ref<IOException> ref = new Ref<>();
-    List<CommittedChangeList> savedChanges =
-      ApplicationManager.getApplication().runReadAction(new Computable<List<CommittedChangeList>>() {
-        @Override
-        public List<CommittedChangeList> compute() {
-          try {
-            return cacheFile.writeChanges(newChanges);    // skip duplicates;
-          }
-          catch (IOException e) {
-            ref.set(e);
-            return null;
-          }
-        }
-      });
+    List<CommittedChangeList> savedChanges = ReadAction.compute(() -> {
+      try {
+        return cacheFile.writeChanges(newChanges);    // skip duplicates;
+      }
+      catch (IOException e) {
+        ref.set(e);
+        return null;
+      }
+    });
     if (!ref.isNull()) {
       throw ref.get();
     }

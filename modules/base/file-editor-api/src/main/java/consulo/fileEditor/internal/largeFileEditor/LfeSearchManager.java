@@ -5,7 +5,6 @@ import consulo.codeEditor.event.CaretEvent;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public interface LfeSearchManager {
 
     void onSearchActionHandlerExecuted();
 
-    @Nonnull
+    
     LargeFileEditor getLargeFileEditor();
 
     void launchNewRangeSearch(long fromPageNumber, long toPageNumber, boolean forwardDirection);

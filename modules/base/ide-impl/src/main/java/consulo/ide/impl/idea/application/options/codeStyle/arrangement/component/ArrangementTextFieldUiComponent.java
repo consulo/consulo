@@ -22,7 +22,6 @@ import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -34,15 +33,15 @@ import javax.swing.event.DocumentListener;
  */
 public class ArrangementTextFieldUiComponent extends AbstractArrangementUiComponent {
 
-  @Nonnull
+  
   private final JBTextField myTextField = new JBTextField(20);
-  @Nonnull
+  
   private final Alarm       myAlarm     = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
 
-  @Nonnull
+  
   private final ArrangementSettingsToken myToken;
 
-  public ArrangementTextFieldUiComponent(@Nonnull ArrangementSettingsToken token) {
+  public ArrangementTextFieldUiComponent(ArrangementSettingsToken token) {
     super(token);
     myToken = token;
     myTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -73,18 +72,18 @@ public class ArrangementTextFieldUiComponent extends AbstractArrangementUiCompon
     }, ArrangementConstants.TEXT_UPDATE_DELAY_MILLIS);
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementSettingsToken getToken() {
     return myToken;
   }
 
   @Override
-  public void chooseToken(@Nonnull ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
+  public void chooseToken(ArrangementSettingsToken data) throws IllegalArgumentException, UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public ArrangementMatchCondition getMatchCondition() {
     String text = myTextField.getText();
@@ -116,7 +115,7 @@ public class ArrangementTextFieldUiComponent extends AbstractArrangementUiCompon
   }
 
   @Override
-  public void setData(@Nonnull Object data) {
+  public void setData(Object data) {
     if (data instanceof String) {
       myTextField.setText(data.toString());
     }

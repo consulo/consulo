@@ -20,8 +20,7 @@ import consulo.ui.Component;
 import consulo.ui.TextBoxWithHistory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -51,9 +50,9 @@ public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text>
         component.setText(myText);
     }
 
-    @Nonnull
+    
     @Override
-    public TextBoxWithHistory setHistory(@Nonnull List<String> history) {
+    public TextBoxWithHistory setHistory(List<String> history) {
         return this;
     }
 
@@ -72,9 +71,9 @@ public class DesktopSwtTextBoxWithHistoryImpl extends SWTComponentDelegate<Text>
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValidator(@Nonnull Validator<String> validator) {
+    public Disposable addValidator(Validator<String> validator) {
         return null;
     }
 

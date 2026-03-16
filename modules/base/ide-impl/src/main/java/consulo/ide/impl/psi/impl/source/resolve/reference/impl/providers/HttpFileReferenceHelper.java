@@ -8,8 +8,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -21,7 +20,7 @@ final class HttpFileReferenceHelper extends FileReferenceHelper {
 
   @Nullable
   @Override
-  public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
+  public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
     VirtualFile root = file;
     VirtualFile parent;
     while ((parent = root.getParent()) != null) {
@@ -30,15 +29,15 @@ final class HttpFileReferenceHelper extends FileReferenceHelper {
     return getPsiFileSystemItem(project, root);
   }
 
-  @Nonnull
+  
   @Override
-  public Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file) {
+  public Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file) {
     PsiFileSystemItem item = getPsiFileSystemItem(project, file);
     return item == null ? Collections.emptyList() : Collections.singleton(item);
   }
 
   @Override
-  public boolean isMine(Project project, @Nonnull VirtualFile file) {
+  public boolean isMine(Project project, VirtualFile file) {
     return file instanceof HttpVirtualFile;
   }
 }

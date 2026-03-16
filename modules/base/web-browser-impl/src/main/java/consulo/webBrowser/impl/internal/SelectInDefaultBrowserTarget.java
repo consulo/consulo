@@ -31,7 +31,6 @@ import consulo.webBrowser.WebBrowserUrlProvider;
 import consulo.webBrowser.WebFileFilter;
 import consulo.webBrowser.action.BaseOpenInBrowserAction;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public final class SelectInDefaultBrowserTarget implements SelectInTarget {
@@ -53,7 +52,7 @@ public final class SelectInDefaultBrowserTarget implements SelectInTarget {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return WebBrowserLocalize.browserSelectInDefaultName();

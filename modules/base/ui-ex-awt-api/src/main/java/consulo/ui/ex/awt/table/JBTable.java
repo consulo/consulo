@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.update.Activatable;
-import jakarta.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -98,7 +97,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
 
     final TableModelListener modelListener = new TableModelListener() {
       @Override
-      public void tableChanged(@Nonnull TableModelEvent e) {
+      public void tableChanged(TableModelEvent e) {
         onTableChanged(e);
       }
     };
@@ -106,7 +105,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     if (getModel() != null) getModel().addTableModelListener(modelListener);
     addPropertyChangeListener("model", new PropertyChangeListener() {
       @Override
-      public void propertyChange(@Nonnull PropertyChangeEvent evt) {
+      public void propertyChange(PropertyChangeEvent evt) {
         repaintViewport();
 
         if (evt.getOldValue() instanceof TableModel) {
@@ -123,7 +122,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     new MyCellEditorRemover();
   }
 
-  protected void onTableChanged(@Nonnull TableModelEvent e) {
+  protected void onTableChanged(TableModelEvent e) {
     if (!myRowHeightIsExplicitlySet) {
       myRowHeight = -1;
     }
@@ -212,7 +211,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
   }
 
-  @Nonnull
+  
   @Override
   protected JTableHeader createDefaultTableHeader() {
     return new JBTableHeader();
@@ -223,7 +222,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   @Override
-  public void setModel(@Nonnull TableModel model) {
+  public void setModel(TableModel model) {
     super.setModel(model);
 
     if (model instanceof SortableColumnModel) {
@@ -253,7 +252,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   @Override
-  protected void paintComponent(@Nonnull Graphics g) {
+  protected void paintComponent(Graphics g) {
     if (myEnableAntialiasing) {
       GraphicsUtil.setupAntialiasing(g);
     }
@@ -298,14 +297,14 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myEmptyText;
   }
 
   @Override
-  @Nonnull
+  
   public ExpandableItemsHandler<TableCell> getExpandableItemsHandler() {
     return myExpandableItemsHandler;
   }
@@ -328,7 +327,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   @Override
-  public int getScrollableUnitIncrement(@Nonnull Rectangle visibleRect, int orientation, int direction) {
+  public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
     if (orientation == SwingConstants.VERTICAL) {
       return super.getScrollableUnitIncrement(visibleRect, orientation, direction);
     }
@@ -352,7 +351,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
   }
 
   @Override
-  public void paint(@Nonnull Graphics g) {
+  public void paint(Graphics g) {
     if (!isEnabled()) {
       g = new Grayer((Graphics2D)g, getBackground());
     }
@@ -398,7 +397,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
   }
 
-  @Nonnull
+  
   protected AsyncProcessIcon createBusyIcon() {
     return new AsyncProcessIcon(toString());
   }
@@ -477,9 +476,9 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     return super.getSurrendersFocusOnKeystroke();
   }
 
-  @Nonnull
+  
   @Override
-  public Component prepareRenderer(@Nonnull TableCellRenderer renderer, int row, int column) {
+  public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
     Component result = super.prepareRenderer(renderer, row, column);
 
     if (myExpandableItemsHandler.getExpandedItems().contains(new TableCell(row, column))) {
@@ -516,7 +515,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
 
     @Override
-    public void propertyChange(@Nonnull PropertyChangeEvent e) {
+    public void propertyChange(PropertyChangeEvent e) {
       if ("tableCellEditor".equals(e.getPropertyName())) {
         tableCellEditorChanged(e.getOldValue(), e.getNewValue());
       }
@@ -586,7 +585,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
 
   private final class MyMouseListener extends MouseAdapter {
     @Override
-    public void mousePressed(@Nonnull MouseEvent e) {
+    public void mousePressed(MouseEvent e) {
       if (JBSwingUtilities.isRightMouseButton(e)) {
         int[] selectedRows = getSelectedRows();
         if (selectedRows.length < 2) {
@@ -646,7 +645,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     private class TableRowSorterModelWrapper extends ModelWrapper<TableModel, Integer> {
       private final TableModel myModel;
 
-      private TableRowSorterModelWrapper(@Nonnull TableModel model) {
+      private TableRowSorterModelWrapper(TableModel model) {
         myModel = model;
       }
 
@@ -674,7 +673,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
         return myModel.getValueAt(row, column);
       }
 
-      @Nonnull
+      
       @Override
       public String getStringValueAt(int row, int column) {
         TableStringConverter converter = getStringConverter();
@@ -712,7 +711,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
       super(JBTable.this.columnModel);
       JBTable.this.addPropertyChangeListener(new PropertyChangeListener() {
         @Override
-        public void propertyChange(@Nonnull PropertyChangeEvent evt) {
+        public void propertyChange(PropertyChangeEvent evt) {
           if ("enabled".equals(evt.getPropertyName())) {
             JBTableHeader.this.repaint();
           }
@@ -721,7 +720,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
 
     @Override
-    public void paint(@Nonnull Graphics g) {
+    public void paint(Graphics g) {
       if (myEnableAntialiasing) {
         GraphicsUtil.setupAntialiasing(g);
       }
@@ -732,7 +731,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
     }
 
     @Override
-    public String getToolTipText(@Nonnull MouseEvent event) {
+    public String getToolTipText(MouseEvent event) {
       TableModel model = getModel();
       if (model instanceof SortableColumnModel) {
         int i = columnAtPoint(event.getPoint());

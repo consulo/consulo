@@ -31,8 +31,7 @@ import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -52,11 +51,11 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
   private DirectoryStorageData myStorageData;
 
   public IoDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                 @Nonnull String dir,
-                                 @Nonnull StateSplitterEx splitter,
-                                 @Nonnull Disposable parentDisposable,
+                                 String dir,
+                                 StateSplitterEx splitter,
+                                 Disposable parentDisposable,
                                  @Nullable StateStorageListener listener,
-                                 @Nonnull PathMacrosService pathMacrosService) {
+                                 PathMacrosService pathMacrosService) {
     super(pathMacroSubstitutor, pathMacrosService);
 
     myDir = new File(dir);
@@ -64,7 +63,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
   }
 
   @Override
-  public void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result) {
+  public void analyzeExternalChangesAndUpdateIfNeed(Set<String> result) {
     // todo reload only changed file, compute diff
     DirectoryStorageData oldData = myStorageData;
     DirectoryStorageData newData = loadState();
@@ -80,18 +79,18 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
 
   @Nullable
   @Override
-  protected Element getStateAndArchive(@Nonnull DirectoryStorageData storageData, @Nonnull String componentName) {
+  protected Element getStateAndArchive(DirectoryStorageData storageData, String componentName) {
     return storageData.getCompositeStateAndArchive(componentName, mySplitter);
   }
 
-  @Nonnull
+  
   private DirectoryStorageData loadState() {
     DirectoryStorageData storageData = new DirectoryStorageData();
     loadFrom(storageData, myDir, myPathMacroSubstitutor);
     return storageData;
   }
 
-  public void loadFrom(@Nonnull DirectoryStorageData data, @Nullable File dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
+  public void loadFrom(DirectoryStorageData data, @Nullable File dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
     if (dir == null || !dir.exists()) {
       return;
     }
@@ -138,13 +137,13 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
     }
   }
 
-  public static boolean isStorageFile(@Nonnull File file) {
+  public static boolean isStorageFile(File file) {
     // ignore system files like .DS_Store on Mac
     return StringUtil.endsWithIgnoreCase(file.getName(), DirectoryStorageData.DEFAULT_EXT);
   }
 
   @Override
-  @Nonnull
+  
   protected DirectoryStorageData getStorageData(boolean reloadData) {
     if (myStorageData != null && !reloadData) {
       return myStorageData;
@@ -168,13 +167,13 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
     private final Set<String> dirtyFileNames = new SmartHashSet<>();
     private final Set<String> removedFileNames = new SmartHashSet<>();
 
-    private MySaveSession(@Nonnull IoDirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
+    private MySaveSession(IoDirectoryBasedStorage storage, DirectoryStorageData storageData) {
       this.storage = storage;
       originalStorageData = storageData;
     }
 
     @Override
-    public void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, Storage storageSpec) {
+    public void setState(Object component, String componentName, Object state, Storage storageSpec) {
       Element compositeState;
       try {
         compositeState = DefaultStateSerializer.serializeState(state, storageSpec);
@@ -206,7 +205,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
       }
     }
 
-    private void doSetState(@Nonnull String componentName, @Nullable String fileName, @Nullable Element subState) {
+    private void doSetState(String componentName, @Nullable String fileName, @Nullable Element subState) {
       if (copiedStorageData == null) {
         copiedStorageData = DirectoryStorageData.setStateAndCloneIfNeed(componentName, fileName, subState, originalStorageData);
         if (copiedStorageData != null && fileName != null) {
@@ -252,7 +251,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
       storage.myStorageData = copiedStorageData;
     }
 
-    private void saveStates(@Nonnull File dir) {
+    private void saveStates(File dir) {
       Element storeElement = new Element(StorageData.COMPONENT);
 
       for (String componentName : copiedStorageData.getComponentNames()) {
@@ -285,7 +284,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
       }
     }
 
-    private void deleteFiles(@Nonnull File dir) {
+    private void deleteFiles(File dir) {
       for (File file : dir.listFiles()) {
         if (removedFileNames.contains(file.getName())) {
           FileUtil.delete(file);

@@ -15,7 +15,6 @@
  */
 package consulo.fileTemplate.impl.internal;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -28,7 +27,7 @@ public final class BundledFileTemplate extends FileTemplateBase {
   private final boolean myLiveTemplateEnabledByDefault;
   private boolean myEnabled = true; // when user 'deletes' bundled plugin, it simply becomes disabled
 
-  public BundledFileTemplate(@Nonnull DefaultTemplate defaultTemplate, boolean internal) {
+  public BundledFileTemplate(DefaultTemplate defaultTemplate, boolean internal) {
     myDefaultTemplate = defaultTemplate;
     myInternal = internal;
     myLiveTemplateEnabledByDefault = defaultTemplate.getText().contains("#[[$");
@@ -36,35 +35,35 @@ public final class BundledFileTemplate extends FileTemplateBase {
   }
 
   @Override
-  @Nonnull
+  
   public String getName() {
     return myDefaultTemplate.getName();
   }
 
   @Override
-  @Nonnull
+  
   public String getExtension() {
     return myDefaultTemplate.getExtension();
   }
 
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     // empty, cannot change name for bundled template
   }
 
   @Override
-  public void setExtension(@Nonnull String extension) {
+  public void setExtension(String extension) {
     // empty, cannot change extension for bundled template
   }
 
   @Override
-  @Nonnull
+  
   protected String getDefaultText() {
     return myDefaultTemplate.getText();
   }
 
   @Override
-  @Nonnull
+  
   public final String getDescription() {
     return myDefaultTemplate.getDescriptionText();
   }

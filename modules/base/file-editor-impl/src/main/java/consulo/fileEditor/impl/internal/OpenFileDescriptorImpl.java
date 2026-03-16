@@ -45,8 +45,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.INativeFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -68,28 +67,28 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
 
     private boolean myUseCurrentWindow = false;
 
-    public OpenFileDescriptorImpl(@Nonnull Project project, @Nonnull VirtualFile file, int offset) {
+    public OpenFileDescriptorImpl(Project project, VirtualFile file, int offset) {
         this(project, file, -1, -1, offset, false);
     }
 
-    public OpenFileDescriptorImpl(@Nonnull Project project, @Nonnull VirtualFile file, int logicalLine, int logicalColumn) {
+    public OpenFileDescriptorImpl(Project project, VirtualFile file, int logicalLine, int logicalColumn) {
         this(project, file, logicalLine, logicalColumn, -1, false);
     }
 
-    public OpenFileDescriptorImpl(@Nonnull Project project,
-                                  @Nonnull VirtualFile file,
+    public OpenFileDescriptorImpl(Project project,
+                                  VirtualFile file,
                                   int logicalLine,
                                   int logicalColumn,
                                   boolean persistent) {
         this(project, file, logicalLine, logicalColumn, -1, persistent);
     }
 
-    public OpenFileDescriptorImpl(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public OpenFileDescriptorImpl(Project project, VirtualFile file) {
         this(project, file, -1, -1, -1, false);
     }
 
-    public OpenFileDescriptorImpl(@Nonnull Project project,
-                                  @Nonnull VirtualFile file,
+    public OpenFileDescriptorImpl(Project project,
+                                  VirtualFile file,
                                   int logicalLine,
                                   int logicalColumn,
                                   int offset,
@@ -112,7 +111,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile getFile() {
         return myFile;
     }
@@ -143,9 +142,8 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         return rangeMarker == null || rangeMarker.isValid();
     }
 
-    @Nonnull
     @Override
-    public CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus) {
+    public CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus) {
         if (!getNavigateOptions().canNavigate()) {
             return CompletableFuture.failedFuture(new IllegalStateException("target not valid"));
         }
@@ -224,8 +222,8 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     }
 
     private void navigateInOpenedEditors(
-        @Nonnull FileEditorOpenResult result,
-        @Nonnull OpenFileDescriptorImpl descriptor,
+        FileEditorOpenResult result,
+        OpenFileDescriptorImpl descriptor,
         boolean requestFocus
     ) {
         FileEditor[] editors = result.getEditors();
@@ -283,7 +281,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         navigateInProjectView(requestFocus);
     }
 
-    private boolean navigateInEditorOrNativeApp(@Nonnull Project project, boolean requestFocus) {
+    private boolean navigateInEditorOrNativeApp(Project project, boolean requestFocus) {
         FileType type = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(myFile, project);
         if (type == null || !myFile.isValid()) {
             return false;
@@ -297,7 +295,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         return navigateInEditor(project, requestFocus);
     }
 
-    public boolean navigateInEditor(@Nonnull Project project, boolean requestFocus) {
+    public boolean navigateInEditor(Project project, boolean requestFocus) {
         return navigateInRequestedEditor() || navigateInAnyFileEditor(project, requestFocus);
     }
 
@@ -339,13 +337,13 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     private void navigateInProjectView(boolean requestFocus) {
         SelectInContext context = new SelectInContext() {
             @Override
-            @Nonnull
+            
             public Project getProject() {
                 return myProject;
             }
 
             @Override
-            @Nonnull
+            
             public VirtualFile getVirtualFile() {
                 return myFile;
             }
@@ -365,7 +363,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         }
     }
 
-    public void navigateIn(@Nonnull Editor e) {
+    public void navigateIn(Editor e) {
         int offset = getOffset();
         CaretModel caretModel = e.getCaretModel();
         boolean caretMoved = false;
@@ -390,7 +388,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         }
     }
 
-    private static void unfoldCurrentLine(@Nonnull Editor editor) {
+    private static void unfoldCurrentLine(Editor editor) {
         final FoldRegion[] allRegions = editor.getFoldingModel().getAllFoldRegions();
         final TextRange range = getRangeToUnfoldOnNavigation(editor);
         editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
@@ -405,8 +403,8 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         });
     }
 
-    @Nonnull
-    public static TextRange getRangeToUnfoldOnNavigation(@Nonnull Editor editor) {
+    
+    public static TextRange getRangeToUnfoldOnNavigation(Editor editor) {
         int offset = editor.getCaretModel().getOffset();
         int line = editor.getDocument().getLineNumber(offset);
         int start = editor.getDocument().getLineStartOffset(line);
@@ -414,7 +412,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
         return new TextRange(start, end);
     }
 
-    private void scrollToCaret(@Nonnull Editor e) {
+    private void scrollToCaret(Editor e) {
         ScrollType scrollType = getUserData(ScrollType.KEY);
         if (scrollType == null) {
             scrollType = ScrollType.CENTER;
@@ -429,7 +427,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return myProject;
     }
@@ -478,7 +476,7 @@ public class OpenFileDescriptorImpl extends UnprotectedUserDataHolder implements
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         if (key == RangeMarker.KEY) {
             return (T) myRangeMarker;
         }

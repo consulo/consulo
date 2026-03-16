@@ -18,8 +18,7 @@ package consulo.language.codeStyle;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author lesya
@@ -46,7 +45,7 @@ public class PostFormatProcessorHelper {
     }
 
     @RequiredReadAction
-    public boolean isElementPartlyInRange(@Nonnull PsiElement element) {
+    public boolean isElementPartlyInRange(PsiElement element) {
         if (myResultTextRange == null) {
             return true;
         }

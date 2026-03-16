@@ -9,8 +9,7 @@ import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.fileEditor.internal.largeFileEditor.LfeSearchManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -34,14 +33,14 @@ public final class LargeFilePrevNextOccurrenceAction extends DumbAwareAction imp
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (isEnabled()) {
             mySearchManager.gotoNextOccurrence(myDirectionForward);
         }
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(isEnabled());
     }
 
@@ -52,7 +51,7 @@ public final class LargeFilePrevNextOccurrenceAction extends DumbAwareAction imp
 
     @Override
     @Nullable
-    public ShortcutSet getShortcut(@Nonnull DataContext context) {
+    public ShortcutSet getShortcut(DataContext context) {
         List<Shortcut> list = new ArrayList<>();
         boolean isSingleLine = !isMultiLine();
         if (myDirectionForward) {

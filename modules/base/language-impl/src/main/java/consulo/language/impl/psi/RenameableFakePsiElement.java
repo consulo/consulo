@@ -27,8 +27,7 @@ import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -62,19 +61,19 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
     public abstract String getName();
 
     @Override
-    @Nonnull
+    
     @RequiredReadAction
     public Language getLanguage() {
         return getContainingFile().getLanguage();
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return myParent.getProject();
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         return PsiManager.getInstance(getProject());
@@ -106,7 +105,7 @@ public abstract class RenameableFakePsiElement extends FakePsiElement implements
         return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {

@@ -8,8 +8,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSet;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,15 +27,15 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
 
     @RequiredReadAction
     @Override
-    @Nonnull
-    public FoldingDescriptor[] buildFoldRegions(@Nonnull ASTNode astNode, @Nonnull Document document) {
+    
+    public FoldingDescriptor[] buildFoldRegions(ASTNode astNode, Document document) {
         List<FoldingDescriptor> descriptors = new LinkedList<>();
         collectDescriptors(astNode, descriptors);
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
 
     @RequiredReadAction
-    private void collectDescriptors(@Nonnull ASTNode node, @Nonnull List<FoldingDescriptor> descriptors) {
+    private void collectDescriptors(ASTNode node, List<FoldingDescriptor> descriptors) {
         Queue<ASTNode> toProcess = new LinkedList<>();
         toProcess.add(node);
         while (!toProcess.isEmpty()) {
@@ -55,7 +54,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
     @RequiredReadAction
     @Override
     @Nullable
-    public String getPlaceholderText(@Nonnull ASTNode node) {
+    public String getPlaceholderText(ASTNode node) {
         StringBuilder builder = new StringBuilder();
         ASTNode child = node.getFirstChildNode();
         while (child != null) {
@@ -83,8 +82,8 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
         return builder.toString();
     }
 
-    @Nonnull
-    private static String getFirstNonEmptyLine(@Nonnull String text) {
+    
+    private static String getFirstNonEmptyLine(String text) {
         int start = 0;
         int end;
         while ((end = text.indexOf('\n', start)) != -1 && start >= end) {
@@ -95,7 +94,7 @@ public abstract class IndentationFoldingBuilder implements FoldingBuilder, DumbA
 
     @RequiredReadAction
     @Override
-    public boolean isCollapsedByDefault(@Nonnull ASTNode node) {
+    public boolean isCollapsedByDefault(ASTNode node) {
         return false;
     }
 }

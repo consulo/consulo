@@ -19,14 +19,12 @@ import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 16/08/2021
  */
 public final class ShowNotifier {
-  public static void once(@Nonnull Component component, @RequiredUIAccess @Nonnull Runnable action) {
+  public static void once(Component component, @RequiredUIAccess Runnable action) {
     UIInternal.get()._ShowNotifier_once(component, action);
   }
 }

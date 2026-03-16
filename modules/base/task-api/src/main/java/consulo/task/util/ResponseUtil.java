@@ -26,7 +26,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -49,13 +48,13 @@ public class ResponseUtil {
   private ResponseUtil() {
   }
 
-  public static Reader getResponseContentAsReader(@Nonnull HttpResponse response) throws IOException {
+  public static Reader getResponseContentAsReader(HttpResponse response) throws IOException {
     Header header = response.getEntity().getContentEncoding();
     Charset charset = header == null ? DEFAULT_CHARSET : Charset.forName(header.getValue());
     return new InputStreamReader(response.getEntity().getContent(), charset);
   }
 
-  public static String getResponseContentAsString(@Nonnull HttpResponse response) throws IOException {
+  public static String getResponseContentAsString(HttpResponse response) throws IOException {
     return EntityUtils.toString(response.getEntity(), DEFAULT_CHARSET);
   }
 
@@ -64,11 +63,11 @@ public class ResponseUtil {
     private final Class<T> myClass;
     private final boolean myIgnoreNotFound;
 
-    public GsonSingleObjectDeserializer(@Nonnull Gson gson, @Nonnull Class<T> cls) {
+    public GsonSingleObjectDeserializer(Gson gson, Class<T> cls) {
       this(gson, cls, false);
     }
 
-    public GsonSingleObjectDeserializer(@Nonnull Gson gson, @Nonnull Class<T> cls, boolean ignoreNotFound) {
+    public GsonSingleObjectDeserializer(Gson gson, Class<T> cls, boolean ignoreNotFound) {
       myGson = gson;
       myClass = cls;
       myIgnoreNotFound = ignoreNotFound;
@@ -107,7 +106,7 @@ public class ResponseUtil {
       this(gson, typeToken, false);
     }
 
-    public GsonMultipleObjectsDeserializer(@Nonnull Gson gson, @Nonnull TypeToken<List<T>> token, boolean ignoreNotFound) {
+    public GsonMultipleObjectsDeserializer(Gson gson, TypeToken<List<T>> token, boolean ignoreNotFound) {
       myGson = gson;
       myTypeToken = token;
       myIgnoreNotFound = ignoreNotFound;

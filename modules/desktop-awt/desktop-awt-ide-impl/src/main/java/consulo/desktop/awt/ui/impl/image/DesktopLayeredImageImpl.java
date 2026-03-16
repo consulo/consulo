@@ -19,7 +19,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -37,7 +36,7 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
     private final Image[] myImages;
     private int[] myCachedSize;
 
-    public DesktopLayeredImageImpl(@Nonnull Image[] images) {
+    public DesktopLayeredImageImpl(Image[] images) {
         myImages = images;
     }
 
@@ -100,7 +99,7 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
         return getHeight();
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithNewSize(int width, int height) {
         Image[] converted = new Image[myImages.length];
@@ -110,7 +109,7 @@ public class DesktopLayeredImageImpl extends JBUI.RasterJBIcon implements Image,
         return new DesktopLayeredImageImpl(converted);
     }
 
-    @Nonnull
+    
     @Override
     public DesktopAWTImage copyWithForceLibraryId(String libraryId) {
         Image[] converted = new Image[myImages.length];

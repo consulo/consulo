@@ -24,7 +24,6 @@ import consulo.ui.ex.awt.popup.PopupListElementRenderer;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +61,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         BasePresentationFactory factory = new BasePresentationFactory();
         ListPopup popup = new ActionGroupPopup(
             LanguageLocalize.popupTitleCopy().get(),
@@ -116,8 +115,8 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
                     @Override
                     @RequiredReadAction
                     protected void customizeComponent(
-                        @Nonnull JList<? extends ActionPopupItem> list,
-                        @Nonnull ActionPopupItem actionItem,
+                        JList<? extends ActionPopupItem> list,
+                        ActionPopupItem actionItem,
                         boolean isSelected
                     ) {
                         myButtonSeparator.setVisible(false);
@@ -163,7 +162,7 @@ public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysP
         popup.showInBestPositionFor(e.getDataContext());
     }
 
-    private static void updatePopupSize(@Nonnull ListPopup popup) {
+    private static void updatePopupSize(ListPopup popup) {
         Application.get().invokeLater(() -> {
             popup.getContent().setPreferredSize(new Dimension(DEFAULT_WIDTH, popup.getContent().getPreferredSize().height));
             popup.getContent().setSize(new Dimension(DEFAULT_WIDTH, popup.getContent().getPreferredSize().height));

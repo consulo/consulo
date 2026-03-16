@@ -38,7 +38,6 @@ import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -101,7 +100,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
         final VcsException[] exc = new VcsException[1];
         Task.Backgroundable task = new Task.Backgroundable(project, title.get(), true, BackgroundFromStartOption.getInstance()) {
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     CommittedChangesProvider provider = vcs.getCommittedChangesProvider();
                     if (!isNonLocal) {
@@ -186,7 +185,7 @@ public class ShowAllAffectedGenericAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         VcsKey vcsKey = e.getData(VcsDataKeys.VCS);
         if (project == null || vcsKey == null) {

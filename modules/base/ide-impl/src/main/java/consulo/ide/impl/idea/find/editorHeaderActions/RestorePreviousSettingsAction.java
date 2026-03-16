@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.find.EditorSearchSession;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -34,7 +33,7 @@ import java.awt.event.KeyEvent;
  */
 public class RestorePreviousSettingsAction extends AnAction implements ShortcutProvider, DumbAware {
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     EditorSearchSession search = e.getData(EditorSearchSession.SESSION_KEY);
     e.getPresentation().setEnabled(
@@ -46,7 +45,7 @@ public class RestorePreviousSettingsAction extends AnAction implements ShortcutP
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     FindModel findModel = e.getRequiredData(EditorSearchSession.SESSION_KEY).getFindModel();
     findModel.copyFrom(FindManager.getInstance(e.getRequiredData(Project.KEY)).getPreviousFindModel());
   }

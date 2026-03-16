@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,26 +30,26 @@ import java.util.function.Consumer;
  * @since 18-Aug-22
  */
 public interface MemberChooserBuilder<T extends ClassMember> {
-  @Nonnull
-  static <C extends ClassMember> MemberChooserBuilder<C> create(@Nonnull C[] elements) {
+  
+  static <C extends ClassMember> MemberChooserBuilder<C> create(C[] elements) {
     return Application.get().getInstance(MemberChooserBuilderFactory.class).newBuilder(elements);
   }
 
-  @Nonnull
-  MemberChooserBuilder<T> withTitle(@Nonnull LocalizeValue titleValue);
+  
+  MemberChooserBuilder<T> withTitle(LocalizeValue titleValue);
 
-  @Nonnull
-  MemberChooserBuilder<T> withOption(@Nonnull KeyWithDefaultValue<Boolean> dataKey, @Nonnull LocalizeValue optionTitle);
+  
+  MemberChooserBuilder<T> withOption(KeyWithDefaultValue<Boolean> dataKey, LocalizeValue optionTitle);
 
-  @Nonnull
+  
   MemberChooserBuilder<T> withEmptySelection();
 
-  @Nonnull
+  
   MemberChooserBuilder<T> withMultipleSelection();
 
   /**
    * Return data-holder of selected data. Keys will be used from options, and ClassMember#KEY_OF_ARRAY
    */
   @RequiredUIAccess
-  void showAsync(@Nonnull Project project, @Nonnull Consumer<UserDataHolder> consumer);
+  void showAsync(Project project, Consumer<UserDataHolder> consumer);
 }

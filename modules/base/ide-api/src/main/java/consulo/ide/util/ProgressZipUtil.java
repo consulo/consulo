@@ -7,8 +7,7 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.io.StreamUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +33,7 @@ public class ProgressZipUtil {
         byte[] processContent(byte[] content, File file) throws IOException;
     }
 
-    public static void unzipWithProgressSynchronously(@Nullable Project project, @Nonnull String progressTitle, @Nonnull final File zipArchive, @Nonnull final File extractToDir)
+    public static void unzipWithProgressSynchronously(@Nullable Project project, String progressTitle, final File zipArchive, final File extractToDir)
         throws ZipUnpackException {
         Outcome<Boolean> outcome = DownloadUtil.provideDataWithProgressSynchronously(project, progressTitle, "Unpacking ...", new Callable<Boolean>() {
             @Override
@@ -76,8 +75,8 @@ public class ProgressZipUtil {
     }
 
     private static void unzipEntryToDir(@Nullable ProgressIndicator progress,
-                                        @Nonnull ZipEntry zipEntry,
-                                        @Nonnull File extractToDir,
+                                        ZipEntry zipEntry,
+                                        File extractToDir,
                                         ZipInputStream stream,
                                         @Nullable Function<String, String> pathConvertor,
                                         @Nullable ContentProcessor contentProcessor) throws IOException {

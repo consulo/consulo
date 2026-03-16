@@ -18,9 +18,8 @@ package consulo.usage;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -37,6 +36,6 @@ public interface UsageContextPanel extends Disposable {
      */
     void updateLayout(@Nullable List<? extends UsageInfo> infos);
 
-    @Nonnull
+    
     JComponent createComponent();
 }

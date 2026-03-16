@@ -17,8 +17,7 @@ package consulo.diff.internal;
 
 import consulo.diff.util.ThreeSide;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class MergeInnerDifferences {
   }
 
   @Nullable
-  public List<TextRange> get(@Nonnull ThreeSide side) {
+  public List<TextRange> get(ThreeSide side) {
     return side.select(myLeft, myBase, myRight);
   }
 }

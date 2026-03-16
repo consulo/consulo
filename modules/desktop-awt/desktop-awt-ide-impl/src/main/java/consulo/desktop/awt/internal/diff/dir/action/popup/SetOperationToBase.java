@@ -23,9 +23,9 @@ import consulo.diff.impl.internal.dir.DirDiffElementImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -33,7 +33,7 @@ import javax.swing.*;
 public abstract class SetOperationToBase extends AnAction {
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     DirDiffOperation operation = getOperation();
     boolean setToDefault = operation == DirDiffOperation.NONE;
     DirDiffTableModel model = getModel(e);
@@ -49,11 +49,11 @@ public abstract class SetOperationToBase extends AnAction {
     table.repaint();
   }
 
-  @Nonnull
+  
   protected abstract DirDiffOperation getOperation();
 
   @Override
-  public final void update(@Nonnull AnActionEvent e) {
+  public final void update(AnActionEvent e) {
     DirDiffTableModel model = getModel(e);
     JTable table = getTable(e);
     if (table != null && model != null) {
@@ -69,12 +69,12 @@ public abstract class SetOperationToBase extends AnAction {
 
   protected abstract boolean isEnabledFor(DirDiffElement element);
 
-  @jakarta.annotation.Nullable
+  @Nullable
   static JTable getTable(AnActionEvent e) {
     return e.getData(DirDiffPanel.DIR_DIFF_TABLE);
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public static DirDiffTableModel getModel(AnActionEvent e) {
     return e.getData(DirDiffPanel.DIR_DIFF_MODEL);
   }

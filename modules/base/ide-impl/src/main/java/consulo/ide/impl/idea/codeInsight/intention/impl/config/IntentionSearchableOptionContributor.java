@@ -26,7 +26,6 @@ import consulo.language.editor.internal.intention.IntentionManagerSettings;
 import consulo.language.editor.internal.intention.TextDescriptor;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class IntentionSearchableOptionContributor extends SearchableOptionContri
   }
 
   @Override
-  public void processOptions(@Nonnull SearchableOptionProcessor processor) {
+  public void processOptions(SearchableOptionProcessor processor) {
     for (IntentionAction action : myApplication.getExtensionList(IntentionAction.class)) {
       IntentionMetaData intentionMetaData = action.getClass().getAnnotation(IntentionMetaData.class);
       if (intentionMetaData == null) {

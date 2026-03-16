@@ -7,7 +7,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,31 +23,31 @@ public interface XLocalAttachDebuggerProvider extends XAttachDebuggerProvider {
    * @deprecated use {@link XAttachDebuggerProvider#getAvailableDebuggers(Project, XAttachHost, ProcessInfo, UserDataHolder)} instead
    */
   @Deprecated
-  List<XLocalAttachDebugger> getAvailableDebuggers(@Nonnull Project project, @Nonnull ProcessInfo process, @Nonnull UserDataHolder contextHolder);
+  List<XLocalAttachDebugger> getAvailableDebuggers(Project project, ProcessInfo process, UserDataHolder contextHolder);
 
   /**
    * @deprecated use {@link XAttachDebuggerProvider#getPresentationGroup()} instead
    */
   @Deprecated
-  @Nonnull
+  
   default XAttachPresentationGroup<ProcessInfo> getAttachGroup() {
     return XDefaultLocalAttachGroup.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
   default XAttachPresentationGroup<ProcessInfo> getPresentationGroup() {
     return getAttachGroup();
   }
 
   @Override
-  default boolean isAttachHostApplicable(@Nonnull XAttachHost attachHost) {
+  default boolean isAttachHostApplicable(XAttachHost attachHost) {
     return attachHost instanceof LocalAttachHost;
   }
 
-  @Nonnull
+  
   @Override
-  default List<XAttachDebugger> getAvailableDebuggers(@Nonnull Project project, @Nonnull XAttachHost hostInfo, @Nonnull ProcessInfo process, @Nonnull UserDataHolder contextHolder) {
+  default List<XAttachDebugger> getAvailableDebuggers(Project project, XAttachHost hostInfo, ProcessInfo process, UserDataHolder contextHolder) {
     assert hostInfo instanceof LocalAttachHost;
 
     return new ArrayList<>(getAvailableDebuggers(project, process, contextHolder));

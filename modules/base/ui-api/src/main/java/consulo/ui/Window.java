@@ -20,16 +20,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.WindowCloseEvent;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 14-Jun-16
  */
 public interface Window extends Component, Disposable {
-    @Nonnull
-    static Window create(@Nonnull String title, @Nonnull WindowOptions options) {
+    static Window create(String title, WindowOptions options) {
         return UIInternal.get()._Window_create(title, options);
     }
 
@@ -44,14 +42,14 @@ public interface Window extends Component, Disposable {
     }
 
     @RequiredUIAccess
-    void setTitle(@Nonnull String title);
+    void setTitle(String title);
 
     @Nullable
     @Override
     Window getParent();
 
     @RequiredUIAccess
-    void setContent(@Nonnull Component content);
+    void setContent(Component content);
 
     @RequiredUIAccess
     void setMenuBar(@Nullable MenuBar menuBar);
@@ -69,9 +67,7 @@ public interface Window extends Component, Disposable {
     void close();
 
     boolean isActive();
-
-    @Nonnull
-    default Disposable addCloseListener(@Nonnull ComponentEventListener<Window, WindowCloseEvent> listener) {
+    default Disposable addCloseListener(ComponentEventListener<Window, WindowCloseEvent> listener) {
         return addListener(WindowCloseEvent.class, listener);
     }
 }

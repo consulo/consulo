@@ -17,7 +17,6 @@ package consulo.language.codeStyle.ui.internal.arrangement;
 
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -59,7 +58,7 @@ public class ArrangementMatchingRulesModel extends DefaultTableModel {
     super.setValueAt(aValue, row, column);
   }
   
-  public void add(@Nonnull Object data) {
+  public void add(Object data) {
     addRow(new Object[] { data });
   }
   

@@ -38,7 +38,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,14 +50,14 @@ public abstract class AbstractFileProcessor {
     private PsiFile file = null;
     private PsiFile[] files = null;
     private boolean subdirs = false;
-    @Nonnull
+    
     private final LocalizeValue message;
-    @Nonnull
+    
     private final LocalizeValue title;
 
     protected abstract Runnable preprocessFile(PsiFile psifile) throws IncorrectOperationException;
 
-    protected AbstractFileProcessor(Project project, @Nonnull LocalizeValue title, @Nonnull LocalizeValue message) {
+    protected AbstractFileProcessor(Project project, LocalizeValue title, LocalizeValue message) {
         myProject = project;
         myModule = null;
         directory = null;
@@ -67,7 +66,7 @@ public abstract class AbstractFileProcessor {
         this.message = message;
     }
 
-    protected AbstractFileProcessor(Project project, Module module, @Nonnull LocalizeValue title, @Nonnull LocalizeValue message) {
+    protected AbstractFileProcessor(Project project, Module module, LocalizeValue title, LocalizeValue message) {
         myProject = project;
         myModule = module;
         directory = null;
@@ -81,8 +80,8 @@ public abstract class AbstractFileProcessor {
         Module module,
         PsiDirectory dir,
         boolean subdirs,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue message
+        LocalizeValue title,
+        LocalizeValue message
     ) {
         myProject = project;
         myModule = module;
@@ -96,8 +95,8 @@ public abstract class AbstractFileProcessor {
         Project project,
         Module module,
         PsiFile file,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue message
+        LocalizeValue title,
+        LocalizeValue message
     ) {
         myProject = project;
         myModule = module;
@@ -110,8 +109,8 @@ public abstract class AbstractFileProcessor {
         Project project,
         Module module,
         PsiFile[] files,
-        @Nonnull LocalizeValue title,
-        @Nonnull LocalizeValue message
+        LocalizeValue title,
+        LocalizeValue message
     ) {
         myProject = project;
         myModule = module;

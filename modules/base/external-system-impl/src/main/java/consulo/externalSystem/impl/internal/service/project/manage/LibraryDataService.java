@@ -26,7 +26,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.io.File;
@@ -45,29 +44,29 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     private static final Logger LOG = Logger.getInstance(LibraryDataService.class);
 
-    @Nonnull
+    
     private final ExternalLibraryPathTypeMapper myLibraryPathTypeMapper;
 
     @Inject
-    public LibraryDataService(@Nonnull ExternalLibraryPathTypeMapper mapper) {
+    public LibraryDataService(ExternalLibraryPathTypeMapper mapper) {
         myLibraryPathTypeMapper = mapper;
     }
 
-    @Nonnull
+    
     @Override
     public Key<LibraryData> getTargetDataKey() {
         return ProjectKeys.LIBRARY;
     }
 
     @Override
-    public void importData(@Nonnull Collection<DataNode<LibraryData>> toImport, @Nonnull Project project, boolean synchronous) {
+    public void importData(Collection<DataNode<LibraryData>> toImport, Project project, boolean synchronous) {
         for (DataNode<LibraryData> dataNode : toImport) {
             importLibrary(dataNode.getData(), project, synchronous);
         }
     }
 
     @RequiredUIAccess
-    public void importLibrary(@Nonnull LibraryData toImport, @Nonnull Project project, boolean synchronous) {
+    public void importLibrary(LibraryData toImport, Project project, boolean synchronous) {
         Map<OrderRootType, Collection<File>> libraryFiles = prepareLibraryFiles(toImport);
 
         Library library = ProjectStructureHelper.findIdeLibrary(toImport, project);
@@ -78,8 +77,8 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
         importLibrary(toImport.getInternalName(), libraryFiles, project, synchronous);
     }
 
-    @Nonnull
-    public Map<OrderRootType, Collection<File>> prepareLibraryFiles(@Nonnull LibraryData data) {
+    
+    public Map<OrderRootType, Collection<File>> prepareLibraryFiles(LibraryData data) {
         Map<OrderRootType, Collection<File>> result = new HashMap<>();
         for (LibraryPathType pathType : LibraryPathType.values()) {
             Set<String> paths = data.getPaths(pathType);
@@ -93,9 +92,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     @RequiredUIAccess
     public void importLibrary(
-        @Nonnull String libraryName,
-        @Nonnull Map<OrderRootType, Collection<File>> libraryFiles,
-        @Nonnull Project project,
+        String libraryName,
+        Map<OrderRootType, Collection<File>> libraryFiles,
+        Project project,
         boolean synchronous
     ) {
         ExternalSystemApiUtil.executeProjectChangeAction(
@@ -128,9 +127,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     @SuppressWarnings("MethodMayBeStatic")
     public void registerPaths(
-        @Nonnull Map<OrderRootType, Collection<File>> libraryFiles,
-        @Nonnull Library.ModifiableModel model,
-        @Nonnull String libraryName
+        Map<OrderRootType, Collection<File>> libraryFiles,
+        Library.ModifiableModel model,
+        String libraryName
     ) {
         for (Map.Entry<OrderRootType, Collection<File>> entry : libraryFiles.entrySet()) {
             for (File file : entry.getValue()) {
@@ -169,7 +168,7 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     @Override
     @RequiredUIAccess
-    public void removeData(@Nonnull Collection<? extends Library> libraries, @Nonnull Project project, boolean synchronous) {
+    public void removeData(Collection<? extends Library> libraries, Project project, boolean synchronous) {
         if (libraries.isEmpty()) {
             return;
         }
@@ -202,9 +201,9 @@ public class LibraryDataService implements ProjectDataService<LibraryData, Libra
 
     @RequiredUIAccess
     public void syncPaths(
-        @Nonnull LibraryData externalLibrary,
-        @Nonnull Library ideLibrary,
-        @Nonnull Project project,
+        LibraryData externalLibrary,
+        Library ideLibrary,
+        Project project,
         boolean synchronous
     ) {
         if (externalLibrary.isUnresolved()) {

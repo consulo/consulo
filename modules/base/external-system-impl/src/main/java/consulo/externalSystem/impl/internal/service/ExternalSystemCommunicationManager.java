@@ -16,8 +16,7 @@
 package consulo.externalSystem.impl.internal.service;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * External system integration consists of common 'external system' functionality and external system-specific code. There are at
@@ -49,7 +48,7 @@ public interface ExternalSystemCommunicationManager {
      * @throws Exception in case something goes wrong
      */
     @Nullable
-    RemoteExternalSystemFacade acquire(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception;
+    RemoteExternalSystemFacade acquire(String id, ProjectSystemId externalSystemId) throws Exception;
 
     /**
      * Release resource acquired by the current manager
@@ -58,9 +57,9 @@ public interface ExternalSystemCommunicationManager {
      * @param externalSystemId target external system id
      * @throws Exception in case something goes wrong
      */
-    void release(@Nonnull String id, @Nonnull ProjectSystemId externalSystemId) throws Exception;
+    void release(String id, ProjectSystemId externalSystemId) throws Exception;
 
-    boolean isAlive(@Nonnull RemoteExternalSystemFacade facade);
+    boolean isAlive(RemoteExternalSystemFacade facade);
 
     /**
      * Disposes all resources acquired by the current manager.

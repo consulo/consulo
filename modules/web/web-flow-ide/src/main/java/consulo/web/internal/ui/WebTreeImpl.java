@@ -33,8 +33,7 @@ import consulo.ui.event.TreeSelectEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -137,7 +136,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             });
         }
 
-        private void queue(@Nonnull WebTreeNodeImpl<NODE> parent, UI ui) {
+        private void queue(WebTreeNodeImpl<NODE> parent, UI ui) {
             invokeLater(() -> {
                 List<WebTreeNodeImpl<NODE>> children = parent.getChildren();
                 if (parent.isNotLoaded()) {
@@ -201,8 +200,8 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
             getDataCommunicator().getKeyMapper().setIdentifierGetter(WebTreeNodeImpl::getId);
         }
 
-        @Nonnull
-        private List<WebTreeNodeImpl<NODE>> fetchChildren(@Nonnull WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
+        
+        private List<WebTreeNodeImpl<NODE>> fetchChildren(WebTreeNodeImpl<NODE> parent, boolean fetchNext) {
             List<WebTreeNodeImpl<NODE>> list = new ArrayList<>();
             Map<String, WebTreeNodeImpl<NODE>> nodeMap = new HashMap<>();
 
@@ -272,7 +271,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    @Nonnull
+    
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
@@ -285,7 +284,7 @@ public class WebTreeImpl<NODE> extends VaadinComponentDelegate<WebTreeImpl.Vaadi
     }
 
     @Override
-    public void expand(@Nonnull TreeNode<NODE> node) {
+    public void expand(TreeNode<NODE> node) {
         toVaadinComponent().expand(node);
     }
 }

@@ -24,8 +24,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.Collection;
@@ -73,10 +72,10 @@ public abstract class HighlightManager {
      * @param hideByTextChange if true, the highlighting is removed automatically if the editor text is changed.
      * @param outHighlighters  if not null, the created {@link RangeHighlighter} object is added to this collection.
      */
-    public void addRangeHighlight(@Nonnull Editor editor,
+    public void addRangeHighlight(Editor editor,
                                   int startOffset,
                                   int endOffset,
-                                  @Nonnull TextAttributesKey attributesKey,
+                                  TextAttributesKey attributesKey,
                                   boolean hideByTextChange,
                                   @Nullable Collection<RangeHighlighter> highlighters) {
         addRangeHighlight(editor, startOffset, endOffset, attributesKey, hideByTextChange, false, highlighters);
@@ -96,10 +95,10 @@ public abstract class HighlightManager {
      * @param hideByAnyKey     if true, the highlighting is removed automatically when the user presses any key.
      * @param highlighters     if not null, the created {@link RangeHighlighter} object is added to this collection.
      */
-    public abstract void addRangeHighlight(@Nonnull Editor editor,
+    public abstract void addRangeHighlight(Editor editor,
                                            int startOffset,
                                            int endOffset,
-                                           @Nonnull TextAttributesKey attributesKey,
+                                           TextAttributesKey attributesKey,
                                            boolean hideByTextChange,
                                            boolean hideByAnyKey,
                                            @Nullable Collection<RangeHighlighter> highlighters);
@@ -111,7 +110,7 @@ public abstract class HighlightManager {
      * @param highlighter the highlighter to remove.
      * @return true if the remove was successful, false if the highlighter was not found in the editor.
      */
-    public abstract boolean removeSegmentHighlighter(@Nonnull Editor editor, @Nonnull RangeHighlighter highlighter);
+    public abstract boolean removeSegmentHighlighter(Editor editor, RangeHighlighter highlighter);
 
     /**
      * Highlights the text ranges of the specified references in the specified editor. The highlighting is removed when the user presses
@@ -123,9 +122,9 @@ public abstract class HighlightManager {
      * @param hideByTextChange if true, the highlighting is removed automatically if the editor text is changed.
      * @param outHighlighters  if not null, the created {@link RangeHighlighter} objects are added to this collection.
      */
-    public abstract void addOccurrenceHighlights(@Nonnull Editor editor,
-                                                 @Nonnull PsiReference[] occurrences,
-                                                 @Nonnull TextAttributesKey attributesKey,
+    public abstract void addOccurrenceHighlights(Editor editor,
+                                                 PsiReference[] occurrences,
+                                                 TextAttributesKey attributesKey,
                                                  boolean hideByTextChange,
                                                  @Nullable Collection<RangeHighlighter> outHighlighters);
 
@@ -140,9 +139,9 @@ public abstract class HighlightManager {
      * @param outHighlighters  if not null, the created {@link RangeHighlighter} objects are added to this collection.
      */
     @RequiredReadAction
-    public abstract void addOccurrenceHighlights(@Nonnull Editor editor,
-                                                 @Nonnull PsiElement[] elements,
-                                                 @Nonnull TextAttributesKey attributesKey,
+    public abstract void addOccurrenceHighlights(Editor editor,
+                                                 PsiElement[] elements,
+                                                 TextAttributesKey attributesKey,
                                                  boolean hideByTextChange,
                                                  @Nullable Collection<RangeHighlighter> outHighlighters);
 
@@ -160,7 +159,7 @@ public abstract class HighlightManager {
      * @param outHighlighters if not null, the created {@link RangeHighlighter} object is added to this collection.
      * @param scrollmarkColor if not null, a gutter mark with the specified color is added in addition to the editor highlight.
      */
-    public abstract void addOccurrenceHighlight(@Nonnull Editor editor,
+    public abstract void addOccurrenceHighlight(Editor editor,
                                                 int start,
                                                 int end,
                                                 TextAttributesKey attributesKey,

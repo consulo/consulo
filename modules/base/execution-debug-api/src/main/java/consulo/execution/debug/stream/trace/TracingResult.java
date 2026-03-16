@@ -2,7 +2,6 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.lib.ResolverFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -10,14 +9,14 @@ import java.util.List;
  * @author Vitaliy.Bibaev
  */
 public interface TracingResult {
-  @Nonnull
+  
   TraceElement getResult();
 
   boolean exceptionThrown();
 
-  @Nonnull
+  
   List<TraceInfo> getTrace();
 
-  @Nonnull
-  ResolvedTracingResult resolve(@Nonnull ResolverFactory resolverFactory);
+  
+  ResolvedTracingResult resolve(ResolverFactory resolverFactory);
 }

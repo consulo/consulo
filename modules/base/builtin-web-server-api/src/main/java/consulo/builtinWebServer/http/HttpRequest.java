@@ -17,8 +17,7 @@ package consulo.builtinWebServer.http;
 
 import consulo.http.HttpMethod;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -27,28 +26,28 @@ import java.nio.charset.Charset;
  * @since 13-Sep-22
  */
 public interface HttpRequest {
-  @Nonnull
+  
   HttpMethod method();
 
-  @Nonnull
-  String getContentAsString(@Nonnull Charset charset) throws IOException;
+  
+  String getContentAsString(Charset charset) throws IOException;
 
   byte[] getContent() throws IOException;
 
-  @Nonnull
+  
   String uri();
 
   /**
    * Returns the decoded path string of the URI.
    */
-  @Nonnull
+  
   String path();
 
   @Nullable
-  String getHeaderValue(@Nonnull String headerName);
+  String getHeaderValue(String headerName);
 
   @Nullable
-  String getParameterValue(@Nonnull String parameter);
+  String getParameterValue(String parameter);
 
   void terminate();
 }

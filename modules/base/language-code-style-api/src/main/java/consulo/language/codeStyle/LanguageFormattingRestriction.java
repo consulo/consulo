@@ -19,11 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface LanguageFormattingRestriction {
     ExtensionPointName<LanguageFormattingRestriction> EXTENSION = ExtensionPointName.create(LanguageFormattingRestriction.class);
 
-    boolean isFormatterAllowed(@Nonnull PsiElement context);
+    boolean isFormatterAllowed(PsiElement context);
 }

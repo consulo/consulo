@@ -19,7 +19,6 @@ package consulo.versionControlSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -28,18 +27,18 @@ import static java.util.Collections.sort;
 import static java.util.Comparator.comparing;
 
 public class FilterDescendantVirtualFileConvertible<T> extends AbstractFilterChildren<T> {
-  @Nonnull
+  
   private final Comparator<T> myComparator;
-  @Nonnull
+  
   private final Function<T, VirtualFile> myConvertor;
 
-  public FilterDescendantVirtualFileConvertible(@Nonnull Function<T, VirtualFile> convertor, @Nonnull Comparator<VirtualFile> comparator) {
+  public FilterDescendantVirtualFileConvertible(Function<T, VirtualFile> convertor, Comparator<VirtualFile> comparator) {
     myConvertor = convertor;
     myComparator = comparing(myConvertor, comparator);
   }
 
   @Override
-  protected void sortAscending(@Nonnull List<T> ts) {
+  protected void sortAscending(List<T> ts) {
     sort(ts, myComparator);
   }
 

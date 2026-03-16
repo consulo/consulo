@@ -20,8 +20,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -30,12 +29,12 @@ public interface TestFinder {
   ExtensionPointName<TestFinder> EP_NAME = ExtensionPointName.create(TestFinder.class);
 
   @Nullable
-  PsiElement findSourceElement(@Nonnull PsiElement from);
+  PsiElement findSourceElement(PsiElement from);
 
-  @Nonnull
-  Collection<PsiElement> findTestsForClass(@Nonnull PsiElement element);
-  @Nonnull
-  Collection<PsiElement> findClassesForTest(@Nonnull PsiElement element);
+  
+  Collection<PsiElement> findTestsForClass(PsiElement element);
+  
+  Collection<PsiElement> findClassesForTest(PsiElement element);
 
-  boolean isTest(@Nonnull PsiElement element);
+  boolean isTest(PsiElement element);
 }

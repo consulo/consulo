@@ -32,7 +32,6 @@ import consulo.logging.Logger;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author egor
@@ -49,7 +48,7 @@ public class AnnotationsPreloader {
 
     project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
-      public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+      public void selectionChanged(FileEditorManagerEvent event) {
         if (!isEnabled()) return;
         VirtualFile file = event.getNewFile();
         if (file != null) {
@@ -64,7 +63,7 @@ public class AnnotationsPreloader {
     return Registry.is("vcs.annotations.preload") && !PowerSaveMode.isEnabled();
   }
 
-  private void schedulePreloading(@Nonnull final VirtualFile file) {
+  private void schedulePreloading(final VirtualFile file) {
     if (myProject.isDisposed() || file.getFileType().isBinary()) return;
 
     myUpdateQueue.queue(new Update(file) {

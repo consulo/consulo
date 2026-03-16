@@ -17,8 +17,7 @@ package consulo.ui.ex;
 
 import consulo.application.internal.InternalKeyboardLayoutUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class KeyboardLayoutUtil extends InternalKeyboardLayoutUtil {
     return InternalKeyboardLayoutUtil.getAsciiForChar(a);
   }
 
-  public static void storeAsciiForChar(@Nonnull KeyEvent e) {
+  public static void storeAsciiForChar(KeyEvent e) {
     int id = e.getID();
     if (id != KeyEvent.KEY_PRESSED) return;
     int mods = e.getModifiers();

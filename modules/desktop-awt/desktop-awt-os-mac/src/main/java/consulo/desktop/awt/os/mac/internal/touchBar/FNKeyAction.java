@@ -8,8 +8,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -29,7 +28,7 @@ final class FNKeyAction extends DumbAwareAction {
     private String  [] getActionsIds(int modifiers) {
         KeymapManager manager = KeymapManager.getInstance();
 
-        @Nonnull Keymap keymap = manager.getActiveKeymap();
+        Keymap keymap = manager.getActiveKeymap();
 
         String[] result = myCache.get(modifiers);
         if (result != null) {
@@ -58,7 +57,7 @@ final class FNKeyAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (myAction == null || myIsActionDisabled) {
             Helpers.emulateKeyPress(KeyEvent.VK_F1 + myFN - 1);
             return;
@@ -67,7 +66,7 @@ final class FNKeyAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(true); // FN-keys are always enabled and visible
         e.getPresentation().setTextValue(LocalizeValue.empty());
         myIsActionDisabled = false;

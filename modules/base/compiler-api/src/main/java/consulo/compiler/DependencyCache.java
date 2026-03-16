@@ -19,8 +19,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Set;
@@ -48,7 +47,7 @@ public interface DependencyCache {
     void update() throws CacheCorruptedException;
 
     @Nullable
-    String relativePathToQName(@Nonnull String path, char separator);
+    String relativePathToQName(String path, char separator);
 
     void syncOutDir(Trinity<File, String, Boolean> trinity) throws CacheCorruptedException;
 }

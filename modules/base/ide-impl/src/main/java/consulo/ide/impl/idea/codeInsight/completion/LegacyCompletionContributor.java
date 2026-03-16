@@ -33,7 +33,6 @@ import consulo.language.psi.ReferenceRange;
 import consulo.language.psi.PsiMultiReference;
 import consulo.util.lang.function.PairConsumer;
 import consulo.annotation.access.RequiredReadAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -48,7 +47,7 @@ public class LegacyCompletionContributor extends CompletionContributor {
 
   @RequiredReadAction
   @Override
-  public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet _result) {
+  public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet _result) {
     if (parameters.getCompletionType() != CompletionType.BASIC) {
       return;
     }
@@ -143,7 +142,7 @@ public class LegacyCompletionContributor extends CompletionContributor {
   }
 
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

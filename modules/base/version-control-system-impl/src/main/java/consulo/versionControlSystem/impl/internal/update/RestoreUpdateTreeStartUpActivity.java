@@ -26,12 +26,11 @@ import consulo.versionControlSystem.VcsBundle;
 import consulo.versionControlSystem.impl.internal.change.commited.CommittedChangesCache;
 import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.update.ActionInfo;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class RestoreUpdateTreeStartUpActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     RestoreUpdateTree restoreUpdateTree = RestoreUpdateTree.getInstance(project);
     UpdateInfo updateInfo = restoreUpdateTree.myUpdateInfo;
 

@@ -18,7 +18,6 @@ package consulo.language.codeStyle.arrangement.std;
 
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,12 +35,12 @@ public class CompositeArrangementSettingsToken {
   private static final Function<ArrangementSettingsToken, CompositeArrangementSettingsToken> WRAPPER =
           token -> new CompositeArrangementSettingsToken(token, deduceRole(token), Collections.<CompositeArrangementSettingsToken>emptyList());
 
-  @Nonnull
+  
   private final List<CompositeArrangementSettingsToken> myChildren = new ArrayList<>();
 
-  @Nonnull
+  
   private final ArrangementSettingsToken myToken;
-  @Nonnull
+  
   private final StdArrangementTokenUiRole myRole;
 
   /**
@@ -52,7 +51,7 @@ public class CompositeArrangementSettingsToken {
    *
    * @param token token to wrap
    */
-  public CompositeArrangementSettingsToken(@Nonnull ArrangementSettingsToken token) {
+  public CompositeArrangementSettingsToken(ArrangementSettingsToken token) {
     this(token, deduceRole(token), Collections.<CompositeArrangementSettingsToken>emptyList());
   }
 
@@ -66,22 +65,22 @@ public class CompositeArrangementSettingsToken {
    * @param token    token to wrap
    * @param children children to wrap
    */
-  public CompositeArrangementSettingsToken(@Nonnull ArrangementSettingsToken token, @Nonnull ArrangementSettingsToken... children) {
+  public CompositeArrangementSettingsToken(ArrangementSettingsToken token, ArrangementSettingsToken... children) {
     this(token, deduceRole(token), ContainerUtil.map2List(children, WRAPPER));
   }
 
-  public CompositeArrangementSettingsToken(@Nonnull ArrangementSettingsToken token, @Nonnull Collection<ArrangementSettingsToken> children) {
+  public CompositeArrangementSettingsToken(ArrangementSettingsToken token, Collection<ArrangementSettingsToken> children) {
     this(token, deduceRole(token), ContainerUtil.map2List(children, WRAPPER));
   }
 
-  public CompositeArrangementSettingsToken(@Nonnull ArrangementSettingsToken token, @Nonnull StdArrangementTokenUiRole role, @Nonnull List<CompositeArrangementSettingsToken> children) {
+  public CompositeArrangementSettingsToken(ArrangementSettingsToken token, StdArrangementTokenUiRole role, List<CompositeArrangementSettingsToken> children) {
     myToken = token;
     myRole = role;
     myChildren.addAll(children);
   }
 
-  @Nonnull
-  private static StdArrangementTokenUiRole deduceRole(@Nonnull ArrangementSettingsToken token) {
+  
+  private static StdArrangementTokenUiRole deduceRole(ArrangementSettingsToken token) {
     StdArrangementTokenUiRole role = token instanceof StdArrangementSettingsToken ? ((StdArrangementSettingsToken)token).getTokenType().getUiRole() : null;
     if (role == null) {
       throw new IllegalArgumentException("Can't deduce UI role for token " + token);
@@ -89,17 +88,17 @@ public class CompositeArrangementSettingsToken {
     return role;
   }
 
-  @Nonnull
+  
   public List<CompositeArrangementSettingsToken> getChildren() {
     return myChildren;
   }
 
-  @Nonnull
+  
   public ArrangementSettingsToken getToken() {
     return myToken;
   }
 
-  @Nonnull
+  
   public StdArrangementTokenUiRole getRole() {
     return myRole;
   }

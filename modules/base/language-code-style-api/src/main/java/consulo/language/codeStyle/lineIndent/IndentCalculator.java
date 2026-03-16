@@ -26,14 +26,13 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.language.codeStyle.Indent.Type.*;
 
 public class IndentCalculator {
   public interface BaseLineOffsetCalculator {
-    int getOffsetInBaseIndentLine(@Nonnull SemanticEditorPosition position);
+    int getOffsetInBaseIndentLine(SemanticEditorPosition position);
   }
 
   public static final BaseLineOffsetCalculator LINE_BEFORE =
@@ -42,19 +41,19 @@ public class IndentCalculator {
   public static final BaseLineOffsetCalculator LINE_AFTER =
     currPosition -> CharArrayUtil.shiftForward(currPosition.getChars(), currPosition.getStartOffset(), " \t\n\r");
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final Document myDocument;
-  @Nonnull
+  
   private final BaseLineOffsetCalculator myBaseLineOffsetCalculator;
-  @Nonnull
+  
   private final Indent myIndent;
 
-  public IndentCalculator(@Nonnull Project project,
-                          @Nonnull Document document,
-                          @Nonnull BaseLineOffsetCalculator baseLineOffsetCalculator,
-                          @Nonnull Indent indent) {
+  public IndentCalculator(Project project,
+                          Document document,
+                          BaseLineOffsetCalculator baseLineOffsetCalculator,
+                          Indent indent) {
     myProject = project;
     myDocument = document;
     myBaseLineOffsetCalculator = baseLineOffsetCalculator;
@@ -62,7 +61,7 @@ public class IndentCalculator {
   }
 
   @Nullable
-  public String getIndentString(@Nullable Language language, @Nonnull SemanticEditorPosition currPosition) {
+  public String getIndentString(@Nullable Language language, SemanticEditorPosition currPosition) {
     String baseIndent = getBaseIndent(currPosition);
     PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument);
     if (file != null) {
@@ -78,8 +77,8 @@ public class IndentCalculator {
     return null;
   }
 
-  @Nonnull
-  public String getBaseIndent(@Nonnull SemanticEditorPosition currPosition) {
+  
+  public String getBaseIndent(SemanticEditorPosition currPosition) {
     CharSequence docChars = myDocument.getCharsSequence();
     int offset = currPosition.getStartOffset();
     if (offset > 0) {
@@ -97,7 +96,7 @@ public class IndentCalculator {
     return "";
   }
 
-  private static int indentToSize(@Nonnull Indent indent, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
+  private static int indentToSize(Indent indent, CommonCodeStyleSettings.IndentOptions options) {
     if (indent.getType() == NORMAL) {
       return options.INDENT_SIZE;
     }

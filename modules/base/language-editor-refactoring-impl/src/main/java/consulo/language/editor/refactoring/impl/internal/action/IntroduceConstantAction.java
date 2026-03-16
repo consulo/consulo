@@ -22,7 +22,6 @@ import consulo.language.editor.refactoring.action.BasePlatformRefactoringAction;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "IntroduceConstant")
 public class IntroduceConstantAction extends BasePlatformRefactoringAction {
@@ -32,7 +31,7 @@ public class IntroduceConstantAction extends BasePlatformRefactoringAction {
     }
 
     @Override
-    protected RefactoringActionHandler getRefactoringHandler(@Nonnull RefactoringSupportProvider provider) {
+    protected RefactoringActionHandler getRefactoringHandler(RefactoringSupportProvider provider) {
         return provider.getIntroduceConstantHandler();
     }
 
@@ -43,7 +42,7 @@ public class IntroduceConstantAction extends BasePlatformRefactoringAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isEnabledOnElements(@Nonnull PsiElement[] elements) {
+    protected boolean isEnabledOnElements(PsiElement[] elements) {
         return false;
     }
 }

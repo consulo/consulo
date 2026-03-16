@@ -21,8 +21,7 @@ import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -31,16 +30,16 @@ import jakarta.annotation.Nullable;
  * Marker for {@link ShowSettingsUtil} with return current {@link SdkModel} for dialog, or for SdkTable
  */
 public interface ProjectStructureSettingsUtil {
-  @Nonnull
+  
   SettingsSdksModel getSdksModel();
 
   @Nullable
-  default ModulesConfigurator getModulesModel(@Nonnull Project project) {
+  default ModulesConfigurator getModulesModel(Project project) {
     return null;
   }
 
   @Nullable
-  default LibrariesConfigurator getLibrariesModel(@Nonnull Project project) {
+  default LibrariesConfigurator getLibrariesModel(Project project) {
     return null;
   }
 }

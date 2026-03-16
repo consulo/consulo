@@ -21,7 +21,6 @@ import consulo.language.parser.PsiBuilder;
 import consulo.language.parser.PsiParser;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -30,8 +29,8 @@ public abstract class PrattParser implements PsiParser {
   protected abstract PrattRegistry getRegistry();
 
   @Override
-  @Nonnull
-  public final ASTNode parse(@Nonnull IElementType root, @Nonnull PsiBuilder builder, @Nonnull LanguageVersion languageVersion) {
+  
+  public final ASTNode parse(IElementType root, PsiBuilder builder, LanguageVersion languageVersion) {
     PrattBuilder prattBuilder = PrattBuilderImpl.createBuilder(builder, getRegistry());
     MutableMarker marker = prattBuilder.mark();
     parse(prattBuilder);

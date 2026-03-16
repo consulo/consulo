@@ -16,8 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,20 +33,20 @@ public class ProjectStructureProblemDescription {
   private final ProblemLevel myProblemLevel;
   private final boolean myCanShowPlace;
 
-  public ProjectStructureProblemDescription(@Nonnull String message,
+  public ProjectStructureProblemDescription(String message,
                                             @Nullable String description,
-                                            @Nonnull PlaceInProjectStructure place,
-                                            @Nonnull ProjectStructureProblemType problemType,
-                                            @Nonnull List<? extends ConfigurationErrorQuickFix> fixes) {
+                                            PlaceInProjectStructure place,
+                                            ProjectStructureProblemType problemType,
+                                            List<? extends ConfigurationErrorQuickFix> fixes) {
     this(message, description, place, problemType, ProblemLevel.PROJECT, fixes, true);
   }
 
-  public ProjectStructureProblemDescription(@Nonnull String message,
+  public ProjectStructureProblemDescription(String message,
                                             @Nullable String description,
-                                            @Nonnull PlaceInProjectStructure place,
-                                            @Nonnull ProjectStructureProblemType problemType,
-                                            @Nonnull ProblemLevel level,
-                                            @Nonnull List<? extends ConfigurationErrorQuickFix> fixes, boolean canShowPlace) {
+                                            PlaceInProjectStructure place,
+                                            ProjectStructureProblemType problemType,
+                                            ProblemLevel level,
+                                            List<? extends ConfigurationErrorQuickFix> fixes, boolean canShowPlace) {
     myMessage = message;
     myDescription = description;
     myPlace = place;

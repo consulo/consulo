@@ -15,7 +15,6 @@
  */
 package consulo.http;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -23,7 +22,7 @@ public class HttpStatusException extends IOException {
     private int myStatusCode;
     private String myUrl;
 
-    public HttpStatusException(@Nonnull String message, int statusCode, @Nonnull String url) {
+    public HttpStatusException(String message, int statusCode, String url) {
         super(message);
         myStatusCode = statusCode;
         myUrl = url;
@@ -33,7 +32,7 @@ public class HttpStatusException extends IOException {
         return myStatusCode;
     }
 
-    @Nonnull
+    
     public String getUrl() {
         return myUrl;
     }

@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.editor.actions;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.IdeActions;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl(id = "backspace.for.selection", order = "after backspace.lookup")
 public class DeleteBackspaceSelectionHandler extends DeleteSelectionHandler {
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_BACKSPACE;

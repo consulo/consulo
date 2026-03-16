@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.base;
 
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.versionControlSystem.log.Hash;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -32,19 +31,19 @@ public class HashImpl implements Hash {
   private static final int BASE = 16;
   private static final int SHORT_HASH_LENGTH = 7;
 
-  @Nonnull
+  
   private final byte[] myData;
   private final int myHashCode;
 
-  @Nonnull
-  public static Hash build(@Nonnull String inputStr) {
+  
+  public static Hash build(String inputStr) {
     byte[] data = buildData(inputStr);
     assert data.length > 0 : "Can not build hash for string " + inputStr;
     return new HashImpl(data);
   }
 
-  @Nonnull
-  public static Hash read(@Nonnull DataInput in) throws IOException {
+  
+  public static Hash read(DataInput in) throws IOException {
     int length = DataInputOutputUtil.readINT(in);
     if (length == 0) throw new IOException("Can not read hash: data length is zero");
     byte[] buf = new byte[length];
@@ -52,13 +51,13 @@ public class HashImpl implements Hash {
     return new HashImpl(buf);
   }
 
-  public void write(@Nonnull DataOutput out) throws IOException {
+  public void write(DataOutput out) throws IOException {
     DataInputOutputUtil.writeINT(out, myData.length);
     out.write(myData);
   }
 
-  @Nonnull
-  private static byte[] buildData(@Nonnull String inputStr) {
+  
+  private static byte[] buildData(String inputStr) {
     // if length == 5, need 3 byte + 1 signal byte
     int length = inputStr.length();
     byte even = (byte)(length % 2);
@@ -75,7 +74,7 @@ public class HashImpl implements Hash {
     return data;
   }
 
-  private static int parseChar(@Nonnull String inputString, int index) {
+  private static int parseChar(String inputString, int index) {
     int k = Character.digit(inputString.charAt(index), BASE);
     if (k < 0) {
       throw new IllegalArgumentException("bad hash string: " + inputString);
@@ -83,12 +82,12 @@ public class HashImpl implements Hash {
     return k;
   }
 
-  private HashImpl(@Nonnull byte[] hash) {
+  private HashImpl(byte[] hash) {
     myData = hash;
     myHashCode = Arrays.hashCode(hash);
   }
 
-  @Nonnull
+  
   @Override
   public String asString() {
     assert myData.length > 0 : "bad length Hash.data";
@@ -127,7 +126,7 @@ public class HashImpl implements Hash {
     return asString();
   }
 
-  @Nonnull
+  
   @Override
   public String toShortString() {
     String s = asString();

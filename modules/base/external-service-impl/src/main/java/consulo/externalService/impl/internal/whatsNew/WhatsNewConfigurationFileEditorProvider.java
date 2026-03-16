@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -45,27 +44,27 @@ public class WhatsNewConfigurationFileEditorProvider implements ConfigurationFil
         myUpdateHistoryProvider = updateHistoryProvider;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "whats_new";
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return myApplication.getIcon();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ExternalServiceLocalize.whatsnewActionCustomText(myApplication.getName()).map(Presentation.NO_MNEMONIC);
     }
 
-    @Nonnull
+    
     @Override
-    public ConfigurationFileEditor createEditor(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public ConfigurationFileEditor createEditor(Project project, VirtualFile file) {
         return new WhatsNewVirtualFileEditor(project, myUpdateHistoryProvider.get(), file);
     }
 }

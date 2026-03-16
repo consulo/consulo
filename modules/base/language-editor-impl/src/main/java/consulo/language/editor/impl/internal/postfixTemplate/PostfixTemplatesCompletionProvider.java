@@ -14,14 +14,13 @@ import consulo.language.editor.template.CustomTemplateCallback;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.ProcessingContext;
-import jakarta.annotation.Nonnull;
 
 import static consulo.language.editor.impl.internal.postfixTemplate.PostfixTemplateCompletionContributor.getPostfixLiveTemplate;
 
 class PostfixTemplatesCompletionProvider implements CompletionProvider {
     @RequiredReadAction
     @Override
-    public void addCompletions(@Nonnull CompletionParameters parameters, @Nonnull ProcessingContext context, @Nonnull CompletionResultSet result) {
+    public void addCompletions(CompletionParameters parameters, ProcessingContext context, CompletionResultSet result) {
         Editor editor = parameters.getEditor();
         if (!isCompletionEnabled(parameters) || LiveTemplateCompletionContributor.shouldShowAllTemplates() || editor.getCaretModel().getCaretCount() != 1) {
       /*
@@ -42,7 +41,7 @@ class PostfixTemplatesCompletionProvider implements CompletionProvider {
         }
     }
 
-    private static boolean isCompletionEnabled(@Nonnull CompletionParameters parameters) {
+    private static boolean isCompletionEnabled(CompletionParameters parameters) {
         ProgressManager.checkCanceled();
         if (!parameters.isAutoPopup()) {
             return false;
@@ -62,13 +61,13 @@ class PostfixTemplatesCompletionProvider implements CompletionProvider {
         }
 
         @Override
-        public boolean prefixMatches(@Nonnull String name) {
+        public boolean prefixMatches(String name) {
             return name.equalsIgnoreCase(myPrefix);
         }
 
-        @Nonnull
+        
         @Override
-        public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
+        public PrefixMatcher cloneWithPrefix(String prefix) {
             return new MyPrefixMatcher(prefix);
         }
     }

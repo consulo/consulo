@@ -17,27 +17,26 @@ package consulo.language.editor.refactoring.event;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class UndoRefactoringElementAdapter implements RefactoringElementListener, UndoRefactoringElementListener {
   @Override
-  public final void elementMoved(@Nonnull PsiElement newElement) {
+  public final void elementMoved(PsiElement newElement) {
     refactored(newElement, null);
   }
 
   @Override
-  public final void elementRenamed(@Nonnull PsiElement newElement) {
+  public final void elementRenamed(PsiElement newElement) {
     refactored(newElement, null);
   }
 
   @Override
-  public final void undoElementMovedOrRenamed(@Nonnull PsiElement newElement, @Nonnull String oldQualifiedName) {
+  public final void undoElementMovedOrRenamed(PsiElement newElement, String oldQualifiedName) {
     refactored(newElement, oldQualifiedName);
   }
 
   /**
    * oldQualifiedName not-null on undoElementMovedOrRenamed, otherwise null
    */
-  protected abstract void refactored(@Nonnull PsiElement element, @Nullable String oldQualifiedName);
+  protected abstract void refactored(PsiElement element, @Nullable String oldQualifiedName);
 }

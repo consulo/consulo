@@ -34,7 +34,6 @@ import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.internal.CommittedChangesBrowserUseCase;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -84,7 +83,7 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         super.uiDataSnapshot(sink);
         sink.set(CommittedChangesBrowserUseCase.DATA_KEY, myUseCase);
         List<Change> list = myViewer.getSelectedChanges();
@@ -105,7 +104,7 @@ public class InternalRepositoryChangesBrowser extends InternalChangesBrowser imp
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent event) {
+        public void update(AnActionEvent event) {
             super.update(event);
             boolean isModalContext = Objects.equals(event.getData(PlatformDataKeys.IS_MODAL_CONTEXT), Boolean.TRUE);
             event.getPresentation().setEnabled(

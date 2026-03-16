@@ -19,13 +19,12 @@ import consulo.document.DocumentReference;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
   private final VirtualFile myFile;
 
-  DocumentReferenceByNonlocalVirtualFile(@Nonnull VirtualFile file) {
+  DocumentReferenceByNonlocalVirtualFile(VirtualFile file) {
     myFile = file;
   }
 
@@ -36,7 +35,7 @@ class DocumentReferenceByNonlocalVirtualFile implements DocumentReference {
   }
 
   @Override
-  @Nonnull
+  
   public VirtualFile getFile() {
     return myFile;
   }

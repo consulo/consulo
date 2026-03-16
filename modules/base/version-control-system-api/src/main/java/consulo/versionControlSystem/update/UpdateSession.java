@@ -17,7 +17,6 @@ package consulo.versionControlSystem.update;
 
 import consulo.versionControlSystem.VcsException;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public interface UpdateSession {
    *
    * @return the list of errors.
    */
-  @Nonnull
+  
   List<VcsException> getExceptions();
 
   /**

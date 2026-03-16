@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.disposer.Disposable;
 import consulo.ide.ServiceManager;
 import consulo.ui.style.Style;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -31,17 +30,17 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LafManager {
-  @Nonnull
+  
   public static LafManager getInstance() {
     return ServiceManager.getService(LafManager.class);
   }
 
-  @Nonnull
+  
   List<Style> getStyles();
 
-  void setCurrentStyle(@Nonnull Style style);
+  void setCurrentStyle(Style style);
 
-  @Nonnull
+  
   Style getCurrentStyle();
 
   void updateUI();

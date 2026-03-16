@@ -15,7 +15,6 @@
  */
 package consulo.externalSystem.model.project;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +24,9 @@ import java.util.List;
  */
 public class ExternalModuleBuildClasspathPojo {
 
-  @Nonnull
+  
   private List<String> myEntries;
-  @Nonnull
+  
   private String myPath;
 
   @SuppressWarnings("UnusedDeclaration")
@@ -36,26 +35,26 @@ public class ExternalModuleBuildClasspathPojo {
     this("___DUMMY___", new ArrayList<>());
   }
 
-  public ExternalModuleBuildClasspathPojo(@Nonnull String path, @Nonnull List<String> entries) {
+  public ExternalModuleBuildClasspathPojo(String path, List<String> entries) {
     myPath = path;
     myEntries = entries;
   }
 
-  @Nonnull
+  
   public String getPath() {
     return myPath;
   }
 
-  public void setPath(@Nonnull String path) {
+  public void setPath(String path) {
     myPath = path;
   }
 
-  @Nonnull
+  
   public List<String> getEntries() {
     return myEntries;
   }
 
-  public void setEntries(@Nonnull List<String> entries) {
+  public void setEntries(List<String> entries) {
     myEntries = entries;
   }
 

@@ -23,7 +23,6 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author traff
@@ -152,7 +152,7 @@ public abstract class ListTableWithButtons<T> extends Observable {
     }
   }
 
-  @Nonnull
+  
   public TableView<T> getTableView() {
     return myTableView;
   }
@@ -212,12 +212,12 @@ public abstract class ListTableWithButtons<T> extends Observable {
 
   protected abstract boolean isEmpty(T element);
 
-  @Nonnull
+  
   protected AnAction[] createExtraActions() {
     return new AnAction[0];
   }
 
-  @Nonnull
+  
   protected List<T> getSelection() {
     int[] selection = myTableView.getComponent().getSelectedRows();
     if (selection.length == 0) {
@@ -263,7 +263,7 @@ public abstract class ListTableWithButtons<T> extends Observable {
       return myRenderer;
     }
 
-    @jakarta.annotation.Nullable
+    @Nullable
     protected abstract String getDescription(T element);
   }
 }

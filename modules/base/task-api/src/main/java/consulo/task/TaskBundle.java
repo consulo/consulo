@@ -5,7 +5,6 @@ import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.application.CommonBundle;
 import consulo.task.localize.TaskLocalize;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
 import org.apache.http.HttpStatus;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -31,11 +30,11 @@ public class TaskBundle {
     // empty
   }
 
-  public static String message(@Nonnull @PropertyKey(resourceBundle = BUNDLE) String key, @Nonnull Object... params) {
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return CommonBundle.message(getBundle(), key, params);
   }
 
-  @Nonnull
+  
   public static String messageForStatusCode(int statusCode) {
     if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
       return message("failure.login");

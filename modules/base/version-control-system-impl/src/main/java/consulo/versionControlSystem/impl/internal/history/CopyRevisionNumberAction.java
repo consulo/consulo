@@ -27,7 +27,6 @@ import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -42,7 +41,7 @@ public class CopyRevisionNumberAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VcsRevisionNumber revision = e.getData(VcsDataKeys.VCS_REVISION_NUMBER);
         if (revision == null) {
             VcsFileRevision fileRevision = e.getData(VcsDataKeys.VCS_FILE_REVISION);
@@ -59,7 +58,7 @@ public class CopyRevisionNumberAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setEnabled(e.hasData(VcsDataKeys.VCS_FILE_REVISION) || e.hasData(VcsDataKeys.VCS_REVISION_NUMBER));
     }

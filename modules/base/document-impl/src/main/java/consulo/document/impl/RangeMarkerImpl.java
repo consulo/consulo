@@ -20,33 +20,32 @@ import consulo.virtualFileSystem.BinaryFileDecompiler;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx {
     private static final Logger LOG = Logger.getInstance(RangeMarkerImpl.class);
 
-    private final @Nonnull Object myDocumentOrFile; // either VirtualFile (if any) or DocumentEx if no file associated
+    private final Object myDocumentOrFile; // either VirtualFile (if any) or DocumentEx if no file associated
     public RangeMarkerTree.RMNode<RangeMarkerEx> myNode;
 
     private volatile long myId;
     private static final StripedIDGenerator counter = new StripedIDGenerator();
 
-    public RangeMarkerImpl(@Nonnull DocumentEx document, int start, int end, boolean register, boolean forceDocumentStrongReference) {
+    public RangeMarkerImpl(DocumentEx document, int start, int end, boolean register, boolean forceDocumentStrongReference) {
         this(forceDocumentStrongReference ? document : ObjectUtil.notNull(FileDocumentManager.getInstance().getFile(document), document),
             document,
             document.getTextLength(), start, end, register, false, false);
     }
 
     // The constructor which creates a marker without a document and saves it in the virtual file directly. Can be cheaper than loading the entire document.
-    RangeMarkerImpl(@Nonnull VirtualFile virtualFile, int start, int end, int estimatedDocumentLength, boolean register) {
+    RangeMarkerImpl(VirtualFile virtualFile, int start, int end, int estimatedDocumentLength, boolean register) {
         // unfortunately, we don't know the exact document size until we load it
         this(virtualFile, null, estimatedDocumentLength, start, end, register, false, false);
     }
 
-    private RangeMarkerImpl(@Nonnull Object documentOrFile,
+    private RangeMarkerImpl(Object documentOrFile,
                             @Nullable DocumentEx document,
                             int documentTextLength,
                             int start,
@@ -66,12 +65,12 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         }
     }
 
-    static int estimateDocumentLength(@Nonnull VirtualFile virtualFile) {
+    static int estimateDocumentLength(VirtualFile virtualFile) {
         Document document = FileDocumentManager.getInstance().getCachedDocument(virtualFile);
         return document == null ? Math.max(0, (int) virtualFile.getLength()) : document.getTextLength();
     }
 
-    protected void registerInTree(@Nonnull DocumentEx document, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
+    protected void registerInTree(DocumentEx document, int start, int end, boolean greedyToLeft, boolean greedyToRight, int layer) {
         document.registerRangeMarker(this, start, end, greedyToLeft, greedyToRight, layer);
     }
 
@@ -129,7 +128,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
 
     @Override
-    public @Nonnull TextRange getTextRange() {
+    public TextRange getTextRange() {
         RangeMarkerTree.RMNode<?> node = myNode;
         if (node == null) {
             return TextRangeScalarUtil.create(myId);
@@ -146,7 +145,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
 
     @Override
-    public final @Nonnull DocumentEx getDocument() {
+    public final DocumentEx getDocument() {
         Object file = myDocumentOrFile;
         DocumentEx document =
             file instanceof VirtualFile ? (DocumentEx) FileDocumentManager.getInstance().getDocument((VirtualFile) file) : (DocumentEx) file;
@@ -214,11 +213,11 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
      * @deprecated do not use because it can mess internal offsets
      */
     @Deprecated(forRemoval = true)
-    public final void documentChanged(@Nonnull DocumentEvent e) {
+    public final void documentChanged(DocumentEvent e) {
         doChangeUpdate(e);
     }
 
-    final void onDocumentChanged(@Nonnull DocumentEvent e) {
+    final void onDocumentChanged(DocumentEvent e) {
         int oldStart = intervalStart();
         int oldEnd = intervalEnd();
         int docLength = e.getDocument().getTextLength();
@@ -245,11 +244,11 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         }
     }
 
-    protected void changedUpdateImpl(@Nonnull DocumentEvent e) {
+    protected void changedUpdateImpl(DocumentEvent e) {
         doChangeUpdate(e);
     }
 
-    private void doChangeUpdate(@Nonnull DocumentEvent e) {
+    private void doChangeUpdate(DocumentEvent e) {
         if (!isValid()) {
             return;
         }
@@ -263,7 +262,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         }
     }
 
-    protected void persistentHighlighterUpdate(@Nonnull DocumentEvent e, boolean wholeLineRange) {
+    protected void persistentHighlighterUpdate(DocumentEvent e, boolean wholeLineRange) {
         int line = 0;
         DocumentEventImpl event = (DocumentEventImpl) e;
         boolean viaDiff = isValid() && PersistentRangeMarkerUtil.shouldTranslateViaDiff(event, toScalarRange());
@@ -294,7 +293,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         }
     }
 
-    private int translatedViaDiff(@Nonnull DocumentEventImpl e, int line) throws FilesTooBigForDiffException {
+    private int translatedViaDiff(DocumentEventImpl e, int line) throws FilesTooBigForDiffException {
         line = e.translateLineViaDiff(line);
         if (line < 0 || line >= getDocument().getLineCount()) {
             invalidate();
@@ -307,11 +306,11 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
 
     // Called after the range was shifted from e.getMoveOffset() to e.getOffset()
-    protected void onReTarget(@Nonnull DocumentEvent e) {
+    protected void onReTarget(DocumentEvent e) {
     }
 
     // return -1 if invalid
-    public static long applyChange(@Nonnull DocumentEvent e, long range,
+    public static long applyChange(DocumentEvent e, long range,
                                    boolean isGreedyToLeft, boolean isGreedyToRight, boolean isStickingToRight) {
         int intervalStart = TextRangeScalarUtil.startOffset(range);
         int intervalEnd = TextRangeScalarUtil.endOffset(range);
@@ -366,7 +365,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         return -1;
     }
 
-    private static long processIfOnePoint(@Nonnull DocumentEvent e, int intervalStart, boolean greedyRight, boolean stickyRight) {
+    private static long processIfOnePoint(DocumentEvent e, int intervalStart, boolean greedyRight, boolean stickyRight) {
         int offset = e.getOffset();
         int oldLength = e.getOldLength();
         int oldEnd = offset + oldLength;
@@ -409,7 +408,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         return isValid(myNode);
     }
 
-    private boolean isValid(@Nullable RangeMarkerTree.RMNode<?> node) {
+    private boolean isValid(RangeMarkerTree.@Nullable RMNode<?> node) {
         if (node == null || !node.isValid()) {
             return false;
         }
@@ -417,7 +416,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         return file instanceof Document || canHaveDocument((VirtualFile) file);
     }
 
-    private static boolean canHaveDocument(@Nonnull VirtualFile file) {
+    private static boolean canHaveDocument(VirtualFile file) {
         Document document = FileDocumentManager.getInstance().getCachedDocument(file);
         if (document != null) {
             return true;
@@ -429,7 +428,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         return !file.getFileType().isBinary() || !RawFileLoader.getInstance().isTooLarge(file.getLength());
     }
 
-    private static boolean isBinaryWithoutDecompiler(@Nonnull VirtualFile file) {
+    private static boolean isBinaryWithoutDecompiler(VirtualFile file) {
         FileType fileType = file.getFileType();
         return fileType.isBinary() && BinaryFileDecompiler.forFileType(fileType) == null;
     }
@@ -485,12 +484,12 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
         return myNode.getTree().findRangeMarkerBefore(this);
     }
 
-    @Nonnull
-    TextRange reCalcTextRangeAfterReload(@Nonnull DocumentImpl document, int tabSize) {
+   
+    TextRange reCalcTextRangeAfterReload(DocumentImpl document, int tabSize) {
         return getTextRange();
     }
 
-    void storeOffsetsBeforeDying(@Nonnull IntervalTreeImpl.IntervalNode<?> node) {
+    void storeOffsetsBeforeDying(IntervalTreeImpl.IntervalNode<?> node) {
         // store current offsets to give async listeners the ability to get offsets
         int delta = node.computeDeltaUpToRoot();
         long range = TextRangeScalarUtil.shift(node.toScalarRange(), delta, delta);
@@ -501,7 +500,7 @@ public class RangeMarkerImpl extends UserDataHolderBase implements RangeMarkerEx
     }
 
     @TestOnly
-    public static void runAssertingInternalInvariants(@Nonnull ThrowableRunnable<?> runnable) throws Throwable {
+    public static void runAssertingInternalInvariants(ThrowableRunnable<?> runnable) throws Throwable {
         RedBlackTree.VERIFY = true;
         try {
             runnable.run();

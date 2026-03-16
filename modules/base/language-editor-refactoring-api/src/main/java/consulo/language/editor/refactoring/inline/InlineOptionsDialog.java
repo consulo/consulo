@@ -32,7 +32,6 @@ import consulo.ui.ValueGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.VerticalLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -116,16 +115,16 @@ public abstract class InlineOptionsDialog extends RefactoringDialog implements I
         return layout;
     }
 
-    @Nonnull
+    
     protected abstract LocalizeValue getNameLabelText();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getBorderTitle();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getInlineAllText();
 
-    @Nonnull
+    
     protected abstract LocalizeValue getInlineThisText();
 
     protected abstract boolean isInlineThis();

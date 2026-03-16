@@ -21,8 +21,7 @@ import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public class DesktopSwtRootPaneImpl {
     myDockLayout.top(menuBar);
   }
 
-  @Nonnull
+  
   public Component getComponent() {
     return myDockLayout;
   }

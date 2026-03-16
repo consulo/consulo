@@ -19,8 +19,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     public Language myCurrentLanguage;
     public Annotator myCurrentAnnotator;
 
-    public AnnotationHolderImpl(@Nullable Language language, @Nonnull AnnotationSession session, boolean batchMode) {
+    public AnnotationHolderImpl(@Nullable Language language, AnnotationSession session, boolean batchMode) {
         myCurrentLanguage = language;
         myAnnotationSession = session;
         myBatchMode = batchMode;
@@ -56,7 +55,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
     @Override
     @RequiredReadAction
-    public Annotation createErrorAnnotation(@Nonnull PsiElement elt, String message) {
+    public Annotation createErrorAnnotation(PsiElement elt, String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -70,7 +69,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createErrorAnnotation(@Nonnull ASTNode node, String message) {
+    public Annotation createErrorAnnotation(ASTNode node, String message) {
         assertMyFile(node.getPsi());
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -84,14 +83,14 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createErrorAnnotation(@Nonnull TextRange range, String message) {
+    public Annotation createErrorAnnotation(TextRange range, String message) {
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(HighlightSeverity.ERROR, range, message, wrapXml(message), callerClass, "createErrorAnnotation");
     }
 
     @Override
     @RequiredReadAction
-    public Annotation createWarningAnnotation(@Nonnull PsiElement elt, String message) {
+    public Annotation createWarningAnnotation(PsiElement elt, String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -105,7 +104,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createWarningAnnotation(@Nonnull ASTNode node, String message) {
+    public Annotation createWarningAnnotation(ASTNode node, String message) {
         assertMyFile(node.getPsi());
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -119,14 +118,14 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createWarningAnnotation(@Nonnull TextRange range, String message) {
+    public Annotation createWarningAnnotation(TextRange range, String message) {
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(HighlightSeverity.WARNING, range, message, wrapXml(message), callerClass, "createWarningAnnotation");
     }
 
     @Override
     @RequiredReadAction
-    public Annotation createWeakWarningAnnotation(@Nonnull PsiElement elt, @Nullable String message) {
+    public Annotation createWeakWarningAnnotation(PsiElement elt, @Nullable String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -140,7 +139,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createWeakWarningAnnotation(@Nonnull ASTNode node, @Nullable String message) {
+    public Annotation createWeakWarningAnnotation(ASTNode node, @Nullable String message) {
         assertMyFile(node.getPsi());
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -154,7 +153,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createWeakWarningAnnotation(@Nonnull TextRange range, String message) {
+    public Annotation createWeakWarningAnnotation(TextRange range, String message) {
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
             HighlightSeverity.WEAK_WARNING,
@@ -168,7 +167,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
     @Override
     @RequiredReadAction
-    public Annotation createInfoAnnotation(@Nonnull PsiElement elt, String message) {
+    public Annotation createInfoAnnotation(PsiElement elt, String message) {
         assertMyFile(elt);
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -182,7 +181,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createInfoAnnotation(@Nonnull ASTNode node, String message) {
+    public Annotation createInfoAnnotation(ASTNode node, String message) {
         assertMyFile(node.getPsi());
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(
@@ -216,13 +215,13 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     }
 
     @Override
-    public Annotation createInfoAnnotation(@Nonnull TextRange range, String message) {
+    public Annotation createInfoAnnotation(TextRange range, String message) {
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(HighlightSeverity.INFORMATION, range, message, wrapXml(message), callerClass, "createInfoAnnotation");
     }
 
     @Override
-    public Annotation createAnnotation(@Nonnull HighlightSeverity severity, @Nonnull TextRange range, @Nullable String message) {
+    public Annotation createAnnotation(HighlightSeverity severity, TextRange range, @Nullable String message) {
         Class<?> callerClass = ReflectionUtil.findCallerClass(2);
         return doCreateAnnotation(severity, range, message, wrapXml(message), callerClass, "createAnnotation");
     }
@@ -235,8 +234,8 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
     @Override
     public Annotation createAnnotation(
-        @Nonnull HighlightSeverity severity,
-        @Nonnull TextRange range,
+        HighlightSeverity severity,
+        TextRange range,
         @Nullable String message,
         @Nullable String tooltip
     ) {
@@ -250,15 +249,15 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     /**
      * @deprecated this is an old way of creating annotations, via createXXXAnnotation(). please use newAnnotation() instead
      */
-    @Nonnull
+    
     @Deprecated
     private Annotation doCreateAnnotation(
-        @Nonnull HighlightSeverity severity,
-        @Nonnull TextRange range,
+        HighlightSeverity severity,
+        TextRange range,
         @Nullable String message,
         @Nullable String tooltip,
         @Nullable Class<?> callerClass,
-        @Nonnull String methodName
+        String methodName
     ) {
         return doCreateAnnotation(
             severity,
@@ -274,16 +273,16 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     /**
      * @deprecated this is an old way of creating annotations, via createXXXAnnotation(). please use newAnnotation() instead
      */
-    @Nonnull
+    
     @Deprecated
     private Annotation doCreateAnnotation(
-        @Nonnull HighlightSeverity severity,
-        @Nonnull TextRange range,
-        @Nonnull LocalizeValue message,
-        @Nonnull LocalizeValue tooltip,
+        HighlightSeverity severity,
+        TextRange range,
+        LocalizeValue message,
+        LocalizeValue tooltip,
         @Nullable Class<?> callerClass,
-        @Nonnull String methodName,
-        @Nonnull Language language
+        String methodName,
+        Language language
     ) {
         Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip, language);
         add(annotation);
@@ -312,7 +311,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         return !isEmpty();
     }
 
-    @Nonnull
+    
     @Override
     public AnnotationSession getCurrentAnnotationSession() {
         return myAnnotationSession;
@@ -326,9 +325,9 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     public void queueToUpdateIncrementally() {
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder newOfSeverity(@Nonnull HighlightSeverity severity, @Nonnull LocalizeValue message) {
+    public AnnotationBuilder newOfSeverity(HighlightSeverity severity, LocalizeValue message) {
         return new AnnotationBuilderImpl(
             this,
             severity,
@@ -338,9 +337,9 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         );
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder newSilentAnnotation(@Nonnull HighlightSeverity severity) {
+    public AnnotationBuilder newSilentAnnotation(HighlightSeverity severity) {
         return new AnnotationBuilderImpl(
             this,
             severity,
@@ -352,7 +351,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
 
     public PsiElement myCurrentElement;
 
-    public void runAnnotatorWithContext(@Nonnull PsiElement element, @Nonnull Annotator annotator) {
+    public void runAnnotatorWithContext(PsiElement element, Annotator annotator) {
         myCurrentAnnotator = annotator;
         myCurrentElement = element;
         annotator.annotate(element, this);
@@ -360,7 +359,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         myCurrentAnnotator = null;
     }
 
-    public <R> void applyExternalAnnotatorWithContext(@Nonnull PsiFile file, @Nonnull ExternalAnnotator<?, R> annotator, R result) {
+    public <R> void applyExternalAnnotatorWithContext(PsiFile file, ExternalAnnotator<?, R> annotator, R result) {
         myExternalAnnotator = annotator;
         myCurrentElement = file;
         annotator.apply(file, result, this);
@@ -371,7 +370,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     // to assert each AnnotationBuilder did call .create() in the end
     private final List<AnnotationBuilderImpl> myCreatedAnnotationBuilders = new ArrayList<>();
 
-    void annotationBuilderCreated(@Nonnull AnnotationBuilderImpl builder) {
+    void annotationBuilderCreated(AnnotationBuilderImpl builder) {
         synchronized (myCreatedAnnotationBuilders) {
             myCreatedAnnotationBuilders.add(builder);
         }
@@ -390,7 +389,7 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
         }
     }
 
-    void annotationCreatedFrom(@Nonnull AnnotationBuilderImpl builder) {
+    void annotationCreatedFrom(AnnotationBuilderImpl builder) {
         synchronized (myCreatedAnnotationBuilders) {
             myCreatedAnnotationBuilders.remove(builder);
         }

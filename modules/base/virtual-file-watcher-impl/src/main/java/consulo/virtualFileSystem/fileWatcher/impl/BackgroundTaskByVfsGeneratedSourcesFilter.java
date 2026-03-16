@@ -23,7 +23,6 @@ import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public class BackgroundTaskByVfsGeneratedSourcesFilter implements GeneratedSourc
 
   @RequiredReadAction
   @Override
-  public boolean isGeneratedSource(@Nonnull VirtualFile file) {
+  public boolean isGeneratedSource(VirtualFile file) {
     List<BackgroundTaskByVfsChangeTaskImpl> tasksImpl =
       ((BackgroundTaskByVfsChangeManagerImpl)myBackgroundTaskByVfsChangeManager).getTasksImpl();
     if (tasksImpl.isEmpty()) {

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.toolWindow;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 public final class ToolWindowAnchor {
@@ -26,7 +25,7 @@ public final class ToolWindowAnchor {
 
   private final String myText;
 
-  private ToolWindowAnchor(@Nonnull String text) {
+  private ToolWindowAnchor(String text) {
     myText = text;
   }
 

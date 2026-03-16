@@ -1,8 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.editor.inlay;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -29,9 +28,9 @@ public interface DeclarativeInlayTreeSink {
             builder);
     }
 
-    default void addPresentation(@Nonnull DeclarativeInlayPosition position,
-                                 @Nonnull HintFormat format,
-                                 @Nonnull Consumer<DeclarativePresentationTreeBuilder> builder) {
+    default void addPresentation(DeclarativeInlayPosition position,
+                                 HintFormat format,
+                                 Consumer<DeclarativePresentationTreeBuilder> builder) {
         addPresentation(position, null, null, format, builder);
     }
 
@@ -43,8 +42,8 @@ public interface DeclarativeInlayTreeSink {
      * @param hintFormat format for the hint
      * @param builder    builder for a given inlay entry; will be called in place
      */
-    default void addPresentation(@Nonnull DeclarativeInlayPosition position,
-                                 @Nonnull Consumer<DeclarativePresentationTreeBuilder> builder) {
+    default void addPresentation(DeclarativeInlayPosition position,
+                                 Consumer<DeclarativePresentationTreeBuilder> builder) {
         addPresentation(position, null, null, HintFormat.DEFAULT, builder);
     }
 
@@ -56,11 +55,11 @@ public interface DeclarativeInlayTreeSink {
      * @param hintFormat format for the hint
      * @param builder    builder for a given inlay entry; will be called in place
      */
-    void addPresentation(@Nonnull DeclarativeInlayPosition position,
+    void addPresentation(DeclarativeInlayPosition position,
                          @Nullable List<DeclarativeInlayPayload> payloads,
                          @Nullable String tooltip,
-                         @Nonnull HintFormat hintFormat,
-                         @Nonnull Consumer<DeclarativePresentationTreeBuilder> builder);
+                         HintFormat hintFormat,
+                         Consumer<DeclarativePresentationTreeBuilder> builder);
 
     /**
      * Explicit branch, which will be executed only if given {@code optionId} is enabled.

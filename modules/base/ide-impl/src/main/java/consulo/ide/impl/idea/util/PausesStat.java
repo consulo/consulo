@@ -19,14 +19,13 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.TimeUnit;
 
 public class PausesStat {
     private static final Logger LOG = Logger.getInstance(PausesStat.class);
     private static final int N_MAX = 100000;
-    @Nonnull
+    
     private final String myName;
     private boolean started;
     private long startTimeStamp;
@@ -41,11 +40,11 @@ public class PausesStat {
     private int totalNumberRecorded;
     private int indexToOverwrite; // used when pauses.size() == N_MAX and we have to overflow cyclically
 
-    public PausesStat(@Nonnull String name) {
+    public PausesStat(String name) {
         myName = name;
     }
 
-    private synchronized void register(int duration, @Nonnull String description) {
+    private synchronized void register(int duration, String description) {
         if (duration > maxDuration) {
             maxDuration = duration;
             maxDurationDescription = description;
@@ -69,7 +68,7 @@ public class PausesStat {
         started = true;
     }
 
-    public void finished(@Nonnull String description) {
+    public void finished(String description) {
         LOG.assertTrue(currentThread == Thread.currentThread());
         LOG.assertTrue(started);
         currentThread = null;

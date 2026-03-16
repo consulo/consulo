@@ -13,7 +13,6 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -23,15 +22,15 @@ import java.util.Objects;
 public abstract class WordBoundaryFilter implements LanguageExtension {
   private static final ExtensionPointCacheKey<WordBoundaryFilter, ByLanguageValue<WordBoundaryFilter>> KEY =
           ExtensionPointCacheKey.create("WordBoundaryFilter", LanguageOneToOne.build(new WordBoundaryFilter() {
-            @Nonnull
+            
             @Override
             public Language getLanguage() {
               return Language.ANY;
             }
           }));
 
-  @Nonnull
-  public static WordBoundaryFilter forLanguage(@Nonnull Language language) {
+  
+  public static WordBoundaryFilter forLanguage(Language language) {
     return Application.get().getExtensionPoint(WordBoundaryFilter.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -45,7 +44,7 @@ public abstract class WordBoundaryFilter implements LanguageExtension {
    * @see HighlighterIterator
    * @see EditorHighlighter
    */
-  public boolean isWordBoundary(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
+  public boolean isWordBoundary(IElementType previousTokenType, IElementType tokenType) {
     return !Objects.equals(previousTokenType, tokenType);
   }
 }

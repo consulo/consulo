@@ -23,8 +23,7 @@ import consulo.versionControlSystem.impl.internal.change.commited.InternalReposi
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowser;
 import consulo.versionControlSystem.impl.internal.ui.awt.InternalChangesBrowserWithRollback;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class ChangesBrowserFactoryImpl implements ChangesBrowserFactory {
     }
 
     @Override
-    public ChangesBrowser<Change> createChangeBrowserWithRollback(@Nonnull Project project, @Nonnull List<Change> changes) {
+    public ChangesBrowser<Change> createChangeBrowserWithRollback(Project project, List<Change> changes) {
         return new InternalChangesBrowserWithRollback(project, changes);
     }
 

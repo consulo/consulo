@@ -5,8 +5,7 @@ import consulo.logging.Logger;
 import consulo.versionControlSystem.log.*;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntObjectHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,19 +14,19 @@ import java.util.stream.Stream;
 public class RefsModel implements VcsLogRefs {
   private static final Logger LOG = Logger.getInstance(RefsModel.class);
 
-  @Nonnull
+  
   private final VcsLogStorage myHashMap;
-  @Nonnull
+  
   private final Map<VirtualFile, CompressedRefs> myRefs;
-  @Nonnull
+  
   private final TIntObjectHashMap<VcsRef> myBestRefForHead;
-  @Nonnull
+  
   private final TIntObjectHashMap<VirtualFile> myRootForHead;
 
-  public RefsModel(@Nonnull Map<VirtualFile, CompressedRefs> refs,
-                   @Nonnull Set<Integer> heads,
-                   @Nonnull VcsLogStorage hashMap,
-                   @Nonnull Map<VirtualFile, VcsLogProvider> providers) {
+  public RefsModel(Map<VirtualFile, CompressedRefs> refs,
+                   Set<Integer> heads,
+                   VcsLogStorage hashMap,
+                   Map<VirtualFile, VcsLogProvider> providers) {
     myRefs = refs;
     myHashMap = hashMap;
 
@@ -55,12 +54,12 @@ public class RefsModel implements VcsLogRefs {
     return myBestRefForHead.get(headIndex);
   }
 
-  @Nonnull
+  
   public VirtualFile rootAtHead(int headIndex) {
     return myRootForHead.get(headIndex);
   }
 
-  @Nonnull
+  
   public Map<VirtualFile, CompressedRefs> getAllRefsByRoot() {
     return myRefs;
   }
@@ -73,12 +72,12 @@ public class RefsModel implements VcsLogRefs {
   }
 
   @Override
-  @Nonnull
+  
   public Collection<VcsRef> getBranches() {
     return myRefs.values().stream().flatMap(CompressedRefs::streamBranches).collect(Collectors.toList());
   }
 
-  @Nonnull
+  
   public Stream<VcsRef> stream() {
     assert !ApplicationManager.getApplication().isDispatchThread();
     return myRefs.values().stream().flatMap(CompressedRefs::stream);

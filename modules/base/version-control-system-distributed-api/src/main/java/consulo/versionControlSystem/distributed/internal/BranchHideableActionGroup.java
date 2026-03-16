@@ -18,13 +18,12 @@ package consulo.versionControlSystem.distributed.internal;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.EmptyAction;
-import jakarta.annotation.Nonnull;
 
 public class BranchHideableActionGroup extends EmptyAction.MyDelegatingActionGroup implements BranchMoreHideableActionGroup, DumbAware {
-    @Nonnull
+    
     private final BranchMoreAction myMoreAction;
 
-    public BranchHideableActionGroup(@Nonnull ActionGroup actionGroup, @Nonnull BranchMoreAction moreAction) {
+    public BranchHideableActionGroup(ActionGroup actionGroup, BranchMoreAction moreAction) {
         super(actionGroup);
         myMoreAction = moreAction;
     }

@@ -32,8 +32,7 @@ import consulo.undoRedo.builder.CommandBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,15 +47,15 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     private static final String DEFAULT_GROUP_ID = null;
 
     public interface Builder {
-        @Nonnull
+        
         Builder withName(@Nullable String name);
 
-        @Nonnull
+        
         Builder withGroupId(@Nullable String groupId);
 
-        <E extends Throwable> void run(@Nonnull ThrowableRunnable<E> action) throws E;
+        <E extends Throwable> void run(ThrowableRunnable<E> action) throws E;
 
-        <R, E extends Throwable> R compute(@Nonnull ThrowableComputable<R, E> action) throws E;
+        <R, E extends Throwable> R compute(ThrowableComputable<R, E> action) throws E;
     }
 
     private static class BuilderImpl implements Builder {
@@ -70,14 +69,14 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
             myFiles = files;
         }
 
-        @Nonnull
+        
         @Override
         public Builder withName(String name) {
             myCommandName = name;
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public Builder withGroupId(String groupId) {
             myGroupId = groupId;
@@ -86,10 +85,10 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
         @Override
         @RequiredUIAccess
-        public <E extends Throwable> void run(@Nonnull final ThrowableRunnable<E> action) throws E {
+        public <E extends Throwable> void run(final ThrowableRunnable<E> action) throws E {
             new WriteCommandAction(myProject, myCommandName, myGroupId, myFiles) {
                 @Override
-                protected void run(@Nonnull Result result) throws Throwable {
+                protected void run(Result result) throws Throwable {
                     action.run();
                 }
             }.execute();
@@ -97,23 +96,23 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
         @Override
         @RequiredUIAccess
-        public <R, E extends Throwable> R compute(@Nonnull final ThrowableComputable<R, E> action) throws E {
+        public <R, E extends Throwable> R compute(final ThrowableComputable<R, E> action) throws E {
             return new WriteCommandAction<R>(myProject, myCommandName, myGroupId, myFiles) {
                 @Override
-                protected void run(@Nonnull Result<R> result) throws Throwable {
+                protected void run(Result<R> result) throws Throwable {
                     result.setResult(action.compute());
                 }
             }.execute().getResultObject();
         }
     }
 
-    @Nonnull
+    
     public static Builder writeCommandAction(Project project) {
         return new BuilderImpl(project);
     }
 
-    @Nonnull
-    public static Builder writeCommandAction(@Nonnull PsiFile first, @Nonnull PsiFile... others) {
+    
+    public static Builder writeCommandAction(PsiFile first, PsiFile... others) {
         return new BuilderImpl(first.getProject(), ArrayUtil.prepend(first, others));
     }
 
@@ -157,7 +156,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         return myGroupID;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public RunResult<T> execute() {
@@ -175,7 +174,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     @RequiredUIAccess
-    private void performWriteCommandAction(@Nonnull RunResult<T> result) {
+    private void performWriteCommandAction(RunResult<T> result) {
         if (!FileModificationService.getInstance().preparePsiElementsForWrite(Arrays.asList(myPsiFiles))) {
             return;
         }
@@ -252,7 +251,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         }
 
         @Override
-        protected void run(@Nonnull Result<T> result) throws Throwable {
+        protected void run(Result<T> result) throws Throwable {
             run();
         }
 
@@ -260,7 +259,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     }
 
     @RequiredUIAccess
-    public static void runWriteCommandAction(Project project, @Nonnull Runnable runnable) {
+    public static void runWriteCommandAction(Project project, Runnable runnable) {
         runWriteCommandAction(project, DEFAULT_COMMAND_NAME, DEFAULT_GROUP_ID, runnable);
     }
 
@@ -269,8 +268,8 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         Project project,
         @Nullable final String commandName,
         @Nullable final String groupID,
-        @Nonnull final Runnable runnable,
-        @Nonnull PsiFile... files
+        final Runnable runnable,
+        PsiFile... files
     ) {
         new Simple(project, commandName, groupID, files) {
             @Override
@@ -282,10 +281,10 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
     @SuppressWarnings("LambdaUnfriendlyMethodOverload")
     @RequiredUIAccess
-    public static <T> T runWriteCommandAction(Project project, @Nonnull final Supplier<T> computable) {
+    public static <T> T runWriteCommandAction(Project project, final Supplier<T> computable) {
         return new WriteCommandAction<T>(project) {
             @Override
-            protected void run(@Nonnull Result<T> result) throws Throwable {
+            protected void run(Result<T> result) throws Throwable {
                 result.setResult(computable.get());
             }
         }.execute().getResultObject();
@@ -295,11 +294,11 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     @RequiredUIAccess
     public static <T, E extends Throwable> T runWriteCommandAction(
         Project project,
-        @Nonnull final ThrowableComputable<T, E> computable
+        final ThrowableComputable<T, E> computable
     ) throws E {
         RunResult<T> result = new WriteCommandAction<T>(project, "") {
             @Override
-            protected void run(@Nonnull Result<T> result) throws Throwable {
+            protected void run(Result<T> result) throws Throwable {
                 result.setResult(computable.compute());
             }
         }.execute();
@@ -317,7 +316,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
      * @deprecated use {@link FileModificationService#preparePsiElementsForWrite(Collection)} (to be removed in IDEA 2018)
      */
     @SuppressWarnings("unused")
-    public static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull Collection<PsiFile> psiFiles) {
+    public static boolean ensureFilesWritable(Project project, Collection<PsiFile> psiFiles) {
         return FileModificationService.getInstance().preparePsiElementsForWrite(psiFiles);
     }
     //</editor-fold>

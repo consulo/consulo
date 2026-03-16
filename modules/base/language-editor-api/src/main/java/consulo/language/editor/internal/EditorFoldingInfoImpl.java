@@ -27,8 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,8 +41,8 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
 
   private final Map<FoldRegion, SmartPsiElementPointer<?>> myFoldRegionToSmartPointerMap = new HashMap<>();
 
-  @Nonnull
-  public static EditorFoldingInfoImpl get(@Nonnull Editor editor) {
+  
+  public static EditorFoldingInfoImpl get(Editor editor) {
     EditorFoldingInfoImpl info = editor.getUserData(KEY);
     if (info == null){
       info = new EditorFoldingInfoImpl();
@@ -55,7 +54,7 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
   @Override
   @Nullable
   @RequiredReadAction
-  public PsiElement getPsiElement(@Nonnull FoldRegion region) {
+  public PsiElement getPsiElement(FoldRegion region) {
     SmartPsiElementPointer<?> pointer = myFoldRegionToSmartPointerMap.get(region);
     if (pointer == null) {
       return null;
@@ -67,7 +66,7 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
   @Override
   @Nullable
   @RequiredReadAction
-  public TextRange getPsiElementRange(@Nonnull FoldRegion region) {
+  public TextRange getPsiElementRange(FoldRegion region) {
     PsiElement element = getPsiElement(region);
     if (element == null) return null;
     PsiFile containingFile = element.getContainingFile();
@@ -80,11 +79,11 @@ public class EditorFoldingInfoImpl implements EditorFoldingInfo {
     return range;
   }
 
-  public void addRegion(@Nonnull FoldRegion region, @Nonnull SmartPsiElementPointer<?> pointer){
+  public void addRegion(FoldRegion region, SmartPsiElementPointer<?> pointer){
     myFoldRegionToSmartPointerMap.put(region, pointer);
   }
 
-  public void removeRegion(@Nonnull FoldRegion region){
+  public void removeRegion(FoldRegion region){
     myFoldRegionToSmartPointerMap.remove(region);
   }
 

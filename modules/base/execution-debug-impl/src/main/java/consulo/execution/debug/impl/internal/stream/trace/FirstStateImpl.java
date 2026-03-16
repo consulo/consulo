@@ -4,7 +4,6 @@ package consulo.execution.debug.impl.internal.stream.trace;
 import consulo.execution.debug.stream.trace.NextAwareState;
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.wrapper.StreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,21 +16,21 @@ final class FirstStateImpl extends StateBase implements NextAwareState {
   private final StreamCall myNextCall;
   private final Map<TraceElement, List<TraceElement>> myToNext;
 
-  FirstStateImpl(@Nonnull List<TraceElement> elements,
-                 @Nonnull StreamCall nextCall,
-                 @Nonnull Map<TraceElement, List<TraceElement>> toNextMapping) {
+  FirstStateImpl(List<TraceElement> elements,
+                 StreamCall nextCall,
+                 Map<TraceElement, List<TraceElement>> toNextMapping) {
     super(elements);
     myNextCall = nextCall;
     myToNext = toNextMapping;
   }
 
   @Override
-  public @Nonnull StreamCall getNextCall() {
+  public StreamCall getNextCall() {
     return myNextCall;
   }
 
   @Override
-  public @Nonnull List<TraceElement> getNextValues(@Nonnull TraceElement value) {
+  public List<TraceElement> getNextValues(TraceElement value) {
     return myToNext.getOrDefault(value, Collections.emptyList());
   }
 }

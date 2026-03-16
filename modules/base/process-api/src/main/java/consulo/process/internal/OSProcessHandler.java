@@ -23,8 +23,7 @@ import consulo.process.io.BaseOutputReader;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashSet;
@@ -40,7 +39,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   private boolean myDestroyRecursively = true;
   private Set<File> myFilesToDelete = null;
 
-  public OSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public OSProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
     this(startProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
     myHasErrorStream = !commandLine.isRedirectErrorStream();
     myFilesToDelete = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
@@ -49,14 +48,14 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public OSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine) {
+  public OSProcessHandler(Process process, /*@NotNull*/ String commandLine) {
     this(process, commandLine, DefaultCharsetProvider.getInstance().getDefaultCharset());
   }
 
   /**
    * {@code commandLine} must not be not empty (for correct thread attribution in the stacktrace)
    */
-  public OSProcessHandler(@Nonnull Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
+  public OSProcessHandler(Process process, /*@NotNull*/ String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
     setHasPty(isPtyProcess(process));
   }
@@ -141,11 +140,11 @@ public class OSProcessHandler extends BaseOSProcessHandler {
    *
    * @param process Process
    */
-  protected void killProcessTree(@Nonnull Process process) {
+  protected void killProcessTree(Process process) {
     executeTask(() -> killProcessTreeSync(process));
   }
 
-  private void killProcessTreeSync(@Nonnull Process process) {
+  private void killProcessTreeSync(Process process) {
     LOG.debug("killing process tree");
     boolean destroyed = OSProcessManager.getInstance().killProcessTree(process);
     if (!destroyed) {
@@ -169,7 +168,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
     myHasPty = hasPty;
   }
 
-  @Nonnull
+  
   @Override
   protected BaseOutputReader.Options readerOptions() {
     return myHasPty ? BaseOutputReader.Options.BLOCKING : super.readerOptions();  // blocking read in case of PTY-based process
@@ -179,7 +178,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
    * Registers a file to delete after the given command line finishes.
    * In order to have an effect, the command line has to be executed with {@link #OSProcessHandler(GeneralCommandLine)}.
    */
-  public static void deleteFileOnTermination(@Nonnull GeneralCommandLine commandLine, @Nonnull File fileToDelete) {
+  public static void deleteFileOnTermination(GeneralCommandLine commandLine, File fileToDelete) {
     Set<File> set = commandLine.getUserData(DELETE_FILES_ON_TERMINATION);
     if (set == null) {
       commandLine.putUserData(DELETE_FILES_ON_TERMINATION, set = new HashSet<>());

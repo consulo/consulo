@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ui;
 import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
@@ -31,7 +30,7 @@ import javax.swing.*;
 @ServiceImpl
 public class LightweightHintFactoryImpl implements LightweightHintFactory {
     @Override
-    public LightweightHint create(@Nonnull JComponent component) {
+    public LightweightHint create(JComponent component) {
         return new LightweightHintImpl(component);
     }
 }

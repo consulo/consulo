@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -37,7 +36,7 @@ public class EditSourceInNewWindowAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         FileEditorManager manager = FileEditorManager.getInstance(e.getRequiredData(Project.KEY));
         ((FileEditorManagerImpl) manager).openFileInNewWindow(getVirtualFiles(e)[0]);
     }

@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.ProcessingContext;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -41,7 +40,7 @@ public class PlatformPatterns extends StandardPatterns {
   public static PsiElementPattern.Capture<PomTargetPsiElement> pomElement(final ElementPattern<? extends PomTarget> targetPattern) {
     return new PsiElementPattern.Capture<>(PomTargetPsiElement.class).with(new PatternCondition<>("withPomTarget") {
       @Override
-      public boolean accepts(@Nonnull PomTargetPsiElement element, ProcessingContext context) {
+      public boolean accepts(PomTargetPsiElement element, ProcessingContext context) {
         return targetPattern.accepts(element.getTarget(), context);
       }
     });

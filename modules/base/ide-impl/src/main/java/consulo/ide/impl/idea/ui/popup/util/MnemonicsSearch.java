@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ui.popup.util;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.idea.ui.popup.WizardPopup;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public abstract class MnemonicsSearch<T> {
     }
   }
 
-  public void processKeyEvent(@Nonnull KeyEvent e) {
+  public void processKeyEvent(KeyEvent e) {
     if (e.isConsumed()) return;
     if (e.getID() != KeyEvent.KEY_TYPED) return;
     if (!StringUtil.isEmptyOrSpaces(myPopup.getSpeedSearch().getFilter())) return;

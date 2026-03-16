@@ -15,13 +15,12 @@
  */
 package consulo.language.editor.intention;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
  * Intention action with sub-actions (options)
  */
 public interface IntentionActionWithOptions extends IntentionAction {
-  @Nonnull
+  
   List<IntentionAction> getOptions();
 }

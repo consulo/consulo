@@ -19,7 +19,6 @@ import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.codeEditor.action.AbstractToggleUseSoftWrapsAction;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * {@link ToggleUseSoftWrapsMenuAction} extension that doesn't suppress configured icon (if any).
@@ -29,7 +28,7 @@ import jakarta.annotation.Nonnull;
  */
 public class ToggleUseSoftWrapsToolbarAction extends AbstractToggleUseSoftWrapsAction {
 
-    public ToggleUseSoftWrapsToolbarAction(@Nonnull SoftWrapAppliancePlaces place) {
+    public ToggleUseSoftWrapsToolbarAction(SoftWrapAppliancePlaces place) {
         super(place, true);
         copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_EDITOR_USE_SOFT_WRAPS));
     }

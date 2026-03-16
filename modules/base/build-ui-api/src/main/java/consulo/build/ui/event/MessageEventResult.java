@@ -4,7 +4,7 @@ package consulo.build.ui.event;
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.MessageEvent;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -13,6 +13,8 @@ public interface MessageEventResult extends EventResult {
   MessageEvent.Kind getKind();
 
   @Nullable
+
+
   @BuildEventsNls.Description
   default String getDetails() { return null; }
 }

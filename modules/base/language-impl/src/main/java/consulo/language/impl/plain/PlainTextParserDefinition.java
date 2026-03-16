@@ -31,7 +31,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.version.LanguageVersion;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -46,58 +45,58 @@ public class PlainTextParserDefinition implements ParserDefinition {
     }
   };
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return PlainTextLanguage.INSTANCE;
   }
 
   @Override
-  @Nonnull
-  public Lexer createLexer(@Nonnull LanguageVersion languageVersion) {
+  
+  public Lexer createLexer(LanguageVersion languageVersion) {
     return new EmptyLexer();
   }
 
   @Override
-  @Nonnull
-  public PsiParser createParser(@Nonnull LanguageVersion languageVersion) {
+  
+  public PsiParser createParser(LanguageVersion languageVersion) {
     throw new UnsupportedOperationException("Not supported");
   }
 
-  @Nonnull
+  
   @Override
   public IFileElementType getFileNodeType() {
     return PLAIN_FILE_ELEMENT_TYPE;
   }
 
   @Override
-  @Nonnull
-  public TokenSet getWhitespaceTokens(@Nonnull LanguageVersion languageVersion) {
+  
+  public TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @Override
-  @Nonnull
-  public TokenSet getCommentTokens(@Nonnull LanguageVersion languageVersion) {
+  
+  public TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @Override
-  @Nonnull
-  public TokenSet getStringLiteralElements(@Nonnull LanguageVersion languageVersion) {
+  
+  public TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TokenSet.EMPTY;
   }
 
   @RequiredReadAction
   @Override
-  @Nonnull
-  public PsiElement createElement(@Nonnull ASTNode node) {
+  
+  public PsiElement createElement(ASTNode node) {
     return PsiUtilCore.NULL_PSI_ELEMENT;
   }
 
-  @Nonnull
+  
   @Override
-  public PsiFile createFile(@Nonnull FileViewProvider viewProvider) {
+  public PsiFile createFile(FileViewProvider viewProvider) {
     return new PsiPlainTextFileImpl(viewProvider);
   }
 }

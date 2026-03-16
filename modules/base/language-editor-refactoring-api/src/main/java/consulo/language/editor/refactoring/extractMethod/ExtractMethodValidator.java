@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.refactoring.extractMethod;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author oleg

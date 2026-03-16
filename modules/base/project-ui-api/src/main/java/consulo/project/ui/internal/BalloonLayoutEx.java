@@ -18,8 +18,7 @@ package consulo.project.ui.internal;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.wm.BalloonLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -34,5 +33,5 @@ public interface BalloonLayoutEx extends BalloonLayout {
 
   void removeListener(Runnable listener);
 
-  void remove(@Nonnull Notification notification);
+  void remove(Notification notification);
 }

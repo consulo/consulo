@@ -30,7 +30,6 @@ import consulo.versionControlSystem.log.impl.internal.data.VcsLogStructureFilter
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 
@@ -45,7 +44,7 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         VcsLogManager logManager = VcsProjectLog.getInstance(project).getLogManager();
@@ -55,7 +54,7 @@ public class ShowGraphHistoryAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         if (!Registry.is("vcs.log.graph.history")) {
             presentation.setEnabledAndVisible(false);

@@ -21,7 +21,6 @@ import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.store.internal.StateStorage;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 
-import jakarta.annotation.Nonnull;
 
 /**
 * @author VISTALL
@@ -30,5 +29,5 @@ import jakarta.annotation.Nonnull;
 // FIXME [VISTALL] looks like it's called in App scope too
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.NONE)
 public interface StateStorageListener {
-  void storageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage);
+  void storageFileChanged(VirtualFileEvent event, StateStorage storage);
 }

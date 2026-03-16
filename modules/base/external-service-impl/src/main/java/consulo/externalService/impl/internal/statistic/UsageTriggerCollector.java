@@ -24,8 +24,7 @@ import consulo.util.collection.ContainerUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -43,7 +42,7 @@ public class UsageTriggerCollector extends UsagesCollector {
     }
 
     @Override
-    @Nonnull
+    
     public Set<UsageDescriptor> getUsages(@Nullable Project project) {
         UsageTriggerImpl.State state = ((UsageTriggerImpl) myUsageTrigger.get()).getState();
 
@@ -51,7 +50,7 @@ public class UsageTriggerCollector extends UsagesCollector {
     }
 
     @Override
-    @Nonnull
+    
     public String getGroupId() {
         return "consulo.platform.base:features.count";
     }

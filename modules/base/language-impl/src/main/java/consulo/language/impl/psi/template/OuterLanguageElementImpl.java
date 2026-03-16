@@ -19,7 +19,6 @@ import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.impl.psi.LeafPsiElement;
 import consulo.language.ast.IElementType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -30,7 +29,7 @@ public class OuterLanguageElementImpl extends LeafPsiElement implements OuterLan
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor) {
+  public void accept(PsiElementVisitor visitor) {
     visitor.visitOuterLanguageElement(this);
   }
 }

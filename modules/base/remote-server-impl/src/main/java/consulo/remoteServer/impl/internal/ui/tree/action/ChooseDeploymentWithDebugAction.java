@@ -8,7 +8,6 @@ import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
@@ -23,14 +22,14 @@ public class ChooseDeploymentWithDebugAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         e.getPresentation().setEnabledAndVisible(node != null && node.getServer().getType().createDebugConnector() != null);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         if (node != null) {
             node.deployWithDebug(e);

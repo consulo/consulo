@@ -40,7 +40,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -200,7 +199,7 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
         actionGroup.add(new CloseTabToolbarAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 CoverageDataManager.getInstance(myProject).chooseSuitesBundle(null);
             }
         });
@@ -285,7 +284,7 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(Navigatable.KEY, getSelectedValue());
         sink.set(HelpManager.HELP_ID, HELP_ID);
     }
@@ -322,13 +321,13 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
         }
 
         @Override
-        public boolean isSelected(@Nonnull AnActionEvent e) {
+        public boolean isSelected(AnActionEvent e) {
             return myStateBean.myFlattenPackages;
         }
 
         @Override
         @RequiredUIAccess
-        public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+        public void setSelected(AnActionEvent e, boolean state) {
             myStateBean.myFlattenPackages = state;
             Object selectedValue = myBuilder.getSelectedValue();
             myBuilder.buildRoot();
@@ -352,12 +351,12 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             goUp();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(!topElementIsSelected(myTreeStructure));
         }
     }
@@ -379,7 +378,7 @@ public class CoverageView extends JPanel implements UiDataProvider, Disposable {
 
         @Override
         @RequiredUIAccess
-        protected void selectElementFromEditor(@Nonnull FileEditor editor) {
+        protected void selectElementFromEditor(FileEditor editor) {
             if (myProject.isDisposed() || !CoverageView.this.isShowing()) {
                 return;
             }

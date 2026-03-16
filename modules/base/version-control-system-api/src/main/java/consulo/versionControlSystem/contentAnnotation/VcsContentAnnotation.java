@@ -20,7 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 

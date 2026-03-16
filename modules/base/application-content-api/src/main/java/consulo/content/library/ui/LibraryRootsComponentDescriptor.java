@@ -17,8 +17,7 @@ import consulo.content.library.LibraryType;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.localize.ProjectLocalize;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public abstract class LibraryRootsComponentDescriptor {
    * @return custom presentation or {@code null} if default presentation should be used
    */
   @Nullable
-  public OrderRootTypePresentation getRootTypePresentation(@Nonnull OrderRootType type) {
+  public OrderRootTypePresentation getRootTypePresentation(OrderRootType type) {
     // will use default impl
     return null;
   }
@@ -46,7 +45,7 @@ public abstract class LibraryRootsComponentDescriptor {
    *
    * @return non-empty list of {@link RootDetector}'s implementations
    */
-  @Nonnull
+  
   public abstract List<? extends RootDetector> getRootDetectors();
 
   /**
@@ -55,7 +54,7 @@ public abstract class LibraryRootsComponentDescriptor {
    *
    * @return {@link LibraryRootsDetector}'s implementation
    */
-  @Nonnull
+  
   public LibraryRootsDetector getRootsDetector() {
     return new LibraryRootsDetectorImpl(getRootDetectors());
   }
@@ -64,7 +63,7 @@ public abstract class LibraryRootsComponentDescriptor {
    * @return descriptor for the file chooser which will be shown when 'Attach Files' button is pressed
    * @param libraryName
    */
-  @Nonnull
+  
   public FileChooserDescriptor createAttachFilesChooserDescriptor(@Nullable String libraryName) {
     return new FileChooserDescriptor(true, true, true, false, true, true)
       .withTitleValue(
@@ -78,14 +77,14 @@ public abstract class LibraryRootsComponentDescriptor {
   /**
    * @return descriptors for 'Attach' buttons in the library roots editor
    */
-  @Nonnull
+  
   public abstract List<? extends AttachRootButtonDescriptor> createAttachButtons();
 
   /**
    * @return Array of root types supported by a library type associated with the roots
    *         component descriptor. All persistent root types are returned by default. 
    */
-  @Nonnull
+  
   public List<OrderRootType> getRootTypes() {
     return OrderRootType.getAllTypes();
   }

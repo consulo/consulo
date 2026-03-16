@@ -38,7 +38,6 @@ import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -67,13 +66,13 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         return new BuildArtifactsBeforeRunTask(myProject);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return CompilerLocalize.buildArtifactsBeforeRunDescriptionEmpty();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription(BuildArtifactsBeforeRunTask task) {
         List<ArtifactPointer> pointers = task.getArtifactPointers();
@@ -86,7 +85,7 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
         return CompilerLocalize.buildArtifactsBeforeRunDescriptionMultiple(pointers.size());
     }
 
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,
@@ -125,9 +124,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     }
 
     public static void setBuildArtifactBeforeRunOption(
-        @Nonnull DataContext dataContext,
+        DataContext dataContext,
         Project project,
-        @Nonnull Artifact artifact,
+        Artifact artifact,
         boolean enable
     ) {
         ConfigurationSettingsEditorWrapper editor = dataContext.getData(ConfigurationSettingsEditorWrapper.CONFIGURATION_EDITOR_KEY);
@@ -163,9 +162,9 @@ public class BuildArtifactsBeforeRunTaskProvider extends AbstractArtifactsBefore
     }
 
     public static void setBuildArtifactBeforeRun(
-        @Nonnull Project project,
-        @Nonnull RunConfiguration configuration,
-        @Nonnull Artifact artifact
+        Project project,
+        RunConfiguration configuration,
+        Artifact artifact
     ) {
         RunManager runManager = RunManager.getInstance(project);
         List<BuildArtifactsBeforeRunTask> buildArtifactsTasks = runManager.getBeforeRunTasks(configuration, ID);

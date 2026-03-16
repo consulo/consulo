@@ -36,8 +36,7 @@ import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -65,7 +64,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Inject
-    public LocalHistoryImpl(@Nonnull Application application) {
+    public LocalHistoryImpl(Application application) {
         myBus = application.getMessageBus();
 
         if (application.isUnitTestMode() || !application.isHeadlessEnvironment()) {
@@ -157,7 +156,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public Label putUserLabel(Project p, @Nonnull String name) {
+    public Label putUserLabel(Project p, String name) {
         if (!isInitialized()) {
             return Label.NULL_INSTANCE;
         }
@@ -170,7 +169,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @Override
-    public Label putSystemLabel(Project project, @Nonnull String name, int color) {
+    public Label putSystemLabel(Project project, String name, int color) {
         if (!isInitialized()) {
             return Label.NULL_INSTANCE;
         }
@@ -186,7 +185,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
         return new Label() {
             @Override
             @RequiredUIAccess
-            public void revert(@Nonnull Project project, @Nonnull VirtualFile file) throws LocalHistoryException {
+            public void revert(Project project, VirtualFile file) throws LocalHistoryException {
                 revertToLabel(project, file, impl);
             }
 
@@ -232,7 +231,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     }
 
     @RequiredUIAccess
-    private void revertToLabel(@Nonnull Project project, @Nonnull VirtualFile f, @Nonnull LabelImpl impl) throws LocalHistoryException {
+    private void revertToLabel(Project project, VirtualFile f, LabelImpl impl) throws LocalHistoryException {
         HistoryDialogModel dirHistoryModel = f.isDirectory()
             ? new DirectoryHistoryDialogModel(project, myGateway, myVcs, f)
             : new EntireFileHistoryDialogModel(project, myGateway, myVcs, f);

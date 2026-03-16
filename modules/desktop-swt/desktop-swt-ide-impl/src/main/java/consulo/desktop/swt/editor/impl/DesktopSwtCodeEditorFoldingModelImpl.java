@@ -18,14 +18,13 @@ package consulo.desktop.swt.editor.impl;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorFoldingModelBase;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 18/12/2021
  */
 public class DesktopSwtCodeEditorFoldingModelImpl extends CodeEditorFoldingModelBase {
-  public DesktopSwtCodeEditorFoldingModelImpl(@Nonnull CodeEditorBase editor) {
+  public DesktopSwtCodeEditorFoldingModelImpl(CodeEditorBase editor) {
     super(editor);
   }
 }

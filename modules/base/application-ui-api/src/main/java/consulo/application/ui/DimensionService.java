@@ -22,8 +22,7 @@ import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.ui.Point2D;
 import consulo.ui.Size2D;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class represents map between strings and rectangles. It's intended to store
@@ -42,10 +41,10 @@ public interface DimensionService extends ModificationTracker {
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
   @Nullable
-  Size2D getSize(@Nonnull String key);
+  Size2D getSize(String key);
 
   @Nullable
-  Size2D getSize(@Nonnull String key, Project project);
+  Size2D getSize(String key, Project project);
 
   /**
    * Store specified {@code size} under the {@code key}. If {@code size} is
@@ -55,9 +54,9 @@ public interface DimensionService extends ModificationTracker {
    * @param size a Size to save.
    * @throws IllegalArgumentException if {@code key} is {@code null}.
    */
-  void setSize(@Nonnull String key, Size2D size);
+  void setSize(String key, Size2D size);
 
-  void setSize(@Nonnull String key, Size2D size, Project project);
+  void setSize(String key, Size2D size, Project project);
 
   /**
    * @param key a String key to perform a query for.
@@ -71,7 +70,7 @@ public interface DimensionService extends ModificationTracker {
   Point2D getLocation(String key);
 
   @Nullable
-  Point2D getLocation(@Nonnull String key, Project project);
+  Point2D getLocation(String key, Project project);
 
   /**
    * Store specified {@code point} under the {@code key}. If {@code point} is
@@ -83,5 +82,5 @@ public interface DimensionService extends ModificationTracker {
    */
   void setLocation(String key, Point2D point);
 
-  void setLocation(@Nonnull String key, Point2D point, Project project);
+  void setLocation(String key, Point2D point, Project project);
 }

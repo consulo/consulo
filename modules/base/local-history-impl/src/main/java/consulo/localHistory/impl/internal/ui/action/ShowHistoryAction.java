@@ -26,7 +26,6 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "LocalHistory.ShowHistory")
@@ -36,7 +35,7 @@ public class ShowHistoryAction extends LocalHistoryActionWithDialog {
         this(LocalHistoryLocalize.actionShowHistoryText());
     }
 
-    protected ShowHistoryAction(@Nonnull LocalizeValue text) {
+    protected ShowHistoryAction(LocalizeValue text) {
         super(text);
     }
 
@@ -47,7 +46,7 @@ public class ShowHistoryAction extends LocalHistoryActionWithDialog {
     }
 
     @Override
-    protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, VirtualFile f, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
         return f != null && gw.isVersioned(f) && (f.isDirectory() || gw.areContentChangesVersioned(f));
     }
 }

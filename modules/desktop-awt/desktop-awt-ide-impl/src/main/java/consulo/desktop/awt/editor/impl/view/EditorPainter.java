@@ -45,8 +45,7 @@ import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -71,11 +70,11 @@ public final class EditorPainter implements TextDrawingCallback {
 
     public static final String EDITOR_TAB_PAINTING = "editor.tab.painting";
 
-    public static int getIndentGuideShift(@Nonnull Editor editor) {
+    public static int getIndentGuideShift(Editor editor) {
         return -Session.getTabGap(Session.getWhiteSpaceScale(editor)) / 2;
     }
 
-    public static boolean isMarginShown(@Nonnull Editor editor) {
+    public static boolean isMarginShown(Editor editor) {
         return editor.getSettings().isRightMarginShown()
             && editor.getColorsScheme().getColor(EditorColors.RIGHT_MARGIN_COLOR) != null
             && (Registry.is("editor.show.right.margin.in.read.only.files") || editor.getDocument().isWritable());
@@ -112,14 +111,14 @@ public final class EditorPainter implements TextDrawingCallback {
 
     @Override
     public void drawChars(
-        @Nonnull Graphics g,
-        @Nonnull char[] data,
+        Graphics g,
+        char[] data,
         int start,
         int end,
         int x,
         int y,
-        @Nonnull Color color,
-        @Nonnull Object fontInfo
+        Color color,
+        Object fontInfo
     ) {
         g.setFont(((FontInfo) fontInfo).getFont());
         g.setColor(color);
@@ -131,7 +130,7 @@ public final class EditorPainter implements TextDrawingCallback {
      * painting all invisible elements cannot take too much time in that case
      */
     @RequiredUIAccess
-    public static boolean isDisabled(@Nonnull DesktopEditorImpl editor) {
+    public static boolean isDisabled(DesktopEditorImpl editor) {
         return editor.getContentComponent().getWidth() < 10 * editor.getScrollingModel().getVisibleArea().width;
     }
 
@@ -605,7 +604,7 @@ public final class EditorPainter implements TextDrawingCallback {
             float x,
             int y,
             float width,
-            @Nonnull FoldRegion foldRegion
+            FoldRegion foldRegion
         ) {
             if (innerAttributes.getBackgroundColor() != null && !isSelected(foldRegion)) {
                 paintBackground(innerAttributes, x, y, width);
@@ -624,7 +623,7 @@ public final class EditorPainter implements TextDrawingCallback {
             }
         }
 
-        private static @Nonnull Int2ObjectMap<IntPair> createVirtualSelectionMap(
+        private static Int2ObjectMap<IntPair> createVirtualSelectionMap(
             CaretModel caretModel,
             int startVisualLine,
             int endVisualLine
@@ -821,7 +820,7 @@ public final class EditorPainter implements TextDrawingCallback {
             ComplexTextFragment.flushDrawingCache(myGraphics);
         }
 
-        private @Nullable TextAttributes getInnerHighlighterAttributes(@Nonnull FoldRegion region) {
+        private @Nullable TextAttributes getInnerHighlighterAttributes(FoldRegion region) {
             if (region.areInnerHighlightersMuted()) {
                 return null;
             }
@@ -863,9 +862,9 @@ public final class EditorPainter implements TextDrawingCallback {
         }
 
         private static void collectVisibleInnerHighlighters(
-            @Nonnull FoldRegion region,
-            @Nonnull MarkupModelEx markupModel,
-            @Nonnull List<? super RangeHighlighterEx> highlighters
+            FoldRegion region,
+            MarkupModelEx markupModel,
+            List<? super RangeHighlighterEx> highlighters
         ) {
             int startOffset = region.getStartOffset();
             int endOffset = region.getEndOffset();
@@ -1070,7 +1069,7 @@ public final class EditorPainter implements TextDrawingCallback {
             return calcFeatureSize(5, scale);
         }
 
-        private static float getWhiteSpaceScale(@Nonnull Editor editor) {
+        private static float getWhiteSpaceScale(Editor editor) {
             return ((float) editor.getColorsScheme().getEditorFontSize()) / FontPreferences.DEFAULT_FONT_SIZE;
         }
 
@@ -1194,7 +1193,7 @@ public final class EditorPainter implements TextDrawingCallback {
          * null otherwise
          */
         @Contract("null -> null")
-        private static @Nullable TextAttributesEffectsBuilder.EffectDescriptor getBorderDescriptor(@Nullable TextAttributes attributes) {
+        private static TextAttributesEffectsBuilder.@Nullable EffectDescriptor getBorderDescriptor(@Nullable TextAttributes attributes) {
             return attributes == null || !attributes.hasEffects()
                 ? null
                 : TextAttributesEffectsBuilder.create(attributes).getEffectDescriptor(TextAttributesEffectsBuilder.EffectSlot.FRAME_SLOT);
@@ -1518,7 +1517,7 @@ public final class EditorPainter implements TextDrawingCallback {
             return new TextAttributes();
         }
 
-        private @Nonnull TextAttributes getBetweenLinesAttributes(
+        private TextAttributes getBetweenLinesAttributes(
             int bottomVisualLine,
             int bottomVisualLineStartOffset,
             PeekableIterator<? extends Caret> caretIterator
@@ -1648,20 +1647,20 @@ public final class EditorPainter implements TextDrawingCallback {
             }
         }
 
-        private void paintCaretBar(@Nonnull Graphics2D g, @Nullable Caret caret, float x, float y, float w, float h, boolean isRtl) {
+        private void paintCaretBar(Graphics2D g, @Nullable Caret caret, float x, float y, float w, float h, boolean isRtl) {
             g.fill(new Rectangle2D.Float(x, y, w, h));
             paintCaretRtlMarker(g, caret, x, y, w, isRtl);
         }
 
-        private static void paintCaretBlock(@Nonnull Graphics2D g, float x, float y, float w, float h) {
+        private static void paintCaretBlock(Graphics2D g, float x, float y, float w, float h) {
             g.fill(new Rectangle2D.Float(x, y, w, h));
         }
 
-        private static void paintCaretUnderscore(@Nonnull Graphics2D g, float x, float y, float w, float h) {
+        private static void paintCaretUnderscore(Graphics2D g, float x, float y, float w, float h) {
             g.fill(new Rectangle2D.Float(x, y, w, h));
         }
 
-        private static void paintCaretBox(@Nonnull Graphics2D g, float x, float y, float w, float h) {
+        private static void paintCaretBox(Graphics2D g, float x, float y, float w, float h) {
             if (w > 2) {
                 float outlineWidth = (float) PaintUtil.alignToInt(1, g);
                 Area area = new Area(new Rectangle2D.Float(x, y, w, h));
@@ -1679,9 +1678,9 @@ public final class EditorPainter implements TextDrawingCallback {
         }
 
         private void paintCaretText(
-            @Nonnull Graphics2D g,
+            Graphics2D g,
             @Nullable Caret caret,
-            @Nonnull ColorValue caretColor,
+            ColorValue caretColor,
             float x,
             float y,
             int topOverhang,
@@ -1711,7 +1710,7 @@ public final class EditorPainter implements TextDrawingCallback {
             }
         }
 
-        private void paintCaretRtlMarker(@Nonnull Graphics2D g, @Nullable Caret caret, float x, float y, float w, boolean isRtl) {
+        private void paintCaretRtlMarker(Graphics2D g, @Nullable Caret caret, float x, float y, float w, boolean isRtl) {
             // We only draw the RTL marker for bar carets. If our bar is close to being a block, skip it. We keep the entire caret inside the
             // caret location width.
             if (myDocument.getTextLength() > 0 && caret != null &&
@@ -1949,7 +1948,7 @@ public final class EditorPainter implements TextDrawingCallback {
             return TextAttributesEffectsBuilder.create(secondary).coverWith(primary).applyTo(result);
         }
 
-        private static TextAttributes debugZombieFoldRegion(@Nonnull FoldRegion region, @Nonnull TextAttributes foldAttributes) {
+        private static TextAttributes debugZombieFoldRegion(FoldRegion region, TextAttributes foldAttributes) {
             if (Registry.is("cache.markup.debug") && region.getUserData(FoldingKeys.ZOMBIE_REGION_KEY) != null) {
                 TextAttributes zombieAttr = foldAttributes.clone();
                 zombieAttr.copyFrom(foldAttributes);
@@ -2040,7 +2039,7 @@ public final class EditorPainter implements TextDrawingCallback {
 
         List<Integer> softMarginsX();
 
-        static @Nonnull XCorrector create(@Nonnull EditorViewImpl view, @Nonnull Insets insets) {
+        static XCorrector create(EditorViewImpl view, Insets insets) {
             return view.getEditor().isRightAligned() ? new RightAligned(view) : new LeftAligned(view, insets);
         }
 
@@ -2048,7 +2047,7 @@ public final class EditorPainter implements TextDrawingCallback {
             private final EditorViewImpl myView;
             private final int myLeftInset;
 
-            private LeftAligned(@Nonnull EditorViewImpl view, @Nonnull Insets insets) {
+            private LeftAligned(EditorViewImpl view, Insets insets) {
                 myView = view;
                 myLeftInset = insets.left;
             }
@@ -2117,7 +2116,7 @@ public final class EditorPainter implements TextDrawingCallback {
         final class RightAligned implements XCorrector {
             private final EditorViewImpl myView;
 
-            private RightAligned(@Nonnull EditorViewImpl view) {
+            private RightAligned(EditorViewImpl view) {
                 myView = view;
             }
 

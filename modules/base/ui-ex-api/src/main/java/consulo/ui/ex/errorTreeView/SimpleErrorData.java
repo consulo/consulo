@@ -16,20 +16,19 @@
 package consulo.ui.ex.errorTreeView;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class SimpleErrorData {
   private final ErrorTreeElementKind myKind;
   private final String[] myMessages;
   private final VirtualFile myVf;
 
-  public SimpleErrorData(@Nonnull ErrorTreeElementKind kind, String[] messages, VirtualFile vf) {
+  public SimpleErrorData(ErrorTreeElementKind kind, String[] messages, VirtualFile vf) {
     myKind = kind;
     myMessages = messages;
     myVf = vf;
   }
 
-  @Nonnull
+  
   public ErrorTreeElementKind getKind() {
     return myKind;
   }

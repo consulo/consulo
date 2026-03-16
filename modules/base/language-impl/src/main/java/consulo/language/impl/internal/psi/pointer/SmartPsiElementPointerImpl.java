@@ -37,8 +37,7 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -51,14 +50,13 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   private final SmartPointerElementInfo myElementInfo;
   protected final SmartPointerManagerImpl myManager;
   private byte myReferenceCount = 1;
-  @Nullable
-  SmartPointerTracker.PointerReference pointerReference;
+  SmartPointerTracker.@Nullable PointerReference pointerReference;
 
-  SmartPsiElementPointerImpl(SmartPointerManagerImpl manager, @Nonnull E element, @Nullable PsiFile containingFile, boolean forInjected) {
+  SmartPsiElementPointerImpl(SmartPointerManagerImpl manager, E element, @Nullable PsiFile containingFile, boolean forInjected) {
     this(manager, element, createElementInfo(manager, element, containingFile, forInjected));
   }
 
-  SmartPsiElementPointerImpl(SmartPointerManagerImpl manager, @Nonnull E element, @Nonnull SmartPointerElementInfo elementInfo) {
+  SmartPsiElementPointerImpl(SmartPointerManagerImpl manager, E element, SmartPointerElementInfo elementInfo) {
     ApplicationManager.getApplication().assertReadAccessAllowed();
     myElementInfo = elementInfo;
     myManager = manager;
@@ -76,7 +74,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Override
-  @Nonnull
+ 
   public Project getProject() {
     return myManager.getProject();
   }
@@ -145,8 +143,8 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return myElementInfo.getPsiRange(myManager);
   }
 
-  @Nonnull
-  private static <E extends PsiElement> SmartPointerElementInfo createElementInfo(SmartPointerManagerImpl manager, @Nonnull E element, PsiFile containingFile, boolean forInjected) {
+ 
+  private static <E extends PsiElement> SmartPointerElementInfo createElementInfo(SmartPointerManagerImpl manager, E element, PsiFile containingFile, boolean forInjected) {
     SmartPointerElementInfo elementInfo = doCreateElementInfo(manager.getProject(), element, containingFile, forInjected);
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       PsiElement restored = elementInfo.restoreElement(manager);
@@ -158,8 +156,8 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return elementInfo;
   }
 
-  @Nonnull
-  private static <E extends PsiElement> SmartPointerElementInfo doCreateElementInfo(@Nonnull Project project, @Nonnull E element, PsiFile containingFile, boolean forInjected) {
+ 
+  private static <E extends PsiElement> SmartPointerElementInfo doCreateElementInfo(Project project, E element, PsiFile containingFile, boolean forInjected) {
     if (element instanceof PsiDirectory) {
       return new DirElementInfo((PsiDirectory)element);
     }
@@ -215,7 +213,7 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
   }
 
   @Nullable
-  private static SmartPointerElementInfo createAnchorInfo(@Nonnull PsiElement element, @Nonnull PsiFile containingFile) {
+  private static SmartPointerElementInfo createAnchorInfo(PsiElement element, PsiFile containingFile) {
     if (element instanceof StubBasedPsiElement && containingFile instanceof PsiFileImpl) {
       IStubFileElementType stubType = ((PsiFileImpl)containingFile).getElementTypeForStubBuilder();
       if (stubType != null && stubType.shouldBuildStubFor(containingFile.getViewProvider().getVirtualFile())) {
@@ -234,12 +232,12 @@ class SmartPsiElementPointerImpl<E extends PsiElement> implements SmartPointerEx
     return null;
   }
 
-  @Nonnull
+ 
   SmartPointerElementInfo getElementInfo() {
     return myElementInfo;
   }
 
-  static boolean pointsToTheSameElementAs(@Nonnull SmartPsiElementPointer pointer1, @Nonnull SmartPsiElementPointer pointer2) {
+  static boolean pointsToTheSameElementAs(SmartPsiElementPointer pointer1, SmartPsiElementPointer pointer2) {
     if (pointer1 == pointer2) return true;
     if (pointer1 instanceof SmartPsiElementPointerImpl && pointer2 instanceof SmartPsiElementPointerImpl) {
       SmartPsiElementPointerImpl impl1 = (SmartPsiElementPointerImpl)pointer1;

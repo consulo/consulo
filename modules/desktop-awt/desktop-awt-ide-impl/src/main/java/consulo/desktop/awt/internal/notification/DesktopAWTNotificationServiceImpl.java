@@ -23,8 +23,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.notification.event.NotificationServiceListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -43,7 +42,7 @@ public class DesktopAWTNotificationServiceImpl implements NotificationService, D
     }
 
     @Override
-    public void notify(@Nonnull Notification notification, @Nullable Project project) {
+    public void notify(Notification notification, @Nullable Project project) {
         NotificationsManagerImpl manager = (NotificationsManagerImpl) NotificationsManager.getNotificationsManager();
         manager.doNotify(notification, project);
 

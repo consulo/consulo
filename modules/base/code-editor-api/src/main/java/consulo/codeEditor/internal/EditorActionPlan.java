@@ -18,7 +18,6 @@ package consulo.codeEditor.internal;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.util.lang.ImmutableCharSequence;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,13 +29,13 @@ public class EditorActionPlan implements ActionPlan {
   private int myCaretOffset;
   private final List<Replacement> myReplacements = new ArrayList<>();
 
-  public EditorActionPlan(@Nonnull Editor editor) {
+  public EditorActionPlan(Editor editor) {
     myEditor = editor;
     myText = (ImmutableCharSequence)editor.getDocument().getImmutableCharSequence();
     myCaretOffset = editor.getCaretModel().getOffset();
   }
 
-  @Nonnull
+  
   @Override
   public ImmutableCharSequence getText() {
     return myText;

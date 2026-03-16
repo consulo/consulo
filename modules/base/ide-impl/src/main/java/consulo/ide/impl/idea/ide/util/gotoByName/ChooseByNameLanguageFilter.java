@@ -22,8 +22,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,26 +32,26 @@ import java.util.List;
  * @author yole
  */
 public class ChooseByNameLanguageFilter extends ChooseByNameFilter<Language> {
-  public ChooseByNameLanguageFilter(@Nonnull ChooseByNamePopup popup,
-                                    @Nonnull FilteringGotoByModel<Language> languageFilteringGotoByModel,
-                                    @Nonnull ChooseByNameFilterConfiguration<Language> languageChooseByNameFilterConfiguration,
-                                    @Nonnull Project project) {
+  public ChooseByNameLanguageFilter(ChooseByNamePopup popup,
+                                    FilteringGotoByModel<Language> languageFilteringGotoByModel,
+                                    ChooseByNameFilterConfiguration<Language> languageChooseByNameFilterConfiguration,
+                                    Project project) {
     super(popup, languageFilteringGotoByModel, languageChooseByNameFilterConfiguration, project);
   }
 
   @Override
-  protected String textForFilterValue(@Nonnull Language value) {
+  protected String textForFilterValue(Language value) {
     return value.getDisplayName().get();
   }
 
   @Nullable
   @Override
-  protected Image iconForFilterValue(@Nonnull Language value) {
+  protected Image iconForFilterValue(Language value) {
     LanguageFileType fileType = value.getAssociatedFileType();
     return fileType != null ? fileType.getIcon() : null;
   }
 
-  @Nonnull
+  
   @Override
   protected Collection<Language> getAllFilterValues() {
     Collection<Language> registeredLanguages = Language.getRegisteredLanguages();

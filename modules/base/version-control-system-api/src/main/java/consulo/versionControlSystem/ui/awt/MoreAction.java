@@ -21,7 +21,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.action.CustomComponentAction;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +51,7 @@ public abstract class MoreAction  extends AnAction implements CustomComponentAct
     myLoadMoreBtn.addActionListener(new ActionListener() {
       @Override
       @RequiredUIAccess
-      public void actionPerformed(@Nonnull ActionEvent e) {
+      public void actionPerformed(ActionEvent e) {
         MoreAction.this.actionPerformed(null);
       }
     });
@@ -75,7 +74,7 @@ public abstract class MoreAction  extends AnAction implements CustomComponentAct
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     e.getPresentation().setEnabled(myEnabled);
     e.getPresentation().setVisible(myVisible);
   }

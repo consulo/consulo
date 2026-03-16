@@ -23,8 +23,7 @@ import consulo.navigation.NavigateOptions;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -79,9 +78,9 @@ public class XSourcePositionFactoryImpl implements XSourcePositionFactory {
         return XSourcePositionImpl.createByElement(element);
     }
 
-    @Nonnull
+    
     @Override
-    public Navigatable createDefaultNavigatable(@Nonnull Project project, @Nonnull XSourcePosition position) {
+    public Navigatable createDefaultNavigatable(Project project, XSourcePosition position) {
         return new XSourcePositionNavigatable(project, position);
     }
 }

@@ -25,8 +25,7 @@ import consulo.task.ui.TaskDialogPanel;
 import consulo.ui.ex.awt.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.versionControlSystem.VcsTaskHandler;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -144,7 +143,7 @@ public class VcsOpenTaskPanel extends TaskDialogPanel {
     myChangelistName.setEnabled(myCreateChangelist.isSelected());
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getPanel() {
     return myPanel;
@@ -230,7 +229,7 @@ public class VcsOpenTaskPanel extends TaskDialogPanel {
     }
 
     @Override
-    protected void customizeCellRenderer(@Nonnull JList list,
+    protected void customizeCellRenderer(JList list,
                                          VcsTaskHandler.TaskInfo value,
                                          int index,
                                          boolean selected,

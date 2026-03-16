@@ -21,7 +21,6 @@ import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.diagram.GraphProvider;
 import consulo.language.editor.diagram.LanguageGraphProvider;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -32,14 +31,14 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class LanguageGraphProviderExtender implements ExtensionExtender<GraphProvider> {
     @Override
-    public void extend(@Nonnull ComponentManager componentManager, @Nonnull Consumer<GraphProvider> consumer) {
+    public void extend(ComponentManager componentManager, Consumer<GraphProvider> consumer) {
         //noinspection GetExtensionPoint
         ExtensionPoint<LanguageGraphProvider> point = componentManager.getExtensionPoint(LanguageGraphProvider.class);
 
         point.forEach(it -> consumer.accept(new LanguageGraphProviderImpl(it)));
     }
 
-    @Nonnull
+    
     @Override
     public Class<GraphProvider> getExtensionClass() {
         return GraphProvider.class;

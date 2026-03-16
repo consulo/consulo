@@ -19,7 +19,6 @@ import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.Tools;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,13 +26,13 @@ import java.util.List;
  * @since 2007-12-19
  */
 public interface GlobalInspectionContextExtension<T> {
-  @Nonnull
+  
   Key<T> getID();
 
-  void performPreRunActivities(@Nonnull List<Tools> globalTools,
-                               @Nonnull List<Tools> localTools,
-                               @Nonnull GlobalInspectionContext context);
-  void performPostRunActivities(@Nonnull List<InspectionToolWrapper> inspections, @Nonnull GlobalInspectionContext context);
+  void performPreRunActivities(List<Tools> globalTools,
+                               List<Tools> localTools,
+                               GlobalInspectionContext context);
+  void performPostRunActivities(List<InspectionToolWrapper> inspections, GlobalInspectionContext context);
 
   void cleanup();
 }

@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +32,7 @@ public abstract class TabbedConfigurable extends CompositeConfigurable<Configura
   protected TabbedPaneWrapper myTabbedPane;
   private final Disposable myParent;
 
-  protected TabbedConfigurable(@Nonnull Disposable parent) {
+  protected TabbedConfigurable(Disposable parent) {
     myParent = parent;
   }
 

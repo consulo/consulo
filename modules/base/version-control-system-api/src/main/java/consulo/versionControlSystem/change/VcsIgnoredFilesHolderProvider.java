@@ -18,7 +18,6 @@ package consulo.versionControlSystem.change;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.versionControlSystem.VcsKey;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,9 +25,9 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface VcsIgnoredFilesHolderProvider {
-    @Nonnull
+    
     VcsKey getVcsKey();
 
-    @Nonnull
+    
     VcsIgnoredFilesHolder create();
 }

@@ -24,7 +24,6 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,19 +35,19 @@ public abstract class VcsBackgroundTask<T> extends Task.ConditionalModal {
   private final Collection<T> myItems;
   private final List<VcsException> myExceptions = new ArrayList<>();
 
-  public VcsBackgroundTask(Project project, @Nonnull String title, @Nonnull PerformInBackgroundOption backgroundOption,
+  public VcsBackgroundTask(Project project, String title, PerformInBackgroundOption backgroundOption,
                            Collection<T> itemsToProcess, boolean canBeCanceled) {
     super(project, title, canBeCanceled, backgroundOption);
     myItems = itemsToProcess;
   }
 
-  public VcsBackgroundTask(Project project, @Nonnull String title, @Nonnull PerformInBackgroundOption backgroundOption,
+  public VcsBackgroundTask(Project project, String title, PerformInBackgroundOption backgroundOption,
                            Collection<T> itemsToProcess) {
     this(project, title, backgroundOption, itemsToProcess, false);
   }
 
   @Override
-  public void run(@Nonnull ProgressIndicator indicator) {
+  public void run(ProgressIndicator indicator) {
     for(T item: myItems) {
       try {
         process(item);

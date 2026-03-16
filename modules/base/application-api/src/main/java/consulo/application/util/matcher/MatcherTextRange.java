@@ -15,7 +15,6 @@
  */
 package consulo.application.util.matcher;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -25,12 +24,12 @@ import java.util.Objects;
  * @since 04-Apr-22
  */
 public class MatcherTextRange {
-  @Nonnull
+  
   public static MatcherTextRange from(int offset, int length) {
     return create(offset, offset + length);
   }
 
-  @Nonnull
+  
   public static MatcherTextRange create(int startOffset, int endOffset) {
     return new MatcherTextRange(startOffset, endOffset);
   }

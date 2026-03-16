@@ -22,7 +22,6 @@ import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.BaseModuleRootLayerChild;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
   private static final Logger LOG = Logger.getInstance(OrderEntryBaseImpl.class);
@@ -35,7 +34,7 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
   private int myIndex;
   private OrderEntryType<?> myType;
 
-  protected OrderEntryBaseImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer) {
+  protected OrderEntryBaseImpl(OrderEntryType<?> provider, ModuleRootLayerImpl rootLayer) {
     super(rootLayer);
     myType = provider;
   }
@@ -44,14 +43,14 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
     myIndex = index;
   }
 
-  @Nonnull
+  
   @Override
   public OrderEntryType<?> getType() {
     return myType;
   }
 
   @Override
-  public int compareTo(@Nonnull OrderEntry orderEntry) {
+  public int compareTo(OrderEntry orderEntry) {
     LOG.assertTrue(orderEntry.getOwnerModule() == getOwnerModule());
     return myIndex - ((OrderEntryBaseImpl)orderEntry).myIndex;
   }
@@ -67,7 +66,7 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
     return hc;
   }
 
-  @Nonnull
+  
   @Override
   public String toString() {
     return getOwnerModule().getName() + " -> " + getPresentableName();

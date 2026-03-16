@@ -5,7 +5,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
 import consulo.application.internal.AsyncExecutionService;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -27,21 +26,19 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
         myApplication = app;
         app.addApplicationListener(new ApplicationListener() {
             @Override
-            public void writeActionStarted(@Nonnull Object action) {
+            public void writeActionStarted(Object action) {
                 ourWriteActionCounter.incrementAndGet();
             }
         }, app);
     }
 
-    @Nonnull
     @Override
     public AppUIExecutor createUIExecutor() {
         return new AppUIExecutorImpl();
     }
 
-    @Nonnull
     @Override
-    public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(@Nonnull Callable<T> computation) {
+    public <T> NonBlockingReadAction<T> buildNonBlockingReadAction(Callable<T> computation) {
         return new NonBlockingReadActionImpl<>(myApplication, computation);
     }
 

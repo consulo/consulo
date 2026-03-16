@@ -25,21 +25,20 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 
 public class RefModuleImpl extends RefEntityImpl implements RefModule {
   private final Module myModule;
 
-  RefModuleImpl(@Nonnull Module module, @Nonnull RefManager manager) {
+  RefModuleImpl(Module module, RefManager manager) {
     super(module.getName(), manager);
     myModule = module;
     ((RefProjectImpl)manager.getRefProject()).add(this);
   }
 
   @Override
-  public synchronized void add(@Nonnull RefEntity child) {
+  public synchronized void add(RefEntity child) {
     if (myChildren == null) {
       myChildren = new ArrayList<>();
     }
@@ -51,19 +50,19 @@ public class RefModuleImpl extends RefEntityImpl implements RefModule {
   }
 
   @Override
-  public synchronized void removeChild(@Nonnull RefEntity child) {
+  public synchronized void removeChild(RefEntity child) {
     if (myChildren != null) {
       myChildren.remove(child);
     }
   }
 
   @Override
-  public void accept(@Nonnull RefVisitor refVisitor) {
+  public void accept(RefVisitor refVisitor) {
     ApplicationManager.getApplication().runReadAction(() -> refVisitor.visitModule(this));
   }
 
   @Override
-  @Nonnull
+  
   public Module getModule() {
     return myModule;
   }

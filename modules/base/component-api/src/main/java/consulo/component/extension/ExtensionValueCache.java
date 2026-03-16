@@ -16,8 +16,7 @@
 package consulo.component.extension;
 
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -31,7 +30,7 @@ public class ExtensionValueCache<E> implements Supplier<E> {
 
     private final long myCachedModificationCount;
 
-    public ExtensionValueCache(@Nonnull ExtensionPoint<E> extensionPoint, @Nullable E definition) {
+    public ExtensionValueCache(ExtensionPoint<E> extensionPoint, @Nullable E definition) {
         myExtensionPoint = extensionPoint;
         myValueRef = new SimpleReference<>(definition);
 

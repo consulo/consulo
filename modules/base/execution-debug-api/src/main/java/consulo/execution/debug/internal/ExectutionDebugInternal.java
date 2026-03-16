@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,6 +29,6 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExectutionDebugInternal {
     @RequiredReadAction
-    @Nonnull
-    Image getContentRootIcon(@Nonnull Project project, @Nonnull VirtualFile file);
+    
+    Image getContentRootIcon(Project project, VirtualFile file);
 }

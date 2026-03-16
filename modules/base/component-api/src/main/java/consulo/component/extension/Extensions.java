@@ -18,8 +18,7 @@ package consulo.component.extension;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated
 @DeprecationInfo("Prefer ComponentManager.getExtensionPoint() methods")
@@ -27,17 +26,17 @@ public class Extensions {
   private Extensions() {
   }
 
-  @Nonnull
+  
   @SuppressWarnings({"unchecked"})
   @Deprecated
-  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> extensionPointName) {
+  public static <T> T[] getExtensions(ExtensionPointName<T> extensionPointName) {
     return extensionPointName.getExtensions();
   }
 
-  @Nonnull
+  
   @SuppressWarnings({"unchecked"})
   @Deprecated
-  public static <T> T[] getExtensions(@Nonnull ExtensionPointName<T> name, @Nullable ComponentManager areaInstance) {
+  public static <T> T[] getExtensions(ExtensionPointName<T> name, @Nullable ComponentManager areaInstance) {
     if (areaInstance == null) return getExtensions(name);
     else return areaInstance.getExtensionPoint(name.getIdClass()).getExtensions();
   }

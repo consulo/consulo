@@ -19,8 +19,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.TypeVariable;
 
 /**
@@ -33,7 +32,7 @@ public class ComponentSerializationUtil {
     return (Class<T>)ReflectionUtil.getRawType(ReflectionUtil.resolveVariableInHierarchy(variable, aClass));
   }
 
-  public static <S> void loadComponentState(@Nonnull PersistentStateComponent<S> configuration, @Nullable Element element) {
+  public static <S> void loadComponentState(PersistentStateComponent<S> configuration, @Nullable Element element) {
     if (element != null) {
       Class<S> stateClass = getStateClass(configuration.getClass());
       configuration.loadState(XmlSerializer.deserialize(element, stateClass));

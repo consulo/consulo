@@ -26,8 +26,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author dsl
@@ -35,11 +34,11 @@ import jakarta.annotation.Nullable;
 public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseImpl implements ClonableOrderEntry, ModuleExtensionWithSdkOrderEntry {
   private String myModuleExtensionId;
 
-  public ModuleExtensionWithSdkOrderEntryImpl(@Nonnull String moduleExtensionId, @Nonnull ModuleRootLayerImpl rootModel) {
+  public ModuleExtensionWithSdkOrderEntryImpl(String moduleExtensionId, ModuleRootLayerImpl rootModel) {
     this(moduleExtensionId, rootModel, true);
   }
 
-  public ModuleExtensionWithSdkOrderEntryImpl(@Nonnull String moduleExtensionId, @Nonnull ModuleRootLayerImpl rootModel, boolean init) {
+  public ModuleExtensionWithSdkOrderEntryImpl(String moduleExtensionId, ModuleRootLayerImpl rootModel, boolean init) {
     super(ModuleExtensionWithSdkOrderEntryType.getInstance(), rootModel, ProjectRootManagerImpl.getInstanceImpl(rootModel.getProject()));
     myModuleExtensionId = moduleExtensionId;
     if (init) {
@@ -85,7 +84,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableName() {
     StringBuilder builder = new StringBuilder();
 
@@ -119,12 +118,12 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  public <R> R accept(@Nonnull RootPolicy<R> policy, R initialValue) {
+  public <R> R accept(RootPolicy<R> policy, R initialValue) {
     return policy.visitModuleExtensionSdkOrderEntry(this, initialValue);
   }
 
   @Override
-  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
+  public boolean isEquivalentTo(OrderEntry other) {
     if (other instanceof ModuleExtensionWithSdkOrderEntry) {
       String name1 = getSdkName();
       String name2 = ((ModuleExtensionWithSdkOrderEntry)other).getSdkName();
@@ -134,12 +133,12 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @Nonnull
-  public OrderEntry cloneEntry(@Nonnull ModuleRootLayerImpl rootModel) {
+  
+  public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
     return new ModuleExtensionWithSdkOrderEntryImpl(myModuleExtensionId, rootModel, true);
   }
 
-  @Nonnull
+  
   @Override
   public String getModuleExtensionId() {
     return myModuleExtensionId;

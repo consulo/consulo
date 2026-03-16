@@ -50,8 +50,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import consulo.webBrowser.BrowserUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -66,7 +65,7 @@ public class ExternalJavaDocAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -96,7 +95,7 @@ public class ExternalJavaDocAction extends AnAction {
         PsiElement element,
         PsiElement originalElement,
         String docUrl,
-        @Nonnull DataContext dataContext
+        DataContext dataContext
     ) {
         DocumentationProvider provider = DocumentationManagerHelper.getProviderFromElement(element);
         if (provider instanceof ExternalDocumentationHandler externalDocumentationHandler
@@ -162,7 +161,7 @@ public class ExternalJavaDocAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Editor editor = e.getData(Editor.KEY);
         PsiElement element = getElement(e.getDataContext(), editor);

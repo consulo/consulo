@@ -22,7 +22,6 @@ import consulo.module.content.layer.ModuleRootModel;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
@@ -32,17 +31,17 @@ import java.util.function.Predicate;
 @ExtensionImpl(id = "null", order = "last")
 public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   @Override
-  public boolean canHandle(@Nonnull ModuleRootModel moduleRootModel) {
+  public boolean canHandle(ModuleRootModel moduleRootModel) {
     return moduleRootModel.getModule().getModuleDirUrl() == null;
   }
 
   @Override
-  public boolean containsFile(@Nonnull ObjectIntMap<VirtualFile> roots, @Nonnull VirtualFile virtualFile) {
+  public boolean containsFile(ObjectIntMap<VirtualFile> roots, VirtualFile virtualFile) {
     return roots.containsKey(virtualFile);
   }
 
   @Override
-  public void processFiles(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate, @Nonnull Predicate<VirtualFile> processor) {
+  public void processFiles(ModuleRootModel moduleRootModel, Predicate<ContentFolderTypeProvider> predicate, Predicate<VirtualFile> processor) {
     moduleRootModel.iterateContentEntries(contentEntry -> {
       VirtualFile file = contentEntry.getFile();
       return file == null || processor.test(file);
@@ -50,7 +49,7 @@ public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   }
 
   @Override
-  public void processFileUrls(@Nonnull ModuleRootModel moduleRootModel, @Nonnull Predicate<ContentFolderTypeProvider> predicate, @Nonnull Predicate<String> processor) {
+  public void processFileUrls(ModuleRootModel moduleRootModel, Predicate<ContentFolderTypeProvider> predicate, Predicate<String> processor) {
     moduleRootModel.iterateContentEntries(contentEntry -> processor.test(contentEntry.getUrl()));
   }
 }

@@ -29,7 +29,6 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 public class HighlightLevelUtil {
   private HighlightLevelUtil() {
@@ -37,19 +36,19 @@ public class HighlightLevelUtil {
   public enum AnalysisLevel {
     HIGHLIGHT, HIGHLIGHT_AND_INSPECT
   }
-  public static boolean shouldAnalyse(@Nonnull PsiFile root, @Nonnull AnalysisLevel analysisLevel) {
+  public static boolean shouldAnalyse(PsiFile root, AnalysisLevel analysisLevel) {
     return analysisLevel == AnalysisLevel.HIGHLIGHT_AND_INSPECT ? shouldInspect(root) : shouldHighlight(root);
   }
 
 
-  public static boolean shouldHighlight(@Nonnull PsiElement psiRoot) {
+  public static boolean shouldHighlight(PsiElement psiRoot) {
     HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(psiRoot.getProject());
 
     FileHighlightingSetting settingForRoot = component.getHighlightingSettingForRoot(psiRoot);
     return settingForRoot != FileHighlightingSetting.SKIP_HIGHLIGHTING;
   }
 
-  public static boolean shouldInspect(@Nonnull PsiElement psiRoot) {
+  public static boolean shouldInspect(PsiElement psiRoot) {
     if (ApplicationManager.getApplication().isUnitTestMode()) return true;
 
     if (!shouldHighlight(psiRoot)) return false;
@@ -70,7 +69,7 @@ public class HighlightLevelUtil {
     return settingForRoot != FileHighlightingSetting.SKIP_INSPECTION;
   }
 
-  public static void forceRootHighlighting(@Nonnull PsiElement root, @Nonnull FileHighlightingSetting level) {
+  public static void forceRootHighlighting(PsiElement root, FileHighlightingSetting level) {
     HighlightingSettingsPerFile component = HighlightingSettingsPerFile.getInstance(root.getProject());
 
     component.setHighlightingSettingForRoot(root, level);

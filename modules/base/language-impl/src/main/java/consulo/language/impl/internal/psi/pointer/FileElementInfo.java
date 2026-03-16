@@ -15,20 +15,19 @@ import consulo.project.Project;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class FileElementInfo extends SmartPointerElementInfo {
-  @Nonnull
+  
   private final VirtualFile myVirtualFile;
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final String myLanguageId;
-  @Nonnull
+  
   private final String myFileClassName;
 
-  FileElementInfo(@Nonnull PsiFile file) {
+  FileElementInfo(PsiFile file) {
     myVirtualFile = file.getViewProvider().getVirtualFile();
     myProject = file.getProject();
     myLanguageId = LanguageUtil.getRootLanguage(file).getID();
@@ -36,7 +35,7 @@ class FileElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
+  PsiElement restoreElement(SmartPointerManagerImpl manager) {
     Language language = Language.findLanguageByID(myLanguageId);
     if (language == null) return null;
     PsiFile file = SelfElementInfo.restoreFileFromVirtual(myVirtualFile, myProject, language);
@@ -44,7 +43,7 @@ class FileElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
+  PsiFile restoreFile(SmartPointerManagerImpl manager) {
     PsiElement element = restoreElement(manager);
     return element == null ? null : element.getContainingFile(); // can be directory
   }
@@ -55,18 +54,18 @@ class FileElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  boolean pointsToTheSameElementAs(SmartPointerElementInfo other, SmartPointerManagerImpl manager) {
     return other instanceof FileElementInfo && Comparing.equal(myVirtualFile, ((FileElementInfo)other).myVirtualFile);
   }
 
-  @Nonnull
+  
   @Override
   VirtualFile getVirtualFile() {
     return myVirtualFile;
   }
 
   @Override
-  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getRange(SmartPointerManagerImpl manager) {
     if (!myVirtualFile.isValid()) return null;
 
     Document document = FileDocumentManager.getInstance().getDocument(myVirtualFile);
@@ -75,7 +74,7 @@ class FileElementInfo extends SmartPointerElementInfo {
 
   @Nullable
   @Override
-  Segment getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getPsiRange(SmartPointerManagerImpl manager) {
     Document currentDoc = FileDocumentManager.getInstance().getCachedDocument(myVirtualFile);
     Document committedDoc = currentDoc == null ? null : ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(myProject)).getLastCommittedDocument(currentDoc);
     return committedDoc == null ? getRange(manager) : new TextRange(0, committedDoc.getTextLength());

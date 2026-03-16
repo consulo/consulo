@@ -22,8 +22,7 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -39,7 +38,7 @@ public class NotificationGroupRegistrator implements Consumer<NotificationGroup>
       return registrator;
     });
 
-  @Nonnull
+  
   public static NotificationGroupRegistrator last() {
     Application application = Application.get();
     return application.getExtensionPoint(NotificationGroupContributor.class).getOrBuildCache(KEY);
@@ -64,7 +63,7 @@ public class NotificationGroupRegistrator implements Consumer<NotificationGroup>
     return myGroups.get(groupId);
   }
 
-  @Nonnull
+  
   public Iterable<NotificationGroup> all() {
     return myGroups.values();
   }

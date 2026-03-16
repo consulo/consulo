@@ -18,7 +18,6 @@ package consulo.logger.internal.impl.logback.attachment;
 import consulo.logging.attachment.Attachment;
 import consulo.util.io.PathUtil;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -45,7 +44,7 @@ public class AttachmentImpl implements Attachment {
     myDisplayText = displayText;
   }
 
-  public AttachmentImpl(@Nonnull String name, @Nonnull Throwable throwable) {
+  public AttachmentImpl(String name, Throwable throwable) {
     this(name + ".trace", ExceptionUtil.getThrowableText(throwable));
   }
 
@@ -79,7 +78,7 @@ public class AttachmentImpl implements Attachment {
     myIncluded = included;
   }
 
-  @Nonnull
+  
   @Override
   public Attachment copy(String newPath) {
     return new AttachmentImpl(newPath, myBytes, myDisplayText);

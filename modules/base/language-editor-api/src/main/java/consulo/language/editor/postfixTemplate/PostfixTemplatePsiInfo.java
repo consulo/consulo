@@ -16,17 +16,16 @@
 package consulo.language.editor.postfixTemplate;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public interface PostfixTemplatePsiInfo {
-  @Nonnull
-  public abstract PsiElement createExpression(@Nonnull PsiElement context,
-                                              @Nonnull String prefix,
-                                              @Nonnull String suffix);
+  
+  public abstract PsiElement createExpression(PsiElement context,
+                                              String prefix,
+                                              String suffix);
 
   /**
    * You can assume that {@code element} is an element produced by {@code createExpression}
    */
-  @Nonnull
-  public abstract PsiElement getNegatedExpression(@Nonnull PsiElement element);
+  
+  public abstract PsiElement getNegatedExpression(PsiElement element);
 }

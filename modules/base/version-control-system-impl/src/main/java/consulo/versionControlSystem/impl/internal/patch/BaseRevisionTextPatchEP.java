@@ -28,7 +28,6 @@ import consulo.logging.Logger;
 import consulo.versionControlSystem.change.patch.PatchEP;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -57,14 +56,14 @@ public class BaseRevisionTextPatchEP implements PatchEP {
     myChangeListManager = ChangeListManager.getInstance(myProject);
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return "consulo.versionControlSystem.impl.internal.patch.BaseRevisionTextPatchEP";
   }
 
   @Override
-  public CharSequence provideContent(@Nonnull String path, CommitContext commitContext) {
+  public CharSequence provideContent(String path, CommitContext commitContext) {
     if (commitContext == null) return null;
     if (Boolean.TRUE.equals(commitContext.getUserData(ourPutBaseRevisionTextKey))) {
       File file = new File(myBaseDir, path);
@@ -91,12 +90,12 @@ public class BaseRevisionTextPatchEP implements PatchEP {
   }
 
   @Override
-  public void consumeContent(@Nonnull String path, @Nonnull CharSequence content, CommitContext commitContext) {
+  public void consumeContent(String path, CharSequence content, CommitContext commitContext) {
   }
 
   @Override
-  public void consumeContentBeforePatchApplied(@Nonnull String path,
-                                               @Nonnull CharSequence content,
+  public void consumeContentBeforePatchApplied(String path,
+                                               CharSequence content,
                                                CommitContext commitContext) {
     if (commitContext == null) return;
     Map<String, String> map = commitContext.getUserData(ourStoredTexts);

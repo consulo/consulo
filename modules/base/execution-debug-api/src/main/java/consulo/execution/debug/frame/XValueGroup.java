@@ -17,8 +17,7 @@ package consulo.execution.debug.frame;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a group of values in a debugger tree.
@@ -26,11 +25,11 @@ import jakarta.annotation.Nullable;
 public abstract class XValueGroup extends XValueContainer {
   private final String myName;
 
-  protected XValueGroup(@Nonnull String name) {
+  protected XValueGroup(String name) {
     myName = name;
   }
 
-  @Nonnull
+  
   public String getName() {
     return myName;
   }
@@ -50,7 +49,7 @@ public abstract class XValueGroup extends XValueContainer {
   /**
    * @return separator between the group name and the {@link #getComment() comment} in the node text
    */
-  @Nonnull
+  
   public String getSeparator() {
     return " = ";
   }

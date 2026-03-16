@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.distributed.push;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 public abstract class VcsPushOptionsPanel extends JPanel {

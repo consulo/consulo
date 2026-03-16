@@ -20,8 +20,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implement this interface to provide hierarchy browsing actions (Type Hierarchy, Method Hierarchy,
@@ -37,7 +36,7 @@ public interface HierarchyProvider extends LanguageExtension {
    * @return the target element, or null if the action is not applicable in this context.
    */
   @Nullable
-  PsiElement getTarget(@Nonnull DataContext dataContext);
+  PsiElement getTarget(DataContext dataContext);
 
   /**
    * Creates a browser for viewing the hierarchy of the specified element.
@@ -45,7 +44,7 @@ public interface HierarchyProvider extends LanguageExtension {
    * @param target the element to view the hierarchy for.
    * @return the browser instance.
    */
-  @Nonnull
+  
   HierarchyBrowser createHierarchyBrowser(PsiElement target);
 
   /**
@@ -53,5 +52,5 @@ public interface HierarchyProvider extends LanguageExtension {
    *
    * @param hierarchyBrowser the browser instance created by {@link #createHierarchyBrowser(PsiElement)}.
    */
-  void browserActivated(@Nonnull HierarchyBrowser hierarchyBrowser);
+  void browserActivated(HierarchyBrowser hierarchyBrowser);
 }

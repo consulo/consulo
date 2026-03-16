@@ -15,8 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.function.Consumer;
@@ -32,7 +31,7 @@ public class ColorChooser {
         @Nullable Color preselectedColor,
         boolean enableOpacity,
         boolean opacityInPercent,
-        @Nonnull Consumer<Color> colorConsumer
+        Consumer<Color> colorConsumer
     ) {
         ColorChooserService.getInstance().showDialog(parent, caption, preselectedColor, enableOpacity, opacityInPercent, colorConsumer);
     }
@@ -42,7 +41,7 @@ public class ColorChooser {
         String caption,
         @Nullable Color preselectedColor,
         boolean enableOpacity,
-        @Nonnull Consumer<Color> colorConsumer
+        Consumer<Color> colorConsumer
     ) {
         chooseColor(parent, caption, preselectedColor, enableOpacity, false, colorConsumer);
     }
@@ -51,7 +50,7 @@ public class ColorChooser {
         Component parent,
         String caption,
         @Nullable Color preselectedColor,
-        @Nonnull Consumer<Color> colorConsumer
+        Consumer<Color> colorConsumer
     ) {
         chooseColor(parent, caption, preselectedColor, false, colorConsumer);
     }

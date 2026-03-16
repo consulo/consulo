@@ -58,8 +58,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
 
@@ -82,7 +81,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     private static final String COMPONENT_TAG = "component";
 
     private final Project myProject;
-    @Nonnull
+    
     private final Editor myEditor;
 
     private final RangeMarker myLbraceMarker;
@@ -91,7 +90,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     private boolean myKeepOnHintHidden;
 
     private final CaretListener myEditorCaretListener;
-    @Nonnull
+    
     private final ParameterInfoHandler<PsiElement, Object> myHandler;
     private final MyBestLocationPointProvider myProvider;
 
@@ -125,7 +124,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         return null;
     }
 
-    private static List<ParameterInfoController> getAllControllers(@Nonnull Editor editor) {
+    private static List<ParameterInfoController> getAllControllers(Editor editor) {
         List<ParameterInfoController> array = editor.getUserData(ALL_CONTROLLERS_KEY);
         if (array == null) {
             array = new ArrayList<>();
@@ -134,11 +133,11 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         return array;
     }
 
-    public static boolean existsForEditor(@Nonnull Editor editor) {
+    public static boolean existsForEditor(Editor editor) {
         return !getAllControllers(editor).isEmpty();
     }
 
-    public static boolean existsWithVisibleHintForEditor(@Nonnull Editor editor, boolean anyHintType) {
+    public static boolean existsWithVisibleHintForEditor(Editor editor, boolean anyHintType) {
         return getAllControllers(editor).stream().anyMatch(c -> c.isHintShown(anyHintType));
     }
 
@@ -148,13 +147,13 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
     @RequiredUIAccess
     public ParameterInfoController(
-        @Nonnull Project project,
-        @Nonnull Editor editor,
+        Project project,
+        Editor editor,
         int lbraceOffset,
         Object[] descriptors,
         Object highlighted,
         PsiElement parameterOwner,
-        @Nonnull ParameterInfoHandler handler,
+        ParameterInfoHandler handler,
         boolean showHint,
         boolean requestFocus
     ) {
@@ -177,7 +176,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
         myEditorCaretListener = new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent e) {
+            public void caretPositionChanged(CaretEvent e) {
                 if (!ProjectUndoManager.getInstance(myProject).isUndoOrRedoInProgress()) {
                     syncUpdateOnCaretMove();
                     rescheduleUpdate();
@@ -188,7 +187,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
         myEditor.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void documentChanged(@Nonnull DocumentEvent e) {
+            public void documentChanged(DocumentEvent e) {
                 rescheduleUpdate();
             }
         }, this);
@@ -284,7 +283,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         updateComponent();
     }
 
-    private void adjustPositionForLookup(@Nonnull Lookup lookup) {
+    private void adjustPositionForLookup(Lookup lookup) {
         if (myEditor.isDisposed()) {
             Disposer.dispose(this);
             return;
@@ -413,7 +412,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
     private void executeFindElementForUpdatingParameterInfo(
         UpdateParameterInfoContext context,
-        @Nonnull Consumer<PsiElement> elementForUpdatingConsumer
+        Consumer<PsiElement> elementForUpdatingConsumer
     ) {
         runTask(
             myProject,
@@ -581,7 +580,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     }
 
     @RequiredReadAction
-    private static int getParameterIndex(@Nonnull PsiElement[] parameters, @Nonnull IElementType delimiter, int offset) {
+    private static int getParameterIndex(PsiElement[] parameters, IElementType delimiter, int offset) {
         for (int i = 0; i < parameters.length; i++) {
             PsiElement parameter = parameters[i];
             TextRange textRange = parameter.getTextRange();
@@ -612,7 +611,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     }
 
     @RequiredReadAction
-    private static int getParameterNavigationOffset(@Nonnull PsiElement parameter, @Nonnull CharSequence text) {
+    private static int getParameterNavigationOffset(PsiElement parameter, CharSequence text) {
         int rangeStart = parameter.getTextRange().getStartOffset();
         int rangeEnd = parameter.getTextRange().getEndOffset();
         int offset = CharArrayUtil.shiftBackward(text, rangeEnd - 1, WHITESPACE) + 1;
@@ -658,7 +657,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     }
 
     @TestOnly
-    public static void waitForDelayedActions(@Nonnull Editor editor, long timeout, @Nonnull TimeUnit unit) throws TimeoutException {
+    public static void waitForDelayedActions(Editor editor, long timeout, TimeUnit unit) throws TimeoutException {
         long deadline = System.currentTimeMillis() + unit.toMillis(timeout);
         while (System.currentTimeMillis() < deadline) {
             List<ParameterInfoController> controllers = getAllControllers(editor);
@@ -782,7 +781,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
         }
 
         @Override
-        @Nonnull
+        
         public Editor getEditor() {
             return myEditor;
         }
@@ -968,7 +967,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
             myEditor = editor;
         }
 
-        @Nonnull
+        
         @RequiredUIAccess
         private Pair<Point, Short> getBestPointPosition(
             LightweightHintImpl hint,

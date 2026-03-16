@@ -18,7 +18,6 @@ package consulo.build.ui.output;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.build.ui.progress.BuildProgressListener;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -28,17 +27,17 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface BuildOutputService {
-    default BuildOutputInstantReader.Primary createBuildOutputInstantReader(@Nonnull Object buildId,
-                                                                            @Nonnull Object parentEventId,
-                                                                            @Nonnull BuildProgressListener buildProgressListener,
-                                                                            @Nonnull List<BuildOutputParser> parsers) {
+    default BuildOutputInstantReader.Primary createBuildOutputInstantReader(Object buildId,
+                                                                            Object parentEventId,
+                                                                            BuildProgressListener buildProgressListener,
+                                                                            List<BuildOutputParser> parsers) {
         return createBuildOutputInstantReader(buildId, parentEventId, buildProgressListener, parsers, 50, 64);
     }
 
-    BuildOutputInstantReader.Primary createBuildOutputInstantReader(@Nonnull Object buildId,
-                                                                    @Nonnull Object parentEventId,
-                                                                    @Nonnull BuildProgressListener buildProgressListener,
-                                                                    @Nonnull List<BuildOutputParser> parsers,
+    BuildOutputInstantReader.Primary createBuildOutputInstantReader(Object buildId,
+                                                                    Object parentEventId,
+                                                                    BuildProgressListener buildProgressListener,
+                                                                    List<BuildOutputParser> parsers,
                                                                     int pushBackBufferSize,
                                                                     int channelBufferCapacity);
 }

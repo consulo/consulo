@@ -33,8 +33,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 @State(name = "CopyrightManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/", stateSplitter = CopyrightManager.CopyrightStateSplitter.class)})
@@ -58,7 +57,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   private Project myProject;
 
   @Inject
-  public CopyrightManager(@Nonnull Project project) {
+  public CopyrightManager(Project project) {
     myProject = project;
   }
 
@@ -165,7 +164,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   }
 
   @Nullable
-  public CopyrightProfile getCopyrightOptions(@Nonnull PsiFile file) {
+  public CopyrightProfile getCopyrightOptions(PsiFile file) {
     VirtualFile virtualFile = file.getVirtualFile();
     if (virtualFile == null || myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;
@@ -200,9 +199,9 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
   }
 
   public static final class CopyrightStateSplitter extends MainConfigurationStateSplitter {
-    @Nonnull
+    
     @Override
-    protected String getSubStateFileName(@Nonnull Element element) {
+    protected String getSubStateFileName(Element element) {
       for (Element option : element.getChildren("option")) {
         if (option.getAttributeValue("name").equals("myName")) {
           return option.getAttributeValue("value");
@@ -211,13 +210,13 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
       throw new IllegalStateException();
     }
 
-    @Nonnull
+    
     @Override
     protected String getComponentStateFileName() {
       return "profiles_settings";
     }
 
-    @Nonnull
+    
     @Override
     protected String getSubStateTagName() {
       return "copyright";

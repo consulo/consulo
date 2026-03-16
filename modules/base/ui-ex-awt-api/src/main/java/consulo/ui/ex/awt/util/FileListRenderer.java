@@ -20,13 +20,12 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePresentation;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
 public class FileListRenderer extends ColoredListCellRenderer {
     @Override
-    protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+    protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
         // paint selection only as a focus rectangle
         mySelected = false;
         setBackground(null);

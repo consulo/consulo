@@ -18,8 +18,7 @@ package consulo.language.editor.impl.internal.markup;
 import consulo.application.util.NotNullLazyValue;
 import consulo.codeEditor.internal.EditorAnalyzeStatus;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,7 +71,6 @@ public class AnalyzerStatus implements EditorAnalyzeStatus {
         myControllerValue = uiController;
     }
 
-    @Nonnull
     public UIController getController() {
         return myControllerValue;
     }

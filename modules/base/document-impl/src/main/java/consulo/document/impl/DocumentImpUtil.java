@@ -17,7 +17,6 @@ package consulo.document.impl;
 
 import consulo.undoRedo.util.UndoUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
  */
 public class DocumentImpUtil {
   @Deprecated
-  public static void writeInRunUndoTransparentAction(@Nonnull Runnable runnable) {
+  public static void writeInRunUndoTransparentAction(Runnable runnable) {
     UndoUtil.writeInRunUndoTransparentAction(runnable);
   }
 }

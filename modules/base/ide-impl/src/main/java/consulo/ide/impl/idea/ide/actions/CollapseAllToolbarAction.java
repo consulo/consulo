@@ -23,7 +23,6 @@ import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.ActionManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 public class CollapseAllToolbarAction extends TreeCollapseAllActionBase {
     private TreeExpander myTreeExpander;
@@ -38,7 +37,7 @@ public class CollapseAllToolbarAction extends TreeCollapseAllActionBase {
         this(treeExpander, LocalizeValue.ofNullable(description));
     }
 
-    public CollapseAllToolbarAction(TreeExpander treeExpander, @Nonnull LocalizeValue description) {
+    public CollapseAllToolbarAction(TreeExpander treeExpander, LocalizeValue description) {
         super(ActionLocalize.actionCollapseallText(), description, PlatformIconGroup.actionsCollapseall());
         myTreeExpander = treeExpander;
         copyFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_COLLAPSE_ALL));

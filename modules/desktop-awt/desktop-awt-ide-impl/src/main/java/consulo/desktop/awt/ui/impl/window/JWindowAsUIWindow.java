@@ -20,7 +20,6 @@ import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -36,13 +35,13 @@ public class JWindowAsUIWindow extends JWindow implements FromSwingWindowWrapper
     myWindowOverAWTWindow = new WindowOverAWTWindow(this) {
       @RequiredUIAccess
       @Override
-      public void setTitle(@Nonnull String title) {
+      public void setTitle(String title) {
         throw new UnsupportedOperationException();
       }
     };
   }
 
-  @Nonnull
+  
   @Override
   public Window toUIWindow() {
     return myWindowOverAWTWindow;

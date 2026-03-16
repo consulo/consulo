@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,11 +24,11 @@ public class SequenceIterator<T> implements Iterator<T> {
   private final Iterator<T>[] myIterators;
   private int myCurrentIndex;
 
-  public SequenceIterator(@Nonnull Iterator<T>... iterators){
+  public SequenceIterator(Iterator<T>... iterators){
     myIterators = new Iterator[iterators.length];
     System.arraycopy(iterators, 0, myIterators, 0, iterators.length);
   }
-  public SequenceIterator(@Nonnull Collection<Iterator<T>> iterators) {
+  public SequenceIterator(Collection<Iterator<T>> iterators) {
     this(iterators.toArray(new Iterator[iterators.size()]));
   }
 

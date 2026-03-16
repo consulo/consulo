@@ -25,7 +25,6 @@ import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.concurrent.coroutine.step.Iteration;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +39,7 @@ public class OpenSourceUtil {
     navigate(requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
   }
 
-  @Nonnull
-  public static CompletableFuture<?> openSourcesFromAsync(@Nonnull UIAccess uiAccess, DataContext context, boolean requestFocus) {
+  public static CompletableFuture<?> openSourcesFromAsync(UIAccess uiAccess, DataContext context, boolean requestFocus) {
     return navigateAsync(uiAccess, requestFocus, context.getData(Navigatable.KEY_OF_ARRAY));
   }
 
@@ -78,14 +76,12 @@ public class OpenSourceUtil {
     }
   }
 
-  @Nonnull
-  public static CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, Navigatable... navigatables) {
+  public static CompletableFuture<?> navigateAsync(UIAccess uiAccess, Navigatable... navigatables) {
     return navigateAsync(uiAccess, true, navigatables);
   }
 
-  @Nonnull
   @SuppressWarnings("unchecked")
-  public static CompletableFuture<?> navigateAsync(@Nonnull UIAccess uiAccess, boolean requestFocus, Navigatable... navigatables) {
+  public static CompletableFuture<?> navigateAsync(UIAccess uiAccess, boolean requestFocus, Navigatable... navigatables) {
     if (navigatables == null || navigatables.length == 0) {
       return CompletableFuture.completedFuture(null);
     }

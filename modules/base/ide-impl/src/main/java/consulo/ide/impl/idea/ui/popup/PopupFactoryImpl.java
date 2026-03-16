@@ -34,8 +34,7 @@ import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.util.lang.EmptyRunnable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -48,19 +47,16 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class PopupFactoryImpl extends JBPopupFactory {
-    @Nonnull
     @Override
     public ListPopup createConfirmation(String title, Runnable onYes, int defaultOptionIndex) {
         return createConfirmation(title, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get(), onYes, defaultOptionIndex);
     }
 
-    @Nonnull
     @Override
     public ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, int defaultOptionIndex) {
         return createConfirmation(title, yesText, noText, onYes, EmptyRunnable.getInstance(), defaultOptionIndex);
     }
 
-    @Nonnull
     @Override
     public JBPopup createMessage(String text) {
         return createListPopup(new BaseListPopupStep<>(null, text));
@@ -85,7 +81,6 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return null;
     }
 
-    @Nonnull
     @Override
     public ListPopup createConfirmation(
         String title,
@@ -117,24 +112,22 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return app == null || !app.isUnitTestMode() ? new ListPopupImpl(step) : new MockConfirmation(step, yesText);
     }
 
-    @Nonnull
     public static Supplier<DataContext> getComponentContextSupplier(Component component) {
         return () -> DataManager.getInstance().getDataContext(component);
     }
 
     @Override
-    @Nonnull
     public ListPopup createActionGroupPopup(
         String title,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         ActionSelectionAid aid,
         boolean showDisabledActions,
         Runnable disposeCallback,
         int maxRowCount,
         Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace,
-        @Nonnull BiPredicate<Object, Boolean> customFilter
+        BiPredicate<Object, Boolean> customFilter
     ) {
         return new ActionGroupPopup(
             title,
@@ -153,12 +146,11 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         );
     }
 
-    @Nonnull
     @Override
     public ListPopup createActionGroupPopup(
         String title,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         boolean showNumbers,
         boolean showDisabledActions,
         boolean honorActionMnemonics,
@@ -185,11 +177,10 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
     @Override
     public PopupStep createActionsStep(
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         @Nullable String actionPlace,
         boolean showNumbers,
         boolean showDisabledActions,
@@ -229,48 +220,41 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         };
     }
 
-    @Nonnull
     @Override
-    public ListPopup createListPopup(@Nonnull ListPopupStep step) {
+    public ListPopup createListPopup(ListPopupStep step) {
         return new ListPopupImpl(step);
     }
 
-    @Nonnull
     @Override
-    public ListPopup createListPopup(@Nonnull ComponentManager project, @Nonnull ListPopupStep step) {
+    public ListPopup createListPopup(ComponentManager project, ListPopupStep step) {
         return new ListPopupImpl((Project) project, step);
     }
 
-    @Nonnull
     @Override
-    public ListPopup createListPopup(@Nonnull ListPopupStep step, int maxRowCount) {
+    public ListPopup createListPopup(ListPopupStep step, int maxRowCount) {
         ListPopupImpl popup = new ListPopupImpl(step);
         popup.setMaxRowCount(maxRowCount);
         return popup;
     }
 
-    @Nonnull
     @Override
-    public TreePopup createTree(JBPopup parent, @Nonnull TreePopupStep aStep, Object parentValue) {
+    public TreePopup createTree(JBPopup parent, TreePopupStep aStep, Object parentValue) {
         return new TreePopupImpl((Project) aStep.getProject(), parent, aStep, parentValue);
     }
 
-    @Nonnull
     @Override
-    public TreePopup createTree(@Nonnull TreePopupStep aStep) {
+    public TreePopup createTree(TreePopupStep aStep) {
         return new TreePopupImpl((Project) aStep.getProject(), null, aStep, null);
     }
 
-    @Nonnull
     @Override
-    public ComponentPopupBuilder createComponentPopupBuilder(@Nonnull JComponent content, JComponent preferableFocusComponent) {
+    public ComponentPopupBuilder createComponentPopupBuilder(JComponent content, JComponent preferableFocusComponent) {
         return new ComponentPopupBuilderImpl(content, preferableFocusComponent);
     }
 
 
-    @Nonnull
     @Override
-    public RelativePoint guessBestPopupLocation(@Nonnull DataContext dataContext) {
+    public RelativePoint guessBestPopupLocation(DataContext dataContext) {
         Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         JComponent focusOwner = component instanceof JComponent ? (JComponent) component : null;
 
@@ -295,9 +279,8 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return guessBestPopupLocation(focusOwner);
     }
 
-    @Nonnull
     @Override
-    public RelativePoint guessBestPopupLocation(@Nonnull JComponent component) {
+    public RelativePoint guessBestPopupLocation(JComponent component) {
         Point popupMenuPoint = null;
         Rectangle visibleRect = component.getVisibleRect();
         if (component instanceof JList) { // JList
@@ -372,12 +355,11 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return new RelativePoint(component, popupMenuPoint);
     }
 
-    public boolean isBestPopupLocationVisible(@Nonnull Editor editor) {
+    public boolean isBestPopupLocationVisible(Editor editor) {
         return getVisibleBestPopupLocation(editor) != null;
     }
 
-    @Nonnull
-    public RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
+    public RelativePoint guessBestPopupLocation(Editor editor) {
         Point p = getVisibleBestPopupLocation(editor);
         if (p == null) {
             Rectangle visibleArea = editor.getScrollingModel().getVisibleArea();
@@ -387,7 +369,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
     }
 
     @Nullable
-    private static Point getVisibleBestPopupLocation(@Nonnull Editor editor) {
+    private static Point getVisibleBestPopupLocation(Editor editor) {
         VisualPosition visualPosition = editor.getUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION);
 
         if (visualPosition == null) {
@@ -414,8 +396,7 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
     }
 
     @Override
-    @Nonnull
-    public List<JBPopup> getChildPopups(@Nonnull Component component) {
+    public List<JBPopup> getChildPopups(Component component) {
         return AbstractPopup.getChildPopups(component);
     }
 
@@ -424,10 +405,9 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return IdeEventQueueProxy.getInstance().isPopupActive();
     }
 
-    @Nonnull
     @Override
     public BalloonBuilder createHtmlTextBalloonBuilder(
-        @Nonnull String htmlContent,
+        String htmlContent,
         @Nullable Image icon,
         Color textColor,
         Color fillColor,
@@ -468,10 +448,9 @@ public abstract class PopupFactoryImpl extends JBPopupFactory {
         return builder;
     }
 
-    @Nonnull
     @Override
     public BalloonBuilder createHtmlTextBalloonBuilder(
-        @Nonnull String htmlContent,
+        String htmlContent,
         NotificationType type,
         @Nullable HyperlinkListener listener
     ) {

@@ -3,8 +3,7 @@ package consulo.codeEditor;
 
 import consulo.ui.color.ColorValue;
 import consulo.util.lang.MathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Used to override caret attributes such as shape, size or painting color.
@@ -22,8 +21,8 @@ public final class CaretVisualAttributes {
     }
 
     private final @Nullable ColorValue myColor;
-    private final @Nonnull Weight myWeight;
-    private final @Nonnull Shape myShape;
+    private final Weight myWeight;
+    private final Shape myShape;
     private final float myThickness;
 
     /**
@@ -32,7 +31,7 @@ public final class CaretVisualAttributes {
      * @param color  The color to draw the caret. If {@code null}, the caret will be drawn using {@link com.intellij.openapi.editor.colors.EditorColors#CARET_COLOR}.
      * @param weight Describes the thickness of the caret when drawn as a vertical bar.
      */
-    public CaretVisualAttributes(@Nullable ColorValue color, @Nonnull Weight weight) {
+    public CaretVisualAttributes(@Nullable ColorValue color, Weight weight) {
         this(color, weight, Shape.DEFAULT, 1.0f);
     }
 
@@ -45,7 +44,7 @@ public final class CaretVisualAttributes {
      * @param thickness The thickness used to draw the caret, as a factor of height or width. The value is clamped between 0 and 1.0f
      *                  This only applies when shape is either {@link Shape#BAR} or {@link Shape#UNDERSCORE}.
      */
-    public CaretVisualAttributes(@Nullable ColorValue color, @Nonnull Weight weight, @Nonnull Shape shape, float thickness) {
+    public CaretVisualAttributes(@Nullable ColorValue color, Weight weight, Shape shape, float thickness) {
         myColor = color;
         myWeight = weight;
         myShape = shape;
@@ -62,7 +61,7 @@ public final class CaretVisualAttributes {
     /**
      * @return The {@link Shape} to draw the caret.
      */
-    public @Nonnull Shape getShape() {
+    public Shape getShape() {
         return myShape;
     }
 
@@ -84,7 +83,7 @@ public final class CaretVisualAttributes {
      *
      * @return The {@link Weight} of the {@link Shape#DEFAULT} caret when drawn as a vertical bar, used to modify the thickness.
      */
-    public @Nonnull Weight getWeight() {
+    public Weight getWeight() {
         return myWeight;
     }
 

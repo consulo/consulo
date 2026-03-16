@@ -20,7 +20,6 @@ import consulo.language.file.LanguageFileType;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,25 +32,25 @@ public class Sand2FileType extends LanguageFileType {
     super(SandLanguage.INSTANCE);
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "SAND2";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return LocalizeValue.of("Sand2 files");
   }
 
-  @Nonnull
+  
   @Override
   public String getDefaultExtension() {
     return "sand2";
   }
 
-  @Nonnull
+  
   @Override
   public Image getIcon() {
     return AllIcons.Nodes.ClassInitializer;

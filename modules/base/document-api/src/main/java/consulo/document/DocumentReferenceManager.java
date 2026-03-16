@@ -19,18 +19,17 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class DocumentReferenceManager {
-  @Nonnull
+  
   public static DocumentReferenceManager getInstance() {
     return ApplicationManager.getApplication().getInstance(DocumentReferenceManager.class);
   }
 
-  @Nonnull
-  public abstract DocumentReference create(@Nonnull Document document);
+  
+  public abstract DocumentReference create(Document document);
 
-  @Nonnull
-  public abstract DocumentReference create(@Nonnull VirtualFile file);
+  
+  public abstract DocumentReference create(VirtualFile file);
 }

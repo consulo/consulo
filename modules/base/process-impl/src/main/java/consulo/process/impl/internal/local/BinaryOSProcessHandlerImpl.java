@@ -22,8 +22,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.OSProcessHandler;
 import consulo.process.io.BaseDataReader;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -32,21 +31,21 @@ import java.util.concurrent.Future;
 public class BinaryOSProcessHandlerImpl extends OSProcessHandler implements BinaryProcessHandler {
   private final BufferExposingByteArrayOutputStream myOutput = new BufferExposingByteArrayOutputStream();
 
-  public BinaryOSProcessHandlerImpl(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  public BinaryOSProcessHandlerImpl(GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
   }
 
-  public BinaryOSProcessHandlerImpl(@Nonnull Process process, @Nonnull String commandLine, @Nullable Charset charset) {
+  public BinaryOSProcessHandlerImpl(Process process, String commandLine, @Nullable Charset charset) {
     super(process, commandLine, charset);
   }
 
   @Override
-  @Nonnull
+  
   public byte[] getOutput() {
     return myOutput.toByteArray();
   }
 
-  @Nonnull
+  
   @Override
   protected BaseDataReader createOutputDataReader() {
     return new SimpleBinaryReader(myProcess.getInputStream(), readerOptions().policy());
@@ -59,13 +58,13 @@ public class BinaryOSProcessHandlerImpl extends OSProcessHandler implements Bina
     }
 
     @Override
-    protected void onBinaryAvailable(@Nonnull byte[] data, int size) {
+    protected void onBinaryAvailable(byte[] data, int size) {
       myOutput.write(data, 0, size);
     }
 
-    @Nonnull
+    
     @Override
-    protected Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
+    protected Future<?> executeOnPooledThread(Runnable runnable) {
       return BinaryOSProcessHandlerImpl.this.executeTask(runnable);
     }
   }

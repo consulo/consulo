@@ -20,8 +20,7 @@ import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +33,7 @@ import java.util.List;
 public class QualifiedName implements Comparable<QualifiedName> {
   public static final QualifiedName ROOT = new QualifiedName(0);
 
-  @Nonnull
+  
   private final List<String> myComponents;
 
   private QualifiedName(int count) {
@@ -50,7 +49,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return qName;
   }
 
-  @Nonnull
+  
   public static QualifiedName fromComponents(String... components) {
     if(components.length == 0) {
       return ROOT;
@@ -74,12 +73,12 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return result;
   }
 
-  @Nonnull
+  
   public QualifiedName removeLastComponent() {
     return removeTail(1);
   }
 
-  @Nonnull
+  
   public QualifiedName removeTail(int count) {
     int size = myComponents.size();
     QualifiedName result = new QualifiedName(size);
@@ -90,7 +89,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return result;
   }
 
-  @Nonnull
+  
   public QualifiedName removeHead(int count) {
     int size = myComponents.size();
     QualifiedName result = new QualifiedName(size);
@@ -101,7 +100,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return result;
   }
 
-  @Nonnull
+  
   public List<String> getComponents() {
     return myComponents;
   }
@@ -135,7 +134,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return true;
   }
 
-  public boolean endsWith(@Nonnull String suffix) {
+  public boolean endsWith(String suffix) {
     return suffix.equals(getLastComponent());
   }
 
@@ -201,8 +200,8 @@ public class QualifiedName implements Comparable<QualifiedName> {
     return StringUtil.join(myComponents, separator);
   }
 
-  @Nonnull
-  public static QualifiedName fromDottedString(@Nonnull String refName) {
+  
+  public static QualifiedName fromDottedString(String refName) {
     if(StringUtil.isEmpty(refName)) {
       return ROOT;
     }
@@ -227,7 +226,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
   }
 
   @Override
-  public int compareTo(@Nonnull QualifiedName other) {
+  public int compareTo(QualifiedName other) {
     return toString().compareTo(other.toString());
   }
 }

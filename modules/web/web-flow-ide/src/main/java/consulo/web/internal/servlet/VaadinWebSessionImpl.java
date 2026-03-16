@@ -23,8 +23,7 @@ import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.web.application.WebSession;
 import consulo.web.internal.ui.WebUIAccessImpl;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -60,7 +59,7 @@ public class VaadinWebSessionImpl implements WebSession {
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
   public WebSession copy() {
     // copy state

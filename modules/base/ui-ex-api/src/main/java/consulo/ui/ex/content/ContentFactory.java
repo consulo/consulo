@@ -21,40 +21,39 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.Component;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ContentFactory {
-    @Nonnull
+    
     static ContentFactory getInstance() {
         return Application.get().getInstance(ContentFactory.class);
     }
 
-    @Nonnull
-    ContentManager createContentManager(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull ComponentManager project);
+    
+    ContentManager createContentManager(ContentUI contentUI, boolean canCloseContents, ComponentManager project);
 
-    @Nonnull
-    ContentManager createContentManager(boolean canCloseContents, @Nonnull ComponentManager project);
+    
+    ContentManager createContentManager(boolean canCloseContents, ComponentManager project);
 
     /**
      * do not rename due it will be conflicted with deprecated method
      */
-    @Nonnull
+    
     default Content createUIContent(@Nullable Component component, String displayName, boolean isLockable) {
         throw new AbstractMethodError();
     }
 
     // TODO [VISTALL] AWT & Swing dependency
     // region AWT & Swing dependency
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use createUIContent")
     default Content createContent(javax.swing.JComponent component, String displayName, boolean isLockable) {
         throw new AbstractMethodError();
     }
 
-    @Nonnull
+    
     @Deprecated
     default TabbedContent createTabbedContent(javax.swing.JComponent component, String displayName, boolean isPinnable, String titlePrefix) {
         throw new AbstractMethodError();
@@ -67,7 +66,7 @@ public interface ContentFactory {
         private SERVICE() {
         }
 
-        @Nonnull
+        
         @Deprecated
         public static ContentFactory getInstance() {
             return Application.get().getInstance(ContentFactory.class);

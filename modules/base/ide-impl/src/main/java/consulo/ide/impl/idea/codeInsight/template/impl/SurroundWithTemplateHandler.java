@@ -22,7 +22,6 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
@@ -32,7 +31,7 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
   }
 
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, Editor editor, PsiFile file) {
     if (!EditorModificationUtil.checkModificationAllowed(editor)) return;
     if (!editor.getSelectionModel().hasSelection()) {
       SurroundWithHandler.selectLogicalLineContentsAtCaret(editor);
@@ -52,8 +51,8 @@ public class SurroundWithTemplateHandler implements CodeInsightActionHandler {
     editor.showPopupInBestPositionFor(popup);
   }
 
-  @Nonnull
-  public static List<AnAction> createActionGroup(@Nonnull Editor editor, @Nonnull PsiFile file, @Nonnull Set<Character> usedMnemonicsSet) {
+  
+  public static List<AnAction> createActionGroup(Editor editor, PsiFile file, Set<Character> usedMnemonicsSet) {
     TemplateActionContext templateActionContext = TemplateActionContext.surrounding(file, editor);
     List<CustomLiveTemplate> customTemplates = TemplateManagerImpl.listApplicableCustomTemplates(templateActionContext);
     List<? extends Template> templates = TemplateManager.getInstance(file.getProject()).listApplicableTemplates(templateActionContext);

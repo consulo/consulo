@@ -22,7 +22,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class RootFileElement extends FileElement {
     private List<VirtualFile> myFiles;
     private Object[] myChildren;
 
-    public RootFileElement(@Nonnull List<VirtualFile> files, String name, boolean showFileSystemRoots) {
+    public RootFileElement(List<VirtualFile> files, String name, boolean showFileSystemRoots) {
         super(files.size() == 1 ? files.get(0) : null, name);
         myFiles = files.isEmpty() && showFileSystemRoots ? null : files;
     }

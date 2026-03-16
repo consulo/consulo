@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.awt;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.*;
@@ -24,7 +23,7 @@ import java.awt.*;
  * @author Konstantin Bulenkov
  */
 public class JBFont extends Font {
-  @Nonnull
+  
   public static JBFont label() {
     return create(UIManager.getFont("Label.font"), false);
   }

@@ -24,7 +24,6 @@ import consulo.web.gwt.shared.ui.state.image.MultiImageState;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemRpc;
 import consulo.web.gwt.shared.ui.state.menu.MenuItemState;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -50,7 +49,7 @@ public class GwtMenuItemImplConnector extends AbstractComponentConnector impleme
     return (GwtMenuItemImpl)super.getWidget();
   }
 
-  @Nonnull
+  
   public static GwtHorizontalLayoutImpl createTextLayout(String text, MultiImageState state) {
     GwtHorizontalLayoutImpl layout = new GwtHorizontalLayoutImpl();
     layout.setHorizontalAlignment(GwtHorizontalLayoutImpl.ALIGN_LEFT);

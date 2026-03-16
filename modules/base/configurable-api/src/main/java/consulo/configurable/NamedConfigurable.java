@@ -28,8 +28,7 @@ import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.WrappedLayout;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 /**
@@ -45,7 +44,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
     private final WrappedLayout myTopRightPanel;
 
     @RequiredUIAccess
-    private UIPanel(boolean isNameEditable, @Nonnull Consumer<String> nameListener) {
+    private UIPanel(boolean isNameEditable, Consumer<String> nameListener) {
       myNameLayout = DockLayout.create();
       myNameLayout.setVisible(isNameEditable);
 
@@ -123,7 +122,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   @RequiredUIAccess
   @Override
-  public final Component createUIComponent(@Nonnull Disposable parentUIDisposable) {
+  public final Component createUIComponent(Disposable parentUIDisposable) {
     if (myUIPanel != null) {
       return myUIPanel.myWholePanel;
     }
@@ -167,7 +166,7 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
 
   @Nullable
   @RequiredUIAccess
-  protected Component createTopRightComponent(@Nonnull TextBox textBox, @Nonnull Disposable parentUIDisposable) {
+  protected Component createTopRightComponent(TextBox textBox, Disposable parentUIDisposable) {
     return null;
   }
 
@@ -182,6 +181,6 @@ public abstract class NamedConfigurable<T> implements Configurable, MasterDetail
   }
 
   @RequiredUIAccess
-  @Nonnull
-  public abstract Component createOptionsPanel(@Nonnull Disposable parentUIDisposable);
+  
+  public abstract Component createOptionsPanel(Disposable parentUIDisposable);
 }

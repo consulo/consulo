@@ -26,8 +26,7 @@ import consulo.navigation.NavigationItem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 
 public class SymbolPresentationUtil {
@@ -35,7 +34,7 @@ public class SymbolPresentationUtil {
   }
 
   @RequiredReadAction
-  public static String getSymbolPresentableText(@Nonnull PsiElement element) {
+  public static String getSymbolPresentableText(PsiElement element) {
     if (element instanceof NavigationItem) {
       ItemPresentation presentation = ((NavigationItem)element).getPresentation();
       if (presentation != null){

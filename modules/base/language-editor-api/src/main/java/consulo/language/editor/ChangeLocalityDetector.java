@@ -18,8 +18,7 @@ package consulo.language.editor;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -39,5 +38,5 @@ public interface ChangeLocalityDetector {
    *       So the parent check is enough, e.g: {@code changedElement.getParent() instanceof PsiCodeBlock}
    */
   @Nullable
-  PsiElement getChangeHighlightingDirtyScopeFor(@Nonnull PsiElement changedElement);
+  PsiElement getChangeHighlightingDirtyScopeFor(PsiElement changedElement);
 }

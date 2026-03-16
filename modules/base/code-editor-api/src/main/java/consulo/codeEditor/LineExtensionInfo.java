@@ -6,14 +6,13 @@ import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
 import org.intellij.lang.annotations.JdkConstants;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class LineExtensionInfo {
-  @Nonnull
+  
   private final String myText;
   @Nullable
   private final ColorValue myColor;
@@ -26,7 +25,7 @@ public class LineExtensionInfo {
   @JdkConstants.FontStyle
   private final int myFontType;
 
-  public LineExtensionInfo(@Nonnull String text, @Nullable ColorValue color, @Nullable EffectType effectType, @Nullable ColorValue effectColor, @JdkConstants.FontStyle int fontType) {
+  public LineExtensionInfo(String text, @Nullable ColorValue color, @Nullable EffectType effectType, @Nullable ColorValue effectColor, @JdkConstants.FontStyle int fontType) {
     myText = text;
     myColor = color;
     myEffectType = effectType;
@@ -35,7 +34,7 @@ public class LineExtensionInfo {
     myBgColor = null;
   }
 
-  public LineExtensionInfo(@Nonnull String text, @Nonnull TextAttributes attr) {
+  public LineExtensionInfo(String text, TextAttributes attr) {
     myText = text;
     myColor = attr.getForegroundColor();
     myEffectType = attr.getEffectType();
@@ -44,7 +43,7 @@ public class LineExtensionInfo {
     myBgColor = attr.getBackgroundColor();
   }
 
-  @Nonnull
+  
   public String getText() {
     return myText;
   }

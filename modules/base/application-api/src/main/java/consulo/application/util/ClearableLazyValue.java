@@ -17,7 +17,6 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -28,10 +27,10 @@ import java.util.function.Supplier;
 @DeprecationInfo("Use consulo.util.lang.lazy.ClearableLazyValue")
 public abstract class ClearableLazyValue<T> {
 
-  @Nonnull
+  
   public static <T> ClearableLazyValue<T> create(final Supplier<? extends T> computable) {
     return new ClearableLazyValue<T>() {
-      @Nonnull
+      
       @Override
       protected T compute() {
         return computable.get();
@@ -41,10 +40,10 @@ public abstract class ClearableLazyValue<T> {
 
   private T myValue;
 
-  @Nonnull
+  
   protected abstract T compute();
 
-  @Nonnull
+  
   public T getValue() {
     T result = myValue;
     if (result == null) {

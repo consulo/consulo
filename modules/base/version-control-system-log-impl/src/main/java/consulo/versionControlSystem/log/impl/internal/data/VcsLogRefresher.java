@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -29,12 +28,12 @@ public interface VcsLogRefresher {
    * Synchronously loads some recent commits from the VCS, builds the DataPack and queues to refresh everything. <br/>
    * This is called on log initialization and on the full refresh.
    */
-  @Nonnull
+  
   DataPack readFirstBlock();
 
   /**
    * Refreshes the log and builds the actual data pack.
    * Triggered by some event from the VCS which indicates that the log could change (e.g. new commits arrived).
    */
-  void refresh(@Nonnull Collection<VirtualFile> rootsToRefresh);
+  void refresh(Collection<VirtualFile> rootsToRefresh);
 }

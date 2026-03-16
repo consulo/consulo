@@ -20,8 +20,7 @@ import consulo.platform.ProcessInfo;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @deprecated use {@link XAttachPresentationGroup} instead
@@ -35,39 +34,39 @@ public class XDefaultLocalAttachGroup implements XLocalAttachGroup {
     return 0;
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupName() {
     return "";
   }
 
-  @Nonnull
+  
   @Override
-  public Image getItemIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+  public Image getItemIcon(Project project, ProcessInfo info, UserDataHolder dataHolder) {
     return getProcessIcon(project, info, dataHolder);
   }
 
-  @Nonnull
+  
   @Override
-  public String getItemDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+  public String getItemDisplayText(Project project, ProcessInfo info, UserDataHolder dataHolder) {
     return getProcessDisplayText(project, info, dataHolder);
   }
 
   @Nullable
   @Override
-  public String getItemDescription(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+  public String getItemDescription(Project project, ProcessInfo info, UserDataHolder dataHolder) {
     return null;
   }
 
   @Override
-  @Nonnull
-  public Image getProcessIcon(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+  
+  public Image getProcessIcon(Project project, ProcessInfo info, UserDataHolder dataHolder) {
     return AllIcons.RunConfigurations.Application;
   }
 
   @Override
-  @Nonnull
-  public String getProcessDisplayText(@Nonnull Project project, @Nonnull ProcessInfo info, @Nonnull UserDataHolder dataHolder) {
+  
+  public String getProcessDisplayText(Project project, ProcessInfo info, UserDataHolder dataHolder) {
     return info.getExecutableDisplayName();
   }
 }

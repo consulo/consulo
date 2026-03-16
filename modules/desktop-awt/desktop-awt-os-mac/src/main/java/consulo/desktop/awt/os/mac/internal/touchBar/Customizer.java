@@ -4,8 +4,7 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -16,30 +15,30 @@ class Customizer {
     private final Map<AnAction, ActionGroupInfo> myAct2Parent = new HashMap<>();
     private final Map<AnAction, Object> myAct2Descriptor = new HashMap<>();
 
-    private final @Nullable TBPanel.CrossEscInfo myCrossEscInfo;
+    private final TBPanel.@Nullable CrossEscInfo myCrossEscInfo;
     @Nullable
     private final String[] myAutoCloseActionIds;
 
-    Customizer(@Nullable TBPanel.CrossEscInfo crossEscInfo, String[] autoCloseActionIds, @Nonnull ItemCustomizer itemCustomizer) {
+    Customizer(TBPanel.@Nullable CrossEscInfo crossEscInfo, String[] autoCloseActionIds, ItemCustomizer itemCustomizer) {
         this(crossEscInfo, autoCloseActionIds);
         addBaseCustomizations(itemCustomizer);
     }
 
-    Customizer(@Nullable TBPanel.CrossEscInfo crossEscInfo, @Nullable String[] autoCloseActionIds) {
+    Customizer(TBPanel.@Nullable CrossEscInfo crossEscInfo, @Nullable String[] autoCloseActionIds) {
         myCrossEscInfo = crossEscInfo;
         myAutoCloseActionIds = autoCloseActionIds;
     }
 
-    void prepare(@Nonnull ActionGroup actionGroup) {
+    void prepare(ActionGroup actionGroup) {
         myAct2Parent.clear();
         fillAct2Parent(new ActionGroupInfo(actionGroup, null));
     }
 
-    void onBeforeActionsExpand(@Nonnull ActionGroup actionGroup) {
+    void onBeforeActionsExpand(ActionGroup actionGroup) {
     }
 
-    private void fillAct2Parent(@Nonnull ActionGroupInfo actionGroupInfo) {
-        @Nonnull ActionGroup actionGroup = actionGroupInfo.group;
+    private void fillAct2Parent(ActionGroupInfo actionGroupInfo) {
+        ActionGroup actionGroup = actionGroupInfo.group;
         AnAction[] actions = actionGroup.getChildren(null);
         for (AnAction childAction : actions) {
             if (childAction == null) {
@@ -53,8 +52,7 @@ class Customizer {
         }
     }
 
-    @Nullable
-    TBPanel.CrossEscInfo getCrossEscInfo() {
+    TBPanel.@Nullable CrossEscInfo getCrossEscInfo() {
         return myCrossEscInfo;
     }
 
@@ -63,7 +61,7 @@ class Customizer {
         return myAutoCloseActionIds;
     }
 
-    boolean applyCustomizations(@Nonnull TBItemAnActionButton button, @Nonnull Presentation presentation) {
+    boolean applyCustomizations(TBItemAnActionButton button, Presentation presentation) {
         @Nullable ActionGroupInfo parentInfo = myAct2Parent.get(button.getAnAction());
         boolean result = false;
 
@@ -100,7 +98,7 @@ class Customizer {
         return result;
     }
 
-    boolean isPrincipalGroupAction(@Nonnull AnAction action) {
+    boolean isPrincipalGroupAction(AnAction action) {
         // 1. check parent group
         ActionGroupInfo groupInfo = myAct2Parent.get(action);
         if (groupInfo != null && groupInfo.hasPrincipalParent()) {
@@ -116,30 +114,30 @@ class Customizer {
     // Add customization methods
     //
 
-    void addCustomization(@Nonnull AnAction action, @Nonnull ItemCustomizer buttCustomizer) {
+    void addCustomization(AnAction action, ItemCustomizer buttCustomizer) {
         List<ItemCustomizer> bcl = myAct2ButtCustomizer.computeIfAbsent(action, (a) -> new ArrayList<>());
         bcl.add(buttCustomizer);
     }
 
-    void addCustomizations(@Nonnull AnAction action, ItemCustomizer... customizers) {
+    void addCustomizations(AnAction action, ItemCustomizer... customizers) {
         Collections.addAll(myAct2ButtCustomizer.computeIfAbsent(action, (a) -> new ArrayList<>()), customizers);
     }
 
-    void addBaseCustomizations(@Nonnull ItemCustomizer customizer) {
+    void addBaseCustomizations(ItemCustomizer customizer) {
         myBaseCustomizers.add(customizer);
     }
 
-    void addGroupCustomization(@Nonnull Map<Long, ActionGroup> actionGroups, ItemCustomizer... customizers) {
+    void addGroupCustomization(Map<Long, ActionGroup> actionGroups, ItemCustomizer... customizers) {
         for (ActionGroup actionGroup : actionGroups.values()) {
             addGroupCustomization(actionGroup, customizers);
         }
     }
 
-    void addGroupCustomization(@Nonnull ActionGroup actionGroup, ItemCustomizer... customizers) {
+    void addGroupCustomization(ActionGroup actionGroup, ItemCustomizer... customizers) {
         Collections.addAll(myGroupCustomizers.computeIfAbsent(actionGroup, (a) -> new ArrayList<>()), customizers);
     }
 
-    void addDescriptor(@Nonnull AnAction action, @Nonnull Object desc) {
+    void addDescriptor(AnAction action, Object desc) {
         myAct2Descriptor.put(action, desc);
     }
 
@@ -148,12 +146,12 @@ class Customizer {
     //
 
     static final class ActionGroupInfo {
-        final @Nonnull ActionGroup group;
-        final @Nonnull String groupID;
+        final ActionGroup group;
+        final String groupID;
         final @Nullable ActionGroupInfo parent;
         final @Nullable TouchbarActionCustomizations groupC;
 
-        ActionGroupInfo(@Nonnull ActionGroup group, @Nullable ActionGroupInfo parent) {
+        ActionGroupInfo(ActionGroup group, @Nullable ActionGroupInfo parent) {
             this.group = group;
             this.parent = parent;
             this.groupID = Helpers.getActionId(group);
@@ -176,6 +174,6 @@ class Customizer {
     }
 
     interface ItemCustomizer {
-        void applyCustomizations(@Nullable ActionGroupInfo parentGroupInfo, @Nonnull TBItemAnActionButton butt, @Nonnull Presentation presentation);
+        void applyCustomizations(@Nullable ActionGroupInfo parentGroupInfo, TBItemAnActionButton butt, Presentation presentation);
     }
 }

@@ -15,7 +15,6 @@
  */
 package consulo.fileEditor;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -23,10 +22,10 @@ import javax.swing.*;
  * @since 2018-05-09
  */
 public interface FileEditorWithProviderComposite extends FileEditorComposite {
-  @Nonnull
+  
   FileEditorProvider[] getProviders();
 
-  void addEditor(@Nonnull FileEditor editor, FileEditorProvider provider);
+  void addEditor(FileEditor editor, FileEditorProvider provider);
 
   JComponent getPreferredFocusedComponent();
 

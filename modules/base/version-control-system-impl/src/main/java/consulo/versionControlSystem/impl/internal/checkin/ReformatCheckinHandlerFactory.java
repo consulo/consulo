@@ -22,7 +22,6 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.checkin.CheckinHandler;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl(id = "reformat", order = "first")
 public class ReformatCheckinHandlerFactory extends CheckinHandlerFactory {
   @Override
-  @Nonnull
+  
   public CheckinHandler createHandler(CheckinProjectPanel panel, CommitContext commitContext) {
     return new ReformatBeforeCheckinHandler(panel.getProject(), panel);
   }

@@ -17,7 +17,6 @@ package consulo.module.extension;
 
 import consulo.content.bundle.Sdk;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +24,6 @@ import jakarta.annotation.Nonnull;
  */
 public interface MutableModuleExtensionWithSdk<T extends ModuleExtensionWithSdk<T>> extends ModuleExtensionWithSdk<T>, MutableModuleExtension<T> {
   @Override
-  @Nonnull
+  
   MutableModuleInheritableNamedPointer<Sdk> getInheritableSdk();
 }

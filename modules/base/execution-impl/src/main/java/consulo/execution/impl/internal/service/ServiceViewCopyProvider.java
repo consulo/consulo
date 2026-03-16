@@ -7,7 +7,6 @@ import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.datatransfer.StringSelection;
@@ -16,12 +15,12 @@ import java.util.List;
 final class ServiceViewCopyProvider implements CopyProvider {
   private final ServiceView myServiceView;
 
-  ServiceViewCopyProvider(@Nonnull ServiceView serviceView) {
+  ServiceViewCopyProvider(ServiceView serviceView) {
     myServiceView = serviceView;
   }
 
   @Override
-  public void performCopy(@Nonnull DataContext dataContext) {
+  public void performCopy(DataContext dataContext) {
     List<ServiceViewItem> items = ServiceViewActionProvider.getSelectedItems(dataContext);
     if (!items.isEmpty()) {
       CopyPasteManager.getInstance().setContents(new StringSelection(
@@ -30,7 +29,7 @@ final class ServiceViewCopyProvider implements CopyProvider {
   }
 
   @Override
-  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+  public boolean isCopyEnabled(DataContext dataContext) {
     if (ServiceViewActionProvider.getSelectedItems(dataContext).isEmpty()) {
       return false;
     }
@@ -39,7 +38,7 @@ final class ServiceViewCopyProvider implements CopyProvider {
   }
 
   @Override
-  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+  public boolean isCopyVisible(DataContext dataContext) {
     return false;
   }
 }

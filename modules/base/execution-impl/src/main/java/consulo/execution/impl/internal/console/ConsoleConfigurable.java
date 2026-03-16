@@ -13,8 +13,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.encoding.ApplicationEncodingManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -132,14 +131,14 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
 
     @RequiredUIAccess
     @Override
-    public JComponent createComponent(@Nonnull Disposable disposable) {
+    public JComponent createComponent(Disposable disposable) {
         if (myPanel == null) {
             myPanel = new Panel();
         }
         return myPanel.myMainComponent;
     }
 
-    public void addRule(@Nonnull String rule) {
+    public void addRule(String rule) {
         myPanel.myPositivePanel.addRule(rule);
     }
 
@@ -181,7 +180,7 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return "execution.console.folding";
     }
@@ -192,7 +191,7 @@ public class ConsoleConfigurable implements SearchableConfigurable, Configurable
         return StandardConfigurableIds.EXECUTION_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Console");

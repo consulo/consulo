@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Gregory.Shrago
@@ -36,16 +35,16 @@ public abstract class PatternCompilerFactory {
    * @param alias or null
    * @return pattern classes
    */
-  @Nonnull
+  
   public abstract Class[] getPatternClasses(@Nullable String alias);
 
   /**
    * Classes from {@link PatternClassProvider} extension
    */
-  @Nonnull
-  public abstract <T> PatternCompiler<T> getPatternCompiler(@Nonnull Class[] patternClasses);
+  
+  public abstract <T> PatternCompiler<T> getPatternCompiler(Class[] patternClasses);
 
-  @Nonnull
+  
   public <T> PatternCompiler<T> getPatternCompiler(@Nullable String alias) {
     return getPatternCompiler(getPatternClasses(alias));
   }

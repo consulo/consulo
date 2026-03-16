@@ -25,8 +25,7 @@ import consulo.versionControlSystem.VcsPathPresenter;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nullable;
-import org.jetbrains.annotations.NonNls;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.HashMap;
@@ -225,7 +224,7 @@ public class Change {
     return path1.equals(path2);
   }
 
-  @NonNls
+  
   public String toString() {
     Type type = getType();
     //noinspection EnumSwitchStatementWhichMissesCases

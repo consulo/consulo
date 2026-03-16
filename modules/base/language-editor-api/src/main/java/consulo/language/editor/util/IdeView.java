@@ -20,8 +20,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Common interface for IDE views where files can be selected (project view, packages view,
@@ -43,7 +42,7 @@ public interface IdeView {
    *
    * @return the list of directories, or an empty array if nothing is selected.
    */
-  @Nonnull
+  
   PsiDirectory[] getDirectories();
 
   /**

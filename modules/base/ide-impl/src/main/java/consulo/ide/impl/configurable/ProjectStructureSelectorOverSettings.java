@@ -41,8 +41,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.MasterDetailsComponent;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -58,7 +57,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> select(@Nullable Artifact artifact, boolean requestFocus) {
         return selectAsync(ArtifactsStructureConfigurable.ID, ArtifactsStructureConfigurable.class, (artifactsStructureConfigurable, runnable) -> {
@@ -68,9 +67,9 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public AsyncResult<Void> select(@Nonnull Sdk sdk, boolean requestFocus) {
+    public AsyncResult<Void> select(Sdk sdk, boolean requestFocus) {
         return selectAsync(SdkListConfigurable.ID, SdkListConfigurable.class, (sdkListConfigurable, runnable) -> {
             sdkListConfigurable.selectNodeInTree(sdk);
             runnable.run();
@@ -78,7 +77,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> select(@Nullable String moduleToSelect, @Nullable String tabId, boolean requestFocus) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
@@ -108,9 +107,9 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public AsyncResult<Void> select(@Nonnull LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
+    public AsyncResult<Void> select(LibraryOrderEntry libraryOrderEntry, boolean requestFocus) {
         Library library = libraryOrderEntry.getLibrary();
         if (library == null) {
             return AsyncResult.rejected();
@@ -119,9 +118,9 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public AsyncResult<Void> selectOrderEntry(@Nonnull Module module, @Nullable OrderEntry orderEntry) {
+    public AsyncResult<Void> selectOrderEntry(Module module, @Nullable OrderEntry orderEntry) {
         return selectAsync(ModuleStructureConfigurable.ID, ModuleStructureConfigurable.class, (moduleStructureConfigurable, runnable) -> {
             moduleStructureConfigurable.selectNodeInTree(module).doWhenDone((node) -> {
                 ModuleEditor moduleEditor = ((ModuleConfigurable) ((MasterDetailsComponent.MyNode) node).getConfigurable()).getModuleEditor();
@@ -140,9 +139,9 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public AsyncResult<Void> selectProjectOrGlobalLibrary(@Nonnull Library library, boolean requestFocus) {
+    public AsyncResult<Void> selectProjectOrGlobalLibrary(Library library, boolean requestFocus) {
         return selectAsync(ProjectLibrariesConfigurable.ID, ProjectLibrariesConfigurable.class, (projectLibrariesConfigurable, runnable) -> {
             projectLibrariesConfigurable.selectNodeInTree(library);
             runnable.run();
@@ -150,7 +149,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> selectProjectGeneralSettings(boolean requestFocus) {
         return selectAsync(StandardConfigurableIds.PROJECT_GROUP, ProjectConfigurableGroup.class, (projectConfigurable, runnable) -> {
@@ -159,7 +158,7 @@ public class ProjectStructureSelectorOverSettings implements ProjectStructureSel
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     private <T extends UnnamedConfigurable> AsyncResult<Void> selectAsync(String id, Class<T> cls, BiConsumer<T, Runnable> consumer) {
         AsyncResult<Void> result = AsyncResult.undefined();
 

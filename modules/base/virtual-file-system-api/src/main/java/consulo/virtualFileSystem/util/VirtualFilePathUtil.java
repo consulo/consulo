@@ -22,8 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class VirtualFilePathUtil {
   private VirtualFilePathUtil() {
@@ -40,13 +39,13 @@ public class VirtualFilePathUtil {
     return getLocalPath(file.getPath());
   }
 
-  @Nonnull
-  public static String getLocalPath(@Nonnull String path) {
+  
+  public static String getLocalPath(String path) {
     return FileUtil.toSystemDependentName(StringUtil.trimEnd(path, ArchiveFileSystem.ARCHIVE_SEPARATOR));
   }
 
-  @Nonnull
-  public static VirtualFile getLocalFile(@Nonnull VirtualFile file) {
+  
+  public static VirtualFile getLocalFile(VirtualFile file) {
     if (!file.isValid()) {
       return file;
     }
@@ -59,8 +58,8 @@ public class VirtualFilePathUtil {
     return file;
   }
 
-  @Nonnull
-  public static String toPresentableUrl(@Nonnull String url) {
+  
+  public static String toPresentableUrl(String url) {
     return getLocalPath(VirtualFileManager.extractPath(url));
   }
 }

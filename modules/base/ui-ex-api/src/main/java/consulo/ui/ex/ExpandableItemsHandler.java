@@ -17,7 +17,6 @@ package consulo.ui.ex;
 
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 public interface ExpandableItemsHandler<T> {
@@ -38,6 +37,6 @@ public interface ExpandableItemsHandler<T> {
 
   boolean isEnabled();
 
-  @Nonnull
+  
   Collection<T> getExpandedItems();
 }

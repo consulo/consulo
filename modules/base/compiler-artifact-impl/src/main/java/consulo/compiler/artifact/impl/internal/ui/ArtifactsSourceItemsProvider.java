@@ -27,8 +27,7 @@ import consulo.compiler.artifact.ui.PackagingSourceItemsProvider;
 import consulo.compiler.artifact.ui.SourceItemPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.PresentationData;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,9 +40,9 @@ import java.util.List;
 @ExtensionImpl(order = "last")
 public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
   @Override
-  @Nonnull
-  public Collection<? extends PackagingSourceItem> getSourceItems(@Nonnull ArtifactEditorContext editorContext,
-                                                                  @Nonnull Artifact artifact,
+  
+  public Collection<? extends PackagingSourceItem> getSourceItems(ArtifactEditorContext editorContext,
+                                                                  Artifact artifact,
                                                                   @Nullable PackagingSourceItem parent) {
     if (parent == null) {
       if (!ArtifactElementType.getAvailableArtifacts(editorContext, artifact, true).isEmpty()) {
@@ -74,13 +73,13 @@ public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
     }
 
     @Override
-    public SourceItemPresentation createPresentation(@Nonnull ArtifactEditorContext context) {
+    public SourceItemPresentation createPresentation(ArtifactEditorContext context) {
       return new ArtifactsGroupPresentation();
     }
 
     @Override
-    @Nonnull
-    public List<? extends PackagingElement<?>> createElements(@Nonnull ArtifactEditorContext context) {
+    
+    public List<? extends PackagingElement<?>> createElements(ArtifactEditorContext context) {
       return Collections.emptyList();
     }
 
@@ -91,7 +90,7 @@ public class ArtifactsSourceItemsProvider extends PackagingSourceItemsProvider {
       }
 
       @Override
-      public void render(@Nonnull PresentationData presentationData, SimpleTextAttributes mainAttributes,
+      public void render(PresentationData presentationData, SimpleTextAttributes mainAttributes,
                          SimpleTextAttributes commentAttributes) {
         presentationData.setIcon(AllIcons.Nodes.Artifact);
         presentationData.addText("Artifacts", mainAttributes);

@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to overwrite project level UTF-8 BOM option for a specific virtual file.
@@ -19,5 +18,5 @@ public interface Utf8BomOptionProvider {
      * @return true if BOM should be added for UTF-8-encoded file.
      * @see EncodingManager#shouldAddBOMForNewUtf8File()
      */
-    boolean shouldAddBOMForNewUtf8File(@Nonnull VirtualFile file);
+    boolean shouldAddBOMForNewUtf8File(VirtualFile file);
 }

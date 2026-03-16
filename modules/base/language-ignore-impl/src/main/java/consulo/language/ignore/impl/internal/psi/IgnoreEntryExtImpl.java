@@ -31,7 +31,6 @@ import consulo.language.ignore.Syntax;
 import consulo.language.ignore.psi.*;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * Custom {@link IgnoreElementImpl} implementation.
@@ -81,7 +80,7 @@ public abstract class IgnoreEntryExtImpl extends IgnoreElementImpl implements Ig
      *
      * @return syntax
      */
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Syntax getSyntax() {
@@ -103,7 +102,7 @@ public abstract class IgnoreEntryExtImpl extends IgnoreElementImpl implements Ig
      *
      * @return entry value without `!` negation sign
      */
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getValue() {

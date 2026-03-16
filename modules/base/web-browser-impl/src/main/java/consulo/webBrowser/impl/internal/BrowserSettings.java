@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.webBrowser.WebBrowser;
 import consulo.webBrowser.WebSearchOptions;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -42,7 +41,7 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "web.browsers";
   }
@@ -53,7 +52,7 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return WebBrowserLocalize.browsersSettings();
@@ -61,7 +60,7 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     if (myPanel == null) {
       myPanel = new BrowserSettingsPanel(myWebSearchOptionsProvider, uiDisposable);
     }
@@ -96,7 +95,7 @@ public class BrowserSettings implements ApplicationConfigurable, SearchableConfi
     myPanel = null;
   }
 
-  public void selectBrowser(@Nonnull WebBrowser browser) {
+  public void selectBrowser(WebBrowser browser) {
     if(myPanel == null) {
       throw new IllegalArgumentException("not initialized ui");
     }

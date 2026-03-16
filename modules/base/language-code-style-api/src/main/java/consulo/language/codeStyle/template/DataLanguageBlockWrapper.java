@@ -23,8 +23,7 @@ import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.Pair;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   private Spacing mySpacing;
   private Map<Pair<Block, Block>, Spacing> myChildDataBorderSpacings;
 
-  private DataLanguageBlockWrapper(@Nonnull Block original) {
+  private DataLanguageBlockWrapper(Block original) {
     assert !(original instanceof DataLanguageBlockWrapper) && !(original instanceof TemplateLanguageBlock);
     myOriginal = original;
 
@@ -61,13 +60,13 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Override
-  @Nonnull
+  
   public TextRange getTextRange() {
     return myOriginal.getTextRange();
   }
 
   @Override
-  @Nonnull
+  
   public List<Block> getSubBlocks() {
     if (myBlocks == null) {
       myBlocks = buildBlocks();
@@ -130,7 +129,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Override
-  @Nonnull
+  
   public ChildAttributes getChildAttributes(int newChildIndex) {
     return myOriginal.getChildAttributes(newChildIndex);
   }
@@ -147,7 +146,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
 
   @Override
   @Nullable
-  public Spacing getSpacing(Block child1, @Nonnull Block child2) {
+  public Spacing getSpacing(Block child1, Block child2) {
     if (child1 instanceof DataLanguageBlockWrapper && child2 instanceof DataLanguageBlockWrapper) {
       return myOriginal.getSpacing(((DataLanguageBlockWrapper)child1).myOriginal, ((DataLanguageBlockWrapper)child2).myOriginal);
     }
@@ -187,7 +186,7 @@ public class DataLanguageBlockWrapper implements ASTBlock, BlockEx, BlockWithPar
   }
 
   @Nullable
-  public static DataLanguageBlockWrapper create(@Nonnull Block original, @Nullable Indent indent) {
+  public static DataLanguageBlockWrapper create(Block original, @Nullable Indent indent) {
     boolean doesntNeedWrapper = original instanceof ASTBlock && ((ASTBlock)original).getNode() instanceof OuterLanguageElement;
     return doesntNeedWrapper ? null : new DataLanguageBlockWrapper(original);
   }

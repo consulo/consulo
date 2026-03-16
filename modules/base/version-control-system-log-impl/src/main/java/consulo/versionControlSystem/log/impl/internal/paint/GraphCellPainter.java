@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.log.impl.internal.paint;
 
 import consulo.versionControlSystem.log.graph.PrintElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -27,9 +26,9 @@ import java.util.Collection;
  */
 public interface GraphCellPainter {
 
-  void draw(@Nonnull Graphics2D g2, @Nonnull Collection<? extends PrintElement> printElements);
+  void draw(Graphics2D g2, Collection<? extends PrintElement> printElements);
 
   @Nullable
-  PrintElement getElementUnderCursor(@Nonnull Collection<? extends PrintElement> printElements, int x, int y);
+  PrintElement getElementUnderCursor(Collection<? extends PrintElement> printElements, int x, int y);
 }
 

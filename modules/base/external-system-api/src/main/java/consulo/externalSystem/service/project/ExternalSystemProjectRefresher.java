@@ -22,7 +22,6 @@ import consulo.externalSystem.importing.ImportSpecBuilder;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ProgressExecutionMode;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,7 +44,7 @@ public interface ExternalSystemProjectRefresher {
      * @deprecated use {@link  ExternalSystemUtil#refreshProjects(ImportSpecBuilder)}
      */
     @Deprecated
-    default void refreshProjects(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId, boolean force) {
+    default void refreshProjects(Project project, ProjectSystemId externalSystemId, boolean force) {
         refreshProjects(project, externalSystemId, force, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
     }
 
@@ -61,10 +60,10 @@ public interface ExternalSystemProjectRefresher {
      */
     @Deprecated
     default void refreshProjects(
-        @Nonnull Project project,
-        @Nonnull ProjectSystemId externalSystemId,
+        Project project,
+        ProjectSystemId externalSystemId,
         boolean force,
-        @Nonnull ProgressExecutionMode progressExecutionMode
+        ProgressExecutionMode progressExecutionMode
     ) {
         refreshProjects(new ImportSpecBuilder(project, externalSystemId).forceWhenUptodate(force).use(progressExecutionMode));
     }
@@ -80,12 +79,12 @@ public interface ExternalSystemProjectRefresher {
      * @param isPreviewMode       flag that identifies whether gradle libraries should be resolved during the refresh
      * @param reportRefreshError  prevent to show annoying error notification, e.g. if auto-import mode used
      */
-    void refreshProject(@Nonnull Project project,
-                        @Nonnull ProjectSystemId externalSystemId,
-                        @Nonnull String externalProjectPath,
-                        @Nonnull ExternalProjectRefreshCallback callback,
+    void refreshProject(Project project,
+                        ProjectSystemId externalSystemId,
+                        String externalProjectPath,
+                        ExternalProjectRefreshCallback callback,
                         boolean isPreviewMode,
-                        @Nonnull ProgressExecutionMode progressExecutionMode,
+                        ProgressExecutionMode progressExecutionMode,
                         boolean reportRefreshError);
 
     /**
@@ -100,15 +99,15 @@ public interface ExternalSystemProjectRefresher {
      * @return the most up-to-date gradle project (if any)
      */
     default void refreshProject(
-        @Nonnull Project project,
-        @Nonnull ProjectSystemId externalSystemId,
-        @Nonnull String externalProjectPath,
-        @Nonnull ExternalProjectRefreshCallback callback,
+        Project project,
+        ProjectSystemId externalSystemId,
+        String externalProjectPath,
+        ExternalProjectRefreshCallback callback,
         boolean isPreviewMode,
-        @Nonnull ProgressExecutionMode progressExecutionMode
+        ProgressExecutionMode progressExecutionMode
     ) {
         refreshProject(project, externalSystemId, externalProjectPath, callback, isPreviewMode, progressExecutionMode, true);
     }
 
-    void refreshProjects(@Nonnull ImportSpecBuilder specBuilder);
+    void refreshProjects(ImportSpecBuilder specBuilder);
 }

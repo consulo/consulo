@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class SMTestHelperImpl implements SMTestHelper {
-  @Nonnull
+  
   @Override
   public List<TestsLocationProviderUtil.FileInfo> collectCandidates(Project project, String fileName, boolean includeNonProjectItems) {
     List<TestsLocationProviderUtil.FileInfo> filesInfo = new ArrayList<>();

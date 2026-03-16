@@ -28,8 +28,7 @@ import consulo.util.io.PathUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +42,8 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static final String DEFAULT_LIBRARY_NAME = "Unnamed";
 
   @Override
-  public NewLibraryConfiguration createLibraryFromFiles(@Nonnull LibraryRootsComponentDescriptor descriptor,
-                                                        @Nonnull JComponent parentComponent,
+  public NewLibraryConfiguration createLibraryFromFiles(LibraryRootsComponentDescriptor descriptor,
+                                                        JComponent parentComponent,
                                                         @Nullable VirtualFile contextDirectory,
                                                         LibraryType<?> type,
                                                         Project project) {
@@ -64,20 +63,20 @@ public class LibraryTypeServiceImpl extends LibraryTypeService {
   private static <P extends LibraryProperties<?>> NewLibraryConfiguration doCreate(final LibraryType<P> type, final String name, final List<OrderRoot> roots) {
     return new NewLibraryConfiguration(name, type, type != null ? type.getKind().createDefaultProperties() : null) {
       @Override
-      public void addRoots(@Nonnull LibraryEditor editor) {
+      public void addRoots(LibraryEditor editor) {
         editor.addRoots(roots);
       }
     };
   }
 
-  public static String suggestLibraryName(@Nonnull VirtualFile[] classesRoots) {
+  public static String suggestLibraryName(VirtualFile[] classesRoots) {
     if (classesRoots.length >= 1) {
       return FileUtil.getNameWithoutExtension(PathUtil.getFileName(classesRoots[0].getPath()));
     }
     return DEFAULT_LIBRARY_NAME;
   }
 
-  public static String suggestLibraryName(@Nonnull List<OrderRoot> roots) {
+  public static String suggestLibraryName(List<OrderRoot> roots) {
     if (roots.size() >= 1) {
       return FileUtil.getNameWithoutExtension(PathUtil.getFileName(roots.get(0).getFile().getPath()));
     }

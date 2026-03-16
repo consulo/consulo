@@ -22,7 +22,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -35,13 +34,13 @@ public class SandBackgroundTaskByVfsChangeProvider extends BackgroundTaskByVfsCh
   }
 
   @Override
-  public void setDefaultParameters(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull BackgroundTaskByVfsParameters parameters) {
+  public void setDefaultParameters(Project project, VirtualFile virtualFile, BackgroundTaskByVfsParameters parameters) {
     parameters.setExePath("notepad.exe");
     parameters.setProgramParameters(virtualFile.getPresentableUrl());
     parameters.setWorkingDirectory("$FileParentPath$");
   }
 
-  @Nonnull
+  
   @Override
   public String getTemplateName() {
     return "#Sand";

@@ -44,8 +44,7 @@ import consulo.ui.ex.awt.ColoredSideBorder;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,7 +117,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         @Nullable String className,
         SortedMap<Integer, LineData> lines,
         boolean coverageByTestApplicable,
-        @Nonnull CoverageSuitesBundle coverageSuite,
+        CoverageSuitesBundle coverageSuite,
         Int2IntFunction newToOldConverter,
         Int2IntFunction oldToNewConverter,
         boolean subCoverageActive
@@ -153,7 +152,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
     }
 
     @Override
-    public boolean canDoAction(@Nonnull MouseEvent e) {
+    public boolean canDoAction(MouseEvent e) {
         Component component = e.getComponent();
         return component instanceof EditorGutterComponentEx gutter
             && e.getX() > gutter.getLineMarkerAreaOffset()
@@ -168,7 +167,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
     @Override
     @RequiredUIAccess
-    public void doAction(@Nonnull Editor editor, @Nonnull MouseEvent e) {
+    public void doAction(Editor editor, MouseEvent e) {
         e.consume();
         JComponent comp = (JComponent) e.getComponent();
         JRootPane rootPane = comp.getRootPane();
@@ -283,7 +282,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         return editor.getColorsScheme().getAttributes(myKey).getErrorStripeColor();
     }
 
-    @Nonnull
+    
     @Override
     public Position getPosition() {
         return Position.LEFT;
@@ -307,7 +306,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             LocalizeValue nextChange = getNextChange();
             if (nextChange.isNotEmpty()) {
@@ -334,7 +333,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             LocalizeValue nextChange = getNextChange();
             if (nextChange.isNotEmpty()) {
@@ -354,7 +353,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Integer lineNumber = getLineEntry();
             if (lineNumber != null) {
                 moveToLine(lineNumber, myEditor);
@@ -392,7 +391,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
             return null;
         }
 
-        @Nonnull
+        
         protected LocalizeValue getNextChange() {
             Integer entry = getLineEntry();
             if (entry != null) {
@@ -412,7 +411,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(getLineEntry() != null);
         }
     }
@@ -432,13 +431,13 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setVisible(getLineData(myLineNumber) != null);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = myEditor.getProject();
 
             ExecutionCoverageInternal.getInstance()

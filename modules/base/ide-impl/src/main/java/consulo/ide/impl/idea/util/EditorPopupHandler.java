@@ -5,7 +5,6 @@ import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.EditorEx;
-import jakarta.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link EditorEx#setContextMenuGroupId(String)} or
@@ -25,17 +24,17 @@ public abstract class EditorPopupHandler implements EditorMouseListener {
   }
 
   @Override
-  public void mouseClicked(@Nonnull EditorMouseEvent e) {
+  public void mouseClicked(EditorMouseEvent e) {
     handle(e);
   }
 
   @Override
-  public void mousePressed(@Nonnull EditorMouseEvent e) {
+  public void mousePressed(EditorMouseEvent e) {
     handle(e);
   }
 
   @Override
-  public void mouseReleased(@Nonnull EditorMouseEvent e) {
+  public void mouseReleased(EditorMouseEvent e) {
     handle(e);
   }
 }

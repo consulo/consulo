@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,10 +31,10 @@ public interface PsiElementUsageTargetFactory {
         return Application.get().getInstance(PsiElementUsageTargetFactory.class);
     }
 
-    @Nonnull
+    
     PsiElementUsageTarget create(PsiElement element);
 
-    @Nonnull
+    
     default PsiElementUsageTarget[] create(PsiElement[] elements) {
         PsiElementUsageTarget[] targets = new PsiElementUsageTarget[elements.length];
         for (int i = 0; i < elements.length; i++) {

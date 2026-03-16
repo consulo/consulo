@@ -21,7 +21,6 @@ import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.lineIndent.SemanticEditorPosition;
 import consulo.language.codeStyle.lineIndent.SemanticEditorPositionFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Function;
 
@@ -36,7 +35,7 @@ public class SemanticEditorPositionFactoryImpl implements SemanticEditorPosition
     myEditor = editor;
   }
 
-  @Nonnull
+  
   @Override
   public SemanticEditorPosition create(int offset, Function<IElementType, SemanticEditorPosition.SyntaxElement> mapper) {
     return SemanticEditorPositionImpl.createEditorPosition((EditorEx)myEditor,
@@ -45,8 +44,8 @@ public class SemanticEditorPositionFactoryImpl implements SemanticEditorPosition
                                                            mapper::apply);
   }
 
-  @Nonnull
-  protected HighlighterIterator getIteratorAtPosition(@Nonnull EditorEx editor, int offset) {
+  
+  protected HighlighterIterator getIteratorAtPosition(EditorEx editor, int offset) {
     return editor.getHighlighter().createIterator(offset);
   }
 }

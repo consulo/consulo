@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * Shows a live template-like chooser UI over a PSI element and offers the user to replace certain sub-elements of the
@@ -37,9 +36,9 @@ public interface TemplateBuilder {
    * @param element         the element to replace.
    * @param replacementText the initial value for the replacement.
    */
-  void replaceElement(@Nonnull PsiElement element, String replacementText);
+  void replaceElement(PsiElement element, String replacementText);
 
-  void replaceElement(@Nonnull PsiElement element, TextRange rangeWithinElement, String replacementText);
+  void replaceElement(PsiElement element, TextRange rangeWithinElement, String replacementText);
 
   void replaceElement(PsiElement element, Expression expression, boolean alwaysStopAt);
 
@@ -53,7 +52,7 @@ public interface TemplateBuilder {
 
   void replaceElement(PsiElement element, TextRange textRange, String primaryVariableName, String otherVariableName, boolean alwaysStopAt);
 
-  void replaceElement(@Nonnull PsiElement element, @Nonnull TextRange textRange, String varName, Expression expression, boolean alwaysStopAt);
+  void replaceElement(PsiElement element, TextRange textRange, String varName, Expression expression, boolean alwaysStopAt);
 
   /**
    * Creates a replacement box for the specified element with the specified expression.
@@ -61,9 +60,9 @@ public interface TemplateBuilder {
    * @param element    the element to replace.
    * @param expression the replacement expression.
    */
-  void replaceElement(@Nonnull PsiElement element, Expression expression);
+  void replaceElement(PsiElement element, Expression expression);
 
-  void replaceElement(@Nonnull PsiElement element, TextRange rangeWithinElement, Expression expression);
+  void replaceElement(PsiElement element, TextRange rangeWithinElement, Expression expression);
 
   /**
    * Creates a replacement box for the specified text range within the container element.
@@ -95,7 +94,7 @@ public interface TemplateBuilder {
    * @param editor editor to use to start editing process.
    * @param inline if true then inline template will be created, regular otherwise
    */
-  void run(@Nonnull Editor editor, boolean inline);
+  void run(Editor editor, boolean inline);
 
   /**
    * Adds end variable after the specified element
@@ -106,9 +105,9 @@ public interface TemplateBuilder {
 
   void replaceElement(PsiElement element, String varName, Expression expression, boolean alwaysStopAt, boolean skipOnStart);
 
-  @Nonnull
+  
   Template buildInlineTemplate();
 
-  @Nonnull
+  
   Template buildTemplate();
 }

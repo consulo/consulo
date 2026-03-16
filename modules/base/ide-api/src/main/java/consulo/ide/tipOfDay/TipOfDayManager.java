@@ -21,7 +21,6 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ public interface TipOfDayManager {
   /**
    * Schedule show tips dialog. Will open one time, per app start (even if multiple projects open)
    */
-  void scheduleShow(@Nonnull UIAccess uiAccess, @Nonnull Project project);
+  void scheduleShow(UIAccess uiAccess, Project project);
 
   /**
    * Force show tip dialog without any checks

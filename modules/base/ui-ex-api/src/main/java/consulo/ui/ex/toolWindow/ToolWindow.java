@@ -27,20 +27,19 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ToolWindow extends BusyObject, UserDataHolder {
     Key<ToolWindow> KEY = Key.create(ToolWindow.class);
     Key<Boolean> SHOW_CONTENT_ICON = Key.create("ContentIcon");
 
-    @Nonnull
+   
     String getId();
 
-    @Nonnull
+   
     LocalizeValue getDisplayName();
 
-    void setDisplayName(@Nonnull LocalizeValue displayName);
+    void setDisplayName(LocalizeValue displayName);
 
     /**
      * @throws IllegalStateException if tool window isn't installed.
@@ -111,7 +110,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
      * @throws IllegalStateException if tool window isn't installed.
      */
     @RequiredUIAccess
-    void setAnchor(@Nonnull ToolWindowAnchor anchor, @Nullable Runnable runnable);
+    void setAnchor(ToolWindowAnchor anchor, @Nullable Runnable runnable);
 
     /**
      * @throws IllegalStateException if tool window isn't installed.
@@ -140,14 +139,14 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     /**
      * @throws IllegalStateException if tool window isn't installed.
      */
-    @Nonnull
+   
     ToolWindowType getType();
 
     /**
      * @throws IllegalStateException if tool window isn't installed.
      */
     @RequiredUIAccess
-    void setType(@Nonnull ToolWindowType type, @Nullable Runnable runnable);
+    void setType(ToolWindowType type, @Nullable Runnable runnable);
 
     /**
      * @return selected content title
@@ -167,7 +166,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     /**
      * @return window stripe button text.
      */
-    @Nonnull
+   
     @RequiredUIAccess
     @Deprecated
     default String getStripeTitle() {
@@ -180,7 +179,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     @Deprecated
     @DeprecationInfo("Use 'displayName' attribute")
     @RequiredUIAccess
-    default void setStripeTitle(@Nonnull String title) {
+    default void setStripeTitle(String title) {
         throw new UnsupportedOperationException("Use #setDisplayName");
     }
 
@@ -210,17 +209,17 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
     }
 
     @RequiredUIAccess
-    void setContentUiType(@Nonnull ToolWindowContentUiType type, @Nullable Runnable runnable);
+    void setContentUiType(ToolWindowContentUiType type, @Nullable Runnable runnable);
 
-    void setDefaultContentUiType(@Nonnull ToolWindowContentUiType type);
+    void setDefaultContentUiType(ToolWindowContentUiType type);
 
-    @Nonnull
+   
     @RequiredUIAccess
     ToolWindowContentUiType getContentUiType();
 
-    void installWatcher(@Nonnull ContentManager contentManager);
+    void installWatcher(ContentManager contentManager);
 
-    @Nonnull
+   
     ContentManager getContentManager();
 
     @Nullable
@@ -243,19 +242,19 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
 
     boolean isDisposed();
 
-    default void setTitleActions(@Nonnull AnAction... actions) {
+    default void setTitleActions(AnAction... actions) {
     }
 
-    default void setTabActions(@Nonnull AnAction... actions) {
+    default void setTabActions(AnAction... actions) {
     }
 
-    default void setTabDoubleClickActions(@Nonnull AnAction... actions) {
+    default void setTabDoubleClickActions(AnAction... actions) {
     }
 
     default void setAdditionalGearActions(@Nullable ActionGroup additionalGearActions) {
     }
 
-    @Nonnull
+   
     default Component getUIComponent() {
         throw new AbstractMethodError();
     }
@@ -274,8 +273,7 @@ public interface ToolWindow extends BusyObject, UserDataHolder {
 
     // region AWT & Swing dependency
 
-    @Nullable
-    default javax.swing.JComponent getComponent() {
+    default javax.swing.@Nullable JComponent getComponent() {
         throw new AbstractMethodError();
     }
 

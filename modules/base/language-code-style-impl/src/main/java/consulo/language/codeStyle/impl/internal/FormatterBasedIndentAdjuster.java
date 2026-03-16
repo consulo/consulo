@@ -10,7 +10,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 public class FormatterBasedIndentAdjuster {
     private final static int MAX_SYNCHRONOUS_ADJUSTMENT_DOC_SIZE = 100000;
@@ -19,7 +18,7 @@ public class FormatterBasedIndentAdjuster {
     }
 
     @RequiredUIAccess
-    public static void scheduleIndentAdjustment(@Nonnull Project myProject, @Nonnull Document myDocument, int myOffset) {
+    public static void scheduleIndentAdjustment(Project myProject, Document myDocument, int myOffset) {
         IndentAdjusterRunnable fixer = new IndentAdjusterRunnable(myProject, myDocument, myOffset);
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
         if (isSynchronousAdjustment(myDocument)) {
@@ -31,7 +30,7 @@ public class FormatterBasedIndentAdjuster {
         }
     }
 
-    private static boolean isSynchronousAdjustment(@Nonnull Document document) {
+    private static boolean isSynchronousAdjustment(Document document) {
         return Application.get().isUnitTestMode() || document.getTextLength() <= MAX_SYNCHRONOUS_ADJUSTMENT_DOC_SIZE;
     }
 

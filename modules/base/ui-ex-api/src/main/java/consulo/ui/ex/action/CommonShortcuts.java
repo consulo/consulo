@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.platform.Platform;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -170,7 +169,7 @@ public class CommonShortcuts {
         return shortcutsById(IdeActions.ACTION_DELETE);
     }
 
-    @Nonnull
+    
     private static CustomShortcutSet shortcutsById(String actionId) {
         Application application = ApplicationManager.getApplication();
         KeymapManager keymapManager = application == null ? null : application.getInstance(KeymapManager.class);

@@ -26,8 +26,7 @@ import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -47,23 +46,23 @@ public class SandBundleType extends BundleType {
     }
 
     @Override
-    public boolean canCreatePredefinedSdks(@Nonnull Platform platform) {
+    public boolean canCreatePredefinedSdks(Platform platform) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
-    public Set<String> getEnviromentVariables(@Nonnull Platform platform) {
+    public Set<String> getEnviromentVariables(Platform platform) {
         return Set.of("TEMP");
     }
 
     @Override
-    public void collectHomePaths(@Nonnull Platform platform, @Nonnull Consumer<Path> pathConsumer) {
+    public void collectHomePaths(Platform platform, Consumer<Path> pathConsumer) {
     }
 
     @Nullable
     @Override
-    public String getVersionString(@Nonnull Platform platform, @Nonnull Path path) {
+    public String getVersionString(Platform platform, Path path) {
         return "1";
     }
 

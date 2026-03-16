@@ -21,8 +21,7 @@ import consulo.util.collection.MultiMap;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,25 +29,25 @@ import java.util.Map;
 public abstract class VcsLogOneCommitPerRepoAction<Repo extends Repository> extends VcsLogAction<Repo> {
 
   @Override
-  protected void actionPerformed(@Nonnull Project project, @Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected void actionPerformed(Project project, MultiMap<Repo, VcsFullCommitDetails> grouped) {
     Map<Repo, VcsFullCommitDetails> singleElementMap = convertToSingleElementMap(grouped);
     assert singleElementMap != null;
     actionPerformed(project, singleElementMap);
   }
 
   @Override
-  protected boolean isEnabled(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  protected boolean isEnabled(MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return allValuesAreSingletons(grouped);
   }
 
-  protected abstract void actionPerformed(@Nonnull Project project, @Nonnull Map<Repo, VcsFullCommitDetails> commits);
+  protected abstract void actionPerformed(Project project, Map<Repo, VcsFullCommitDetails> commits);
 
-  private boolean allValuesAreSingletons(@Nonnull MultiMap<Repo, VcsFullCommitDetails> grouped) {
+  private boolean allValuesAreSingletons(MultiMap<Repo, VcsFullCommitDetails> grouped) {
     return !ContainerUtil.exists(grouped.entrySet(), entry -> entry.getValue().size() != 1);
   }
 
   @Nullable
-  private Map<Repo, VcsFullCommitDetails> convertToSingleElementMap(@Nonnull MultiMap<Repo, VcsFullCommitDetails> groupedCommits) {
+  private Map<Repo, VcsFullCommitDetails> convertToSingleElementMap(MultiMap<Repo, VcsFullCommitDetails> groupedCommits) {
     Map<Repo, VcsFullCommitDetails> map = new HashMap<>();
     for (Map.Entry<Repo, Collection<VcsFullCommitDetails>> entry : groupedCommits.entrySet()) {
       Collection<VcsFullCommitDetails> commits = entry.getValue();

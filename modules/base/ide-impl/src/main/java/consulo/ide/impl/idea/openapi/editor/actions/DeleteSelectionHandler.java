@@ -30,8 +30,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl(id = "delete.for.selection")
 public class DeleteSelectionHandler extends EditorWriteActionHandler implements ExtensionEditorActionHandler {
@@ -62,7 +61,7 @@ public class DeleteSelectionHandler extends EditorWriteActionHandler implements 
         myOriginalHandler = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_DELETE;

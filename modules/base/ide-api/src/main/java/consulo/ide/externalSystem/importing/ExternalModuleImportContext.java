@@ -18,8 +18,7 @@ package consulo.ide.externalSystem.importing;
 import consulo.externalSystem.service.setting.AbstractImportFromExternalSystemControl;
 import consulo.ide.moduleImport.ModuleImportContext;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ public class ExternalModuleImportContext<C extends AbstractImportFromExternalSys
     myImportProvider = importProvider;
   }
 
-  @Nonnull
+  
   public AbstractExternalModuleImportProvider<C> getImportProvider() {
     return myImportProvider;
   }

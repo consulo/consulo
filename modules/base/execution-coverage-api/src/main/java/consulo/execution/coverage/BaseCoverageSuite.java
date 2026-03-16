@@ -10,8 +10,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -105,14 +104,14 @@ public abstract class BaseCoverageSuite implements CoverageSuite, JDOMExternaliz
     }
 
     @Override
-    @Nonnull
+    
     public String getCoverageDataFileName() {
         return myCoverageDataFileProvider.getCoverageDataFilePath();
     }
 
     @Override
     public
-    @Nonnull
+    
     CoverageFileProvider getCoverageDataFileProvider() {
         return myCoverageDataFileProvider;
     }

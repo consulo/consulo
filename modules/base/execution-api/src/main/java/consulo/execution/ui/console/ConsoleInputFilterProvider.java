@@ -21,12 +21,11 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ConsoleInputFilterProvider {
   ExtensionPointName<ConsoleInputFilterProvider> INPUT_FILTER_PROVIDERS = ExtensionPointName.create(ConsoleInputFilterProvider.class);
 
-  @Nonnull
-  InputFilter[] getDefaultFilters(@Nonnull Project project);
+  
+  InputFilter[] getDefaultFilters(Project project);
 }

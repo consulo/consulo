@@ -25,7 +25,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.dataholder.Key;
 import consulo.language.ast.TokenSet;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -33,9 +32,9 @@ import java.util.*;
  * @author Dennis.Ushakov
  */
 public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
-  @Nonnull
+  
   private final TokenSet myTemplateExpressionStartTokens;
-  @Nonnull
+  
   private final Class myTemplateFileViewProviderClass;
 
   private final Set<Language> knownLanguageSet;
@@ -43,16 +42,16 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
   private final static Key<Class> TEMPLATE_VIEW_PROVIDER_CLASS_KEY = Key.create("TEMPLATE_VIEW_PROVIDER_CLASS");
 
   protected TemplateLanguageErrorFilter(
-    @Nonnull TokenSet templateExpressionStartTokens,
-    @Nonnull Class templateFileViewProviderClass)
+    TokenSet templateExpressionStartTokens,
+    Class templateFileViewProviderClass)
   {
     this(templateExpressionStartTokens, templateFileViewProviderClass, new String[0]);
   }
 
   protected TemplateLanguageErrorFilter(
-    @Nonnull TokenSet templateExpressionStartTokens,
-    @Nonnull Class templateFileViewProviderClass,
-    @Nonnull String... knownSubLanguageNames)
+    TokenSet templateExpressionStartTokens,
+    Class templateFileViewProviderClass,
+    String... knownSubLanguageNames)
   {
     myTemplateExpressionStartTokens = TokenSet.create(templateExpressionStartTokens.getTypes());
     myTemplateFileViewProviderClass = templateFileViewProviderClass;
@@ -70,7 +69,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
   }
 
   @Override
-  public boolean shouldHighlightErrorElement(@Nonnull PsiErrorElement element) {
+  public boolean shouldHighlightErrorElement(PsiErrorElement element) {
     if (isKnownSubLanguage(element.getParent().getLanguage())) {
       //
       // Immediately discard filters with non-matching template class if already known
@@ -101,7 +100,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
     return true;
   }
   
-  private boolean shouldIgnoreErrorAt(@Nonnull FileViewProvider viewProvider, int offset) {
+  private boolean shouldIgnoreErrorAt(FileViewProvider viewProvider, int offset) {
     PsiElement element = viewProvider.findElementAt(offset, viewProvider.getBaseLanguage());
     if (element instanceof PsiWhiteSpace) element = element.getNextSibling();
     if (element != null && myTemplateExpressionStartTokens.contains(element.getNode().getElementType())) {
@@ -110,7 +109,7 @@ public abstract class TemplateLanguageErrorFilter extends HighlightErrorFilter {
     return false;
   }
   
-  protected boolean isKnownSubLanguage(@Nonnull Language language) {
+  protected boolean isKnownSubLanguage(Language language) {
     for (Language knownLanguage : knownLanguageSet) {
       if (language.is(knownLanguage)) {
         return true;

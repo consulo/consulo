@@ -46,8 +46,7 @@ import consulo.undoRedo.internal.StartMarkAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -179,7 +178,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     @Override
     protected abstract JComponent getComponent();
 
-    protected abstract void saveSettings(@Nonnull V variable);
+    protected abstract void saveSettings(V variable);
 
     @Override
     @RequiredReadAction
@@ -435,10 +434,10 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     @Override
     @RequiredUIAccess
     protected void addHighlights(
-        @Nonnull Map<TextRange, TextAttributesKey> ranges,
-        @Nonnull Editor editor,
-        @Nonnull Collection<RangeHighlighter> highlighters,
-        @Nonnull HighlightManager highlightManager
+        Map<TextRange, TextAttributesKey> ranges,
+        Editor editor,
+        Collection<RangeHighlighter> highlighters,
+        HighlightManager highlightManager
     ) {
         TextAttributesKey attributesKey = EditorColors.SEARCH_RESULT_ATTRIBUTES;
         V variable = getVariable();

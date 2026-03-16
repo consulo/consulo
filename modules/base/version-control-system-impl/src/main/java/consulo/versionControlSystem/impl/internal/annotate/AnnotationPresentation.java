@@ -29,28 +29,27 @@ import consulo.versionControlSystem.annotate.AnnotationSourceSwitcher;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.internal.TextAnnotationPresentation;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class AnnotationPresentation implements TextAnnotationPresentation {
-  @Nonnull
+  
   private final FileAnnotation myFileAnnotation;
-  @Nonnull
+  
   private final UpToDateLineNumberProvider myUpToDateLineNumberProvider;
   @Nullable private final AnnotationSourceSwitcher mySwitcher;
   private final ArrayList<AnAction> myActions = new ArrayList<>();
 
-  @Nonnull
+  
   private final Disposable myDisposable;
   private boolean myDisposed = false;
 
-  AnnotationPresentation(@Nonnull FileAnnotation fileAnnotation,
-                         @Nonnull UpToDateLineNumberProvider upToDateLineNumberProvider,
+  AnnotationPresentation(FileAnnotation fileAnnotation,
+                         UpToDateLineNumberProvider upToDateLineNumberProvider,
                          @Nullable AnnotationSourceSwitcher switcher,
-                         @Nonnull Disposable disposable) {
+                         Disposable disposable) {
     myUpToDateLineNumberProvider = upToDateLineNumberProvider;
     myFileAnnotation = fileAnnotation;
     mySwitcher = switcher;
@@ -84,7 +83,7 @@ class AnnotationPresentation implements TextAnnotationPresentation {
     return myActions;
   }
 
-  @Nonnull
+  
   public List<AnAction> getActions() {
     return myActions;
   }

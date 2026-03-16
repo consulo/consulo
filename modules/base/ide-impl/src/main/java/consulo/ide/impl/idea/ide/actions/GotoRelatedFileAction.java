@@ -42,8 +42,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,7 +62,7 @@ public class GotoRelatedFileAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Editor editor = e.getData(Editor.KEY);
         PsiFile psiFile = e.getData(PsiFile.KEY);
         if (psiFile == null) {
@@ -297,9 +296,9 @@ public class GotoRelatedFileAction extends AnAction {
         return popup;
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static List<GotoRelatedItem> getItems(@Nonnull PsiFile psiFile, @Nullable Editor editor, @Nullable DataContext dataContext) {
+    public static List<GotoRelatedItem> getItems(PsiFile psiFile, @Nullable Editor editor, @Nullable DataContext dataContext) {
         PsiElement contextElement = psiFile;
         if (editor != null) {
             PsiElement element = psiFile.findElementAt(editor.getCaretModel().getOffset());
@@ -339,7 +338,7 @@ public class GotoRelatedFileAction extends AnAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(e.hasData(PsiFile.KEY));
     }
 

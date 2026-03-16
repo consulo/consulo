@@ -20,8 +20,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -80,7 +79,7 @@ public class TemplateContext {
         }
     }
 
-    public void setDefaultContext(@Nonnull TemplateContext defContext) {
+    public void setDefaultContext(TemplateContext defContext) {
         Map<String, Boolean> copy = new HashMap<>(myContextStates);
         myContextStates.clear();
         myContextStates.putAll(defContext.myContextStates);

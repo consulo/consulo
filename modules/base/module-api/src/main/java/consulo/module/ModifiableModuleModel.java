@@ -18,8 +18,7 @@ package consulo.module;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 /**
@@ -34,7 +33,7 @@ public interface ModifiableModuleModel {
    *
    * @return the array of modules.
    */
-  @Nonnull
+  
   Module[] getModules();
 
   /**
@@ -46,8 +45,8 @@ public interface ModifiableModuleModel {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  @Nonnull
-  Module newModule(@Nonnull String name, @Nullable String dirPath);
+  
+  Module newModule(String name, @Nullable String dirPath);
 
   /**
    * Creates a module of the specified type at the specified path and adds it to the project
@@ -59,10 +58,10 @@ public interface ModifiableModuleModel {
    * @param options map of module options to be used when creating the module
    * @return the module instance.
    */
-  @Nonnull
+  
   @Deprecated
   @DeprecationInfo("Parameter options is deprecated")
-  default Module newModule(@Nonnull String name, @Nullable String dirPath, @Nullable Map<String, String> options) {
+  default Module newModule(String name, @Nullable String dirPath, @Nullable Map<String, String> options) {
     return newModule(name, dirPath);
   }
 
@@ -72,7 +71,7 @@ public interface ModifiableModuleModel {
    *
    * @param module the module to remove.
    */
-  void disposeModule(@Nonnull Module module);
+  void disposeModule(Module module);
 
   /**
    * Returns the project module with the specified name.
@@ -81,7 +80,7 @@ public interface ModifiableModuleModel {
    * @return the module instance, or null if no module with such name exists.
    */
   @Nullable
-  Module findModuleByName(@Nonnull String name);
+  Module findModuleByName(String name);
 
   /**
    * Disposes of all modules in the project.
@@ -109,7 +108,7 @@ public interface ModifiableModuleModel {
    * @param newName the new name to rename the module to.
    * @throws ModuleWithNameAlreadyExistsException if a module with such a name already exists in the project.
    */
-  void renameModule(@Nonnull Module module, @Nonnull String newName) throws ModuleWithNameAlreadyExistsException;
+  void renameModule(Module module, String newName) throws ModuleWithNameAlreadyExistsException;
 
   /**
    * Returns the project module which has been renamed to the specified name.
@@ -118,7 +117,7 @@ public interface ModifiableModuleModel {
    * @return the module instance, or null if no module has been renamed to such a name.
    */
   @Nullable
-  Module getModuleToBeRenamed(@Nonnull String newName);
+  Module getModuleToBeRenamed(String newName);
 
   /**
    * Returns the name to which the specified module has been renamed.
@@ -127,7 +126,7 @@ public interface ModifiableModuleModel {
    * @return the new name, or null if the module has not been renamed.
    */
   @Nullable
-  String getNewName(@Nonnull Module module);
+  String getNewName(Module module);
 
   @Nullable
   String[] getModuleGroupPath(Module module);

@@ -19,14 +19,13 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ide.ServiceManager;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Fokin
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class SystemDock {
-  @Nonnull
+  
   public static SystemDock getInstance() {
     return ServiceManager.getService(SystemDock.class);
   }

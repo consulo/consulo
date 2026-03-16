@@ -11,8 +11,7 @@ import consulo.language.psi.PsiElement;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Set;
 
@@ -53,11 +52,11 @@ public class FoldingDescriptor {
    *              {@link FoldingBuilder#isCollapsedByDefault(ASTNode)}.
    * @param range The folded text range in file
    */
-  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range) {
+  public FoldingDescriptor(ASTNode node, TextRange range) {
     this(node, range, null);
   }
 
-  public FoldingDescriptor(@Nonnull PsiElement element, @Nonnull TextRange range) {
+  public FoldingDescriptor(PsiElement element, TextRange range) {
     this(ObjectUtil.assertNotNull(element.getNode()), range, null);
   }
 
@@ -71,7 +70,7 @@ public class FoldingDescriptor {
    * @param range The folded text range in file
    * @param group Regions with the same group instance expand and collapse together.
    */
-  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range, @Nullable FoldingGroup group) {
+  public FoldingDescriptor(ASTNode node, TextRange range, @Nullable FoldingGroup group) {
     this(node, range, group, Collections.emptySet());
   }
 
@@ -87,7 +86,7 @@ public class FoldingDescriptor {
    * @param dependencies folding dependencies: other files or elements that could change
    *                     folding description, see <a href="#Dependencies">Dependencies</a>
    */
-  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range, @Nullable FoldingGroup group, Set<Object> dependencies) {
+  public FoldingDescriptor(ASTNode node, TextRange range, @Nullable FoldingGroup group, Set<Object> dependencies) {
     this(node, range, group, dependencies, false);
   }
 
@@ -103,7 +102,7 @@ public class FoldingDescriptor {
    * @param dependencies folding dependencies: other files or elements that could change, see <a href="#Dependencies">Dependencies</a>
    * @param neverExpands shall be true for fold regions that must not be ever expanded.
    */
-  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range, @Nullable FoldingGroup group, Set<Object> dependencies, boolean neverExpands) {
+  public FoldingDescriptor(ASTNode node, TextRange range, @Nullable FoldingGroup group, Set<Object> dependencies, boolean neverExpands) {
     this(node, range, group, dependencies, neverExpands, null, null);
   }
 
@@ -117,7 +116,7 @@ public class FoldingDescriptor {
    * @param group           Regions with the same group instance expand and collapse together.
    * @param placeholderText Text displayed instead of folded text, when the region is collapsed
    */
-  public FoldingDescriptor(@Nonnull PsiElement e, int start, int end, @Nullable FoldingGroup group, @Nonnull String placeholderText) {
+  public FoldingDescriptor(PsiElement e, int start, int end, @Nullable FoldingGroup group, String placeholderText) {
     this(e.getNode(), new TextRange(start, end), group, placeholderText);
   }
 
@@ -131,7 +130,7 @@ public class FoldingDescriptor {
    * @param group           Regions with the same group instance expand and collapse together.
    * @param placeholderText Text displayed instead of folded text, when the region is collapsed
    */
-  public FoldingDescriptor(@Nonnull ASTNode node, @Nonnull TextRange range, @Nullable FoldingGroup group, @Nonnull String placeholderText) {
+  public FoldingDescriptor(ASTNode node, TextRange range, @Nullable FoldingGroup group, String placeholderText) {
     this(node, range, group, Collections.emptySet(), false, placeholderText, null);
   }
 
@@ -147,12 +146,12 @@ public class FoldingDescriptor {
    * @param collapsedByDefault Whether the region should be collapsed for newly opened files
    * @param dependencies       folding dependencies: other files or elements that could change, see <a href="#Dependencies">Dependencies</a>
    */
-  public FoldingDescriptor(@Nonnull ASTNode node,
-                           @Nonnull TextRange range,
+  public FoldingDescriptor(ASTNode node,
+                           TextRange range,
                            @Nullable FoldingGroup group,
-                           @Nonnull String placeholderText,
+                           String placeholderText,
                            @Nullable Boolean collapsedByDefault,
-                           @Nonnull Set<Object> dependencies) {
+                           Set<Object> dependencies) {
     this(node, range, group, dependencies, false, placeholderText, collapsedByDefault);
   }
 
@@ -170,10 +169,10 @@ public class FoldingDescriptor {
    * @param placeholderText    Text displayed instead of folded text, when the region is collapsed
    * @param collapsedByDefault Whether the region should be collapsed for newly opened files
    */
-  public FoldingDescriptor(@Nonnull ASTNode node,
-                           @Nonnull TextRange range,
+  public FoldingDescriptor(ASTNode node,
+                           TextRange range,
                            @Nullable FoldingGroup group,
-                           @Nonnull Set<Object> dependencies,
+                           Set<Object> dependencies,
                            boolean neverExpands,
                            @Nullable String placeholderText,
                            @Nullable Boolean collapsedByDefault) {
@@ -194,7 +193,7 @@ public class FoldingDescriptor {
   /**
    * @return the node to which the folding region is related.
    */
-  @Nonnull
+  
   public ASTNode getElement() {
     return myElement;
   }
@@ -204,7 +203,7 @@ public class FoldingDescriptor {
    *
    * @return the folded text range.
    */
-  @Nonnull
+  
   public TextRange getRange() {
     return myRange;
   }
@@ -239,7 +238,7 @@ public class FoldingDescriptor {
     return foldingBuilder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)foldingBuilder).getPlaceholderText(myElement, myRange) : foldingBuilder.getPlaceholderText(myElement);
   }
 
-  @Nonnull
+  
   public Set<Object> getDependencies() {
     return myDependencies;
   }

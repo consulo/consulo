@@ -18,17 +18,16 @@ package consulo.language.file.inject;
 import consulo.document.DocumentWindow;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileDelegate;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 public interface VirtualFileWindow extends VirtualFileDelegate {
   @Override
-  @Nonnull
+  
   VirtualFile getDelegate();
 
-  @Nonnull
+  
   DocumentWindow getDocumentWindow();
 
   boolean isValid();

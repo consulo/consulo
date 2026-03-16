@@ -16,7 +16,6 @@
 package consulo.language.editor.ui.awt;
 
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import jakarta.annotation.Nonnull;
 
 import java.util.Comparator;
 
@@ -29,6 +28,6 @@ import java.util.Comparator;
  * @param <T> completion element type.
  */
 public interface TextCompletionValueDescriptor<T> extends Comparator<T> {
-  @Nonnull
-  LookupElementBuilder createLookupBuilder(@Nonnull T item);
+  
+  LookupElementBuilder createLookupBuilder(T item);
 }

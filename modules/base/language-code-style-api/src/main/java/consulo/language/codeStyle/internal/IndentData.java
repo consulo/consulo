@@ -18,8 +18,7 @@ package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.IndentInfo;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class IndentData {
   private final int myIndentSpaces;
@@ -68,7 +67,7 @@ public class IndentData {
     return "spaces=" + mySpaces + ", indent spaces=" + myIndentSpaces;
   }
 
-  public static IndentData createFrom(@Nonnull CharSequence chars, int startOffset, int endOffset, int tabSize) {
+  public static IndentData createFrom(CharSequence chars, int startOffset, int endOffset, int tabSize) {
     assert tabSize > 0 : "Invalid tab size: " + tabSize;
     int indent = 0;
     int alignment = 0;

@@ -23,26 +23,25 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public abstract class TabsPlacementAction extends ToggleAction implements DumbAware {
-    protected TabsPlacementAction(@Nonnull LocalizeValue text) {
+    protected TabsPlacementAction(LocalizeValue text) {
         super(text);
     }
 
     abstract int getPlace();
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return UISettings.getInstance().EDITOR_TAB_PLACEMENT == getPlace();
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         UISettings.getInstance().EDITOR_TAB_PLACEMENT = getPlace();
         LafManager.getInstance().repaintUI();
         UISettings.getInstance().fireUISettingsChanged();

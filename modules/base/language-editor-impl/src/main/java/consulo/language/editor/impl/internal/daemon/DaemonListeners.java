@@ -79,8 +79,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -109,14 +108,14 @@ public final class DaemonListeners implements Disposable {
     }
 
     @Inject
-    public DaemonListeners(@Nonnull Application application,
-                           @Nonnull DaemonCodeAnalyzer daemonCodeAnalyzer,
-                           @Nonnull ActionManager actionManager,
-                           @Nonnull EditorFactory editorFactory,
-                           @Nonnull Project project,
-                           @Nonnull Provider<IntentionsUI> intentionsUI,
-                           @Nonnull ProjectLocator projectLocator,
-                           @Nonnull Provider<ErrorStripeUpdateManager> errorStripeUpdateManager) {
+    public DaemonListeners(Application application,
+                           DaemonCodeAnalyzer daemonCodeAnalyzer,
+                           ActionManager actionManager,
+                           EditorFactory editorFactory,
+                           Project project,
+                           Provider<IntentionsUI> intentionsUI,
+                           ProjectLocator projectLocator,
+                           Provider<ErrorStripeUpdateManager> errorStripeUpdateManager) {
         myProject = project;
         myDaemonCodeAnalyzer = (DaemonCodeAnalyzerInternal) daemonCodeAnalyzer;
 
@@ -138,7 +137,7 @@ public final class DaemonListeners implements Disposable {
         eventMulticaster.addDocumentListener(new DocumentListener() {
             // clearing highlighters before changing document because change can damage editor highlighters drastically, so we'll clear more than necessary
             @Override
-            public void beforeDocumentChange(@Nonnull DocumentEvent e) {
+            public void beforeDocumentChange(DocumentEvent e) {
                 Document document = e.getDocument();
                 VirtualFile virtualFile = FileDocumentManager.getInstance().getFile(document);
                 Project project = virtualFile == null ? null : projectLocator.guessProjectForFile(virtualFile);
@@ -152,7 +151,7 @@ public final class DaemonListeners implements Disposable {
 
         eventMulticaster.addCaretListener(new CaretListener() {
             @Override
-            public void caretPositionChanged(@Nonnull CaretEvent e) {
+            public void caretPositionChanged(CaretEvent e) {
                 Editor editor = e.getEditor();
                 if ((editor.isShowing() || application.isHeadlessEnvironment()) && worthBothering(editor.getDocument(), editor.getProject())) {
 
@@ -168,7 +167,7 @@ public final class DaemonListeners implements Disposable {
         connection.subscribe(EditorTrackerListener.class, new EditorTrackerListener() {
             @Override
             @RequiredUIAccess
-            public void activeEditorsChanged(@Nonnull List<Editor> activeEditors) {
+            public void activeEditorsChanged(List<Editor> activeEditors) {
                 if (myActiveEditors.equals(activeEditors)) {
                     return;
                 }
@@ -190,7 +189,7 @@ public final class DaemonListeners implements Disposable {
         editorFactory.addEditorFactoryListener(new EditorFactoryListener() {
             @Override
             @RequiredUIAccess
-            public void editorCreated(@Nonnull EditorFactoryEvent event) {
+            public void editorCreated(EditorFactoryEvent event) {
                 Editor editor = event.getEditor();
                 Document document = editor.getDocument();
                 Project editorProject = editor.getProject();
@@ -207,7 +206,7 @@ public final class DaemonListeners implements Disposable {
             }
 
             @Override
-            public void editorReleased(@Nonnull EditorFactoryEvent event) {
+            public void editorReleased(EditorFactoryEvent event) {
                 // mem leak after closing last editor otherwise
                 application.invokeLater(() -> intentionsUI.get().invalidate(), project.getDisposed());
             }
@@ -219,7 +218,7 @@ public final class DaemonListeners implements Disposable {
 
         connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override
-            public void rootsChanged(@Nonnull ModuleRootEvent event) {
+            public void rootsChanged(ModuleRootEvent event) {
                 stopDaemonAndRestartAllFiles("Project roots changed");
             }
         });
@@ -248,7 +247,7 @@ public final class DaemonListeners implements Disposable {
         connection.subscribe(AnActionListener.class, new MyAnActionListener());
         connection.subscribe(BulkFileListener.class, new BulkFileListener() {
             @Override
-            public void after(@Nonnull List<? extends VFileEvent> events) {
+            public void after(List<? extends VFileEvent> events) {
                 boolean isDaemonShouldBeStopped = false;
                 for (VFileEvent event : events) {
                     if (event instanceof VFilePropertyChangeEvent) {
@@ -269,7 +268,7 @@ public final class DaemonListeners implements Disposable {
             }
 
             @RequiredReadAction
-            private void fileRenamed(@Nonnull VFilePropertyChangeEvent event) {
+            private void fileRenamed(VFilePropertyChangeEvent event) {
                 stopDaemonAndRestartAllFiles("Virtual file name changed");
                 VirtualFile virtualFile = event.getFile();
                 PsiFile psiFile =
@@ -300,7 +299,7 @@ public final class DaemonListeners implements Disposable {
         });
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
-            public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+            public void fileTypesChanged(FileTypeEvent event) {
                 intentionsUI.get().invalidate();
             }
         });
@@ -346,7 +345,7 @@ public final class DaemonListeners implements Disposable {
         stopDaemonAndRestartAllFiles("Project closed");
     }
 
-    public boolean canChangeFileSilently(@Nonnull PsiFileSystemItem file) {
+    public boolean canChangeFileSilently(PsiFileSystemItem file) {
         Project project = file.getProject();
         DaemonListeners listeners = getInstance(project);
 
@@ -387,7 +386,7 @@ public final class DaemonListeners implements Disposable {
         return listeners.canUndo(virtualFile);
     }
 
-    private boolean canUndo(@Nonnull VirtualFile virtualFile) {
+    private boolean canUndo(VirtualFile virtualFile) {
         FileEditor[] editors = FileEditorManager.getInstance(myProject).getEditors(virtualFile);
         if (editors.length == 0) {
             return false;
@@ -405,7 +404,7 @@ public final class DaemonListeners implements Disposable {
 
     private class MyApplicationListener implements ApplicationListener {
         @Override
-        public void beforeWriteActionStart(@Nonnull Object action) {
+        public void beforeWriteActionStart(Object action) {
             if (!myDaemonCodeAnalyzer.isRunning()) {
                 return; // we'll restart in writeActionFinished()
             }
@@ -413,7 +412,7 @@ public final class DaemonListeners implements Disposable {
         }
 
         @Override
-        public void writeActionFinished(@Nonnull Object action) {
+        public void writeActionFinished(Object action) {
             stopDaemon(true, "Write action finish");
         }
     }
@@ -430,7 +429,7 @@ public final class DaemonListeners implements Disposable {
         }
 
         @Override
-        public void commandStarted(@Nonnull CommandEvent event) {
+        public void commandStarted(CommandEvent event) {
             Document affectedDocument = extractDocumentFromCommand(event);
             if (!worthBothering(affectedDocument, event.getProject())) {
                 return;
@@ -451,7 +450,7 @@ public final class DaemonListeners implements Disposable {
         }
 
         @Nullable
-        private Document extractDocumentFromCommand(@Nonnull CommandEvent event) {
+        private Document extractDocumentFromCommand(CommandEvent event) {
             Document affectedDocument = event.getDocument();
             if (affectedDocument != null) {
                 return affectedDocument;
@@ -468,7 +467,7 @@ public final class DaemonListeners implements Disposable {
         }
 
         @Override
-        public void commandFinished(@Nonnull CommandEvent event) {
+        public void commandFinished(CommandEvent event) {
             Document affectedDocument = extractDocumentFromCommand(event);
             if (!worthBothering(affectedDocument, event.getProject())) {
                 return;
@@ -521,12 +520,12 @@ public final class DaemonListeners implements Disposable {
         }
 
         @Override
-        public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
+        public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
             myEscPressed = action == escapeAction;
         }
 
         @Override
-        public void beforeEditorTyping(char c, @Nonnull DataContext dataContext) {
+        public void beforeEditorTyping(char c, DataContext dataContext) {
             Editor editor = dataContext.getData(Editor.KEY);
             //no need to stop daemon if something happened in the console
             if (editor != null && !worthBothering(editor.getDocument(), editor.getProject())) {
@@ -536,19 +535,19 @@ public final class DaemonListeners implements Disposable {
         }
     }
 
-    private void stopDaemon(boolean toRestartAlarm, @Nonnull String reason) {
+    private void stopDaemon(boolean toRestartAlarm, String reason) {
         if (myDaemonCodeAnalyzer.stopProcess(toRestartAlarm, reason)) {
             myDaemonEventPublisher.daemonCancelEventOccurred(reason);
         }
     }
 
-    private void stopDaemonAndRestartAllFiles(@Nonnull String reason) {
+    private void stopDaemonAndRestartAllFiles(String reason) {
         if (myDaemonCodeAnalyzer.doRestart()) {
             myDaemonEventPublisher.daemonCancelEventOccurred(reason);
         }
     }
 
-    //private void removeQuickFixesContributedByPlugin(@Nonnull PluginDescriptor pluginDescriptor) {
+    //private void removeQuickFixesContributedByPlugin(PluginDescriptor pluginDescriptor) {
     //  for (FileEditor fileEditor : FileEditorManager.getInstance(myProject).getAllEditors()) {
     //    if (fileEditor instanceof TextEditor) {
     //      Editor editor = ((TextEditor)fileEditor).getEditor();
@@ -561,7 +560,7 @@ public final class DaemonListeners implements Disposable {
     //  }
     //}
 
-    //private static void removeHighlightersContributedByPlugin(@Nonnull PluginDescriptor pluginDescriptor, RangeHighlighter[] highlighters) {
+    //private static void removeHighlightersContributedByPlugin(PluginDescriptor pluginDescriptor, RangeHighlighter[] highlighters) {
     //  for (RangeHighlighter highlighter : highlighters) {
     //    HighlightInfo info = HighlightInfo.fromRangeHighlighter(highlighter);
     //    if (info == null) continue;
@@ -576,7 +575,7 @@ public final class DaemonListeners implements Disposable {
     //  }
     //}
 
-    //private static boolean isContributedByPlugin(@Nonnull HighlightInfo.IntentionActionDescriptor intentionActionDescriptor, @Nonnull PluginDescriptor descriptor) {
+    //private static boolean isContributedByPlugin(HighlightInfo.IntentionActionDescriptor intentionActionDescriptor, PluginDescriptor descriptor) {
     //  IntentionAction action = intentionActionDescriptor.getAction();
     //  PluginId pluginId = PluginManager.getPluginId(action.getClass());
     //  return descriptor.getPluginId().equals(pluginId);

@@ -29,8 +29,7 @@ import consulo.externalService.statistic.ConvertUsagesUtil;
 import consulo.externalService.statistic.UsageDescriptor;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -42,7 +41,7 @@ import java.util.*;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent implements PersistentStateComponent<Element> {
-    @Nonnull
+    
     public static UsageStatisticsPersistenceComponent getInstance() {
         return Application.get().getInstance(UsageStatisticsPersistenceComponent.class);
     }
@@ -54,7 +53,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
     private static final String PERIOD_ATTR = "period";
     private static final String SECRET_KEY = "key";
 
-    @Nonnull
+    
     private SendPeriod myPeriod = SendPeriod.WEEKLY;
 
     private String mySecretKey;
@@ -119,7 +118,7 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
         return element;
     }
 
-    @Nonnull
+    
     public String getSecretKey() {
         if (mySecretKey == null) {
             mySecretKey = UUID.randomUUID().toString();
@@ -128,16 +127,16 @@ public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersiste
         return mySecretKey;
     }
 
-    @Nonnull
+    
     public SendPeriod getPeriod() {
         return myPeriod;
     }
 
-    public void setPeriod(@Nonnull SendPeriod period) {
+    public void setPeriod(SendPeriod period) {
         myPeriod = period;
     }
 
-    @Nonnull
+    
     private static SendPeriod parsePeriod(@Nullable String periodAttrValue) {
         if (SendPeriod.DAILY.getName().equals(periodAttrValue)) {
             return SendPeriod.DAILY;

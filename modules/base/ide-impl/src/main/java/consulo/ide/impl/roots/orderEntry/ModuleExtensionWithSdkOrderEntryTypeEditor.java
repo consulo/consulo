@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -38,7 +37,7 @@ import java.util.function.Consumer;
 public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleExtensionWithSdkOrderEntryImpl> {
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public void navigate(ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     Sdk sdk = orderEntry.getSdk();
     if (sdk == null) {
       return;
@@ -47,15 +46,15 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(sdk, true));
   }
 
-  @Nonnull
+  
   @Override
   public String getOrderTypeId() {
     return ModuleExtensionWithSdkOrderEntryType.ID;
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRender(ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
     return it -> {
       Sdk sdk = orderEntry.getSdk();
 

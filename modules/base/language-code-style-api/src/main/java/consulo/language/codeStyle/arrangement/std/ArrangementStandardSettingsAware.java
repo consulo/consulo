@@ -18,8 +18,7 @@ package consulo.language.codeStyle.arrangement.std;
 import consulo.language.codeStyle.arrangement.match.ArrangementEntryMatcher;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +64,7 @@ public interface ArrangementStandardSettingsAware {
    * @param current  an object which represents currently chosen tokens; <code>null</code> if no other token is selected
    * @return         <code>true</code> if given token is enabled with the given condition; <code>false</code> otherwise
    */
-  boolean isEnabled(@Nonnull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
+  boolean isEnabled(ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
 
   /**
    * This method is assumed to be used only by third-party developers. All built-in IJ conditions are supposed
@@ -75,14 +74,14 @@ public interface ArrangementStandardSettingsAware {
    * @return           a matcher for the given condition
    * @throws IllegalArgumentException   if current rearranger doesn't know how to build a matcher from the given condition
    */
-  @Nonnull
-  ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementMatchCondition condition) throws IllegalArgumentException;
+  
+  ArrangementEntryMatcher buildMatcher(ArrangementMatchCondition condition) throws IllegalArgumentException;
 
   /**
    * @return    collections of mutual exclusion settings. It's is used by standard arrangement settings UI to automatically
    *            deselect elements on selection change. Example: 'private' modifier was selected. When any other modifier is selected
    *            'public' modifier is deselected if returned collection contains set of all supported visibility modifiers
    */
-  @Nonnull
+  
   Collection<Set<ArrangementSettingsToken>> getMutexes();
 }

@@ -15,7 +15,6 @@
  */
 package consulo.process.impl.internal.local;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,10 +24,10 @@ import java.io.OutputStream;
  */
 public class ProcessWrapper extends Process {
 
-  @Nonnull
+  
   private final Process myOriginalProcess;
 
-  public ProcessWrapper(@Nonnull Process originalProcess) {
+  public ProcessWrapper(Process originalProcess) {
     myOriginalProcess = originalProcess;
   }
 
@@ -62,7 +61,7 @@ public class ProcessWrapper extends Process {
     myOriginalProcess.destroy();
   }
 
-  @Nonnull
+  
   public Process getOriginalProcess() {
     return myOriginalProcess;
   }

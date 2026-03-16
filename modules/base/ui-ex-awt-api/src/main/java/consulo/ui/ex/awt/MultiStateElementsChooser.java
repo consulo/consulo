@@ -27,8 +27,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.Lists;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
@@ -54,16 +53,16 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
   }
 
   public interface MarkStateDescriptor<T, S> {
-    @Nonnull
-    S getDefaultState(@Nonnull T element);
+    
+    S getDefaultState(T element);
 
-    @Nonnull
-    S getNextState(@Nonnull T element, @Nonnull S state);
+    
+    S getNextState(T element, S state);
 
     @Nullable
-    S getNextState(@Nonnull Map<T, S> elementsWithStates);
+    S getNextState(Map<T, S> elementsWithStates);
 
-    boolean isMarked(@Nonnull S state);
+    boolean isMarked(S state);
 
     @Nullable
     S getMarkState(@Nullable Object value);
@@ -175,13 +174,13 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.SHIFT_DOWN_MASK), "selectLastRowExtendSelection");
   }
 
-  @Nonnull
+  
   @Override
   public StatusText getEmptyText() {
     return myTable.getEmptyText();
   }
 
-  @Nonnull
+  
   @Override
   public ExpandableItemsHandler<TableCell> getExpandableItemsHandler() {
     return myTable.getExpandableItemsHandler();
@@ -349,7 +348,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     return myTable.getSelectedRow();
   }
 
-  @Nonnull
+  
   public List<T> getSelectedElements() {
     List<T> elements = new ArrayList<T>();
     int[] selectedRows = myTable.getSelectedRows();
@@ -386,7 +385,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     myTableModel.setMarkState(getElementsRows(elements), markState);
   }
 
-  @Nonnull
+  
   public Map<T, S> getElementMarkStates() {
     int count = myTableModel.getRowCount();
     Map<T, S> elements = new LinkedHashMap<T, S>();
@@ -602,7 +601,7 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
       fireTableRowsUpdated(firstRow, lastRow);
     }
 
-    @Nonnull
+    
     private S notNullMarkState(T element, S markState) {
       return markState != null ? markState : myMarkStateDescriptor.getDefaultState(element);
     }
@@ -631,12 +630,12 @@ public class MultiStateElementsChooser<T, S> extends JPanel implements Component
     }
   }
 
-  protected String getItemText(@Nonnull T value) {
+  protected String getItemText(T value) {
     return value.toString();
   }
 
   @Nullable
-  protected Image getItemIcon(@Nonnull T value) {
+  protected Image getItemIcon(T value) {
     return null;
   }
 

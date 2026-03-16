@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.errorTreeView;
 
 import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
@@ -27,7 +26,7 @@ public class SimpleMessageElement extends ErrorTreeElement{
   private final String[] myMessage;
   private final Object myData;
 
-  public SimpleMessageElement(@Nonnull ErrorTreeElementKind kind, String[] text, Object data) {
+  public SimpleMessageElement(ErrorTreeElementKind kind, String[] text, Object data) {
     super(kind);
     myMessage = text;
     myData = data;

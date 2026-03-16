@@ -32,7 +32,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Comparator;
 import java.util.function.Consumer;
@@ -78,19 +77,17 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     return 0;
   };
 
-  @Nonnull
   @Override
-  public EditorTextField getEditorField(@Nonnull Language language, @Nonnull Project project,
-                                        @Nonnull Iterable<Consumer<EditorEx>> features) {
+  public EditorTextField getEditorField(Language language, Project project,
+                                        Iterable<Consumer<EditorEx>> features) {
     return new MyEditorTextField(language, project, features);
   }
 
   private static class MyEditorTextField extends LanguageTextField {
 
-    @Nonnull
     private final Iterable<Consumer<EditorEx>> myCustomizations;
 
-    MyEditorTextField(@Nonnull Language language, @Nonnull Project project, @Nonnull Iterable<Consumer<EditorEx>> customizations) {
+    MyEditorTextField(Language language, Project project, Iterable<Consumer<EditorEx>> customizations) {
       super(language, project, "", false);
       myCustomizations = customizations;
     }
@@ -111,7 +108,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
       settings.setVirtualSpace(false);
     }
 
-    private void applyCustomizations(@Nonnull EditorEx editor) {
+    private void applyCustomizations(EditorEx editor) {
       for (Consumer<EditorEx> customization : myCustomizations) {
         customization.accept(editor);
       }
@@ -123,7 +120,7 @@ public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       super.uiDataSnapshot(sink);
       sink.set(PlatformDataKeys.ACTIONS_SORTER, ACTIONS_COMPARATOR);
     }

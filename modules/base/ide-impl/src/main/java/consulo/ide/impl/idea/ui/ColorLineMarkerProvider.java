@@ -38,7 +38,6 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.awt.event.MouseEvent;
@@ -55,7 +54,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         private final ColorValue myColor;
 
         @RequiredReadAction
-        public MyInfo(@Nonnull PsiElement element, ColorValue color, ElementColorProvider colorProvider) {
+        public MyInfo(PsiElement element, ColorValue color, ElementColorProvider colorProvider) {
             super(
                 element,
                 element.getTextRange(),
@@ -95,13 +94,13 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         }
 
         @Override
-        public boolean canMergeWith(@Nonnull MergeableLineMarkerInfo<?> info) {
+        public boolean canMergeWith(MergeableLineMarkerInfo<?> info) {
             return info instanceof MyInfo;
         }
 
-        @Nonnull
+        
         @Override
-        public Image getCommonIcon(@Nonnull List<MergeableLineMarkerInfo> infos) {
+        public Image getCommonIcon(List<MergeableLineMarkerInfo> infos) {
             ImageKey colors = PlatformIconGroup.gutterColors();
             return ImageEffects.canvas(colors.getWidth(), colors.getHeight(), canvas2D -> {
                 for (int i = 0; i < 4; i++) {
@@ -140,9 +139,9 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
             });
         }
 
-        @Nonnull
+        
         @Override
-        public Function<? super PsiElement, String> getCommonTooltip(@Nonnull List<MergeableLineMarkerInfo> infos) {
+        public Function<? super PsiElement, String> getCommonTooltip(List<MergeableLineMarkerInfo> infos) {
             return a -> null;
         }
     }
@@ -154,7 +153,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
         myApplication = application;
     }
 
-    @Nonnull
+    
     @Override
     public Language getLanguage() {
         return Language.ANY;
@@ -162,7 +161,7 @@ public final class ColorLineMarkerProvider implements LineMarkerProvider, DumbAw
 
     @Override
     @RequiredReadAction
-    public LineMarkerInfo getLineMarkerInfo(@Nonnull PsiElement element) {
+    public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
         ExtensionPoint<ElementColorProvider> point = myApplication.getExtensionPoint(ElementColorProvider.class);
         Map.Entry<ElementColorProvider, ColorValue> colorInfo = point.computeSafeIfAny(it -> {
             ColorValue value = it.getColorFrom(element);

@@ -27,8 +27,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class SendToFavoritesGroup extends ActionGroup {
         setPopup(true);
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         if (e == null) {
@@ -68,7 +67,7 @@ public class SendToFavoritesGroup extends ActionGroup {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         e.getPresentation().setVisible(
             SendToFavoritesAction.isEnabled(e) && e.hasData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY)
@@ -82,7 +81,7 @@ public class SendToFavoritesGroup extends ActionGroup {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getRequiredData(Project.KEY);
             FavoritesTreeNodeDescriptor[] roots = e.getRequiredData(FavoritesTreeViewPanel.CONTEXT_FAVORITES_ROOTS_DATA_KEY);
             String listName = e.getData(FavoritesTreeViewPanel.FAVORITES_LIST_NAME_DATA_KEY);

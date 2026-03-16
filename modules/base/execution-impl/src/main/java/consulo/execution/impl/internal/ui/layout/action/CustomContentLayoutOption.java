@@ -1,6 +1,5 @@
 package consulo.execution.impl.internal.ui.layout.action;
 
-import org.jetbrains.annotations.Nls;
 
 public interface CustomContentLayoutOption {
     boolean isEnabled();
@@ -9,6 +8,6 @@ public interface CustomContentLayoutOption {
 
     void select();
 
-    @Nls
+    
     String getDisplayName();
 }

@@ -4,8 +4,7 @@ package consulo.ui.ex.awt;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,44 +42,44 @@ import java.util.Map;
  */
 public final class GridBag extends GridBagConstraints {
   private int myDefaultAnchor = anchor;
-  @Nonnull
+  
   private final Map<Integer, Integer> myDefaultColumnAnchors = new HashMap<>();
 
   private int myDefaultFill = fill;
-  @Nonnull
+  
   private final Map<Integer, Integer> myDefaultColumnFills = new HashMap<>();
 
   private double myDefaultWeightX = weightx;
-  @Nonnull
+  
   private final Map<Integer, Double> myDefaultColumnWeightsX = new HashMap<>();
   private double myDefaultWeightY = weighty;
-  @Nonnull
+  
   private final Map<Integer, Double> myDefaultColumnWeightsY = new HashMap<>();
 
   private int myDefaultPaddingX = ipadx;
-  @Nonnull
+  
   private final Map<Integer, Integer> myDefaultColumnPaddingsX = new HashMap<>();
   private int myDefaultPaddingY = ipady;
-  @Nonnull
+  
   private final Map<Integer, Integer> myDefaultColumnPaddingsY = new HashMap<>();
 
   @Nullable
   private Insets myDefaultInsets = insets;
-  @Nonnull
+  
   private final IntObjectMap<Insets> myDefaultColumnInsets = IntMaps.newIntObjectHashMap();
 
   public GridBag() {
     gridx = gridy = -1;
   }
 
-  @Nonnull
+  
   public GridBag nextLine() {
     gridy++;
     gridx = -1;
     return reset();
   }
 
-  @Nonnull
+  
   public GridBag next() {
     gridx++;
     return reset();
@@ -90,7 +89,7 @@ public final class GridBag extends GridBagConstraints {
     return gridy;
   }
 
-  @Nonnull
+  
   public GridBag setLine(int line) {
     gridy = line;
     return this;
@@ -100,13 +99,13 @@ public final class GridBag extends GridBagConstraints {
     return gridx;
   }
 
-  @Nonnull
+  
   public GridBag setColumn(int cell) {
     gridx = cell;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag reset() {
     gridwidth = gridheight = 1;
 
@@ -122,25 +121,25 @@ public final class GridBag extends GridBagConstraints {
     return this;
   }
 
-  @Nonnull
+  
   public GridBag anchor(int anchor) {
     this.anchor = anchor;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag fillCell() {
     fill = GridBagConstraints.BOTH;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag fillCellHorizontally() {
     fill = GridBagConstraints.HORIZONTAL;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag fillCellVertically() {
     fill = GridBagConstraints.VERTICAL;
     return this;
@@ -151,50 +150,50 @@ public final class GridBag extends GridBagConstraints {
     return this;
   }
 
-  @Nonnull
+  
   public GridBag weightx(double weight) {
     weightx = weight;
     return this;
   }
 
 
-  @Nonnull
+  
   public GridBag weighty(double weight) {
     weighty = weight;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag coverLine() {
     gridwidth = GridBagConstraints.REMAINDER;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag coverLine(int cells) {
     gridwidth = cells;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag coverColumn() {
     gridheight = GridBagConstraints.REMAINDER;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag coverColumn(int cells) {
     gridheight = cells;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag padx(int padding) {
     ipadx = padding;
     return this;
   }
 
-  @Nonnull
+  
   public GridBag pady(int padding) {
     ipady = padding;
     return this;
@@ -204,27 +203,27 @@ public final class GridBag extends GridBagConstraints {
   /**
    * @see #insets(Insets)
    */
-  @Nonnull
+  
   public GridBag insets(int top, int left, int bottom, int right) {
     return insets(JBUI.insets(top, left, bottom, right));
   }
 
-  @Nonnull
+  
   public GridBag insetTop(int top) {
     return insets(JBUI.insets(top, -1, -1, -1));
   }
 
-  @Nonnull
+  
   public GridBag insetBottom(int bottom) {
     return insets(JBUI.insets(-1, -1, bottom, -1));
   }
 
-  @Nonnull
+  
   public GridBag insetLeft(int left) {
     return insets(JBUI.insets(-1, left, -1, -1));
   }
 
-  @Nonnull
+  
   public GridBag insetRight(int right) {
     return insets(JBUI.insets(-1, -1, -1, right));
   }
@@ -233,7 +232,7 @@ public final class GridBag extends GridBagConstraints {
    * Pass -1 to use a default value for this column.
    * E.g, Insets(10, -1, -1, -1) means that 'top' will be changed to 10 and other sides will be set to defaults for this column.
    */
-  @Nonnull
+  
   public GridBag insets(@Nullable Insets insets) {
     if (insets != null && (insets.top < 0 || insets.bottom < 0 || insets.left < 0 || insets.right < 0)) {
       Insets def = getDefaultInsets(gridx);
@@ -251,7 +250,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultAnchor;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultAnchor(int anchor) {
     myDefaultAnchor = anchor;
     return this;
@@ -261,7 +260,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnAnchors.containsKey(column) ? myDefaultColumnAnchors.get(column) : getDefaultAnchor();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultAnchor(int column, int anchor) {
     if (anchor == -1) {
       myDefaultColumnAnchors.remove(column);
@@ -276,7 +275,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultFill;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultFill(int fill) {
     myDefaultFill = fill;
     return this;
@@ -286,7 +285,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnFills.containsKey(column) ? myDefaultColumnFills.get(column) : getDefaultFill();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultFill(int column, int fill) {
     if (fill == -1) {
       myDefaultColumnFills.remove(column);
@@ -301,7 +300,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultWeightX;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultWeightX(double weight) {
     myDefaultWeightX = weight;
     return this;
@@ -311,7 +310,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnWeightsX.containsKey(column) ? myDefaultColumnWeightsX.get(column) : getDefaultWeightX();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultWeightX(int column, double weight) {
     if (weight == -1) {
       myDefaultColumnWeightsX.remove(column);
@@ -327,7 +326,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultWeightY;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultWeightY(double weight) {
     myDefaultWeightY = weight;
     return this;
@@ -337,7 +336,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnWeightsY.containsKey(column) ? myDefaultColumnWeightsY.get(column) : getDefaultWeightY();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultWeightY(int column, double weight) {
     if (weight == -1) {
       myDefaultColumnWeightsY.remove(column);
@@ -353,7 +352,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultPaddingX;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultPaddingX(int padding) {
     myDefaultPaddingX = padding;
     return this;
@@ -363,7 +362,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnPaddingsX.containsKey(column) ? myDefaultColumnPaddingsX.get(column) : getDefaultPaddingX();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultPaddingX(int column, int padding) {
     if (padding == -1) {
       myDefaultColumnPaddingsX.remove(column);
@@ -378,7 +377,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultPaddingY;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultPaddingY(int padding) {
     myDefaultPaddingY = padding;
     return this;
@@ -388,7 +387,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnPaddingsY.containsKey(column) ? myDefaultColumnPaddingsY.get(column) : getDefaultPaddingY();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultPaddingY(int column, int padding) {
     if (padding == -1) {
       myDefaultColumnPaddingsY.remove(column);
@@ -404,7 +403,7 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultInsets;
   }
 
-  @Nonnull
+  
   public GridBag setDefaultInsets(int top, int left, int bottom, int right) {
     return setDefaultInsets(JBUI.insets(top, left, bottom, right));
   }
@@ -419,12 +418,12 @@ public final class GridBag extends GridBagConstraints {
     return myDefaultColumnInsets.containsKey(column) ? myDefaultColumnInsets.get(column) : getDefaultInsets();
   }
 
-  @Nonnull
+  
   public GridBag setDefaultInsets(int column, int top, int left, int bottom, int right) {
     return setDefaultInsets(column, JBUI.insets(top, left, bottom, right));
   }
 
-  @Nonnull
+  
   public GridBag setDefaultInsets(int column, @Nullable Insets insets) {
     if (insets == null) {
       myDefaultColumnInsets.remove(column);

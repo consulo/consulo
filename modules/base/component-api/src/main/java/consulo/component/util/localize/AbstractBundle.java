@@ -17,7 +17,6 @@ package consulo.component.util.localize;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Locale;
@@ -52,11 +51,11 @@ public abstract class AbstractBundle {
     myPathToBundle = "messages." + getClass().getName();
   }
 
-  protected AbstractBundle(@Nonnull String pathToBundle) {
+  protected AbstractBundle(String pathToBundle) {
     myPathToBundle = pathToBundle;
   }
 
-  public String getMessage(@Nonnull String key, Object... params) {
+  public String getMessage(String key, Object... params) {
     return BundleBase.message(getBundle(), key, params);
   }
 
@@ -72,8 +71,8 @@ public abstract class AbstractBundle {
 
   private static final Map<ClassLoader, Map<String, ResourceBundle>> ourCache = new ConcurrentHashMap<>();
 
-  @Nonnull
-  public static ResourceBundle getResourceBundle(@Nonnull String pathToBundle, @Nonnull ClassLoader loader) {
+  
+  public static ResourceBundle getResourceBundle(String pathToBundle, ClassLoader loader) {
     Map<String, ResourceBundle> map = ourCache.computeIfAbsent(loader, classLoader -> new ConcurrentHashMap<>());
     return map.computeIfAbsent(pathToBundle, s -> ResourceBundle.getBundle(s, Locale.getDefault(), loader));
   }

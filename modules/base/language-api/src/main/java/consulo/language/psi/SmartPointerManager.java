@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Allows to create references to PSI elements that can survive a reparse and return the corresponding
@@ -28,8 +27,8 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class SmartPointerManager {
-  @Nonnull
-  public abstract SmartPsiFileRange createSmartPsiFileRangePointer(@Nonnull PsiFile file, @Nonnull TextRange range);
+  
+  public abstract SmartPsiFileRange createSmartPsiFileRangePointer(PsiFile file, TextRange range);
 
   public static SmartPointerManager getInstance(Project project) {
     return project.getInstance(SmartPointerManager.class);
@@ -44,8 +43,8 @@ public abstract class SmartPointerManager {
    * @return a pointer to the specified element which can survive PSI reparse
    * @see #createSmartPsiElementPointer(PsiElement)
    */
-  @Nonnull
-  public static <E extends PsiElement> SmartPsiElementPointer<E> createPointer(@Nonnull E element) {
+  
+  public static <E extends PsiElement> SmartPsiElementPointer<E> createPointer(E element) {
     return getInstance(element.getProject()).createSmartPsiElementPointer(element);
   }
 
@@ -56,8 +55,8 @@ public abstract class SmartPointerManager {
    * @param element the element to create a pointer to.
    * @return the smart pointer instance.
    */
-  @Nonnull
-  public abstract <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@Nonnull E element);
+  
+  public abstract <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(E element);
 
   /**
    * Creates a smart pointer to the specified PSI element.
@@ -66,8 +65,8 @@ public abstract class SmartPointerManager {
    * @param containingFile the result of <code>element.getContainingFile()</code>.
    * @return the smart pointer instance.
    */
-  @Nonnull
-  public abstract <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(@Nonnull E element, PsiFile containingFile);
+  
+  public abstract <E extends PsiElement> SmartPsiElementPointer<E> createSmartPsiElementPointer(E element, PsiFile containingFile);
 
   /**
    * Creates a smart pointer to the specified PSI element which doesn't hold a strong reference to the PSI
@@ -76,8 +75,8 @@ public abstract class SmartPointerManager {
    * @param element the element to create a pointer to.
    * @return the smart pointer instance.
    */
-  @Nonnull
-  public <E extends PsiElement> SmartPsiElementPointer<E> createLazyPointer(@Nonnull E element) {
+  
+  public <E extends PsiElement> SmartPsiElementPointer<E> createLazyPointer(E element) {
     return createSmartPsiElementPointer(element);
   }
 
@@ -88,11 +87,11 @@ public abstract class SmartPointerManager {
    * @param pointer2 smart pointer to compare
    * @return true if both pointers point to the same PSI element.
    */
-  public abstract boolean pointToTheSameElement(@Nonnull SmartPsiElementPointer pointer1, @Nonnull SmartPsiElementPointer pointer2);
+  public abstract boolean pointToTheSameElement(SmartPsiElementPointer pointer1, SmartPsiElementPointer pointer2);
 
   /**
    * Disposes a smart pointer and frees the resources associated with it. Calling this method is not obligatory: pointers are
    * freed correctly when they're not used anymore. But disposing the pointers explicitly might be beneficial for performance.
    */
-  public abstract void removePointer(@Nonnull SmartPsiElementPointer pointer);
+  public abstract void removePointer(SmartPsiElementPointer pointer);
 }

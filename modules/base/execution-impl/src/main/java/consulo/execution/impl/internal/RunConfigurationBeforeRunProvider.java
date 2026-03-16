@@ -45,8 +45,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -73,7 +72,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public Key<RunConfigurableBeforeRunTask> getId() {
         return ID;
@@ -92,13 +91,13 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         return ProgramRunnerUtil.getConfigurationIcon(task.getSettings(), false);
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchRunAnotherConfiguration();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription(RunConfigurableBeforeRunTask task) {
         if (task.getSettings() == null) {
@@ -126,7 +125,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         return new RunConfigurableBeforeRunTask();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> configureTask(RunConfiguration runConfiguration, RunConfigurableBeforeRunTask task) {
@@ -139,7 +138,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         return result;
     }
 
-    @Nonnull
+    
     private List<RunnerAndConfigurationSettings> getAvailableConfigurations(RunConfiguration runConfiguration) {
         Project project = runConfiguration.getProject();
         if (project == null || !project.isInitialized()) {
@@ -173,7 +172,7 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
         return runner.canRun(executorId, settings.getConfiguration());
     }
 
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> executeTaskAsync(UIAccess uiAccess, DataContext context, RunConfiguration configuration, ExecutionEnvironment env, RunConfigurableBeforeRunTask task) {
         RunnerAndConfigurationSettings settings = task.getSettings();
@@ -322,11 +321,11 @@ public class RunConfigurationBeforeRunProvider extends BeforeRunTaskProvider<Run
 
     private class SelectionDialog extends DialogWrapper {
         private RunnerAndConfigurationSettings mySelectedSettings;
-        @Nonnull
+        
         private final List<RunnerAndConfigurationSettings> mySettings;
         private JBList myJBList;
 
-        private SelectionDialog(RunnerAndConfigurationSettings selectedSettings, @Nonnull List<RunnerAndConfigurationSettings> settings) {
+        private SelectionDialog(RunnerAndConfigurationSettings selectedSettings, List<RunnerAndConfigurationSettings> settings) {
             super(myProject);
             setTitle(ExecutionLocalize.beforeLaunchRunAnotherConfigurationChoose());
             mySelectedSettings = selectedSettings;

@@ -21,13 +21,12 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.usage.localize.UsageLocalize;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class UsageInfoSearcherAdapter implements UsageSearcher {
-    protected void processUsages(@Nonnull Predicate<Usage> processor, @Nonnull Project project) {
+    protected void processUsages(Predicate<Usage> processor, Project project) {
         SimpleReference<UsageInfo[]> refUsages = new SimpleReference<>();
         SimpleReference<Boolean> dumbModeOccurred = new SimpleReference<>();
         Application app = project.getApplication();

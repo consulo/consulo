@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
@@ -41,7 +40,7 @@ public abstract class FileIndentOptionsProvider {
      * @return Indent options or {@code null} if the provider can't retrieve them.
      */
     @Nullable
-    public abstract IndentOptions getIndentOptions(@Nonnull CodeStyleSettings settings, @Nonnull PsiFile file);
+    public abstract IndentOptions getIndentOptions(CodeStyleSettings settings, PsiFile file);
 
     /**
      * Tells if the provider can be used when a complete file is reformatted.
@@ -52,12 +51,12 @@ public abstract class FileIndentOptionsProvider {
         return true;
     }
 
-    protected static void notifyIndentOptionsChanged(@Nonnull Project project, @Nullable PsiFile file) {
+    protected static void notifyIndentOptionsChanged(Project project, @Nullable PsiFile file) {
         CodeStyleSettingsManager.getInstance(project).fireCodeStyleSettingsChanged(file);
     }
 
     @Nullable
-    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(@Nonnull IndentOptions indentOptions) {
+    public IndentStatusBarUIContributor getIndentStatusBarUiContributor(IndentOptions indentOptions) {
         return null;
     }
 }

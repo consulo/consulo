@@ -19,25 +19,24 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.postfixTemplate.PostfixTemplateProvider;
 import consulo.language.editor.postfixTemplate.PostfixTemplatePsiInfo;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class NotPostfixTemplate extends PostfixTemplateWithExpressionSelector {
 
-  @Nonnull
+  
   private final PostfixTemplatePsiInfo myPsiInfo;
 
   /**
    * @deprecated use {@link #NotPostfixTemplate(PostfixTemplatePsiInfo, PostfixTemplateExpressionSelector, PostfixTemplateProvider)}
    */
   @Deprecated(forRemoval = true)
-  public NotPostfixTemplate(@Nonnull PostfixTemplatePsiInfo info,
-                            @Nonnull PostfixTemplateExpressionSelector selector) {
+  public NotPostfixTemplate(PostfixTemplatePsiInfo info,
+                            PostfixTemplateExpressionSelector selector) {
     this(info, selector, null);
   }
 
-  public NotPostfixTemplate(@Nonnull PostfixTemplatePsiInfo info,
-                            @Nonnull PostfixTemplateExpressionSelector selector,
+  public NotPostfixTemplate(PostfixTemplatePsiInfo info,
+                            PostfixTemplateExpressionSelector selector,
                             @Nullable PostfixTemplateProvider provider) {
     super(null, "not", "!expr", selector, provider);
     myPsiInfo = info;
@@ -47,27 +46,27 @@ public class NotPostfixTemplate extends PostfixTemplateWithExpressionSelector {
    * @deprecated use {@link #NotPostfixTemplate(String, String, String, PostfixTemplatePsiInfo, PostfixTemplateExpressionSelector, PostfixTemplateProvider)}
    */
   @Deprecated(forRemoval = true)
-  public NotPostfixTemplate(@Nonnull String name,
-                            @Nonnull String key,
-                            @Nonnull String example,
-                            @Nonnull PostfixTemplatePsiInfo info,
-                            @Nonnull PostfixTemplateExpressionSelector selector) {
+  public NotPostfixTemplate(String name,
+                            String key,
+                            String example,
+                            PostfixTemplatePsiInfo info,
+                            PostfixTemplateExpressionSelector selector) {
     super(name, key, example, selector);
     myPsiInfo = info;
   }
 
   public NotPostfixTemplate(@Nullable String id,
-                            @Nonnull String name,
-                            @Nonnull String example,
-                            @Nonnull PostfixTemplatePsiInfo info,
-                            @Nonnull PostfixTemplateExpressionSelector selector,
+                            String name,
+                            String example,
+                            PostfixTemplatePsiInfo info,
+                            PostfixTemplateExpressionSelector selector,
                             @Nullable PostfixTemplateProvider provider) {
     super(id, name, example, selector, provider);
     myPsiInfo = info;
   }
 
   @Override
-  protected void expandForChooseExpression(@Nonnull PsiElement expression, @Nonnull Editor editor) {
+  protected void expandForChooseExpression(PsiElement expression, Editor editor) {
     PsiElement element = myPsiInfo.getNegatedExpression(expression);
     expression.replace(element);
   }

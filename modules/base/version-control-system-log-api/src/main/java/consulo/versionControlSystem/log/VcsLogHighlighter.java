@@ -15,8 +15,7 @@
  */
 package consulo.versionControlSystem.log;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
@@ -30,8 +29,8 @@ public interface VcsLogHighlighter {
    * @param commitDetails details of selected commit.
    * @param isSelected    if true, the row currently has selection on it.
    */
-  @Nonnull
-  VcsCommitStyle getStyle(@Nonnull VcsShortCommitDetails commitDetails, boolean isSelected);
+  
+  VcsCommitStyle getStyle(VcsShortCommitDetails commitDetails, boolean isSelected);
 
   /**
    * This method is called when new data arrives to the ui.
@@ -39,7 +38,7 @@ public interface VcsLogHighlighter {
    * @param dataPack        new visible pack.
    * @param refreshHappened true if permanent graph has changed.
    */
-  void update(@Nonnull VcsLogDataPack dataPack, boolean refreshHappened);
+  void update(VcsLogDataPack dataPack, boolean refreshHappened);
 
   /**
    * Describes how to display commit entry in the log table (for example, text or background color).

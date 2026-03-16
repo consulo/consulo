@@ -17,7 +17,6 @@ package consulo.ui.impl.model;
 
 import consulo.ui.model.ListModel;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,14 +31,14 @@ public class ImmutableListModelImpl<E> implements ListModel<E> {
     myItems.addAll(items);
   }
 
-  @Nonnull
+  
   @Override
   public E get(int index) {
     return myItems.get(index);
   }
 
   @Override
-  public int indexOf(@Nonnull E value) {
+  public int indexOf(E value) {
     return myItems.indexOf(value);
   }
 

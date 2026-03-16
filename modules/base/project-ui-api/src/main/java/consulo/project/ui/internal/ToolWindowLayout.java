@@ -23,8 +23,7 @@ import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**
@@ -69,7 +68,7 @@ public final class ToolWindowLayout {
    *
    * @param layout to be copied.
    */
-  public final void copyFrom(@Nonnull ToolWindowLayout layout) {
+  public final void copyFrom(ToolWindowLayout layout) {
     for (WindowInfoImpl info1 : layout.getAllInfos()) {
       WindowInfoImpl info = myRegisteredId2Info.get(info1.getId());
       if (info != null) {
@@ -102,7 +101,7 @@ public final class ToolWindowLayout {
    * @param id     <code>id</code> of tool window to be registered.
    * @param anchor the default tool window anchor.
    */
-  public final WindowInfoImpl register(@Nonnull String id, @Nonnull ToolWindowAnchor anchor, boolean splitMode) {
+  public final WindowInfoImpl register(String id, ToolWindowAnchor anchor, boolean splitMode) {
     WindowInfoImpl info = myUnregisteredId2Info.get(id);
     if (info != null) { // tool window has been already registered some time
       myUnregisteredId2Info.remove(id);
@@ -121,7 +120,7 @@ public final class ToolWindowLayout {
     return info;
   }
 
-  public void unregister(@Nonnull String id) {
+  public void unregister(String id) {
     WindowInfoImpl info = myRegisteredId2Info.remove(id).copy();
     myUnregisteredId2Info.put(id, info);
     // invalidate caches
@@ -157,7 +156,7 @@ public final class ToolWindowLayout {
   /**
    * @return <code>WindowInfo</code>s for all registered tool windows.
    */
-  @Nonnull
+  
   public final WindowInfoImpl[] getInfos() {
     if (myRegisteredInfos == null) {
       myRegisteredInfos = myRegisteredId2Info.values().toArray(new WindowInfoImpl[myRegisteredId2Info.size()]);
@@ -168,7 +167,7 @@ public final class ToolWindowLayout {
   /**
    * @return <code>WindowInfos</code>s for all windows that are currently unregistered.
    */
-  @Nonnull
+  
   private WindowInfoImpl[] getUnregisteredInfos() {
     if (myUnregisteredInfos == null) {
       myUnregisteredInfos = myUnregisteredId2Info.values().toArray(new WindowInfoImpl[myUnregisteredId2Info.size()]);
@@ -179,7 +178,7 @@ public final class ToolWindowLayout {
   /**
    * @return <code>WindowInfo</code>s of all (registered and unregistered) tool windows.
    */
-  @Nonnull
+  
   private WindowInfoImpl[] getAllInfos() {
     WindowInfoImpl[] registeredInfos = getInfos();
     WindowInfoImpl[] unregisteredInfos = getUnregisteredInfos();
@@ -191,8 +190,8 @@ public final class ToolWindowLayout {
    * @return all (registered and not unregistered) <code>WindowInfos</code> for the specified <code>anchor</code>.
    * Returned infos are sorted by order.
    */
-  @Nonnull
-  private WindowInfoImpl[] getAllInfos(@Nonnull ToolWindowAnchor anchor) {
+  
+  private WindowInfoImpl[] getAllInfos(ToolWindowAnchor anchor) {
     WindowInfoImpl[] infos = getAllInfos();
     ArrayList<WindowInfoImpl> list = new ArrayList<>(infos.length);
     for (WindowInfoImpl info : infos) {
@@ -209,7 +208,7 @@ public final class ToolWindowLayout {
    * Normalizes order of windows in the passed array. Note, that array should be
    * sorted by order (by ascending). Order of first window will be <code>0</code>.
    */
-  private static void normalizeOrder(@Nonnull WindowInfoImpl[] infos) {
+  private static void normalizeOrder(WindowInfoImpl[] infos) {
     for (int i = 0; i < infos.length; i++) {
       infos[i].setOrder(i);
     }
@@ -227,8 +226,8 @@ public final class ToolWindowLayout {
    * @return comparator which compares <code>StripeButtons</code> in the stripe with
    * specified <code>anchor</code>.
    */
-  @Nonnull
-  public final Comparator<ToolWindowStripeButton> comparator(@Nonnull ToolWindowAnchor anchor) {
+  
+  public final Comparator<ToolWindowStripeButton> comparator(ToolWindowAnchor anchor) {
     return new MyStripeButtonComparator(anchor);
   }
 
@@ -237,7 +236,7 @@ public final class ToolWindowLayout {
    * @return maximum ordinal number in the specified stripe. Returns <code>-1</code>
    * if there is no any tool window with the specified anchor.
    */
-  private int getMaxOrder(@Nonnull ToolWindowAnchor anchor) {
+  private int getMaxOrder(ToolWindowAnchor anchor) {
     int res = -1;
     WindowInfoImpl[] infos = getAllInfos();
     for (WindowInfoImpl info : infos) {
@@ -255,7 +254,7 @@ public final class ToolWindowLayout {
    * @param newAnchor new anchor
    * @param newOrder  new order
    */
-  public final void setAnchor(@Nonnull String id, @Nonnull ToolWindowAnchor newAnchor, int newOrder) {
+  public final void setAnchor(String id, ToolWindowAnchor newAnchor, int newOrder) {
     if (newOrder == -1) { // if order isn't defined then the window will the last in the stripe
       newOrder = getMaxOrder(newAnchor) + 1;
     }
@@ -279,12 +278,12 @@ public final class ToolWindowLayout {
     }
   }
 
-  public void setSplitMode(@Nonnull String id, boolean split) {
+  public void setSplitMode(String id, boolean split) {
     WindowInfoImpl info = getInfo(id, true);
     info.setSplit(split);
   }
 
-  public final void readExternal(@Nonnull Element layoutElement) {
+  public final void readExternal(Element layoutElement) {
     myUnregisteredInfos = null;
     for (Element e : layoutElement.getChildren()) {
       if (WindowInfoImpl.TAG.equals(e.getName())) {
@@ -301,7 +300,7 @@ public final class ToolWindowLayout {
   }
 
   @Nullable
-  public final Element writeExternal(@Nonnull String tagName) {
+  public final Element writeExternal(String tagName) {
     WindowInfoImpl[] infos = getAllInfos();
     if (infos.length == 0) {
       return null;
@@ -316,8 +315,8 @@ public final class ToolWindowLayout {
     return state;
   }
 
-  @Nonnull
-  public List<String> getVisibleIdsOn(@Nonnull ToolWindowAnchor anchor, @Nonnull ToolWindowManager manager) {
+  
+  public List<String> getVisibleIdsOn(ToolWindowAnchor anchor, ToolWindowManager manager) {
     List<String> ids = new ArrayList<>();
     for (WindowInfoImpl each : getAllInfos(anchor)) {
       ToolWindow window = manager.getToolWindow(each.getId());
@@ -339,7 +338,7 @@ public final class ToolWindowLayout {
   private final class MyStripeButtonComparator implements Comparator<ToolWindowStripeButton> {
     private final Map<String, WindowInfoImpl> myId2Info = new HashMap<>();
 
-    public MyStripeButtonComparator(@Nonnull ToolWindowAnchor anchor) {
+    public MyStripeButtonComparator(ToolWindowAnchor anchor) {
       WindowInfoImpl[] infos = getInfos();
       for (WindowInfoImpl info : infos) {
         if (anchor == info.getAnchor()) {

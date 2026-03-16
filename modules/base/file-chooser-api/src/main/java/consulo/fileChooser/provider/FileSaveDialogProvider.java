@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -35,9 +34,9 @@ import java.awt.*;
 public interface FileSaveDialogProvider extends FileOperateDialogProvider {
     ExtensionPointName<FileSaveDialogProvider> EP_NAME = ExtensionPointName.create(FileSaveDialogProvider.class);
 
-    @Nonnull
+    
     FileSaverDialog createSaveFileDialog(
-        @Nonnull FileSaverDescriptor descriptor,
+        FileSaverDescriptor descriptor,
         @Nullable ComponentManager project,
         @Nullable Component parent
     );

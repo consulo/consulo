@@ -24,7 +24,6 @@ import consulo.component.store.impl.internal.storage.StateStorageFacade;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 public class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected static final String ROOT_TAG_NAME = "project";
@@ -36,13 +35,13 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
     myApplication = project.getApplication();
   }
 
-  @Nonnull
+  
   @Override
   public StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter) {
     return myApplication.getUnbindedInstance(splitter);
   }
 
-  @Nonnull
+  
   @Override
   protected String getConfigurationMacro(boolean directorySpec) {
     return StoragePathMacros.PROJECT_CONFIG_DIR;

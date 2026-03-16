@@ -33,8 +33,7 @@ import consulo.versionControlSystem.VcsMappingListener;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,22 +51,22 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @ServiceImpl
 public class VcsRepositoryManager implements Disposable {
 
-  @Nonnull
-  public static VcsRepositoryManager getInstance(@Nonnull Project project) {
+  
+  public static VcsRepositoryManager getInstance(Project project) {
     return project.getInstance(VcsRepositoryManager.class);
   }
 
-  @Nonnull
+  
   private final ProjectLevelVcsManager myVcsManager;
 
-  @Nonnull
+  
   private final ReentrantReadWriteLock REPO_LOCK = new ReentrantReadWriteLock();
-  @Nonnull
+  
   private final ReentrantReadWriteLock.WriteLock MODIFY_LOCK = new ReentrantReadWriteLock().writeLock();
 
-  @Nonnull
+  
   private final Map<VirtualFile, Repository> myRepositories = new HashMap<>();
-  @Nonnull
+  
   private final Map<VirtualFile, Repository> myExternalRepositories = new HashMap<>();
 
   private volatile boolean myDisposed;
@@ -77,7 +76,7 @@ public class VcsRepositoryManager implements Disposable {
   private Future<?> myUpdateFuture = CompletableFuture.completedFuture(null);
 
   @Inject
-  public VcsRepositoryManager(@Nonnull Project project, @Nonnull ProjectLevelVcsManager vcsManager) {
+  public VcsRepositoryManager(Project project, ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myVcsManager = vcsManager;
     project.getMessageBus().connect(this).subscribe(VcsMappingListener.class, this::scheduleUpdate);
@@ -106,17 +105,17 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Nullable
-  public Repository getRepositoryForFile(@Nonnull VirtualFile file) {
+  public Repository getRepositoryForFile(VirtualFile file) {
     return getRepositoryForFile(file, false);
   }
 
   @Nullable
-  public Repository getRepositoryForFileQuick(@Nonnull VirtualFile file) {
+  public Repository getRepositoryForFileQuick(VirtualFile file) {
     return getRepositoryForFile(file, true);
   }
 
   @Nullable
-  public Repository getExternalRepositoryForFile(@Nonnull VirtualFile file) {
+  public Repository getExternalRepositoryForFile(VirtualFile file) {
     Map<VirtualFile, Repository> repositories = getExternalRepositories();
     for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
       if (entry.getKey().isValid() && VirtualFileUtil.isAncestor(entry.getKey(), file, false)) {
@@ -127,7 +126,7 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Nullable
-  public Repository getExternalRepositoryForFile(@Nonnull FilePath file) {
+  public Repository getExternalRepositoryForFile(FilePath file) {
     Map<VirtualFile, Repository> repositories = getExternalRepositories();
     for (Map.Entry<VirtualFile, Repository> entry : repositories.entrySet()) {
       if (entry.getKey().isValid() && FileUtil.isAncestor(entry.getKey().getPath(), file.getPath(), false)) {
@@ -138,7 +137,7 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Nullable
-  public Repository getRepositoryForFile(@Nonnull VirtualFile file, boolean quick) {
+  public Repository getRepositoryForFile(VirtualFile file, boolean quick) {
     VcsRoot vcsRoot = myVcsManager.getVcsRootObjectFor(file);
     if (vcsRoot == null) {
       return getExternalRepositoryForFile(file);
@@ -188,7 +187,7 @@ public class VcsRepositoryManager implements Disposable {
     }
   }
 
-  public void addExternalRepository(@Nonnull VirtualFile root, @Nonnull Repository repository) {
+  public void addExternalRepository(VirtualFile root, Repository repository) {
     REPO_LOCK.writeLock().lock();
     try {
       myExternalRepositories.put(root, repository);
@@ -198,7 +197,7 @@ public class VcsRepositoryManager implements Disposable {
     }
   }
 
-  public void removeExternalRepository(@Nonnull VirtualFile root) {
+  public void removeExternalRepository(VirtualFile root) {
     REPO_LOCK.writeLock().lock();
     try {
       myExternalRepositories.remove(root);
@@ -208,7 +207,7 @@ public class VcsRepositoryManager implements Disposable {
     }
   }
 
-  public boolean isExternal(@Nonnull Repository repository) {
+  public boolean isExternal(Repository repository) {
     try {
       REPO_LOCK.readLock().lock();
       return !myRepositories.containsValue(repository) && myExternalRepositories.containsValue(repository);
@@ -218,7 +217,7 @@ public class VcsRepositoryManager implements Disposable {
     }
   }
 
-  @Nonnull
+  
   public Collection<Repository> getRepositories() {
     try {
       REPO_LOCK.readLock().lock();
@@ -229,7 +228,7 @@ public class VcsRepositoryManager implements Disposable {
     }
   }
 
-  @Nonnull
+  
   private Map<VirtualFile, Repository> getExternalRepositories() {
     REPO_LOCK.readLock().lock();
     try {
@@ -280,8 +279,8 @@ public class VcsRepositoryManager implements Disposable {
     }).mappingChanged();
   }
 
-  @Nonnull
-  private Map<VirtualFile, Repository> findNewRoots(@Nonnull Set<VirtualFile> knownRoots) {
+  
+  private Map<VirtualFile, Repository> findNewRoots(Set<VirtualFile> knownRoots) {
     Map<VirtualFile, Repository> newRootsMap = new HashMap<>();
     for (VcsRoot root : myVcsManager.getAllVcsRoots()) {
       VirtualFile rootPath = root.getPath();
@@ -298,8 +297,8 @@ public class VcsRepositoryManager implements Disposable {
     return newRootsMap;
   }
 
-  @Nonnull
-  private Collection<VirtualFile> findInvalidRoots(@Nonnull Collection<VirtualFile> roots) {
+  
+  private Collection<VirtualFile> findInvalidRoots(Collection<VirtualFile> roots) {
     VirtualFile[] validRoots = myVcsManager.getAllVersionedRoots();
     return ContainerUtil.filter(roots, file -> !ArrayUtil.contains(file, validRoots));
   }
@@ -312,7 +311,7 @@ public class VcsRepositoryManager implements Disposable {
   }
 
   @Override
-  @Nonnull
+  
   public String toString() {
     return "RepositoryManager{myRepositories: " + myRepositories + '}';
   }

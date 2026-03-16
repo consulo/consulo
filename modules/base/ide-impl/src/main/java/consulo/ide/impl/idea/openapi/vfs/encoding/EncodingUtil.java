@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeWithPredefinedCharset;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -61,12 +60,12 @@ public class EncodingUtil {
     // returns ABSOLUTELY if bytes on disk, converted to text with the charset, converted back to bytes matched
     // returns NO_WAY if the new encoding is incompatible (bytes on disk will differ)
     // returns WELL_IF_YOU_INSIST if the bytes on disk remain the same but the text will change
-    @Nonnull
+    
     static Magic8 isSafeToReloadIn(
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull CharSequence text,
-        @Nonnull byte[] bytes,
-        @Nonnull Charset charset
+        VirtualFile virtualFile,
+        CharSequence text,
+        byte[] bytes,
+        Charset charset
     ) {
         // file has BOM but the charset hasn't
         byte[] bom = virtualFile.getBOM();
@@ -108,12 +107,12 @@ public class EncodingUtil {
         ) ? Magic8.ABSOLUTELY : Magic8.WELL_IF_YOU_INSIST;
     }
 
-    @Nonnull
+    
     static Magic8 isSafeToConvertTo(
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull CharSequence text,
-        @Nonnull byte[] bytesOnDisk,
-        @Nonnull Charset charset
+        VirtualFile virtualFile,
+        CharSequence text,
+        byte[] bytesOnDisk,
+        Charset charset
     ) {
         try {
             String lineSeparator = FileDocumentManager.getInstance().getLineSeparator(virtualFile, null);
@@ -136,10 +135,10 @@ public class EncodingUtil {
 
     @RequiredUIAccess
     static void saveIn(
-        @Nonnull Document document,
+        Document document,
         Editor editor,
-        @Nonnull VirtualFile virtualFile,
-        @Nonnull Charset charset
+        VirtualFile virtualFile,
+        Charset charset
     ) {
         FileDocumentManager documentManager = FileDocumentManager.getInstance();
         documentManager.saveDocument(document);
@@ -172,7 +171,7 @@ public class EncodingUtil {
     }
 
     @RequiredUIAccess
-    static void reloadIn(@Nonnull final VirtualFile virtualFile, @Nonnull Charset charset, Project project) {
+    static void reloadIn(final VirtualFile virtualFile, Charset charset, Project project) {
         FileDocumentManager documentManager = FileDocumentManager.getInstance();
 
         Consumer<VirtualFile> setEncoding = file -> {
@@ -193,7 +192,7 @@ public class EncodingUtil {
         MessageBusConnection connection = Application.get().getMessageBus().connect(disposable);
         connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
             @Override
-            public void beforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
+            public void beforeFileContentReload(VirtualFile file, Document document) {
                 if (!file.equals(virtualFile)) {
                     return;
                 }
@@ -218,7 +217,7 @@ public class EncodingUtil {
     }
 
     // returns file type description if the charset is hard-coded or null if file type does not restrict encoding
-    private static String checkHardcodedCharsetFileType(@Nonnull VirtualFile virtualFile) {
+    private static String checkHardcodedCharsetFileType(VirtualFile virtualFile) {
         FileType fileType = virtualFile.getFileType();
         if (fileType instanceof FileTypeWithPredefinedCharset fileTypeWithPredefinedCharset) {
             return fileTypeWithPredefinedCharset.getPredefinedCharset(virtualFile).getSecond();
@@ -226,12 +225,12 @@ public class EncodingUtil {
         return null;
     }
 
-    public static boolean canReload(@Nonnull VirtualFile virtualFile) {
+    public static boolean canReload(VirtualFile virtualFile) {
         return checkCanReload(virtualFile, null) == null;
     }
 
     @Nullable
-    static FailReason checkCanReload(@Nonnull VirtualFile virtualFile, @Nullable SimpleReference<? super Charset> current) {
+    static FailReason checkCanReload(VirtualFile virtualFile, @Nullable SimpleReference<? super Charset> current) {
         if (virtualFile.isDirectory()) {
             return FailReason.IS_DIRECTORY;
         }
@@ -262,7 +261,7 @@ public class EncodingUtil {
     }
 
     @Nullable
-    private static FailReason fileTypeDescriptionError(@Nonnull VirtualFile virtualFile) {
+    private static FailReason fileTypeDescriptionError(VirtualFile virtualFile) {
         if (virtualFile.getFileType().isBinary()) {
             return FailReason.IS_BINARY;
         }
@@ -276,7 +275,7 @@ public class EncodingUtil {
      * @return null means enabled, notnull means disabled and contains error message
      */
     @Nullable
-    static FailReason checkCanConvert(@Nonnull VirtualFile virtualFile) {
+    static FailReason checkCanConvert(VirtualFile virtualFile) {
         if (virtualFile.isDirectory()) {
             return FailReason.IS_DIRECTORY;
         }
@@ -286,7 +285,7 @@ public class EncodingUtil {
     }
 
     @Nullable
-    static FailReason checkCanConvertAndReload(@Nonnull VirtualFile selectedFile) {
+    static FailReason checkCanConvertAndReload(VirtualFile selectedFile) {
         FailReason result = checkCanConvert(selectedFile);
         if (result == null) {
             return null;
@@ -295,7 +294,7 @@ public class EncodingUtil {
     }
 
     @Nullable
-    public static Pair<Charset, LocalizeValue> getCharsetAndTheReasonTooltip(@Nonnull VirtualFile file) {
+    public static Pair<Charset, LocalizeValue> getCharsetAndTheReasonTooltip(VirtualFile file) {
         FailReason r1 = checkCanConvert(file);
         if (r1 == null) {
             return null;
@@ -311,8 +310,8 @@ public class EncodingUtil {
         return Pair.create(current.get(), errorDescription);
     }
 
-    @Nonnull
-    static LocalizeValue reasonToString(@Nonnull FailReason reason, VirtualFile file) {
+    
+    static LocalizeValue reasonToString(FailReason reason, VirtualFile file) {
         return switch (reason) {
             case IS_DIRECTORY -> IdeLocalize.noCharsetSetReasonDisabledForDirectory();
             case IS_BINARY -> IdeLocalize.noCharsetSetReasonDisabledForBinaryFile();

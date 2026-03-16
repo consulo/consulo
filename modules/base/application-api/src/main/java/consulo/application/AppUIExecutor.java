@@ -4,7 +4,6 @@ package consulo.application;
 import consulo.application.internal.AsyncExecutionService;
 import consulo.component.ComponentManager;
 import consulo.ui.ModalityState;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -18,7 +17,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
   /**
    * Creates an executor working on UI thread.
    */
-  @Nonnull
   static AppUIExecutor onUiThread() {
     return AsyncExecutionService.getService().createUIExecutor();
   }
@@ -27,8 +25,7 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @deprecated Modality state is no longer used. Use {@link #onUiThread()} instead.
    */
   @Deprecated
-  @Nonnull
-  static AppUIExecutor onUiThread(@Nonnull ModalityState modality) {
+  static AppUIExecutor onUiThread(ModalityState modality) {
     return onUiThread();
   }
 
@@ -36,7 +33,6 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @return an executor that should always invoke the given runnable later. Otherwise, if {@link #execute} is called
    * on dispatch thread already, and all others constraints are met, the runnable would be executed immediately.
    */
-  @Nonnull
   @Contract(pure = true)
   AppUIExecutor later();
 
@@ -44,15 +40,13 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
    * @return an executor that invokes runnables only when all documents are committed. Automatically expires when the project is disposed.
    * @see PsiDocumentManager#hasUncommitedDocuments()
    */
-  @Nonnull
   @Contract(pure = true)
-  AppUIExecutor withDocumentsCommitted(@Nonnull ComponentManager project);
+  AppUIExecutor withDocumentsCommitted(ComponentManager project);
 
   /**
    * @return an executor that invokes runnables only when indices have been built and are available to use. Automatically expires when the project is disposed.
    * @see consulo.ide.impl.idea.openapi.project.DumbService#isDumb(Project)
    */
-  @Nonnull
   @Contract(pure = true)
-  AppUIExecutor inSmartMode(@Nonnull ComponentManager project);
+  AppUIExecutor inSmartMode(ComponentManager project);
 }

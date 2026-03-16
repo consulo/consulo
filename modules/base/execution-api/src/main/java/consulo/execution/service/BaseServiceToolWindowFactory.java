@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class BaseServiceToolWindowFactory implements ToolWindowFactory {
     @Override
-    public boolean shouldBeAvailable(@Nonnull Project project) {
+    public boolean shouldBeAvailable(Project project) {
         return false;
     }
 
@@ -39,7 +38,7 @@ public abstract class BaseServiceToolWindowFactory implements ToolWindowFactory 
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         project.getInstance(ServiceViewToolWindowManager.class).createToolWindowContent(toolWindow);
     }
 }

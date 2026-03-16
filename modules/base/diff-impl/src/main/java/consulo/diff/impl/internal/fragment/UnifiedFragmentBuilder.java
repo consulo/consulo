@@ -21,37 +21,36 @@ import consulo.diff.util.LineRange;
 import consulo.diff.util.Side;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // This class works incorrectly with non-fair differences (when chunk of matched lines has different length in left/right files)
 public class UnifiedFragmentBuilder {
-  @Nonnull
+  
   private final List<LineFragment> myFragments;
-  @Nonnull
+  
   private final Document myDocument1;
-  @Nonnull
+  
   private final Document myDocument2;
-  @Nonnull
+  
   private final Side myMasterSide;
 
-  @Nonnull
+  
   private final StringBuilder myBuilder = new StringBuilder();
-  @Nonnull
+  
   private final List<ChangedBlock> myBlocks = new ArrayList<ChangedBlock>();
-  @Nonnull
+  
   private final List<HighlightRange> myRanges = new ArrayList<HighlightRange>();
-  @Nonnull
+  
   private final LineNumberConvertor.Builder myConvertor = new LineNumberConvertor.Builder();
-  @Nonnull
+  
   private final List<LineRange> myChangedLines = new ArrayList<LineRange>();
 
-  public UnifiedFragmentBuilder(@Nonnull List<LineFragment> fragments,
-                                @Nonnull Document document1,
-                                @Nonnull Document document2,
-                                @Nonnull Side masterSide) {
+  public UnifiedFragmentBuilder(List<LineFragment> fragments,
+                                Document document1,
+                                Document document2,
+                                Side masterSide) {
     myFragments = fragments;
     myDocument1 = document1;
     myDocument2 = document2;
@@ -86,7 +85,7 @@ public class UnifiedFragmentBuilder {
   }
 
   @SuppressWarnings("UnnecessaryLocalVariable")
-  private void processChanged(@Nonnull LineFragment fragment) {
+  private void processChanged(LineFragment fragment) {
     int startLine1 = fragment.getStartLine1();
     int endLine1 = fragment.getEndLine1() - 1;
     int lines1 = endLine1 - startLine1;
@@ -141,7 +140,7 @@ public class UnifiedFragmentBuilder {
     }
   }
 
-  private void appendTextSide(@Nonnull Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
+  private void appendTextSide(Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
     int linesBefore = totalLines;
     appendText(side, offset1, offset2, lines, startLine1, startLine2);
     int linesAfter = totalLines;
@@ -149,7 +148,7 @@ public class UnifiedFragmentBuilder {
     myChangedLines.add(new LineRange(linesBefore, linesAfter));
   }
 
-  private void appendText(@Nonnull Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
+  private void appendText(Side side, int offset1, int offset2, int lines, int startLine1, int startLine2) {
     Document document = side.select(myDocument1, myDocument2);
 
     int newline = document.getTextLength() > offset2 + 1 ? 1 : 0;
@@ -170,7 +169,7 @@ public class UnifiedFragmentBuilder {
     totalLines += lines + 1;
   }
 
-  private static int getLineCount(@Nonnull Document document) {
+  private static int getLineCount(Document document) {
     return Math.max(document.getLineCount(), 1);
   }
 
@@ -183,27 +182,27 @@ public class UnifiedFragmentBuilder {
     return myEqual;
   }
 
-  @Nonnull
+  
   public CharSequence getText() {
     return myBuilder;
   }
 
-  @Nonnull
+  
   public List<ChangedBlock> getBlocks() {
     return myBlocks;
   }
 
-  @Nonnull
+  
   public List<HighlightRange> getRanges() {
     return myRanges;
   }
 
-  @Nonnull
+  
   public LineNumberConvertor getConvertor() {
     return myConvertor.build();
   }
 
-  @Nonnull
+  
   public List<LineRange> getChangedLines() {
     return myChangedLines;
   }

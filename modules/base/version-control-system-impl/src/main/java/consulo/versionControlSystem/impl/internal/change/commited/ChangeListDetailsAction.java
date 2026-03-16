@@ -40,7 +40,6 @@ import consulo.versionControlSystem.change.commited.ReceivedChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -58,7 +57,7 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         ChangeList[] changeLists = e.getRequiredData(VcsDataKeys.CHANGE_LISTS);
         if (changeLists.length > 0 && changeLists[0] instanceof CommittedChangeList committedChangeList) {
@@ -67,7 +66,7 @@ public class ChangeListDetailsAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         ChangeList[] changeLists = e.getData(VcsDataKeys.CHANGE_LISTS);
         e.getPresentation().setEnabled(

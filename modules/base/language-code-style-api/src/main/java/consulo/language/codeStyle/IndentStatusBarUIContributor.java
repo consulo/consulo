@@ -10,8 +10,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBarUIContributor {
     private final IndentOptions myIndentOptions;
@@ -38,8 +37,8 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
         return createTooltip(getIndentInfo(myIndentOptions).get(), getHint());
     }
 
-    @Nonnull
-    public static LocalizeValue getIndentInfo(@Nonnull IndentOptions indentOptions) {
+    
+    public static LocalizeValue getIndentInfo(IndentOptions indentOptions) {
         return indentOptions.USE_TAB_CHARACTER
             ? CodeStyleLocalize.indentStatusBarTab()
             : CodeStyleLocalize.indentStatusBarSpaces(indentOptions.INDENT_SIZE);
@@ -53,7 +52,7 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
         return true;
     }
 
-    @Nonnull
+    
     public static String createTooltip(String indentInfo, String hint) {
         HtmlBuilder builder = new HtmlBuilder();
         builder.append(CodeStyleLocalize.indentStatusBarIndentTooltip().get()).append(HtmlChunk.nbsp()).append(indentInfo);
@@ -63,9 +62,9 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
         return builder.wrapWithHtmlBody().toString();
     }
 
-    @Nonnull
+    
     @Override
-    public String getStatusText(@Nonnull PsiFile psiFile) {
+    public String getStatusText(PsiFile psiFile) {
         String widgetText = getIndentInfo(myIndentOptions).get();
         IndentOptions projectIndentOptions = CodeStyle.getSettings(psiFile.getProject()).getLanguageIndentOptions(psiFile.getLanguage());
         if (!projectIndentOptions.equals(myIndentOptions)) {

@@ -37,7 +37,6 @@ import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -54,11 +53,11 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     private AsyncProjectViewSupport myAsyncSupport;
     private JScrollPane myComponent;
 
-    protected AbstractProjectViewPSIPane(@Nonnull Project project) {
+    protected AbstractProjectViewPSIPane(Project project) {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public JComponent createComponent() {
         if (myComponent != null) {
@@ -127,7 +126,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     }
 
     @Override
-    protected void installComparator(AbstractTreeBuilder builder, @Nonnull Comparator<? super NodeDescriptor> comparator) {
+    protected void installComparator(AbstractTreeBuilder builder, Comparator<? super NodeDescriptor> comparator) {
         if (myAsyncSupport != null) {
             myAsyncSupport.setComparator(comparator);
         }
@@ -193,7 +192,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         CustomizationUtil.installPopupHandler(myTree, IdeActions.GROUP_PROJECT_VIEW_POPUP, ActionPlaces.PROJECT_VIEW_POPUP);
     }
 
-    @Nonnull
+    
     @Override
     public final ActionCallback updateFromRoot(boolean restoreExpandedPaths) {
         Runnable afterUpdate;
@@ -229,7 +228,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
     }
 
     @Override
-    @Nonnull
+    
     public AsyncResult<Void> selectCB(Object element, VirtualFile file, boolean requestFocus) {
         if (file != null) {
             AbstractTreeBuilder builder = getTreeBuilder();
@@ -247,7 +246,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         return AsyncResult.resolved();
     }
 
-    @Nonnull
+    
     public ActionCallback beforeSelect() {
         // actually, getInitialized().doWhenDone() should be called by builder internally
         // this will be done in 2017
@@ -258,7 +257,7 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         return builder.getInitialized();
     }
 
-    protected BaseProjectTreeBuilder createBuilder(@Nonnull DefaultTreeModel treeModel) {
+    protected BaseProjectTreeBuilder createBuilder(DefaultTreeModel treeModel) {
         return new ProjectTreeBuilder(myProject, myTree, treeModel, null, (ProjectAbstractTreeStructureBase) myTreeStructure) {
             @Override
             protected AbstractTreeUpdater createUpdater() {
@@ -267,14 +266,14 @@ public abstract class AbstractProjectViewPSIPane extends AbstractProjectViewPane
         };
     }
 
-    @Nonnull
+    
     public abstract ProjectAbstractTreeStructureBase createStructure();
 
-    @Nonnull
-    protected abstract ProjectViewTree createTree(@Nonnull DefaultTreeModel treeModel);
+    
+    protected abstract ProjectViewTree createTree(DefaultTreeModel treeModel);
 
-    @Nonnull
-    protected abstract AbstractTreeUpdater createTreeUpdater(@Nonnull AbstractTreeBuilder treeBuilder);
+    
+    protected abstract AbstractTreeUpdater createTreeUpdater(AbstractTreeBuilder treeBuilder);
 
     /**
      * @param object   an object that represents a node in the project tree

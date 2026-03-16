@@ -22,8 +22,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public class LightContentFolderImpl implements ContentFolder {
     myContentEntry = contentEntry;
   }
 
-  @Nonnull
+  
   @Override
   public ContentFolderTypeProvider getType() {
     return myContentFolderTypeProvider;
@@ -54,19 +53,19 @@ public class LightContentFolderImpl implements ContentFolder {
     return myFile.getFile();
   }
 
-  @Nonnull
+  
   @Override
   public ContentEntry getContentEntry() {
     return myContentEntry;
   }
 
-  @Nonnull
+  
   @Override
   public String getUrl() {
     return myFile.getUrl();
   }
 
-  @Nonnull
+  
   @Override
   public Map<Key, Object> getProperties() {
     return Collections.emptyMap();
@@ -74,12 +73,12 @@ public class LightContentFolderImpl implements ContentFolder {
 
   @Nullable
   @Override
-  public <T> T getPropertyValue(@Nonnull Key<T> key) {
+  public <T> T getPropertyValue(Key<T> key) {
     return null;
   }
 
   @Override
-  public <T> void setPropertyValue(@Nonnull Key<T> key, @jakarta.annotation.Nullable T value) {
+  public <T> void setPropertyValue(Key<T> key, @Nullable T value) {
 
   }
 

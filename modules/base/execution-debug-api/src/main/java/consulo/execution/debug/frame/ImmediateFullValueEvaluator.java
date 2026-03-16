@@ -16,7 +16,6 @@
 package consulo.execution.debug.frame;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -24,17 +23,17 @@ import jakarta.annotation.Nonnull;
 public class ImmediateFullValueEvaluator extends XFullValueEvaluator {
   private String myFullValue;
 
-  public ImmediateFullValueEvaluator(@Nonnull String fullValue) {
+  public ImmediateFullValueEvaluator(String fullValue) {
     myFullValue = fullValue;
   }
 
-  public ImmediateFullValueEvaluator(@Nonnull LocalizeValue linkText, @Nonnull String fullValue) {
+  public ImmediateFullValueEvaluator(LocalizeValue linkText, String fullValue) {
     super(linkText);
     myFullValue = fullValue;
   }
 
   @Override
-  public void startEvaluation(@Nonnull XFullValueEvaluationCallback callback) {
+  public void startEvaluation(XFullValueEvaluationCallback callback) {
     callback.evaluated(myFullValue);
   }
 }

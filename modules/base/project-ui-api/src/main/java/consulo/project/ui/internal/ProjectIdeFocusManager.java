@@ -21,8 +21,7 @@ import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectIdeFocusManager extends IdeFocusManager {
-  @Nonnull
+  
   static IdeFocusManager getInstance(@Nullable Project project) {
     if (project == null || project.isDisposed() || !project.isInitialized()) return ApplicationIdeFocusManager.getInstance();
 

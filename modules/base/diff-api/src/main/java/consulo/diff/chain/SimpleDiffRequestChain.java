@@ -23,45 +23,44 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 public class SimpleDiffRequestChain extends UserDataHolderBase implements DiffRequestChain {
-  public static SimpleDiffRequestChain fromProducer(@Nonnull DiffRequestProducer producer) {
+  public static SimpleDiffRequestChain fromProducer(DiffRequestProducer producer) {
     return fromProducers(Collections.singletonList(producer));
   }
 
-  public static SimpleDiffRequestChain fromProducers(@Nonnull List<? extends DiffRequestProducer> producers) {
+  public static SimpleDiffRequestChain fromProducers(List<? extends DiffRequestProducer> producers) {
     return fromProducers(producers, -1);
   }
 
-  public static SimpleDiffRequestChain fromProducers(@Nonnull List<? extends DiffRequestProducer> producers, int selectedIndex) {
+  public static SimpleDiffRequestChain fromProducers(List<? extends DiffRequestProducer> producers, int selectedIndex) {
     SimpleDiffRequestChain chain = new SimpleDiffRequestChain(producers, null);
     if (selectedIndex > 0) chain.setIndex(selectedIndex);
     return chain;
   }
 
-  @Nonnull
+  
   private final List<? extends DiffRequestProducer> myRequests;
   private int myIndex = 0;
 
-  public SimpleDiffRequestChain(@Nonnull DiffRequest request) {
+  public SimpleDiffRequestChain(DiffRequest request) {
     this(Collections.singletonList(request));
   }
 
-  public SimpleDiffRequestChain(@Nonnull List<? extends DiffRequest> requests) {
+  public SimpleDiffRequestChain(List<? extends DiffRequest> requests) {
     myRequests = ContainerUtil.map(requests, request -> new DiffRequestProducerWrapper(request));
   }
 
-  private SimpleDiffRequestChain(@Nonnull List<? extends DiffRequestProducer> requests, @Nullable Object constructorFlag) {
+  private SimpleDiffRequestChain(List<? extends DiffRequestProducer> requests, @Nullable Object constructorFlag) {
     assert constructorFlag == null;
     myRequests = requests;
   }
 
   @Override
-  @Nonnull
+  
   public List<? extends DiffRequestProducer> getRequests() {
     return myRequests;
   }
@@ -78,27 +77,27 @@ public class SimpleDiffRequestChain extends UserDataHolderBase implements DiffRe
   }
 
   public static class DiffRequestProducerWrapper implements DiffRequestProducer {
-    @Nonnull
+    
     private final DiffRequest myRequest;
 
-    public DiffRequestProducerWrapper(@Nonnull DiffRequest request) {
+    public DiffRequestProducerWrapper(DiffRequest request) {
       myRequest = request;
     }
 
-    @Nonnull
+    
     public DiffRequest getRequest() {
       return myRequest;
     }
 
-    @Nonnull
+    
     @Override
     public String getName() {
       return StringUtil.notNullize(myRequest.getTitle(), "Change");
     }
 
-    @Nonnull
+    
     @Override
-    public DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator) throws DiffRequestProducerException, ProcessCanceledException {
+    public DiffRequest process(UserDataHolder context, ProgressIndicator indicator) throws DiffRequestProducerException, ProcessCanceledException {
       return myRequest;
     }
   }

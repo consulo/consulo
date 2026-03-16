@@ -18,7 +18,6 @@ package consulo.language.editor.impl.internal.folding;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 /**
  * Custom folding provider for <a href="http://ui.netbeans.org/docs/ui/code_folding/cf_uispec.html#menus">NetBeans folding conventions.</a>
@@ -42,7 +41,7 @@ public class NetBeansCustomFoldingProvider extends CustomFoldingProvider {
     return customText.isEmpty() ? "..." : customText;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDescription() {
     return LocalizeValue.localizeTODO("<editor-fold...> Comments");

@@ -22,7 +22,6 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.content.TestSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author UNV
@@ -31,19 +30,19 @@ import jakarta.annotation.Nonnull;
 public class TestHierarchyScope extends HierarchyScopeBase {
     public static final TestHierarchyScope INSTANCE = new TestHierarchyScope();
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPresentableName() {
         return IdeLocalize.hierarchyScopeTest();
     }
 
     @Override
-    public boolean isInScope(PsiElement baseClass, @Nonnull PsiElement srcElement) {
+    public boolean isInScope(PsiElement baseClass, PsiElement srcElement) {
         VirtualFile virtualFile = srcElement.getContainingFile().getVirtualFile();
         return virtualFile == null || TestSourcesFilter.isTestSources(virtualFile, srcElement.getProject());
     }
 
-    @Nonnull
+    
     @Override
     public SearchScope getSearchScope(PsiElement thisClass) {
         return GlobalSearchScopes.projectTestScope(thisClass.getProject());

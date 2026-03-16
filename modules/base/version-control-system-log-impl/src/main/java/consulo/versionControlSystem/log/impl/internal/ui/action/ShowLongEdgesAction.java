@@ -21,7 +21,6 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.data.MainVcsLogUiProperties;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogUiProperties;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Log.ShowLongEdges")
 public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
@@ -35,7 +34,7 @@ public class ShowLongEdgesAction extends BooleanPropertyToggleAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         VcsLogUi ui = e.getData(VcsLogUi.KEY);
         if (ui != null && !ui.areGraphActionsEnabled()) {

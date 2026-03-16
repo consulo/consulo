@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.util.lang.Pair;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -86,7 +85,7 @@ public class TableColumnAnimator extends Timer implements ActionListener {
     myDone = done;
   }
 
-  @NonNls
+  
   @Override
   public String toString() {
     return "Table column animator";

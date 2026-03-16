@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -39,11 +38,11 @@ public class DefaultHighlightVisitorFactory implements HighlightVisitorFactory, 
     }
 
     @Override
-    public boolean suitableForFile(@Nonnull PsiFile file) {
+    public boolean suitableForFile(PsiFile file) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightVisitor createVisitor() {
         return new DefaultHighlightVisitor(myProject);

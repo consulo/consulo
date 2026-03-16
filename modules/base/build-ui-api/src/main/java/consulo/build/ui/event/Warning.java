@@ -15,18 +15,18 @@
  */
 package consulo.build.ui.event;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
  */
 public interface Warning {
-  @Nonnull
   @BuildEventsNls.Title
   String getMessage();
 
   @Nullable
+
+
   @BuildEventsNls.Description
   String getDescription();
 }

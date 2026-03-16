@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implement this to add additional custom actions to the popup invoked by right-clicking on the annotation gutter.
@@ -35,6 +34,6 @@ public interface AnnotationGutterActionProvider {
      * @param annotation annotation which is currently shown on the gutter.
      * @return new action that can be invoked from the annotation gutter popup.
      */
-    @Nonnull
+    
     AnAction createAction(FileAnnotation annotation);
 }

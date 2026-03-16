@@ -16,7 +16,6 @@
 package consulo.diff.merge;
 
 import consulo.diff.content.DiffContent;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -24,16 +23,16 @@ public abstract class ThreesideMergeRequest extends MergeRequest {
   /**
    * 3 contents: left - middle - right (local - base - server)
    */
-  @Nonnull
+  
   public abstract List<? extends DiffContent> getContents();
 
-  @Nonnull
+  
   public abstract DiffContent getOutputContent();
 
   /**
    * @return contents names. Should have same length as {@link #getContents()}
    * Titles could be null.
    */
-  @Nonnull
+  
   public abstract List<String> getContentTitles();
 }

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.execution.console;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.scratch.RootType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author gregsh
@@ -29,7 +28,7 @@ public final class HistoryRootType extends RootType {
     super("consoles/.history", null);
   }
 
-  @Nonnull
+  
   public static HistoryRootType getInstance() {
     return findByClass(HistoryRootType.class);
   }

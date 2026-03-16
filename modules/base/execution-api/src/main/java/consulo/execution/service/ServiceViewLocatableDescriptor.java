@@ -2,7 +2,7 @@
 package consulo.execution.service;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ServiceViewLocatableDescriptor {
   @Nullable

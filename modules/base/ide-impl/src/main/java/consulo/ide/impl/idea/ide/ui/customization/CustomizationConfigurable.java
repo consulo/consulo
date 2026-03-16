@@ -21,8 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -43,7 +42,7 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
     return myPanel.getPanel();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return IdeLocalize.titleCustomizations();
@@ -77,7 +76,7 @@ public class CustomizationConfigurable implements SearchableConfigurable, Config
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "preferences.customizations";
   }

@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module consulo.disposer.api {
   requires transitive consulo.annotation;
   

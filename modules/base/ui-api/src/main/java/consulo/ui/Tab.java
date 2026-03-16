@@ -15,8 +15,7 @@
  */
 package consulo.ui;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -25,7 +24,7 @@ import java.util.function.BiConsumer;
  * @since 2016-06-14
  */
 public interface Tab {
-    void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer);
+    void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer);
 
     void setCloseHandler(@Nullable BiConsumer<Tab, Component> closeHandler);
 

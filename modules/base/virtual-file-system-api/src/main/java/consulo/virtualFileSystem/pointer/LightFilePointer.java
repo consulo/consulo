@@ -23,22 +23,21 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class LightFilePointer implements VirtualFilePointer {
 
-  @Nonnull
+  
   private final String myUrl;
   @Nullable
   private volatile VirtualFile myFile;
   private volatile boolean myRefreshed = false;
 
-  public LightFilePointer(@Nonnull String url) {
+  public LightFilePointer(String url) {
     myUrl = url;
   }
 
-  public LightFilePointer(@Nonnull VirtualFile file) {
+  public LightFilePointer(VirtualFile file) {
     myUrl = file.getUrl();
     myFile = file;
   }
@@ -51,13 +50,13 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @Nonnull
+  
   public String getUrl() {
     return myUrl;
   }
 
   @Override
-  @Nonnull
+  
   public String getFileName() {
     VirtualFile file = myFile;
     if (file != null) {
@@ -68,15 +67,15 @@ public class LightFilePointer implements VirtualFilePointer {
   }
 
   @Override
-  @Nonnull
+  
   public String getPresentableUrl() {
     VirtualFile file = getFile();
     if (file != null) return file.getPresentableUrl();
     return toPresentableUrl(myUrl);
   }
 
-  @Nonnull
-  private static String toPresentableUrl(@Nonnull String url) {
+  
+  private static String toPresentableUrl(String url) {
     String path = VirtualFileManager.extractPath(url);
     String protocol = VirtualFileManager.extractProtocol(url);
     VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);

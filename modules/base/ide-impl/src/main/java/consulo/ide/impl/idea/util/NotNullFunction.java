@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.annotation.DeprecationInfo;
-import jakarta.annotation.Nonnull;
 
 /**
  * 
@@ -27,6 +26,6 @@ import jakarta.annotation.Nonnull;
 @DeprecationInfo("Use Function from JDK")
 public interface NotNullFunction<Param, Result> extends NullableFunction<Param, Result> {
   @Override
-  @Nonnull
+  
   Result apply(Param dom);
 }

@@ -8,8 +8,7 @@ import consulo.desktop.awt.editor.impl.DesktopEditorImpl;
 import consulo.document.Document;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.paint.PaintUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Collections;
@@ -23,11 +22,11 @@ import java.util.function.Consumer;
  * as fragments.
  */
 final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsIterator.Fragment> {
-    static @Nonnull Iterable<Fragment> create(@Nonnull EditorViewImpl view, int offset, boolean beforeSoftWrap) {
+    static Iterable<Fragment> create(EditorViewImpl view, int offset, boolean beforeSoftWrap) {
         return create(view, offset, beforeSoftWrap, false);
     }
 
-    static @Nonnull Iterable<Fragment> create(@Nonnull EditorViewImpl view, int offset, boolean beforeSoftWrap, boolean align) {
+    static Iterable<Fragment> create(EditorViewImpl view, int offset, boolean beforeSoftWrap, boolean align) {
         return () -> new VisualLineFragmentsIterator(view, offset, beforeSoftWrap, align);
     }
 
@@ -35,8 +34,8 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
      * If {@code quickEvaluationListener} is provided, quick approximate iteration mode becomes enabled, listener will be invoked
      * if approximation will in fact be used during width calculation.
      */
-    static @Nonnull Iterable<Fragment> create(@Nonnull EditorViewImpl view,
-                                              @Nonnull VisualLinesIterator visualLinesIterator,
+    static Iterable<Fragment> create(EditorViewImpl view,
+                                              VisualLinesIterator visualLinesIterator,
                                               @Nullable Runnable quickEvaluationListener,
                                               boolean align) {
         return () -> new VisualLineFragmentsIterator(view, visualLinesIterator, quickEvaluationListener, align);
@@ -103,7 +102,7 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
             align);
     }
 
-    private VisualLineFragmentsIterator(@Nonnull EditorViewImpl view, @Nonnull VisualLinesIterator visualLinesIterator,
+    private VisualLineFragmentsIterator(EditorViewImpl view, VisualLinesIterator visualLinesIterator,
                                         @Nullable Runnable quickEvaluationListener, boolean align) {
         assert !visualLinesIterator.atEnd();
         myView = view;
@@ -521,7 +520,7 @@ final class VisualLineFragmentsIterator implements Iterator<VisualLineFragmentsI
         }
     }
 
-    private @Nonnull String assertMessage() {
+    private String assertMessage() {
         String startOffset = "startOffset: " + mySegmentStartOffset;
         String endOffset = "endOffset: " + mySegmentEndOffset;
         String foldIndex = "foldIndex: " + myCurrentFoldRegionIndex;

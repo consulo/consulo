@@ -17,13 +17,12 @@ package consulo.ui.ex.internal;
 
 import consulo.annotation.component.ActionImpl;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 26-Jun-22
  */
 public interface InjectingBindingActionStubBase extends ActionStubBase {
-  @Nonnull
+  
   ActionImpl getActionImpl();
 }

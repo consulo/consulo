@@ -9,24 +9,23 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "fatalErrorWidget", order = "after notificationsWidget")
 public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
-    @Nonnull
+    
     @Override
     public String getDisplayName() {
         return UILocalize.statusBarFatalErrorWidgetName().get();
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project) {
+    public boolean isAvailable(Project project) {
         return true;
     }
 
     @Override
-    @Nonnull
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    public StatusBarWidget createWidget(Project project) {
         return new IdeMessagePanel(project, this, WindowManager.getInstance().getIdeFrame(project), MessagePool.getInstance());
     }
 
@@ -36,7 +35,7 @@ public class FatalErrorWidgetFactory implements StatusBarWidgetFactory {
     }
 
     @Override
-    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+    public boolean canBeEnabledOn(StatusBar statusBar) {
         return false;
     }
 }

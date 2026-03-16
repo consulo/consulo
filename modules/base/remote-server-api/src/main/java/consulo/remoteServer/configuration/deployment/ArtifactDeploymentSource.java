@@ -19,14 +19,13 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public interface ArtifactDeploymentSource extends DeploymentSource {
-  @Nonnull
+  
   ArtifactPointer getArtifactPointer();
 
   @Nullable

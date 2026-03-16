@@ -19,7 +19,6 @@ import consulo.fileEditor.impl.internal.search.SearchSession;
 import consulo.find.FindSettings;
 import consulo.find.localize.FindLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 public class ToggleMatchCase extends EditorSearchToggleAction implements Embeddable {
     public ToggleMatchCase() {
@@ -37,12 +36,12 @@ public class ToggleMatchCase extends EditorSearchToggleAction implements Embedda
     }
 
     @Override
-    protected boolean isSelected(@Nonnull SearchSession session) {
+    protected boolean isSelected(SearchSession session) {
         return session.getFindModel().isCaseSensitive();
     }
 
     @Override
-    protected void setSelected(@Nonnull SearchSession session, boolean selected) {
+    protected void setSelected(SearchSession session, boolean selected) {
         session.getFindModel().setCaseSensitive(selected);
         FindSettings.getInstance().setLocalCaseSensitive(selected);
     }

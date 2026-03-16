@@ -28,7 +28,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -36,11 +35,10 @@ import jakarta.annotation.Nonnull;
 @ExtensionImpl
 public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
     @Override
-    public boolean validate(@Nonnull Project project) {
+    public boolean validate(Project project) {
         return project.getProjectType() == ProjectType.REGULAR;
     }
 
-    @Nonnull
     @Override
     public String getId() {
         return ToolWindowId.TODO_VIEW;
@@ -48,23 +46,20 @@ public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         project.getInstance(TodoView.class).initToolWindow(toolWindow);
     }
 
-    @Nonnull
     @Override
     public ToolWindowAnchor getAnchor() {
         return ToolWindowAnchor.BOTTOM;
     }
 
-    @Nonnull
     @Override
     public Image getIcon() {
         return PlatformIconGroup.toolwindowsToolwindowtodo();
     }
 
-    @Nonnull
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("TODO");

@@ -22,8 +22,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.platform.Platform;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -33,12 +32,12 @@ public final class SyntaxInfoBuilder {
     private SyntaxInfoBuilder() {
     }
 
-    @Nonnull
+    
     static MyMarkupIterator createMarkupIterator(
-        @Nonnull EditorHighlighter highlighter,
-        @Nonnull CharSequence text,
-        @Nonnull EditorColorsScheme schemeToUse,
-        @Nonnull MarkupModel markupModel,
+        EditorHighlighter highlighter,
+        CharSequence text,
+        EditorColorsScheme schemeToUse,
+        MarkupModel markupModel,
         int startOffsetToUse,
         int endOffset
     ) {
@@ -73,9 +72,9 @@ public final class SyntaxInfoBuilder {
         private ColorValue myCurrentBackgroundColor;
 
         MyMarkupIterator(
-            @Nonnull CharSequence charSequence,
-            @Nonnull RangeIterator rangeIterator,
-            @Nonnull EditorColorsScheme colorsScheme
+            CharSequence charSequence,
+            RangeIterator rangeIterator,
+            EditorColorsScheme colorsScheme
         ) {
             myRangeIterator = rangeIterator;
             mySegmentIterator = new SegmentIterator(charSequence, colorsScheme.getFontPreferences());
@@ -109,7 +108,7 @@ public final class SyntaxInfoBuilder {
             return myCurrentFontStyle;
         }
 
-        @Nonnull
+        
         public String getFontFamilyName() {
             return mySegmentIterator.getCurrentFontFamilyName();
         }
@@ -130,9 +129,9 @@ public final class SyntaxInfoBuilder {
     }
 
     static class CompositeRangeIterator implements RangeIterator {
-        @Nonnull
+        
         private final ColorValue myDefaultForeground;
-        @Nonnull
+        
         private final ColorValue myDefaultBackground;
         private final IteratorWrapper[] myIterators;
         private final TextAttributes myMergedAttributes = new TextAttributes();
@@ -141,7 +140,7 @@ public final class SyntaxInfoBuilder {
         private int myCurrentEnd;
 
         // iterators have priority corresponding to their order in the parameter list - rightmost having the largest priority
-        CompositeRangeIterator(@Nonnull EditorColorsScheme colorsScheme, RangeIterator... iterators) {
+        CompositeRangeIterator(EditorColorsScheme colorsScheme, RangeIterator... iterators) {
             myDefaultForeground = colorsScheme.getDefaultForeground();
             myDefaultBackground = colorsScheme.getDefaultBackground();
             myIterators = new IteratorWrapper[iterators.length];
@@ -302,7 +301,7 @@ public final class SyntaxInfoBuilder {
 
         private MarkupModelRangeIterator(
             @Nullable MarkupModel markupModel,
-            @Nonnull EditorColorsScheme colorsScheme,
+            EditorColorsScheme colorsScheme,
             int startOffset,
             int endOffset
         ) {
@@ -424,7 +423,7 @@ public final class SyntaxInfoBuilder {
         private int myCurrentEnd;
         private TextAttributes myCurrentAttributes;
 
-        HighlighterRangeIterator(@Nonnull EditorHighlighter highlighter, int startOffset, int endOffset) {
+        HighlighterRangeIterator(EditorHighlighter highlighter, int startOffset, int endOffset) {
             myStartOffset = startOffset;
             myEndOffset = endOffset;
             myIterator = highlighter.createIterator(startOffset);
@@ -518,11 +517,11 @@ public final class SyntaxInfoBuilder {
 
         private final SyntaxInfo.Builder builder;
 
-        @Nonnull
+        
         private final CharSequence myText;
-        @Nonnull
+        
         private final ColorValue myDefaultForeground;
-        @Nonnull
+        
         private final ColorValue myDefaultBackground;
 
         @Nullable
@@ -540,7 +539,7 @@ public final class SyntaxInfoBuilder {
 
         private int myIndentSymbolsToStripAtCurrentLine;
 
-        Context(@Nonnull CharSequence charSequence, @Nonnull EditorColorsScheme scheme, int indentSymbolsToStrip) {
+        Context(CharSequence charSequence, EditorColorsScheme scheme, int indentSymbolsToStrip) {
             myText = charSequence;
             myDefaultForeground = scheme.getDefaultForeground();
             myDefaultBackground = scheme.getDefaultBackground();
@@ -679,7 +678,7 @@ public final class SyntaxInfoBuilder {
             builder.addText(position + myOffsetShift, position + myOffsetShift + 1);
         }
 
-        @Nonnull
+        
         public SyntaxInfo finish() {
             return builder.build();
         }

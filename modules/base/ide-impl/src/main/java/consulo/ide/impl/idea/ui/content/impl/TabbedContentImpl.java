@@ -20,7 +20,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUtilEx;
 import consulo.ui.ex.content.TabbedContent;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +41,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
   }
 
   @Override
-  public void addContent(@Nonnull JComponent content, @Nonnull String name, boolean selectTab) {
+  public void addContent(JComponent content, String name, boolean selectTab) {
     Pair<String, JComponent> tab = Pair.create(name, content);
     if (!myTabs.contains(tab)) {
       myTabs.add(tab);
@@ -74,7 +73,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
   }
 
   @Override
-  public void removeContent(@Nonnull JComponent content) {
+  public void removeContent(JComponent content) {
     Pair<String, JComponent> toRemove = null;
     for (Pair<String, JComponent> tab : myTabs) {
       if (tab.second == content) {
@@ -105,7 +104,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
   }
 
   @Override
-  public boolean findAndSelectContent(@Nonnull JComponent contentComponent) {
+  public boolean findAndSelectContent(JComponent contentComponent) {
     String tabName = findTabNameByComponent(contentComponent);
     if (tabName != null) {
       setDisplayName(tabName);
@@ -133,7 +132,7 @@ public class TabbedContentImpl extends ContentImpl implements TabbedContent {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public List<Pair<String, JComponent>> getTabs() {
     return Collections.unmodifiableList(myTabs);

@@ -11,8 +11,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
@@ -37,7 +36,7 @@ public abstract class AutoPopupController {
   public static final Key<Boolean> AUTO_POPUP_ON_FOCUS_GAINED = Key.create("Show Completion Auto-Popup On Focus Gained");
 
 
-  public static AutoPopupController getInstance(@Nonnull Project project) {
+  public static AutoPopupController getInstance(Project project) {
     return project.getInstance(AutoPopupController.class);
   }
 
@@ -45,13 +44,13 @@ public abstract class AutoPopupController {
 
   public abstract void autoPopupMemberLookup(Editor editor, CompletionType completionType, @Nullable Predicate<? super PsiFile> condition);
 
-  public abstract void scheduleAutoPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, @Nullable Predicate<? super PsiFile> condition);
+  public abstract void scheduleAutoPopup(Editor editor, CompletionType completionType, @Nullable Predicate<? super PsiFile> condition);
 
   public abstract void scheduleAutoPopup(Editor editor);
 
   public abstract void showParameterInfo(Project project, Editor editor, PsiFile file, int lbraceOffset, PsiElement highlightedElement, boolean requestFocus);
 
-  public abstract void autoPopupParameterInfo(@Nonnull Editor editor, @Nullable Object highlightedMethod);
+  public abstract void autoPopupParameterInfo(Editor editor, @Nullable Object highlightedMethod);
 
-  public abstract void showCompletionPopup(@Nonnull Editor editor, @Nonnull CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous);
+  public abstract void showCompletionPopup(Editor editor, CompletionType completionType, boolean invokedExplicitly, boolean autopopup, boolean synchronous);
 }

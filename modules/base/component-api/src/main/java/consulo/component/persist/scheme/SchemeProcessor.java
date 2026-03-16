@@ -20,25 +20,24 @@ import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
 public interface SchemeProcessor<T, E extends ExternalizableScheme> {
-  E readScheme(@Nonnull Document schemeContent) throws InvalidDataException, IOException, JDOMException;
+  E readScheme(Document schemeContent) throws InvalidDataException, IOException, JDOMException;
 
-  Parent writeScheme(@Nonnull E scheme) throws WriteExternalException;
+  Parent writeScheme(E scheme) throws WriteExternalException;
 
-  boolean shouldBeSaved(@Nonnull E scheme);
+  boolean shouldBeSaved(E scheme);
 
-  void initScheme(@Nonnull E scheme);
+  void initScheme(E scheme);
 
-  void onSchemeAdded(@Nonnull E scheme);
+  void onSchemeAdded(E scheme);
 
-  void onSchemeDeleted(@Nonnull E scheme);
+  void onSchemeDeleted(E scheme);
 
   void onCurrentSchemeChanged(E oldCurrentScheme);
 
-  @Nonnull
-  String getName(@Nonnull T immutableElement);
+  
+  String getName(T immutableElement);
 }

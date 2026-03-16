@@ -27,7 +27,6 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -80,7 +79,7 @@ public class XDebuggerSettingManagerImpl extends XDebuggerSettingsManager implem
   }
 
   @Override
-  @Nonnull
+  
   public XDebuggerDataViewSettings getDataViewSettings() {
     return myDataViewSettings;
   }

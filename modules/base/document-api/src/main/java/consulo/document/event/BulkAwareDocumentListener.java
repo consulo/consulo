@@ -3,7 +3,6 @@ package consulo.document.event;
 
 import consulo.document.Document;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Convenience interface for {@link DocumentListener}-s which only process notifications on document changes performed not in
@@ -13,19 +12,19 @@ import jakarta.annotation.Nonnull;
  */
 public interface BulkAwareDocumentListener extends DocumentListener {
   @Override
-  default void beforeDocumentChange(@Nonnull DocumentEvent event) {
+  default void beforeDocumentChange(DocumentEvent event) {
     if (!event.getDocument().isInBulkUpdate()) beforeDocumentChangeNonBulk(event);
   }
 
   @Override
-  default void documentChanged(@Nonnull DocumentEvent event) {
+  default void documentChanged(DocumentEvent event) {
     if (!event.getDocument().isInBulkUpdate()) documentChangedNonBulk(event);
   }
 
-  default void beforeDocumentChangeNonBulk(@Nonnull DocumentEvent event) {
+  default void beforeDocumentChangeNonBulk(DocumentEvent event) {
   }
 
-  default void documentChangedNonBulk(@Nonnull DocumentEvent event) {
+  default void documentChangedNonBulk(DocumentEvent event) {
   }
 
   /**
@@ -34,29 +33,29 @@ public interface BulkAwareDocumentListener extends DocumentListener {
    */
   interface Simple extends BulkAwareDocumentListener {
     @Override
-    default void beforeDocumentChangeNonBulk(@Nonnull DocumentEvent event) {
+    default void beforeDocumentChangeNonBulk(DocumentEvent event) {
       beforeDocumentChange(event.getDocument());
     }
 
     @Override
-    default void documentChangedNonBulk(@Nonnull DocumentEvent event) {
+    default void documentChangedNonBulk(DocumentEvent event) {
       afterDocumentChange(event.getDocument());
     }
 
     @Override
-    default void bulkUpdateStarting(@Nonnull Document document) {
+    default void bulkUpdateStarting(Document document) {
       beforeDocumentChange(document);
     }
 
     @Override
-    default void bulkUpdateFinished(@Nonnull Document document) {
+    default void bulkUpdateFinished(Document document) {
       afterDocumentChange(document);
     }
 
-    default void beforeDocumentChange(@Nonnull Document document) {
+    default void beforeDocumentChange(Document document) {
     }
 
-    default void afterDocumentChange(@Nonnull Document document) {
+    default void afterDocumentChange(Document document) {
     }
   }
 }

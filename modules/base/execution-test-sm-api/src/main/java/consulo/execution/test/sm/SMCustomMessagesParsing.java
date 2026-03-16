@@ -18,14 +18,13 @@ package consulo.execution.test.sm;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.sm.runner.OutputToGeneralTestEventsConverter;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author gregsh
  */
 public interface SMCustomMessagesParsing {
     OutputToGeneralTestEventsConverter createTestEventsConverter(
-        @Nonnull String testFrameworkName,
-        @Nonnull TestConsoleProperties consoleProperties
+        String testFrameworkName,
+        TestConsoleProperties consoleProperties
     );
 }

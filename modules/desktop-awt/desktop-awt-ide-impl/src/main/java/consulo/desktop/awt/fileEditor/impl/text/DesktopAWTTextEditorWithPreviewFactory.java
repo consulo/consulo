@@ -21,8 +21,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.TextEditorWithPreview;
 import consulo.fileEditor.TextEditorWithPreviewFactory;
 import consulo.ui.ex.action.ActionToolbar;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -32,12 +31,12 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class DesktopAWTTextEditorWithPreviewFactory implements TextEditorWithPreviewFactory {
-    @Nonnull
+    
     @Override
-    public TextEditorWithPreview create(@Nonnull TextEditor editor,
-                                        @Nonnull FileEditor preview,
+    public TextEditorWithPreview create(TextEditor editor,
+                                        FileEditor preview,
                                         @Nullable ActionToolbar leftToolbarActionToolbar,
-                                        @Nonnull String editorName) {
+                                        String editorName) {
         return new TextEditorWithPreviewImpl(editor, preview, leftToolbarActionToolbar, editorName);
     }
 }

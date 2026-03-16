@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.util.containers;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * return -1 instead of 0 if no such mapping exists
@@ -29,11 +28,11 @@ public class ObjectIntHashMap<K> extends TObjectIntHashMap<K> {
     super(initialCapacity);
   }
 
-  public ObjectIntHashMap(@Nonnull TObjectHashingStrategy<K> strategy) {
+  public ObjectIntHashMap(TObjectHashingStrategy<K> strategy) {
     super(strategy);
   }
 
-  public ObjectIntHashMap(int initialCapacity, @Nonnull TObjectHashingStrategy<K> strategy) {
+  public ObjectIntHashMap(int initialCapacity, TObjectHashingStrategy<K> strategy) {
     super(initialCapacity, strategy);
   }
 

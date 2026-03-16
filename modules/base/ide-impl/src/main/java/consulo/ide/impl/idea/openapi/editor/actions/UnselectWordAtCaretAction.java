@@ -24,7 +24,6 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -43,7 +42,7 @@ public class UnselectWordAtCaretAction extends EditorAction implements DumbAware
         }
 
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
         }
     }
 }

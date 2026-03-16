@@ -18,7 +18,6 @@ package consulo.document.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.DocumentFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 /**
@@ -28,9 +27,9 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 @Singleton
 public class DocumentFactoryImpl implements DocumentFactory {
-    @Nonnull
+    
     @Override
-    public DocumentEx createDocument(@Nonnull CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread) {
+    public DocumentEx createDocument(CharSequence chars, boolean acceptSlashR, boolean forUseInNonAWTThread) {
         return new DocumentImpl(chars, acceptSlashR, forUseInNonAWTThread);
     }
 }

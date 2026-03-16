@@ -1,8 +1,7 @@
 package consulo.language.duplicateAnalysis.equivalence;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene.Kudelevsky
@@ -11,12 +10,12 @@ public class SingleChildDescriptor {
   private final MyType myType;
   private final PsiElement myElement;
 
-  public SingleChildDescriptor(@Nonnull MyType type, @Nullable PsiElement element) {
+  public SingleChildDescriptor(MyType type, @Nullable PsiElement element) {
     myType = type;
     myElement = element;
   }
 
-  @Nonnull
+  
   public MyType getType() {
     return myType;
   }

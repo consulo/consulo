@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.project.Project;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna

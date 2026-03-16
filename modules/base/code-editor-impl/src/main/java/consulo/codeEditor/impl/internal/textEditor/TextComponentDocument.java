@@ -23,8 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.util.dataholder.UserDataHolderBase;
 import kava.beans.PropertyChangeListener;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -39,7 +38,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
         myTextComponent = textComponent;
     }
 
-    @Nonnull
+    
     @Override
     public String getText() {
         try {
@@ -51,9 +50,9 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
         }
     }
 
-    @Nonnull
+    
     @Override
-    public String getText(@Nonnull TextRange range) {
+    public String getText(TextRange range) {
         try {
             javax.swing.text.Document document = myTextComponent.getDocument();
             return document.getText(range.getStartOffset(), range.getLength());
@@ -64,19 +63,19 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    @Nonnull
+    
     public CharSequence getCharsSequence() {
         return getText();
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getImmutableCharSequence() {
         return getText();
     }
 
     @Override
-    @Nonnull
+    
     public char[] getChars() {
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -107,7 +106,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    public void insertString(int offset, @Nonnull CharSequence s) {
+    public void insertString(int offset, CharSequence s) {
         try {
             myTextComponent.getDocument().insertString(offset, s.toString(), null);
         }
@@ -127,7 +126,7 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
+    public void replaceString(int startOffset, int endOffset, CharSequence s) {
         javax.swing.text.Document document = myTextComponent.getDocument();
         try {
             document.remove(startOffset, endOffset - startOffset);
@@ -154,39 +153,39 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    public void addDocumentListener(@Nonnull DocumentListener listener) {
+    public void addDocumentListener(DocumentListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void addDocumentListener(@Nonnull DocumentListener listener, @Nonnull Disposable parentDisposable) {
+    public void addDocumentListener(DocumentListener listener, Disposable parentDisposable) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void removeDocumentListener(@Nonnull DocumentListener listener) {
+    public void removeDocumentListener(DocumentListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    @Nonnull
+    
     public RangeMarker createRangeMarker(int startOffset, int endOffset) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    @Nonnull
+    
     public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -196,13 +195,13 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    @Nonnull
+    
     public RangeMarker createGuardedBlock(int startOffset, int endOffset) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public void removeGuardedBlock(@Nonnull RangeMarker block) {
+    public void removeGuardedBlock(RangeMarker block) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -232,13 +231,13 @@ public class TextComponentDocument extends UserDataHolderBase implements Documen
     }
 
     @Override
-    public void setText(@Nonnull CharSequence text) {
+    public void setText(CharSequence text) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    @Nonnull
-    public RangeMarker createRangeMarker(@Nonnull TextRange textRange) {
+    
+    public RangeMarker createRangeMarker(TextRange textRange) {
         throw new UnsupportedOperationException("Not implemented");
     }
 

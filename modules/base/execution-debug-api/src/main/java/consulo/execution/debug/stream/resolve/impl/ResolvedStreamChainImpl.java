@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.resolve.impl;
 
 import consulo.execution.debug.stream.resolve.ResolvedStreamCall;
 import consulo.execution.debug.stream.resolve.ResolvedStreamChain;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +15,19 @@ public class ResolvedStreamChainImpl implements ResolvedStreamChain {
   private final ResolvedStreamCall.Terminator myTerminator;
   private final List<ResolvedStreamCall.Intermediate> myIntermediateCalls;
 
-  ResolvedStreamChainImpl(@Nonnull ResolvedStreamCall.Terminator terminator,
-                          @Nonnull List<ResolvedStreamCall.Intermediate> intermediates) {
+  ResolvedStreamChainImpl(ResolvedStreamCall.Terminator terminator,
+                          List<ResolvedStreamCall.Intermediate> intermediates) {
     myTerminator = terminator;
     myIntermediateCalls = List.copyOf(intermediates);
   }
 
   @Override
-  public @Nonnull ResolvedStreamCall.Terminator getTerminator() {
+  public ResolvedStreamCall.Terminator getTerminator() {
     return myTerminator;
   }
 
   @Override
-  public @Nonnull List<ResolvedStreamCall.Intermediate> getIntermediateCalls() {
+  public List<ResolvedStreamCall.Intermediate> getIntermediateCalls() {
     return myIntermediateCalls;
   }
 
@@ -36,11 +35,11 @@ public class ResolvedStreamChainImpl implements ResolvedStreamChain {
     private final List<ResolvedStreamCall.Intermediate> myIntermediates = new ArrayList<>();
     private ResolvedStreamCall.Terminator myTerminator;
 
-    public void addIntermediate(@Nonnull ResolvedStreamCall.Intermediate intermediate) {
+    public void addIntermediate(ResolvedStreamCall.Intermediate intermediate) {
       myIntermediates.add(intermediate);
     }
 
-    public void setTerminator(@Nonnull ResolvedStreamCall.Terminator terminator) {
+    public void setTerminator(ResolvedStreamCall.Terminator terminator) {
       myTerminator = terminator;
     }
 

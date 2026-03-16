@@ -17,7 +17,6 @@ package consulo.colorScheme.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.colorScheme.BundledColorSchemeProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionImpl
 public class DefaultBundledColorSchemeProvider implements BundledColorSchemeProvider {
-    @Nonnull
+    
     @Override
     public String[] getColorSchemeFiles() {
         return new String[]{

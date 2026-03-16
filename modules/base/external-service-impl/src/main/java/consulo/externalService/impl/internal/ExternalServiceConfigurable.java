@@ -38,8 +38,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -66,7 +65,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
         myUsageStatisticsPersistenceComponentProvider = usageStatisticsPersistenceComponentProvider;
     }
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "externalServices";
@@ -78,7 +77,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
         return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("External Services");
@@ -94,9 +93,9 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         ExternalServiceConfiguration extService = myExternalServiceConfigurationProvider.get();
         UsageStatisticsPersistenceComponent statistics = myUsageStatisticsPersistenceComponentProvider.get();
 

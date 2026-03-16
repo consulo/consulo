@@ -21,7 +21,6 @@ import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RuntimeConfigurationProducer;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Wraps a {@link RuntimeConfigurationProducer} in a {@link ConfigurationFromContext}.
@@ -40,7 +39,7 @@ class ConfigurationFromContextWrapper extends ConfigurationFromContext {
     myProducer.perform(context, startRunnable);
   }
 
-  @Nonnull
+  
   @Override
   public RunnerAndConfigurationSettings getConfigurationSettings() {
     return myProducer.getConfiguration();
@@ -51,7 +50,7 @@ class ConfigurationFromContextWrapper extends ConfigurationFromContext {
     myProducer.setConfiguration(configurationSettings);
   }
 
-  @Nonnull
+  
   @Override
   public PsiElement getSourceElement() {
     return myProducer.getSourceElement();

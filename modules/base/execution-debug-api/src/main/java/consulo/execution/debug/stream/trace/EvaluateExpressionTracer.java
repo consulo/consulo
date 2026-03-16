@@ -9,8 +9,7 @@ import consulo.execution.debug.internal.XEvaluationCallbackBase;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.stream.wrapper.StreamChain;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,10 +23,10 @@ public class EvaluateExpressionTracer implements StreamTracer {
     private final XValueInterpreter myXValueInterpreter;
 
     public EvaluateExpressionTracer(
-        @Nonnull XDebugSession mySession,
-        @Nonnull TraceExpressionBuilder myExpressionBuilder,
-        @Nonnull TraceResultInterpreter myResultInterpreter,
-        @Nonnull XValueInterpreter myXValueInterpreter
+        XDebugSession mySession,
+        TraceExpressionBuilder myExpressionBuilder,
+        TraceResultInterpreter myResultInterpreter,
+        XValueInterpreter myXValueInterpreter
     ) {
         this.mySession = mySession;
         this.myExpressionBuilder = myExpressionBuilder;
@@ -35,9 +34,9 @@ public class EvaluateExpressionTracer implements StreamTracer {
         this.myXValueInterpreter = myXValueInterpreter;
     }
 
-    @Nonnull
+    
     @Override
-    public Result trace(@Nonnull StreamChain chain) {
+    public Result trace(StreamChain chain) {
         String streamTraceExpression = myExpressionBuilder.createTraceExpression(chain);
 
         XStackFrame stackFrame = mySession.getCurrentStackFrame();
@@ -103,23 +102,23 @@ public class EvaluateExpressionTracer implements StreamTracer {
         }
     }
 
-    @Nonnull
+    
     private EvaluationResult evaluateStreamExpression(
-        @Nonnull XDebuggerEvaluator evaluator,
-        @Nonnull StreamChain chain,
-        @Nonnull String streamTraceExpression,
-        @Nonnull XStackFrame stackFrame
+        XDebuggerEvaluator evaluator,
+        StreamChain chain,
+        String streamTraceExpression,
+        XStackFrame stackFrame
     ) {
         CompletableFuture<EvaluationResult> deferred = new CompletableFuture<>();
 
         evaluator.evaluate(myExpressionBuilder.createXExpression(chain, streamTraceExpression), new XEvaluationCallbackBase() {
             @Override
-            public void evaluated(@Nonnull XValue evaluationResult) {
+            public void evaluated(XValue evaluationResult) {
                 deferred.complete(new EvaluationResult(evaluationResult, null));
             }
 
             @Override
-            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 deferred.complete(new EvaluationResult(null, errorMessage.get()));
             }
         }, stackFrame.getSourcePosition());

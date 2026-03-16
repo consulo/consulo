@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "FileChooser.NewFile")
 public class NewFileAction extends FileChooserAction {
@@ -42,7 +41,7 @@ public class NewFileAction extends FileChooserAction {
     }
 
     @Override
-    protected void update(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    protected void update(FileSystemTree fileSystemTree, AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         FileType fileType = e.getData(FileChooserKeys.NEW_FILE_TYPE);
         if (fileType != null) {
@@ -58,7 +57,7 @@ public class NewFileAction extends FileChooserAction {
 
     @Override
     @RequiredUIAccess
-    protected void actionPerformed(@Nonnull FileSystemTree fileSystemTree, @Nonnull AnActionEvent e) {
+    protected void actionPerformed(FileSystemTree fileSystemTree, AnActionEvent e) {
         FileType fileType = e.getRequiredData(FileChooserKeys.NEW_FILE_TYPE);
         String initialContent = e.getData(FileChooserKeys.NEW_FILE_TEMPLATE_TEXT);
         if (initialContent != null) {
@@ -67,7 +66,7 @@ public class NewFileAction extends FileChooserAction {
     }
 
     @RequiredUIAccess
-    private static void createNewFile(@Nonnull FileSystemTree fileSystemTree, FileType fileType, String initialContent) {
+    private static void createNewFile(FileSystemTree fileSystemTree, FileType fileType, String initialContent) {
         VirtualFile file = fileSystemTree.getNewFileParent();
         if (file == null || !file.isDirectory()) {
             return;

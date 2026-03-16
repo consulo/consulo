@@ -21,8 +21,7 @@ import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.language.psi.PsiManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -30,13 +29,13 @@ import jakarta.annotation.Nullable;
 public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
     private final CachedValueProvider<T> myProvider;
 
-    public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
+    public PsiCachedValueImpl(PsiManager manager, CachedValueProvider<T> provider, CachedValuesFactory factory) {
         this(manager, provider, false, factory);
     }
 
     PsiCachedValueImpl(
-        @Nonnull PsiManager manager,
-        @Nonnull CachedValueProvider<T> provider,
+        PsiManager manager,
+        CachedValueProvider<T> provider,
         boolean trackValue,
         CachedValuesFactory factory
     ) {
@@ -50,7 +49,7 @@ public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedVa
         return getValueWithLock(null);
     }
 
-    @Nonnull
+    
     @Override
     public CachedValueProvider<T> getValueProvider() {
         return myProvider;

@@ -26,7 +26,6 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -60,7 +59,7 @@ public class ArtifactErrorPanel {
                 else {
                     JBPopupFactory.getInstance()
                         .createListPopup(new BaseListPopupStep<ConfigurationErrorQuickFix>(null, myCurrentQuickFixes) {
-                            @Nonnull
+                            
                             @Override
                             public String getTextFor(ConfigurationErrorQuickFix value) {
                                 return value.getActionName();
@@ -84,7 +83,7 @@ public class ArtifactErrorPanel {
         artifactEditor.queueValidation();
     }
 
-    public void showError(@Nonnull String message, @Nonnull List<? extends ConfigurationErrorQuickFix> quickFixes) {
+    public void showError(String message, List<? extends ConfigurationErrorQuickFix> quickFixes) {
         myErrorLabel.setVisible(true);
         String errorText = XmlStringUtil.wrapInHtml(message);
         if (myErrorLabel.isShowing()) {

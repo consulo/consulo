@@ -34,8 +34,7 @@ import consulo.ui.style.StandardColors;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -50,7 +49,7 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
     myDateTimeFormatManager = dateTimeFormatManager;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return "ide.date.format";
@@ -65,16 +64,16 @@ public class DateTimeFormatConfigurable extends SimpleConfigurableByProperties i
     return "preferences.general";
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Date Formats");
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  protected Component createLayout(@Nonnull PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+  protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
     DateTimeFormatManager dateTimeFormatManager = myDateTimeFormatManager.get();
 
     VerticalLayout layout = VerticalLayout.create();

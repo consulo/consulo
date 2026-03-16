@@ -26,7 +26,6 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -122,7 +121,7 @@ public class CustomFileTypeEditor extends SettingsEditor<AbstractFileType> {
     type.setSyntaxTable(getSyntaxTable());
   }
 
-  @Nonnull
+  
   public JComponent createEditor() {
     JComponent panel = createCenterPanel();
     for (int i = 0; i < myKeywordsLists.length; i++) {

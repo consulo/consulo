@@ -19,16 +19,15 @@ import consulo.component.ProcessCanceledException;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2021-12-28
  */
 public class BombedStringUtil {
-    @Nonnull
+    
     @Contract(pure = true)
-    public static CharSequence newBombedCharSequence(@Nonnull CharSequence sequence, long delay) {
+    public static CharSequence newBombedCharSequence(CharSequence sequence, long delay) {
         final long myTime = System.currentTimeMillis() + delay;
         return new StringUtil.BombedCharSequence(sequence) {
             @Override

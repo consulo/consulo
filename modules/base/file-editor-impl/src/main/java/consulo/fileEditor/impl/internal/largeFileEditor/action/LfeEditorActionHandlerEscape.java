@@ -8,14 +8,13 @@ import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.fileEditor.internal.SearchReplaceComponent;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public final class LfeEditorActionHandlerEscape extends LfeBaseEditorActionHandler {
     @Override
-    protected void doExecuteInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                  @Nonnull Editor editor,
+    protected void doExecuteInLfe(LargeFileEditor largeFileEditor,
+                                  Editor editor,
                                   @Nullable Caret caret,
                                   DataContext dataContext) {
         if (largeFileEditor.getEditor().getHeaderComponent() instanceof SearchReplaceComponent) {
@@ -27,14 +26,14 @@ public final class LfeEditorActionHandlerEscape extends LfeBaseEditorActionHandl
     }
 
     @Override
-    protected boolean isEnabledInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                     @Nonnull Editor editor,
-                                     @Nonnull Caret caret,
+    protected boolean isEnabledInLfe(LargeFileEditor largeFileEditor,
+                                     Editor editor,
+                                     Caret caret,
                                      DataContext dataContext) {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_ESCAPE;

@@ -15,20 +15,19 @@
  */
 package consulo.codeEditor;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 20-Mar-22
  */
 public interface InjectedEditor extends Editor {
-  @Nonnull
-  LogicalPosition hostToInjected(@Nonnull LogicalPosition hPos);
+  
+  LogicalPosition hostToInjected(LogicalPosition hPos);
 
-  @Nonnull
-  LogicalPosition injectedToHost(@Nonnull LogicalPosition pos);
+  
+  LogicalPosition injectedToHost(LogicalPosition pos);
 
-  @Nonnull
+  
   Editor getDelegate();
 
   boolean isValid();

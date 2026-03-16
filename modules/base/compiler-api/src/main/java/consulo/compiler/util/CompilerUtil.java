@@ -39,7 +39,6 @@ import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -105,13 +104,13 @@ public class CompilerUtil {
     /**
      * must not be called inside ReadAction
      */
-    public static void refreshIOFiles(@Nonnull Collection<File> files) {
+    public static void refreshIOFiles(Collection<File> files) {
         if (!files.isEmpty()) {
             LocalFileSystem.getInstance().refreshIoFiles(files);
         }
     }
 
-    public static void refreshIODirectories(@Nonnull Collection<File> files) {
+    public static void refreshIODirectories(Collection<File> files) {
         LocalFileSystem lfs = LocalFileSystem.getInstance();
         List<VirtualFile> filesToRefresh = new ArrayList<>();
         for (File file : files) {

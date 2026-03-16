@@ -17,18 +17,17 @@ package consulo.versionControlSystem.log.impl.internal.data;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.versionControlSystem.log.VcsShortCommitDetails;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public interface DataGetter<T extends VcsShortCommitDetails> {
-  @Nonnull
-  T getCommitData(@Nonnull Integer hash, @Nonnull Iterable<Integer> neighbourHashes);
+  
+  T getCommitData(Integer hash, Iterable<Integer> neighbourHashes);
 
-  void loadCommitsData(@Nonnull List<Integer> hashes,
-                       @Nonnull Consumer<List<T>> consumer,
+  void loadCommitsData(List<Integer> hashes,
+                       Consumer<List<T>> consumer,
                        @Nullable ProgressIndicator indicator);
 
   @Nullable

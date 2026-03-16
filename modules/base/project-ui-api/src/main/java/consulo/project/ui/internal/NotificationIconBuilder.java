@@ -18,8 +18,7 @@ package consulo.project.ui.internal;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -28,12 +27,12 @@ import java.util.List;
  * @since 15-Jun-24
  */
 public class NotificationIconBuilder {
-  @Nonnull
+  
   public static Image getIcon(List<NotificationType> notifications) {
     return createIconWithNotificationCount(getMaximumType(notifications), notifications.size());
   }
 
-  @Nonnull
+  
   private static Image createIconWithNotificationCount(NotificationType type, int size) {
     if (size == 0) {
       return PlatformIconGroup.toolwindowsNotifications();

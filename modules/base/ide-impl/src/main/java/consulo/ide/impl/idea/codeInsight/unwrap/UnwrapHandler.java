@@ -46,8 +46,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         if (!LanguageEditorUtil.checkModificationAllowed(editor)) {
             return;
         }
@@ -169,7 +168,7 @@ public class UnwrapHandler implements CodeInsightActionHandler {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PsiFile file = myElement.getContainingFile();
             if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
                 return;

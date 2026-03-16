@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.TraceableDisposable;
 import consulo.disposer.util.DisposableList;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ServiceLoader;
 
 /**
@@ -30,19 +29,21 @@ import java.util.ServiceLoader;
 public abstract class DisposerInternal {
   public static final DisposerInternal ourInstance = loadSingleOrError(DisposerInternal.class);
 
-  public abstract void register(@Nonnull Disposable parent, @Nonnull Disposable child, @Nullable String key);
+  public abstract void register(Disposable parent, Disposable child, @Nullable String key);
 
-  public abstract boolean isDisposed(@Nonnull Disposable disposable);
+  public abstract boolean isDisposed(Disposable disposable);
 
-  public abstract boolean isDisposing(@Nonnull Disposable disposable);
+  public abstract boolean isDisposing(Disposable disposable);
 
-  public abstract void dispose(@Nonnull Disposable disposable, boolean processUnregistered);
+  public abstract void dispose(Disposable disposable, boolean processUnregistered);
 
   public abstract TraceableDisposable newTraceDisposable(boolean debug);
 
-  public abstract Disposable get(@Nonnull String key);
+  @Nullable
+  public abstract Disposable get(String key);
 
-  public abstract Throwable getDisposalTrace(@Nonnull Disposable disposable);
+  @Nullable
+  public abstract Throwable getDisposalTrace(Disposable disposable);
 
   public abstract boolean isDebugMode();
 
@@ -51,17 +52,12 @@ public abstract class DisposerInternal {
   public abstract boolean setDebugMode(boolean debugMode);
 
   @Nullable
-  public abstract <T extends Disposable> T findRegisteredObject(@Nonnull Disposable parentDisposable, @Nonnull T object);
-
-  @Nonnull
+  public abstract <T extends Disposable> T findRegisteredObject(Disposable parentDisposable, T object);
   public abstract <T> DisposableList<T> createList();
 
-  public abstract boolean tryRegister(@Nonnull Disposable parent, @Nonnull Disposable child);
-
-  @Nonnull
-  private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
+  public abstract boolean tryRegister(Disposable parent, Disposable child);
+  private static <T> T loadSingleOrError(Class<T> clazz) {
     return ServiceLoader.load(clazz, clazz.getClassLoader()).findFirst().get();
   }
 }
-
 

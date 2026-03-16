@@ -3,7 +3,6 @@ package consulo.execution.debug.stream.ui;
 
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 import java.util.stream.Stream;
 
@@ -11,10 +10,10 @@ import java.util.stream.Stream;
  * @author Vitaliy.Bibaev
  */
 public interface ChooserOption {
-  @Nonnull
+  
   Stream<TextRange> rangeStream();
 
-  @Nonnull
+  
  
   String getText();
 }

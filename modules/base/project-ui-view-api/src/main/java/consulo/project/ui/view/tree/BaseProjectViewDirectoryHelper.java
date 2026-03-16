@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -45,7 +44,7 @@ public class BaseProjectViewDirectoryHelper {
 
     @Nullable
     @RequiredReadAction
-    public static String getLocationString(@Nonnull PsiDirectory psiDirectory) {
+    public static String getLocationString(PsiDirectory psiDirectory) {
         PsiPackage aPackage = PsiPackageManager.getInstance(psiDirectory.getProject()).findAnyPackage(psiDirectory);
         if (ProjectRootsUtil.isSourceRoot(psiDirectory) && aPackage != null) {
             return aPackage.getQualifiedName();
@@ -69,9 +68,9 @@ public class BaseProjectViewDirectoryHelper {
             !aPackage.getQualifiedName().isEmpty();
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    public static String getNodeName(ViewSettings settings, Object parentValue, @Nonnull PsiDirectory directory) {
+    public static String getNodeName(ViewSettings settings, Object parentValue, PsiDirectory directory) {
         Project project = directory.getProject();
 
         PsiPackage aPackage = PsiPackageManager.getInstance(project).findAnyPackage(directory);

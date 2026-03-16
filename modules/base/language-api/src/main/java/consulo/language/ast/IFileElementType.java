@@ -18,19 +18,18 @@ package consulo.language.ast;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class IFileElementType extends ILazyParseableElementType {
   public IFileElementType(@Nullable Language language) {
     super("FILE", language);
   }
 
-  public IFileElementType(@Nonnull String debugName, @Nullable Language language) {
+  public IFileElementType(String debugName, @Nullable Language language) {
     super(debugName, language);
   }
 
-  public IFileElementType(@Nonnull String debugName, @Nullable Language language, boolean register) {
+  public IFileElementType(String debugName, @Nullable Language language, boolean register) {
     super(debugName, language, register);
   }
 

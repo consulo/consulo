@@ -22,8 +22,7 @@ import consulo.ui.internal.UIInternal;
 import consulo.ui.util.TraverseUtil;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -40,92 +39,59 @@ public interface Alert<V> {
   /**
    * @return new alert builder, with default title - and default type *info*
    */
-  @Nonnull
   static <L> Alert<L> create() {
     return UIInternal.get()._Alerts_create();
   }
-
-  @Nonnull
-  Alert<V> remember(@Nonnull AlertValueRemember<V> remember);
-
-  @Nonnull
+  Alert<V> remember(AlertValueRemember<V> remember);
   Alert<V> asWarning();
-
-  @Nonnull
   Alert<V> asError();
-
-  @Nonnull
   Alert<V> asQuestion();
-
-  @Nonnull
-  default Alert<V> button(int buttonId, @Nonnull V simpleValue) {
+  default Alert<V> button(int buttonId, V simpleValue) {
     return button(buttonId, () -> simpleValue);
   }
-
-  @Nonnull
-  Alert<V> button(int buttonId, @Nonnull Supplier<V> valueGetter);
-
-  @Nonnull
-  default Alert<V> button(@Nonnull String text, @Nonnull V simpleValue) {
+  Alert<V> button(int buttonId, Supplier<V> valueGetter);
+  default Alert<V> button(String text, V simpleValue) {
     return button(text, () -> simpleValue);
   }
-
-  @Nonnull
-  default Alert<V> button(@Nonnull String text, @Nonnull Supplier<V> valueGetter) {
+  default Alert<V> button(String text, Supplier<V> valueGetter) {
     return button(LocalizeValue.of(text), valueGetter);
   }
-
-  @Nonnull
-  Alert<V> button(@Nonnull LocalizeValue text, @Nonnull Supplier<V> valueGetter);
+  Alert<V> button(LocalizeValue text, Supplier<V> valueGetter);
 
   /**
    * Mark last added button as default (enter will hit it)
    */
-  @Nonnull
   Alert<V> asDefaultButton();
 
   /**
    * Mark last added button as exit action (will be invoked if window closed by X)
    */
-  @Nonnull
   Alert<V> asExitButton();
-
-  @Nonnull
-  default Alert<V> exitValue(@Nonnull V value) {
+  default Alert<V> exitValue(V value) {
     return exitValue(() -> value);
   }
-
-  @Nonnull
-  Alert<V> exitValue(@Nonnull Supplier<V> valueGetter);
-
-  @Nonnull
+  Alert<V> exitValue(Supplier<V> valueGetter);
   @Deprecated
   @DeprecationInfo("Use with #title(LocalizeValue)")
-  default Alert<V> title(@Nonnull String text) {
+  default Alert<V> title(String text) {
     return title(LocalizeValue.of(text));
   }
 
   /**
    * Default title is application name
    */
-  @Nonnull
-  Alert<V> title(@Nonnull LocalizeValue value);
-
-  @Nonnull
+  Alert<V> title(LocalizeValue value);
   @Deprecated
   @DeprecationInfo("Use with #text(LocalizeValue)")
-  default Alert<V> text(@Nonnull String text) {
+  default Alert<V> text(String text) {
     return text(LocalizeValue.of(text));
   }
-
-  @Nonnull
-  Alert<V> text(@Nonnull LocalizeValue value);
+  Alert<V> text(LocalizeValue value);
 
   /**
    * Does not block UI thread
    */
   @RequiredUIAccess
-  @Nonnull
   default AsyncResult<V> showAsync(@Nullable Component component) {
     return showAsync(TraverseUtil.getWindowAncestor(component));
   }
@@ -134,7 +100,6 @@ public interface Alert<V> {
    * Does not block UI thread
    */
   @RequiredUIAccess
-  @Nonnull
   default AsyncResult<V> showAsync() {
     return showAsync((Window)null);
   }
@@ -143,15 +108,13 @@ public interface Alert<V> {
    * Does not block UI thread
    */
   @RequiredUIAccess
-  @Nonnull
   AsyncResult<V> showAsync(@Nullable Window component);
 
   /**
    * Does not block UI thread
    */
   @RequiredUIAccess
-  @Nonnull
-  default AsyncResult<V> showAsync(@Nonnull WindowOwner component) {
+  default AsyncResult<V> showAsync(WindowOwner component) {
     return showAsync(component.getWindow());
   }
 }

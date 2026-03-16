@@ -28,14 +28,13 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.hint.HintManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
  */
 public abstract class ConvertIndentsActionBase extends EditorAction {
-    protected ConvertIndentsActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ConvertIndentsActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description, null);
         setupHandler(new Handler());
     }

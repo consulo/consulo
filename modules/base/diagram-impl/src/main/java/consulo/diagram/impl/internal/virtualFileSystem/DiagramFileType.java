@@ -19,7 +19,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,25 +27,25 @@ import jakarta.annotation.Nonnull;
 public class DiagramFileType implements FileType {
     public static final DiagramFileType INSTANCE = new DiagramFileType();
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return "DIAGRAM";
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Diagram");
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription() {
         return LocalizeValue.localizeTODO("Diagram");
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return PlatformIconGroup.filetypesDiagram();

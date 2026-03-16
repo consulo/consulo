@@ -22,8 +22,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -98,7 +97,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
-  @Nonnull
+  
   public String getCanonicalText() {
     PsiReference reference = chooseReference();
     return reference == null ? myReferences.get(0).getCanonicalText() : reference.getCanonicalText();
@@ -114,7 +113,7 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
   }
 
   @Override
-  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
     for (PsiReference reference : myReferences) {
       if (reference instanceof FileReference) {
         return reference.bindToElement(element);
@@ -133,13 +132,13 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
 
 
   @Override
-  @Nonnull
+  
   public Object[] getVariants() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 
   @Override
-  @Nonnull
+  
   public ResolveResult[] multiResolve(boolean incompleteCode) {
     if (myCachedResult == null) {
       myCachedResult = innerResolve(incompleteCode);
@@ -189,9 +188,9 @@ public class PsiDynaReference<T extends PsiElement> extends PsiReferenceBase<T> 
     return myChosenOne >= 0 ? myReferences.get(myChosenOne) : null;
   }
 
-  @Nonnull
+  
   @Override
-  public LocalizeValue buildUnresolvedMessage(@Nonnull String referenceText) {
+  public LocalizeValue buildUnresolvedMessage(String referenceText) {
     PsiReference reference = chooseReference();
 
     if (reference instanceof EmptyResolveMessageProvider emptyResolveMessageProvider) {

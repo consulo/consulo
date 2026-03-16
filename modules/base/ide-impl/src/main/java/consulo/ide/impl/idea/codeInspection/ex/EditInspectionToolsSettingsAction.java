@@ -37,7 +37,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -47,28 +46,28 @@ import javax.swing.*;
 public class EditInspectionToolsSettingsAction implements IntentionAction, Iconable, HighPriorityAction, SyntheticIntentionAction {
   private final String myShortName;
 
-  public EditInspectionToolsSettingsAction(@Nonnull LocalInspectionTool tool) {
+  public EditInspectionToolsSettingsAction(LocalInspectionTool tool) {
     myShortName = tool.getShortName();
   }
 
-  public EditInspectionToolsSettingsAction(@Nonnull HighlightDisplayKey key) {
+  public EditInspectionToolsSettingsAction(HighlightDisplayKey key) {
     myShortName = key.toString();
   }
 
   @Override
-  @Nonnull
+  
   public LocalizeValue getText() {
     return InspectionLocalize.editOptionsOfReporterInspectionText();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return true;
   }
 
   @Override
   @RequiredUIAccess
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     InspectionProjectProfileManager projectProfileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = projectProfileManager.getInspectionProfile();
     editToolSettings(project,

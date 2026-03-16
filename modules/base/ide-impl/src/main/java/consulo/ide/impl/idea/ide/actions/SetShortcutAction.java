@@ -17,7 +17,6 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -30,7 +29,7 @@ public class SetShortcutAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         JBPopup seDialog = project.getUserData(SearchEverywhereManager.SEARCH_EVERYWHERE_POPUP);
         if (seDialog == null) {
@@ -52,7 +51,7 @@ public class SetShortcutAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
         Project project = e.getData(Project.KEY);

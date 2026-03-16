@@ -20,7 +20,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.component.ProcessCanceledException;
 
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.BooleanSupplier;
 
@@ -35,7 +34,7 @@ public interface HighlightingPass {
    * throw {@link ProcessCanceledException} if <code>true</code> is returned.
    */
   @RequiredReadAction
-  void collectInformation(@Nonnull ProgressIndicator progress);
+  void collectInformation(ProgressIndicator progress);
 
   /**
    * Called to apply information collected by {@linkplain #collectInformation(ProgressIndicator)} to the editor.
@@ -49,7 +48,6 @@ public interface HighlightingPass {
    * and should not be applied to the editor. Used by {@code PassExecutorService} as the expired
    * condition for {@code Application.invokeLater()}.
    */
-  @Nonnull
   default BooleanSupplier getExpiredCondition() {
     return () -> false;
   }

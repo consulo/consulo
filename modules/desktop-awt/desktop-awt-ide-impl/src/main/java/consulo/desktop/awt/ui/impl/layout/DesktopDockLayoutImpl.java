@@ -20,7 +20,6 @@ import consulo.ui.StaticPosition;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.Layout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,9 +51,9 @@ public class DesktopDockLayoutImpl extends DesktopLayoutBase<JPanel, StaticPosit
         }
     }
 
-    @Nonnull
+    
     @Override
-    public Layout<StaticPosition> add(@Nonnull Component component, @Nonnull StaticPosition constraint) {
+    public Layout<StaticPosition> add(Component component, StaticPosition constraint) {
         set(component, convertConstraints(constraint));
         return this;
     }

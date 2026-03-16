@@ -28,8 +28,7 @@ import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkListener;
 import javax.swing.tree.TreeNode;
@@ -52,7 +51,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   private volatile boolean myObsolete;
   private volatile boolean myAlreadySorted;
 
-  protected XValueContainerNode(XDebuggerTree tree, XDebuggerTreeNode parent, @Nonnull ValueContainer valueContainer) {
+  protected XValueContainerNode(XDebuggerTree tree, XDebuggerTreeNode parent, ValueContainer valueContainer) {
     super(tree, parent, true);
     myValueContainer = valueContainer;
   }
@@ -78,7 +77,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void addChildren(@Nonnull XValueChildrenList children, boolean last) {
+  public void addChildren(XValueChildrenList children, boolean last) {
     if (myObsolete) return;
     invokeNodeUpdate(() -> {
       if (myObsolete) return;
@@ -127,7 +126,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     });
   }
 
-  private static boolean isUseGetChildrenHack(@Nonnull XDebuggerTree tree) {
+  private static boolean isUseGetChildrenHack(XDebuggerTree tree) {
     return !tree.isUnderRemoteDebug();
   }
 
@@ -171,7 +170,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
   }
 
   @Override
-  public void setErrorMessage(@Nonnull LocalizeValue errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
+  public void setErrorMessage(LocalizeValue errorMessage, @Nullable XDebuggerTreeNodeHyperlink link) {
     setMessage(
       errorMessage,
       XDebuggerUIConstants.ERROR_MESSAGE_ICON,
@@ -183,9 +182,9 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
 
   @Override
   public void setMessage(
-    @Nonnull LocalizeValue message,
+    LocalizeValue message,
     Image icon,
-    @Nonnull SimpleTextAttributes attributes,
+    SimpleTextAttributes attributes,
     @Nullable XDebuggerTreeNodeHyperlink link
   ) {
     invokeNodeUpdate(
@@ -195,7 +194,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     );
   }
 
-  public void setInfoMessage(@Nonnull LocalizeValue message, @Nullable HyperlinkListener hyperlinkListener) {
+  public void setInfoMessage(LocalizeValue message, @Nullable HyperlinkListener hyperlinkListener) {
     invokeNodeUpdate(
       () -> setMessageNodes(
         Collections.singletonList(MessageTreeNode.createInfoMessage(myTree, message, hyperlinkListener)),
@@ -224,7 +223,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     fireNodesInserted(messages);
   }
 
-  @Nonnull
+  
   public XDebuggerTreeNode addTemporaryEditorNode(@Nullable Image icon, @Nullable String text) {
     if (isLeaf()) {
       setLeaf(false);
@@ -260,7 +259,7 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return index;
   }
 
-  @Nonnull
+  
   @Override
   public List<? extends TreeNode> getChildren() {
     loadChildren();
@@ -289,13 +288,13 @@ public abstract class XValueContainerNode<ValueContainer extends XValueContainer
     return myCachedAllChildren;
   }
 
-  @Nonnull
+  
   public ValueContainer getValueContainer() {
     return myValueContainer;
   }
 
   @Override
-  @Nonnull
+  
   public List<? extends XValueContainerNode<?>> getLoadedChildren() {
     List<? extends XValueContainerNode<?>> empty = Collections.<XValueGroupNodeImpl>emptyList();
     return ContainerUtil.concat(

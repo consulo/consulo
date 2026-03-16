@@ -23,8 +23,7 @@ import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,8 +68,7 @@ class ParameterInfoTaskRunnerUtil {
     return ProjectIdeFocusManager.getInstance(project).getFocusOwner();
   }
 
-  @Nonnull
-  private static Consumer<Boolean> startProgressAndCreateStopAction(@Nonnull Project project, String progressTitle, AtomicReference<CompletableFuture<?>> promiseRef, Editor editor) {
+  private static Consumer<Boolean> startProgressAndCreateStopAction(Project project, String progressTitle, AtomicReference<CompletableFuture<?>> promiseRef, Editor editor) {
     AtomicReference<Consumer<Boolean>> stopActionRef = new AtomicReference<>();
 
     UIAccess uiAccess = project.getUIAccess();

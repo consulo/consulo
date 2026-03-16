@@ -24,8 +24,7 @@ import consulo.http.impl.internal.proxy.HttpProxyManagerImpl;
 import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ExtensionImpl
 public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySettingsUi, HttpProxyManagerImpl> implements ApplicationConfigurable {
@@ -36,7 +35,7 @@ public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySetting
   }
 
   @Inject
-  public HttpProxyConfigurable(@Nonnull HttpProxyManager settings) {
+  public HttpProxyConfigurable(HttpProxyManager settings) {
     super("http.proxy", LocalizeValue.localizeTODO("HTTP Proxy"), "http.proxy");
 
     this.settings = (HttpProxyManagerImpl)settings;
@@ -48,7 +47,7 @@ public class HttpProxyConfigurable extends IdeaConfigurableBase<HttpProxySetting
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   protected HttpProxyManagerImpl getSettings() {
     return settings;

@@ -2,8 +2,7 @@
 package consulo.application.internal.perfomance;
 
 import consulo.application.internal.perfomance.Activity;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -74,7 +73,7 @@ public final class StartUpMeasurer {
    * <p>
    * Scope is not supported — reported as global.
    */
-  public static void addInstantEvent(@Nonnull String name) {
+  public static void addInstantEvent(String name) {
     if (!isEnabled) {
       return;
     }
@@ -84,36 +83,36 @@ public final class StartUpMeasurer {
     addActivity(activity);
   }
 
-  @Nonnull
-  public static Activity startActivity(@Nonnull String name) {
+  
+  public static Activity startActivity(String name) {
     return startActivity(name, ActivityCategory.APP_INIT);
   }
 
-  @Nonnull
-  public static Activity startActivity(@Nonnull String name, @Nonnull ActivityCategory category) {
+  
+  public static Activity startActivity(String name, ActivityCategory category) {
     return startActivity(name, category, null);
   }
 
-  @Nonnull
-  public static Activity startActivity(@Nonnull String name, @Nonnull ActivityCategory category, @Nullable String pluginId) {
+  
+  public static Activity startActivity(String name, ActivityCategory category, @Nullable String pluginId) {
     ActivityImpl activity = new ActivityImpl(name, getCurrentTime(), /* parent = */ null, /* level = */  pluginId);
     activity.setCategory(category);
     return activity;
   }
 
-  @Nonnull
-  public static Activity startMainActivity(@Nonnull String name) {
+  
+  public static Activity startMainActivity(String name) {
     return new ActivityImpl(name, null);
   }
 
   /**
    * Default threshold is applied.
    */
-  public static long addCompletedActivity(long start, @Nonnull Class<?> clazz, @Nonnull ActivityCategory category, @Nullable String pluginId) {
+  public static long addCompletedActivity(long start, Class<?> clazz, ActivityCategory category, @Nullable String pluginId) {
     return addCompletedActivity(start, clazz, category, pluginId, -1);
   }
 
-  public static long addCompletedActivity(long start, @Nonnull Class<?> clazz, @Nonnull ActivityCategory category, @Nullable String pluginId, long threshold) {
+  public static long addCompletedActivity(long start, Class<?> clazz, ActivityCategory category, @Nullable String pluginId, long threshold) {
     if (!isEnabled) {
       return -1;
     }
@@ -131,7 +130,7 @@ public final class StartUpMeasurer {
   /**
    * Default threshold is applied.
    */
-  public static long addCompletedActivity(long start, @Nonnull String name, @Nonnull ActivityCategory category, String pluginId) {
+  public static long addCompletedActivity(long start, String name, ActivityCategory category, String pluginId) {
     long end = getCurrentTime();
     long duration = end - start;
     if (duration <= MEASURE_THRESHOLD) {
@@ -142,7 +141,7 @@ public final class StartUpMeasurer {
     return duration;
   }
 
-  public static void addCompletedActivity(long start, long end, @Nonnull String name, @Nonnull ActivityCategory category, String pluginId) {
+  public static void addCompletedActivity(long start, long end, String name, ActivityCategory category, String pluginId) {
     if (!isEnabled) {
       return;
     }
@@ -153,7 +152,7 @@ public final class StartUpMeasurer {
     addActivity(item);
   }
 
-  public static void setCurrentState(@Nonnull LoadingState state) {
+  public static void setCurrentState(LoadingState state) {
     LoadingState old = currentState.getAndSet(state);
     if (old.ordinal() > state.ordinal()) {
       LoadingState.getLogger().error("New state " + state + " cannot precede old " + old);
@@ -161,18 +160,18 @@ public final class StartUpMeasurer {
     stateSet(state);
   }
 
-  public static void compareAndSetCurrentState(@Nonnull LoadingState expectedState, @Nonnull LoadingState newState) {
+  public static void compareAndSetCurrentState(LoadingState expectedState, LoadingState newState) {
     if (currentState.compareAndSet(expectedState, newState)) {
       stateSet(newState);
     }
   }
 
-  private static void stateSet(@Nonnull LoadingState state) {
+  private static void stateSet(LoadingState state) {
     addInstantEvent(state.displayName);
   }
 
   //@ApiStatus.Internal
-  public static void processAndClear(boolean isContinueToCollect, @Nonnull Consumer<? super ActivityImpl> consumer) {
+  public static void processAndClear(boolean isContinueToCollect, Consumer<? super ActivityImpl> consumer) {
     isEnabled = isContinueToCollect;
 
     while (true) {
@@ -190,12 +189,12 @@ public final class StartUpMeasurer {
     return startTime;
   }
 
-  static void addActivity(@Nonnull ActivityImpl activity) {
+  static void addActivity(ActivityImpl activity) {
     items.add(activity);
   }
 
   // @ApiStatus.Internal
-  public static void addTimings(@Nonnull Map<String, Long> timings, @Nonnull String groupName) {
+  public static void addTimings(Map<String, Long> timings, String groupName) {
     if (!items.isEmpty()) {
       throw new IllegalStateException("addTimings must be not called if some events were already added using API");
     }
@@ -223,7 +222,7 @@ public final class StartUpMeasurer {
   }
 
   //@ApiStatus.Internal
-  public static void addPluginCost(@Nonnull String pluginId, @Nonnull String phase, long time) {
+  public static void addPluginCost(String pluginId, String phase, long time) {
     if (!isMeasuringPluginStartupCosts()) {
       return;
     }
@@ -238,7 +237,7 @@ public final class StartUpMeasurer {
   }
 
   //@ApiStatus.Internal
-  public static void doAddPluginCost(@Nonnull String pluginId, @Nonnull String phase, long time, @Nonnull Map<String, Map<String, Long>> pluginCostMap) {
+  public static void doAddPluginCost(String pluginId, String phase, long time, Map<String, Map<String, Long>> pluginCostMap) {
     Map<String, Long> costPerPhaseMap = pluginCostMap.get(pluginId);
     if (costPerPhaseMap == null) {
       costPerPhaseMap = new HashMap<>();

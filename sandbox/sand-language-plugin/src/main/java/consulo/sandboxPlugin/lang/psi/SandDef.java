@@ -17,14 +17,13 @@ package consulo.sandboxPlugin.lang.psi;
 
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.ast.ASTNode;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 19.03.14
  */
 public class SandDef extends ASTWrapperPsiElement {
-  public SandDef(@Nonnull ASTNode node) {
+  public SandDef(ASTNode node) {
     super(node);
   }
 }

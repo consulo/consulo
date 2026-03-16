@@ -27,8 +27,7 @@ import consulo.versionControlSystem.history.ShortVcsRevisionNumber;
 import consulo.versionControlSystem.history.VcsFileRevision;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -44,24 +43,24 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
   private boolean myContentLoadFailed = false;
   private Charset myCharset;
 
-  public VcsVirtualFile(@Nonnull String path,
+  public VcsVirtualFile(String path,
                         @Nullable VcsFileRevision revision,
-                        @Nonnull VirtualFileSystem fileSystem) {
+                        VirtualFileSystem fileSystem) {
     super(path, fileSystem);
     myFileRevision = revision;
   }
 
-  public VcsVirtualFile(@Nonnull String path,
-                        @Nonnull byte[] content,
+  public VcsVirtualFile(String path,
+                        byte[] content,
                         @Nullable String revision,
-                        @Nonnull VirtualFileSystem fileSystem) {
+                        VirtualFileSystem fileSystem) {
     this(path, null, fileSystem);
     myContent = content;
     setRevision(revision);
   }
 
   @Override
-  @Nonnull
+  
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
       return ArrayUtil.EMPTY_BYTE_ARRAY;
@@ -135,7 +134,7 @@ public class VcsVirtualFile extends AbstractVcsVirtualFile {
     return myFileRevision;
   }
 
-  @Nonnull
+  
   @Override
   public Charset getCharset() {
     if (myCharset != null) return myCharset;

@@ -15,7 +15,6 @@
  */
 package consulo.ui.web.internal.layout;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,7 +24,7 @@ public class WebHorizontalTwoComponentSplitLayoutImpl extends WebTwoComponentSpl
   public static class Vaadin extends WebSplitLayoutVaadinBase<WebHorizontalTwoComponentSplitLayoutImpl> {
   }
 
-  @Nonnull
+  
   @Override
   public Vaadin createVaadinComponent() {
     return new Vaadin();

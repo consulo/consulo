@@ -21,7 +21,6 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,8 +33,8 @@ public interface ApplyPatchDifferentiatedDialogFactory {
   DialogWrapper create(Project project,
                        ApplyPatchExecutor callback,
                        List<ApplyPatchExecutor> executors,
-                       @Nonnull ApplyPatchMode applyPatchMode,
-                       @Nonnull VirtualFile patchFile);
+                       ApplyPatchMode applyPatchMode,
+                       VirtualFile patchFile);
 
   FileChooserDescriptor createSelectPatchDescriptor();
 }

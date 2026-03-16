@@ -24,8 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.include.FileIncludeManager;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author mike
@@ -41,7 +40,7 @@ public class FileIncludeContextHectorProvider implements HectorComponentPanelsPr
 
   @Override
   @Nullable
-  public HectorComponentPanel createConfigurable(@Nonnull PsiFile file) {
+  public HectorComponentPanel createConfigurable(PsiFile file) {
     if (DumbService.getInstance(file.getProject()).isDumb()) {
       return null;
     }

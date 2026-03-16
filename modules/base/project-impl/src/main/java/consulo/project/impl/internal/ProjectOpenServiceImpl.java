@@ -42,8 +42,7 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -74,27 +73,24 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
      */
     private record OpenContext(
         @Nullable Project projectToClose,
-        @Nonnull VirtualFile virtualFile
+        VirtualFile virtualFile
     ) {
     }
 
-    @Nonnull
     private final Application myApplication;
     private final ProgressBuilderFactory myProgressBuilderFactory;
-    @Nonnull
     private final ComponentBinding myComponentBinding;
-    @Nonnull
     private final ProjectManager myProjectManager;
     private final ProjectFrameAllocator myProjectFrameAllocator;
     private final ProjectOpenProcessors myProjectOpenProcessors;
 
     @Inject
-    public ProjectOpenServiceImpl(@Nonnull Application application,
-                                  @Nonnull ProgressBuilderFactory progressBuilderFactory,
-                                  @Nonnull ComponentBinding componentBinding,
-                                  @Nonnull ProjectManager projectManager,
-                                  @Nonnull ProjectFrameAllocator projectFrameAllocator,
-                                  @Nonnull ProjectOpenProcessors projectOpenProcessors) {
+    public ProjectOpenServiceImpl(Application application,
+                                  ProgressBuilderFactory progressBuilderFactory,
+                                  ComponentBinding componentBinding,
+                                  ProjectManager projectManager,
+                                  ProjectFrameAllocator projectFrameAllocator,
+                                  ProjectOpenProcessors projectOpenProcessors) {
         myApplication = application;
         myProgressBuilderFactory = progressBuilderFactory;
         myComponentBinding = componentBinding;
@@ -103,12 +99,11 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         myProjectOpenProcessors = projectOpenProcessors;
     }
 
-    @Nonnull
     @Override
     public CompletableFuture<Project> openProjectAsync(
-        @Nonnull Path filePath,
-        @Nonnull UIAccess uiAccess,
-        @Nonnull ProjectOpenContext context) {
+        Path filePath,
+        UIAccess uiAccess,
+        ProjectOpenContext context) {
 
         boolean isWelcome = WelcomeProjectManager.WELCOME_PATH.equals(filePath);
 
@@ -309,10 +304,9 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
      *
      * @return the same OpenContext if we should proceed, or null if cancelled
      */
-    @Nonnull
     private CompletableFuture<OpenContext> confirmAndCloseProjectAsync(
-        @Nonnull OpenContext openContext,
-        @Nonnull UIAccess uiAccess) {
+        OpenContext openContext,
+        UIAccess uiAccess) {
 
         // If the project to close is the welcome project, skip dialog and close via WelcomeProjectManager
         // (which properly saves state before dispose)
@@ -383,9 +377,9 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
     }
 
     private void handleDialogResult(int exitCode,
-                                    @Nonnull OpenContext openContext,
-                                    @Nonnull UIAccess uiAccess,
-                                    @Nonnull CompletableFuture<OpenContext> result) {
+                                    OpenContext openContext,
+                                    UIAccess uiAccess,
+                                    CompletableFuture<OpenContext> result) {
         if (exitCode == ProjectOpenSetting.OPEN_PROJECT_SAME_WINDOW) {
             closeAndProceed(openContext, uiAccess).whenComplete((ctx, error) -> {
                 if (error != null) {
@@ -408,10 +402,9 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         }
     }
 
-    @Nonnull
     private CompletableFuture<OpenContext> closeAndProceed(
-        @Nonnull OpenContext openContext,
-        @Nonnull UIAccess uiAccess) {
+        OpenContext openContext,
+        UIAccess uiAccess) {
 
         CompletableFuture<OpenContext> result = new CompletableFuture<>();
 

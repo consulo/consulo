@@ -27,8 +27,7 @@ import consulo.ui.layout.LayoutStyle;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.base.TargetVaddin;
 import consulo.web.internal.ui.base.VaadinComponentDelegate;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -89,7 +88,7 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
     }
 
     @Override
-    public void remove(@Nonnull Component component) {
+    public void remove(Component component) {
         if (component.getParent() == this) {
             toVaadinComponent().setContent(null);
         }
@@ -102,14 +101,14 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    public LabeledLayout set(@Nonnull Component component) {
+    public LabeledLayout set(Component component) {
         getVaadinComponent().setContent(TargetVaddin.to(component));
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public WebLabeledLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();

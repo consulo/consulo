@@ -18,20 +18,19 @@ package consulo.process.util;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.internal.CapturingProcessHandler;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 04/06/2023
  */
 public class CapturingProcessUtil {
-  @Nonnull
-  public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
+  
+  public static ProcessOutput execAndGetOutput(GeneralCommandLine commandLine) throws ExecutionException {
     return new CapturingProcessHandler(commandLine).runProcess();
   }
 
-  @Nonnull
-  public static ProcessOutput execAndGetOutput(@Nonnull GeneralCommandLine commandLine,
+  
+  public static ProcessOutput execAndGetOutput(GeneralCommandLine commandLine,
                                                int timeoutInMilliseconds) throws ExecutionException {
     return new CapturingProcessHandler(commandLine).runProcess(timeoutInMilliseconds);
   }

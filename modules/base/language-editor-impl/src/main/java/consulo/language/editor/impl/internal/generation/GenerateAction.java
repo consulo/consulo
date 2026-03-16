@@ -28,8 +28,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.ActionGroupUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "Generate")
 public class GenerateAction extends DumbAwareAction {
@@ -39,7 +38,7 @@ public class GenerateAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext();
 
         Project project = e.getRequiredData(Project.KEY);
@@ -61,7 +60,7 @@ public class GenerateAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         if (ActionPlaces.isPopupPlace(e.getPlace())) {
             e.getPresentation().setEnabledAndVisible(isEnabled(e));
         }
@@ -70,7 +69,7 @@ public class GenerateAction extends DumbAwareAction {
         }
     }
 
-    private static boolean isEnabled(@Nonnull AnActionEvent e) {
+    private static boolean isEnabled(AnActionEvent e) {
         return e.hasData(Project.KEY) && e.hasData(Editor.KEY) && !ActionGroupUtil.isGroupEmpty(getGroup(), e);
     }
 
@@ -78,7 +77,7 @@ public class GenerateAction extends DumbAwareAction {
         return (DefaultActionGroup) ActionManager.getInstance().getAction(IdeActions.GROUP_GENERATE);
     }
 
-    private static ActionGroup wrapGroup(ActionGroup actionGroup, DataContext dataContext, @Nonnull Project project) {
+    private static ActionGroup wrapGroup(ActionGroup actionGroup, DataContext dataContext, Project project) {
         boolean dumbMode = DumbService.isDumb(project);
         ActionGroup.Builder copy = ActionGroup.newImmutableBuilder();
         for (AnAction action : actionGroup.getChildren(null)) {
@@ -116,7 +115,7 @@ public class GenerateAction extends DumbAwareAction {
             getTemplatePresentation().setPerformGroup(true);
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return new AnAction[]{myEditTemplateAction};
@@ -124,7 +123,7 @@ public class GenerateAction extends DumbAwareAction {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Project project = e.getRequiredData(Project.KEY);
             DumbService dumbService = DumbService.getInstance(project);
             try {

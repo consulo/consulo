@@ -22,13 +22,12 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseProgramRunner<Settings extends RunnerSettings> implements ProgramRunner<Settings> {
     @RequiredUIAccess
     @Override
-    public void execute(@Nonnull ExecutionEnvironment environment) throws ExecutionException {
+    public void execute(ExecutionEnvironment environment) throws ExecutionException {
         RunProfileState state = environment.getState();
         if (state == null) {
             return;
@@ -40,10 +39,10 @@ public abstract class BaseProgramRunner<Settings extends RunnerSettings> impleme
     }
 
     @RequiredUIAccess
-    protected abstract void execute(@Nonnull ExecutionEnvironment environment, @Nonnull RunProfileState state) throws ExecutionException;
+    protected abstract void execute(ExecutionEnvironment environment, RunProfileState state) throws ExecutionException;
 
     @Nullable
-    static RunContentDescriptor postProcess(@Nonnull ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor) {
+    static RunContentDescriptor postProcess(ExecutionEnvironment environment, @Nullable RunContentDescriptor descriptor) {
         if (descriptor != null) {
             descriptor.setExecutionId(environment.getExecutionId());
         }

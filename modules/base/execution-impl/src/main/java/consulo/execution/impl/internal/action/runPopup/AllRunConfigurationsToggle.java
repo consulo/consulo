@@ -23,7 +23,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.ui.ex.internal.PopupListModelApi;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ public class AllRunConfigurationsToggle extends DumbAwareToggleAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Presentation presentation = e.getPresentation();
         presentation.setKeepPopupOnPerform(KeepPopupOnPerform.Always);
@@ -59,7 +58,7 @@ public class AllRunConfigurationsToggle extends DumbAwareToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return false;
@@ -70,7 +69,7 @@ public class AllRunConfigurationsToggle extends DumbAwareToggleAction {
 
     @RequiredUIAccess
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

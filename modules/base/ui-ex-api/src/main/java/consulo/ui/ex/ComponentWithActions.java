@@ -16,8 +16,7 @@
 package consulo.ui.ex;
 
 import consulo.ui.ex.action.ActionGroup;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -35,7 +34,7 @@ public interface ComponentWithActions {
   @Nullable
   JComponent getToolbarContextComponent();
 
-  @Nonnull
+  
   JComponent getComponent();
 
   boolean isContentBuiltIn();
@@ -81,7 +80,7 @@ public interface ComponentWithActions {
       return myToolbarContext;
     }
 
-    @Nonnull
+    
     public JComponent getComponent() {
       return myComponent;
     }

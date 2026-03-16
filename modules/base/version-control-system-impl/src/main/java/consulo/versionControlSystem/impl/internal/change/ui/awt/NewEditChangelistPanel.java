@@ -35,7 +35,6 @@ import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.versionControlSystem.change.EditChangelistSupport;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -176,7 +175,7 @@ public abstract class NewEditChangelistPanel extends JPanel {
     protected ComponentWithTextFieldWrapper createComponentWithTextField(Project project) {
         EditorTextField editorTextField = createEditorField(project, 1);
         return new ComponentWithTextFieldWrapper(editorTextField) {
-            @Nonnull
+            
             @Override
             public EditorTextField getEditorTextField() {
                 return editorTextField;
@@ -205,14 +204,14 @@ public abstract class NewEditChangelistPanel extends JPanel {
     }
 
     protected abstract static class ComponentWithTextFieldWrapper {
-        @Nonnull
+        
         private final Component myComponent;
 
-        public ComponentWithTextFieldWrapper(@Nonnull Component component) {
+        public ComponentWithTextFieldWrapper(Component component) {
             myComponent = component;
         }
 
-        @Nonnull
+        
         abstract EditorTextField getEditorTextField();
     }
 }

@@ -15,13 +15,12 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2023-11-08
  */
 public interface VirtualFileDelegate {
-  @Nonnull
+  
   VirtualFile getDelegate();
 }

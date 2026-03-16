@@ -15,13 +15,12 @@
  */
 package consulo.component.util;
 
-import jakarta.annotation.Nonnull;
 
 public class CompositeModificationTracker extends SimpleModificationTracker {
-  @Nonnull
+  
   private final ModificationTracker myAdditionalTracker;
 
-  public CompositeModificationTracker(@Nonnull ModificationTracker tracker) {
+  public CompositeModificationTracker(ModificationTracker tracker) {
     myAdditionalTracker = tracker;
   }
 

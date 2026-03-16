@@ -1,6 +1,5 @@
 package consulo.content.bundle;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -10,10 +9,10 @@ import java.util.function.Consumer;
 public interface BundleHolder {
   static BundleHolder EMPTY = () -> Sdk.EMPTY_ARRAY;
 
-  @Nonnull
+  
   Sdk[] getBundles();
 
-  default void forEachBundle(@Nonnull Consumer<Sdk> sdkConsumer) {
+  default void forEachBundle(Consumer<Sdk> sdkConsumer) {
     for (Sdk sdk : getBundles()) {
       sdkConsumer.accept(sdk);
     }

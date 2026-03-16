@@ -22,7 +22,6 @@ import consulo.language.editor.refactoring.rename.AutomaticRenamerFactory;
 import consulo.language.editor.refactoring.rename.RenameProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -72,12 +71,12 @@ public class RenameRefactoringImpl extends RefactoringImpl<RenameProcessor> impl
     }
 
     @Override
-    public void addRenamerFactory(@Nonnull AutomaticRenamerFactory factory) {
+    public void addRenamerFactory(AutomaticRenamerFactory factory) {
         myProcessor.addRenamerFactory(factory);
     }
 
     @Override
-    public void removeRenamerFactory(@Nonnull AutomaticRenamerFactory factory) {
+    public void removeRenamerFactory(AutomaticRenamerFactory factory) {
         myProcessor.addRenamerFactory(factory);
     }
 }

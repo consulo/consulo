@@ -14,7 +14,6 @@ import consulo.undoRedo.internal.CommandToken;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 public class DefaultRawTypedHandler implements TypedActionHandlerEx, RawTypedActionHandler {
     private final TypedAction myAction;
@@ -26,7 +25,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx, RawTypedAct
     }
 
     @Override
-    public void beforeExecute(@Nonnull Editor editor, char c, @Nonnull DataContext context, @Nonnull ActionPlan plan) {
+    public void beforeExecute(Editor editor, char c, DataContext context, ActionPlan plan) {
         if (editor.isViewer() || !editor.getDocument().isWritable()) {
             return;
         }
@@ -40,7 +39,7 @@ public class DefaultRawTypedHandler implements TypedActionHandlerEx, RawTypedAct
 
     @Override
     @RequiredUIAccess
-    public void execute(@Nonnull final Editor editor, final char charTyped, @Nonnull final DataContext dataContext) {
+    public void execute(final Editor editor, final char charTyped, final DataContext dataContext) {
         CommandProcessorEx commandProcessorEx = (CommandProcessorEx)CommandProcessor.getInstance();
         Project project = dataContext.getData(Project.KEY);
         if (myCurrentCommandToken != null) {

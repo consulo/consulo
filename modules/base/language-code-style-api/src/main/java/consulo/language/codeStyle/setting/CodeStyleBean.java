@@ -6,7 +6,6 @@ import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
-import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -20,18 +19,18 @@ import java.io.Serializable;
 @SuppressWarnings("unused")
 public abstract class CodeStyleBean implements Serializable {
 
-  @Nonnull
+  
   private CodeStyleSettings myRootSettings;
 
   public CodeStyleBean() {
     myRootSettings = new CodeStyleSettings();
   }
 
-  public void setRootSettings(@Nonnull CodeStyleSettings settings) {
+  public void setRootSettings(CodeStyleSettings settings) {
     myRootSettings = settings;
   }
 
-  @Nonnull
+  
   protected abstract Language getLanguage();
 
   public int getRightMargin() {
@@ -42,7 +41,7 @@ public abstract class CodeStyleBean implements Serializable {
     myRootSettings.setRightMargin(getLanguage(), rightMargin);
   }
 
-  @Nonnull
+  
   public CommonCodeStyleSettings.WrapOnTyping getWrapOnTyping() {
     for (CommonCodeStyleSettings.WrapOnTyping c : CommonCodeStyleSettings.WrapOnTyping.values()) {
       if (c.intValue == getCommonSettings().WRAP_ON_TYPING) return c;
@@ -50,16 +49,16 @@ public abstract class CodeStyleBean implements Serializable {
     return CommonCodeStyleSettings.WrapOnTyping.NO_WRAP;
   }
 
-  public void setWrapOnTyping(@Nonnull CommonCodeStyleSettings.WrapOnTyping value) {
+  public void setWrapOnTyping(CommonCodeStyleSettings.WrapOnTyping value) {
     getCommonSettings().WRAP_ON_TYPING = value.intValue;
   }
 
-  @Nonnull
+  
   protected final CommonCodeStyleSettings getCommonSettings() {
     return myRootSettings.getCommonSettings(getLanguage());
   }
 
-  @Nonnull
+  
   protected final CommonCodeStyleSettings.IndentOptions getIndentOptions(boolean isWritable) {
     CommonCodeStyleSettings.IndentOptions indentOptions = getCommonSettings().getIndentOptions();
     if (indentOptions == null && isWritable) {
@@ -68,8 +67,8 @@ public abstract class CodeStyleBean implements Serializable {
     return indentOptions != null ? indentOptions : myRootSettings.OTHER_INDENT_OPTIONS;
   }
 
-  @Nonnull
-  protected final <T extends CustomCodeStyleSettings> T getCustomSettings(@Nonnull Class<T> settingsClass) {
+  
+  protected final <T extends CustomCodeStyleSettings> T getCustomSettings(Class<T> settingsClass) {
     return myRootSettings.getCustomSettings(settingsClass);
   }
 
@@ -77,7 +76,7 @@ public abstract class CodeStyleBean implements Serializable {
     return WrapType.byLegacyRepresentation(wrap);
   }
 
-  protected static int wrapTypeToInt(@Nonnull WrapType wrapType) {
+  protected static int wrapTypeToInt(WrapType wrapType) {
     return wrapType.getLegacyRepresentation();
   }
 }

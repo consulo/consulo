@@ -23,8 +23,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQuickFixOnPsiElement implements IntentionAction, SyntheticIntentionAction {
   protected LocalQuickFixAndIntentionActionOnPsiElement(@Nullable PsiElement element) {
@@ -35,7 +34,7 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
   }
 
   @Override
-  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     if (file == null||myStartElement==null) return;
     PsiElement startElement = myStartElement.getElement();
     PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
@@ -44,7 +43,7 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
   }
 
   @Override
-  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
     if (myStartElement == null) return false;
     PsiElement startElement = myStartElement.getElement();
     PsiElement endElement = myEndElement == null ? startElement : myEndElement.getElement();
@@ -63,14 +62,14 @@ public abstract class LocalQuickFixAndIntentionActionOnPsiElement extends LocalQ
    * @param startElement
    * @param endElement
    */
-  public abstract void invoke(@Nonnull Project project,
-                              @Nonnull PsiFile file,
+  public abstract void invoke(Project project,
+                              PsiFile file,
                               @Nullable Editor editor,
-                              @Nonnull PsiElement startElement,
-                              @Nonnull PsiElement endElement);
+                              PsiElement startElement,
+                              PsiElement endElement);
 
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull PsiElement startElement, @Nonnull PsiElement endElement) {
+  public void invoke(Project project, PsiFile file, PsiElement startElement, PsiElement endElement) {
     invoke(project, file, null, startElement, endElement);
   }
 

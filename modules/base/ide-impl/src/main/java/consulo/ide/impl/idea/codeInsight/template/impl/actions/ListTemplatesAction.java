@@ -21,7 +21,6 @@ import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.impl.action.BaseCodeInsightAction;
 import consulo.language.editor.impl.internal.template.ListTemplatesHandler;
 import consulo.platform.base.localize.ActionLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "InsertLiveTemplate")
 public class ListTemplatesAction extends BaseCodeInsightAction {
@@ -29,7 +28,7 @@ public class ListTemplatesAction extends BaseCodeInsightAction {
         super(ActionLocalize.actionInsertlivetemplateText(), ActionLocalize.actionInsertlivetemplateDescription());
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ListTemplatesHandler();

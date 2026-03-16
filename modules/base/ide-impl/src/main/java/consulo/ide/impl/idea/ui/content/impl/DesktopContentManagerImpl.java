@@ -26,7 +26,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,7 +38,7 @@ import java.awt.*;
 public class DesktopContentManagerImpl extends ContentManagerBase {
     protected JComponent myComponent;
 
-    public DesktopContentManagerImpl(@Nonnull ContentUI contentUI, boolean canCloseContents, @Nonnull Project project) {
+    public DesktopContentManagerImpl(ContentUI contentUI, boolean canCloseContents, Project project) {
         super(contentUI, canCloseContents, project);
     }
 
@@ -48,7 +47,6 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
         myUI.getComponent().updateUI();
     }
 
-    @Nonnull
     @Override
     protected AsyncResult<Void> requestFocusForComponent() {
         return getFocusManager().requestFocus(myComponent, true);
@@ -78,7 +76,6 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
         return null;
     }
 
-    @Nonnull
     @Override
     public JComponent getComponent() {
         if (myComponent == null) {
@@ -93,7 +90,6 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
         return myComponent;
     }
 
-    @Nonnull
     @Override
     public AsyncResult<Void> requestFocus(Content content, boolean forced) {
         Content toSelect = content == null ? getSelectedContent() : content;
@@ -111,7 +107,7 @@ public class DesktopContentManagerImpl extends ContentManagerBase {
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             for (UiDataProvider uiDataProvider : myDataProviders) {
                 uiDataProvider.uiDataSnapshot(sink);
             }

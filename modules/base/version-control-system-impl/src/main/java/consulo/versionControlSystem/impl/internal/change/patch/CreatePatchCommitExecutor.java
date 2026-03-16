@@ -47,8 +47,7 @@ import consulo.versionControlSystem.impl.internal.ui.awt.CreatePatchConfiguratio
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -70,7 +69,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
         myProject = project;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getActionText() {
         return LocalizeValue.localizeTODO("Create Patch...");
@@ -82,7 +81,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor {
     }
 
     @Override
-    @Nonnull
+    
     public CommitSession createCommitSession() {
         return new CreatePatchCommitSession(myProject);
     }

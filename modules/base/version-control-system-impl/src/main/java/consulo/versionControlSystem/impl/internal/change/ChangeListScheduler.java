@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,11 +28,11 @@ public class ChangeListScheduler {
   private final ScheduledExecutorService myExecutor =
     AppExecutorUtil.createBoundedScheduledExecutorService("ChangeListManagerImpl pool", 1);
 
-  public void schedule(@Nonnull Runnable command, long delay, @Nonnull TimeUnit unit) {
+  public void schedule(Runnable command, long delay, TimeUnit unit) {
     myExecutor.schedule(command, delay, unit);
   }
 
-  public void submit(@Nonnull Runnable command) {
+  public void submit(Runnable command) {
     myExecutor.submit(command);
   }
 }

@@ -5,8 +5,7 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class LargeEditorActionUtil {
     @Nullable
@@ -21,7 +20,7 @@ public class LargeEditorActionUtil {
     }
 
     @Nullable
-    public static LargeFileEditor tryGetLargeFileEditorManagerFromEditor(@Nonnull Editor editor) {
+    public static LargeFileEditor tryGetLargeFileEditorManagerFromEditor(Editor editor) {
         return editor.getUserData(LargeFileEditor.LARGE_FILE_EDITOR_KEY);
     }
 

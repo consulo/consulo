@@ -17,7 +17,7 @@ package consulo.application.impl.internal.graph;
 
 import consulo.component.util.graph.Graph;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 /**

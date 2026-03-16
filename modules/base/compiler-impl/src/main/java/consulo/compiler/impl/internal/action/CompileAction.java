@@ -41,7 +41,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,9 +69,8 @@ public class CompileAction extends CompileActionBase {
         }
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return Coroutine.first(ReadLock.apply(o -> {
             regularUpdate(event);
 

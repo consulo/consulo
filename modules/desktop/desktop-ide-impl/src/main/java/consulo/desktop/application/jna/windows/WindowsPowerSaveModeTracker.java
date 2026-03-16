@@ -23,7 +23,6 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ public class WindowsPowerSaveModeTracker implements PowerSaveModeSystemTracker {
   private static final Logger LOG = Logger.getInstance(WindowsPowerSaveModeTracker.class);
 
   @Override
-  public void register(@Nonnull Notifier notifier) {
+  public void register(Notifier notifier) {
     if (!Platform.current().os().isWindows() || !JnaLoader.isLoaded()) {
       return;
     }

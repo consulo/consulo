@@ -17,7 +17,6 @@ package consulo.versionControlSystem.impl.internal.change;
 
 import consulo.logging.Logger;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -59,14 +58,14 @@ public class LazyRefreshingSelfQueue<T> {
   }
 
   // adds item that should be updated at next updateStep() call
-  public void addRequest(@Nonnull T t) {
+  public void addRequest(T t) {
     synchronized (myLock) {
       myQueue.addFirst(new Pair<>(null, t));
     }
   }
 
   // unschedules item from update at next updateStep() call
-  public void forceRemove(@Nonnull T t) {
+  public void forceRemove(T t) {
     synchronized (myLock) {
       for (Iterator<Pair<Long, T>> iterator = myQueue.iterator(); iterator.hasNext();) {
         Pair<Long, T> pair = iterator.next();

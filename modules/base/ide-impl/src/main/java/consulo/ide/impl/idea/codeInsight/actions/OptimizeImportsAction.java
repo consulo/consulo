@@ -42,8 +42,7 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -58,11 +57,10 @@ public class OptimizeImportsAction extends AnAction {
     private static final String NO_IMPORTS_OPTIMIZED = "Unused imports not found";
     private static boolean myProcessVcsChangedFilesInTests;
 
-    @Nonnull
     private final Application myApplication;
 
     @Inject
-    public OptimizeImportsAction(@Nonnull Application application) {
+    public OptimizeImportsAction(Application application) {
         myApplication = application;
         List<ImportOptimizer> extensions = application.getExtensionPoint(ImportOptimizer.class).getExtensionList();
 
@@ -89,9 +87,9 @@ public class OptimizeImportsAction extends AnAction {
 
     @RequiredReadAction
     private void updatePresentationForFiles(
-        @Nonnull Presentation presentation,
+        Presentation presentation,
         boolean enabled,
-        @Nonnull List<PsiFile> files
+        List<PsiFile> files
     ) {
         presentation.setEnabled(enabled);
 
@@ -105,7 +103,7 @@ public class OptimizeImportsAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         actionPerformedImpl(event.getDataContext());
     }
 
@@ -223,9 +221,8 @@ public class OptimizeImportsAction extends AnAction {
         }
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent event) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return OptionalReadLock.apply(i -> {
             Presentation presentation = event.getPresentation();
             if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {

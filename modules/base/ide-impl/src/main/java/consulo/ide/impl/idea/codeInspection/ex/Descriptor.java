@@ -27,8 +27,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 /**
@@ -51,7 +50,7 @@ public class Descriptor {
   private final InspectionProfileImpl myInspectionProfile;
   private final String myScopeName;
 
-  public Descriptor(@Nonnull ScopeToolState state, @Nonnull InspectionProfileImpl inspectionProfile, @Nonnull Project project) {
+  public Descriptor(ScopeToolState state, InspectionProfileImpl inspectionProfile, Project project) {
     myState = state;
     myInspectionProfile = inspectionProfile;
     InspectionToolWrapper tool = state.getTool();
@@ -92,7 +91,7 @@ public class Descriptor {
     return myText;
   }
 
-  @Nonnull
+  
   public HighlightDisplayKey getKey() {
     return myKey;
   }
@@ -113,7 +112,7 @@ public class Descriptor {
     }
   }
 
-  @Nonnull
+  
   public InspectionToolWrapper getToolWrapper() {
     return myToolWrapper;
   }
@@ -143,7 +142,7 @@ public class Descriptor {
     return myGroup;
   }
 
-  @Nonnull
+  
   public String getScopeName() {
     return myScopeName;
   }

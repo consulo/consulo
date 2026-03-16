@@ -23,8 +23,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.event.WindowManagerListener;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -79,8 +78,7 @@ public abstract class WindowManager {
    * @return <code>null</code> if there is no currently active window or there are any window
    * that can be parent.
    */
-  @Nullable
-  public abstract consulo.ui.Window suggestParentWindow(@Nullable Project project);
+  public abstract consulo.ui.@Nullable Window suggestParentWindow(@Nullable Project project);
 
   /**
    * Get the status bar for the project's main frame
@@ -95,13 +93,13 @@ public abstract class WindowManager {
    * @return status bar
    * @deprecated use getStatusBar(Component, Project)
    */
-  public abstract StatusBar getStatusBar(@Nonnull Component c);
+  public abstract StatusBar getStatusBar(Component c);
 
-  public StatusBar getStatusBar(@Nonnull Component c, @Nullable Project project) {
+  public StatusBar getStatusBar(Component c, @Nullable Project project) {
     return null;
   }
 
-  public StatusBar getStatusBar(@Nonnull consulo.ui.Component c, @Nullable Project project) {
+  public StatusBar getStatusBar(consulo.ui.Component c, @Nullable Project project) {
     return null;
   }
 
@@ -114,8 +112,7 @@ public abstract class WindowManager {
 
   public abstract IdeFrame getIdeFrame(@Nullable Project project);
 
-  @Nullable
-  public consulo.ui.Window getWindow(@Nullable Project project) {
+  public consulo.ui.@Nullable Window getWindow(@Nullable Project project) {
     IdeFrame ideFrame = getIdeFrame(project);
     return ideFrame != null ? ideFrame.getWindow() : null;
   }
@@ -135,7 +132,7 @@ public abstract class WindowManager {
    */
   public abstract boolean isInsideScreenBounds(int x, int y);
 
-  @Nonnull
+ 
   public abstract IdeFrame[] getAllProjectFrames();
 
   @Nullable
@@ -144,8 +141,7 @@ public abstract class WindowManager {
     return (JFrame)TargetAWT.to(findVisibleWindow());
   }
 
-  @Nullable
-  public consulo.ui.Window findVisibleWindow() {
+  public consulo.ui.@Nullable Window findVisibleWindow() {
     IdeFrame frame = findVisibleIdeFrame();
     return frame == null ? null : frame.getWindow();
   }
@@ -162,17 +158,16 @@ public abstract class WindowManager {
    */
   public abstract boolean isFullScreenSupportedInCurrentOS();
 
-  public abstract void requestUserAttention(@Nonnull IdeFrame frame, boolean critical);
+  public abstract void requestUserAttention(IdeFrame frame, boolean critical);
 
-  @Nullable
-  public abstract consulo.ui.Window getMostRecentFocusedWindow();
+  public abstract consulo.ui.@Nullable Window getMostRecentFocusedWindow();
 
 
   /**
    * @return focus owner of the specified window.
    * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.
    */
-  public abstract Component getFocusedComponent(@Nonnull Window window);
+  public abstract Component getFocusedComponent(Window window);
 
   /**
    * @param project may be <code>null</code> when no project is opened.

@@ -9,7 +9,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 public class CustomEditInspectionToolsSettingsAction implements SyntheticIntentionAction, Iconable {
   private final EditInspectionToolsSettingsAction myEditInspectionToolsSettingsAction;   // we delegate due to priority
@@ -20,19 +19,19 @@ public class CustomEditInspectionToolsSettingsAction implements SyntheticIntenti
     myText = text;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myText;
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return myEditInspectionToolsSettingsAction.isAvailable(project, editor, file);
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     myEditInspectionToolsSettingsAction.invoke(project, editor, file);
   }
 

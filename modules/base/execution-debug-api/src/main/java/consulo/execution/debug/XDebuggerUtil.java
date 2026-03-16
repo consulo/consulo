@@ -35,8 +35,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -52,23 +51,23 @@ public abstract class XDebuggerUtil {
 
     public abstract XLineBreakpointType<?>[] getLineBreakpointTypes();
 
-    public void toggleLineBreakpoint(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
+    public void toggleLineBreakpoint(Project project, VirtualFile file, int line) {
         toggleLineBreakpoint(project, file, line, false);
     }
 
-    public abstract void toggleLineBreakpoint(@Nonnull Project project, @Nonnull VirtualFile file, int line, boolean temporary);
+    public abstract void toggleLineBreakpoint(Project project, VirtualFile file, int line, boolean temporary);
 
-    public abstract boolean canPutBreakpointAt(@Nonnull Project project, @Nonnull VirtualFile file, int line);
+    public abstract boolean canPutBreakpointAt(Project project, VirtualFile file, int line);
 
-    public <P extends XBreakpointProperties> void toggleLineBreakpoint(@Nonnull Project project, @Nonnull XLineBreakpointType<P> type, @Nonnull VirtualFile file, int line) {
+    public <P extends XBreakpointProperties> void toggleLineBreakpoint(Project project, XLineBreakpointType<P> type, VirtualFile file, int line) {
         toggleLineBreakpoint(project, type, file, line, false);
     }
 
-    public abstract <P extends XBreakpointProperties> void toggleLineBreakpoint(@Nonnull Project project, @Nonnull XLineBreakpointType<P> type, @Nonnull VirtualFile file, int line, boolean temporary);
+    public abstract <P extends XBreakpointProperties> void toggleLineBreakpoint(Project project, XLineBreakpointType<P> type, VirtualFile file, int line, boolean temporary);
 
     public abstract void removeBreakpoint(Project project, XBreakpoint<?> breakpoint);
 
-    public abstract <B extends XBreakpoint<?>> XBreakpointType<B, ?> findBreakpointType(@Nonnull Class<? extends XBreakpointType<B, ?>> typeClass);
+    public abstract <B extends XBreakpoint<?>> XBreakpointType<B, ?> findBreakpointType(Class<? extends XBreakpointType<B, ?>> typeClass);
 
     /**
      * Create {@link XSourcePosition} instance by line number
@@ -142,27 +141,27 @@ public abstract class XDebuggerUtil {
      * @param processor processor
      */
     @RequiredReadAction
-    public abstract void iterateLine(@Nonnull Project project, @Nonnull Document document, int line, @Nonnull Processor<PsiElement> processor);
+    public abstract void iterateLine(Project project, Document document, int line, Processor<PsiElement> processor);
 
     /**
      * Disable value lookup in specified editor
      */
-    public abstract void disableValueLookup(@Nonnull Editor editor);
+    public abstract void disableValueLookup(Editor editor);
 
     @Nullable
     @RequiredReadAction
-    public abstract PsiElement findContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project projectl);
+    public abstract PsiElement findContextElement(VirtualFile virtualFile, int offset, Project projectl);
 
     @Nullable
     @RequiredReadAction
     @Deprecated
     @DeprecationInfo("'checkXml' always ignored")
-    public PsiElement findContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project project, boolean checkXml) {
+    public PsiElement findContextElement(VirtualFile virtualFile, int offset, Project project, boolean checkXml) {
         return findContextElement(virtualFile, offset, project);
     }
 
-    @Nonnull
-    public abstract XExpression createExpression(@Nonnull String text, Language language, String custom, EvaluationMode mode);
+    
+    public abstract XExpression createExpression(String text, Language language, String custom, EvaluationMode mode);
 
     public boolean isEmptyExpression(@Nullable XExpression expression) {
         return expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression());

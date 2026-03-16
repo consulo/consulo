@@ -33,8 +33,7 @@ import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -114,7 +113,7 @@ public class ImplementationSearcher {
         return true;
     }
 
-    private static void dumbModeNotification(@Nonnull PsiElement element) {
+    private static void dumbModeNotification(PsiElement element) {
         Project project = Application.get().runReadAction((Supplier<Project>) element::getProject);
         DumbService.getInstance(project).showDumbModeNotification("Implementation information isn't available while indices are built");
     }
@@ -123,7 +122,7 @@ public class ImplementationSearcher {
         return targetElements;
     }
 
-    @Nonnull
+    
     public static Set<String> getFlags() {
         return TargetElementUtil.getDefinitionSearchFlags();
     }

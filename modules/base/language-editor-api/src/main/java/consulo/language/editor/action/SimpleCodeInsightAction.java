@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.action;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  */
 public abstract class SimpleCodeInsightAction extends CodeInsightAction implements CodeInsightActionHandler {
 
-  @Nonnull
+  
   @Override
   protected CodeInsightActionHandler getHandler() {
     return this;

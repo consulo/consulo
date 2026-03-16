@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,17 +27,13 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface InvokerFactory {
-    @Nonnull
     static InvokerFactory getInstance() {
         return Application.get().getInstance(InvokerFactory.class);
     }
 
-    @Nonnull
-    Invoker forEventDispatchThread(@Nonnull UIAccess uiAccess, @Nonnull Disposable parent);
+    Invoker forEventDispatchThread(UIAccess uiAccess, Disposable parent);
 
-    @Nonnull
-    Invoker forBackgroundThreadWithReadAction(@Nonnull Disposable parent);
+    Invoker forBackgroundThreadWithReadAction(Disposable parent);
 
-    @Nonnull
-    Invoker forBackgroundThreadWithoutReadAction(@Nonnull Disposable parent);
+    Invoker forBackgroundThreadWithoutReadAction(Disposable parent);
 }

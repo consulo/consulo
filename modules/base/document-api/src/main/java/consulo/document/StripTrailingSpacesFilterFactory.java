@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An extension point to create filters which may put restrictions on how trailing spaces will be handled in a document.
@@ -43,6 +42,6 @@ public abstract class StripTrailingSpacesFilterFactory {
    *         <li>{@link StripTrailingSpacesFilter#ALL_LINES}</li> Allow stripping with no restrictions. Return this value by default.
    *         </ul>
    */
-  @Nonnull
-  public abstract StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, @Nonnull Document document);
+  
+  public abstract StripTrailingSpacesFilter createFilter(@Nullable ComponentManager project, Document document);
 }

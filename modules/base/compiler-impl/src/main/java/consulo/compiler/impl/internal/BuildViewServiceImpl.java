@@ -33,8 +33,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -47,15 +46,15 @@ import java.util.*;
  */
 public class BuildViewServiceImpl {
     private static class ConsolePrinter {
-        @Nonnull
+        
         private final BuildProgress<BuildProgressDescriptor> progress;
         private volatile boolean isNewLinePosition = true;
 
-        private ConsolePrinter(@Nonnull BuildProgress<BuildProgressDescriptor> progress) {
+        private ConsolePrinter(BuildProgress<BuildProgressDescriptor> progress) {
             this.progress = progress;
         }
 
-        private void print(@Nonnull String message, @Nonnull MessageEvent.Kind kind) {
+        private void print(String message, MessageEvent.Kind kind) {
             String text = wrapWithAnsiColor(kind, message);
             if (!isNewLinePosition && !StringUtil.startsWithChar(message, '\r')) {
                 text = '\n' + text;
@@ -169,7 +168,7 @@ public class BuildViewServiceImpl {
                 .withContextActions(contextActions.toArray(AnAction.EMPTY_ARRAY));
 
         myBuildProgress.start(new BuildProgressDescriptor() {
-            @Nonnull
+            
             @Override
             public String getTitle() {
                 return buildDescriptor.getTitle();
@@ -177,7 +176,7 @@ public class BuildViewServiceImpl {
 
             @Override
             public
-            @Nonnull
+            
             BuildDescriptor getBuildDescriptor() {
                 return buildDescriptor;
             }
@@ -196,7 +195,7 @@ public class BuildViewServiceImpl {
             private Stack<LocalizeValue> myTextStack;
 
             @Override
-            public void setTextValue(@Nonnull LocalizeValue text) {
+            public void setTextValue(LocalizeValue text) {
                 addIndicatorNewMessagesAsBuildOutput(text);
             }
 
@@ -210,7 +209,7 @@ public class BuildViewServiceImpl {
                 myBuildProgress.progress(lastMessage.get(), 100, (long) (fraction * 100), "%");
             }
 
-            @Nonnull
+            
             private Stack<LocalizeValue> getTextStack() {
                 Stack<LocalizeValue> stack = myTextStack;
                 if (stack == null) {
@@ -303,7 +302,7 @@ public class BuildViewServiceImpl {
         }
     }
 
-    private static String getMessageTitle(@Nonnull CompilerMessage compilerMessage) {
+    private static String getMessageTitle(CompilerMessage compilerMessage) {
         String message = null;
         String[] messages = StringUtil.splitByLines(compilerMessage.getMessage());
         if (messages.length > 1) {
@@ -330,10 +329,10 @@ public class BuildViewServiceImpl {
 
     @Nullable
     private BuildIssue buildIssue(
-        @Nonnull Collection<String> moduleNames,
-        @Nonnull String title,
-        @Nonnull String message,
-        @Nonnull MessageEvent.Kind kind,
+        Collection<String> moduleNames,
+        String title,
+        String message,
+        MessageEvent.Kind kind,
         @Nullable VirtualFile virtualFile,
         @Nullable Navigatable navigatable
     ) {
@@ -341,7 +340,7 @@ public class BuildViewServiceImpl {
         return null;
     }
 
-    @Nonnull
+    
     private static List<AnAction> getContextActions() {
         List<AnAction> contextActions = new ArrayList<>();
         ActionGroup compilerErrorsViewPopupGroup =
@@ -352,8 +351,8 @@ public class BuildViewServiceImpl {
         return contextActions;
     }
 
-    @Nonnull
-    private static MessageEvent.Kind convertCategory(@Nonnull CompilerMessageCategory category) {
+    
+    private static MessageEvent.Kind convertCategory(CompilerMessageCategory category) {
         return switch (category) {
             case ERROR -> MessageEvent.Kind.ERROR;
             case WARNING -> MessageEvent.Kind.WARNING;

@@ -2,7 +2,6 @@
 package consulo.document.util;
 
 import consulo.document.event.DocumentEvent;
-import jakarta.annotation.Nonnull;
 
 public final class DocumentEventUtil {
     private DocumentEventUtil() {
@@ -15,7 +14,7 @@ public final class DocumentEventUtil {
      * A move insertion event is also the one during which all range markers contained in the text fragment being moved are evacuated to
      * their destination.
      */
-    public static boolean isMoveInsertion(@Nonnull DocumentEvent e) {
+    public static boolean isMoveInsertion(DocumentEvent e) {
         return e.getOldLength() == 0 && e.getMoveOffset() != e.getOffset();
     }
 
@@ -24,7 +23,7 @@ public final class DocumentEventUtil {
      *
      * @see DocumentEventUtil#isMoveInsertion
      */
-    public static boolean isMoveDeletion(@Nonnull DocumentEvent e) {
+    public static boolean isMoveDeletion(DocumentEvent e) {
         return e.getNewLength() == 0 && e.getMoveOffset() != e.getOffset();
     }
 
@@ -33,7 +32,7 @@ public final class DocumentEventUtil {
      * corresponding to the document content when calling from the {@link DocumentListener#beforeDocumentChange} listener method
      * notifying about a {@link #isMoveInsertion move insertion}.
      */
-    public static int getMoveOffsetBeforeInsertion(@Nonnull DocumentEvent e) {
+    public static int getMoveOffsetBeforeInsertion(DocumentEvent e) {
         int moveOffset = e.getMoveOffset();
         if (moveOffset > e.getOffset()) {
             return moveOffset - e.getNewLength();
@@ -46,7 +45,7 @@ public final class DocumentEventUtil {
      * corresponding to the document content when calling from the {@link DocumentListener#documentChanged} listener method
      * notifying about a {@link #isMoveDeletion move deletion}.
      */
-    public static int getMoveOffsetAfterDeletion(@Nonnull DocumentEvent e) {
+    public static int getMoveOffsetAfterDeletion(DocumentEvent e) {
         int moveOffset = e.getMoveOffset();
         if (moveOffset > e.getOffset()) {
             return moveOffset - e.getOldLength();

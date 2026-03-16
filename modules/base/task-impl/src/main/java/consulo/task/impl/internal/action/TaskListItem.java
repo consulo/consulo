@@ -15,7 +15,7 @@
  */
 package consulo.task.impl.internal.action;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import consulo.task.LocalTask;
 import consulo.task.util.TaskUtil;

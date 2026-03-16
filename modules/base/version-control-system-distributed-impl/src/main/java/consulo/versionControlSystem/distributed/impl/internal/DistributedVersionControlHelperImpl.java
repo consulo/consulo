@@ -21,8 +21,7 @@ import consulo.versionControlSystem.distributed.DistributedVersionControlHelper;
 import consulo.versionControlSystem.distributed.impl.internal.push.VcsPushDialog;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.ui.awt.LegacyDialog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.List;
@@ -34,9 +33,9 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 public class DistributedVersionControlHelperImpl implements DistributedVersionControlHelper {
-    @Nonnull
+    
     @Override
-    public LegacyDialog createPushDialog(@Nonnull Project project, @Nonnull List<? extends Repository> selectedRepositories, @Nullable Repository currentRepo) {
+    public LegacyDialog createPushDialog(Project project, List<? extends Repository> selectedRepositories, @Nullable Repository currentRepo) {
         return new VcsPushDialog(project, selectedRepositories, currentRepo);
     }
 }

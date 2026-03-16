@@ -19,7 +19,6 @@ package consulo.find;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -30,18 +29,18 @@ public interface FindInProjectSettings {
     return project.getInstance(FindInProjectSettings.class);
   }
 
-  void addStringToFind(@Nonnull String s);
+  void addStringToFind(String s);
 
-  void addStringToReplace(@Nonnull String s);
+  void addStringToReplace(String s);
 
-  void addDirectory(@Nonnull String s);
+  void addDirectory(String s);
 
-  @Nonnull
+  
   String[] getRecentFindStrings();
 
-  @Nonnull
+  
   String[] getRecentReplaceStrings();
 
-  @Nonnull
+  
   List<String> getRecentDirectories();
 }

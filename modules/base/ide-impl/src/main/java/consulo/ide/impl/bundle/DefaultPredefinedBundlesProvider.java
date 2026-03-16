@@ -22,7 +22,6 @@ import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
@@ -49,7 +48,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
     }
 
     @Override
-    public void createBundles(@Nonnull Context context) {
+    public void createBundles(Context context) {
         Platform platform = Platform.current();
 
         myApplication.getExtensionPoint(SdkType.class).forEach(sdkType -> {
@@ -62,7 +61,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         });
     }
 
-    private void createBundles(@Nonnull Context context, BundleType sdkType, Platform platform) {
+    private void createBundles(Context context, BundleType sdkType, Platform platform) {
         if (!sdkType.canCreatePredefinedSdks(platform)) {
             return;
         }
@@ -104,7 +103,7 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
         }
     }
 
-    private void createLegacySdks(@Nonnull Context context, SdkType sdkType, Platform platform) {
+    private void createLegacySdks(Context context, SdkType sdkType, Platform platform) {
         if (!sdkType.canCreatePredefinedSdks()) {
             return;
         }

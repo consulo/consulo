@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 
-import jakarta.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -28,14 +27,14 @@ import java.util.Set;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProductivityFeaturesRegistry {
-  @Nonnull
+  
   public abstract Set<String> getFeatureIds();
 
-  public abstract FeatureDescriptor getFeatureDescriptor(@Nonnull String id);
+  public abstract FeatureDescriptor getFeatureDescriptor(String id);
 
-  public abstract GroupDescriptor getGroupDescriptor(@Nonnull String id);
+  public abstract GroupDescriptor getGroupDescriptor(String id);
 
-  @Nonnull
+  
   public static ProductivityFeaturesRegistry getInstance() {
     return Application.get().getInstance(ProductivityFeaturesRegistry.class);
   }

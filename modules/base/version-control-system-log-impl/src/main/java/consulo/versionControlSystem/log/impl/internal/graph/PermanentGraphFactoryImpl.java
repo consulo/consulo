@@ -20,7 +20,6 @@ import consulo.versionControlSystem.log.graph.GraphColorManager;
 import consulo.versionControlSystem.log.graph.GraphCommit;
 import consulo.versionControlSystem.log.graph.PermanentGraph;
 import consulo.versionControlSystem.log.graph.PermanentGraphFactory;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.HashMap;
@@ -38,10 +37,10 @@ import java.util.function.Function;
 public class PermanentGraphFactoryImpl implements PermanentGraphFactory {
 
     private static class NotLoadedCommitsIdsGenerator<CommitId> implements Function<CommitId, Integer> {
-        @Nonnull
+        
         private final Map<Integer, CommitId> myNotLoadedCommits = new HashMap<>();
 
-        @Nonnull
+        
         @Override
         public Integer apply(CommitId dom) {
             int nodeId = -(myNotLoadedCommits.size() + 2);
@@ -49,16 +48,16 @@ public class PermanentGraphFactoryImpl implements PermanentGraphFactory {
             return nodeId;
         }
 
-        @Nonnull
+        
         public Map<Integer, CommitId> getNotLoadedCommits() {
             return myNotLoadedCommits;
         }
     }
 
     @Override
-    public <CommitId> PermanentGraph<CommitId> newInstance(@Nonnull List<? extends GraphCommit<CommitId>> graphCommits,
-                                                           @Nonnull GraphColorManager<CommitId> graphColorManager,
-                                                           @Nonnull Set<CommitId> branchesCommitId) {
+    public <CommitId> PermanentGraph<CommitId> newInstance(List<? extends GraphCommit<CommitId>> graphCommits,
+                                                           GraphColorManager<CommitId> graphColorManager,
+                                                           Set<CommitId> branchesCommitId) {
         PermanentLinearGraphBuilder<CommitId> permanentLinearGraphBuilder = PermanentLinearGraphBuilder.newInstance(graphCommits);
         NotLoadedCommitsIdsGenerator<CommitId> idsGenerator = new NotLoadedCommitsIdsGenerator<>();
         PermanentLinearGraphImpl linearGraph = permanentLinearGraphBuilder.build(idsGenerator);

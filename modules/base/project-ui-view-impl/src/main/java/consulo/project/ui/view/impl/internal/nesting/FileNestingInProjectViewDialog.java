@@ -12,8 +12,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         }
     };
 
-    public FileNestingInProjectViewDialog(@Nonnull Project project) {
+    public FileNestingInProjectViewDialog(Project project) {
         super(project);
         setTitle(ProjectUIViewLocalize.fileNestingDialogTitle());
 
@@ -67,7 +66,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         return mainPanel;
     }
 
-    private static JPanel createRulesPanel(@Nonnull TableView<CombinedNestingRule> table) {
+    private static JPanel createRulesPanel(TableView<CombinedNestingRule> table) {
         ToolbarDecorator toolbarDecorator =
             ToolbarDecorator.createDecorator(table,
                     new ElementProducer<>() {
@@ -135,7 +134,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         return table;
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         DialogWrapperAction resetToDefaultAction = new DialogWrapperAction(ProjectUIViewLocalize.fileNestingResetToDefaultButton()) {
@@ -150,7 +149,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
     }
 
     @Override
-    protected @Nonnull LocalizeAction getOKAction() {
+    protected LocalizeAction getOKAction() {
         return myOkAction;
     }
 
@@ -190,7 +189,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         resetTable(ProjectViewFileNestingService.getInstance().getRules());
     }
 
-    private void resetTable(@Nonnull List<? extends ProjectViewFileNestingService.NestingRule> rules) {
+    private void resetTable(List<? extends ProjectViewFileNestingService.NestingRule> rules) {
         SortedMap<String, CombinedNestingRule> result = new TreeMap<>();
         for (ProjectViewFileNestingService.NestingRule rule : ContainerUtil.sorted(rules, RULE_COMPARATOR)) {
             CombinedNestingRule r = result.get(rule.getParentFileSuffix());
@@ -205,7 +204,7 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
         myTable.getListTableModel().setItems(new ArrayList<>(result.values()));
     }
 
-    public void apply(@Nonnull Consumer<? super Boolean> useNestingRulesOptionConsumer) {
+    public void apply(Consumer<? super Boolean> useNestingRulesOptionConsumer) {
         useNestingRulesOptionConsumer.accept(myUseNestingRulesCheckBox.getValue());
 
         if (myUseNestingRulesCheckBox.getValue()) {
@@ -222,12 +221,12 @@ public final class FileNestingInProjectViewDialog extends DialogWrapper {
     }
 
     private static final class CombinedNestingRule {
-        @Nonnull
+        
         String parentSuffix;
-        @Nonnull
+        
         String childSuffixes; // semicolon-separated, space symbols around each suffix are ignored
 
-        private CombinedNestingRule(@Nonnull String parentSuffix, @Nonnull String childSuffixes) {
+        private CombinedNestingRule(String parentSuffix, String childSuffixes) {
             this.parentSuffix = parentSuffix;
             this.childSuffixes = childSuffixes;
         }

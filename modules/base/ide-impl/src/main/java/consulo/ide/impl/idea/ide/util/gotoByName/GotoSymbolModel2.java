@@ -26,8 +26,7 @@ import consulo.navigation.NavigationItem;
 import consulo.platform.Platform;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,7 +34,7 @@ import java.util.HashSet;
 public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   private String[] mySeparators;
 
-  public GotoSymbolModel2(@Nonnull Project project) {
+  public GotoSymbolModel2(Project project) {
     super(project, project.getApplication().getExtensionPoint(GotoSymbolContributor.class).getExtensionList());
   }
 
@@ -105,7 +104,7 @@ public class GotoSymbolModel2 extends FilteringGotoByModel<Language> {
   }
 
   @Override
-  @Nonnull
+  
   public String[] getSeparators() {
     if (mySeparators == null) {
       mySeparators = GotoClassModel2.getSeparatorsFromContributors(getContributorList());

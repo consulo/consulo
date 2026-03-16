@@ -30,7 +30,6 @@ import consulo.project.Project;
 import consulo.project.localize.ProjectLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -78,7 +77,7 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
     }
 
     @Override
-    @Nonnull
+    
     public ProjectStructureElement getProjectStructureElement() {
         return myProjectStructureElement;
     }
@@ -142,7 +141,7 @@ public class LibraryConfigurable extends ProjectStructureElementConfigurable<Lib
         return ProjectLocalize.projectRootsLibraryBannerText(getDisplayName(), libraryType).get();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         if (((LibrariesModifiableModel) myModel.getModifiableModel()).hasLibraryEditor(myLibrary)) {

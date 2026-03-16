@@ -9,30 +9,29 @@ import consulo.index.io.forward.ForwardIndex;
 import consulo.logging.Logger;
 import consulo.util.io.ByteArraySequence;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 
 public class PersistentMapBasedForwardIndex implements ForwardIndex {
   private static final Logger LOG = Logger.getInstance(PersistentMapBasedForwardIndex.class);
-  @Nonnull
+  
   private volatile PersistentHashMap<Integer, ByteArraySequence> myPersistentMap;
-  @Nonnull
+  
   private final File myMapFile;
   private final boolean myUseChunks;
 
-  public PersistentMapBasedForwardIndex(@Nonnull File mapFile) throws IOException {
+  public PersistentMapBasedForwardIndex(File mapFile) throws IOException {
     this(mapFile, true);
   }
 
-  public PersistentMapBasedForwardIndex(@Nonnull File mapFile, boolean useChunks) throws IOException {
+  public PersistentMapBasedForwardIndex(File mapFile, boolean useChunks) throws IOException {
     myPersistentMap = createMap(mapFile);
     myMapFile = mapFile;
     myUseChunks = useChunks;
   }
 
-  @Nonnull
+  
   protected PersistentHashMap<Integer, ByteArraySequence> createMap(File file) throws IOException {
     Boolean oldHasNoChunksValue = PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.get();
     PersistentHashMapValueStorage.CreationTimeOptions.HAS_NO_CHUNKS.set(!myUseChunks);
@@ -46,12 +45,12 @@ public class PersistentMapBasedForwardIndex implements ForwardIndex {
 
   @Nullable
   @Override
-  public ByteArraySequence get(@Nonnull Integer key) throws IOException {
+  public ByteArraySequence get(Integer key) throws IOException {
     return myPersistentMap.get(key);
   }
 
   @Override
-  public void put(@Nonnull Integer key, @Nullable ByteArraySequence value) throws IOException {
+  public void put(Integer key, @Nullable ByteArraySequence value) throws IOException {
     if (value == null) {
       myPersistentMap.remove(key);
     }

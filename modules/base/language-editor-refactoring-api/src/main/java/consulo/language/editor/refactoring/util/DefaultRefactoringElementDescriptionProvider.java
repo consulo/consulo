@@ -21,7 +21,6 @@ import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.usage.UsageViewUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -30,7 +29,7 @@ public class DefaultRefactoringElementDescriptionProvider implements ElementDesc
   public static final DefaultRefactoringElementDescriptionProvider INSTANCE = new DefaultRefactoringElementDescriptionProvider();
 
   @Override
-  public String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+  public String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
     String typeString = UsageViewUtil.getType(element);
     String name = DescriptiveNameUtil.getDescriptiveName(element);
     return typeString + " " + CommonRefactoringUtil.htmlEmphasize(name);

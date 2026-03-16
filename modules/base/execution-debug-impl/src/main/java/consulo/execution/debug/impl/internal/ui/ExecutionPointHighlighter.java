@@ -35,8 +35,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,14 +55,14 @@ public class ExecutionPointHighlighter {
 
     private final AtomicBoolean updateRequested = new AtomicBoolean();
 
-    public ExecutionPointHighlighter(@Nonnull Project project) {
+    public ExecutionPointHighlighter(Project project) {
         myProject = project;
 
         // Update highlighter colors if global color schema was changed
         project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> update(false));
     }
 
-    public void show(@Nonnull XSourcePosition position, boolean notTopFrame, @Nullable GutterIconRenderer gutterIconRenderer) {
+    public void show(XSourcePosition position, boolean notTopFrame, @Nullable GutterIconRenderer gutterIconRenderer) {
         updateRequested.set(false);
         myProject.getUIAccess().give(() -> {
             updateRequested.set(false);
@@ -86,8 +85,8 @@ public class ExecutionPointHighlighter {
         });
     }
 
-    @Nonnull
-    private OpenFileDescriptor findOpenFileDescriptor(@Nonnull Project project, @Nonnull XSourcePosition position) {
+    
+    private OpenFileDescriptor findOpenFileDescriptor(Project project, XSourcePosition position) {
         Navigatable navigatable = position.createNavigatable(project);
         if (navigatable instanceof OpenFileDescriptor openFileDescriptor) {
             return openFileDescriptor;
@@ -233,7 +232,7 @@ public class ExecutionPointHighlighter {
         return myRangeHighlighter != null && myRangeHighlighter.getTargetArea() == HighlighterTargetArea.LINES_IN_RANGE;
     }
 
-    private static void disableMouseHoverPopups(@Nonnull Editor editor, boolean disable) {
+    private static void disableMouseHoverPopups(Editor editor, boolean disable) {
         Project project = editor.getProject();
         if (ApplicationManager.getApplication().isUnitTestMode() || project == null) {
             return;

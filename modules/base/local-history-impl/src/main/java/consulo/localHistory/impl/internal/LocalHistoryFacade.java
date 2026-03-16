@@ -26,11 +26,11 @@ import consulo.localHistory.impl.internal.revision.Revision;
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.localHistory.impl.internal.tree.RootEntry;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 public class LocalHistoryFacade {
   private final ChangeList myChangeList;
@@ -89,7 +89,7 @@ public class LocalHistoryFacade {
     return putLabel(new PutLabelChange(myChangeList.nextId(), name, projectId));
   }
 
-  private void addChange(@Nonnull Change c) {
+  private void addChange(Change c) {
     beginChangeSet();
     myChangeList.addChange(c);
     fireChangeAdded(c);
@@ -97,11 +97,11 @@ public class LocalHistoryFacade {
   }
 
   @TestOnly
-  public void addChangeInTests(@Nonnull StructuralChange c) {
+  public void addChangeInTests(StructuralChange c) {
     addChange(c);
   }
 
-  private LabelImpl putLabel(@Nonnull final PutLabelChange c) {
+  private LabelImpl putLabel(final PutLabelChange c) {
     addChange(c);
     return new LabelImpl() {
 
@@ -158,8 +158,8 @@ public class LocalHistoryFacade {
     myChangeList.accept(v);
   }
 
-  public String revertUpTo(@Nonnull final RootEntry root,
-                           @Nonnull String path,
+  public String revertUpTo(final RootEntry root,
+                           String path,
                            final ChangeSet targetChangeSet,
                            final Change targetChange,
                            final boolean revertTargetChange,
@@ -195,7 +195,7 @@ public class LocalHistoryFacade {
     return result[0];
   }
 
-  public void addListener(@Nonnull final Listener l, @jakarta.annotation.Nullable Disposable parent) {
+  public void addListener(final Listener l, @Nullable Disposable parent) {
     myListeners.add(l);
 
     if (parent != null) {
@@ -208,7 +208,7 @@ public class LocalHistoryFacade {
     }
   }
 
-  public void removeListener(@Nonnull Listener l) {
+  public void removeListener(Listener l) {
     myListeners.remove(l);
   }
 

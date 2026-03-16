@@ -18,7 +18,6 @@ package consulo.localization.internal;
 import consulo.localization.LocalizationKey;
 import consulo.localization.LocalizationManager;
 import consulo.localization.LocalizedValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -29,35 +28,26 @@ import java.util.*;
  */
 public final class DefaultLocalizedValue extends CachingLocalizedValue {
     protected static final Object[] EMPTY_ARGS = new Object[0];
-
-    @Nonnull
     private final LocalizationKey myLocalizationKey;
-    @Nonnull
     private final Object[] myArgs;
 
-    public DefaultLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizationKey key) {
+    public DefaultLocalizedValue(LocalizationManager manager, LocalizationKey key) {
         this(manager, key, EMPTY_ARGS);
     }
 
-    public DefaultLocalizedValue(@Nonnull LocalizationManager manager, @Nonnull LocalizationKey key, @Nonnull Object... args) {
+    public DefaultLocalizedValue(LocalizationManager manager, LocalizationKey key, Object... args) {
         super(manager);
         myArgs = args;
         myLocalizationKey = key;
     }
-
-    @Nonnull
     @Override
     public String getId() {
         return myLocalizationKey.toString();
     }
-
-    @Nonnull
     @Override
     public Optional<LocalizationKey> getKey() {
         return Optional.of(myLocalizationKey);
     }
-
-    @Nonnull
     @Override
     protected String calcValue() {
         Map.Entry<Locale, String> unformattedText = myLocalizationManager.getUnformattedText(myLocalizationKey);

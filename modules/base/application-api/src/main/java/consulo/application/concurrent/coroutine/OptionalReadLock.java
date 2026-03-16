@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -30,8 +29,8 @@ import java.util.function.Function;
  * @since 2026-03-06
  */
 public final class OptionalReadLock<I, O> extends CoroutineStep<I, O> {
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction @Nonnull Function<I, O> function,
-                                                   @Nonnull Runnable onFail) {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction Function<I, O> function,
+                                                   Runnable onFail) {
         return new OptionalReadLock<>(function, onFail);
     }
 

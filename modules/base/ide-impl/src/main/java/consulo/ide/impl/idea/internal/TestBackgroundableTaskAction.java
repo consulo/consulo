@@ -26,7 +26,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.Delay;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,10 +34,10 @@ import java.util.concurrent.CompletableFuture;
  * @since 2025-05-06
  */
 public class TestBackgroundableTaskAction extends DumbAwareAction {
-    @Nonnull
+    
     private final ProgressBuilderFactory myProgressBuilderFactory;
 
-    public TestBackgroundableTaskAction(@Nonnull ProgressBuilderFactory progressBuilderFactory) {
+    public TestBackgroundableTaskAction(ProgressBuilderFactory progressBuilderFactory) {
         super(LocalizeValue.of("Test Backgroundable Task"));
 
         myProgressBuilderFactory = progressBuilderFactory;
@@ -46,7 +45,7 @@ public class TestBackgroundableTaskAction extends DumbAwareAction {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
 
         UIAccess uiAccess = UIAccess.current();

@@ -23,7 +23,6 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = IdeActions.ACTION_COPY)
 public class CopyAction extends AnAction implements DumbAware {
@@ -37,12 +36,12 @@ public class CopyAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         e.getRequiredData(CopyProvider.KEY).performCopy(e.getDataContext());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Presentation presentation = event.getPresentation();
         DataContext dataContext = event.getDataContext();
         CopyProvider provider = event.getData(CopyProvider.KEY);

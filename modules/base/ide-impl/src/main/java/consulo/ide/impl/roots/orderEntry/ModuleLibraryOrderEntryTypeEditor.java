@@ -35,7 +35,6 @@ import consulo.ui.ex.ColoredTextContainer;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -55,29 +54,29 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
 
   @RequiredUIAccess
   @Override
-  public void navigate(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
+  public void navigate(ModuleLibraryOrderEntryImpl orderEntry) {
     Project project = orderEntry.getModuleRootLayer().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.select(orderEntry, true));
   }
 
-  @Nonnull
+  
   @Override
-  public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(@Nonnull ModuleLibraryOrderEntryImpl orderEntry,
-                                                                         @Nonnull Project project,
-                                                                         @Nonnull ModulesConfigurator modulesConfigurator,
-                                                                         @Nonnull LibrariesConfigurator librariesConfigurator) {
+  public ClasspathTableItem<ModuleLibraryOrderEntryImpl> createTableItem(ModuleLibraryOrderEntryImpl orderEntry,
+                                                                         Project project,
+                                                                         ModulesConfigurator modulesConfigurator,
+                                                                         LibrariesConfigurator librariesConfigurator) {
     return new LibraryClasspathTableItem<>(orderEntry, project, modulesConfigurator, librariesConfigurator);
   }
 
-  @Nonnull
+  
   @Override
   public String getOrderTypeId() {
     return ModuleLibraryOrderEntryType.ID;
   }
 
-  @Nonnull
+  
   @Override
-  public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRender(ModuleLibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) {
       return myFileAppearanceService.get().getRenderForInvalidUrl(orderEntry.getPresentableName());
     }

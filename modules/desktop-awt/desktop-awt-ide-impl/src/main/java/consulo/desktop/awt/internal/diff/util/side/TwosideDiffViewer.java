@@ -33,26 +33,21 @@ import consulo.dataContext.DataSink;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TwosideDiffViewer<T extends EditorHolder> extends ListenerDiffViewerBase {
-  @Nonnull
   protected final SimpleDiffPanel myPanel;
-  @Nonnull
   protected final TwosideContentPanel myContentPanel;
 
-  @Nonnull
   private final List<T> myHolders;
 
-  @Nonnull
   private final FocusTrackerSupport<Side> myFocusTrackerSupport;
 
-  public TwosideDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request, @Nonnull EditorHolderFactory<T> factory) {
+  public TwosideDiffViewer(DiffContext context, ContentDiffRequest request, EditorHolderFactory<T> factory) {
     super(context, request);
 
     myHolders = createEditorHolders(factory);
@@ -96,8 +91,7 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   // Editors
   //
 
-  @Nonnull
-  protected List<T> createEditorHolders(@Nonnull EditorHolderFactory<T> factory) {
+  protected List<T> createEditorHolders(EditorHolderFactory<T> factory) {
     List<DiffContent> contents = myRequest.getContents();
 
     List<T> holders = new ArrayList<>(2);
@@ -114,7 +108,6 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     }
   }
 
-  @Nonnull
   protected List<JComponent> createTitles() {
     return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createSimpleTitles(myRequest));
   }
@@ -123,7 +116,6 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
   // Getters
   //
 
-  @Nonnull
   @Override
   public JComponent getComponent() {
     return myPanel;
@@ -136,27 +128,24 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     return getCurrentEditorHolder().getPreferredFocusedComponent();
   }
 
-  @Nonnull
   public Side getCurrentSide() {
     return myFocusTrackerSupport.getCurrentSide();
   }
 
-  protected void setCurrentSide(@Nonnull Side side) {
+  protected void setCurrentSide(Side side) {
     myFocusTrackerSupport.setCurrentSide(side);
   }
 
-  @Nonnull
   protected List<T> getEditorHolders() {
     return myHolders;
   }
 
-  @Nonnull
   protected T getCurrentEditorHolder() {
     return getCurrentSide().select(getEditorHolders());
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     super.uiDataSnapshot(sink);
     sink.lazy(VirtualFile.KEY, () -> DiffImplUtil.getVirtualFile(myRequest, getCurrentSide()));
     sink.lazy(DiffDataKeys.CURRENT_CONTENT, () -> getCurrentSide().select(myRequest.getContents()));
@@ -174,9 +163,9 @@ public abstract class TwosideDiffViewer<T extends EditorHolder> extends Listener
     return getCurrentSide().other().select(getRequest().getContents()).getNavigatable();
   }
 
-  public static <T extends EditorHolder> boolean canShowRequest(@Nonnull DiffContext context,
-                                                                @Nonnull DiffRequest request,
-                                                                @Nonnull EditorHolderFactory<T> factory) {
+  public static <T extends EditorHolder> boolean canShowRequest(DiffContext context,
+                                                                DiffRequest request,
+                                                                EditorHolderFactory<T> factory) {
     if (!(request instanceof ContentDiffRequest)) return false;
 
     List<DiffContent> contents = ((ContentDiffRequest)request).getContents();

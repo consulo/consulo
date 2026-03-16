@@ -20,8 +20,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -33,11 +32,11 @@ public interface PathChooserDialog {
   Key<Boolean> PREFER_LAST_OVER_EXPLICIT = Key.create("prefer.last.over.explicit");
 
   @Deprecated
-  default void choose(@Nullable VirtualFile toSelect, @Nonnull Consumer<List<VirtualFile>> callback) {
+  default void choose(@Nullable VirtualFile toSelect, Consumer<List<VirtualFile>> callback) {
     throw new UnsupportedOperationException("use async method");
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   default AsyncResult<VirtualFile[]> chooseAsync(@Nullable VirtualFile toSelect) {
     throw new AbstractMethodError();

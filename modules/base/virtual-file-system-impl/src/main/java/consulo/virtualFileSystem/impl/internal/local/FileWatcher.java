@@ -10,8 +10,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
@@ -40,13 +39,13 @@ public class FileWatcher {
             return dirtyPaths.isEmpty() && dirtyPathsRecursive.isEmpty() && dirtyDirectories.isEmpty();
         }
 
-        private void addDirtyPath(@Nonnull String path) {
+        private void addDirtyPath(String path) {
             if (!dirtyPathsRecursive.contains(path)) {
                 dirtyPaths.add(path);
             }
         }
 
-        private void addDirtyPathRecursive(@Nonnull String path) {
+        private void addDirtyPathRecursive(String path) {
             dirtyPaths.remove(path);
             dirtyPathsRecursive.add(path);
         }
@@ -62,7 +61,7 @@ public class FileWatcher {
     private volatile CanonicalPathMap myPathMap = new CanonicalPathMap();
     private volatile List<Collection<String>> myManualWatchRoots = Collections.emptyList();
 
-    FileWatcher(@Nonnull Application application, @Nonnull ManagingFS managingFS) {
+    FileWatcher(Application application, ManagingFS managingFS) {
         myManagingFS = managingFS;
         myNotificationSink = new MyFileWatcherNotificationSink();
         myWatchers =
@@ -122,12 +121,12 @@ public class FileWatcher {
         return false;
     }
 
-    @Nonnull
+    
     DirtyPaths getDirtyPaths() {
         return myNotificationSink.getDirtyPaths();
     }
 
-    @Nonnull
+    
     public Collection<String> getManualWatchRoots() {
         List<Collection<String>> manualWatchRoots = myManualWatchRoots;
 
@@ -147,7 +146,7 @@ public class FileWatcher {
     /**
      * Clients should take care of not calling this method in parallel.
      */
-    void setWatchRoots(@Nonnull List<String> recursive, @Nonnull List<String> flat) {
+    void setWatchRoots(List<String> recursive, List<String> flat) {
         Future<?> prevTask = myLastTask.getAndSet(myFileWatcherExecutor.submit(() -> {
             try {
                 CanonicalPathMap pathMap = new CanonicalPathMap(recursive, flat);
@@ -168,7 +167,7 @@ public class FileWatcher {
         }
     }
 
-    public void notifyOnFailure(@Nonnull LocalizeValue cause) {
+    public void notifyOnFailure(LocalizeValue cause) {
         LOG.warn(cause.get());
 
         if (myFailureShown.compareAndSet(false, true)) {
@@ -180,7 +179,7 @@ public class FileWatcher {
         private final Object myLock = new Object();
         private DirtyPaths myDirtyPaths = new DirtyPaths();
 
-        @Nonnull
+        
         DirtyPaths getDirtyPaths() {
             DirtyPaths dirtyPaths = DirtyPaths.EMPTY;
 
@@ -199,13 +198,13 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyManualWatchRoots(@Nonnull Collection<String> roots) {
+        public void notifyManualWatchRoots(Collection<String> roots) {
             myManualWatchRoots.add(roots.isEmpty() ? Collections.emptySet() : new HashSet<>(roots));
             notifyOnEvent(OTHER);
         }
 
         @Override
-        public void notifyMapping(@Nonnull Collection<? extends Pair<String, String>> mapping) {
+        public void notifyMapping(Collection<? extends Pair<String, String>> mapping) {
             if (!mapping.isEmpty()) {
                 myPathMap.addMapping(mapping);
             }
@@ -213,7 +212,7 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyDirtyPath(@Nonnull String path) {
+        public void notifyDirtyPath(String path) {
             Collection<String> paths = myPathMap.getWatchedPaths(path, true);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
@@ -226,7 +225,7 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyPathCreatedOrDeleted(@Nonnull String path) {
+        public void notifyPathCreatedOrDeleted(String path) {
             Collection<String> paths = myPathMap.getWatchedPaths(path, true);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
@@ -243,7 +242,7 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyDirtyDirectory(@Nonnull String path) {
+        public void notifyDirtyDirectory(String path) {
             Collection<String> paths = myPathMap.getWatchedPaths(path, false);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
@@ -254,7 +253,7 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyDirtyPathRecursive(@Nonnull String path) {
+        public void notifyDirtyPathRecursive(String path) {
             Collection<String> paths = myPathMap.getWatchedPaths(path, false);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
@@ -285,7 +284,7 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyUserOnFailure(@Nonnull LocalizeValue cause) {
+        public void notifyUserOnFailure(LocalizeValue cause) {
             notifyOnFailure(cause);
         }
     }

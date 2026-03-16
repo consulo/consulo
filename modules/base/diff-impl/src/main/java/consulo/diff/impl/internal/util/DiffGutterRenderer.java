@@ -22,31 +22,30 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class DiffGutterRenderer extends GutterIconRenderer {
-    @Nonnull
+    
     private final Image myIcon;
-    @Nonnull
+    
     private final LocalizeValue myTooltip;
 
-    public DiffGutterRenderer(@Nonnull Image icon, @Nonnull LocalizeValue tooltip) {
+    public DiffGutterRenderer(Image icon, LocalizeValue tooltip) {
         myIcon = icon;
         myTooltip = tooltip;
     }
 
-    public DiffGutterRenderer(@Nonnull Image icon, @Nullable String tooltip) {
+    public DiffGutterRenderer(Image icon, @Nullable String tooltip) {
         this(icon, LocalizeValue.ofNullable(tooltip));
     }
 
-    @Nonnull
+    
     @Override
     public Image getIcon() {
         return myIcon;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getTooltipValue() {
         return myTooltip;
@@ -62,7 +61,7 @@ public abstract class DiffGutterRenderer extends GutterIconRenderer {
         return true;
     }
 
-    @Nonnull
+    
     @Override
     public Alignment getAlignment() {
         return Alignment.LEFT;

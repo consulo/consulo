@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -16,7 +15,7 @@ public class HelpTooltipManager extends HelpTooltipImpl {
     createMouseListeners();
   }
 
-  public void showTooltip(@Nonnull JComponent component, @Nonnull MouseEvent event) {
+  public void showTooltip(JComponent component, MouseEvent event) {
     initPopupBuilder(new HelpTooltipImpl().setTitle(component.getToolTipText(event)).
             setShortcut((String)component.getClientProperty(SHORTCUT_PROPERTY)));
 

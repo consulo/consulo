@@ -32,7 +32,6 @@ import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -41,12 +40,12 @@ import java.util.List;
 public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandler {
 
   @Override
-  protected boolean isEnabled(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && session.getDebugProcess().getSmartStepIntoHandler() != null;
   }
 
   @Override
-  protected void perform(@Nonnull XDebugSession session, DataContext dataContext) {
+  protected void perform(XDebugSession session, DataContext dataContext) {
     XSmartStepIntoHandler<?> handler = session.getDebugProcess().getSmartStepIntoHandler();
     XSourcePosition position = session.getTopFramePosition();
     if (position == null || handler == null) return;
@@ -77,7 +76,7 @@ public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandl
         return aValue.getIcon();
       }
 
-      @Nonnull
+      
       @Override
       public String getTextFor(V value) {
         return value.getText();

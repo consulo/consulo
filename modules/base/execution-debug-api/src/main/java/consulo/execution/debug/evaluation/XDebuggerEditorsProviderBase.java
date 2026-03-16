@@ -27,16 +27,15 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
 public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvider {
   @RequiredReadAction
-  @Nonnull
+  
   @Override
-  public final Document createDocument(@Nonnull Project project, @Nonnull String text, @Nullable XSourcePosition sourcePosition, @Nonnull EvaluationMode mode) {
+  public final Document createDocument(Project project, String text, @Nullable XSourcePosition sourcePosition, EvaluationMode mode) {
     PsiElement context = null;
     if (sourcePosition != null) {
       context = getContextElement(sourcePosition.getFile(), sourcePosition.getOffset(), project);
@@ -48,13 +47,13 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
     return document;
   }
 
-  @Nonnull
+  
   @Override
   @RequiredReadAction
-  public Document createDocument(@Nonnull Project project,
-                                 @Nonnull XExpression expression,
+  public Document createDocument(Project project,
+                                 XExpression expression,
                                  @Nullable XSourcePosition sourcePosition,
-                                 @Nonnull EvaluationMode mode) {
+                                 EvaluationMode mode) {
     PsiElement context = null;
     if (sourcePosition != null) {
       context = getContextElement(sourcePosition.getFile(), sourcePosition.getOffset(), project);
@@ -62,24 +61,24 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
     return createDocument(project, expression, context, mode);
   }
 
-  @Nonnull
-  public Document createDocument(@Nonnull Project project,
-                                 @Nonnull XExpression expression,
+  
+  public Document createDocument(Project project,
+                                 XExpression expression,
                                  @Nullable PsiElement context,
-                                 @Nonnull EvaluationMode mode) {
+                                 EvaluationMode mode) {
     PsiFile codeFragment = createExpressionCodeFragment(project, expression, context, true);
     Document document = PsiDocumentManager.getInstance(project).getDocument(codeFragment);
     assert document != null;
     return document;
   }
 
-  protected abstract PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull String text, @Nullable PsiElement context, boolean isPhysical);
+  protected abstract PsiFile createExpressionCodeFragment(Project project, String text, @Nullable PsiElement context, boolean isPhysical);
 
-  protected PsiFile createExpressionCodeFragment(@Nonnull Project project, @Nonnull XExpression expression, @Nullable PsiElement context, boolean isPhysical) {
+  protected PsiFile createExpressionCodeFragment(Project project, XExpression expression, @Nullable PsiElement context, boolean isPhysical) {
     return createExpressionCodeFragment(project, expression.getExpression(), context, isPhysical);
   }
 
-  @Nonnull
+  
   public Collection<Language> getSupportedLanguages(@Nullable PsiElement context) {
     if (context != null) {
       return getSupportedLanguages(context.getProject(), null);
@@ -89,7 +88,7 @@ public abstract class XDebuggerEditorsProviderBase extends XDebuggerEditorsProvi
 
   @Nullable
   @RequiredReadAction
-  protected PsiElement getContextElement(@Nonnull VirtualFile virtualFile, int offset, @Nonnull Project project) {
+  protected PsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
     return XDebuggerUtil.getInstance().findContextElement(virtualFile, offset, project);
   }
 }

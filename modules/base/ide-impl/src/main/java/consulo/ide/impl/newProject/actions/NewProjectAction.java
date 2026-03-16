@@ -48,8 +48,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -67,7 +66,7 @@ public class NewProjectAction extends DumbAwareAction {
         super(ActionLocalize.actionNewprojectText(), ActionLocalize.actionNewprojectDescription());
     }
 
-    public NewProjectAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public NewProjectAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -81,11 +80,11 @@ public class NewProjectAction extends DumbAwareAction {
 
         @RequiredUIAccess
         public SlideNewProjectPanel(
-            @Nonnull Disposable parentDisposable,
+            Disposable parentDisposable,
             WelcomeScreenSlider owner,
             @Nullable Project project,
             @Nullable VirtualFile virtualFile,
-            @Nonnull TitlelessDecorator titlelessDecorator
+            TitlelessDecorator titlelessDecorator
         ) {
             super(parentDisposable, project, virtualFile, titlelessDecorator);
             this.owner = owner;
@@ -99,13 +98,13 @@ public class NewProjectAction extends DumbAwareAction {
 
         @Override
         @RequiredUIAccess
-        public void setOKActionText(@Nonnull LocalizeValue text) {
+        public void setOKActionText(LocalizeValue text) {
             myOkButton.setText(text);
         }
 
         @Override
         @RequiredUIAccess
-        public void setCancelText(@Nonnull LocalizeValue text) {
+        public void setCancelText(LocalizeValue text) {
             myCancelButton.setText(text);
         }
 
@@ -120,7 +119,7 @@ public class NewProjectAction extends DumbAwareAction {
         }
 
         @RequiredUIAccess
-        @Nonnull
+        
         @Override
         protected JComponent createSouthPanel() {
             HorizontalLayout buttonsPanel = HorizontalLayout.create();
@@ -162,7 +161,7 @@ public class NewProjectAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         NewProjectDialog dialog = new NewProjectDialog(project, null);
 
@@ -172,7 +171,7 @@ public class NewProjectAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    protected static void generateProject(Project project, @Nonnull NewProjectPanel projectPanel) {
+    protected static void generateProject(Project project, NewProjectPanel projectPanel) {
         NewModuleWizardContext context = projectPanel.getWizardContext();
         NewModuleBuilderProcessor<NewModuleWizardContext> processor = projectPanel.getProcessor();
         if (processor == null || context == null) {
@@ -184,7 +183,7 @@ public class NewProjectAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    private static void generateProjectAsync(Project project, @Nonnull NewProjectPanel panel) {
+    private static void generateProjectAsync(Project project, NewProjectPanel panel) {
         // leave current step
         panel.finish();
 

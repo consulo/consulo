@@ -28,22 +28,21 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public class PackageElementNode extends ProjectViewNode<PackageElement> {
-    public PackageElementNode(@Nonnull Project project, PackageElement value, ViewSettings viewSettings) {
+    public PackageElementNode(Project project, PackageElement value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
-    public PackageElementNode(@Nonnull Project project, Object value, ViewSettings viewSettings) {
+    public PackageElementNode(Project project, Object value, ViewSettings viewSettings) {
         this(project, (PackageElement)value, viewSettings);
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
         if (!isUnderContent(file) || getValue() == null) {
             return false;
         }
@@ -74,7 +73,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Collection<AbstractTreeNode> getChildren() {
         PackageElement value = getValue();
         if (value == null) {
@@ -151,7 +150,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
         return getValue() != null && CopyPasteManager.getInstance().isCutElement(getValue().getPackage());
     }
 
-    @Nonnull
+    
     public VirtualFile[] getVirtualFiles() {
         PackageElement value = getValue();
         if (value == null) {

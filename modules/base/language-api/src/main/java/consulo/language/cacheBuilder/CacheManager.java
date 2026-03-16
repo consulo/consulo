@@ -22,31 +22,30 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public interface CacheManager {
-  @Nonnull
+  
   @Deprecated
-  static CacheManager getInstance(@Nonnull Project project) {
+  static CacheManager getInstance(Project project) {
     return project.getInstance(CacheManager.class);
   }
 
-  @Nonnull
-  PsiFile[] getFilesWithWord(@Nonnull String word, short occurenceMask, @Nonnull GlobalSearchScope scope, boolean caseSensitively);
+  
+  PsiFile[] getFilesWithWord(String word, short occurenceMask, GlobalSearchScope scope, boolean caseSensitively);
 
-  @Nonnull
-  VirtualFile[] getVirtualFilesWithWord(@Nonnull String word,
+  
+  VirtualFile[] getVirtualFilesWithWord(String word,
                                         short occurenceMask,
-                                        @Nonnull GlobalSearchScope scope,
+                                        GlobalSearchScope scope,
                                         boolean caseSensitively);
 
-  boolean processFilesWithWord(@Nonnull Predicate<PsiFile> processor,
-                               @Nonnull String word,
+  boolean processFilesWithWord(Predicate<PsiFile> processor,
+                               String word,
                                short occurenceMask,
-                               @Nonnull GlobalSearchScope scope,
+                               GlobalSearchScope scope,
                                boolean caseSensitively);
 }
 

@@ -26,8 +26,7 @@ import consulo.ui.ex.HelpIdProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.function.BiPredicate;
 
@@ -164,7 +163,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   }
 
   @Override
-  public void addChangeListener(@Nonnull ChangeListener listener, @Nonnull Disposable parent) {
+  public void addChangeListener(ChangeListener listener, Disposable parent) {
     if (myConsole instanceof ObservableConsoleView) {
       ((ObservableConsoleView)myConsole).addChangeListener(listener, parent);
     } else {
@@ -173,12 +172,12 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
   }
 
   @Override
-  @Nonnull
+  
   public AnAction[] createConsoleActions() {
     return AnAction.EMPTY_ARRAY;
   }
 
-  @Nonnull
+  
   public ConsoleView getConsole() {
     return myConsole;
   }
@@ -197,7 +196,7 @@ public abstract class BaseTestsOutputConsoleView implements ConsoleView, Observa
     return myProperties;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   @Override
   public String getHelpId() {
     return "reference.runToolWindow.testResultsTab";

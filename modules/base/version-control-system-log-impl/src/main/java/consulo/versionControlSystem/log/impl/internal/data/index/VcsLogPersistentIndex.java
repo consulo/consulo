@@ -45,8 +45,7 @@ import consulo.versionControlSystem.log.impl.internal.util.TroveUtil;
 import consulo.versionControlSystem.util.StopWatch;
 import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntHashSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,39 +61,39 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     private static final Logger LOG = Logger.getInstance(VcsLogPersistentIndex.class);
     private static final int VERSION = 0;
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final FatalErrorHandler myFatalErrorsConsumer;
-    @Nonnull
+    
     private final VcsLogProgress myProgress;
-    @Nonnull
+    
     private final Map<VirtualFile, VcsLogProvider> myProviders;
-    @Nonnull
+    
     private final VcsLogStorage myHashMap;
-    @Nonnull
+    
     private final VcsUserRegistryImpl myUserRegistry;
-    @Nonnull
+    
     private final Set<VirtualFile> myRoots;
 
     @Nullable
     private final MyIndexStorage myIndexStorage;
 
-    @Nonnull
+    
     private final SingleTaskController<IndexingRequest, Void> mySingleTaskController = new MySingleTaskController();
-    @Nonnull
+    
     private final Map<VirtualFile, AtomicInteger> myNumberOfTasks = new HashMap<>();
 
-    @Nonnull
+    
     private Map<VirtualFile, TIntHashSet> myCommitsToIndex = new HashMap<>();
 
     public VcsLogPersistentIndex(
-        @Nonnull Project project,
-        @Nonnull VcsLogStorage hashMap,
-        @Nonnull VcsLogProgress progress,
-        @Nonnull Map<VirtualFile, VcsLogProvider> providers,
-        @Nonnull FatalErrorHandler fatalErrorsConsumer,
-        @Nonnull Disposable disposableParent
+        Project project,
+        VcsLogStorage hashMap,
+        VcsLogProgress progress,
+        Map<VirtualFile, VcsLogProvider> providers,
+        FatalErrorHandler fatalErrorsConsumer,
+        Disposable disposableParent
     ) {
         myHashMap = hashMap;
         myProject = project;
@@ -120,7 +119,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         Disposer.register(disposableParent, this);
     }
 
-    protected MyIndexStorage createIndexStorage(@Nonnull FatalErrorHandler fatalErrorHandler, @Nonnull String logId) {
+    protected MyIndexStorage createIndexStorage(FatalErrorHandler fatalErrorHandler, String logId) {
         try {
             return IOUtil.openCleanOrResetBroken(
                 () -> new MyIndexStorage(logId, myUserRegistry, myRoots, fatalErrorHandler, this),
@@ -152,7 +151,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         mySingleTaskController.request(new IndexingRequest(commitsToIndex, full));
     }
 
-    private void storeDetail(@Nonnull VcsFullCommitDetails detail) {
+    private void storeDetail(VcsFullCommitDetails detail) {
         if (myIndexStorage == null) {
             return;
         }
@@ -205,12 +204,12 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     }
 
     @Override
-    public synchronized boolean isIndexed(@Nonnull VirtualFile root) {
+    public synchronized boolean isIndexed(VirtualFile root) {
         return myRoots.contains(root) && (!myCommitsToIndex.containsKey(root) && myNumberOfTasks.get(root).get() == 0);
     }
 
     @Override
-    public synchronized void markForIndexing(int index, @Nonnull VirtualFile root) {
+    public synchronized void markForIndexing(int index, VirtualFile root) {
         if (isIndexed(index) || !myRoots.contains(root)) {
             return;
         }
@@ -222,8 +221,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         set.add(index);
     }
 
-    @Nonnull
-    private <T> IntSet filter(@Nonnull PersistentMap<Integer, T> map, @Nonnull Predicate<T> condition) {
+    
+    private <T> IntSet filter(PersistentMap<Integer, T> map, Predicate<T> condition) {
         IntSet result = IntSets.newHashSet();
         if (myIndexStorage == null) {
             return result;
@@ -256,8 +255,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         return result;
     }
 
-    @Nonnull
-    private IntSet filterUsers(@Nonnull Set<VcsUser> users) {
+    
+    private IntSet filterUsers(Set<VcsUser> users) {
         if (myIndexStorage != null) {
             try {
                 return myIndexStorage.users.getCommitsForUsers(users);
@@ -272,8 +271,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         return IntSets.newHashSet();
     }
 
-    @Nonnull
-    private IntSet filterPaths(@Nonnull Collection<FilePath> paths) {
+    
+    private IntSet filterPaths(Collection<FilePath> paths) {
         if (myIndexStorage != null) {
             try {
                 return myIndexStorage.paths.getCommitsForPaths(paths);
@@ -288,8 +287,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         return IntSets.newHashSet();
     }
 
-    @Nonnull
-    public IntSet filterMessages(@Nonnull VcsLogTextFilter filter) {
+    
+    public IntSet filterMessages(VcsLogTextFilter filter) {
         if (myIndexStorage != null) {
             try {
                 if (!filter.isRegex()) {
@@ -331,7 +330,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         return IntSet.of();
     }
 
-    private void processRuntimeException(@Nonnull RuntimeException e) {
+    private void processRuntimeException(RuntimeException e) {
         if (myIndexStorage != null) {
             myIndexStorage.markCorrupted();
         }
@@ -344,7 +343,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     }
 
     @Override
-    public boolean canFilter(@Nonnull List<VcsLogDetailsFilter> filters) {
+    public boolean canFilter(List<VcsLogDetailsFilter> filters) {
         if (filters.isEmpty() || myIndexStorage == null) {
             return false;
         }
@@ -360,8 +359,8 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     }
 
     @Override
-    @Nonnull
-    public Set<Integer> filter(@Nonnull List<VcsLogDetailsFilter> detailsFilters) {
+    
+    public Set<Integer> filter(List<VcsLogDetailsFilter> detailsFilters) {
         VcsLogTextFilter textFilter = ContainerUtil.findInstance(detailsFilters, VcsLogTextFilter.class);
         VcsLogUserFilter userFilter = ContainerUtil.findInstance(detailsFilters, VcsLogUserFilter.class);
         VcsLogStructureFilter pathFilter = ContainerUtil.findInstance(detailsFilters, VcsLogStructureFilter.class);
@@ -411,24 +410,24 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         private static final String COMMITS = "commits";
         private static final String MESSAGES = "messages";
         private static final int MESSAGES_VERSION = 0;
-        @Nonnull
+        
         private final PersistentSet<Integer> commits;
-        @Nonnull
+        
         private final PersistentMap<Integer, String> messages;
-        @Nonnull
+        
         private final VcsLogMessagesTrigramIndex trigrams;
-        @Nonnull
+        
         private final VcsLogUserIndex users;
-        @Nonnull
+        
         private final VcsLogPathsIndex paths;
         private static final String INPUTS = "inputs";
 
         public MyIndexStorage(
-            @Nonnull String logId,
-            @Nonnull VcsUserRegistryImpl userRegistry,
-            @Nonnull Set<VirtualFile> roots,
-            @Nonnull FatalErrorHandler fatalErrorHandler,
-            @Nonnull Disposable parentDisposable
+            String logId,
+            VcsUserRegistryImpl userRegistry,
+            Set<VirtualFile> roots,
+            FatalErrorHandler fatalErrorHandler,
+            Disposable parentDisposable
         )
             throws IOException {
             Disposable disposable = Disposable.newDisposable();
@@ -477,7 +476,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
             catchAndWarn(commits::markCorrupted);
         }
 
-        private static void catchAndWarn(@Nonnull ThrowableRunnable<IOException> runnable) {
+        private static void catchAndWarn(ThrowableRunnable<IOException> runnable) {
             try {
                 runnable.run();
             }
@@ -486,7 +485,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
             }
         }
 
-        private static void cleanup(@Nonnull String logId) {
+        private static void cleanup(String logId) {
             if (!cleanupStorageFiles(INDEX, logId)) {
                 LOG.error("Could not clean up storage files in " + new File(LOG_CACHE, INDEX) + " starting with " + logId);
             }
@@ -508,7 +507,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
                     PerformInBackgroundOption.ALWAYS_BACKGROUND
                 ) {
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         List<IndexingRequest> requests;
                         while (!(requests = popRequests()).isEmpty()) {
                             for (IndexingRequest request : requests) {
@@ -539,12 +538,12 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         private final Map<VirtualFile, TIntHashSet> myCommits;
         private final boolean myFull;
 
-        public IndexingRequest(@Nonnull Map<VirtualFile, TIntHashSet> commits, boolean full) {
+        public IndexingRequest(Map<VirtualFile, TIntHashSet> commits, boolean full) {
             myCommits = commits;
             myFull = full;
         }
 
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
             indicator.setIndeterminate(false);
             indicator.setFraction(0);
 
@@ -579,9 +578,9 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         }
 
         private void indexOneByOne(
-            @Nonnull VirtualFile root,
-            @Nonnull TIntHashSet commitsSet,
-            @Nonnull CommitsCounter counter
+            VirtualFile root,
+            TIntHashSet commitsSet,
+            CommitsCounter counter
         ) {
             IntStream commits = TroveUtil.stream(commitsSet).filter(c -> {
                 if (isIndexed(c)) {
@@ -595,9 +594,9 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         }
 
         private void indexOneByOne(
-            @Nonnull VirtualFile root,
-            @Nonnull CommitsCounter counter,
-            @Nonnull IntStream commits
+            VirtualFile root,
+            CommitsCounter counter,
+            IntStream commits
         ) {
             // We pass hashes to VcsLogProvider#readFullDetails in batches
             // in order to avoid allocating too much memory for these hashes
@@ -615,7 +614,7 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
             flush();
         }
 
-        private boolean indexOneByOne(@Nonnull VirtualFile root, @Nonnull TIntHashSet commits) {
+        private boolean indexOneByOne(VirtualFile root, TIntHashSet commits) {
             VcsLogProvider provider = myProviders.get(root);
             try {
                 List<String> hashes = TroveUtil.map(commits, value -> myHashMap.getCommitId(value).getHash().asString());
@@ -633,9 +632,9 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
         }
 
         public void indexAll(
-            @Nonnull VirtualFile root,
-            @Nonnull TIntHashSet commitsSet,
-            @Nonnull CommitsCounter counter
+            VirtualFile root,
+            TIntHashSet commitsSet,
+            CommitsCounter counter
         ) {
             TIntHashSet notIndexed = new TIntHashSet();
             TroveUtil.stream(commitsSet).forEach(c -> {
@@ -678,13 +677,13 @@ public class VcsLogPersistentIndex implements VcsLogIndex, Disposable {
     }
 
     private static class CommitsCounter {
-        @Nonnull
+        
         public final ProgressIndicator indicator;
         public final int allCommits;
         public volatile int newIndexedCommits;
         public volatile int oldCommits;
 
-        private CommitsCounter(@Nonnull ProgressIndicator indicator, int commits) {
+        private CommitsCounter(ProgressIndicator indicator, int commits) {
             this.indicator = indicator;
             this.allCommits = commits;
         }

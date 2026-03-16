@@ -19,7 +19,6 @@ import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -34,7 +33,7 @@ public abstract class ArtifactModelBase implements ArtifactModel {
 
   protected abstract List<? extends Artifact> getArtifactsList();
 
-  @Nonnull
+  
   public Artifact[] getArtifacts() {
     if (myArtifactsArray == null) {
       List<? extends Artifact> validArtifacts = ContainerUtil.findAll(getArtifactsList(), VALID_ARTIFACT_CONDITION);
@@ -48,7 +47,7 @@ public abstract class ArtifactModelBase implements ArtifactModel {
     return Collections.unmodifiableList(getArtifactsList());
   }
 
-  public Artifact findArtifact(@Nonnull String name) {
+  public Artifact findArtifact(String name) {
     if (myArtifactsMap == null) {
       myArtifactsMap = new HashMap<String, Artifact>();
       for (Artifact artifact : getArtifactsList()) {
@@ -58,18 +57,18 @@ public abstract class ArtifactModelBase implements ArtifactModel {
     return myArtifactsMap.get(name);
   }
 
-  @Nonnull
-  public Artifact getArtifactByOriginal(@Nonnull Artifact artifact) {
+  
+  public Artifact getArtifactByOriginal(Artifact artifact) {
     return artifact;
   }
 
-  @Nonnull
-  public Artifact getOriginalArtifact(@Nonnull Artifact artifact) {
+  
+  public Artifact getOriginalArtifact(Artifact artifact) {
     return artifact;
   }
 
-  @Nonnull
-  public Collection<? extends Artifact> getArtifactsByType(@Nonnull ArtifactType type) {
+  
+  public Collection<? extends Artifact> getArtifactsByType(ArtifactType type) {
     List<Artifact> result = new ArrayList<Artifact>();
     for (Artifact artifact : getArtifacts()) {
       if (artifact.getArtifactType().equals(type)) {

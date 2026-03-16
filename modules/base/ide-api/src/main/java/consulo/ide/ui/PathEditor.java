@@ -41,8 +41,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,7 +98,7 @@ public class PathEditor {
     return roots;
   }
 
-  public void resetPath(@Nonnull List<VirtualFile> paths) {
+  public void resetPath(List<VirtualFile> paths) {
     keepSelectionState();
     clearList();
     setEnabled(true);

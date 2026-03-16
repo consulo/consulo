@@ -18,8 +18,7 @@ package consulo.language.editor.inspection.scheme;
 import consulo.language.editor.internal.inspection.ScopeToolState;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -27,19 +26,19 @@ import java.util.List;
  * @since 2009-04-24
  */
 public interface Tools {
-  @Nonnull
+  
   InspectionToolWrapper getInspectionTool(PsiElement element);
 
-  @Nonnull
+  
   String getShortName();
 
-  @Nonnull
+  
   InspectionToolWrapper getTool();
 
-  @Nonnull
+  
   List<ScopeToolState> getTools();
 
-  @Nonnull
+  
   ScopeToolState getDefaultState();
 
   boolean isEnabled();

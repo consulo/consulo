@@ -24,9 +24,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.localize.LocalizeValue;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,9 +38,9 @@ public class ProgressSuspender implements AutoCloseable {
 
     private final Object myLock = new Object();
     private static final Application ourApp = ApplicationManager.getApplication();
-    @Nonnull
+    
     private final LocalizeValue mySuspendedText;
-    @Nonnull
+    
     private LocalizeValue myTempReason;
     private final ProgressSuspenderListener myPublisher;
     private volatile boolean mySuspended;
@@ -49,7 +48,7 @@ public class ProgressSuspender implements AutoCloseable {
     private final Set<ProgressIndicator> myProgresses = ConcurrentHashMap.newKeySet();
     private boolean myClosed;
 
-    private ProgressSuspender(@Nonnull ProgressIndicatorEx progress, @Nonnull LocalizeValue suspendedText) {
+    private ProgressSuspender(ProgressIndicatorEx progress, LocalizeValue suspendedText) {
         mySuspendedText = suspendedText;
         assert progress.isRunning();
         assert ProgressIndicatorProvider.getGlobalProgressIndicator() == progress;
@@ -79,24 +78,24 @@ public class ProgressSuspender implements AutoCloseable {
         }
     }
 
-    public static ProgressSuspender markSuspendable(@Nonnull ProgressIndicator indicator, @Nonnull LocalizeValue suspendedText) {
+    public static ProgressSuspender markSuspendable(ProgressIndicator indicator, LocalizeValue suspendedText) {
         return new ProgressSuspender((ProgressIndicatorEx)indicator, suspendedText);
     }
 
     @Nullable
-    public static ProgressSuspender getSuspender(@Nonnull ProgressIndicator indicator) {
+    public static ProgressSuspender getSuspender(ProgressIndicator indicator) {
         return indicator instanceof UserDataHolder ? ((UserDataHolder)indicator).getUserData(PROGRESS_SUSPENDER) : null;
     }
 
     /**
      * Associates an additional progress indicator with this suspender, so that its {@code #checkCanceled} can later block the calling thread.
      */
-    public void attachToProgress(@Nonnull ProgressIndicatorEx progress) {
+    public void attachToProgress(ProgressIndicatorEx progress) {
         myProgresses.add(progress);
         ((UserDataHolder)progress).putUserData(PROGRESS_SUSPENDER, this);
     }
 
-    @Nonnull
+    
     public LocalizeValue getSuspendedText() {
         synchronized (myLock) {
             return myTempReason.orIfEmpty(mySuspendedText);
@@ -110,7 +109,7 @@ public class ProgressSuspender implements AutoCloseable {
     /**
      * @param reason if provided, is displayed in the UI instead of suspended text passed into constructor until the progress is resumed
      */
-    public void suspendProcess(@Nonnull LocalizeValue reason) {
+    public void suspendProcess(LocalizeValue reason) {
         synchronized (myLock) {
             if (mySuspended || myClosed) {
                 return;

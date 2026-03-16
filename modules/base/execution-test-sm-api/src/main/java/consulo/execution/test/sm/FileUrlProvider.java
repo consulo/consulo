@@ -29,8 +29,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,14 +41,14 @@ import java.util.List;
 public class FileUrlProvider implements SMTestLocator, DumbAware {
     public static final FileUrlProvider INSTANCE = new FileUrlProvider();
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public List<Location> getLocation(
-        @Nonnull String protocol,
-        @Nonnull String path,
-        @Nonnull Project project,
-        @Nonnull GlobalSearchScope scope
+        String protocol,
+        String path,
+        Project project,
+        GlobalSearchScope scope
     ) {
         if (!URLUtil.FILE_PROTOCOL.equals(protocol)) {
             return Collections.emptyList();
@@ -97,7 +96,7 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
 
     @Nullable
     @RequiredReadAction
-    public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum) {
+    public static Location createLocationFor(Project project, VirtualFile virtualFile, int lineNum) {
         return createLocationFor(project, virtualFile, lineNum, -1);
     }
 
@@ -112,7 +111,7 @@ public class FileUrlProvider implements SMTestLocator, DumbAware {
      */
     @Nullable
     @RequiredReadAction
-    public static Location createLocationFor(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int lineNum, int columnNum) {
+    public static Location createLocationFor(Project project, VirtualFile virtualFile, int lineNum, int columnNum) {
         PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
         if (psiFile == null) {
             return null;

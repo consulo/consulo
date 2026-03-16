@@ -24,8 +24,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -36,7 +35,7 @@ public interface LanguageFileViewProviderFactory extends FileViewProviderFactory
   ExtensionPointCacheKey<LanguageFileViewProviderFactory, ByLanguageValue<LanguageFileViewProviderFactory>> KEY = ExtensionPointCacheKey.create("LanguageFileViewProviderFactory", LanguageOneToOne.build());
 
   @Nullable
-  static LanguageFileViewProviderFactory forLanguage(@Nonnull Language language) {
+  static LanguageFileViewProviderFactory forLanguage(Language language) {
     return Application.get().getExtensionPoint(LanguageFileViewProviderFactory.class).getOrBuildCache(KEY).get(language);
   }
 }

@@ -22,7 +22,6 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.test.light.LightApplicationBuilder;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.*;
 
@@ -107,18 +106,18 @@ public class ConsuloApplicationLoader implements BeforeAllCallback, AfterAllCall
         subInit(store);
     }
 
-    protected void subInit(@Nonnull ExtensionContext.Store store) {
+    protected void subInit(ExtensionContext.Store store) {
     }
 
-    protected boolean isImpicitInject(@Nonnull Class<?> type) {
+    protected boolean isImpicitInject(Class<?> type) {
         return type == Application.class;
     }
 
-    protected boolean isExplicitInject(@Nonnull ComponentScope scope) {
+    protected boolean isExplicitInject(ComponentScope scope) {
         return scope == ComponentScope.APPLICATION;
     }
 
-    protected <T> Object getExplicitInject(@Nonnull ExtensionContext.Store store, @Nonnull ComponentScope scope, @Nonnull Class<?> type) {
+    protected <T> Object getExplicitInject(ExtensionContext.Store store, ComponentScope scope, Class<?> type) {
         switch (scope) {
             case APPLICATION:
                 Application application = store.get(Application.class, Application.class);

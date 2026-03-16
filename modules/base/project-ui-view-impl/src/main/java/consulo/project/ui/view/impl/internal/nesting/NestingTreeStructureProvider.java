@@ -12,7 +12,6 @@ import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Function;
@@ -33,8 +32,8 @@ public final class NestingTreeStructureProvider implements TreeStructureProvider
     private static final Logger LOG = Logger.getInstance(NestingTreeStructureProvider.class);
 
     @Override
-    public @Nonnull Collection<AbstractTreeNode> modify(@Nonnull AbstractTreeNode parent,
-                                                        @Nonnull Collection<AbstractTreeNode> children,
+    public Collection<AbstractTreeNode> modify(AbstractTreeNode parent,
+                                                        Collection<AbstractTreeNode> children,
                                                         ViewSettings settings) {
         if (!(settings instanceof ProjectViewSettings)
             || !settings.getViewOption(ShowNestedProjectViewPaneOptionProvider.SHOW_NESTED_FILES_KEY)) {
@@ -96,8 +95,8 @@ public final class NestingTreeStructureProvider implements TreeStructureProvider
     }
 
     // Algorithm is similar to calcParentToChildren(), but a bit simpler, because we have one specific parentFile.
-    public static Collection<ChildFileInfo> getFilesShownAsChildrenInProjectView(@Nonnull Project project,
-                                                                                 @Nonnull VirtualFile parentFile) {
+    public static Collection<ChildFileInfo> getFilesShownAsChildrenInProjectView(Project project,
+                                                                                 VirtualFile parentFile) {
         LOG.assertTrue(!parentFile.isDirectory());
 
         if (!project
@@ -174,8 +173,8 @@ public final class NestingTreeStructureProvider implements TreeStructureProvider
      * @return only those rules where given {@code fileName} can potentially be a parent (if {@code parentNotChild} is {@code true})
      * or only those rules where given {@code fileName} can potentially be a child (if {@code parentNotChild} is {@code false})
      */
-    private static @Nonnull Collection<ProjectViewFileNestingService.NestingRule> filterRules(@Nonnull Collection<? extends ProjectViewFileNestingService.NestingRule> rules,
-                                                                                              @Nonnull String fileName,
+    private static Collection<ProjectViewFileNestingService.NestingRule> filterRules(Collection<? extends ProjectViewFileNestingService.NestingRule> rules,
+                                                                                              String fileName,
                                                                                               boolean parentNotChild) {
         SmartList<ProjectViewFileNestingService.NestingRule> result = new SmartList<>();
         for (ProjectViewFileNestingService.NestingRule rule : rules) {
@@ -199,6 +198,6 @@ public final class NestingTreeStructureProvider implements TreeStructureProvider
         return result;
     }
 
-    public record ChildFileInfo(@Nonnull VirtualFile file, @Nonnull String namePartCommonWithParentFile) {
+    public record ChildFileInfo(VirtualFile file, String namePartCommonWithParentFile) {
     }
 }

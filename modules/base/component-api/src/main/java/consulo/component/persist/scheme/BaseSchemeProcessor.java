@@ -20,8 +20,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 /**
@@ -29,15 +28,15 @@ import java.io.IOException;
  */
 public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> implements SchemeProcessor<T, E>, SchemeExtensionProvider {
   @Override
-  public void initScheme(@Nonnull E scheme) {
+  public void initScheme(E scheme) {
   }
 
   @Override
-  public void onSchemeAdded(@Nonnull E scheme) {
+  public void onSchemeAdded(E scheme) {
   }
 
   @Override
-  public void onSchemeDeleted(@Nonnull E scheme) {
+  public void onSchemeDeleted(E scheme) {
   }
 
   @Override
@@ -45,7 +44,7 @@ public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> imp
   }
 
   @Nullable
-  public E readScheme(@Nonnull Element element) throws InvalidDataException, IOException, JDOMException {
+  public E readScheme(Element element) throws InvalidDataException, IOException, JDOMException {
     return readScheme(new Document((Element)element.detach()));
   }
 
@@ -53,12 +52,12 @@ public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> imp
   /**
    * @param duringLoad If occurred during {@link SchemeManager#loadSchemes()} call
    */
-  public E readScheme(@Nonnull Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
+  public E readScheme(Element element, boolean duringLoad) throws InvalidDataException, IOException, JDOMException {
     return readScheme(element);
   }
 
   @Override
-  public E readScheme(@Nonnull Document schemeContent) throws InvalidDataException, IOException, JDOMException {
+  public E readScheme(Document schemeContent) throws InvalidDataException, IOException, JDOMException {
     throw new AbstractMethodError();
   }
 
@@ -67,12 +66,12 @@ public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> imp
   }
 
   @Override
-  public boolean shouldBeSaved(@Nonnull E scheme) {
+  public boolean shouldBeSaved(E scheme) {
     return true;
   }
 
-  @Nonnull
-  public State getState(@Nonnull E scheme) {
+  
+  public State getState(E scheme) {
     return shouldBeSaved(scheme) ? State.POSSIBLY_CHANGED : State.NON_PERSISTENT;
   }
 
@@ -81,7 +80,7 @@ public abstract class BaseSchemeProcessor<T, E extends ExternalizableScheme> imp
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public String getSchemeExtension() {
     return ".xml";

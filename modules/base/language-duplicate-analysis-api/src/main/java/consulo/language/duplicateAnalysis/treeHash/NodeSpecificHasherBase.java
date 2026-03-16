@@ -11,7 +11,6 @@ import consulo.language.duplicateAnalysis.util.NodeFilter;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +36,15 @@ public class NodeSpecificHasherBase extends NodeSpecificHasher {
            !myDuplicatesProfile.getDuplocatorState(myDuplicatesProfile.getLanguage(element)).distinguishLiterals();
   }
 
-  public NodeSpecificHasherBase(@Nonnull DuplocatorSettings settings,
-                                @Nonnull FragmentsCollector callback,
-                                @Nonnull DuplicatesProfileBase duplicatesProfile) {
+  public NodeSpecificHasherBase(DuplocatorSettings settings,
+                                FragmentsCollector callback,
+                                DuplicatesProfileBase duplicatesProfile) {
     this(settings, callback, duplicatesProfile, false);
   }
 
-  public NodeSpecificHasherBase(@Nonnull DuplocatorSettings settings,
-                                @Nonnull FragmentsCollector callback,
-                                @Nonnull DuplicatesProfileBase duplicatesProfile,
+  public NodeSpecificHasherBase(DuplocatorSettings settings,
+                                FragmentsCollector callback,
+                                DuplicatesProfileBase duplicatesProfile,
                                 boolean forIndexing) {
     myTreeHasher = new TreeHasherBase(callback, duplicatesProfile, forIndexing ? 0:-1, forIndexing);
     mySettings = settings;
@@ -53,7 +52,7 @@ public class NodeSpecificHasherBase extends NodeSpecificHasher {
     myForIndexing = forIndexing;
   }
 
-  @Nonnull
+  
   public NodeFilter getNodeFilter() {
     return myNodeFilter;
   }
@@ -105,19 +104,19 @@ public class NodeSpecificHasherBase extends NodeSpecificHasher {
   }
 
   @Override
-  public boolean areNodesEqual(@Nonnull PsiElement node1, @Nonnull PsiElement node2) {
+  public boolean areNodesEqual(PsiElement node1, PsiElement node2) {
     return false;
   }
 
   @Override
-  public boolean areTreesEqual(@Nonnull PsiElement root1, @Nonnull PsiElement root2, int discardCost) {
+  public boolean areTreesEqual(PsiElement root1, PsiElement root2, int discardCost) {
     if (root1 == root2) {
       return true;
     }
     return new DuplicatesMatchingVisitor(this, myNodeFilter, discardCost).match(root1, root2);
   }
 
-  @Nonnull
+  
   public DuplicatesProfileBase getDuplicatesProfile() {
     return myDuplicatesProfile;
   }
@@ -129,7 +128,7 @@ public class NodeSpecificHasherBase extends NodeSpecificHasher {
   }
 
   @Override
-  public void visitNode(@Nonnull PsiElement node) {
+  public void visitNode(PsiElement node) {
     Language language = null;
     if (node instanceof PsiFile) {
       FileType fileType = ((PsiFile)node).getFileType();

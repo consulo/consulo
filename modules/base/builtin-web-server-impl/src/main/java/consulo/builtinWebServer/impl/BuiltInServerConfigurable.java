@@ -26,23 +26,22 @@ import consulo.ui.IntBox;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-11-27
  */
 public class BuiltInServerConfigurable extends SimpleConfigurableByProperties implements Configurable {
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return BuiltInServerLocalize.settingBuiltinServerCategoryLabel();
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected Component createLayout(PropertyBuilder propertyBuilder, @Nonnull Disposable uiDisposable) {
+    protected Component createLayout(PropertyBuilder propertyBuilder, Disposable uiDisposable) {
         BuiltInServerOptions options = BuiltInServerOptions.getInstance();
 
         VerticalLayout root = VerticalLayout.create();

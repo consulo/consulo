@@ -3,7 +3,6 @@ package consulo.externalSystem.model.project;
 import consulo.externalSystem.service.project.AbstractExternalEntityData;
 import consulo.externalSystem.service.project.Named;
 import consulo.module.content.layer.orderEntry.DependencyScope;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,33 +17,33 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private final ModuleData myOwnerModule;
-  @Nonnull
+  
   private final T          myTarget;
 
   private DependencyScope myScope = DependencyScope.COMPILE;
 
   private boolean myExported;
 
-  protected AbstractDependencyData(@Nonnull ModuleData ownerModule, @Nonnull T dependency) {
+  protected AbstractDependencyData(ModuleData ownerModule, T dependency) {
     super(ownerModule.getOwner());
     myOwnerModule = ownerModule;
     myTarget = dependency;
   }
 
-  @Nonnull
+  
   public ModuleData getOwnerModule() {
     return myOwnerModule;
   }
 
-  @Nonnull
+  
   public T getTarget() {
     return myTarget;
   }
 
   @Override
-  @Nonnull
+  
   public DependencyScope getScope() {
     return myScope;
   }
@@ -65,7 +64,7 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  @Nonnull
+  
   @Deprecated
   @Override
   public String getName() {
@@ -77,29 +76,29 @@ public abstract class AbstractDependencyData<T extends AbstractExternalEntityDat
    */
   @Deprecated
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     myTarget.setName(name);
   }
 
-  @Nonnull
+  
   @Override
   public String getExternalName() {
     return myTarget.getExternalName();
   }
 
   @Override
-  public void setExternalName(@Nonnull String name) {
+  public void setExternalName(String name) {
     myTarget.setExternalName(name);
   }
 
-  @Nonnull
+  
   @Override
   public String getInternalName() {
     return myTarget.getInternalName();
   }
 
   @Override
-  public void setInternalName(@Nonnull String name) {
+  public void setInternalName(String name) {
     myTarget.setInternalName(name);
   }
 

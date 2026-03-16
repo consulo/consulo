@@ -15,7 +15,6 @@
  */
 package consulo.language;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines the support for line comments with suffix.
@@ -28,6 +27,6 @@ public interface CommenterWithLineSuffix extends Commenter {
    *
    * @return the line comment text
    */
-  @Nonnull
+  
   String getLineCommentSuffix();
 }

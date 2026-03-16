@@ -22,26 +22,25 @@ import consulo.component.ComponentManager;
 import consulo.component.util.BusyObject;
 import consulo.ui.ModalityState;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class UiActivityMonitor {
 
-  public abstract BusyObject getBusy(@Nonnull ComponentManager project, UiActivity... toWatch);
+  public abstract BusyObject getBusy(ComponentManager project, UiActivity... toWatch);
 
   public abstract BusyObject getBusy(UiActivity ... toWatch);
 
-  public abstract void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity);
+  public abstract void addActivity(ComponentManager project, UiActivity activity);
 
-  public abstract void addActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState);
+  public abstract void addActivity(ComponentManager project, UiActivity activity, ModalityState effectiveModalityState);
 
-  public abstract void addActivity(@Nonnull UiActivity activity);
+  public abstract void addActivity(UiActivity activity);
 
-  public abstract void addActivity(@Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState);
+  public abstract void addActivity(UiActivity activity, ModalityState effectiveModalityState);
 
-  public abstract void removeActivity(@Nonnull ComponentManager project, @Nonnull UiActivity activity);
+  public abstract void removeActivity(ComponentManager project, UiActivity activity);
 
-  public abstract void removeActivity(@Nonnull UiActivity activity);
+  public abstract void removeActivity(UiActivity activity);
 
   public abstract void clear();
 

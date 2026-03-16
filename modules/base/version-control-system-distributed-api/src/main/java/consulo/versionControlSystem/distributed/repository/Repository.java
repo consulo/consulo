@@ -19,8 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * <p>
@@ -64,7 +63,7 @@ public interface Repository extends Disposable {
      * During merge (for instance, merge failed with conflicts that weren't immediately resolved).
      */
     MERGING {
-      @Nonnull
+      
       @Override
       public String toString() {
         return "Merging";
@@ -75,7 +74,7 @@ public interface Repository extends Disposable {
      * During rebase.
      */
     REBASING {
-      @Nonnull
+      
       @Override
       public String toString() {
         return "Rebasing";
@@ -86,7 +85,7 @@ public interface Repository extends Disposable {
      * During Cherry-pick/grafting.
      */
     GRAFTING {
-      @Nonnull
+      
       @Override
       public String toString() {
         return "Grafting";
@@ -100,22 +99,22 @@ public interface Repository extends Disposable {
     DETACHED
   }
 
-  @Nonnull
+  
   VirtualFile getRoot();
 
-  @Nonnull
+  
   String getPresentableUrl();
 
-  @Nonnull
+  
   Project getProject();
 
-  @Nonnull
+  
   State getState();
 
   @Nullable
   String getCurrentBranchName();
 
-  @Nonnull
+  
   AbstractVcs getVcs();
 
   /**
@@ -138,6 +137,6 @@ public interface Repository extends Disposable {
   /**
    * Returns a detailed String representation suitable for logging purposes.
    */
-  @Nonnull
+  
   String toLogString();
 }

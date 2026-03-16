@@ -20,7 +20,6 @@ import consulo.ui.PseudoComponent;
 import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.internal.UIInternal;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -49,32 +48,24 @@ public interface TableLayout extends Layout<TableLayout.TableCell> {
         public int getColumn() {
             return myColumn;
         }
-
-        @Nonnull
         public TableCell fill() {
             myFill = true;
             return this;
         }
     }
 
-    static TableLayout create(@Nonnull StaticPosition fillOption) {
+    static TableLayout create(StaticPosition fillOption) {
         return UIInternal.get()._Layouts_table(fillOption);
     }
-
-    @Nonnull
     static TableCell cell(int row, int column) {
         return new TableCell(row, column);
     }
-
-    @Nonnull
     @RequiredUIAccess
-    default TableLayout add(@Nonnull PseudoComponent pseudoComponent, @Nonnull TableCell tableCell) {
+    default TableLayout add(PseudoComponent pseudoComponent, TableCell tableCell) {
         return add(pseudoComponent.getComponent(), tableCell);
     }
-
-    @Nonnull
     @Override
-    default TableLayout add(@Nonnull Component component, @Nonnull TableCell constraint) {
+    default TableLayout add(Component component, TableCell constraint) {
         return (TableLayout) Layout.super.add(component, constraint);
     }
 }

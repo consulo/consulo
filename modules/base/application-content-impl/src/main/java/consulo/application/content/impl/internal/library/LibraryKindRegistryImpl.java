@@ -24,8 +24,7 @@ import consulo.content.library.LibraryKind;
 import consulo.content.library.LibraryPresentation;
 import consulo.content.library.LibraryPresentationProvider;
 import consulo.content.library.LibraryType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -79,9 +78,9 @@ public class LibraryKindRegistryImpl implements LibraryKindRegistry {
     }
 
     private <P extends LibraryPresentation<?>> P find(
-        @Nonnull String libraryKindId,
-        @Nonnull Class<P> pClass,
-        @Nonnull ExtensionPointCacheKey<P, Map<String, P>> cacheKey
+        String libraryKindId,
+        Class<P> pClass,
+        ExtensionPointCacheKey<P, Map<String, P>> cacheKey
     ) {
         ExtensionPoint<P> libraryTypes = myApplication.getExtensionPoint(pClass);
 

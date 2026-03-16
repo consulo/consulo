@@ -6,8 +6,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -20,7 +19,7 @@ import java.util.function.Predicate;
  */
 public abstract class PostfixTemplateExpressionSelectorBase implements PostfixTemplateExpressionSelector {
 
-  @Nonnull
+  
   protected final Predicate<? super PsiElement> myAdditionalCondition;
 
   public PostfixTemplateExpressionSelectorBase(@Nullable Predicate<? super PsiElement> condition) {
@@ -30,8 +29,8 @@ public abstract class PostfixTemplateExpressionSelectorBase implements PostfixTe
   private static final Predicate<PsiElement> PSI_ERROR_FILTER = element -> !PsiTreeUtil.hasErrorElements(element);
 
   @Override
-  public boolean hasExpression(@Nonnull PsiElement context,
-                               @Nonnull Document copyDocument,
+  public boolean hasExpression(PsiElement context,
+                               Document copyDocument,
                                int newOffset) {
     return !getExpressions(context, copyDocument, newOffset).isEmpty();
   }
@@ -40,19 +39,19 @@ public abstract class PostfixTemplateExpressionSelectorBase implements PostfixTe
     return element -> element.getTextRange().getEndOffset() == offset;
   }
 
-  @Nonnull
+  
   @Override
-  public List<PsiElement> getExpressions(@Nonnull PsiElement context, @Nonnull Document document, int offset) {
+  public List<PsiElement> getExpressions(PsiElement context, Document document, int offset) {
     return ContainerUtil.filter(getNonFilteredExpressions(context, document, offset), getFilters(offset));
   }
 
   @Override
-  @Nonnull
+  
   public Function<PsiElement, String> getRenderer() {
     return PsiElement::getText;
   }
 
-  protected abstract List<PsiElement> getNonFilteredExpressions(@Nonnull PsiElement context, @Nonnull Document document, int offset);
+  protected abstract List<PsiElement> getNonFilteredExpressions(PsiElement context, Document document, int offset);
 
   protected Predicate<PsiElement> getFilters(int offset) {
     return getBorderOffsetFilter(offset).and(myAdditionalCondition);

@@ -3,8 +3,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.StringBuilderSpinAllocator;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,9 +16,9 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
 
     @Override
     public void registerProblem(
-        @Nonnull String message, @Nullable String description,
-        @Nonnull ProjectStructureProblemType problemType,
-        @Nonnull PlaceInProjectStructure place,
+        String message, @Nullable String description,
+        ProjectStructureProblemType problemType,
+        PlaceInProjectStructure place,
         @Nullable ConfigurationErrorQuickFix fix
     ) {
         List<ConfigurationErrorQuickFix> fixes =
@@ -28,7 +27,7 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
     }
 
     @Override
-    public void registerProblem(@Nonnull ProjectStructureProblemDescription description) {
+    public void registerProblem(ProjectStructureProblemDescription description) {
         if (myProblemDescriptions == null) {
             myProblemDescriptions = new SmartList<>();
         }
@@ -74,7 +73,7 @@ public class ProjectStructureProblemsHolderImpl implements ProjectStructureProbl
         return false;
     }
 
-    public void removeProblem(@Nonnull ProjectStructureProblemDescription description) {
+    public void removeProblem(ProjectStructureProblemDescription description) {
         if (myProblemDescriptions != null) {
             myProblemDescriptions.remove(description);
         }

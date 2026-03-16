@@ -16,8 +16,7 @@
 
 package consulo.index.io;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -25,13 +24,13 @@ import java.util.function.Supplier;
  * @author Eugene Zhuravlev
  */
 public interface InvertedIndex<Key, Value, Input> {
-  @Nonnull
-  ValueContainer<Value> getData(@Nonnull Key key) throws StorageException;
+  
+  ValueContainer<Value> getData(Key key) throws StorageException;
 
   /**
    * @param inputId *positive* id of content.
    */
-  @Nonnull
+  
   Supplier<Boolean> update(int inputId, @Nullable Input content);
 
   void flush() throws StorageException;

@@ -19,7 +19,6 @@ import consulo.annotation.UsedInPlugin;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -28,6 +27,6 @@ import jakarta.annotation.Nonnull;
 @ServiceAPI(ComponentScope.PROJECT)
 @UsedInPlugin
 public interface XStandaloneVariablesViewFactory {
-    @Nonnull
-    XStandaloneVariablesView create(@Nonnull XDebuggerEditorsProvider editorsProvider, @Nonnull XStackFrame stackFrame);
+    
+    XStandaloneVariablesView create(XDebuggerEditorsProvider editorsProvider, XStackFrame stackFrame);
 }

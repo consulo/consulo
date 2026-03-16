@@ -29,7 +29,6 @@ import consulo.versionControlSystem.log.impl.internal.VcsProjectLog;
 import consulo.versionControlSystem.log.impl.internal.data.DataPack;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogDataImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,9 +39,9 @@ import static java.util.Arrays.asList;
 
 @ExtensionImpl
 public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector {
-  @Nonnull
+  
   @Override
-  public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
+  public Set<UsageDescriptor> getProjectUsages(Project project) throws CollectUsagesException {
     VcsProjectLog projectLog = VcsProjectLog.getInstance(project);
     VcsLogDataImpl logData = projectLog.getDataManager();
     if (logData != null) {
@@ -62,8 +61,8 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
     return Collections.emptySet();
   }
 
-  @Nonnull
-  private static MultiMap<VcsKey, VirtualFile> groupRootsByVcs(@Nonnull Map<VirtualFile, VcsLogProvider> providers) {
+  
+  private static MultiMap<VcsKey, VirtualFile> groupRootsByVcs(Map<VirtualFile, VcsLogProvider> providers) {
     MultiMap<VcsKey, VirtualFile> result = MultiMap.create();
     for (Map.Entry<VirtualFile, VcsLogProvider> entry : providers.entrySet()) {
       VirtualFile root = entry.getKey();
@@ -73,7 +72,7 @@ public class VcsLogRepoSizeCollector extends AbstractApplicationUsagesCollector 
     return result;
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return "consulo.platform.base:vcs.log";

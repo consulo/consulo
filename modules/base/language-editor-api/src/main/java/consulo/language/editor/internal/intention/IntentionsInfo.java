@@ -18,8 +18,7 @@ package consulo.language.editor.internal.intention;
 import consulo.language.editor.intention.IntentionActionFilter;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -50,9 +49,9 @@ public class IntentionsInfo {
     }
 
     private static void filter(
-        @Nonnull List<IntentionActionDescriptor> descriptors,
+        List<IntentionActionDescriptor> descriptors,
         @Nullable PsiFile psiFile,
-        @Nonnull List<IntentionActionFilter> filters
+        List<IntentionActionFilter> filters
     ) {
         for (Iterator<IntentionActionDescriptor> it = descriptors.iterator(); it.hasNext(); ) {
             IntentionActionDescriptor actionDescriptor = it.next();

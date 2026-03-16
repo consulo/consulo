@@ -30,7 +30,6 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.List;
@@ -44,7 +43,7 @@ public class ProjectNetworkRootWatcherChecker implements BackgroundStartupActivi
     private static final Logger LOG = Logger.getInstance(ProjectNetworkRootWatcherChecker.class);
 
     @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void runActivity(Project project, UIAccess uiAccess) {
         VirtualFile[] roots = ProjectRootManager.getInstance(project).getContentRoots();
         if (roots.length == 0) {
             return;

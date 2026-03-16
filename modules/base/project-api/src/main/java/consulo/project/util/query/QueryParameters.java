@@ -4,7 +4,7 @@ package consulo.project.util.query;
 import consulo.application.util.query.QueryExecutor;
 import consulo.project.Project;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface to be (optionally, but preferably) implemented by {@link QueryExecutor} parameters to provide additional data.

@@ -15,8 +15,7 @@
  */
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,52 +28,52 @@ public interface FileSystemInterface {
   long DEFAULT_LENGTH = 0;
   long DEFAULT_TIMESTAMP = 0;
 
-  boolean exists(@Nonnull VirtualFile file);
+  boolean exists(VirtualFile file);
 
-  @Nonnull
-  String[] list(@Nonnull VirtualFile file);
+  
+  String[] list(VirtualFile file);
 
-  boolean isDirectory(@Nonnull VirtualFile file);
+  boolean isDirectory(VirtualFile file);
 
-  long getTimeStamp(@Nonnull VirtualFile file);
+  long getTimeStamp(VirtualFile file);
 
-  void setTimeStamp(@Nonnull VirtualFile file, long timeStamp) throws IOException;
+  void setTimeStamp(VirtualFile file, long timeStamp) throws IOException;
 
-  boolean isWritable(@Nonnull VirtualFile file);
+  boolean isWritable(VirtualFile file);
 
-  void setWritable(@Nonnull VirtualFile file, boolean writableFlag) throws IOException;
+  void setWritable(VirtualFile file, boolean writableFlag) throws IOException;
 
-  boolean isSymLink(@Nonnull VirtualFile file);
+  boolean isSymLink(VirtualFile file);
 
   @Nullable
-  String resolveSymLink(@Nonnull VirtualFile file);
+  String resolveSymLink(VirtualFile file);
 
-  VirtualFile createChildDirectory(@Nullable Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException;
+  VirtualFile createChildDirectory(@Nullable Object requestor, VirtualFile parent, String dir) throws IOException;
 
-  VirtualFile createChildFile(@Nullable Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException;
+  VirtualFile createChildFile(@Nullable Object requestor, VirtualFile parent, String file) throws IOException;
 
-  void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException;
+  void deleteFile(Object requestor, VirtualFile file) throws IOException;
 
-  void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException;
+  void moveFile(Object requestor, VirtualFile file, VirtualFile newParent) throws IOException;
 
-  void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException;
+  void renameFile(Object requestor, VirtualFile file, String newName) throws IOException;
 
-  VirtualFile copyFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent, @Nonnull String copyName) throws IOException;
+  VirtualFile copyFile(Object requestor, VirtualFile file, VirtualFile newParent, String copyName) throws IOException;
 
-  @Nonnull
-  byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException;
+  
+  byte[] contentsToByteArray(VirtualFile file) throws IOException;
 
   /**
    * Does NOT strip the BOM from the beginning of the stream, unlike the {@link VirtualFile#getInputStream()}
    */
-  @Nonnull
-  InputStream getInputStream(@Nonnull VirtualFile file) throws IOException;
+  
+  InputStream getInputStream(VirtualFile file) throws IOException;
 
   /**
    * Does NOT add the BOM to the beginning of the stream, unlike the {@link VirtualFile#getOutputStream(Object)}
    */
-  @Nonnull
-  OutputStream getOutputStream(@Nonnull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException;
+  
+  OutputStream getOutputStream(VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException;
 
-  long getLength(@Nonnull VirtualFile file);
+  long getLength(VirtualFile file);
 }

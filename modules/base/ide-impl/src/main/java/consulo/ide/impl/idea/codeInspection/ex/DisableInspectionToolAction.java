@@ -35,7 +35,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 
@@ -50,7 +49,7 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
     myToolId = key.toString();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.disableInspectionActionName();
@@ -58,7 +57,7 @@ public class DisableInspectionToolAction implements IntentionAction, SyntheticIn
 
   @Override
   @RequiredUIAccess
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     InspectionProjectProfileManager profileManager = InspectionProjectProfileManager.getInstance(file.getProject());
     InspectionProfile inspectionProfile = profileManager.getInspectionProfile();
     ModifiableModel model = inspectionProfile.getModifiableModel();

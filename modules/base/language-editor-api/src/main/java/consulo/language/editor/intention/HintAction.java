@@ -20,7 +20,6 @@ import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
@@ -33,7 +32,7 @@ public interface HintAction extends IntentionAction {
    *
    * @return whether anything user-visible happened: a popup was shown or anything has changed in document/PSI/project model
    */
-  boolean showHint(@Nonnull Editor editor);
+  boolean showHint(Editor editor);
 
   /**
    * Perform this action if it doesn't require any user interaction, doesn't show any popups. Example: insert a new unambiguous import
@@ -43,7 +42,7 @@ public interface HintAction extends IntentionAction {
    *
    * @return whether the action was performed and anything has changed in document/PSI/project model
    */
-  default boolean fixSilently(@Nonnull Editor editor) {
+  default boolean fixSilently(Editor editor) {
     return false;
   }
 }

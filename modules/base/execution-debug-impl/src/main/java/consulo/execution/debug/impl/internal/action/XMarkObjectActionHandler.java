@@ -27,15 +27,14 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.ui.ValueMarkup;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   @Override
-  public void perform(@Nonnull Project project, AnActionEvent event) {
+  public void perform(Project project, AnActionEvent event) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     if (session == null) return;
 
@@ -60,7 +59,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   }
 
   @Override
-  public boolean isEnabled(@Nonnull Project project, AnActionEvent event) {
+  public boolean isEnabled(Project project, AnActionEvent event) {
     XValueMarkers<?, ?> markers = getValueMarkers(project);
     if (markers == null) return false;
 
@@ -69,7 +68,7 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   }
 
   @Override
-  public boolean isMarked(@Nonnull Project project, @Nonnull AnActionEvent event) {
+  public boolean isMarked(Project project, AnActionEvent event) {
     XValueMarkers<?, ?> markers = getValueMarkers(project);
     if (markers == null) return false;
 
@@ -78,12 +77,12 @@ public class XMarkObjectActionHandler extends MarkObjectActionHandler {
   }
 
   @Override
-  public boolean isHidden(@Nonnull Project project, AnActionEvent event) {
+  public boolean isHidden(Project project, AnActionEvent event) {
     return getValueMarkers(project) == null;
   }
 
   @Nullable
-  private static XValueMarkers<?, ?> getValueMarkers(@Nonnull Project project) {
+  private static XValueMarkers<?, ?> getValueMarkers(Project project) {
     XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
     return session != null ? ((XDebugSessionImpl)session).getValueMarkers() : null;
   }

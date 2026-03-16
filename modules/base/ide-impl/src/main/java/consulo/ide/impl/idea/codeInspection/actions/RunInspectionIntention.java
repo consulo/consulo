@@ -42,7 +42,6 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.LinkedHashSet;
@@ -54,7 +53,7 @@ import java.util.LinkedHashSet;
 public class RunInspectionIntention implements IntentionAction, HighPriorityAction, SyntheticIntentionAction {
   private final String myShortName;
 
-  public RunInspectionIntention(@Nonnull InspectionToolWrapper toolWrapper) {
+  public RunInspectionIntention(InspectionToolWrapper toolWrapper) {
     myShortName = toolWrapper.getShortName();
   }
 
@@ -62,19 +61,19 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
     myShortName = key.toString();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return InspectionLocalize.runInspectionOnFileIntentionText();
   }
 
   @Override
-  public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, Editor editor, PsiFile file) {
     return LocalInspectionToolWrapper.findTool2RunInBatch(project, file, myShortName) != null;
   }
 
   @Override
-  public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     InspectionManagerImpl managerEx = (InspectionManagerImpl)InspectionManager.getInstance(project);
     Module module = ModuleUtilCore.findModuleForPsiElement(file);
     AnalysisScope analysisScope = new AnalysisScope(file);
@@ -103,9 +102,9 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
   }
 
   public static void rerunInspection(
-    @Nonnull InspectionToolWrapper toolWrapper,
-    @Nonnull InspectionManagerImpl managerEx,
-    @Nonnull AnalysisScope scope,
+    InspectionToolWrapper toolWrapper,
+    InspectionManagerImpl managerEx,
+    AnalysisScope scope,
     PsiElement psiElement
   ) {
     GlobalInspectionContextImpl inspectionContext = createContext(toolWrapper, managerEx, psiElement);
@@ -113,8 +112,8 @@ public class RunInspectionIntention implements IntentionAction, HighPriorityActi
   }
 
   public static GlobalInspectionContextImpl createContext(
-    @Nonnull InspectionToolWrapper toolWrapper,
-    @Nonnull InspectionManagerImpl managerEx,
+    InspectionToolWrapper toolWrapper,
+    InspectionManagerImpl managerEx,
     PsiElement psiElement
   ) {
     InspectionProfileImpl rootProfile =

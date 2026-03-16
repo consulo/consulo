@@ -67,8 +67,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 
@@ -92,7 +91,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private ContentManager myManager;
     private final RunnerLayoutImpl myLayoutSettings;
 
-    @Nonnull
     private final ActionManager myActionManager;
     private final String mySessionName;
     private NonOpaquePanel myComponent;
@@ -156,12 +154,12 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     private int myWindow;
     private boolean myDisposing;
 
-    public RunnerContentUiImpl(@Nonnull Project project,
-                               @Nonnull RunnerLayoutUi ui,
-                               @Nonnull ActionManager actionManager,
-                               @Nonnull IdeFocusManager focusManager,
-                               @Nonnull RunnerLayoutImpl settings,
-                               @Nonnull String sessionName) {
+    public RunnerContentUiImpl(Project project,
+                               RunnerLayoutUi ui,
+                               ActionManager actionManager,
+                               IdeFocusManager focusManager,
+                               RunnerLayoutImpl settings,
+                               String sessionName) {
         myProject = project;
         myRunnerUi = ui;
         myLayoutSettings = settings;
@@ -170,14 +168,14 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         myFocusManager = focusManager;
     }
 
-    public RunnerContentUiImpl(@Nonnull RunnerContentUiImpl ui, @Nonnull RunnerContentUiImpl original, int window) {
+    public RunnerContentUiImpl(RunnerContentUiImpl ui, RunnerContentUiImpl original, int window) {
         this(ui.myProject, ui.myRunnerUi, ui.myActionManager, ui.myFocusManager, ui.myLayoutSettings, ui.mySessionName);
         myOriginal = original;
         original.myChildren.add(this);
         myWindow = window == 0 ? original.findFreeWindow() : window;
     }
 
-    public void setTopActions(@Nonnull ActionGroup topActions, @Nonnull String place) {
+    public void setTopActions(ActionGroup topActions, String place) {
         myTopActions = topActions;
         myActionsPlace = place;
 
@@ -246,7 +244,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
         myTabs = (JBRunnerTabs) new JBRunnerTabs(myProject, myActionManager, myFocusManager, this).setDataProvider(new UiDataProvider() {
                 @Override
-                public void uiDataSnapshot(@Nonnull DataSink sink) {
+                public void uiDataSnapshot(DataSink sink) {
                     sink.set(ViewContext.CONTEXT_KEY, RunnerContentUiImpl.this);
                     TabInfo info = myTabs.getTargetInfo();
                     if (info != null) {
@@ -308,7 +306,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         });
         myTabs.addTabMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(@Nonnull MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (UIUtil.isCloseClick(e)) {
                     TabInfo tabInfo = myTabs.findInfo(e);
                     GridImpl grid = tabInfo == null ? null : getGridFor(tabInfo);
@@ -394,7 +392,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public void propertyChange(@Nonnull PropertyChangeEvent evt) {
+    public void propertyChange(PropertyChangeEvent evt) {
         Content content = (Content) evt.getSource();
         GridImpl grid = getGridFor(content, false);
         if (grid == null) {
@@ -489,7 +487,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return AsyncResult.done(null);
     }
 
-    private void storeDefaultIndices(@Nonnull Content[] contents) {
+    private void storeDefaultIndices(Content[] contents) {
         //int i = 0;
         for (Content content : contents) {
             content.putUserData(RunnerLayoutImpl.DEFAULT_INDEX, getStateFor(content).getTab().getDefaultIndex());
@@ -507,9 +505,8 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return getAcceptArea();
     }
 
-    @Nonnull
     @Override
-    public ContentResponse getContentResponse(@Nonnull DockableContent content, RelativePoint point) {
+    public ContentResponse getContentResponse(DockableContent content, RelativePoint point) {
         if (!(content instanceof DockableGrid)) {
             return ContentResponse.DENY;
         }
@@ -530,7 +527,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public void add(@Nonnull DockableContent dockable, RelativePoint dropTarget) {
+    public void add(DockableContent dockable, RelativePoint dropTarget) {
         DockableGrid dockableGrid = (DockableGrid) dockable;
         RunnerContentUiImpl prev = dockableGrid.getRunnerUi();
 
@@ -600,12 +597,12 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public Image startDropOver(@Nonnull DockableContent content, RelativePoint point) {
+    public Image startDropOver(DockableContent content, RelativePoint point) {
         return null;
     }
 
     @Override
-    public Image processDropOver(@Nonnull DockableContent dockable, RelativePoint dropTarget) {
+    public Image processDropOver(DockableContent dockable, RelativePoint dropTarget) {
         JBTabs current = getTabsAt(dockable, dropTarget);
 
         if (myCurrentOver != null && myCurrentOver != current) {
@@ -632,7 +629,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return myCurrentOverImg;
     }
 
-    @Nonnull
     private static PlaceInGrid calcPlaceInGrid(Point point, Dimension size) {
         // 1/3 (left) |   (center/bottom) | 1/3 (right)
         if (point.x < size.width / 3) {
@@ -666,7 +662,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public void resetDropOver(@Nonnull DockableContent content) {
+    public void resetDropOver(DockableContent content) {
         if (myCurrentOver != null) {
             myCurrentOver.resetDropOver(myCurrentOverInfo);
             myCurrentOver = null;
@@ -689,7 +685,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public void setManager(@Nonnull ContentManager manager) {
+    public void setManager(ContentManager manager) {
         assert myManager == null;
 
         myManager = manager;
@@ -808,7 +804,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Nullable
-    private GridImpl getGridFor(@Nonnull Content content, boolean createIfMissing) {
+    private GridImpl getGridFor(Content content, boolean createIfMissing) {
         GridImpl grid = (GridImpl) findGridFor(content);
         if (grid != null || !createIfMissing) {
             return grid;
@@ -924,7 +920,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
     @Override
     @Nullable
-    public GridCell findCellFor(@Nonnull Content content) {
+    public GridCell findCellFor(Content content) {
         GridImpl cell = getGridFor(content, false);
         return cell != null ? cell.getCellFor(content) : null;
     }
@@ -1175,7 +1171,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
 
     @Override
     @Nullable
-    public Grid findGridFor(@Nonnull Content content) {
+    public Grid findGridFor(Content content) {
         TabImpl tab = (TabImpl) getStateFor(content).getTab();
         for (TabInfo each : myTabs.getTabs()) {
             TabImpl t = getTabFor(each);
@@ -1227,7 +1223,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
+    public boolean canChangeSelectionTo(Content content, boolean implicit) {
         if (implicit) {
             GridImpl grid = getGridFor(content, false);
             if (grid != null) {
@@ -1238,25 +1234,21 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return true;
     }
 
-    @Nonnull
     @Override
     public String getCloseActionName() {
         return UIBundle.message("tabbed.pane.close.tab.action.name");
     }
 
-    @Nonnull
     @Override
     public String getCloseAllButThisActionName() {
         return UIBundle.message("tabbed.pane.close.all.tabs.but.this.action.name");
     }
 
-    @Nonnull
     @Override
     public String getPreviousContentActionName() {
         return "Select Previous Tab";
     }
 
-    @Nonnull
     @Override
     public String getNextContentActionName() {
         return "Select Next Tab";
@@ -1429,7 +1421,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public void restore(@Nonnull Content content) {
+    public void restore(Content content) {
         GridImpl grid = getGridFor(content, false);
         if (grid == null) {
             getStateFor(content).assignTab(myLayoutSettings.getOrCreateTab(-1));
@@ -1443,7 +1435,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public @Nullable Content findOrRestoreContentIfNeeded(@Nonnull String key) {
+    public @Nullable Content findOrRestoreContentIfNeeded(String key) {
         Content content = findContent(key);
         if (content == null) {
             content = findMinimizedContent(key);
@@ -1455,7 +1447,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Nullable
-    private Content findMinimizedContent(@Nonnull String key) {
+    private Content findMinimizedContent(String key) {
         for (AnAction action : myViewActions.getChildren(null, ActionManager.getInstance())) {
             if (!(action instanceof ViewLayoutModificationAction)) {
                 continue;
@@ -1581,7 +1573,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
 
         @Override
-        public void uiDataSnapshot(@Nonnull DataSink sink) {
+        public void uiDataSnapshot(DataSink sink) {
             sink.set(RunnerContentUi.KEY, RunnerContentUiImpl.this);
 
             Content content = getContentManager().getSelectedContent();
@@ -1666,7 +1658,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         processAttraction(content.getUserData(ViewImpl.ID), myAttractions, new LayoutAttractionPolicy.Bounce(), afterInitialized, true);
     }
 
-    public void attractByCondition(@Nonnull String condition, boolean afterInitialized) {
+    public void attractByCondition(String condition, boolean afterInitialized) {
         processAttraction(myLayoutSettings.getToFocus(condition),
             myConditionAttractions,
             myLayoutSettings.getAttractionPolicy(condition),
@@ -1753,7 +1745,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         return myManager;
     }
 
-    @Nonnull
     @Override
     public ActionManager getActionManager() {
         return myActionManager;
@@ -1765,7 +1756,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public View getStateFor(@Nonnull Content content) {
+    public View getStateFor(Content content) {
         return myLayoutSettings.getStateFor(content);
     }
 
@@ -1775,7 +1766,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
     }
 
     @Override
-    public ActionCallback select(@Nonnull Content content, boolean requestFocus) {
+    public ActionCallback select(Content content, boolean requestFocus) {
         GridImpl grid = (GridImpl) findGridFor(content);
         if (grid == null) {
             return ActionCallback.DONE;
@@ -1828,7 +1819,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
 
         @Override
-        public Dimension preferredLayoutSize(@Nonnull Container parent) {
+        public Dimension preferredLayoutSize(Container parent) {
 
             Dimension size = new Dimension();
             Dimension leftSize = myLeft.getPreferredSize();
@@ -1841,7 +1832,7 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
         }
 
         @Override
-        public void layoutContainer(@Nonnull Container parent) {
+        public void layoutContainer(Container parent) {
             Dimension size = parent.getSize();
             Dimension prefSize = parent.getPreferredSize();
             if (prefSize.width <= size.width) {
@@ -1993,7 +1984,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             myWindow = window;
         }
 
-        @Nonnull
         @Override
         public List<Content> getKey() {
             return myContents;
@@ -2027,7 +2017,6 @@ public class RunnerContentUiImpl implements RunnerContentUi, ViewContextEx, Prop
             return myOriginal != null ? myOriginal : RunnerContentUiImpl.this;
         }
 
-        @Nonnull
         public List<Content> getContents() {
             return myContents;
         }

@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,7 @@ import static consulo.ui.ex.awt.JBUI.ScaleType.OBJ_SCALE;
  * @since 2020-08-01
  */
 public class DesktopImageWithTextImpl extends JBUI.ScalableJBIcon implements Icon, Image {
-    @Nonnull
+    
     private final String myText;
     private final WeakReference<Component> myCompRef;
     private final int myFontSize;
@@ -44,7 +43,7 @@ public class DesktopImageWithTextImpl extends JBUI.ScalableJBIcon implements Ico
     private Font myFont;
     private FontMetrics myMetrics;
 
-    public DesktopImageWithTextImpl(@Nonnull String text, @Nonnull Component component, int fontSize) {
+    public DesktopImageWithTextImpl(String text, Component component, int fontSize) {
         myText = text;
         myFontSize = fontSize;
         myCompRef = new WeakReference<>(component);

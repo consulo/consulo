@@ -47,8 +47,7 @@ import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -78,7 +77,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         project.getApplication().addApplicationListener(
             new ApplicationListener() {
                 @Override
-                public void writeActionStarted(@Nonnull Object action) {
+                public void writeActionStarted(Object action) {
                     if (processor != null) {
                         Project project1 = processor.getCurrentCommandProject();
                         if (project1 == myProject) {
@@ -89,7 +88,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
 
                 @Override
                 @RequiredUIAccess
-                public void writeActionFinished(@Nonnull Object action) {
+                public void writeActionFinished(Object action) {
                     if (processor != null) {
                         Project project1 = processor.getCurrentCommandProject();
                         if (project1 == myProject) {
@@ -103,14 +102,14 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @Override
-    public void register(@Nonnull PomModelAspectRegistrator registrator) {
+    public void register(PomModelAspectRegistrator registrator) {
         TreeAspect treeAspect = registrator.getModelAspect(TreeAspect.class);
 
         registrator.register(PostprocessReformattingAspect.class, this, Set.of(treeAspect));
     }
 
     @Override
-    public void disablePostprocessFormattingInside(@Nonnull Runnable runnable) {
+    public void disablePostprocessFormattingInside(Runnable runnable) {
         disablePostprocessFormattingInside(() -> {
             runnable.run();
             return null;
@@ -118,7 +117,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @Override
-    public <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable) {
+    public <T> T disablePostprocessFormattingInside(Supplier<T> computable) {
         try {
             getContext().myDisabledCounter++;
             return computable.get();
@@ -131,7 +130,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
 
     @Override
     @RequiredUIAccess
-    public void postponeFormattingInside(@Nonnull Runnable runnable) {
+    public void postponeFormattingInside(Runnable runnable) {
         postponeFormattingInside(() -> {
             runnable.run();
             return null;
@@ -140,7 +139,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
 
     @Override
     @RequiredUIAccess
-    public <T> T postponeFormattingInside(@Nonnull Supplier<T> computable) {
+    public <T> T postponeFormattingInside(Supplier<T> computable) {
         UIAccess.assertIsUIThread();
         try {
             incrementPostponedCounter();
@@ -169,12 +168,12 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         }
     }
 
-    private static void atomic(@Nonnull Runnable r) {
+    private static void atomic(Runnable r) {
         ProgressManager.getInstance().executeNonCancelableSection(r);
     }
 
     @Override
-    public void update(@Nonnull PomModelEvent event) {
+    public void update(PomModelEvent event) {
         atomic(new Runnable() {
             @Override
             public void run() {
@@ -284,11 +283,11 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @Override
-    public void doPostponedFormatting(@Nonnull FileViewProvider viewProvider) {
+    public void doPostponedFormatting(FileViewProvider viewProvider) {
         postponedFormattingImpl(viewProvider);
     }
 
-    private void postponedFormattingImpl(@Nonnull FileViewProvider viewProvider) {
+    private void postponedFormattingImpl(FileViewProvider viewProvider) {
         atomic(() -> {
             if (isDisabled()) {
                 return;
@@ -307,12 +306,12 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @Override
-    public boolean isViewProviderLocked(@Nonnull FileViewProvider fileViewProvider) {
+    public boolean isViewProviderLocked(FileViewProvider fileViewProvider) {
         return getContext().myReformatElements.containsKey(fileViewProvider);
     }
 
     @Override
-    public void assertDocumentChangeIsAllowed(@Nonnull PsiFile file) {
+    public void assertDocumentChangeIsAllowed(PsiFile file) {
         PostprocessReformattingAspectImpl reformattingAspect =
             (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(file.getProject());
         reformattingAspect.assertDocumentChangeIsAllowed(file.getViewProvider());
@@ -326,7 +325,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
      * @throws RuntimeException If the assertion fails.
      */
     @Override
-    public void assertDocumentChangeIsAllowed(@Nonnull FileViewProvider viewProvider) {
+    public void assertDocumentChangeIsAllowed(FileViewProvider viewProvider) {
         if (isViewProviderLocked(viewProvider)) {
             Throwable cause = viewProvider.getUserData(REFORMAT_ORIGINATOR);
             String message = "Document is locked by write PSI operations. " +
@@ -338,7 +337,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         }
     }
 
-    private String dumpUnprocessedElements(@Nonnull FileViewProvider provider) {
+    private String dumpUnprocessedElements(FileViewProvider provider) {
         StringBuilder sb = new StringBuilder();
         int count = 0;
         List<ASTNode> nodes = myContext.get().myReformatElements.get(provider);
@@ -356,7 +355,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         return sb.toString();
     }
 
-    private void postponeFormatting(@Nonnull FileViewProvider viewProvider, @Nonnull ASTNode child) {
+    private void postponeFormatting(FileViewProvider viewProvider, ASTNode child) {
         if (!CodeEditUtil.isNodeGenerated(child) && child.getElementType() != TokenType.WHITE_SPACE) {
             int oldIndent = CodeEditUtil.getOldIndentation(child);
             LOG.assertTrue(
@@ -376,7 +375,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @RequiredUIAccess
-    private void doPostponedFormattingInner(@Nonnull FileViewProvider key) {
+    private void doPostponedFormattingInner(FileViewProvider key) {
         List<ASTNode> astNodes = getContext().myReformatElements.remove(key);
         Document document = key.getDocument();
         // Sort ranges by end offsets so that we won't need any offset adjustment after reformat or reindent
@@ -442,7 +441,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     @RequiredUIAccess
-    private void reparseByTextIfNeeded(@Nonnull FileViewProvider viewProvider, @Nonnull Document document) {
+    private void reparseByTextIfNeeded(FileViewProvider viewProvider, Document document) {
         if (PsiDocumentManager.getInstance(myProject).isCommitted(document)) {
             Set<PsiFile> rootsToReparse = new HashSet<>();
             for (ASTNode node : myContext.get().myRaisingCandidates.get(viewProvider)) {
@@ -482,10 +481,10 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         return psi instanceof PsiWhiteSpace || psi instanceof PsiComment;
     }
 
-    @Nonnull
+    
     private List<PostponedAction> normalizeAndReorderPostponedActions(
-        @Nonnull Set<PostprocessFormattingTask> rangesToProcess,
-        @Nonnull Document document
+        Set<PostprocessFormattingTask> rangesToProcess,
+        Document document
     ) {
         List<PostprocessFormattingTask> freeFormattingActions = new ArrayList<>();
         List<ReindentTask> indentActions = new ArrayList<>();
@@ -612,9 +611,9 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     private static void createActionsMap(
-        @Nonnull List<? extends ASTNode> astNodes,
-        @Nonnull FileViewProvider provider,
-        @Nonnull Collection<? super PostprocessFormattingTask> rangesToProcess
+        List<? extends ASTNode> astNodes,
+        FileViewProvider provider,
+        Collection<? super PostprocessFormattingTask> rangesToProcess
     ) {
         Set<ASTNode> nodesToProcess = new HashSet<>(astNodes);
         Document document = provider.getDocument();
@@ -664,7 +663,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
                 }
 
                 @RequiredReadAction
-                private Iterable<TextRange> getEnabledRanges(@Nonnull PsiElement element) {
+                private Iterable<TextRange> getEnabledRanges(PsiElement element) {
                     List<TextRange> disabledRanges = new ArrayList<>();
                     for (DisabledIndentRangesProvider rangesProvider : DisabledIndentRangesProvider.EP_NAME.getExtensions()) {
                         Collection<TextRange> providedDisabledRanges = rangesProvider.getDisabledIndentRanges(element);
@@ -693,8 +692,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     private static void handleReformatMarkers(
-        @Nonnull FileViewProvider key,
-        @Nonnull Set<? super PostprocessFormattingTask> rangesToProcess
+        FileViewProvider key,
+        Set<? super PostprocessFormattingTask> rangesToProcess
     ) {
         Document document = key.getDocument();
         if (document == null) {
@@ -725,9 +724,9 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     private static void adjustIndentationInRange(
-        @Nonnull PsiFile file,
-        @Nonnull Document document,
-        @Nonnull TextRange[] indents,
+        PsiFile file,
+        Document document,
+        TextRange[] indents,
         int indentAdjustment
     ) {
         CharSequence charsSequence = document.getCharsSequence();
@@ -740,7 +739,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         }
     }
 
-    private static int getNewIndent(@Nonnull PsiFile psiFile, int firstWhitespace) {
+    private static int getNewIndent(PsiFile psiFile, int firstWhitespace) {
         Document document = psiFile.getViewProvider().getDocument();
         assert document != null;
         int startOffset = document.getLineStartOffset(document.getLineNumber(firstWhitespace));
@@ -756,8 +755,8 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         return getContext().myDisabledCounter > 0;
     }
 
-    @Nonnull
-    private CodeFormatterFacade getFormatterFacade(@Nonnull FileViewProvider viewProvider) {
+    
+    private CodeFormatterFacade getFormatterFacade(FileViewProvider viewProvider) {
         CodeStyleSettings styleSettings = CodeStyle.getSettings(viewProvider.getPsi(viewProvider.getBaseLanguage()));
         PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myPsiManager.getProject());
         Document document = viewProvider.getDocument();
@@ -769,15 +768,15 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     private abstract static class PostprocessFormattingTask implements Comparable<PostprocessFormattingTask>, Segment, Disposable {
-        @Nonnull
+        
         private final RangeMarker myRange;
 
-        PostprocessFormattingTask(@Nonnull RangeMarker rangeMarker) {
+        PostprocessFormattingTask(RangeMarker rangeMarker) {
             myRange = rangeMarker;
         }
 
         @Override
-        public int compareTo(@Nonnull PostprocessFormattingTask o) {
+        public int compareTo(PostprocessFormattingTask o) {
             RangeMarker o1 = myRange;
             RangeMarker o2 = o.myRange;
             if (o1.equals(o2)) {
@@ -799,7 +798,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
             return diff;
         }
 
-        @Nonnull
+        
         public RangeMarker getRange() {
             return myRange;
         }
@@ -823,13 +822,13 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     private static class ReformatTask extends PostprocessFormattingTask {
-        ReformatTask(@Nonnull RangeMarker rangeMarker) {
+        ReformatTask(RangeMarker rangeMarker) {
             super(rangeMarker);
         }
     }
 
     private static class ReformatWithHeadingWhitespaceTask extends PostprocessFormattingTask {
-        ReformatWithHeadingWhitespaceTask(@Nonnull RangeMarker rangeMarker) {
+        ReformatWithHeadingWhitespaceTask(RangeMarker rangeMarker) {
             super(rangeMarker);
         }
     }
@@ -837,7 +836,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     private static class ReindentTask extends PostprocessFormattingTask {
         private final int myOldIndent;
 
-        ReindentTask(@Nonnull RangeMarker rangeMarker, int oldIndent) {
+        ReindentTask(RangeMarker rangeMarker, int oldIndent) {
             super(rangeMarker);
             myOldIndent = oldIndent;
         }
@@ -848,19 +847,19 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     }
 
     private interface PostponedAction extends Disposable {
-        void execute(@Nonnull FileViewProvider viewProvider);
+        void execute(FileViewProvider viewProvider);
     }
 
     private class ReformatRangesAction implements PostponedAction {
         private final FormatTextRanges myRanges;
 
-        ReformatRangesAction(@Nonnull FormatTextRanges ranges) {
+        ReformatRangesAction(FormatTextRanges ranges) {
             myRanges = ranges;
         }
 
         @Override
         @RequiredUIAccess
-        public void execute(@Nonnull FileViewProvider viewProvider) {
+        public void execute(FileViewProvider viewProvider) {
             PsiFile file = viewProvider.getPsi(viewProvider.getBaseLanguage());
             FormatTextRanges textRanges = myRanges.ensureNonEmpty();
             textRanges.setExtendToContext(true);
@@ -881,12 +880,12 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     private static class ReindentRangesAction implements PostponedAction {
         private final List<Pair<Integer, RangeMarker>> myRangesToReindent = new ArrayList<>();
 
-        public void add(@Nonnull RangeMarker rangeMarker, int oldIndent) {
+        public void add(RangeMarker rangeMarker, int oldIndent) {
             myRangesToReindent.add(new Pair<>(oldIndent, rangeMarker));
         }
 
         @Override
-        public void execute(@Nonnull FileViewProvider viewProvider) {
+        public void execute(FileViewProvider viewProvider) {
             Document document = viewProvider.getDocument();
             assert document != null;
             PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());

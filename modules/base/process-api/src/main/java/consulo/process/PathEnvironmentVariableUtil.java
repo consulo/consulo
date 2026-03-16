@@ -19,8 +19,7 @@ import consulo.logging.Logger;
 import consulo.process.local.EnvironmentUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public class PathEnvironmentVariableUtil {
    * @return {@code File} instance or null if not found
    */
   @Nullable
-  public static File findInPath(@Nonnull String fileBaseName) {
+  public static File findInPath(String fileBaseName) {
     return findInPath(fileBaseName, false);
   }
 
@@ -58,7 +57,7 @@ public class PathEnvironmentVariableUtil {
    * @return {@code File} instance or null if not found
    */
   @Nullable
-  public static File findInPath(@Nonnull String fileBaseName, boolean logFindDetails) {
+  public static File findInPath(String fileBaseName, boolean logFindDetails) {
     List<File> exeFiles = findExeFilesInPath(fileBaseName, true, logFindDetails);
     return exeFiles.size() > 0 ? exeFiles.get(0) : null;
   }
@@ -70,13 +69,13 @@ public class PathEnvironmentVariableUtil {
    * @param fileBaseName file base name
    * @return file list
    */
-  @Nonnull
-  public static List<File> findAllExeFilesInPath(@Nonnull String fileBaseName) {
+  
+  public static List<File> findAllExeFilesInPath(String fileBaseName) {
     return findExeFilesInPath(fileBaseName, false, false);
   }
 
-  @Nonnull
-  private static List<File> findExeFilesInPath(@Nonnull String fileBaseName,
+  
+  private static List<File> findExeFilesInPath(String fileBaseName,
                                                boolean stopAfterFirstMatch,
                                                boolean logFindDetails) {
     String systemPath = EnvironmentUtil.getValue("PATH");

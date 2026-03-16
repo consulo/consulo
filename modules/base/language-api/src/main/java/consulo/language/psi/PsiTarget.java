@@ -17,12 +17,11 @@ package consulo.language.psi;
 
 import consulo.language.pom.PomTarget;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
  */
 public interface PsiTarget extends PomTarget {
-  @Nonnull
+  
   PsiElement getNavigationElement();
 }

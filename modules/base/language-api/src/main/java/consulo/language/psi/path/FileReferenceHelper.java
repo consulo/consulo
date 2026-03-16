@@ -25,8 +25,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,20 +37,20 @@ import java.util.Collections;
 public abstract class FileReferenceHelper {
     public static final ExtensionPointName<FileReferenceHelper> EP_NAME = ExtensionPointName.create(FileReferenceHelper.class);
 
-    @Nonnull
-    public String trimUrl(@Nonnull String url) {
+    
+    public String trimUrl(String url) {
         return url;
     }
 
     // FIXME use consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider
-    //@Nonnull
+    //
     //public List<? extends LocalQuickFix> registerFixes(FileReference reference) {
     //  return Collections.emptyList();
     //}
 
     @Nullable
     @RequiredReadAction
-    public PsiFileSystemItem getPsiFileSystemItem(Project project, @Nonnull VirtualFile file) {
+    public PsiFileSystemItem getPsiFileSystemItem(Project project, VirtualFile file) {
         PsiManager psiManager = PsiManager.getInstance(project);
         return getPsiFileSystemItem(psiManager, file);
     }
@@ -62,19 +61,19 @@ public abstract class FileReferenceHelper {
     }
 
     @Nullable
-    public PsiFileSystemItem findRoot(Project project, @Nonnull VirtualFile file) {
+    public PsiFileSystemItem findRoot(Project project, VirtualFile file) {
         return null;
     }
 
-    @Nonnull
-    public Collection<PsiFileSystemItem> getRoots(@Nonnull Module module) {
+    
+    public Collection<PsiFileSystemItem> getRoots(Module module) {
         return Collections.emptyList();
     }
 
-    @Nonnull
-    public abstract Collection<PsiFileSystemItem> getContexts(Project project, @Nonnull VirtualFile file);
+    
+    public abstract Collection<PsiFileSystemItem> getContexts(Project project, VirtualFile file);
 
-    public abstract boolean isMine(Project project, @Nonnull VirtualFile file);
+    public abstract boolean isMine(Project project, VirtualFile file);
 
     public boolean isFallback() {
         return false;

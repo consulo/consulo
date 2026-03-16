@@ -7,21 +7,20 @@ import consulo.document.internal.DocumentEx;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public final class TextViewer extends EditorTextField {
   private final boolean myEmbeddedIntoDialogWrapper;
   private final boolean myUseSoftWraps;
 
-  public TextViewer(@Nonnull Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
+  public TextViewer(Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
     this(createDocument(""), project, embeddedIntoDialogWrapper, useSoftWraps);
   }
 
-  public TextViewer(@Nonnull String initialText, @Nonnull Project project) {
+  public TextViewer(String initialText, Project project) {
     this(createDocument(initialText), project, false, false);
   }
 
-  public TextViewer(@Nonnull Document document, @Nonnull Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
+  public TextViewer(Document document, Project project, boolean embeddedIntoDialogWrapper, boolean useSoftWraps) {
     super(document, project, PlainTextFileType.INSTANCE, true, false);
 
     myEmbeddedIntoDialogWrapper = embeddedIntoDialogWrapper;
@@ -29,7 +28,7 @@ public final class TextViewer extends EditorTextField {
     setFontInheritedFromLAF(false);
   }
 
-  private static Document createDocument(@Nonnull String initialText) {
+  private static Document createDocument(String initialText) {
     Document document = EditorFactory.getInstance().createDocument(initialText);
     if (document instanceof DocumentEx) {
       ((DocumentEx)document).setAcceptSlashR(true);

@@ -15,14 +15,13 @@
  */
 package consulo.execution.ui.console;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 01-Aug-22
  */
 public interface ConsoleFoldingRegistrator {
-  void addFolding(@Nonnull String line);
+  void addFolding(String line);
 
-  void removeFolding(@Nonnull String line);
+  void removeFolding(String line);
 }

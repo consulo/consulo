@@ -17,8 +17,7 @@ package consulo.colorScheme;
 
 import consulo.component.util.pointer.Named;
 import consulo.ui.color.ColorValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.awt.*;
@@ -31,10 +30,10 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
     void setAttributes(TextAttributesKey key, TextAttributes attributes);
 
-    @Nonnull
+    
     ColorValue getDefaultBackground();
 
-    @Nonnull
+    
     ColorValue getDefaultForeground();
 
     @Nullable
@@ -54,10 +53,10 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
      *
      * @return font preferences to use
      */
-    @Nonnull
+    
     FontPreferences getFontPreferences();
 
-    void setFontPreferences(@Nonnull FontPreferences preferences);
+    void setFontPreferences(FontPreferences preferences);
 
     String getEditorFontName();
 
@@ -74,7 +73,7 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
 
     FontSize getQuickDocFontSize();
 
-    void setQuickDocFontSize(@Nonnull FontSize fontSize);
+    void setQuickDocFontSize(FontSize fontSize);
 
     Font getFont(EditorFontType key);
 
@@ -90,10 +89,10 @@ public interface EditorColorsScheme extends Cloneable, TextAttributesScheme, Nam
      * @return console font preferences to use
      * @see #getFontPreferences()
      */
-    @Nonnull
+    
     FontPreferences getConsoleFontPreferences();
 
-    void setConsoleFontPreferences(@Nonnull FontPreferences preferences);
+    void setConsoleFontPreferences(FontPreferences preferences);
 
     String getConsoleFontName();
 

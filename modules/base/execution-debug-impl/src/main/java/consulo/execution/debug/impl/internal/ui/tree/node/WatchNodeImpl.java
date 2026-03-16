@@ -29,8 +29,7 @@ import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTree;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.localize.LocalizeValue;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -38,38 +37,38 @@ import jakarta.annotation.Nullable;
 public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
     private final XExpression myExpression;
 
-    public WatchNodeImpl(@Nonnull XDebuggerTree tree,
-                         @Nonnull WatchesRootNode parent,
-                         @Nonnull XExpression expression,
+    public WatchNodeImpl(XDebuggerTree tree,
+                         WatchesRootNode parent,
+                         XExpression expression,
                          @Nullable XStackFrame stackFrame) {
         super(tree, parent, expression.getExpression(), new XWatchValue(expression, tree, stackFrame));
         myExpression = expression;
     }
 
-    WatchNodeImpl(@Nonnull XDebuggerTree tree,
-                  @Nonnull WatchesRootNode parent,
-                  @Nonnull XExpression expression,
+    WatchNodeImpl(XDebuggerTree tree,
+                  WatchesRootNode parent,
+                  XExpression expression,
                   @Nullable XStackFrame stackFrame,
-                  @Nonnull String name) {
+                  String name) {
         this(tree, parent, expression, name, new XWatchValue(expression, tree, stackFrame));
     }
 
-    WatchNodeImpl(@Nonnull XDebuggerTree tree,
-                  @Nonnull WatchesRootNode parent,
-                  @Nonnull XExpression expression,
-                  @Nonnull String name,
-                  @Nonnull XValue value) {
+    WatchNodeImpl(XDebuggerTree tree,
+                  WatchesRootNode parent,
+                  XExpression expression,
+                  String name,
+                  XValue value) {
         super(tree, parent, name, value);
         myExpression = expression;
     }
 
     @Override
-    @Nonnull
+    
     public XExpression getExpression() {
         return myExpression;
     }
 
-    @Nonnull
+    
     @Override
     public XValue getValueContainer() {
         XValue container = super.getValueContainer();
@@ -105,14 +104,14 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        public void computeChildren(@Nonnull XCompositeNode node) {
+        public void computeChildren(XCompositeNode node) {
             if (myValue != null) {
                 myValue.computeChildren(node);
             }
         }
 
         @Override
-        public void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+        public void computePresentation(XValueNode node, XValuePlace place) {
             if (myStackFrame != null) {
                 if (myTree.isShowing() || ApplicationManager.getApplication().isUnitTestMode()) {
                     XDebuggerEvaluator evaluator = myStackFrame.getEvaluator();
@@ -127,12 +126,12 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         private class MyEvaluationCallback extends XEvaluationCallbackBase implements Obsolescent {
-            @Nonnull
+            
             private final XValueNode myNode;
-            @Nonnull
+            
             private final XValuePlace myPlace;
 
-            public MyEvaluationCallback(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+            public MyEvaluationCallback(XValueNode node, XValuePlace place) {
                 myNode = node;
                 myPlace = place;
             }
@@ -143,7 +142,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
             }
 
             @Override
-            public void evaluated(@Nonnull XValue result) {
+            public void evaluated(XValue result) {
                 myValue = result;
 
                 if (myNode instanceof WatchNodeImpl watchNode) {
@@ -154,20 +153,20 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
             }
 
             @Override
-            public void errorOccurred(@Nonnull LocalizeValue errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 myNode.setPresentation(XDebuggerUIConstants.ERROR_MESSAGE_ICON, new XErrorValuePresentation(errorMessage), false);
             }
         }
 
         private static final XValuePresentation EMPTY_PRESENTATION = new XValuePresentation() {
-            @Nonnull
+            
             @Override
             public String getSeparator() {
                 return "";
             }
 
             @Override
-            public void renderValue(@Nonnull XValueTextRenderer renderer) {
+            public void renderValue(XValueTextRenderer renderer) {
             }
         };
 
@@ -178,7 +177,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        @Nonnull
+        
         public AsyncResult<XExpression> calculateEvaluationExpression() {
             return AsyncResult.done(myExpression);
         }
@@ -196,15 +195,15 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        public void computeSourcePosition(@Nonnull XNavigatable navigatable) {
+        public void computeSourcePosition(XNavigatable navigatable) {
             if (myValue != null) {
                 myValue.computeSourcePosition(navigatable);
             }
         }
 
         @Override
-        @Nonnull
-        public consulo.util.lang.ThreeState computeInlineDebuggerData(@Nonnull XInlineDebuggerDataCallback callback) {
+        
+        public consulo.util.lang.ThreeState computeInlineDebuggerData(XInlineDebuggerDataCallback callback) {
             return consulo.util.lang.ThreeState.NO;
         }
 
@@ -219,7 +218,7 @@ public class WatchNodeImpl extends XValueNodeImpl implements WatchNode {
         }
 
         @Override
-        public void computeTypeSourcePosition(@Nonnull XNavigatable navigatable) {
+        public void computeTypeSourcePosition(XNavigatable navigatable) {
             if (myValue != null) {
                 myValue.computeTypeSourcePosition(navigatable);
             }

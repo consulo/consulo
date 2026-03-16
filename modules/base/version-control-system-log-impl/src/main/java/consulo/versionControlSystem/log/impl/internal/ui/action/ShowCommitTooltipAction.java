@@ -27,7 +27,6 @@ import consulo.versionControlSystem.log.VcsLogUi;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogGraphTable;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "Vcs.Log.ShowTooltip", shortcutFrom = @ActionRef(id = IdeActions.ACTION_QUICK_JAVADOC))
 public class ShowCommitTooltipAction extends DumbAwareAction {
@@ -36,7 +35,7 @@ public class ShowCommitTooltipAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(
             e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl vcsLogUi
                 && vcsLogUi.getTable().getSelectedRowCount() == 1
@@ -45,7 +44,7 @@ public class ShowCommitTooltipAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VcsLogGraphTable table = ((VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY)).getTable();
         int row = table.getSelectedRow();
         if (ScrollingUtil.isVisible(table, row)) {

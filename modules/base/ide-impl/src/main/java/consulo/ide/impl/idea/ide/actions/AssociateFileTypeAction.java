@@ -29,7 +29,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "AssociateWithFileType")
 public class AssociateFileTypeAction extends AnAction {
@@ -39,13 +38,13 @@ public class AssociateFileTypeAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         FileTypeChooser.associateFileType(file.getName());
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         VirtualFile file = e.getData(VirtualFile.KEY);
         Project project = e.getData(Project.KEY);

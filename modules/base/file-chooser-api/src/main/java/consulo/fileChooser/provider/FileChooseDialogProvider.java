@@ -21,8 +21,7 @@ import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -32,16 +31,16 @@ import java.awt.*;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FileChooseDialogProvider extends FileOperateDialogProvider {
-    @Nonnull
+    
     FileChooserDialog createFileChooser(
-        @Nonnull FileChooserDescriptor descriptor,
+        FileChooserDescriptor descriptor,
         @Nullable ComponentManager project,
         @Nullable Component parent
     );
 
-    @Nonnull
+    
     PathChooserDialog createPathChooser(
-        @Nonnull FileChooserDescriptor descriptor,
+        FileChooserDescriptor descriptor,
         @Nullable ComponentManager project,
         @Nullable Component parent
     );

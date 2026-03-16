@@ -22,8 +22,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -51,7 +50,7 @@ public class FileTypeExtensionPreviewAcceptor implements ExtensionPreviewAccepto
    * for correct specification - see hub impl
    */
   @Nullable
-  public FileNameMatcher createMatcher(@Nonnull String extensionValue) {
+  public FileNameMatcher createMatcher(String extensionValue) {
     if (extensionValue.length() < 2) {
       return null;
     }

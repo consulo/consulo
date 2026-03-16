@@ -22,8 +22,7 @@ import consulo.codeEditor.event.CaretListener;
 import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,12 +56,12 @@ public class ImaginaryCaretModel implements CaretModel {
     }
 
     @Override
-    public void moveToLogicalPosition(@Nonnull LogicalPosition pos) {
+    public void moveToLogicalPosition(LogicalPosition pos) {
         myCaret.moveToLogicalPosition(pos);
     }
 
     @Override
-    public void moveToVisualPosition(@Nonnull VisualPosition pos) {
+    public void moveToVisualPosition(VisualPosition pos) {
         myCaret.moveToVisualPosition(pos);
     }
 
@@ -81,13 +80,11 @@ public class ImaginaryCaretModel implements CaretModel {
         return true;
     }
 
-    @Nonnull
     @Override
     public LogicalPosition getLogicalPosition() {
         return myCaret.getLogicalPosition();
     }
 
-    @Nonnull
     @Override
     public VisualPosition getVisualPosition() {
         return myCaret.getVisualPosition();
@@ -123,13 +120,11 @@ public class ImaginaryCaretModel implements CaretModel {
         return 1;
     }
 
-    @Nonnull
     @Override
     public Caret getCurrentCaret() {
         return getPrimaryCaret();
     }
 
-    @Nonnull
     @Override
     public Caret getPrimaryCaret() {
         return myCaret;
@@ -140,7 +135,6 @@ public class ImaginaryCaretModel implements CaretModel {
         return 1;
     }
 
-    @Nonnull
     @Override
     public List<Caret> getAllCarets() {
         return Collections.singletonList(myCaret);
@@ -148,24 +142,24 @@ public class ImaginaryCaretModel implements CaretModel {
 
     @Nullable
     @Override
-    public Caret getCaretAt(@Nonnull VisualPosition pos) {
+    public Caret getCaretAt(VisualPosition pos) {
         throw notImplemented();
     }
 
     @Nullable
     @Override
-    public Caret addCaret(@Nonnull VisualPosition pos) {
+    public Caret addCaret(VisualPosition pos) {
         throw notImplemented();
     }
 
     @Nullable
     @Override
-    public Caret addCaret(@Nonnull VisualPosition pos, boolean makePrimary) {
+    public Caret addCaret(VisualPosition pos, boolean makePrimary) {
         throw notImplemented();
     }
 
     @Override
-    public boolean removeCaret(@Nonnull Caret caret) {
+    public boolean removeCaret(Caret caret) {
         throw notImplemented();
     }
 
@@ -174,12 +168,12 @@ public class ImaginaryCaretModel implements CaretModel {
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates) {
         setCaretsAndSelections(caretStates, true);
     }
 
     @Override
-    public void setCaretsAndSelections(@Nonnull List<? extends CaretState> caretStates, boolean updateSystemSelection) {
+    public void setCaretsAndSelections(List<? extends CaretState> caretStates, boolean updateSystemSelection) {
         if (caretStates.size() != 1) {
             LOG.error("Imaginary caret does not support multicaret. caretStates=" + caretStates);
         }
@@ -195,7 +189,6 @@ public class ImaginaryCaretModel implements CaretModel {
         }
     }
 
-    @Nonnull
     @Override
     public List<CaretState> getCaretsAndSelections() {
         return Collections.singletonList(
@@ -209,32 +202,32 @@ public class ImaginaryCaretModel implements CaretModel {
     }
 
     @Override
-    public void runForEachCaret(@Nonnull CaretAction action) {
+    public void runForEachCaret(CaretAction action) {
         action.perform(getCurrentCaret());
     }
 
     @Override
-    public void runForEachCaret(@Nonnull CaretAction action, boolean reverseOrder) {
+    public void runForEachCaret(CaretAction action, boolean reverseOrder) {
         action.perform(getCurrentCaret());
     }
 
     @Override
-    public void addCaretActionListener(@Nonnull CaretActionListener listener, @Nonnull Disposable disposable) {
+    public void addCaretActionListener(CaretActionListener listener, Disposable disposable) {
         throw notImplemented();
     }
 
     @Override
-    public void runBatchCaretOperation(@Nonnull Runnable runnable) {
+    public void runBatchCaretOperation(Runnable runnable) {
         throw notImplemented();
     }
 
     @Override
-    public void addCaretListener(@Nonnull CaretListener listener) {
+    public void addCaretListener(CaretListener listener) {
         LOG.info("Called ImaginaryCaretModel#addCaretListener which is stubbed and has no implementation");
     }
 
     @Override
-    public void removeCaretListener(@Nonnull CaretListener listener) {
+    public void removeCaretListener(CaretListener listener) {
         LOG.info("Called ImaginaryCaretModel#removeCaretListener which is stubbed and has no implementation");
     }
 }

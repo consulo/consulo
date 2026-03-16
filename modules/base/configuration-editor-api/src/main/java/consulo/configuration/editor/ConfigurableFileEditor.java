@@ -35,8 +35,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +64,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         super(project, virtualFile);
     }
 
-    @Nonnull
+    
     protected abstract U createConfigurable();
 
     @RequiredUIAccess
@@ -159,7 +158,7 @@ public abstract class ConfigurableFileEditor<U extends UnnamedConfigurable> exte
         return myModified;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public JComponent getComponent() {

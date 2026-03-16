@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,8 +30,8 @@ import jakarta.annotation.Nonnull;
 public interface ServiceViewToolWindowManager {
 
   @RequiredUIAccess
-  void initToolWindow(@Nonnull ToolWindow toolWindow);
+  void initToolWindow(ToolWindow toolWindow);
 
   @RequiredUIAccess
-  void createToolWindowContent(@Nonnull ToolWindow toolWindow);
+  void createToolWindowContent(ToolWindow toolWindow);
 }

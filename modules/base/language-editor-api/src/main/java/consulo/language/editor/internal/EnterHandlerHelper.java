@@ -19,8 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ public class EnterHandlerHelper {
     public final static Key<Language> CONTEXT_LANGUAGE = Key.create("EnterHandler.Language");
 
     @Nullable
-    public static Language getContextLanguage(@Nonnull DataContext dataContext) {
+    public static Language getContextLanguage(DataContext dataContext) {
         if (dataContext instanceof UserDataHolder userDataHolder) {
             return CONTEXT_LANGUAGE.get(userDataHolder);
         }

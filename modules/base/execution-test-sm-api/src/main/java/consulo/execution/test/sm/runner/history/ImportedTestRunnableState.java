@@ -29,8 +29,7 @@ import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import consulo.execution.test.ui.BaseTestsOutputConsoleView;
 import consulo.process.ExecutionException;
 import consulo.process.NopProcessHandler;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -47,7 +46,7 @@ public class ImportedTestRunnableState implements RunProfileState {
 
     @Nullable
     @Override
-    public ExecutionResult execute(Executor executor, @Nonnull ProgramRunner runner) throws ExecutionException {
+    public ExecutionResult execute(Executor executor, ProgramRunner runner) throws ExecutionException {
         MyEmptyProcessHandler handler = new MyEmptyProcessHandler();
         SMTRunnerConsoleProperties properties = myRunProfile.getProperties();
         RunProfile configuration;

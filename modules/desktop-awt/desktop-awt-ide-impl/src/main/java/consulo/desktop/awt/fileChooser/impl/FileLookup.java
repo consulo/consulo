@@ -17,17 +17,16 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public interface FileLookup {
 
   interface Finder {
     @Nullable
-    LookupFile find(@Nonnull String path);
+    LookupFile find(String path);
 
-    String normalize(@Nonnull String path);
+    String normalize(String path);
 
     String getSeparator();
   }

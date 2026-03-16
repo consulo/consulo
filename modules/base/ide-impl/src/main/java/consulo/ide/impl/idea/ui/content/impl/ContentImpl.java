@@ -25,7 +25,7 @@ import consulo.ui.ex.content.AlertIcon;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 

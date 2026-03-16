@@ -12,8 +12,7 @@ import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.internal.ActionToolbarEx;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.Sets;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +32,7 @@ final class ServiceViewTreeUi implements ServiceViewUi {
     private JComponent myServiceActionToolbarWrapper;
     private ActionToolbar myMasterActionToolbar;
 
-    ServiceViewTreeUi(@Nonnull ServiceViewState state) {
+    ServiceViewTreeUi(ServiceViewState state) {
         myMainPanel = new SimpleToolWindowPanel(false);
 
         mySplitter = new OnePixelSplitter(false, state.contentProportion);
@@ -68,19 +67,18 @@ final class ServiceViewTreeUi implements ServiceViewUi {
                     .iterator());
     }
 
-    @Nonnull
     @Override
     public JComponent getComponent() {
         return myMainPanel;
     }
 
     @Override
-    public void saveState(@Nonnull ServiceViewState state) {
+    public void saveState(ServiceViewState state) {
         state.contentProportion = mySplitter.getProportion();
     }
 
     @Override
-    public void setServiceToolbar(@Nonnull ServiceViewActionProvider actionProvider) {
+    public void setServiceToolbar(ServiceViewActionProvider actionProvider) {
         boolean inDetails = ServiceViewUIUtils.isNewServicesUIEnabled();
         myServiceActionToolbar = actionProvider.createServiceToolbar(myMainPanel, inDetails);
         if (inDetails) {
@@ -94,7 +92,7 @@ final class ServiceViewTreeUi implements ServiceViewUi {
     }
 
     @Override
-    public void setMasterComponent(@Nonnull JComponent component, @Nonnull ServiceViewActionProvider actionProvider) {
+    public void setMasterComponent(JComponent component, ServiceViewActionProvider actionProvider) {
         myMasterPanel.add(ScrollPaneFactory.createScrollPane(component, SideBorder.TOP), BorderLayout.CENTER);
 
         myMasterActionToolbar = actionProvider.createMasterComponentToolbar(component);

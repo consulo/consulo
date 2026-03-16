@@ -32,7 +32,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collections;
@@ -76,7 +75,7 @@ public class UnshelveWithDialogAction extends AnAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     Project project = e.getData(Project.KEY);
     ShelvedChangeListImpl[] changes = e.getData(ShelvedChangesViewManagerImpl.SHELVED_CHANGELIST_KEY);
     e.getPresentation().setEnabled(project != null && changes != null && changes.length == 1);

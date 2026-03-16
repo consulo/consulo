@@ -2,7 +2,6 @@ package consulo.application.util.matcher;
 
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -19,13 +18,13 @@ public class PlainPrefixMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull String name) {
+  public boolean prefixMatches(String name) {
     return StringUtil.containsIgnoreCase(name, getPrefix());
   }
 
-  @Nonnull
+  
   @Override
-  public PrefixMatcher cloneWithPrefix(@Nonnull String prefix) {
+  public PrefixMatcher cloneWithPrefix(String prefix) {
     return new PlainPrefixMatcher(prefix);
   }
 }

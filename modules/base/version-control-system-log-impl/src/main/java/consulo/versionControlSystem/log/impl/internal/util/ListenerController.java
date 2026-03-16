@@ -16,12 +16,11 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 public interface ListenerController<Listener> {
-  void addListener(@Nonnull Listener listener);
+  void addListener(Listener listener);
 
-  void removeListener(@Nonnull Listener listener);
+  void removeListener(Listener listener);
 
   void removeAllListeners();
 }

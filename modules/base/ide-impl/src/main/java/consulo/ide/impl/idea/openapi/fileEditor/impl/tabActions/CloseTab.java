@@ -29,7 +29,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -80,7 +79,7 @@ public class CloseTab extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (isPinned() && ActionPlaces.EDITOR_TAB.equals(e.getPlace())) {
             myEditorWindow.setFilePinned(myFile, false);
             return;

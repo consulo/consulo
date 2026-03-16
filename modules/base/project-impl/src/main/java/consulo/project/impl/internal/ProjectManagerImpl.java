@@ -44,8 +44,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -72,19 +71,14 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
 
     private final List<Predicate<Project>> myCloseProjectVetos = Lists.newLockFreeCopyOnWriteList();
 
-    @Nonnull
     private final Application myApplication;
-    @Nonnull
     private final ComponentBinding myComponentBinding;
-    @Nonnull
     private final Provider<ProjectOpenService> myProjectOpenService;
-    @Nonnull
     private final ProgressIndicatorProvider myProgressManager;
 
     private final EventDispatcher<ProjectManagerListener> myDeprecatedListenerDispatcher =
         EventDispatcher.create(ProjectManagerListener.class);
 
-    @Nonnull
     private static List<ProjectManagerListener> getListeners(Project project) {
         List<ProjectManagerListener> array = project.getUserData(LISTENERS_IN_PROJECT_KEY);
         if (array == null) {
@@ -96,9 +90,9 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     private ExcludeRootsCache myExcludeRootsCache;
 
     @Inject
-    public ProjectManagerImpl(@Nonnull Application application,
-                              @Nonnull ComponentBinding componentBinding,
-                              @Nonnull Provider<ProjectOpenService> projectOpenService) {
+    public ProjectManagerImpl(Application application,
+                              ComponentBinding componentBinding,
+                              Provider<ProjectOpenService> projectOpenService) {
         myApplication = application;
         myComponentBinding = componentBinding;
         myProjectOpenService = projectOpenService;
@@ -110,7 +104,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         myExcludeRootsCache = new ExcludeRootsCache(connection);
         connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectOpened(Project project, UIAccess uiAccess) {
                 myDeprecatedListenerDispatcher.getMulticaster().projectOpened(project, uiAccess);
 
                 for (ProjectManagerListener listener : getListeners(project)) {
@@ -119,7 +113,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             }
 
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 myDeprecatedListenerDispatcher.getMulticaster().projectClosed(project, uiAccess);
 
                 for (ProjectManagerListener listener : getListeners(project)) {
@@ -128,7 +122,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
             }
 
             @Override
-            public void projectClosing(@Nonnull Project project) {
+            public void projectClosing(Project project) {
                 myDeprecatedListenerDispatcher.getMulticaster().projectClosing(project);
 
                 for (ProjectManagerListener listener : getListeners(project)) {
@@ -138,9 +132,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         });
     }
 
-    @Nonnull
     @Override
-    public CompletableFuture<Project> openProjectAsync(@Nonnull Path filePath, @Nonnull UIAccess uiAccess, @Nonnull ProjectOpenContext context) {
+    public CompletableFuture<Project> openProjectAsync(Path filePath, UIAccess uiAccess, ProjectOpenContext context) {
         return myProjectOpenService.get().openProjectAsync(filePath, uiAccess, context);
     }
 
@@ -153,7 +146,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     @Nullable
     @Override
     @RequiredUIAccess
-    public Project newProject(String projectName, @Nonnull String dirPath, boolean useDefaultProjectSettings) {
+    public Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings) {
         dirPath = toCanonicalName(dirPath);
 
         ProjectImpl project = createProject(projectName, dirPath, false);
@@ -168,7 +161,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    @Nonnull
     private static String message(Throwable e) {
         String message = e.getMessage();
         if (message != null) {
@@ -189,7 +181,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         return message;
     }
 
-    private void initProject(@Nonnull ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
+    private void initProject(ProjectImpl project, @Nullable ProjectImpl template) throws IOException {
         ProgressIndicator indicator = myProgressManager.getProgressIndicator();
         if (indicator != null && !project.isDefault()) {
             indicator.setTextValue(ProjectLocalize.loadingComponentsFor(project.getName()));
@@ -217,17 +209,15 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    @Nonnull
     private ProjectImpl createProject(
         @Nullable String projectName,
-        @Nonnull String dirPath,
+        String dirPath,
         boolean noUICall
     ) {
         return new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), projectName, noUICall, myComponentBinding);
     }
 
-    @Nonnull
-    private static String toCanonicalName(@Nonnull String filePath) {
+    private static String toCanonicalName(String filePath) {
         try {
             return FileUtil.resolveShortWindowsName(filePath);
         }
@@ -239,7 +229,6 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    @Nonnull
     public Project[] getOpenProjects() {
         synchronized (lock) {
             return myOpenProjects.clone();
@@ -261,7 +250,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         }
     }
 
-    public boolean addToOpened(@Nonnull Project project) {
+    public boolean addToOpened(Project project) {
         assert !project.isDisposed() : "Must not open already disposed project";
         synchronized (lock) {
             if (isProjectOpened(project)) {
@@ -273,8 +262,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         return true;
     }
 
-    @Nonnull
-    Collection<Project> removeFromOpened(@Nonnull Project project) {
+    Collection<Project> removeFromOpened(Project project) {
         synchronized (lock) {
             myOpenProjects = ArrayUtil.remove(myOpenProjects, project);
             SingleProjectHolder.theProject = myOpenProjects.length == 1 ? myOpenProjects[0] : null;
@@ -283,11 +271,11 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    public void reloadProject(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void reloadProject(Project project, UIAccess uiAccess) {
         doReloadProjectAsync(project, uiAccess);
     }
 
-    public void doReloadProjectAsync(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void doReloadProjectAsync(Project project, UIAccess uiAccess) {
         ProjectReloadState.getInstance(project).onBeforeAutomaticProjectReload();
 
         if (project.isDisposed()) {
@@ -306,22 +294,22 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    public void addProjectManagerListener(@Nonnull ProjectManagerListener listener) {
+    public void addProjectManagerListener(ProjectManagerListener listener) {
         myDeprecatedListenerDispatcher.addListener(listener);
     }
 
     @Override
-    public void addProjectManagerListener(@Nonnull ProjectManagerListener listener, @Nonnull Disposable parentDisposable) {
+    public void addProjectManagerListener(ProjectManagerListener listener, Disposable parentDisposable) {
         myDeprecatedListenerDispatcher.addListener(listener, parentDisposable);
     }
 
     @Override
-    public void removeProjectManagerListener(@Nonnull ProjectManagerListener listener) {
+    public void removeProjectManagerListener(ProjectManagerListener listener) {
         myDeprecatedListenerDispatcher.removeListener(listener);
     }
 
     @Override
-    public void addProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener) {
+    public void addProjectManagerListener(Project project, ProjectManagerListener listener) {
         List<ProjectManagerListener> listeners = project.getUserData(LISTENERS_IN_PROJECT_KEY);
         if (listeners == null) {
             listeners = project.putUserDataIfAbsent(LISTENERS_IN_PROJECT_KEY, Lists.newLockFreeCopyOnWriteList());
@@ -330,7 +318,7 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    public void removeProjectManagerListener(@Nonnull Project project, @Nonnull ProjectManagerListener listener) {
+    public void removeProjectManagerListener(Project project, ProjectManagerListener listener) {
         List<ProjectManagerListener> listeners = project.getUserData(LISTENERS_IN_PROJECT_KEY);
         LOG.assertTrue(listeners != null);
         boolean removed = listeners.remove(listener);
@@ -357,15 +345,13 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
         return true;
     }
 
-    @Nonnull
     @Override
-    public Disposable registerCloseProjectVeto(@Nonnull Predicate<Project> projectVeto) {
+    public Disposable registerCloseProjectVeto(Predicate<Project> projectVeto) {
         myCloseProjectVetos.add(projectVeto);
         return () -> myCloseProjectVetos.remove(projectVeto);
     }
 
 
-    @Nonnull
     @Override
     public String[] getAllExcludedUrls() {
         return myExcludeRootsCache.getExcludedUrls();

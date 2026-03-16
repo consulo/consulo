@@ -16,18 +16,16 @@
 package consulo.ide.impl.idea.openapi.editor.actions;
 
 import consulo.annotation.component.ActionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.localize.IdeLocalize;
+import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.virtualFileSystem.NewVirtualFile;
-import consulo.logging.Logger;
-
-import jakarta.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +47,7 @@ public class RemoveBomAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         VirtualFile[] files = e.getRequiredData(VirtualFile.KEY_OF_ARRAY);
         List<VirtualFile> filesToProcess = getFilesWithBom(files, true);
         for (VirtualFile virtualFile : filesToProcess) {
@@ -72,7 +70,7 @@ public class RemoveBomAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (files == null) {
             e.getPresentation().setEnabled(false);
@@ -102,8 +100,8 @@ public class RemoveBomAction extends AnAction implements DumbAware {
      * @param all   flag the defines if all files with {@link VirtualFile#getBOM() BOM} should be collected or just any of them
      * @return collection of detected files with defined {@link VirtualFile#getBOM() BOM} if any; empty collection otherwise
      */
-    @Nonnull
-    private static List<VirtualFile> getFilesWithBom(@Nonnull VirtualFile[] roots, boolean all) {
+    
+    private static List<VirtualFile> getFilesWithBom(VirtualFile[] roots, boolean all) {
         List<VirtualFile> result = new ArrayList<>();
         for (VirtualFile root : roots) {
             if (!all && !result.isEmpty()) {
@@ -114,10 +112,10 @@ public class RemoveBomAction extends AnAction implements DumbAware {
         return result;
     }
 
-    private static void getFilesWithBom(@Nonnull VirtualFile root, @Nonnull final List<VirtualFile> result, final boolean all) {
-        VfsUtilCore.visitChildrenRecursively(root, new VirtualFileVisitor() {
+    private static void getFilesWithBom(VirtualFile root, final List<VirtualFile> result, final boolean all) {
+        VirtualFileUtil.visitChildrenRecursively(root, new VirtualFileVisitor() {
             @Override
-            public boolean visitFile(@Nonnull VirtualFile file) {
+            public boolean visitFile(VirtualFile file) {
                 if (file.isDirectory()) {
                     if (!all && !result.isEmpty()) {
                         return false;

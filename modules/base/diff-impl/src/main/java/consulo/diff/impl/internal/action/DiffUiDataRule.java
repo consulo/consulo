@@ -21,12 +21,11 @@ import consulo.dataContext.DataSnapshot;
 import consulo.dataContext.UiDataRule;
 import consulo.diff.DiffDataKeys;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 public class DiffUiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         Navigatable navigatable = snapshot.get(DiffDataKeys.NAVIGATABLE);
         if (navigatable != null) {
             sink.set(DiffDataKeys.NAVIGATABLE_ARRAY, new Navigatable[]{navigatable});

@@ -17,8 +17,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +69,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         Project aProject,
         ExecutionNodeImpl parentNode,
         boolean isAutoExpandNode,
-        @Nonnull Supplier<Boolean> isCorrectThread
+        Supplier<Boolean> isCorrectThread
     ) {
         super(parentNode);
         myName = "";
@@ -84,7 +83,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     }
 
     @Override
-    protected void update(@Nonnull PresentationData presentation) {
+    protected void update(PresentationData presentation) {
         assert myIsCorrectThread.get();
         setIcon(getCurrentIcon());
         presentation.setPresentableText(myName);
@@ -107,7 +106,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     }
 
     //@ApiStatus.Internal
-    void applyFrom(@Nonnull BuildEventPresentationData buildEventPresentationData) {
+    void applyFrom(BuildEventPresentationData buildEventPresentationData) {
         myAlwaysVisible = true;
         setIconProvider(() -> buildEventPresentationData.getNodeIcon());
     }
@@ -138,7 +137,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         myHint = hint;
     }
 
-    public void add(@Nonnull ExecutionNodeImpl node) {
+    public void add(ExecutionNodeImpl node) {
         assert myIsCorrectThread.get();
         myChildrenList.add(node);
         node.setFilter(myFilter);
@@ -226,7 +225,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         return result;
     }
 
-    @Nonnull
+   
     public List<ExecutionNodeImpl> getChildList() {
         assert myIsCorrectThread.get();
         List<ExecutionNodeImpl> visibleList = myVisibleChildrenList;
@@ -321,7 +320,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
     }
 
     @Override
-    @Nonnull
+   
     public List<Navigatable> getNavigatables() {
         if (myNavigatable != null) {
             return Collections.singletonList(myNavigatable);
@@ -340,15 +339,14 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
         return Collections.emptyList();
     }
 
-    public void setIconProvider(@Nonnull Supplier<? extends Image> iconProvider) {
+    public void setIconProvider(Supplier<? extends Image> iconProvider) {
         myPreferredIconValue = NullableLazyValue.createValue(iconProvider::get);
     }
 
     /**
      * @return the top most node whose parent structure has changed. Returns null if only node itself needs to be updated.
      */
-    @Nullable
-    public ExecutionNodeImpl reportChildMessageKind(MessageEvent.Kind kind) {
+    public ExecutionNodeImpl reportChildMessageKind(MessageEvent.@Nullable Kind kind) {
         assert myIsCorrectThread.get();
         if (kind == MessageEvent.Kind.ERROR) {
             myErrors.incrementAndGet();
@@ -364,7 +362,7 @@ public class ExecutionNodeImpl extends ExecutionNode<ExecutionNodeImpl> {
 
     @Nullable
         //@ApiStatus.Experimental
-    ExecutionNodeImpl findFirstChild(@Nonnull Predicate<? super ExecutionNodeImpl> filter) {
+    ExecutionNodeImpl findFirstChild(Predicate<? super ExecutionNodeImpl> filter) {
         assert myIsCorrectThread.get();
         //noinspection SSBasedInspection
         return myChildrenList.stream().filter(filter).findFirst().orElse(null);

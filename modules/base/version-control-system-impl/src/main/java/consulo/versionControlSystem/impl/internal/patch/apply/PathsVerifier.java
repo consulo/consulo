@@ -39,8 +39,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
   // out
   private final List<Pair<VirtualFile, ApplyTextFilePatch>> myTextPatches;
   private final List<Pair<VirtualFile, ApplyFilePatchBase<BinaryType>>> myBinaryPatches;
-  @Nonnull
+  
   private final List<VirtualFile> myWritableFiles;
   private final BaseMapper myBaseMapper;
   private ProjectLevelVcsManager myVcsManager;
@@ -195,7 +194,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return myDeletedPaths;
   }
 
-  @Nonnull
+  
   public Collection<FilePatch> filterBadFileTypePatches() {
     List<Pair<VirtualFile, ApplyTextFilePatch>> failedTextPatches =
       ContainerUtil.findAll(myTextPatches, textPatch -> {
@@ -209,7 +208,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     );
   }
 
-  private boolean isFileTypeOk(@Nonnull VirtualFile file) {
+  private boolean isFileTypeOk(VirtualFile file) {
     FileType fileType = file.getFileType();
     if (fileType == UnknownFileType.INSTANCE) {
       fileType = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(file.getName());
@@ -539,7 +538,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return myBinaryPatches;
   }
 
-  @Nonnull
+  
   public List<VirtualFile> getWritableFiles() {
     return myWritableFiles;
   }
@@ -558,7 +557,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     private final VirtualFile myCurrent;
     private final String myNewName;
 
-    private MovedFileData(@Nonnull VirtualFile newParent, @Nonnull VirtualFile current, @Nonnull String newName) {
+    private MovedFileData(VirtualFile newParent, VirtualFile current, String newName) {
       myNewParent = newParent;
       myCurrent = current;
       myNewName = newName;
@@ -598,7 +597,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return myCurrent;
     }
 
-    private void performRenameWithConflicts(@Nonnull File oldParent) throws IOException {
+    private void performRenameWithConflicts(File oldParent) throws IOException {
       File tmpFileWithUniqueName = FileUtil.createTempFile(oldParent, "tempFileToMove", null, false);
       File newParentFile = VirtualFileUtil.virtualToIoFile(myNewParent);
       File destFile = new File(newParentFile, tmpFileWithUniqueName.getName());

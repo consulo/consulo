@@ -27,8 +27,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -45,12 +44,12 @@ import java.util.Map;
 public class EarlyAccessProgramManager implements PersistentStateComponent<Element> {
     private final Application myApplication;
 
-    @Nonnull
+    
     public static EarlyAccessProgramManager getInstance() {
         return Application.get().getInstance(EarlyAccessProgramManager.class);
     }
 
-    public static boolean is(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
+    public static boolean is(Class<? extends EarlyAccessProgramDescriptor> key) {
         return getInstance().getState(key);
     }
 
@@ -63,7 +62,7 @@ public class EarlyAccessProgramManager implements PersistentStateComponent<Eleme
         myApplication = application;
     }
 
-    public boolean getState(@Nonnull Class<? extends EarlyAccessProgramDescriptor> key) {
+    public boolean getState(Class<? extends EarlyAccessProgramDescriptor> key) {
         Boolean value = myStates.get(key);
         if (value == null) {
             EarlyAccessProgramDescriptor extension = myApplication.getExtensionPoint(EarlyAccessProgramDescriptor.class).findExtension(key);

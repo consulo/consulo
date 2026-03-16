@@ -19,8 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.util.ActionUtil;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -48,15 +47,15 @@ public final class EmptyAction extends AnAction {
         super(text, description, icon);
     }
 
-    public EmptyAction(@Nonnull LocalizeValue text) {
+    public EmptyAction(LocalizeValue text) {
         super(text);
     }
 
-    public EmptyAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    public EmptyAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    public EmptyAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    public EmptyAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -68,19 +67,19 @@ public final class EmptyAction extends AnAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(myEnabled);
     }
 
-    public static void setupAction(@Nonnull AnAction action, @Nonnull String id, @Nullable JComponent component) {
+    public static void setupAction(AnAction action, String id, @Nullable JComponent component) {
         ActionUtil.mergeFrom(action, id).registerCustomShortcutSet(component, null);
     }
 
-    public static void registerActionShortcuts(@Nonnull JComponent component, @Nonnull JComponent fromComponent) {
+    public static void registerActionShortcuts(JComponent component, JComponent fromComponent) {
         ActionUtil.copyRegisteredShortcuts(component, fromComponent);
     }
 
@@ -90,8 +89,8 @@ public final class EmptyAction extends AnAction {
      * ActionManager.getInstance().getAction(id).registerCustomShortcutSet(shortcutSet, component) shouldn't be used directly,
      * because it will erase shortcuts, assigned to this action in keymap.
      */
-    @Nonnull
-    public static AnAction registerWithShortcutSet(@Nonnull String id, @Nonnull ShortcutSet shortcutSet, @Nonnull JComponent component) {
+    
+    public static AnAction registerWithShortcutSet(String id, ShortcutSet shortcutSet, JComponent component) {
         AnAction newAction = wrap(ActionManager.getInstance().getAction(id));
         newAction.registerCustomShortcutSet(shortcutSet, component);
         return newAction;
@@ -109,23 +108,23 @@ public final class EmptyAction extends AnAction {
     }
 
     public static class MyDelegatingAction extends AnAction {
-        @Nonnull
+        
         private final AnAction myDelegate;
 
-        public MyDelegatingAction(@Nonnull AnAction action) {
+        public MyDelegatingAction(AnAction action) {
             myDelegate = action;
             copyFrom(action);
             setEnabledInModalContext(action.isEnabledInModalContext());
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             myDelegate.update(e);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myDelegate.actionPerformed(e);
         }
 
@@ -141,16 +140,16 @@ public final class EmptyAction extends AnAction {
     }
 
     public static class MyDelegatingActionGroup extends ActionGroup {
-        @Nonnull
+        
         private final ActionGroup myDelegate;
 
-        public MyDelegatingActionGroup(@Nonnull ActionGroup action) {
+        public MyDelegatingActionGroup(ActionGroup action) {
             myDelegate = action;
             copyFrom(action);
             setEnabledInModalContext(action.isEnabledInModalContext());
         }
 
-        @Nonnull
+        
         public ActionGroup getDelegate() {
             return myDelegate;
         }
@@ -160,20 +159,20 @@ public final class EmptyAction extends AnAction {
             return myDelegate.isPopup();
         }
 
-        @Nonnull
+        
         @Override
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             return myDelegate.getChildren(e);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             myDelegate.update(e);
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myDelegate.actionPerformed(e);
         }
 
@@ -199,7 +198,7 @@ public final class EmptyAction extends AnAction {
     }
 
     public static class DelegatingCompactActionGroup extends MyDelegatingActionGroup implements CompactActionGroup {
-        public DelegatingCompactActionGroup(@Nonnull ActionGroup action) {
+        public DelegatingCompactActionGroup(ActionGroup action) {
             super(action);
         }
     }

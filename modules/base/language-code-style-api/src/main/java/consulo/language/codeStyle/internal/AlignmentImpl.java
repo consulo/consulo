@@ -18,8 +18,7 @@ package consulo.language.codeStyle.internal;
 
 import consulo.language.codeStyle.Alignment;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public class AlignmentImpl extends Alignment {
@@ -34,7 +33,7 @@ public class AlignmentImpl extends Alignment {
     this(false, Anchor.LEFT);
   }
 
-  public AlignmentImpl(boolean allowBackwardShift, @Nonnull Anchor anchor) {
+  public AlignmentImpl(boolean allowBackwardShift, Anchor anchor) {
     myAllowBackwardShift = allowBackwardShift;
     myAnchor = anchor;
     myOffsetRespBlocksCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myOffsetRespBlocks);
@@ -44,7 +43,7 @@ public class AlignmentImpl extends Alignment {
     return myAllowBackwardShift;
   }
 
-  @Nonnull
+  
   public Anchor getAnchor() {
     return myAnchor;
   }
@@ -137,8 +136,8 @@ public class AlignmentImpl extends Alignment {
     return new HashSet<>(myOffsetRespBlocks);
   }
 
-  @Nonnull
-  private static AbstractBlockWrapper extendBlockFromStart(@Nonnull AbstractBlockWrapper block) {
+  
+  private static AbstractBlockWrapper extendBlockFromStart(AbstractBlockWrapper block) {
     while (true) {
       AbstractBlockWrapper parent = block.getParent();
       if (parent != null && parent.getStartOffset() == block.getStartOffset()) {
@@ -150,8 +149,8 @@ public class AlignmentImpl extends Alignment {
     }
   }
 
-  @Nonnull
-  private static AbstractBlockWrapper extendBlockFromEnd(@Nonnull AbstractBlockWrapper block) {
+  
+  private static AbstractBlockWrapper extendBlockFromEnd(AbstractBlockWrapper block) {
     while (true) {
       AbstractBlockWrapper parent = block.getParent();
       if (parent != null && parent.getEndOffset() == block.getEndOffset()) {

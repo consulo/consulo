@@ -5,7 +5,6 @@ import consulo.util.collection.ContainerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,11 +21,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SchedulingWrapper implements ScheduledExecutorService {
   private static final Logger LOG = LoggerFactory.getLogger(SchedulingWrapper.class);
   private final AtomicBoolean shutdown = new AtomicBoolean();
-  @Nonnull
+  
   protected final ExecutorService backendExecutorService;
   protected final AppDelayQueue delayQueue;
 
-  public SchedulingWrapper(@Nonnull ExecutorService backendExecutorService, @Nonnull AppDelayQueue delayQueue) {
+  public SchedulingWrapper(ExecutorService backendExecutorService, AppDelayQueue delayQueue) {
     this.delayQueue = delayQueue;
     if (backendExecutorService instanceof ScheduledExecutorService) {
       throw new IllegalArgumentException("backendExecutorService: " + backendExecutorService + " is already ScheduledExecutorService");
@@ -34,7 +33,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     this.backendExecutorService = backendExecutorService;
   }
 
-  @Nonnull
+  
   @Override
   public List<Runnable> shutdownNow() {
     return doShutdownNow();
@@ -51,13 +50,13 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     }
   }
 
-  @Nonnull
+  
   protected List<Runnable> doShutdownNow() {
     doShutdown(); // shutdown me first to avoid further delayQueue offers
     return cancelAndRemoveTasksFromQueue();
   }
 
-  @Nonnull
+  
   protected List<Runnable> cancelAndRemoveTasksFromQueue() {
     List<MyScheduledFutureTask> result = ContainerUtil.filter(delayQueue, task -> {
       if (task.getBackendExecutorService() == backendExecutorService) {
@@ -85,7 +84,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
   }
 
   @Override
-  public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
     if (!isShutdown()) throw new IllegalStateException("must await termination after shutdown() or shutdownNow() only");
     List<MyScheduledFutureTask> tasks = new ArrayList<MyScheduledFutureTask>(delayQueue);
     for (MyScheduledFutureTask task : tasks) {
@@ -127,7 +126,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     /**
      * Creates a one-shot action with given nanoTime-based trigger time.
      */
-    public MyScheduledFutureTask(@Nonnull Runnable r, V result, long ns) {
+    public MyScheduledFutureTask(Runnable r, V result, long ns) {
       super(r, result);
       time = ns;
       period = 0;
@@ -137,7 +136,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     /**
      * Creates a periodic action with given nano time and period.
      */
-    private MyScheduledFutureTask(@Nonnull Runnable r, V result, long ns, long period) {
+    private MyScheduledFutureTask(Runnable r, V result, long ns, long period) {
       super(r, result);
       time = ns;
       this.period = period;
@@ -147,7 +146,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     /**
      * Creates a one-shot action with given nanoTime-based trigger time.
      */
-    private MyScheduledFutureTask(@Nonnull Callable<V> callable, long ns) {
+    private MyScheduledFutureTask(Callable<V> callable, long ns) {
       super(callable);
       time = ns;
       period = 0;
@@ -162,12 +161,12 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     }
 
     @Override
-    public long getDelay(@Nonnull TimeUnit unit) {
+    public long getDelay(TimeUnit unit) {
       return unit.convert(time - now(), TimeUnit.NANOSECONDS);
     }
 
     @Override
-    public int compareTo(@Nonnull Delayed other) {
+    public int compareTo(Delayed other) {
       if (other == this) {
         return 0;
       }
@@ -236,7 +235,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
       return "Delay: " + getDelay(TimeUnit.MILLISECONDS) + "ms; " + (info == this ? super.toString() : info) + " backendExecutorService: " + backendExecutorService;
     }
 
-    @Nonnull
+    
     private ExecutorService getBackendExecutorService() {
       return backendExecutorService;
     }
@@ -255,7 +254,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
   /**
    * Returns the trigger time of a delayed action.
    */
-  public static long triggerTime(@Nonnull AppDelayQueue queue, long delay, TimeUnit unit) {
+  public static long triggerTime(AppDelayQueue queue, long delay, TimeUnit unit) {
     return triggerTime(queue, unit.toNanos(delay < 0 ? 0 : delay));
   }
 
@@ -266,7 +265,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
   /**
    * Returns the trigger time of a delayed action.
    */
-  private static long triggerTime(@Nonnull AppDelayQueue queue, long delay) {
+  private static long triggerTime(AppDelayQueue queue, long delay) {
     return now() + (delay < Long.MAX_VALUE >> 1 ? delay : overflowFree(queue, delay));
   }
 
@@ -277,7 +276,7 @@ public class SchedulingWrapper implements ScheduledExecutorService {
    * not yet been, while some other task is added with a delay of
    * Long.MAX_VALUE.
    */
-  private static long overflowFree(@Nonnull AppDelayQueue queue, long delay) {
+  private static long overflowFree(AppDelayQueue queue, long delay) {
     Delayed head = queue.peek();
     if (head != null) {
       long headDelay = head.getDelay(TimeUnit.NANOSECONDS);
@@ -288,15 +287,15 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     return delay;
   }
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> schedule(@Nonnull Runnable command, long delay, @Nonnull TimeUnit unit) {
+  public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
     MyScheduledFutureTask<?> t = new MyScheduledFutureTask<Void>(command, null, triggerTime(delayQueue, delay, unit));
     return delayedExecute(t);
   }
 
-  @Nonnull
-  public <T> MyScheduledFutureTask<T> delayedExecute(@Nonnull MyScheduledFutureTask<T> t) {
+  
+  public <T> MyScheduledFutureTask<T> delayedExecute(MyScheduledFutureTask<T> t) {
     if (LOG.isTraceEnabled()) {
       LOG.trace("Submit at delay " + t.getDelay(TimeUnit.MILLISECONDS) + "ms " + AppDelayQueue.info(t));
     }
@@ -315,22 +314,22 @@ public class SchedulingWrapper implements ScheduledExecutorService {
     return delayQueue;
   }
 
-  @Nonnull
+  
   @Override
-  public <V> ScheduledFuture<V> schedule(@Nonnull Callable<V> callable, long delay, @Nonnull TimeUnit unit) {
+  public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
     MyScheduledFutureTask<V> t = new MyScheduledFutureTask<V>(callable, triggerTime(delayQueue, delay, unit));
     return delayedExecute(t);
   }
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> scheduleAtFixedRate(@Nonnull Runnable command, long initialDelay, long period, @Nonnull TimeUnit unit) {
+  public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
     throw new UnsupportedOperationException("Not supported because it's bad for hibernation; use scheduleWithFixedDelay() with the same parameters instead.");
   }
 
-  @Nonnull
+  
   @Override
-  public ScheduledFuture<?> scheduleWithFixedDelay(@Nonnull Runnable command, long initialDelay, long delay, @Nonnull TimeUnit unit) {
+  public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
     if (delay <= 0) {
       throw new IllegalArgumentException("delay must be positive but got: " + delay);
     }
@@ -340,53 +339,53 @@ public class SchedulingWrapper implements ScheduledExecutorService {
 
   /////////////////////// delegates for ExecutorService ///////////////////////////
 
-  @Nonnull
+  
   @Override
-  public <T> Future<T> submit(@Nonnull Callable<T> task) {
+  public <T> Future<T> submit(Callable<T> task) {
     return backendExecutorService.submit(task);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> Future<T> submit(@Nonnull Runnable task, T result) {
+  public <T> Future<T> submit(Runnable task, T result) {
     return backendExecutorService.submit(task, result);
   }
 
-  @Nonnull
+  
   @Override
-  public Future<?> submit(@Nonnull Runnable task) {
+  public Future<?> submit(Runnable task) {
     return backendExecutorService.submit(task);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks) throws InterruptedException {
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
     return backendExecutorService.invokeAll(tasks);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks, long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
     return backendExecutorService.invokeAll(tasks, timeout, unit);
   }
 
-  @Nonnull
+  
   @Override
-  public <T> T invokeAny(@Nonnull Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
     return backendExecutorService.invokeAny(tasks);
   }
 
   @Override
-  public <T> T invokeAny(@Nonnull Collection<? extends Callable<T>> tasks, long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
     return backendExecutorService.invokeAny(tasks, timeout, unit);
   }
 
   @Override
-  public void execute(@Nonnull Runnable command) {
+  public void execute(Runnable command) {
     backendExecutorService.execute(command);
   }
 
-  @Nonnull
+  
   public ExecutorService getBackendExecutorService() {
     return backendExecutorService;
   }

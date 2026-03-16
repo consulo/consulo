@@ -8,25 +8,24 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.localize.UILocalize;
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(id = "selectionModeWidget", order = "after moduleLayerWidget")
 public class ColumnSelectionModeWidgetFactory extends StatusBarEditorBasedWidgetFactory {
     @Override
-    @Nonnull
+    
     public String getDisplayName() {
         return UILocalize.statusBarSelectionModeWidgetName().get();
     }
 
     @Override
-    public boolean canBeEnabledOn(@Nonnull StatusBar statusBar) {
+    public boolean canBeEnabledOn(StatusBar statusBar) {
         Editor editor = getTextEditor(statusBar);
         return editor != null && editor.isColumnMode();
     }
 
     @Override
-    @Nonnull
-    public StatusBarWidget createWidget(@Nonnull Project project) {
+    
+    public StatusBarWidget createWidget(Project project) {
         return new ColumnSelectionModePanel(project, this);
     }
 }

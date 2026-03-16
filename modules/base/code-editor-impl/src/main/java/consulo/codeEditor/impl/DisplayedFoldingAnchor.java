@@ -16,7 +16,6 @@
 package consulo.codeEditor.impl;
 
 import consulo.codeEditor.FoldRegion;
-import jakarta.annotation.Nonnull;
 
 public class DisplayedFoldingAnchor {
   public enum Type {
@@ -33,14 +32,14 @@ public class DisplayedFoldingAnchor {
     }
   }
 
-  @Nonnull
+  
   public final FoldRegion foldRegion;
   public final int visualLine;
   public final int foldRegionVisualLines;
-  @Nonnull
+  
   public final Type type;
 
-  public DisplayedFoldingAnchor(@Nonnull FoldRegion foldRegion, int visualLine, int foldRegionVisualLines, @Nonnull Type type) {
+  public DisplayedFoldingAnchor(FoldRegion foldRegion, int visualLine, int foldRegionVisualLines, Type type) {
     this.foldRegion = foldRegion;
     this.visualLine = visualLine;
     this.foldRegionVisualLines = foldRegionVisualLines;

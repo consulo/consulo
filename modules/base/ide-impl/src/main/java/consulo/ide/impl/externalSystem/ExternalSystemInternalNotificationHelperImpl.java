@@ -45,8 +45,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -67,9 +66,9 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
     public void addMessage(
         VirtualFile virtualFile,
         String groupName,
-        @Nonnull Notification notification,
-        @Nonnull ProjectSystemId externalSystemId,
-        @Nonnull NotificationData notificationData
+        Notification notification,
+        ProjectSystemId externalSystemId,
+        NotificationData notificationData
     ) {
 
 
@@ -126,11 +125,11 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         });
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public NewErrorTreeViewPanelImpl prepareMessagesView(
-        @Nonnull ProjectSystemId externalSystemId,
-        @Nonnull NotificationSource notificationSource,
+        ProjectSystemId externalSystemId,
+        NotificationSource notificationSource,
         boolean activateView
     ) {
         UIAccess.assertIsUIThread();
@@ -163,7 +162,7 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
     }
 
     @Nullable
-    private Content findContent(@Nonnull Pair<NotificationSource, ProjectSystemId> contentIdPair, @Nonnull String contentDisplayName) {
+    private Content findContent(Pair<NotificationSource, ProjectSystemId> contentIdPair, String contentDisplayName) {
         Content targetContent = null;
         MessageView messageView = myProject.getInstance(MessageView.class);
         for (Content content : messageView.getContentManager().getContents()) {
@@ -175,10 +174,10 @@ public class ExternalSystemInternalNotificationHelperImpl implements ExternalSys
         return targetContent;
     }
 
-    @Nonnull
+    
     public static String getContentDisplayName(
-        @Nonnull NotificationSource notificationSource,
-        @Nonnull ProjectSystemId externalSystemId
+        NotificationSource notificationSource,
+        ProjectSystemId externalSystemId
     ) {
         if (notificationSource != NotificationSource.PROJECT_SYNC) {
             throw new AssertionError("unsupported notification source found: " + notificationSource);

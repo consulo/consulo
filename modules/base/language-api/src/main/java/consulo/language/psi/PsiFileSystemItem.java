@@ -19,8 +19,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a file or directory which can be renamed.
@@ -37,7 +36,7 @@ public interface PsiFileSystemItem extends PsiCheckedRenameElement, NavigatableP
     @Nullable
     VirtualFile getVirtualFile();
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     String getName();

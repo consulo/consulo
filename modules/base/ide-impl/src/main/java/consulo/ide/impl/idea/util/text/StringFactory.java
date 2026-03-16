@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.util.text;
 
-import jakarta.annotation.Nonnull;
 
 @Deprecated
 public class StringFactory {
-  @Nonnull
-  public static String createShared(@Nonnull char[] chars) {
+  
+  public static String createShared(char[] chars) {
     return new String(chars);
   }
 }

@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,14 +31,14 @@ public interface UsagePreviewPanelFactory {
         return Application.get().getInstance(UsagePreviewPanelFactory.class);
     }
 
-    @Nonnull
-    default UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation) {
+    
+    default UsagePreviewPanel createPreviewPanel(Project project, UsageViewPresentation presentation) {
         return createPreviewPanel(project, presentation, false);
     }
 
-    @Nonnull
-    UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor);
+    
+    UsagePreviewPanel createPreviewPanel(Project project, UsageViewPresentation presentation, boolean isEditor);
 
-    @Nonnull
+    
     UsageViewPresentation createEmpUsageViewPresentation();
 }

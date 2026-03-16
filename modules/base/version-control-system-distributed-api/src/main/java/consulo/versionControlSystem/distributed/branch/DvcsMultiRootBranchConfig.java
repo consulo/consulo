@@ -16,16 +16,15 @@
 package consulo.versionControlSystem.distributed.branch;
 
 import consulo.versionControlSystem.distributed.repository.Repository;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 public abstract class DvcsMultiRootBranchConfig<Repo extends Repository> {
-  @Nonnull
+ 
   protected final Collection<Repo> myRepositories;
 
-  public DvcsMultiRootBranchConfig(@Nonnull Collection<Repo> repositories) {
+  public DvcsMultiRootBranchConfig(Collection<Repo> repositories) {
     myRepositories = repositories;
   }
 
@@ -52,8 +51,7 @@ public abstract class DvcsMultiRootBranchConfig<Repo extends Repository> {
     return commonBranch;
   }
 
-  @Nullable
-  public Repository.State getState() {
+  public Repository.@Nullable State getState() {
     Repository.State commonState = null;
     for (Repo repository : myRepositories) {
       Repository.State state = repository.getState();
@@ -67,6 +65,6 @@ public abstract class DvcsMultiRootBranchConfig<Repo extends Repository> {
     return commonState;
   }
 
-  @Nonnull
+ 
   public abstract Collection<String> getLocalBranchNames();
 }

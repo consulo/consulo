@@ -19,8 +19,7 @@ import consulo.compiler.scope.CompileScope;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Set;
@@ -33,15 +32,15 @@ public interface CompileContextEx extends CompileContext {
 
     void addMessage(CompilerMessage message);
 
-    @Nonnull
+    
     Set<VirtualFile> getTestOutputDirectories();
 
     /**
      * the same as FileIndex.isInTestSourceContent(), but takes into account generated output dirs
      */
-    boolean isInTestSourceContent(@Nonnull VirtualFile fileOrDir);
+    boolean isInTestSourceContent(VirtualFile fileOrDir);
 
-    boolean isInSourceContent(@Nonnull VirtualFile fileOrDir);
+    boolean isInSourceContent(VirtualFile fileOrDir);
 
     void addScope(CompileScope additionalScope);
 
@@ -53,5 +52,5 @@ public interface CompileContextEx extends CompileContext {
 
     boolean isGenerated(VirtualFile file);
 
-    void assignModule(@Nonnull VirtualFile root, @Nonnull Module module, boolean isTestSource, @Nullable Compiler compiler);
+    void assignModule(VirtualFile root, Module module, boolean isTestSource, @Nullable Compiler compiler);
 }

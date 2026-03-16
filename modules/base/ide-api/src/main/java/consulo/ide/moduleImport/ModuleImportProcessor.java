@@ -35,8 +35,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -84,7 +83,7 @@ public class ModuleImportProcessor {
         return result;
     }
 
-    @Nonnull
+    
     private static FileChooserDescriptor createAllImportDescriptor(boolean isModuleImport) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, true, true, false, false) {
             @Override
@@ -106,7 +105,7 @@ public class ModuleImportProcessor {
     public static <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
         VirtualFile file,
-        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
     ) {
         boolean isModuleImport = project != null;
 
@@ -127,9 +126,9 @@ public class ModuleImportProcessor {
     @SuppressWarnings("unchecked")
     public static <C extends ModuleImportContext> void showImportChooser(
         @Nullable Project project,
-        @Nonnull VirtualFile file,
-        @Nonnull List<ModuleImportProvider> providers,
-        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        VirtualFile file,
+        List<ModuleImportProvider> providers,
+        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
     ) {
         if (providers.size() == 1) {
             showImportWizard(project, file, providers.get(0), result);
@@ -141,7 +140,7 @@ public class ModuleImportProcessor {
     }
 
     @RequiredUIAccess
-    private static AsyncResult<ModuleImportProvider> showImportTarget(@Nonnull List<ModuleImportProvider> providers) {
+    private static AsyncResult<ModuleImportProvider> showImportTarget(List<ModuleImportProvider> providers) {
         ComboBox<ModuleImportProvider> box = ComboBox.create(providers);
         box.setRenderer((renderer, index, item) -> {
             assert item != null;
@@ -167,9 +166,9 @@ public class ModuleImportProcessor {
     @RequiredUIAccess
     private static <C extends ModuleImportContext> void showImportWizard(
         @Nullable Project project,
-        @Nonnull VirtualFile targetFile,
-        @Nonnull ModuleImportProvider<C> moduleImportProvider,
-        @Nonnull AsyncResult<Pair<C, ModuleImportProvider<C>>> result
+        VirtualFile targetFile,
+        ModuleImportProvider<C> moduleImportProvider,
+        AsyncResult<Pair<C, ModuleImportProvider<C>>> result
     ) {
         ModuleImportDialog<C> dialog = new ModuleImportDialog<>(project, targetFile, moduleImportProvider);
 

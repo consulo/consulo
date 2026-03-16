@@ -60,8 +60,7 @@ import consulo.ui.style.StyleManager;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,7 +85,6 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
 
     private final DesktopEditorErrorPanel myErrorPanel;
 
-    @Nonnull
     private ErrorStripTooltipRendererProvider myTooltipRendererProvider = new BasicTooltipRendererProvider();
 
     private int myMinMarkHeight = JBUI.scale(2);
@@ -98,7 +96,7 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
 
     private DesktopEditorAnalyzeStatusPanel myStatusPanel;
 
-    DesktopEditorMarkupModelImpl(@Nonnull DesktopEditorImpl editor) {
+    DesktopEditorMarkupModelImpl(DesktopEditorImpl editor) {
         super(editor);
         myEditorFragmentRenderer = new EditorFragmentRenderer();
         myStatusPanel = new DesktopEditorAnalyzeStatusPanel(this);
@@ -395,7 +393,7 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
 
     @RequiredUIAccess
     @Override
-    public void setErrorPanelPopupHandler(@Nonnull PopupHandler handler) {
+    public void setErrorPanelPopupHandler(PopupHandler handler) {
         UIAccess.assertIsUIThread();
         DesktopEditorErrorPanel errorPanel = getErrorPanel();
         if (errorPanel != null) {
@@ -404,12 +402,11 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
     }
 
     @Override
-    public void setErrorStripTooltipRendererProvider(@Nonnull ErrorStripTooltipRendererProvider provider) {
+    public void setErrorStripTooltipRendererProvider(ErrorStripTooltipRendererProvider provider) {
         myTooltipRendererProvider = provider;
     }
 
     @Override
-    @Nonnull
     public ErrorStripTooltipRendererProvider getErrorStripTooltipRendererProvider() {
         return myTooltipRendererProvider;
     }
@@ -450,7 +447,7 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
 
     private static class BasicTooltipRendererProvider implements ErrorStripTooltipRendererProvider {
         @Override
-        public TooltipRenderer calcTooltipRenderer(@Nonnull Collection<? extends RangeHighlighter> highlighters) {
+        public TooltipRenderer calcTooltipRenderer(Collection<? extends RangeHighlighter> highlighters) {
             LineTooltipRenderer bigRenderer = null;
             //do not show same tooltip twice
             Set<String> tooltips = null;
@@ -482,21 +479,18 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
             return bigRenderer;
         }
 
-        @Nonnull
         @Override
-        public TooltipRenderer calcTooltipRenderer(@Nonnull String text) {
+        public TooltipRenderer calcTooltipRenderer(String text) {
             return new LineTooltipRenderer(text, new Object[]{text});
         }
 
-        @Nonnull
         @Override
-        public TooltipRenderer calcTooltipRenderer(@Nonnull String text, int width) {
+        public TooltipRenderer calcTooltipRenderer(String text, int width) {
             return new LineTooltipRenderer(text, width, new Object[]{text});
         }
 
-        @Nonnull
         @Override
-        public TrafficTooltipRenderer createTrafficTooltipRenderer(@Nonnull final Runnable onHide, @Nonnull Editor editor) {
+        public TrafficTooltipRenderer createTrafficTooltipRenderer(final Runnable onHide, Editor editor) {
             return new TrafficTooltipRenderer() {
                 @Override
                 public void repaintTooltipWindow() {
@@ -504,11 +498,11 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
 
                 @Override
                 public LightweightHintImpl show(
-                    @Nonnull Editor editor,
-                    @Nonnull Point p,
+                    Editor editor,
+                    Point p,
                     boolean alignToRight,
-                    @Nonnull TooltipGroup group,
-                    @Nonnull HintHint hintHint
+                    TooltipGroup group,
+                    HintHint hintHint
                 ) {
                     JLabel label = new JLabel("WTF");
                     return new LightweightHintImpl(label) {
@@ -523,7 +517,6 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
         }
     }
 
-    @Nonnull
     public ProperTextRange offsetsToYPositions(int start, int end) {
         return myErrorPanel.offsetsToYPositions(start, end);
     }
@@ -580,11 +573,11 @@ public class DesktopEditorMarkupModelImpl extends EditorMarkupModelImpl<DesktopE
         @Override
         @RequiredUIAccess
         public LightweightHintImpl show(
-            @Nonnull Editor editor,
-            @Nonnull Point p,
+            Editor editor,
+            Point p,
             boolean alignToRight,
-            @Nonnull TooltipGroup group,
-            @Nonnull HintHint hintInfo
+            TooltipGroup group,
+            HintHint hintInfo
         ) {
             HintManagerImpl hintManager = HintManagerImpl.getInstanceImpl();
             boolean needDelay = false;

@@ -1,7 +1,6 @@
 package consulo.externalSystem.service.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import jakarta.annotation.Nonnull;
 
 import java.io.Serializable;
 
@@ -18,6 +17,6 @@ import java.io.Serializable;
  */
 public interface ExternalEntityData extends Serializable {
 
-  @Nonnull
+  
   ProjectSystemId getOwner();
 }

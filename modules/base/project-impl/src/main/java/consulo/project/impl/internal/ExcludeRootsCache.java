@@ -12,7 +12,6 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,30 +23,30 @@ final class ExcludeRootsCache {
 
   private static class CachedUrls {
     private final long myModificationCount;
-    @Nonnull
+    
     private final String[] myUrls;
 
-    private CachedUrls(long count, @Nonnull String[] urls) {
+    private CachedUrls(long count, String[] urls) {
       myModificationCount = count;
       myUrls = urls;
     }
   }
 
-  ExcludeRootsCache(@Nonnull MessageBusConnection connection) {
+  ExcludeRootsCache(MessageBusConnection connection) {
     connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
-      public void projectOpened(@Nonnull Project project) {
+      public void projectOpened(Project project) {
         myCache = null;
       }
 
       @Override
-      public void projectClosed(@Nonnull Project project) {
+      public void projectClosed(Project project) {
         myCache = null;
       }
     });
   }
 
-  @Nonnull
+  
   String[] getExcludedUrls() {
     return ReadAction.compute(() -> {
       CachedUrls cache = myCache;

@@ -19,8 +19,7 @@ import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.application.util.mac.foundation.MacUtil;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,7 +82,7 @@ public class MacNativeUIUtil {
     return windowTitle;
   }
 
-  @Nonnull
+  
   public static Color colorFromNative(ID color) {
     ID colorSpace = Foundation.invoke("NSColorSpace", "genericRGBColorSpace");
     ID colorInSpace = Foundation.invoke(color, "colorUsingColorSpace:", colorSpace);

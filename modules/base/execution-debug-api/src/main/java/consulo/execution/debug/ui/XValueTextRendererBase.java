@@ -19,42 +19,41 @@ import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.execution.debug.frame.presentation.XValuePresentation;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
  */
 public abstract class XValueTextRendererBase implements XValuePresentation.XValueTextRenderer {
   @Override
-  public void renderStringValue(@Nonnull String value) {
+  public void renderStringValue(String value) {
     renderStringValue(value, null, '"', -1);
   }
 
   @Override
-  public void renderCharValue(@Nonnull String value) {
+  public void renderCharValue(String value) {
     renderStringValue(value, null, '\'', -1);
   }
 
   @Override
-  public void renderStringValue(@Nonnull String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
+  public void renderStringValue(String value, @Nullable String additionalSpecialCharsToHighlight, int maxLength) {
     renderStringValue(value, additionalSpecialCharsToHighlight, '"', maxLength);
   }
 
   @Override
-  public void renderNumericValue(@Nonnull String value) {
+  public void renderNumericValue(String value) {
     renderRawValue(value, DefaultLanguageHighlighterColors.NUMBER);
   }
 
   @Override
-  public void renderKeywordValue(@Nonnull String value) {
+  public void renderKeywordValue(String value) {
     renderRawValue(value, DefaultLanguageHighlighterColors.KEYWORD);
   }
 
   @Override
-  public final void renderValue(@Nonnull String value, @Nonnull TextAttributesKey key) {
+  public final void renderValue(String value, TextAttributesKey key) {
     renderRawValue(value, key);
   }
 
-  protected abstract void renderRawValue(@Nonnull String value, @Nonnull TextAttributesKey key);
+  protected abstract void renderRawValue(String value, TextAttributesKey key);
 }

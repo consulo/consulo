@@ -18,13 +18,13 @@ package consulo.diff.dir;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.PatternUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -84,7 +84,7 @@ public class DirDiffSettings {
     }
   }
 
-  public <T extends AnAction> void addExtraAction(@Nonnull T action) {
+  public <T extends AnAction> void addExtraAction(T action) {
     extraToolbarActions.add(action);
   }
 
@@ -95,12 +95,12 @@ public class DirDiffSettings {
   public interface CompareModeNameProvider {
     String COMPARE_MODE_NAME_PROVIDER = "Compare mode name provider"; //NON-NLS
 
-    @jakarta.annotation.Nullable
+    @Nullable
     String getName(CompareMode mode);
   }
 
   public interface CustomSourceChooser {
-    @jakarta.annotation.Nullable
-    DiffElement chooseSource(@Nonnull DiffElement first, @Nonnull DiffElement second);
+    @Nullable
+    DiffElement chooseSource(DiffElement first, DiffElement second);
   }
 }

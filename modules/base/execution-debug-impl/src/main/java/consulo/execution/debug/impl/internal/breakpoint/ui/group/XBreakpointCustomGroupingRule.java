@@ -20,8 +20,7 @@ import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -44,7 +43,7 @@ public class XBreakpointCustomGroupingRule<B> extends XBreakpointGroupingRule<B,
   }
 
   @Override
-  public XBreakpointCustomGroup getGroup(@Nonnull B breakpoint, @Nonnull Collection<XBreakpointCustomGroup> groups) {
+  public XBreakpointCustomGroup getGroup(B breakpoint, Collection<XBreakpointCustomGroup> groups) {
     if (!(breakpoint instanceof XBreakpointBase)) {
       return null;
     }

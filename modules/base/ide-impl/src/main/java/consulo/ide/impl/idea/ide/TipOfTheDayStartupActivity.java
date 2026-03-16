@@ -23,7 +23,6 @@ import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl(order = "last")
 public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAware {
@@ -37,7 +36,7 @@ public class TipOfTheDayStartupActivity implements PostStartupActivity, DumbAwar
   }
 
   @Override
-  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     if (!myGeneralSettings.isShowTipsOnStartup()) {
       return;
     }

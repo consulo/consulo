@@ -15,19 +15,18 @@
  */
 package consulo.localHistory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 /**
  * Wrapper for any exception occurred during local history actions and processes
  */
 public class LocalHistoryException extends Exception {
-  public LocalHistoryException(@Nonnull String message) {
+  public LocalHistoryException(String message) {
     super(message);
   }
 
-  public LocalHistoryException(@Nonnull String message, @Nullable Throwable cause) {
+  public LocalHistoryException(String message, @Nullable Throwable cause) {
     super(message, cause);
   }
 }

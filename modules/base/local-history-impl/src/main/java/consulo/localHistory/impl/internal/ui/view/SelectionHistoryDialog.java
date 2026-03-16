@@ -21,13 +21,12 @@ import consulo.localHistory.impl.internal.LocalHistoryFacade;
 import consulo.localHistory.impl.internal.ui.model.FileHistoryDialogModel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public class SelectionHistoryDialog extends FileHistoryDialog {
   private final int myFrom;
   private final int myTo;
 
-  public SelectionHistoryDialog(@Nonnull Project p, IdeaGateway gw, VirtualFile f, int from, int to) {
+  public SelectionHistoryDialog(Project p, IdeaGateway gw, VirtualFile f, int from, int to) {
     super(p, gw, f, false);
     myFrom = from;
     myTo = to;

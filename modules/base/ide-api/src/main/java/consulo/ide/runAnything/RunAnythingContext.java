@@ -29,8 +29,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class RunAnythingContext {
             myProject = project;
         }
 
-        @Nonnull
+        
         public Project getProject() {
             return myProject;
         }
@@ -86,10 +85,10 @@ public class RunAnythingContext {
     }
 
     public static final class RecentDirectoryContext extends RunAnythingContext {
-        @Nonnull
+        
         private final String myPath;
 
-        public RecentDirectoryContext(@Nonnull String path) {
+        public RecentDirectoryContext(String path) {
             super(
                 LocalizeValue.ofNullable(UserHomeFileUtil.getLocationRelativeToUserHome(path)),
                 LocalizeValue.empty(),
@@ -98,7 +97,7 @@ public class RunAnythingContext {
             myPath = path;
         }
 
-        @Nonnull
+        
         public String getPath() {
             return myPath;
         }
@@ -124,7 +123,7 @@ public class RunAnythingContext {
     public static final class ModuleContext extends RunAnythingContext {
         private final Module myModule;
 
-        public ModuleContext(@Nonnull Module module) {
+        public ModuleContext(Module module) {
             super(
                 LocalizeValue.ofNullable(module.getName()),
                 LocalizeValue.ofNullable(calcDescription(module)),
@@ -139,7 +138,7 @@ public class RunAnythingContext {
             return myModule.getModuleDirPath();
         }
 
-        @Nonnull
+        
         private static String calcDescription(Module module) {
             String basePath = module.getProject().getBasePath();
             if (basePath != null) {
@@ -161,7 +160,7 @@ public class RunAnythingContext {
             return "undefined";
         }
 
-        @Nonnull
+        
         public Module getModule() {
             return myModule;
         }
@@ -184,21 +183,21 @@ public class RunAnythingContext {
         }
     }
 
-    @Nonnull
+    
     protected final LocalizeValue label;
-    @Nonnull
+    
     protected final LocalizeValue description;
     protected final Image icon;
 
-    private RunAnythingContext(@Nonnull LocalizeValue label) {
+    private RunAnythingContext(LocalizeValue label) {
         this(label, LocalizeValue.empty(), null);
     }
 
-    private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description) {
+    private RunAnythingContext(LocalizeValue label, LocalizeValue description) {
         this(label, description, null);
     }
 
-    private RunAnythingContext(@Nonnull LocalizeValue label, @Nonnull LocalizeValue description, Image icon) {
+    private RunAnythingContext(LocalizeValue label, LocalizeValue description, Image icon) {
         this.label = label;
         this.description = description;
         this.icon = icon;
@@ -209,12 +208,12 @@ public class RunAnythingContext {
         return null;
     }
 
-    @Nonnull
+    
     public LocalizeValue getLabel() {
         return label;
     }
 
-    @Nonnull
+    
     public LocalizeValue getDescription() {
         return description;
     }

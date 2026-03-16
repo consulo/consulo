@@ -48,31 +48,29 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "OpenFile")
 public class OpenFileAction extends AnAction implements DumbAware {
-    @Nonnull
     private final ProjectManager myProjectManager;
 
     @Inject
-    public OpenFileAction(@Nonnull ProjectManager projectManager) {
+    public OpenFileAction(ProjectManager projectManager) {
         this(ActionLocalize.actionOpenfileText(), ActionLocalize.actionOpenfileDescription(), PlatformIconGroup.nodesFolderopened(), projectManager);
     }
 
-    public OpenFileAction(@Nonnull LocalizeValue text,
-                          @Nonnull LocalizeValue description,
+    public OpenFileAction(LocalizeValue text,
+                          LocalizeValue description,
                           @Nullable Image icon,
-                          @Nonnull ProjectManager projectManager) {
+                          ProjectManager projectManager) {
         super(text, description, icon);
         myProjectManager = projectManager;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         @Nullable Project project = e.getData(Project.KEY);
         boolean showFiles = project != null;
 
@@ -120,7 +118,7 @@ public class OpenFileAction extends AnAction implements DumbAware {
     }
 
     @RequiredUIAccess
-    private void doOpenFile(@Nullable Project project, @Nonnull VirtualFile[] result) {
+    private void doOpenFile(@Nullable Project project, VirtualFile[] result) {
         for (VirtualFile file : result) {
             if (file.isDirectory()) {
                 ProjectOpenContext openContext = new ProjectOpenContext();

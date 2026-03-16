@@ -21,8 +21,7 @@ import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.internal.breakpoint.XExpressionImpl;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -36,12 +35,12 @@ public class XDebuggerHistoryManagerImpl implements XDebuggerHistoryManager {
     public static final int MAX_RECENT_EXPRESSIONS = 10;
     private final Map<String, LinkedList<XExpression>> myRecentExpressions = new HashMap<>();
 
-    public static XDebuggerHistoryManagerImpl getInstance(@Nonnull Project project) {
+    public static XDebuggerHistoryManagerImpl getInstance(Project project) {
         return project.getInstance(XDebuggerHistoryManagerImpl.class);
     }
 
     @Override
-    public boolean addRecentExpression(@Nonnull String id, @Nullable XExpression expression) {
+    public boolean addRecentExpression(String id, @Nullable XExpression expression) {
         if (expression == null || StringUtil.isEmptyOrSpaces(expression.getExpression())) {
             return false;
         }
@@ -61,9 +60,9 @@ public class XDebuggerHistoryManagerImpl implements XDebuggerHistoryManager {
         return true;
     }
 
-    @Nonnull
+    
     @Override
-    public List<XExpression> getRecentExpressions(@Nonnull String id) {
+    public List<XExpression> getRecentExpressions(String id) {
         LinkedList<XExpression> list = myRecentExpressions.get(id);
         return list != null ? list : Collections.<XExpression>emptyList();
     }

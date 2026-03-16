@@ -3,16 +3,14 @@ package consulo.language.codeStyle.fileSet;
 
 import consulo.language.codeStyle.fileSet.FileSetDescriptor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FileSetDescriptorFactory {
 
   private FileSetDescriptorFactory() {
   }
 
-  @Nullable
-  public static FileSetDescriptor createDescriptor(@Nonnull FileSetDescriptor.State state) {
+  public static FileSetDescriptor createDescriptor(FileSetDescriptor.@Nullable State state) {
     if (PatternDescriptor.PATTERN_TYPE.equals(state.type) && state.pattern != null) {
       return new PatternDescriptor(state.pattern);
     }

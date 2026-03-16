@@ -14,7 +14,6 @@ package consulo.content.library.ui;
 
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -23,17 +22,17 @@ public class OrderRootTypePresentation {
   private final String myNodeText;
   private final Image myIcon;
 
-  public OrderRootTypePresentation(@Nonnull String nodeText, @Nonnull Image icon) {
+  public OrderRootTypePresentation(String nodeText, Image icon) {
     myNodeText = nodeText;
     myIcon = icon;
   }
 
-  @Nonnull
+  
   public String getNodeText() {
     return myNodeText;
   }
 
-  @Nonnull
+  
   public Image getIcon() {
     return myIcon;
   }

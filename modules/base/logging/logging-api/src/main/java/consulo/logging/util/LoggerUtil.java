@@ -18,18 +18,17 @@ package consulo.logging.util;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 20-Mar-22
  */
 public class LoggerUtil {
-    public static void error(@Nonnull Logger logger, @Nonnull String message, @Nonnull String... attachmentText) {
+    public static void error(Logger logger, String message, String... attachmentText) {
         error(logger, message, new Throwable(), attachmentText);
     }
 
-    public static void error(@Nonnull Logger logger, @Nonnull String message, @Nonnull Throwable cause, @Nonnull String... attachmentText) {
+    public static void error(Logger logger, String message, Throwable cause, String... attachmentText) {
         StringBuilder detailsBuffer = new StringBuilder();
         for (String detail : attachmentText) {
             detailsBuffer.append(detail).append(",");

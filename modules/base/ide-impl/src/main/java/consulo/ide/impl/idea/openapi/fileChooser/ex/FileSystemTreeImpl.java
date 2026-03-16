@@ -9,8 +9,6 @@ import consulo.fileChooser.FileSystemTree;
 import consulo.fileChooser.node.FileNodeDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileTreeStructure;
 import consulo.ide.impl.idea.openapi.fileChooser.tree.*;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,8 +27,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -53,7 +51,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     private final ArrayList<Runnable> myOkActions = new ArrayList<>(2);
     private final FileChooserDescriptor myDescriptor;
 
-    @Nonnull
+    
     private final AsyncTreeModel myAsyncTreeModel;
 
     private final List<Listener> myListeners = Lists.newLockFreeCopyOnWriteList();
@@ -111,7 +109,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                 @RequiredUIAccess
                 @Override
                 public void customizeCellRenderer(
-                    @Nonnull JTree tree,
+                    JTree tree,
                     Object value,
                     boolean selected,
                     boolean expanded,
@@ -310,7 +308,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                         ? newFileName
                         : newFileName + '.' + fileType.getDefaultExtension();
                     VirtualFile file = parentDirectory.createChildData(this, newFileNameWithExtension);
-                    VfsUtil.saveText(file, initialContent != null ? initialContent : "");
+                    VirtualFileUtil.saveText(file, initialContent != null ? initialContent : "");
                     updateTree();
                     select(file, null);
                     return null;
@@ -349,12 +347,12 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public <T> T getData(@Nonnull Key<T> key) {
+    public <T> T getData(Key<T> key) {
         return myDescriptor.getUserData(key);
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile[] getSelectedFiles() {
         TreePath[] paths = myTree.getSelectionPaths();
         if (paths == null) {
@@ -368,7 +366,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
                 files.add(file);
             }
         }
-        return VfsUtilCore.toVirtualFileArray(files);
+        return VirtualFileUtil.toVirtualFileArray(files);
     }
 
     private boolean isLeaf(TreePath path) {
@@ -392,14 +390,14 @@ public class FileSystemTreeImpl implements FileSystemTree {
     }
 
     @Override
-    public boolean isUnderRoots(@Nonnull VirtualFile file) {
+    public boolean isUnderRoots(VirtualFile file) {
         List<VirtualFile> roots = myDescriptor.getRoots();
         if (roots.size() == 0) {
             return true;
         }
 
         for (VirtualFile root : roots) {
-            if (root != null && VfsUtilCore.isAncestor(root, file, false)) {
+            if (root != null && VirtualFileUtil.isAncestor(root, file, false)) {
                 return true;
             }
         }
@@ -413,7 +411,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
         Disposer.register(parent, () -> myListeners.remove(listener));
     }
 
-    private void fireSelection(@Nonnull List<? extends VirtualFile> selection) {
+    private void fireSelection(List<? extends VirtualFile> selection) {
         for (Listener each : myListeners) {
             each.selectionChanged(selection);
         }

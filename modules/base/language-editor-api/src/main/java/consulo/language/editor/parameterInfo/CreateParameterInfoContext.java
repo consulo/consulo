@@ -20,7 +20,7 @@ import consulo.language.editor.parameterInfo.ParameterInfoContext;
 import consulo.language.editor.parameterInfo.ParameterInfoHandler;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface CreateParameterInfoContext extends ParameterInfoContext {
   @Nullable

@@ -15,7 +15,6 @@
  */
 package consulo.colorScheme;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -38,5 +37,5 @@ public interface ModifiableFontPreferences extends FontPreferences {
 
     void resetFontSizes();
 
-    void setFontSize(@Nonnull String fontFamily, int size);
+    void setFontSize(String fontFamily, int size);
 }

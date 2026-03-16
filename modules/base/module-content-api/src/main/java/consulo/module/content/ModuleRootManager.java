@@ -23,7 +23,6 @@ import consulo.module.content.internal.ModuleRootManagerInternal;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Interface for getting information about the contents and dependencies of a module.
@@ -38,7 +37,7 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    * @param module the module for which the root manager is requested.
    * @return the root manager instance.
    */
-  public static ModuleRootManager getInstance(@Nonnull Module module) {
+  public static ModuleRootManager getInstance(Module module) {
     return module.getInstance(ModuleRootManager.class);
   }
 
@@ -47,7 +46,7 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    *
    * @return the file index instance.
    */
-  @Nonnull
+  
   public abstract ModuleFileIndex getFileIndex();
 
   /**
@@ -56,7 +55,7 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    *
    * @return the modifiable root model.
    */
-  @Nonnull
+  
   @RequiredReadAction
   public abstract ModifiableRootModel getModifiableModel();
 
@@ -66,7 +65,7 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    *
    * @return the list of module direct dependencies.
    */
-  @Nonnull
+  
   public abstract Module[] getDependencies();
 
   /**
@@ -76,7 +75,7 @@ public sealed interface ModuleRootManager extends ModuleRootModel permits Module
    * @param includeTests whether test-only dependencies should be included
    * @return the list of module direct dependencies.
    */
-  @Nonnull
+  
   public abstract Module[] getDependencies(boolean includeTests);
 
   /**

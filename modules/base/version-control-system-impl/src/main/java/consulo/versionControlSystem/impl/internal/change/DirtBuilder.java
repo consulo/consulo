@@ -24,7 +24,6 @@ import consulo.versionControlSystem.change.VcsDirtyScopeBuilder;
 import consulo.versionControlSystem.change.VcsModifiableDirtyScope;
 import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.util.VcsUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public class DirtBuilder {
         return !scopesByVcs.isEmpty();
     }
 
-    @Nonnull
+    
     public List<VcsModifiableDirtyScope> buildScopes(Project project) {
         Collection<VcsDirtyScopeBuilder> scopes;
 
@@ -94,7 +93,7 @@ public class DirtBuilder {
         return isEverythingDirty || ContainerUtil.any(scopesByVcs.values(), it -> it.belongsTo(filePath));
     }
 
-    @Nonnull
+    
     private VcsDirtyScopeBuilder createDirtyScope(AbstractVcs vcs) {
         VcsDirtyScopeBuilder scope = vcs.createDirtyScope();
         if (scope != null) {

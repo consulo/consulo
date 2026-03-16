@@ -19,8 +19,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -40,11 +39,11 @@ public class CommonEditSourceAction extends BaseNavigateToSourceAction {
         super(focusEditor);
     }
 
-    public CommonEditSourceAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, boolean focusEditor) {
+    public CommonEditSourceAction(LocalizeValue text, LocalizeValue description, boolean focusEditor) {
         super(text, description, focusEditor);
     }
 
-    public CommonEditSourceAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon, boolean focusEditor) {
+    public CommonEditSourceAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon, boolean focusEditor) {
         super(text, description, icon, focusEditor);
     }
 }

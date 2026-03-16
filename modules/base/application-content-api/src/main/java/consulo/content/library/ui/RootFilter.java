@@ -19,7 +19,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -33,11 +32,11 @@ public abstract class RootFilter extends RootDetector {
     super(rootType, jarDirectory, presentableRootTypeName);
   }
 
-  public abstract boolean isAccepted(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator);
+  public abstract boolean isAccepted(VirtualFile rootCandidate, ProgressIndicator progressIndicator);
 
-  @Nonnull
+  
   @Override
-  public Collection<VirtualFile> detectRoots(@Nonnull VirtualFile rootCandidate, @Nonnull ProgressIndicator progressIndicator) {
+  public Collection<VirtualFile> detectRoots(VirtualFile rootCandidate, ProgressIndicator progressIndicator) {
     if (isAccepted(rootCandidate, progressIndicator)) {
       return Collections.singletonList(rootCandidate);
     }

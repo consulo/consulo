@@ -23,8 +23,7 @@ import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class ReplaceUnderscoresToCamelCaseMacro extends MacroBase {
 
   @Nullable
   @Override
-  protected Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick) {
+  protected Result calculateResult(Expression[] params, ExpressionContext context, boolean quick) {
     String text = getTextResult(params, context, true);
     if (text != null) {
       List<String> strings = StringUtil.split(text, "_");

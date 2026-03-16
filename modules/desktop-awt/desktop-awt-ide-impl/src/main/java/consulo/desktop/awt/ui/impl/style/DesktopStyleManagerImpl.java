@@ -24,7 +24,6 @@ import consulo.ui.impl.style.StyleManagerImpl;
 import consulo.ui.style.Style;
 import consulo.util.lang.lazy.LazyValue;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -43,20 +42,20 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
   }
 
   @Override
-  public void setCurrentStyle(@Nonnull Style newStyle) {
+  public void setCurrentStyle(Style newStyle) {
     LafManager lafManager = myLafManager.get();
     Style oldStyle = lafManager.getCurrentStyle();
     lafManager.setCurrentStyle(newStyle);
     fireStyleChanged(oldStyle, newStyle);
   }
 
-  @Nonnull
+  
   @Override
   public List<Style> getStyles() {
     return myLafManager.get().getStyles();
   }
 
-  @Nonnull
+  
   @Override
   public Style getCurrentStyle() {
     return myLafManager.get().getCurrentStyle();
@@ -68,7 +67,7 @@ public class DesktopStyleManagerImpl extends StyleManagerImpl {
   }
 
   @Override
-  public void refreshAntialiasingType(@Nonnull AntialiasingType antialiasingType) {
+  public void refreshAntialiasingType(AntialiasingType antialiasingType) {
     for (Window w : Window.getWindows()) {
       for (JComponent c : UIUtil.uiTraverser(w).filter(JComponent.class)) {
         GraphicsUtil.setAntialiasingType(c, DesktopAntialiasingTypeUtil.getAntialiasingTypeForSwingComponent());

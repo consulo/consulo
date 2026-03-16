@@ -18,11 +18,10 @@ package consulo.execution.configuration.log;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.log.ui.AdditionalTabComponentManager;
 
-import jakarta.annotation.Nonnull;
 import java.nio.charset.Charset;
 
 public interface LogConsoleManager extends AdditionalTabComponentManager {
-  void addLogConsole(@Nonnull String name, @Nonnull String path, @Nonnull Charset charset, long skippedContent, @Nonnull RunConfigurationBase runConfiguration);
+  void addLogConsole(String name, String path, Charset charset, long skippedContent, RunConfigurationBase runConfiguration);
 
-  void removeLogConsole(@Nonnull String pathOrId);
+  void removeLogConsole(String pathOrId);
 }

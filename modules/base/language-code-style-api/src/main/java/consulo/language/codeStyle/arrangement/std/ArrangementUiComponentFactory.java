@@ -20,8 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
@@ -29,8 +28,8 @@ public interface ArrangementUiComponentFactory {
   ExtensionPointName<ArrangementUiComponentFactory> EP_NAME = ExtensionPointName.create(ArrangementUiComponentFactory.class);
 
   @Nullable
-  ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
-                               @Nonnull List<ArrangementSettingsToken> tokens,
-                               @Nonnull ArrangementColorsProvider colorsProvider,
-                               @Nonnull ArrangementStandardSettingsManager settingsManager);
+  ArrangementUiComponent build(StdArrangementTokenUiRole role,
+                               List<ArrangementSettingsToken> tokens,
+                               ArrangementColorsProvider colorsProvider,
+                               ArrangementStandardSettingsManager settingsManager);
 }

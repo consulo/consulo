@@ -26,8 +26,7 @@ import consulo.ui.Rectangle2D;
 import consulo.ui.Size2D;
 import consulo.ui.ex.util.UIXmlSerializeUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.Map;
@@ -53,7 +52,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     }
 
     @SuppressWarnings("unchecked")
-    <T> T get(@Nonnull Class<T> type, @Nullable Rectangle2D screen) {
+    <T> T get(Class<T> type, @Nullable Rectangle2D screen) {
       Point2D location = myLocation;
       Size2D size = mySize;
       // convert location and size according to the given screen
@@ -124,7 +123,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
   }
 
 
-  protected <T> T getFor(Object object, @Nonnull String key, @Nonnull Class<T> type) {
+  protected <T> T getFor(Object object, String key, Class<T> type) {
     if (isHeadless()) return null;
     if (UISettings.getInstance().getPresentationMode()) key += ".inPresentationMode"; // separate key for the presentation mode
     GC configuration = getConfiguration(object);
@@ -138,7 +137,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
   }
 
   protected void putFor(Object object,
-                        @Nonnull String key,
+                        String key,
                         Point2D location,
                         boolean locationSet,
                         Size2D size,
@@ -163,13 +162,13 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     return state != null && isVisible(state.myLocation, state.mySize);
   }
 
-  @Nonnull
+  
   protected Rectangle2D getScreenRectangle(@Nullable GC configuration) {
     // TODO this need to be reworked
     return new Rectangle2D(0, 0);
   }
 
-  protected Rectangle2D getScreenRectangle(@Nonnull Point2D location) {
+  protected Rectangle2D getScreenRectangle(Point2D location) {
     // TODO this need to be reworked
     return new Rectangle2D(location.x(), location.y(), 0, 0);
   }
@@ -178,8 +177,8 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
     return true;
   }
 
-  @Nonnull
-  protected String getAbsoluteKey(@Nullable GC configuration, @Nonnull String key) {
+  
+  protected String getAbsoluteKey(@Nullable GC configuration, String key) {
     return key;
   }
 
@@ -191,39 +190,39 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
   }
 
   @Override
-  public Point2D getLocationFor(Object object, @Nonnull String key) {
+  public Point2D getLocationFor(Object object, String key) {
     return getFor(object, key, Point2D.class);
   }
 
   @Override
-  public void putLocationFor(Object object, @Nonnull String key, Point2D location) {
+  public void putLocationFor(Object object, String key, Point2D location) {
     putFor(object, key, location, true, null, false, false, false, false, false);
   }
 
   @Override
-  public Size2D getSizeFor(Object object, @Nonnull String key) {
+  public Size2D getSizeFor(Object object, String key) {
     return getFor(object, key, Size2D.class);
   }
 
   @Override
-  public void putSizeFor(Object object, @Nonnull String key, Size2D size) {
+  public void putSizeFor(Object object, String key, Size2D size) {
     putFor(object, key, null, false, size, true, false, false, false, false);
   }
 
   @Override
-  public Rectangle2D getBoundsFor(Object object, @Nonnull String key) {
+  public Rectangle2D getBoundsFor(Object object, String key) {
     return getFor(object, key, Rectangle2D.class);
   }
 
   @Override
-  public void putBoundsFor(Object object, @Nonnull String key, Rectangle2D bounds) {
+  public void putBoundsFor(Object object, String key, Rectangle2D bounds) {
     Point2D location = apply(Rectangle2D::minPoint, bounds);
     Size2D size = apply(Rectangle2D::size, bounds);
     putFor(object, key, location, true, size, true, false, false, false, false);
   }
 
   @Override
-  public final void loadState(@Nonnull Element element) {
+  public final void loadState(Element element) {
     synchronized (myStateMap) {
       myStateMap.clear();
       for (Element child : element.getChildren()) {
@@ -286,7 +285,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
   }
 
   @Nullable
-  private CachedState<GC> put(@Nonnull String key,
+  private CachedState<GC> put(String key,
                               @Nullable Point2D location,
                               boolean locationSet,
                               @Nullable Size2D size,
@@ -332,7 +331,7 @@ public abstract class UnifiedWindowStateServiceImpl<GC> implements WindowStateSe
   }
 
   @Nullable
-  protected static <T, R> R apply(@Nonnull Function<T, R> function, @Nullable T value) {
+  protected static <T, R> R apply(Function<T, R> function, @Nullable T value) {
     return value == null ? null : function.apply(value);
   }
 }

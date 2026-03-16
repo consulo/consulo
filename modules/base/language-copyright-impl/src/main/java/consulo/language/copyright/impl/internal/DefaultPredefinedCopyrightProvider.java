@@ -22,7 +22,6 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -45,7 +44,7 @@ public class DefaultPredefinedCopyrightProvider implements PredefinedCopyrightPr
     mySet.put(LocalizeValue.localizeTODO("MIT"), () -> getText("/consulo/language/copyright/impl/internal/MIT.txt"));
   }
 
-  @Nonnull
+  
   @Override
   public Map<LocalizeValue, String> getCopyrightTexts() {
     Map<LocalizeValue, String> set = new LinkedHashMap<>();

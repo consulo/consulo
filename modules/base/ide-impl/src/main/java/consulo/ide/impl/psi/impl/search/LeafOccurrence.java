@@ -1,8 +1,7 @@
 package consulo.ide.impl.psi.impl.search;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -14,18 +13,18 @@ public final class LeafOccurrence {
 
   private int offsetInStart;
 
-  public LeafOccurrence(@Nonnull PsiElement scope, @Nonnull PsiElement start, int offsetInStart) {
+  public LeafOccurrence(PsiElement scope, PsiElement start, int offsetInStart) {
     this.scope = scope;
     this.start = start;
     this.offsetInStart = offsetInStart;
   }
 
-  @Nonnull
+  
   public final PsiElement getScope() {
     return scope;
   }
 
-  @Nonnull
+  
   public final PsiElement getStart() {
     return start;
   }
@@ -34,12 +33,12 @@ public final class LeafOccurrence {
     return offsetInStart;
   }
 
-  @Nonnull
+  
   public final PsiElement component1() {
     return scope;
   }
 
-  @Nonnull
+  
   public final PsiElement component2() {
     return start;
   }
@@ -48,12 +47,12 @@ public final class LeafOccurrence {
     return offsetInStart;
   }
 
-  @Nonnull
-  public final LeafOccurrence copy(@Nonnull PsiElement scope, @Nonnull PsiElement start, int offsetInStart) {
+  
+  public final LeafOccurrence copy(PsiElement scope, PsiElement start, int offsetInStart) {
     return new LeafOccurrence(scope, start, offsetInStart);
   }
 
-  @Nonnull
+  
   public String toString() {
     StringBuilder __builder = new StringBuilder();
     __builder.append("LeafOccurrence(");

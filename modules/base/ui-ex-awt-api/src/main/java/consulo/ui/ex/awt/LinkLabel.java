@@ -6,8 +6,7 @@ import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.accessibility.AccessibleAction;
 import javax.accessibility.AccessibleContext;
@@ -52,7 +51,7 @@ public class LinkLabel<T> extends JLabel {
         this(text, TargetAWT.to(icon), aListener, null, null);
     }
 
-    @Nonnull
+    
     public static LinkLabel<?> create(@Nullable String text, @Nullable Runnable action) {
         return new LinkLabel<>(text, (Icon) null, action == null ? null : (__, ___) -> action.run(), null, null);
     }
@@ -170,7 +169,7 @@ public class LinkLabel<T> extends JLabel {
         }
     }
 
-    @Nonnull
+    
     protected Rectangle getTextBounds() {
         if (textR.isEmpty()) {
             updateLayoutRectangles();

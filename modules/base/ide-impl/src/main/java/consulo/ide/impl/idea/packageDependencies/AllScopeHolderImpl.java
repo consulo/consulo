@@ -26,15 +26,14 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 @Singleton
 @ServiceImpl
 public class AllScopeHolderImpl implements AllScopeHolder {
-  @Nonnull
+  
   private static final String TEXT = FilePatternPackageSet.SCOPE_FILE + ":*//*";
 
-  @Nonnull
+  
   public static final NamedScope ALL = new NamedScope("All", LocalizeValue.localizeTODO("All"), new AbstractPackageSet(TEXT, 0) {
     @Override
     public boolean contains(VirtualFile file, Project project, NamedScopesHolder scopesHolder) {
@@ -42,7 +41,7 @@ public class AllScopeHolderImpl implements AllScopeHolder {
     }
   });
 
-  @Nonnull
+  
   @Override
   public NamedScope getAllScope() {
     return ALL;

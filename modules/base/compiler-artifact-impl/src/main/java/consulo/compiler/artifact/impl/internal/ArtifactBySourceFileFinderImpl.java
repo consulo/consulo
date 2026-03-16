@@ -28,7 +28,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -77,7 +76,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
       final PackagingElementResolvingContext context = myArtifactManager.getResolvingContext();
       ArtifactUtil.processPackagingElements(artifact, null, new PackagingElementProcessor<PackagingElement<?>>() {
         @Override
-        public boolean process(@Nonnull PackagingElement<?> element, @Nonnull PackagingElementPath path) {
+        public boolean process(PackagingElement<?> element, PackagingElementPath path) {
           if (element instanceof FileOrDirectoryCopyPackagingElement<?>) {
             VirtualFile root = ((FileOrDirectoryCopyPackagingElement)element).findFile();
             if (root != null) {
@@ -97,7 +96,7 @@ public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
   }
 
   @Override
-  public Collection<? extends Artifact> findArtifacts(@Nonnull VirtualFile sourceFile) {
+  public Collection<? extends Artifact> findArtifacts(VirtualFile sourceFile) {
     MultiValuesMap<VirtualFile, Artifact> map = getFileToArtifactsMap().getValue();
     if (map.isEmpty()) {
       return Collections.emptyList();

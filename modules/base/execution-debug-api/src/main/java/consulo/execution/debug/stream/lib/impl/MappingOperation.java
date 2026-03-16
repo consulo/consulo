@@ -16,10 +16,9 @@
 package consulo.execution.debug.stream.lib.impl;
 
 import consulo.execution.debug.stream.resolve.MapResolver;
-import jakarta.annotation.Nonnull;
 
 public class MappingOperation extends OrderBasedOperation {
-    public MappingOperation(@Nonnull String name) {
+    public MappingOperation(String name) {
         super(name, new MapResolver());
     }
 }

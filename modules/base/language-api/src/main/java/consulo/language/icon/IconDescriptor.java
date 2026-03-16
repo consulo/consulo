@@ -19,8 +19,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.ArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,12 +44,12 @@ public class IconDescriptor {
     return this;
   }
 
-  public IconDescriptor addLayerIcon(@Nonnull Image icon) {
+  public IconDescriptor addLayerIcon(Image icon) {
     myLayerIcons = ArrayUtil.append(myLayerIcons, icon);
     return this;
   }
 
-  public IconDescriptor removeLayerIcon(@Nonnull Image icon) {
+  public IconDescriptor removeLayerIcon(Image icon) {
     myLayerIcons = ArrayUtil.remove(myLayerIcons, icon);
     return this;
   }
@@ -69,7 +68,7 @@ public class IconDescriptor {
     myRightIcon = rightIcon;
   }
 
-  @Nonnull
+  
   public Image toIcon() {
     Image mainIcon;
     if(myLayerIcons.length == 0) {

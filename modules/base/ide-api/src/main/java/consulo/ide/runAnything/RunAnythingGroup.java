@@ -11,8 +11,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,18 +41,18 @@ public abstract class RunAnythingGroup {
     /**
      * @return Current group title in the main list.
      */
-    @Nonnull
+    
     public abstract LocalizeValue getTitle();
 
     public String getKey() {
         return getTitle().getId();
     }
 
-    public boolean isVisibleFor(@Nonnull Project project) {
+    public boolean isVisibleFor(Project project) {
         return RunAnythingCache.getInstance(project).isGroupVisible(getKey());
     }
 
-    public void setVisibleFor(@Nonnull Project project, boolean visibility) {
+    public void setVisibleFor(Project project, boolean visibility) {
         RunAnythingCache.getInstance(project).saveGroupVisibilityKey(getKey(), visibility);
     }
 
@@ -81,11 +80,11 @@ public abstract class RunAnythingGroup {
      * @param cancellationChecker checks 'load more' calculation process to be cancelled
      */
     public abstract SearchResult getItems(
-        @Nonnull DataContext dataContext,
-        @Nonnull CollectionListModel<Object> model,
-        @Nonnull String pattern,
+        DataContext dataContext,
+        CollectionListModel<Object> model,
+        String pattern,
         boolean isInsertionMode,
-        @Nonnull Runnable cancellationChecker
+        Runnable cancellationChecker
     );
 
     /**
@@ -109,8 +108,8 @@ public abstract class RunAnythingGroup {
      *
      * @return group title if {@code titleIndex} is equals to group {@link #myTitleIndex} and {@code null} if nothing found
      */
-    @Nonnull
-    public static LocalizeValue getTitle(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
+    
+    public static LocalizeValue getTitle(Collection<? extends RunAnythingGroup> groups, int titleIndex) {
         return Optional.ofNullable(findGroup(groups, titleIndex)).map(RunAnythingGroup::getTitle).orElse(LocalizeValue.empty());
     }
 
@@ -120,7 +119,7 @@ public abstract class RunAnythingGroup {
      * @return group if {@code titleIndex} is equals to group {@link #myTitleIndex} and {@code null} if nothing found
      */
     @Nullable
-    public static RunAnythingGroup findGroup(@Nonnull Collection<? extends RunAnythingGroup> groups, int titleIndex) {
+    public static RunAnythingGroup findGroup(Collection<? extends RunAnythingGroup> groups, int titleIndex) {
         return groups.stream()
             .filter(runAnythingGroup -> titleIndex == ((RunAnythingGroup)runAnythingGroup).myTitleIndex)
             .findFirst()
@@ -131,7 +130,7 @@ public abstract class RunAnythingGroup {
      * Finds group {@code itemIndex} belongs to.
      */
     @Nullable
-    public static RunAnythingGroup findItemGroup(@Nonnull List<? extends RunAnythingGroup> groups, int itemIndex) {
+    public static RunAnythingGroup findItemGroup(List<? extends RunAnythingGroup> groups, int itemIndex) {
         RunAnythingGroup runAnythingGroup = null;
         for (RunAnythingGroup group : groups) {
             if (group.myTitleIndex == -1) {
@@ -149,7 +148,7 @@ public abstract class RunAnythingGroup {
     /**
      * Shifts {@link #myTitleIndex} starting from {@code baseIndex} to {@code shift}.
      */
-    private static void shiftTitleIndex(@Nonnull Collection<? extends RunAnythingGroup> groups, int baseIndex, int shift) {
+    private static void shiftTitleIndex(Collection<? extends RunAnythingGroup> groups, int baseIndex, int shift) {
         ((Collection<RunAnythingGroup>)groups).stream()
             .filter(runAnythingGroup -> runAnythingGroup.myTitleIndex != -1 && runAnythingGroup.myTitleIndex > baseIndex)
             .forEach(runAnythingGroup -> runAnythingGroup.myTitleIndex += shift);
@@ -158,21 +157,21 @@ public abstract class RunAnythingGroup {
     /**
      * Clears {@link #myMoreIndex} of all groups.
      */
-    public static void clearMoreIndex(@Nonnull Collection<? extends RunAnythingGroup> groups) {
+    public static void clearMoreIndex(Collection<? extends RunAnythingGroup> groups) {
         groups.forEach(runAnythingGroup -> runAnythingGroup.myMoreIndex = -1);
     }
 
     /**
      * Clears {@link #myTitleIndex} of all groups.
      */
-    private static void clearTitleIndex(@Nonnull Collection<? extends RunAnythingGroup> groups) {
+    private static void clearTitleIndex(Collection<? extends RunAnythingGroup> groups) {
         groups.forEach(runAnythingGroup -> ((RunAnythingGroup)runAnythingGroup).myTitleIndex = -1);
     }
 
     /**
      * Joins {@link #myTitleIndex} and {@link #myMoreIndex} of all groups; using for navigating by 'TAB' between groups.
      */
-    public static int[] getAllIndexes(@Nonnull Collection<? extends RunAnythingGroup> groups) {
+    public static int[] getAllIndexes(Collection<? extends RunAnythingGroup> groups) {
         IntList list = IntLists.newArrayList();
         for (RunAnythingGroup runAnythingGroup : groups) {
             list.add(runAnythingGroup.myTitleIndex);
@@ -188,21 +187,21 @@ public abstract class RunAnythingGroup {
      * Finds matched by {@link #myMoreIndex} group.
      */
     @Nullable
-    public static RunAnythingGroup findGroupByMoreIndex(@Nonnull Collection<? extends RunAnythingGroup> groups, int moreIndex) {
+    public static RunAnythingGroup findGroupByMoreIndex(Collection<? extends RunAnythingGroup> groups, int moreIndex) {
         return groups.stream().filter(runAnythingGroup -> moreIndex == runAnythingGroup.myMoreIndex).findFirst().orElse(null);
     }
 
     /**
      * Returns {@code true} if {@code index} is a {@link #myMoreIndex} of some group, {@code false} otherwise
      */
-    public static boolean isMoreIndex(@Nonnull Collection<? extends RunAnythingGroup> groups, int index) {
+    public static boolean isMoreIndex(Collection<? extends RunAnythingGroup> groups, int index) {
         return groups.stream().anyMatch(runAnythingGroup -> runAnythingGroup.myMoreIndex == index);
     }
 
     /**
      * Shifts {@link #myMoreIndex} and {@link #myTitleIndex} of all groups starting from {@code baseIndex} to {@code shift}.
      */
-    public static void shiftIndexes(@Nonnull Collection<? extends RunAnythingGroup> groups, int baseIndex, int shift) {
+    public static void shiftIndexes(Collection<? extends RunAnythingGroup> groups, int baseIndex, int shift) {
         shiftTitleIndex(groups, baseIndex, shift);
         shiftMoreIndex(groups, baseIndex, shift);
     }
@@ -210,7 +209,7 @@ public abstract class RunAnythingGroup {
     /**
      * Clears {@link #myMoreIndex} and {@link #myTitleIndex} of all groups.
      */
-    public static void clearIndexes(@Nonnull Collection<? extends RunAnythingGroup> groups) {
+    public static void clearIndexes(Collection<? extends RunAnythingGroup> groups) {
         clearTitleIndex(groups);
         clearMoreIndex(groups);
     }
@@ -224,10 +223,10 @@ public abstract class RunAnythingGroup {
      * @param cancellationChecker runnable that should throw a {@code ProcessCancelledException} if 'load more' process was cancelled
      */
     public final synchronized void collectItems(
-        @Nonnull DataContext dataContext,
-        @Nonnull CollectionListModel<Object> model,
-        @Nonnull String pattern,
-        @Nonnull Runnable cancellationChecker
+        DataContext dataContext,
+        CollectionListModel<Object> model,
+        String pattern,
+        Runnable cancellationChecker
     ) {
         SearchResult result = getItems(dataContext, model, pattern, false, cancellationChecker);
 

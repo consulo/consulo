@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class StatisticsManager {
@@ -55,17 +54,17 @@ public abstract class StatisticsManager {
    * @see #incUseCount(StatisticsInfo)
    * @see #OBLIVION_THRESHOLD
    */
-  public abstract int getUseCount(@Nonnull StatisticsInfo info);
+  public abstract int getUseCount(StatisticsInfo info);
 
   /**
    * @return the position of {@code info.getValue()} in all recently registered entries with the same {@code info.getContext()}. 0 if it it's the most recent entry, {@code Integer.MAX_INT} if it was never used, or was used too long ago (more than {@link #RECENCY_OBLIVION_THRESHOLD} other entries with the same context have been registered with {@link #incUseCount(StatisticsInfo)} since.
    */
-  public abstract int getLastUseRecency(@Nonnull StatisticsInfo info);
+  public abstract int getLastUseRecency(StatisticsInfo info);
 
   /**
    * Register a usage of an <context, value> entry represented by info parameter. This will affect subsequent {@link #getUseCount(StatisticsInfo)} and {@link #getLastUseRecency(StatisticsInfo)} results.
    */
-  public abstract void incUseCount(@Nonnull StatisticsInfo info);
+  public abstract void incUseCount(StatisticsInfo info);
 
   public <T, Loc, Stat extends Statistician<T, Loc, Stat>> int getUseCount(Key<? extends Statistician<T, Loc, Stat>> key, T element, Loc location) {
     StatisticsInfo info = serialize(key, element, location);
@@ -82,5 +81,5 @@ public abstract class StatisticsManager {
   /**
    * @return infos by this context ordered by usage time: recent first
    */
-  public abstract StatisticsInfo[] getAllValues(@Nonnull String context);
+  public abstract StatisticsInfo[] getAllValues(String context);
 }

@@ -25,16 +25,15 @@ import consulo.module.Module;
 import consulo.content.OrderRootType;
 import consulo.content.library.ui.LibraryEditor;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
 * @author nik
 */
 public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootButtonDescriptor {
-  public ChooserBasedAttachRootButtonDescriptor(@Nonnull OrderRootType rootType, @Nonnull String buttonText) {
+  public ChooserBasedAttachRootButtonDescriptor(OrderRootType rootType, String buttonText) {
     super(rootType, buttonText);
   }
 
@@ -46,8 +45,8 @@ public abstract class ChooserBasedAttachRootButtonDescriptor extends AttachRootB
   public abstract String getChooserDescription();
 
   @Override
-  public VirtualFile[] selectFiles(@Nonnull JComponent parent, @Nullable VirtualFile initialSelection,
-                                   @Nonnull DataContext dataContext, @Nonnull LibraryEditor libraryEditor) {
+  public VirtualFile[] selectFiles(JComponent parent, @Nullable VirtualFile initialSelection,
+                                   DataContext dataContext, LibraryEditor libraryEditor) {
     FileChooserDescriptor chooserDescriptor = createChooserDescriptor();
     chooserDescriptor.setTitle(getChooserTitle(libraryEditor.getName()));
     chooserDescriptor.setDescription(getChooserDescription());

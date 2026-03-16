@@ -10,7 +10,6 @@ import consulo.document.internal.RangeMarkerEx;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -30,12 +29,12 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
     }
 
     @Override
-    public void replaceText(@Nonnull CharSequence chars, long newModificationStamp) {
+    public void replaceText(CharSequence chars, long newModificationStamp) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setText(@Nonnull CharSequence text) {
+    public void setText(CharSequence text) {
         String s = StringUtil.convertLineSeparators(text.toString());
         myChars = new char[s.length()];
         s.getChars(0, s.length(), myChars, 0);
@@ -43,20 +42,20 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
         myLineSet = LineSet.createLineSet(myString);
     }
 
-    @Nonnull
+    
     @Override
     public LineIterator createLineIterator() {
         return myLineSet.createIterator();
     }
 
     @Override
-    public boolean removeRangeMarker(@Nonnull RangeMarkerEx rangeMarker) {
+    public boolean removeRangeMarker(RangeMarkerEx rangeMarker) {
         return myRangeMarkers.removeInterval(rangeMarker);
     }
 
     @Override
     public void registerRangeMarker(
-        @Nonnull RangeMarkerEx rangeMarker,
+        RangeMarkerEx rangeMarker,
         int start,
         int end,
         boolean greedyToLeft,
@@ -67,22 +66,22 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
     }
 
     @Override
-    public boolean processRangeMarkers(@Nonnull Predicate<? super RangeMarker> processor) {
+    public boolean processRangeMarkers(Predicate<? super RangeMarker> processor) {
         return myRangeMarkers.processAll(processor);
     }
 
     @Override
-    public boolean processRangeMarkersOverlappingWith(int start, int end, @Nonnull Predicate<? super RangeMarker> processor) {
+    public boolean processRangeMarkersOverlappingWith(int start, int end, Predicate<? super RangeMarker> processor) {
         return myRangeMarkers.processOverlappingWith(start, end, processor);
     }
 
-    @Nonnull
+    
     @Override
     public CharSequence getImmutableCharSequence() {
         return myString;
     }
 
-    @Nonnull
+    
     @Override
     public char[] getChars() {
         return myChars;
@@ -109,7 +108,7 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
     }
 
     @Override
-    public void insertString(int offset, @Nonnull CharSequence s) {
+    public void insertString(int offset, CharSequence s) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -119,7 +118,7 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
     }
 
     @Override
-    public void replaceString(int startOffset, int endOffset, @Nonnull CharSequence s) {
+    public void replaceString(int startOffset, int endOffset, CharSequence s) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
@@ -133,13 +132,13 @@ public class EditorTextFieldRendererDocument extends UserDataHolderBase implemen
         return 0;
     }
 
-    @Nonnull
+    
     @Override
     public RangeMarker createRangeMarker(int startOffset, int endOffset, boolean surviveOnExternalChange) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    @Nonnull
+    
     @Override
     public RangeMarker createGuardedBlock(int startOffset, int endOffset) {
         throw new UnsupportedOperationException("Not implemented");

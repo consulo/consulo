@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @see PsiLanguageInjectionHost
@@ -30,8 +29,8 @@ import jakarta.annotation.Nonnull;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface MultiHostInjector {
-  @Nonnull
+  
   Class<? extends PsiElement> getElementClass();
 
-  void injectLanguages(@Nonnull MultiHostRegistrar registrar, @Nonnull PsiElement context);
+  void injectLanguages(MultiHostRegistrar registrar, PsiElement context);
 }

@@ -18,7 +18,6 @@ package consulo.language.internal;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.ScalarIndexExtension;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,7 +30,7 @@ public abstract class TrigramIndex extends ScalarIndexExtension<Integer> {
         return !fileType.isBinary();
     }
 
-    @Nonnull
+    
     @Override
     public ID<Integer, Void> getName() {
         return INDEX_ID;

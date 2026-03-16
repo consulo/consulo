@@ -23,8 +23,7 @@ import consulo.dataContext.UiDataRule;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,14 +53,14 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
      * @param dataManager the data manager for rule resolution
      * @param providers   providers in hierarchy order (child-first)
      */
-    public PreCachedDataContext(@Nonnull BaseDataManager dataManager, @Nonnull List<DataProvider> providers) {
+    public PreCachedDataContext(BaseDataManager dataManager, List<DataProvider> providers) {
         myDataManager = dataManager;
         myProviders = providers;
     }
 
     @Nullable
     @Override
-    public <T> T getData(@Nonnull Key<T> dataId) {
+    public <T> T getData(Key<T> dataId) {
         for (DataProvider provider : myProviders) {
             T data = myDataManager.getDataFromProvider(provider, dataId, null);
             if (data != null) {
@@ -72,7 +71,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
     }
 
     @Override
-    public <T> T getUserData(@Nonnull Key<T> key) {
+    public <T> T getUserData(Key<T> key) {
         Map<Key, Object> map = myUserData;
         if (map == null) {
             return null;
@@ -82,7 +81,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
     }
 
     @Override
-    public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+    public <T> void putUserData(Key<T> key, @Nullable T value) {
         if (myUserData == null) {
             myUserData = new HashMap<>();
         }
@@ -100,8 +99,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
      * @param provider the original provider from the component
      * @return a background-safe data provider
      */
-    @Nonnull
-    public static DataProvider initProviderForAsync(@Nonnull DataProvider provider) {
+    public static DataProvider initProviderForAsync(DataProvider provider) {
         // UiDataProviderAdapter already handles UiDataProvider via DataSinkImpl,
         // but for async context we want to pre-collect the sink on EDT
         if (provider instanceof UiDataProviderAdapter uiAdapter) {
@@ -114,7 +112,7 @@ public class PreCachedDataContext implements AsyncDataContext, UserDataHolder {
         return new DataProvider() {
             @Nullable
             @Override
-            public Object getData(@Nonnull Key<?> dataKey) {
+            public Object getData(Key<?> dataKey) {
                 long start = System.currentTimeMillis();
                 try {
                     return provider.getData(dataKey);

@@ -47,8 +47,7 @@ import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.webBrowser.*;
 import consulo.webBrowser.localize.WebBrowserLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 
 import javax.swing.*;
@@ -101,19 +100,19 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
     @Override
     @RequiredUIAccess
-    public void open(@Nonnull String url) {
+    public void open(String url) {
         openOrBrowse(url, false);
     }
 
     @Override
     @RequiredUIAccess
-    public void browse(@Nonnull File file) {
+    public void browse(File file) {
         browse(VirtualFileUtil.toUri(file));
     }
 
     @Override
     @RequiredUIAccess
-    public void browse(@Nonnull URI uri) {
+    public void browse(URI uri) {
         LOG.debug("Launch browser: [" + uri + "]");
 
         WebBrowserManager settings = getGeneralSettingsInstance();
@@ -140,7 +139,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     }
 
     @RequiredUIAccess
-    private void openOrBrowse(@Nonnull String url, boolean browse) {
+    private void openOrBrowse(String url, boolean browse) {
         url = url.trim();
 
         if (url.startsWith("jar:")) {
@@ -261,7 +260,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
                 Application.get().invokeLater(() -> new Task.Backgroundable(null, "Extracting files...", true) {
                     @Override
-                    public void run(@Nonnull ProgressIndicator indicator) {
+                    public void run(ProgressIndicator indicator) {
                         int size = zipFile.size();
                         int[] counter = new int[]{0};
 
@@ -274,7 +273,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
                             }
 
                             @Override
-                            public boolean accept(@Nonnull File dir, @Nonnull String name) {
+                            public boolean accept(File dir, String name) {
                                 indicator.checkCanceled();
                                 boolean result = myImportantOnly == myImportantDirs.contains(dir);
                                 if (result) {
@@ -341,7 +340,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         }
 
         @Override
-        @Nonnull
+        
         protected Action[] createActions() {
             setOKButtonText(CommonLocalize.buttonYes());
             return new Action[]{getOKAction(), getCancelAction()};
@@ -365,13 +364,13 @@ public class BrowserLauncherAppless extends BrowserLauncher {
 
     @Override
     @RequiredUIAccess
-    public void browse(@Nonnull String url, @Nullable WebBrowser browser) {
+    public void browse(String url, @Nullable WebBrowser browser) {
         browse(url, browser, null);
     }
 
     @Override
     @RequiredUIAccess
-    public void browse(@Nonnull String url, @Nullable WebBrowser browser, @Nullable Project project) {
+    public void browse(String url, @Nullable WebBrowser browser, @Nullable Project project) {
         WebBrowser effectiveBrowser = getEffectiveBrowser(browser);
 
         if (effectiveBrowser == null) {
@@ -393,7 +392,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         @Nullable String browserPath,
         @Nullable WebBrowser browser,
         @Nullable Project project,
-        @Nonnull String[] additionalParameters
+        String[] additionalParameters
     ) {
         Runnable launchTask = null;
         if (browserPath == null && browser != null) {
@@ -409,7 +408,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         @Nullable String browserPath,
         @Nullable WebBrowser browser,
         @Nullable Project project,
-        @Nonnull String[] additionalParameters,
+        String[] additionalParameters,
         @Nullable Runnable launchTask
     ) {
         return checkPath(browserPath, browser, project, launchTask) && doLaunch(
@@ -443,10 +442,10 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     @RequiredUIAccess
     private boolean doLaunch(
         @Nullable String url,
-        @Nonnull List<String> command,
+        List<String> command,
         @Nullable WebBrowser browser,
         @Nullable Project project,
-        @Nonnull String[] additionalParameters,
+        String[] additionalParameters,
         @Nullable Runnable launchTask
     ) {
         if (url != null && url.startsWith("jar:")) {
@@ -483,8 +482,8 @@ public class BrowserLauncherAppless extends BrowserLauncher {
     protected void checkCreatedProcess(
         @Nullable WebBrowser browser,
         @Nullable Project project,
-        @Nonnull GeneralCommandLine commandLine,
-        @Nonnull Process process,
+        GeneralCommandLine commandLine,
+        Process process,
         @Nullable Runnable launchTask
     ) {
     }
@@ -500,7 +499,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         LOG.warn(error);
     }
 
-    private static void addArgs(@Nonnull GeneralCommandLine command, @Nullable BrowserSpecificSettings settings, @Nonnull String[] additional) {
+    private static void addArgs(GeneralCommandLine command, @Nullable BrowserSpecificSettings settings, String[] additional) {
         List<String> specific = settings == null ? Collections.<String>emptyList() : settings.getAdditionalParameters();
         if (specific.size() + additional.length > 0) {
             if (isOpenCommandUsed(command)) {
@@ -512,7 +511,7 @@ public class BrowserLauncherAppless extends BrowserLauncher {
         }
     }
 
-    public static boolean isOpenCommandUsed(@Nonnull GeneralCommandLine command) {
+    public static boolean isOpenCommandUsed(GeneralCommandLine command) {
         return Platform.current().os().isMac() && ExecUtil.getOpenCommandPath().equals(command.getExePath());
     }
 }

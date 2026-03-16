@@ -23,7 +23,6 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.usage.UsageTreeColorsScheme;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -32,7 +31,7 @@ import jakarta.annotation.Nonnull;
 @Singleton
 @ServiceImpl
 public class UsageTreeColorsSchemeImpl implements UsageTreeColorsScheme {
-  @Nonnull
+  
   @Override
   public EditorColorsScheme getScheme() {
     return EditorColorsUtil.getColorSchemeForBackground(TargetAWT.from(UIUtil.getTreeTextBackground()));

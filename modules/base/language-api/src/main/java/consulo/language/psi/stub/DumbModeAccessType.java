@@ -2,7 +2,6 @@
 package consulo.language.psi.stub;
 
 import consulo.application.util.function.ThrowableComputable;
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents special index access types in dumb mode.
@@ -38,7 +37,7 @@ public enum DumbModeAccessType {
    *
    * @param command - A command to execute
    */
-  public void ignoreDumbMode(@Nonnull Runnable command) {
+  public void ignoreDumbMode(Runnable command) {
     FileBasedIndex.getInstance().ignoreDumbMode(this, () -> {
       command.run();
       return null;
@@ -54,7 +53,7 @@ public enum DumbModeAccessType {
    *
    * @param computable - A command to execute
    */
-  public <T, E extends Throwable> T ignoreDumbMode(@Nonnull ThrowableComputable<T, E> computable) throws E {
+  public <T, E extends Throwable> T ignoreDumbMode(ThrowableComputable<T, E> computable) throws E {
     return FileBasedIndex.getInstance().ignoreDumbMode(this, computable);
   }
 }

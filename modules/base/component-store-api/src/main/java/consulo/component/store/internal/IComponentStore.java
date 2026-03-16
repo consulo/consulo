@@ -17,8 +17,7 @@ package consulo.component.store.internal;
 
 import consulo.ui.UIAccess;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,21 +33,20 @@ public interface IComponentStore {
 
   void load() throws IOException, StateStorageException;
 
-  void save(@Nonnull UIAccess uiAccess, boolean force, @Nonnull List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  void save(UIAccess uiAccess, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
 
   /**
    * Return storable info about component
    */
   @Nullable
-  <T> StateComponentInfo<T> loadStateIfStorable(@Nonnull T component);
+  <T> StateComponentInfo<T> loadStateIfStorable(T component);
 
-  void reinitComponents(@Nonnull Set<String> componentNames, boolean reloadData);
+  void reinitComponents(Set<String> componentNames, boolean reloadData);
 
-  @Nonnull
   StateStorageManager getStateStorageManager();
 
   /**
    * @return true is reloaded - false if not reloaded
    */
-  boolean reload(@Nonnull Collection<? extends StateStorage> changedStorages);
+  boolean reload(Collection<? extends StateStorage> changedStorages);
 }

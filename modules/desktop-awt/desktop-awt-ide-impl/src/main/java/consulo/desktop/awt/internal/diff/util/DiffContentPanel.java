@@ -19,8 +19,7 @@ import consulo.diff.internal.DiffImplUtil;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +35,7 @@ public class DiffContentPanel extends JPanel {
     private final JComponent myContent;
     private final Wrapper myBottomBreadcrumbs = new InvisibleWrapper();
 
-    public DiffContentPanel(@Nonnull JComponent content) {
+    public DiffContentPanel(JComponent content) {
         myContent = content;
 
         initLayout(this, myTitle, myTopBreadcrumbs, myContent, myBottomBreadcrumbs);
@@ -52,7 +51,7 @@ public class DiffContentPanel extends JPanel {
     //    }
     //}
     //
-    //public void updateBreadcrumbsPlacement(@Nonnull BreadcrumbsPlacement placement) {
+    //public void updateBreadcrumbsPlacement(BreadcrumbsPlacement placement) {
     //    if (myBreadcrumbs == null) return;
     //
     //    myTopBreadcrumbs.setContent(placement == BreadcrumbsPlacement.TOP ? myBreadcrumbs : null);
@@ -64,11 +63,11 @@ public class DiffContentPanel extends JPanel {
     //}
 
     private static void initLayout(
-        @Nonnull DiffContentPanel contentPanel,
-        @Nonnull JComponent title,
-        @Nonnull JComponent topBreadcrumbs,
-        @Nonnull JComponent content,
-        @Nonnull JComponent bottomBreadcrumbs
+        DiffContentPanel contentPanel,
+        JComponent title,
+        JComponent topBreadcrumbs,
+        JComponent content,
+        JComponent bottomBreadcrumbs
     ) {
         contentPanel.removeAll();
         contentPanel.setLayout(new DiffContentLayout(title, topBreadcrumbs, content, bottomBreadcrumbs));
@@ -78,7 +77,7 @@ public class DiffContentPanel extends JPanel {
         contentPanel.add(bottomBreadcrumbs);
     }
 
-    public static void syncTitleHeights(@Nonnull List<DiffContentPanel> panels) {
+    public static void syncTitleHeights(List<DiffContentPanel> panels) {
         List<JComponent> titles = ContainerUtil.map(panels, it -> it.myTitle);
         List<JComponent> topBreadcrumbs = ContainerUtil.map(panels, it -> it.myTopBreadcrumbs);
 
@@ -94,20 +93,20 @@ public class DiffContentPanel extends JPanel {
     }
 
     private static class DiffContentLayout extends AbstractLayoutManager {
-        @Nonnull
+        
         private final JComponent myTitle;
-        @Nonnull
+        
         private final JComponent myTopBreadcrumbs;
-        @Nonnull
+        
         private final JComponent myContent;
-        @Nonnull
+        
         private final JComponent myBottomBreadcrumbs;
 
         DiffContentLayout(
-            @Nonnull JComponent title,
-            @Nonnull JComponent topBreadcrumbs,
-            @Nonnull JComponent content,
-            @Nonnull JComponent bottomBreadcrumbs
+            JComponent title,
+            JComponent topBreadcrumbs,
+            JComponent content,
+            JComponent bottomBreadcrumbs
         ) {
             myTitle = title;
             myTopBreadcrumbs = topBreadcrumbs;
@@ -135,7 +134,7 @@ public class DiffContentPanel extends JPanel {
         }
 
         @Override
-        public void layoutContainer(@Nonnull Container parent) {
+        public void layoutContainer(Container parent) {
             int y = 0;
 
             int width = parent.getWidth();
@@ -160,8 +159,8 @@ public class DiffContentPanel extends JPanel {
             myBottomBreadcrumbs.setBounds(0, bottomY, width, bottomSize.height);
         }
 
-        @Nonnull
-        private static Dimension getPreferredSize(@Nonnull JComponent component) {
+        
+        private static Dimension getPreferredSize(JComponent component) {
             return component.isVisible() ? component.getPreferredSize() : new Dimension();
         }
     }

@@ -18,7 +18,6 @@ package consulo.execution.debug.ui;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.execution.debug.breakpoint.XExpression;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -26,21 +25,21 @@ import jakarta.annotation.Nonnull;
 public class XDebugSessionData extends UserDataHolderBase {
   public static final Key<XDebugSessionData> DATA_KEY = Key.create("XDebugSessionData");
 
-  @Nonnull
+  
   private XExpression[] myWatchExpressions;
   private final String myConfigurationName;
   private boolean myBreakpointsMuted = false;
 
-  public XDebugSessionData(@Nonnull XExpression[] watchExpressions, @Nonnull String configurationName) {
+  public XDebugSessionData(XExpression[] watchExpressions, String configurationName) {
     myWatchExpressions = watchExpressions;
     myConfigurationName = configurationName;
   }
 
-  public void setWatchExpressions(@Nonnull XExpression[] watchExpressions) {
+  public void setWatchExpressions(XExpression[] watchExpressions) {
     myWatchExpressions = watchExpressions;
   }
 
-  @Nonnull
+  
   public XExpression[] getWatchExpressions() {
     return myWatchExpressions;
   }
@@ -53,7 +52,7 @@ public class XDebugSessionData extends UserDataHolderBase {
     myBreakpointsMuted = breakpointsMuted;
   }
 
-  @Nonnull
+  
   public String getConfigurationName() {
     return myConfigurationName;
   }

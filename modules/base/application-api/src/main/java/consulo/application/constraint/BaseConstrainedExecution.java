@@ -5,8 +5,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -114,7 +113,7 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
     return null;
   }
 
-  @Nonnull
+  
   public ContextConstraint[] getConstraints() {
     return constraints;
   }
@@ -124,7 +123,7 @@ public abstract class BaseConstrainedExecution<E extends ConstrainedExecution<E>
     scheduleWithinConstraints(runnable, condition, constraints);
   }
 
-  public static void scheduleWithinConstraints(@Nonnull Runnable runnable, @Nullable BooleanSupplier condition, ContextConstraint[] constraints) {
+  public static void scheduleWithinConstraints(Runnable runnable, @Nullable BooleanSupplier condition, ContextConstraint[] constraints) {
     List<ContextConstraint> attemptChain = new ArrayList<>();
 
     Runnable inner = new Runnable() {

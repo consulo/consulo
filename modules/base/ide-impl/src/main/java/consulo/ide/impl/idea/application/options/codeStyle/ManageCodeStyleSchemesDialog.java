@@ -46,8 +46,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -146,7 +145,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
         }
     }
 
-    private static void showStatus(Component component, @Nonnull LocalizeValue message, MessageType messageType) {
+    private static void showStatus(Component component, LocalizeValue message, MessageType messageType) {
         BalloonBuilder balloonBuilder = JBPopupFactory.getInstance()
             .createHtmlTextBalloonBuilder(message.get(), messageType.getDefaultIcon(), messageType.getPopupBackground(), null);
         balloonBuilder.setFadeoutTime(5000);
@@ -256,14 +255,14 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
         myCopyToProjectButton.setEnabled(!mySchemesTableModel.isProjectScheme(selectedScheme));
     }
 
-    @Nonnull
+    
     private CodeStyleScheme getSelectedScheme() {
         int row = mySchemesTable.getSelectedRow();
         assert row >= 0;
         return mySchemesTableModel.getSchemeAt(row);
     }
 
-    @Nonnull
+    
     @Override
     protected Action[] createActions() {
         return new Action[]{};
@@ -470,10 +469,10 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
 
         private MySchemesTable() {
             myFixedItemsRenderer = new DefaultTableCellRenderer() {
-                @Nonnull
+                
                 @Override
                 public Component getTableCellRendererComponent(
-                    @Nonnull JTable table,
+                    JTable table,
                     Object value,
                     boolean isSelected,
                     boolean hasFocus,
@@ -508,7 +507,7 @@ public class ManageCodeStyleSchemesDialog extends DialogWrapper {
             updateSchemes();
         }
 
-        @Nonnull
+        
         @Override
         public String getColumnName(int column) {
             assert column == 0;

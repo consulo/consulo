@@ -10,30 +10,29 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.EmptyRunnable;
 import consulo.util.lang.ref.SimpleReference;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class NewProgressRunner<R> {
-    @Nonnull
+    
     private final Function<? super ProgressIndicator, ? extends R> myComputation;
 
     private final boolean isModal;
 
-    @Nonnull
+    
     private final CompletableFuture<? extends ProgressIndicator> myProgressIndicatorFuture;
 
-    public NewProgressRunner(@Nonnull Function<? super ProgressIndicator, ? extends R> computation,
+    public NewProgressRunner(Function<? super ProgressIndicator, ? extends R> computation,
                              boolean modal,
-                             @Nonnull CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
+                             CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
         myComputation = ClientId.decorateFunction(computation);
         isModal = modal;
         myProgressIndicatorFuture = progressIndicatorFuture;
     }
 
-    @Nonnull
+    
     public CompletableFuture<R> submit(Application application) {
         if (application.isWriteAccessAllowed()) {
             throw new IllegalArgumentException("Can't start task under write lock");
@@ -66,9 +65,9 @@ public final class NewProgressRunner<R> {
         return exec(myProgressIndicatorFuture, onThreadCallable);
     }
 
-    @Nonnull
-    private CompletableFuture<R> exec(@Nonnull CompletableFuture<? extends ProgressIndicator> progressFuture,
-                                      @Nonnull Supplier<R> onThreadCallable) {
+    
+    private CompletableFuture<R> exec(CompletableFuture<? extends ProgressIndicator> progressFuture,
+                                      Supplier<R> onThreadCallable) {
         CompletableFuture<R> taskFuture = launchTask(onThreadCallable);
         CompletableFuture<R> resultFuture;
 
@@ -100,8 +99,8 @@ public final class NewProgressRunner<R> {
         return resultFuture;
     }
 
-    @Nonnull
-    private CompletableFuture<R> launchTask(@Nonnull Supplier<R> callable) {
+    
+    private CompletableFuture<R> launchTask(Supplier<R> callable) {
         return CompletableFuture.supplyAsync(callable, AppExecutorUtil.getAppExecutorService());
     }
 }

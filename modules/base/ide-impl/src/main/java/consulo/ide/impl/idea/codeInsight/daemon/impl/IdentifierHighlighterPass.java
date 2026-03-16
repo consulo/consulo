@@ -50,7 +50,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -66,14 +65,13 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     private final Collection<TextRange> myWriteAccessRanges = Collections.synchronizedList(new ArrayList<TextRange>());
     private final int myCaretOffset;
 
-    IdentifierHighlighterPass(@Nonnull Project project, @Nonnull PsiFile file, @Nonnull Editor editor) {
+    IdentifierHighlighterPass(Project project, PsiFile file, Editor editor) {
         super(project, editor.getDocument(), false);
         myFile = file;
         myEditor = editor;
         myCaretOffset = myEditor.getCaretModel().getOffset();
     }
 
-    @Nonnull
     private Editor getEditorForRead() {
         ImaginaryEditor imaginary = getImaginaryEditor();
         return imaginary != null ? imaginary : myEditor;
@@ -81,7 +79,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
 
     @Override
     @RequiredReadAction
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    public void doCollectInformation(ProgressIndicator progress) {
         Editor editor = getEditorForRead();
         HighlightUsagesHandlerBase<PsiElement> highlightUsagesHandler = HighlightUsagesHandler.createCustomHandler(editor, myFile);
         if (highlightUsagesHandler != null) {
@@ -156,10 +154,9 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
      * @param psiElement psi element to search in
      * @return a pair where first element is read usages and second is write usages
      */
-    @Nonnull
     @RequiredReadAction
     public static Couple<Collection<TextRange>> getHighlightUsages(
-        @Nonnull PsiElement target,
+        PsiElement target,
         PsiElement psiElement,
         boolean withDeclarations
     ) {
@@ -172,16 +169,14 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
      * @param target     target psi element
      * @param psiElement psi element to search in
      */
-    @Nonnull
     @RequiredReadAction
-    public static Collection<TextRange> getUsages(@Nonnull PsiElement target, PsiElement psiElement, boolean withDeclarations) {
+    public static Collection<TextRange> getUsages(PsiElement target, PsiElement psiElement, boolean withDeclarations) {
         return getUsages(target, psiElement, withDeclarations, false).first;
     }
 
-    @Nonnull
     @RequiredReadAction
     private static Couple<Collection<TextRange>> getUsages(
-        @Nonnull PsiElement target,
+        PsiElement target,
         PsiElement psiElement,
         boolean withDeclarations,
         boolean detectAccess
@@ -226,7 +221,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
     }
 
   @RequiredReadAction
-  private void highlightTargetUsages(@Nonnull PsiElement target) {
+  private void highlightTargetUsages(PsiElement target) {
         Couple<Collection<TextRange>> usages = getHighlightUsages(target, myFile, true);
         myReadAccessRanges.addAll(usages.first);
         myWriteAccessRanges.addAll(usages.second);

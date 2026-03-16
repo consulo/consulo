@@ -33,8 +33,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.CopyPasteManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.Transferable;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class CopyHandler extends EditorActionHandler implements ExtensionEditorA
         myOriginalAction = originalHandler;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_COPY;

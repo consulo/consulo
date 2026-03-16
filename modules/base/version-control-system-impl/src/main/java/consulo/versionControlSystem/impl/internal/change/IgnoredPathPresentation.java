@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.change.ChangesUtil;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.File;
 
@@ -30,7 +29,7 @@ public class IgnoredPathPresentation {
     myProject = project;
   }
 
-  public String alwaysRelative(@Nonnull String path) {
+  public String alwaysRelative(String path) {
     File file = new File(path);
     String relativePath = path;
     if (file.isAbsolute()) {

@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.pathMacro.PromptingMacro;
 import consulo.pathMacro.SecondQueueExpandMacro;
 import consulo.ui.ex.awt.Messages;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class PromptMacro extends PromptingMacro implements SecondQueueExpandMacro {
   @Override

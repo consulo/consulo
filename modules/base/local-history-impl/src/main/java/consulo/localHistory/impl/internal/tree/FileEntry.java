@@ -19,7 +19,6 @@ package consulo.localHistory.impl.internal.tree;
 import consulo.localHistory.impl.internal.Content;
 import consulo.localHistory.impl.internal.StoredContent;
 import consulo.localHistory.impl.internal.revision.Difference;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -84,7 +83,7 @@ public class FileEntry extends Entry {
     return true;
   }
 
-  @Nonnull
+  
   @Override
   public FileEntry copy() {
     return new FileEntry(getNameId(), myContent, myTimestamp, isReadOnly);

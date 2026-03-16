@@ -23,7 +23,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -50,9 +49,9 @@ public class DesktopAWTActionToolbarFactory implements ActionToolbarFactory {
         myDataManager = dataManager;
     }
 
-    @Nonnull
+    
     @Override
-    public ActionToolbar createActionToolbar(String place, ActionGroup group, @Nonnull ActionToolbar.Style style) {
+    public ActionToolbar createActionToolbar(String place, ActionGroup group, ActionToolbar.Style style) {
         if (style == ActionToolbar.Style.INPLACE) {
             return new SimpleActionToolbarImpl(place, group, myActionManager, myDataManager, myApplication, myKeymapManager, style);
         }

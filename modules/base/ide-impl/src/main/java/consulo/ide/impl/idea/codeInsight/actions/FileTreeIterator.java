@@ -24,7 +24,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 
@@ -32,24 +31,24 @@ public class FileTreeIterator {
   private Queue<PsiFile> myCurrentFiles = new LinkedList<>();
   private Queue<PsiDirectory> myCurrentDirectories = new LinkedList<>();
 
-  public FileTreeIterator(@Nonnull List<PsiFile> files) {
+  public FileTreeIterator(List<PsiFile> files) {
     myCurrentFiles.addAll(files);
   }
 
   @RequiredReadAction
-  public FileTreeIterator(@Nonnull Module module) {
+  public FileTreeIterator(Module module) {
     myCurrentDirectories.addAll(collectModuleDirectories(module));
     expandDirectoriesUntilFilesNotEmpty();
   }
 
-  public FileTreeIterator(@Nonnull Project project) {
+  public FileTreeIterator(Project project) {
     myCurrentDirectories.addAll(collectProjectDirectories(project));
     expandDirectoriesUntilFilesNotEmpty();
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static List<PsiDirectory> collectProjectDirectories(@Nonnull Project project) {
+  public static List<PsiDirectory> collectProjectDirectories(Project project) {
     List<PsiDirectory> directories = new ArrayList<>();
 
     Module[] modules = ModuleManager.getInstance(project).getModules();
@@ -60,17 +59,17 @@ public class FileTreeIterator {
     return directories;
   }
 
-  public FileTreeIterator(@Nonnull PsiDirectory directory) {
+  public FileTreeIterator(PsiDirectory directory) {
     myCurrentDirectories.add(directory);
     expandDirectoriesUntilFilesNotEmpty();
   }
 
-  public FileTreeIterator(@Nonnull FileTreeIterator fileTreeIterator) {
+  public FileTreeIterator(FileTreeIterator fileTreeIterator) {
     myCurrentFiles = new LinkedList<>(fileTreeIterator.myCurrentFiles);
     myCurrentDirectories = new LinkedList<>(fileTreeIterator.myCurrentDirectories);
   }
 
-  @Nonnull
+  
   public PsiFile next() {
     if (myCurrentFiles.isEmpty()) {
       throw new NoSuchElementException();
@@ -93,12 +92,12 @@ public class FileTreeIterator {
   }
 
   @RequiredReadAction
-  private void expandDirectory(@Nonnull PsiDirectory dir) {
+  private void expandDirectory(PsiDirectory dir) {
     Collections.addAll(myCurrentFiles, dir.getFiles());
     Collections.addAll(myCurrentDirectories, dir.getSubdirectories());
   }
 
-  @Nonnull
+  
   @RequiredReadAction
   public static List<PsiDirectory> collectModuleDirectories(Module module) {
     List<PsiDirectory> dirs = new ArrayList<>();

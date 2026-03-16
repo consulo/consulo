@@ -11,7 +11,6 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.List;
 public final class ChangesDiffCalculator {
   private static final Logger LOG = Logger.getInstance(ChangesDiffCalculator.class);
 
-  public static List<TextRange> calculateDiff(@Nonnull Document beforeDocument, @Nonnull Document currentDocument) {
+  public static List<TextRange> calculateDiff(Document beforeDocument, Document currentDocument) {
     CharSequence beforeText = beforeDocument.getCharsSequence();
     CharSequence currentText = currentDocument.getCharsSequence();
 
@@ -63,8 +62,8 @@ public final class ChangesDiffCalculator {
    * Thus, when comparing whitespace sequences of different length, we always highlight rightmost whitespaces
    * (while general algorithm gives no warranty on this case, and usually highlights leftmost whitespaces).
    */
-  @Nonnull
-  private static TextRange calculateChangeHighlightRange(@Nonnull CharSequence text, int startOffset, int endOffset) {
+  
+  private static TextRange calculateChangeHighlightRange(CharSequence text, int startOffset, int endOffset) {
     if (startOffset == endOffset) {
       while (startOffset < text.length() && text.charAt(startOffset) == ' ') {
         startOffset++;
@@ -83,7 +82,7 @@ public final class ChangesDiffCalculator {
     return new TextRange(startOffset, endOffset);
   }
 
-  private static boolean rangesEqual(@Nonnull CharSequence text, int start1, int end1, int start2, int end2) {
+  private static boolean rangesEqual(CharSequence text, int start1, int end1, int start2, int end2) {
     if (end1 - start1 != end2 - start2) return false;
     for (int i = start1; i < end1; i++) {
       if (text.charAt(i) != text.charAt(i - start1 + start2)) return false;

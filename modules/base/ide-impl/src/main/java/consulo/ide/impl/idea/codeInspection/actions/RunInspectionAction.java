@@ -43,8 +43,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
@@ -66,7 +65,7 @@ public class RunInspectionAction extends GotoActionBase {
     }
 
     @Override
-    protected void gotoActionPerformed(@Nonnull AnActionEvent e) {
+    protected void gotoActionPerformed(AnActionEvent e) {
         final Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -85,7 +84,7 @@ public class RunInspectionAction extends GotoActionBase {
             new GotoInspectionModel(project),
             new GotoActionCallback<>() {
                 @Override
-                protected ChooseByNameFilter<Object> createFilter(@Nonnull ChooseByNamePopup popup) {
+                protected ChooseByNameFilter<Object> createFilter(ChooseByNamePopup popup) {
                     popup.setSearchInAnyPlace(true);
                     return super.createFilter(popup);
                 }
@@ -103,8 +102,8 @@ public class RunInspectionAction extends GotoActionBase {
 
     @RequiredUIAccess
     private static void runInspection(
-        @Nonnull Project project,
-        @Nonnull String shortName,
+        Project project,
+        String shortName,
         @Nullable VirtualFile virtualFile,
         PsiElement psiElement,
         PsiFile psiFile
@@ -145,12 +144,12 @@ public class RunInspectionAction extends GotoActionBase {
         ) {
 
             @Override
-            protected JComponent getAdditionalActionSettings(@Nonnull Project project) {
+            protected JComponent getAdditionalActionSettings(Project project) {
                 return fileFilterPanel.getPanel();
             }
 
             @Override
-            public AnalysisScope getScope(@Nonnull AnalysisScope defaultScope) {
+            public AnalysisScope getScope(AnalysisScope defaultScope) {
                 AnalysisScope scope = super.getScope(defaultScope);
                 SearchScope filterScope = fileFilterPanel.getSearchScope();
                 if (filterScope == null) {

@@ -22,7 +22,6 @@ import consulo.build.ui.progress.BuildProgressDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -45,10 +44,10 @@ public interface CompilerRunner {
 
     Result NO = NoResult.INSTANCE;
 
-    @Nonnull
-    Result checkAvailable(@Nonnull DataContext dataContext);
+    
+    Result checkAvailable(DataContext dataContext);
 
-    @Nonnull
+    
     LocalizeValue getName();
 
     default void cleanUp(CompileDriver compileDriver, CompileContextEx context) {

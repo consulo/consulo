@@ -20,8 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -49,7 +48,7 @@ public class TrackCoverageAction extends ToggleModelAction {
     }
 
     @Override
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         super.setSelected(e, state);
         if (!TestConsoleProperties.TRACK_CODE_COVERAGE.value(myProperties)) {
             restoreMergedCoverage();
@@ -60,7 +59,7 @@ public class TrackCoverageAction extends ToggleModelAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return super.isSelected(e) && CoverageDataManager.getInstance(myProperties.getProject()).isSubCoverageActive();
     }
 

@@ -63,8 +63,7 @@ import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -149,13 +148,13 @@ public class ApplyPatchAction extends DumbAwareAction {
         }
     }
 
-    private static boolean isProjectOrScopeView(@Nonnull String place) {
+    private static boolean isProjectOrScopeView(String place) {
         return place.equals(ActionPlaces.PROJECT_VIEW_POPUP) || place.equals(ActionPlaces.SCOPE_VIEW_POPUP);
     }
 
     // used by TeamCity plugin
     @RequiredUIAccess
-    public static void showApplyPatch(@Nonnull Project project, @Nonnull VirtualFile file) {
+    public static void showApplyPatch(Project project, VirtualFile file) {
         DialogWrapper dialog = getDialogFactory(project).create(
             project,
             new ApplyPatchDefaultExecutor(project),
@@ -167,7 +166,7 @@ public class ApplyPatchAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    public static Boolean showAndGetApplyPatch(@Nonnull Project project, @Nonnull File file) {
+    public static Boolean showAndGetApplyPatch(Project project, File file) {
         VirtualFile vFile = VirtualFileUtil.findFileByIoFile(file, true);
         String patchPath = file.getPath();
         if (vFile == null) {
@@ -216,13 +215,13 @@ public class ApplyPatchAction extends DumbAwareAction {
         return sb.toString();
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public static ApplyPatchStatus applyOnly(
         @Nullable Project project,
-        @Nonnull ApplyFilePatchBase patch,
+        ApplyFilePatchBase patch,
         @Nullable ApplyPatchContext context,
-        @Nonnull VirtualFile file,
+        VirtualFile file,
         @Nullable CommitContext commitContext,
         boolean reverse,
         @Nullable String leftPanelTitle,
@@ -333,13 +332,13 @@ public class ApplyPatchAction extends DumbAwareAction {
         }
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private static ApplyFilePatch.Result tryApplyPatch(
         @Nullable Project project,
-        @Nonnull ApplyFilePatchBase patch,
+        ApplyFilePatchBase patch,
         @Nullable ApplyPatchContext context,
-        @Nonnull VirtualFile file,
+        VirtualFile file,
         @Nullable CommitContext commitContext
     ) {
         FilePatch patchBase = patch.getPatch();
@@ -371,8 +370,8 @@ public class ApplyPatchAction extends DumbAwareAction {
         return charSequence != null ? StringUtil.convertLineSeparators(charSequence.toString()) : null;
     }
 
-    @Nonnull
-    private static ApplyPatchDifferentiatedDialogFactory getDialogFactory(@Nonnull Project project) {
+    
+    private static ApplyPatchDifferentiatedDialogFactory getDialogFactory(Project project) {
         return project.getApplication().getInstance(ApplyPatchDifferentiatedDialogFactory.class);
     }
 }

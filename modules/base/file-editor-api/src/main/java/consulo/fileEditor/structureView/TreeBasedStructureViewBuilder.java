@@ -21,8 +21,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Default implementation of the {@link StructureViewBuilder} interface which uses the
@@ -41,12 +40,12 @@ public abstract class TreeBasedStructureViewBuilder implements StructureViewBuil
    * @return the structure view model instance.
    * @see TextEditorBasedStructureViewModel
    */
-  @Nonnull
+  
   public abstract StructureViewModel createStructureViewModel(@Nullable Editor editor);
 
   @Override
-  @Nonnull
-  public StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project) {
+  
+  public StructureView createStructureView(FileEditor fileEditor, Project project) {
     StructureViewModel model = createStructureViewModel(fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null);
     StructureView view = StructureViewFactory.getInstance(project).createStructureView(fileEditor, model, project, isRootNodeShown());
     Disposer.register(view, model);

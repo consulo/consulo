@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov

@@ -1,7 +1,6 @@
 package consulo.execution.debug.frame;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 public interface XValueCallback {
     /**
@@ -10,7 +9,7 @@ public interface XValueCallback {
      * @param errorMessage message describing the error
      */
     @Deprecated
-    default void errorOccurred(@Nonnull String errorMessage) {
+    default void errorOccurred(String errorMessage) {
         errorOccurred(LocalizeValue.of(errorMessage));
     }
 
@@ -19,5 +18,5 @@ public interface XValueCallback {
      *
      * @param errorMessage message describing the error
      */
-    void errorOccurred(@Nonnull LocalizeValue errorMessage);
+    void errorOccurred(LocalizeValue errorMessage);
 }

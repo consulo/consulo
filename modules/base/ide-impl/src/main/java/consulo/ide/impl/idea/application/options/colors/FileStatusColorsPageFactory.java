@@ -20,17 +20,16 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusFactory;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 class FileStatusColorsPageFactory implements ColorAndFontPanelFactory {
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
-    public NewColorAndFontPanel createPanel(@Nonnull ColorAndFontOptions options) {
+    public NewColorAndFontPanel createPanel(ColorAndFontOptions options) {
         return NewColorAndFontPanel.create(
             new PreviewPanel.Empty(),
             ApplicationLocalize.titleFileStatus(),
@@ -40,7 +39,7 @@ class FileStatusColorsPageFactory implements ColorAndFontPanelFactory {
         );
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getPanelDisplayName() {
         return ApplicationLocalize.titleFileStatus();

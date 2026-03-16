@@ -24,7 +24,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionToolbarsHolder;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.List;
@@ -35,15 +34,15 @@ import java.util.concurrent.CompletableFuture;
  * @since 2024-12-31
  */
 public abstract class ActionToolbarEngine {
-    @Nonnull
+    
     private final String myPlace;
 
-    @Nonnull
+    
     private final ActionGroup myActionGroup;
 
-    @Nonnull
+    
     private final ActionToolbar myActionToolbar;
-    @Nonnull
+    
     private final ActionManager myActionManager;
 
     private final ToolbarNotifier myUpdater;
@@ -52,16 +51,16 @@ public abstract class ActionToolbarEngine {
 
     private List<? extends AnAction> myVisibleActions = List.of();
 
-    @Nonnull
+    
     private CompletableFuture<List<? extends AnAction>> myLastUpdate = CompletableFuture.completedFuture(List.of());
 
-    public ActionToolbarEngine(@Nonnull String place,
-                               @Nonnull ActionGroup actionGroup,
-                               @Nonnull ActionToolbar actionToolbar,
-                               @Nonnull Application application,
-                               @Nonnull KeymapManager keymapManager,
-                               @Nonnull ActionManager actionManager,
-                               @Nonnull JComponent component) {
+    public ActionToolbarEngine(String place,
+                               ActionGroup actionGroup,
+                               ActionToolbar actionToolbar,
+                               Application application,
+                               KeymapManager keymapManager,
+                               ActionManager actionManager,
+                               JComponent component) {
         myPlace = place;
         myActionGroup = actionGroup;
         myActionToolbar = actionToolbar;
@@ -78,12 +77,12 @@ public abstract class ActionToolbarEngine {
 
     protected abstract void removeAll();
 
-    @Nonnull
+    
     public String getPlace() {
         return myPlace;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     private CompletableFuture<List<? extends AnAction>> updateAsync() {
         DataContext dataContext = getDataContext();
@@ -108,7 +107,7 @@ public abstract class ActionToolbarEngine {
         return myLastUpdate;
     }
 
-    private void actionsUpdated(@Nonnull List<? extends AnAction> newVisibleActions) {
+    private void actionsUpdated(List<? extends AnAction> newVisibleActions) {
         if (!newVisibleActions.equals(myVisibleActions)) {
             boolean shouldRebuildUI = newVisibleActions.isEmpty() || myVisibleActions.isEmpty();
             myVisibleActions = newVisibleActions;
@@ -117,7 +116,7 @@ public abstract class ActionToolbarEngine {
         }
     }
 
-    public Presentation getPresentation(@Nonnull AnAction action) {
+    public Presentation getPresentation(AnAction action) {
         return myPresentationFactory.getPresentation(action);
     }
 
@@ -144,7 +143,7 @@ public abstract class ActionToolbarEngine {
         myUpdater.updateActions(true);
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     public CompletableFuture<List<? extends AnAction>> updateActionsAsync() {
         return myUpdater.updateActionsAsync();
@@ -176,17 +175,17 @@ public abstract class ActionToolbarEngine {
         myLastUpdate = CompletableFuture.completedFuture(myVisibleActions);
     }
 
-    @Nonnull
+    
     public ActionGroup getActionGroup() {
         return myActionGroup;
     }
 
-    @Nonnull
+    
     public List<? extends AnAction> getVisibleActions() {
         return myVisibleActions;
     }
 
-    @Nonnull
+    
     public List<AnAction> getActions() {
         AnAction[] kids = myActionGroup.getChildren(null);
         return List.of(kids);

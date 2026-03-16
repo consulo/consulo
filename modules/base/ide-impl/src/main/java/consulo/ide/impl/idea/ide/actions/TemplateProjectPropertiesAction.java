@@ -24,7 +24,6 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "TemplateProjectProperties")
 public class TemplateProjectPropertiesAction extends AnAction implements DumbAware {
@@ -34,7 +33,7 @@ public class TemplateProjectPropertiesAction extends AnAction implements DumbAwa
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project defaultProject = ProjectManagerEx.getInstanceEx().getDefaultProject();
         ShowSettingsUtil.getInstance().showSettingsDialog(defaultProject);
     }

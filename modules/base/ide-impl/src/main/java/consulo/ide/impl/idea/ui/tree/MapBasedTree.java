@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.ui.tree;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.TreePath;
@@ -41,11 +40,11 @@ public final class MapBasedTree<K, N> {
     private volatile Consumer<? super N> nodeRemoved;
     private volatile Consumer<? super N> nodeInserted;
 
-    public MapBasedTree(boolean identity, @Nonnull Function<? super N, ? extends K> keyFunction) {
+    public MapBasedTree(boolean identity, Function<? super N, ? extends K> keyFunction) {
         this(identity, keyFunction, null);
     }
 
-    public MapBasedTree(boolean identity, @Nonnull Function<? super N, ? extends K> keyFunction, TreePath path) {
+    public MapBasedTree(boolean identity, Function<? super N, ? extends K> keyFunction, TreePath path) {
         map = identity ? new IdentityHashMap<>() : new HashMap<>();
         this.keyFunction = keyFunction;
         this.path = path;
@@ -58,12 +57,12 @@ public final class MapBasedTree<K, N> {
         map.values().forEach(Entry::invalidate);
     }
 
-    public void onRemove(@Nonnull Consumer<? super N> consumer) {
+    public void onRemove(Consumer<? super N> consumer) {
         Consumer old = nodeRemoved;
         nodeRemoved = old == null ? consumer : old.andThen(consumer);
     }
 
-    public void onInsert(@Nonnull Consumer<? super N> consumer) {
+    public void onInsert(Consumer<? super N> consumer) {
         Consumer old = nodeInserted;
         nodeInserted = old == null ? consumer : old.andThen(consumer);
     }
@@ -120,7 +119,7 @@ public final class MapBasedTree<K, N> {
         return true;
     }
 
-    public UpdateResult<N> update(@Nonnull Entry<N> parent, List<? extends Pair<N, Boolean>> children) {
+    public UpdateResult<N> update(Entry<N> parent, List<? extends Pair<N, Boolean>> children) {
         List<Entry<N>> newChildren = new ArrayList<>(children == null ? 0 : children.size());
         List<Entry<N>> oldChildren = parent.children;
         Map<Entry<N>, K> mapInserted = new IdentityHashMap<>();
@@ -313,7 +312,7 @@ public final class MapBasedTree<K, N> {
             this.contained = guard(contained);
         }
 
-        public TreeModelEvent getEvent(@Nonnull Object source, TreePath path, @Nonnull List<Entry<N>> list) {
+        public TreeModelEvent getEvent(Object source, TreePath path, List<Entry<N>> list) {
             int size = list.size();
             int[] indices = new int[size];
             Object[] nodes = new Object[size];

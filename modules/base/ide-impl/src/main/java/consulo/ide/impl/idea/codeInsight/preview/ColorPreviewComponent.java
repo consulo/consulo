@@ -16,8 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.preview;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,10 +25,10 @@ import java.awt.*;
  * @author spleaner
  */
 public class ColorPreviewComponent extends JComponent implements PreviewHintComponent {
-  @Nonnull
+  
   private final Color myColor;
 
-  public ColorPreviewComponent(@Nonnull Color color) {
+  public ColorPreviewComponent(Color color) {
     myColor = color;
     setOpaque(true);
   }

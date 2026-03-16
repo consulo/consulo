@@ -36,8 +36,7 @@ import consulo.util.lang.StringHash;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -405,7 +404,7 @@ public class GeneratedParserUtilBase {
     }
   }
 
-  private static void addCompletionVariant(@Nonnull PsiBuilder builder, @Nonnull CompletionState completionState, Object o) {
+  private static void addCompletionVariant(PsiBuilder builder, CompletionState completionState, Object o) {
     int offset = builder.getCurrentOffset();
     if (!builder.eof() && offset == builder.rawTokenTypeStart(1)) return; // suppress for zero-length tokens
     String text = completionState.convertItem(o);
@@ -417,11 +416,11 @@ public class GeneratedParserUtilBase {
     }
   }
 
-  public static boolean isWhitespaceOrComment(@Nonnull PsiBuilder builder, @Nullable IElementType type) {
+  public static boolean isWhitespaceOrComment(PsiBuilder builder, @Nullable IElementType type) {
     return ((Builder)builder).getDelegate().isWhitespaceOrCommentType(type);
   }
 
-  private static boolean wasAutoSkipped(@Nonnull PsiBuilder builder, int steps) {
+  private static boolean wasAutoSkipped(PsiBuilder builder, int steps) {
     for (int i = -1; i >= -steps; i--) {
       if (!isWhitespaceOrComment(builder, builder.rawLookup(i))) return false;
     }
@@ -790,11 +789,11 @@ public class GeneratedParserUtilBase {
       return convertItem(o);
     }
 
-    public void addItem(@Nonnull PsiBuilder builder, @Nonnull String text) {
+    public void addItem(PsiBuilder builder, String text) {
       items.add(text);
     }
 
-    public boolean prefixMatches(@Nonnull PsiBuilder builder, @Nonnull String text) {
+    public boolean prefixMatches(PsiBuilder builder, String text) {
       int builderOffset = builder.getCurrentOffset();
       int diff = offset - builderOffset;
       int length = text.length();
@@ -828,7 +827,7 @@ public class GeneratedParserUtilBase {
       return false;
     }
 
-    public boolean prefixMatches(@Nonnull String prefix, @Nonnull String variant) {
+    public boolean prefixMatches(String prefix, String variant) {
       boolean matches = Application.get().getInstance(ParserPrefixMatcher.class).prefixMatches(prefix, variant.replace(' ', '_'));
       if (matches && StringUtil.isWhiteSpace(prefix.charAt(prefix.length() - 1))) {
         return StringUtil.startsWithIgnoreCase(variant, prefix);
@@ -879,25 +878,25 @@ public class GeneratedParserUtilBase {
     MyList<Variant> unexpected = new MyList<>(INITIAL_VARIANTS_SIZE / 10);
 
     final LimitedPool<Variant> VARIANTS = new LimitedPool<>(VARIANTS_POOL_SIZE, new LimitedPool.ObjectFactory<Variant>() {
-      @Nonnull
+      
       @Override
       public Variant create() {
         return new Variant();
       }
 
       @Override
-      public void cleanup(@Nonnull Variant o) {
+      public void cleanup(Variant o) {
       }
     });
     final LimitedPool<Frame> FRAMES = new LimitedPool<>(FRAMES_POOL_SIZE, new LimitedPool.ObjectFactory<Frame>() {
-      @Nonnull
+      
       @Override
       public Frame create() {
         return new Frame();
       }
 
       @Override
-      public void cleanup(@Nonnull Frame o) {
+      public void cleanup(Frame o) {
       }
     });
 
@@ -1198,7 +1197,7 @@ public class GeneratedParserUtilBase {
       super("DUMMY_BLOCK", Language.ANY);
     }
 
-    @Nonnull
+    
     @Override
     public ASTNode createCompositeNode() {
       return new DummyBlock();
@@ -1210,13 +1209,13 @@ public class GeneratedParserUtilBase {
       super(DUMMY_BLOCK);
     }
 
-    @Nonnull
+    
     @Override
     public PsiReference[] getReferences() {
       return PsiReference.EMPTY_ARRAY;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public Language getLanguage() {

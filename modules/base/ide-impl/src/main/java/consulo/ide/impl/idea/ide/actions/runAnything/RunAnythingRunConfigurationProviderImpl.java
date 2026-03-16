@@ -11,8 +11,7 @@ import consulo.ide.runAnything.RunAnythingContext;
 import consulo.ide.runAnything.RunAnythingGroup;
 import consulo.ide.localize.IdeLocalize;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -22,9 +21,9 @@ import static consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil.fetc
 
 @ExtensionImpl
 public class RunAnythingRunConfigurationProviderImpl extends RunAnythingRunConfigurationProvider {
-    @Nonnull
+    
     @Override
-    public Collection<ChooseRunConfigurationPopup.ItemWrapper> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<ChooseRunConfigurationPopup.ItemWrapper> getValues(DataContext dataContext, String pattern) {
         return getWrappers(dataContext);
     }
 
@@ -40,16 +39,16 @@ public class RunAnythingRunConfigurationProviderImpl extends RunAnythingRunConfi
         return new RunAnythingCompletionGroup(this, IdeLocalize.runAnythingRunConfigurationsGroupTitle());
     }
 
-    @Nonnull
-    private static List<ChooseRunConfigurationPopup.ItemWrapper> getWrappers(@Nonnull DataContext dataContext) {
+    
+    private static List<ChooseRunConfigurationPopup.ItemWrapper> getWrappers(DataContext dataContext) {
         Project project = fetchProject(dataContext);
         return ChooseRunConfigurationPopup.createFlatSettingsList(project);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
+    public List<RunAnythingContext> getExecutionContexts(DataContext dataContext) {
         return Collections.emptyList();
     }
 }

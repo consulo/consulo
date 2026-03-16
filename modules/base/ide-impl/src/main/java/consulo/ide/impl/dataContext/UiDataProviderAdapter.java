@@ -20,8 +20,7 @@ import consulo.dataContext.DataProvider;
 import consulo.dataContext.UiDataProvider;
 import consulo.dataContext.UiDataRule;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -37,18 +36,17 @@ import java.util.List;
 public class UiDataProviderAdapter implements DataProvider {
     private final UiDataProvider myProvider;
 
-    public UiDataProviderAdapter(@Nonnull UiDataProvider provider) {
+    public UiDataProviderAdapter(UiDataProvider provider) {
         myProvider = provider;
     }
 
-    @Nonnull
     public UiDataProvider getProvider() {
         return myProvider;
     }
 
     @Nullable
     @Override
-    public Object getData(@Nonnull Key<?> dataId) {
+    public Object getData(Key<?> dataId) {
         DataSinkImpl sink = new DataSinkImpl();
         List<UiDataRule> rules = Application.get().getExtensionPoint(UiDataRule.class).getExtensionList();
         sink.collectFromProvider(myProvider, rules);

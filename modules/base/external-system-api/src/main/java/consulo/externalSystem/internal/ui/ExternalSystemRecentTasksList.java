@@ -35,8 +35,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -49,12 +48,12 @@ import java.util.function.Supplier;
  */
 public class ExternalSystemRecentTasksList extends JBList implements Supplier<ExternalTaskExecutionInfo> {
 
-  @Nonnull
+  
   private static final JLabel EMPTY_RENDERER = new JLabel(" ");
   
-  public ExternalSystemRecentTasksList(@Nonnull ExternalSystemRecentTaskListModel model,
-                                       @Nonnull final ProjectSystemId externalSystemId,
-                                       @Nonnull final Project project)
+  public ExternalSystemRecentTasksList(ExternalSystemRecentTaskListModel model,
+                                       final ProjectSystemId externalSystemId,
+                                       final Project project)
   {
     super(model);
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -102,7 +101,7 @@ public class ExternalSystemRecentTasksList extends JBList implements Supplier<Ex
     return (ExternalSystemRecentTaskListModel)super.getModel();
   }
 
-  public void setFirst(@Nonnull ExternalTaskExecutionInfo task) {
+  public void setFirst(ExternalTaskExecutionInfo task) {
     ExternalTaskExecutionInfo selected = get();
     ExternalSystemRecentTaskListModel model = getModel();
     model.setFirst(task);
@@ -132,14 +131,14 @@ public class ExternalSystemRecentTasksList extends JBList implements Supplier<Ex
 
   private static class MyRenderer extends DefaultListCellRenderer {
 
-    @Nonnull
+    
     private final consulo.ui.image.Image myGenericTaskIcon;
-    @Nonnull
+    
     private final Project myProject;
     @Nullable
     private ConfigurationType myConfigurationType;
 
-    MyRenderer(@Nonnull Project project, @Nonnull consulo.ui.image.Image genericTaskIcon, @Nullable ConfigurationType configurationType) {
+    MyRenderer(Project project, consulo.ui.image.Image genericTaskIcon, @Nullable ConfigurationType configurationType) {
       myProject = project;
       myGenericTaskIcon = genericTaskIcon;
       myConfigurationType = configurationType;

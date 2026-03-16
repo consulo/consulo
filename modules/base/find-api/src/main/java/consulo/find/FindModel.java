@@ -22,8 +22,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.PatternUtil;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -257,7 +256,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @return the string to find.
      */
-    @Nonnull
+    
     public String getStringToFind() {
         return myStringToFind;
     }
@@ -267,7 +266,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @param s the string to find.
      */
-    public void setStringToFind(@Nonnull String s) {
+    public void setStringToFind(String s) {
         boolean changed = !StringUtil.equals(s, myStringToFind);
         myStringToFind = s;
         myPattern = PatternUtil.NOTHING;
@@ -281,7 +280,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @return the string to replace with.
      */
-    @Nonnull
+    
     public String getStringToReplace() {
         return myStringToReplace;
     }
@@ -291,7 +290,7 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
      *
      * @param s the string to replace with.
      */
-    public void setStringToReplace(@Nonnull String s) {
+    public void setStringToReplace(String s) {
         boolean changed = !StringUtil.equals(s, myStringToReplace);
         myStringToReplace = s;
         if (changed) {
@@ -849,12 +848,12 @@ public class FindModel extends UserDataHolderBase implements Cloneable {
         }
     }
 
-    @Nonnull
+    
     public FindSearchContext getSearchContext() {
         return searchContext;
     }
 
-    public void setSearchContext(@Nonnull FindSearchContext _searchContext) {
+    public void setSearchContext(FindSearchContext _searchContext) {
         doSetContext(_searchContext);
     }
 

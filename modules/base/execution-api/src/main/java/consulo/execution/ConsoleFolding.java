@@ -4,8 +4,7 @@ package consulo.execution;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public abstract class ConsoleFolding {
      * @param line    line to check whether it should be folded or not
      * @return {@code true} if line should be folded, {@code false} if not
      */
-    public boolean shouldFoldLine(@Nonnull Project project, @Nonnull String line) {
+    public boolean shouldFoldLine(Project project, String line) {
         return false;
     }
 
@@ -37,7 +36,7 @@ public abstract class ConsoleFolding {
      * @return placeholder for lines or {@code null} if these lines should not be folded
      */
     @Nullable
-    public String getPlaceholderText(@Nonnull Project project, @Nonnull List<String> lines) {
+    public String getPlaceholderText(Project project, List<String> lines) {
         return null;
     }
 }

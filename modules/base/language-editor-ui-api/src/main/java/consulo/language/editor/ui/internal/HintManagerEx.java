@@ -22,7 +22,6 @@ import consulo.language.editor.hint.HintManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.hint.HintHint;
 import consulo.ui.ex.awt.hint.LightweightHint;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 
@@ -41,18 +40,18 @@ public interface HintManagerEx extends HintManager {
     );
 
     void showEditorHint(
-        @Nonnull LightweightHint hint,
-        @Nonnull Editor editor,
-        @Nonnull Point p,
+        LightweightHint hint,
+        Editor editor,
+        Point p,
         @HideFlags int flags,
         int timeout,
         boolean reviveOnEditorChange
     );
 
     void showEditorHint(
-        @Nonnull LightweightHint hint,
-        @Nonnull Editor editor,
-        @Nonnull Point p,
+        LightweightHint hint,
+        Editor editor,
+        Point p,
         @HideFlags int flags,
         int timeout,
         boolean reviveOnEditorChange,
@@ -60,9 +59,9 @@ public interface HintManagerEx extends HintManager {
     );
 
     public void showEditorHint(
-        @Nonnull LightweightHint hint,
-        @Nonnull Editor editor,
-        @Nonnull Point p,
+        LightweightHint hint,
+        Editor editor,
+        Point p,
         @HideFlags int flags,
         int timeout,
         boolean reviveOnEditorChange,
@@ -87,21 +86,21 @@ public interface HintManagerEx extends HintManager {
     );
 
     @RequiredUIAccess
-    Point getHintPosition(@Nonnull LightweightHint hint, @Nonnull Editor editor, @PositionFlags short constraint);
+    Point getHintPosition(LightweightHint hint, Editor editor, @PositionFlags short constraint);
 
     @RequiredUIAccess
     Point getHintPosition(
-        @Nonnull LightweightHint hint,
-        @Nonnull Editor editor,
-        @Nonnull VisualPosition pos,
+        LightweightHint hint,
+        Editor editor,
+        VisualPosition pos,
         @PositionFlags short constraint
     );
 
     @RequiredUIAccess
     Point getHintPosition(
-        @Nonnull LightweightHint hint,
-        @Nonnull Editor editor,
-        @Nonnull LogicalPosition pos,
+        LightweightHint hint,
+        Editor editor,
+        LogicalPosition pos,
         @PositionFlags short constraint
     );
 

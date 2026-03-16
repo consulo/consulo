@@ -26,7 +26,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ScrollingUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -41,7 +40,7 @@ public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenAct
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         RecentProjectsManager mgr = RecentProjectsManager.getInstance();
         for (AnAction action : getSelectedElements(e)) {
             if (action instanceof ReopenProjectAction reopenProjectAction) {
@@ -66,7 +65,7 @@ public class RemoveSelectedProjectsAction extends RecentProjectsWelcomeScreenAct
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(!getSelectedElements(e).isEmpty());
     }
 }

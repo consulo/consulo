@@ -42,8 +42,7 @@ import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.function.Predicates;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,13 +61,13 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
         @RequiredUIAccess
         @Override
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             setSelectedContext(this.context);
         }
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setTextValue(context.getLabel());
             e.getPresentation().setDescriptionValue(context.getDescription());
             e.getPresentation().setIcon(context.getIcon());
@@ -90,7 +89,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
         @RequiredUIAccess
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             e.getPresentation().setIcon(Image.empty(16));
         }
@@ -111,7 +110,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Application.get().invokeLater(() -> {
                 Project project = e.getData(Project.KEY);
 
@@ -236,19 +235,19 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
     @Nullable
     public abstract RunAnythingContext getSelectedContext();
 
-    @Nonnull
+    
     public abstract List<RunAnythingContext> getAvailableContexts();
 
     public abstract void setAvailableContexts(List<? extends RunAnythingContext> contexts);
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         return AnAction.EMPTY_ARRAY;
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         presentation.setDescriptionValue(IdeLocalize.runAnythingContextTooltip());
 
@@ -272,7 +271,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
 
     @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;

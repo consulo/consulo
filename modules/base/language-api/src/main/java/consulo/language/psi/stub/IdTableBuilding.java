@@ -29,8 +29,7 @@ import consulo.language.psi.search.UsageSearchContext;
 import consulo.util.lang.CharArrayUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,12 +102,12 @@ public class IdTableBuilding {
   private static class WordsScannerFileTypeIdIndexerAdapter implements IdIndexer {
     private final WordsScanner myScanner;
 
-    public WordsScannerFileTypeIdIndexerAdapter(@Nonnull WordsScanner scanner) {
+    public WordsScannerFileTypeIdIndexerAdapter(WordsScanner scanner) {
       myScanner = scanner;
     }
 
     @Override
-    @Nonnull
+    
     public Map<IdIndexEntry, Integer> map(FileContent inputData) {
       final CharSequence chars = inputData.getContentAsText();
       final char[] charsArray = CharArrayUtil.fromSequenceWithoutCopying(chars);
@@ -137,7 +136,7 @@ public class IdTableBuilding {
       return consumer.getResult();
     }
 
-    @Nonnull
+    
     @Override
     public FileType getFileType() {
       throw new UnsupportedOperationException();

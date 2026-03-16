@@ -20,7 +20,6 @@ import consulo.execution.ui.console.language.LanguageConsoleBuilder;
 import consulo.execution.ui.console.language.LanguageConsoleBuilderFactory;
 import consulo.language.Language;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -38,9 +37,9 @@ public class DesktopAWTLanguageConsoleBuilderFactory implements LanguageConsoleB
     myProject = project;
   }
 
-  @Nonnull
+  
   @Override
-  public LanguageConsoleBuilder newBuilder(@Nonnull Language language) {
+  public LanguageConsoleBuilder newBuilder(Language language) {
     return new DesktopLanguageConsoleBuilder(myProject, language);
   }
 }

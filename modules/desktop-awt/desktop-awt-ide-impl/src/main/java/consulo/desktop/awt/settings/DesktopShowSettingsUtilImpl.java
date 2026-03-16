@@ -42,8 +42,7 @@ import consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.update.Activatable;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -73,7 +72,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         mySdksModel = new DefaultSdksModel(sdkTableProvider);
     }
 
-    @Nonnull
+    
     @Override
     public SettingsSdksModel getSdksModel() {
         mySdksModel.initializeIfNeed();
@@ -83,9 +82,9 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
     @RequiredUIAccess
     private AsyncResult<Void> showSettingsImpl(
         @Nullable Project tempProject,
-        @Nonnull Function<Project, Configurable[]> configurableBuilder,
-        @Nonnull ConfigurablePreselectStrategy strategy,
-        @Nonnull Consumer<DesktopSettingsDialog> onShow
+        Function<Project, Configurable[]> configurableBuilder,
+        ConfigurablePreselectStrategy strategy,
+        Consumer<DesktopSettingsDialog> onShow
     ) {
         Project actualProject = tempProject != null ? tempProject : myDefaultProjectFactory.getDefaultProject();
 
@@ -111,14 +110,14 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         return result;
     }
 
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     @RequiredUIAccess
     @Override
     public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(
         @Nullable Project project,
-        @Nonnull Class<T> configurableClass,
-        @Nonnull Consumer<T> afterSelect
+        Class<T> configurableClass,
+        Consumer<T> afterSelect
     ) {
         assert Configurable.class.isAssignableFrom(configurableClass) : "Not a configurable: " + configurableClass.getName();
 
@@ -129,7 +128,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         });
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
@@ -142,10 +141,10 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect) {
+    public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
         return showSettingsImpl(
             project,
             BaseShowSettingsUtil::buildConfigurables,
@@ -155,7 +154,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         );
     }
 
-    @Nonnull
+    
     @Override
     @RequiredUIAccess
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
@@ -195,7 +194,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         return null;
     }
 
-    @Nonnull
+    
     @RequiredUIAccess
     @Override
     public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nullable Configurable toSelect) {
@@ -210,7 +209,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
 
     @RequiredUIAccess
     @Override
-    public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
+    public AsyncResult<Void> showProjectStructureDialog(Project project, Consumer<ProjectStructureSelector> consumer) {
         return showSettingsImpl(project, BaseShowSettingsUtil::buildConfigurables, ConfigurablePreselectStrategy.notSelected(), dialog -> {
             ProjectStructureSelector editor = DataManager.getInstance().getDataContext(dialog.getContentPane()).getData(ProjectStructureSelector.KEY);
             assert editor != null;
@@ -230,7 +229,7 @@ public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSetting
         @Nullable String title,
         Project project,
         String dimensionServiceKey,
-        @Nonnull Configurable configurable
+        Configurable configurable
     ) {
         return editConfigurable(null, project, configurable, LocalizeValue.ofNullable(title), dimensionServiceKey, null);
     }

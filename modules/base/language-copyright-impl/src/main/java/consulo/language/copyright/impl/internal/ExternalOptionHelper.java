@@ -20,7 +20,7 @@ import consulo.language.copyright.config.CopyrightProfile;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.jdom.JDOMUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 

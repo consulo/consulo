@@ -18,14 +18,13 @@ package consulo.ide.impl.idea.ide.impl.dataRules;
 import consulo.dataContext.DataSnapshot;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2004-02-10
  */
 public final class ProjectFileDirectoryRule {
-  static VirtualFile getData(@Nonnull DataSnapshot dataProvider) {
+  static VirtualFile getData(DataSnapshot dataProvider) {
     VirtualFile dir = dataProvider.get(Project.PROJECT_FILE_DIRECTORY);
     if (dir == null) {
       Project project = dataProvider.get(Project.KEY);

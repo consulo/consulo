@@ -3,26 +3,25 @@ package consulo.index.io.forward;
 
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.util.io.ByteArraySequence;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
 public interface IntForwardIndex extends ForwardIndex {
 
-  int getInt(@Nonnull Integer key) throws IOException;
+  int getInt(Integer key) throws IOException;
 
-  void putInt(@Nonnull Integer key, int value) throws IOException;
+  void putInt(Integer key, int value) throws IOException;
 
   @Nullable
   @Override
-  default ByteArraySequence get(@Nonnull Integer key) throws IOException {
+  default ByteArraySequence get(Integer key) throws IOException {
     int intValue = getInt(key);
     return AbstractForwardIndexAccessor.serializeToByteSeq(intValue, EnumeratorIntegerDescriptor.INSTANCE, 4);
   }
 
   @Override
-  default void put(@Nonnull Integer key, @Nullable ByteArraySequence value) throws IOException {
+  default void put(Integer key, @Nullable ByteArraySequence value) throws IOException {
     int valueAsInt = value == null ? 0 : AbstractForwardIndexAccessor.deserializeFromByteSeq(value, EnumeratorIntegerDescriptor.INSTANCE);
     putInt(key, valueAsInt);
   }

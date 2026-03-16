@@ -37,8 +37,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.InputEvent;
@@ -52,14 +51,14 @@ public abstract class SelectInContextImpl implements SelectInContext {
     }
 
     @Override
-    @Nonnull
+    
     public Project getProject() {
         return myPsiFile.getProject();
     }
 
 
     @Override
-    @Nonnull
+    
     public VirtualFile getVirtualFile() {
         VirtualFile vFile = myPsiFile.getVirtualFile();
         assert vFile != null;
@@ -262,13 +261,13 @@ public abstract class SelectInContextImpl implements SelectInContext {
         }
 
         @Override
-        @Nonnull
+        
         public Project getProject() {
             return myProject;
         }
 
         @Override
-        @Nonnull
+        
         public VirtualFile getVirtualFile() {
             return myVirtualFile;
         }

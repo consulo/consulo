@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.popup.IdePopupEventDispatcher;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -61,37 +60,37 @@ public interface IdeEventQueueProxy {
   default void addDispatcher(Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
   }
 
-  default void addPostprocessor(@Nonnull Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
+  default void addPostprocessor(Predicate<AWTEvent> dispatcher, @Nullable Disposable parent) {
   }
 
-  default boolean containsDispatcher(@Nonnull Predicate<AWTEvent> dispatcher) {
+  default boolean containsDispatcher(Predicate<AWTEvent> dispatcher) {
     return false;
   }
 
-  default void removePostprocessor(@Nonnull Predicate<AWTEvent> dispatcher) {
+  default void removePostprocessor(Predicate<AWTEvent> dispatcher) {
   }
 
-  default void removeDispatcher(@Nonnull Predicate<AWTEvent> dispatcher) {
+  default void removeDispatcher(Predicate<AWTEvent> dispatcher) {
   }
 
   default void requestFocusInNonFocusedWindow(MouseEvent event) {
   }
 
-  default void blockNextEvents(@Nonnull MouseEvent e) {
+  default void blockNextEvents(MouseEvent e) {
   }
 
   default AWTEvent getTrueCurrentEvent() {
     return null;
   }
 
-  default void doWhenReady(@Nonnull Runnable runnable) {
+  default void doWhenReady(Runnable runnable) {
     runnable.run();
   }
 
-  default void addActivityListener(@Nonnull Runnable runnable, Disposable parentDisposable) {
+  default void addActivityListener(Runnable runnable, Disposable parentDisposable) {
   }
 
-  default void removeActivityListener(@Nonnull Runnable runnable) {
+  default void removeActivityListener(Runnable runnable) {
   }
 
   default boolean isKeyEventDispatcherReady() {
@@ -104,15 +103,15 @@ public interface IdeEventQueueProxy {
   default void removePopup(IdePopupEventDispatcher idePopupEventDispatcher) {
   }
 
-  default void disableInputMethods(@Nonnull Disposable parentDisposable) {
+  default void disableInputMethods(Disposable parentDisposable) {
   }
 
   default void dispatchEvent(AWTEvent event) {
   }
 
-  default void addIdleListener(@Nonnull Runnable runnable, int timeoutMillis) {
+  default void addIdleListener(Runnable runnable, int timeoutMillis) {
   }
 
-  default void removeIdleListener(@Nonnull Runnable runnable) {
+  default void removeIdleListener(Runnable runnable) {
   }
 }

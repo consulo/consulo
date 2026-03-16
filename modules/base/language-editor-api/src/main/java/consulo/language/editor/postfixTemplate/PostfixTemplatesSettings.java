@@ -29,8 +29,7 @@ import consulo.util.xml.serializer.annotation.MapAnnotation;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -47,17 +46,17 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
   private boolean templatesCompletionEnabled = true;
   private int myShortcut = TemplateConstants.TAB_CHAR;
 
-  public boolean isTemplateEnabled(@Nonnull PostfixTemplate template, @Nonnull PostfixTemplateProvider provider) {
+  public boolean isTemplateEnabled(PostfixTemplate template, PostfixTemplateProvider provider) {
     String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
     return isTemplateEnabled(template, langForProvider);
   }
 
-  public boolean isTemplateEnabled(PostfixTemplate template, @Nonnull String strictLangForProvider) {
+  public boolean isTemplateEnabled(PostfixTemplate template, String strictLangForProvider) {
     Set<String> result = myLangToDisabledTemplates.get(strictLangForProvider);
     return result == null || !result.contains(template.getKey());
   }
 
-  public void disableTemplate(@Nonnull PostfixTemplate template, @Nonnull PostfixTemplateProvider provider) {
+  public void disableTemplate(PostfixTemplate template, PostfixTemplateProvider provider) {
     String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
     disableTemplate(template, langForProvider);
   }
@@ -67,7 +66,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     state.add(template.getKey());
   }
 
-  public void enableTemplate(@Nonnull PostfixTemplate template, @Nonnull PostfixTemplateProvider provider) {
+  public void enableTemplate(PostfixTemplate template, PostfixTemplateProvider provider) {
     String langForProvider = PostfixTemplatesUtils.getLangForProvider(provider);
     enableTemplate(template, langForProvider);
   }
@@ -93,13 +92,13 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     this.templatesCompletionEnabled = templatesCompletionEnabled;
   }
 
-  @Nonnull
+  
   @MapAnnotation(entryTagName = "disabled-postfix-templates", keyAttributeName = "lang", surroundWithTag = false)
   public Map<String, Set<String>> getLangDisabledTemplates() {
     return myLangToDisabledTemplates;
   }
 
-  public void setLangDisabledTemplates(@Nonnull Map<String, Set<String>> templatesState) {
+  public void setLangDisabledTemplates(Map<String, Set<String>> templatesState) {
     myLangToDisabledTemplates = templatesState;
   }
 
@@ -111,7 +110,7 @@ public class PostfixTemplatesSettings implements PersistentStateComponent<Elemen
     myShortcut = shortcut;
   }
 
-  @Nonnull
+  
   public static PostfixTemplatesSettings getInstance() {
     return Application.get().getInstance(PostfixTemplatesSettings.class);
   }

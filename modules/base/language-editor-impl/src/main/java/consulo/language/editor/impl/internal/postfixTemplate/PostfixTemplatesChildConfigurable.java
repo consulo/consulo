@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.CheckBoxList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -57,13 +56,13 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
   /**
    * @see PostfixTemplatesConfigurable#getId()
    */
-  @Nonnull
+  
   @Override
   public String getId() {
     return "editing.postfixCompletion." + myPostfixTemplateProvider.getLanguage().getID();
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return myPostfixTemplateProvider.getLanguage().getDisplayName();
@@ -72,7 +71,7 @@ public class PostfixTemplatesChildConfigurable implements Configurable, Configur
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     OnePixelSplitter splitter = new OnePixelSplitter();
     splitter.setSplitterProportionKey("PostfixTemplatesChildConfigurable.splitter");
 

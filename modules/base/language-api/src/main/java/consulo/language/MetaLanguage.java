@@ -5,7 +5,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,11 +19,11 @@ import java.util.stream.Collectors;
 public abstract class MetaLanguage extends Language {
   public static final ExtensionPointName<MetaLanguage> EP_NAME = ExtensionPointName.create(MetaLanguage.class);
 
-  protected MetaLanguage(@Nonnull String ID) {
+  protected MetaLanguage(String ID) {
     super(ID);
   }
 
-  @Nonnull
+  
   public static List<MetaLanguage> all() {
     return EP_NAME.getExtensionList();
   }
@@ -32,12 +31,12 @@ public abstract class MetaLanguage extends Language {
   /**
    * Checks if the given language matches the criterion of this meta-language.
    */
-  public abstract boolean matchesLanguage(@Nonnull Language language);
+  public abstract boolean matchesLanguage(Language language);
 
   /**
    * Returns the list of all languages matching this meta-language.
    */
-  @Nonnull
+  
   public Collection<Language> getMatchingLanguages() {
     return Language.getRegisteredLanguages().stream().filter(this::matchesLanguage).collect(Collectors.toList());
   }

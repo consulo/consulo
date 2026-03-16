@@ -27,8 +27,7 @@ import consulo.project.Project;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -49,7 +48,7 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
     myDefaultProjectFactory = defaultProjectFactory;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project) {
@@ -59,37 +58,37 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
     return settingsDialog.showAsync();
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
-  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, @Nonnull Class<T> toSelect, @Nonnull Consumer<T> afterSelect) {
+  public <T extends UnnamedConfigurable> AsyncResult<Void> showAndSelect(@Nullable Project project, Class<T> toSelect, Consumer<T> afterSelect) {
     return showSettingsDialog(project);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, @Nonnull String nameToSelect) {
+  public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String nameToSelect) {
     return showSettingsDialog(project);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
   public AsyncResult<Void> showSettingsDialog(@Nullable Project project, String id2Select, String filter) {
     return showSettingsDialog(project);
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showSettingsDialog(@Nonnull Project project, Configurable toSelect) {
+  public AsyncResult<Void> showSettingsDialog(Project project, Configurable toSelect) {
     return showSettingsDialog(project);
   }
 
   @RequiredUIAccess
   @Override
-  public AsyncResult<Void> showProjectStructureDialog(@Nonnull Project project, @Nonnull Consumer<ProjectStructureSelector> consumer) {
+  public AsyncResult<Void> showProjectStructureDialog(Project project, Consumer<ProjectStructureSelector> consumer) {
     return AsyncResult.rejected();
   }
 
@@ -134,7 +133,7 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
     return false;
   }
 
-  @Nonnull
+  
   @Override
   public SettingsSdksModel getSdksModel() {
     SettingsSdksModel model = new DefaultSdksModel();

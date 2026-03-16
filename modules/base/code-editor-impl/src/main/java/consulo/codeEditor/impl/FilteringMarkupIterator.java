@@ -2,18 +2,17 @@
 package consulo.codeEditor.impl;
 
 import consulo.document.MarkupIterator;
-import jakarta.annotation.Nonnull;
 
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 public class FilteringMarkupIterator<T> implements MarkupIterator<T> {
-  @Nonnull
+  
   private final MarkupIterator<T> myDelegate;
-  @Nonnull
+  
   private final Predicate<? super T> myFilter;
 
-  public FilteringMarkupIterator(@Nonnull MarkupIterator<T> delegate, @Nonnull Predicate<? super T> filter) {
+  public FilteringMarkupIterator(MarkupIterator<T> delegate, Predicate<? super T> filter) {
     myDelegate = delegate;
     myFilter = filter;
     skipUnrelated();

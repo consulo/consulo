@@ -17,7 +17,6 @@ package consulo.externalSystem.service.notification;
 
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.MessageCategory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vladislav.Soroka
@@ -39,7 +38,7 @@ public enum NotificationCategory {
     return myValue;
   }
 
-  @Nonnull
+  
   public NotificationType getNotificationType() {
     return convert(this);
   }

@@ -15,7 +15,6 @@
  */
 package consulo.logging.internal;
 
-import jakarta.annotation.Nonnull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ServiceLoader;
@@ -40,15 +39,15 @@ public class LoggerFactoryInitializer {
     ourFactory = factory;
   }
 
-  @Nonnull
-  private static String getThrowableText(@Nonnull Throwable aThrowable) {
+  
+  private static String getThrowableText(Throwable aThrowable) {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     aThrowable.printStackTrace(writer);
     return stringWriter.getBuffer().toString();
   }
 
-  public static void initializeLogger(@Nonnull ClassLoader classLoader) {
+  public static void initializeLogger(ClassLoader classLoader) {
     ServiceLoader<LoggerFactoryProvider> factories = ServiceLoader.load(LoggerFactoryProvider.class, classLoader);
     ServiceLoader.Provider<LoggerFactoryProvider> factory = factories
         .stream()

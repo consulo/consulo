@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.tipOfDay.TipOfDayContributor;
 import consulo.ide.tipOfDay.impl.localize.TipOfDayLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Consumer;
 
@@ -30,7 +29,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class DefaultTipOfDayContributor implements TipOfDayContributor {
     @Override
-    public void contribute(@Nonnull Consumer<LocalizeValue> consumer) {
+    public void contribute(Consumer<LocalizeValue> consumer) {
         consumer.accept(TipOfDayLocalize.welcome());
         consumer.accept(TipOfDayLocalize.gotoclass());
 

@@ -21,10 +21,8 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -40,19 +38,19 @@ import java.util.regex.Pattern;
  * @since 5.1
  */
 public class LogFileOptions implements JDOMExternalizable {
-  @NonNls private static final String PATH = "path";
-  @NonNls private static final String CHECKED = "checked";
-  @NonNls private static final String ALIAS = "alias";
-  @NonNls private static final String SKIPPED = "skipped";
-  @NonNls private static final String SHOW_ALL = "show_all";
-  @NonNls private static final String CHARSET = "charset";
+  private static final String PATH = "path";
+  private static final String CHECKED = "checked";
+  private static final String ALIAS = "alias";
+  private static final String SKIPPED = "skipped";
+  private static final String SHOW_ALL = "show_all";
+  private static final String CHARSET = "charset";
 
   private String myName;
   private String myPathPattern;
   private boolean myEnabled;
   private boolean mySkipContent;
   private boolean myShowAll;
-  @Nonnull
+  
   private Charset myCharset;
 
   //read external

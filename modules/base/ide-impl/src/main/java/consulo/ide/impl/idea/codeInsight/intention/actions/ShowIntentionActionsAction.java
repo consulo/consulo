@@ -24,7 +24,6 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author mike
@@ -41,7 +40,7 @@ public class ShowIntentionActionsAction extends BaseCodeInsightAction implements
         return true;
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new ShowIntentionActionsHandler();

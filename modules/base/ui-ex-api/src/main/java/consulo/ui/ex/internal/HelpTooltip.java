@@ -16,7 +16,7 @@
 package consulo.ui.ex.internal;
 
 import consulo.ui.ex.action.Shortcut;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

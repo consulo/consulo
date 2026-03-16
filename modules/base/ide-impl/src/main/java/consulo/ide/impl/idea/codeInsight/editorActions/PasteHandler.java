@@ -54,8 +54,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -73,7 +72,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         myOriginalHandler = originalAction;
     }
 
-    @Nonnull
+    
     @Override
     public String getActionId() {
         return IdeActions.ACTION_EDITOR_PASTE;
@@ -81,7 +80,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
     @Override
     @RequiredUIAccess
-    public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
+    public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
         assert caret == null : "Invocation of 'paste' operation for specific caret is not supported";
         execute(editor, dataContext, null);
     }
@@ -105,7 +104,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
 
         DataContext context = new DataContext() {
             @Override
-            public Object getData(@Nonnull Key dataId) {
+            public Object getData(Key dataId) {
                 return PasteAction.TRANSFERABLE_PROVIDER == dataId
                     ? new Supplier<Transferable>() {
                         @Nullable
@@ -160,7 +159,7 @@ public class PasteHandler extends EditorActionHandler implements EditorTextInser
         Project project,
         PsiFile file,
         Document document,
-        @Nonnull Transferable content
+        Transferable content
     ) {
         CopyPasteManager.getInstance().stopKillRings();
 

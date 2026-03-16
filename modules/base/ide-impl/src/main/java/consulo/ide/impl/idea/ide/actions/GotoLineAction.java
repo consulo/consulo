@@ -17,7 +17,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "GotoLine")
 public class GotoLineAction extends AnAction implements DumbAware {
@@ -28,7 +27,7 @@ public class GotoLineAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         Editor editor = e.getData(EditorKeys.EDITOR_EVEN_IF_INACTIVE);
         if (Boolean.TRUE.equals(e.getData(PlatformDataKeys.IS_MODAL_CONTEXT))) {
@@ -48,7 +47,7 @@ public class GotoLineAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         event.getPresentation().setEnabledAndVisible(
             event.hasData(Project.KEY)
                 && event.hasData(EditorKeys.EDITOR_EVEN_IF_INACTIVE)

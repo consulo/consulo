@@ -6,7 +6,6 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +33,7 @@ public class DuplocatorSettings implements PersistentStateComponent<DuplocatorSe
   }
 
   @Override
-  public void loadState(@Nonnull DuplocatorSettings object) {
+  public void loadState(DuplocatorSettings object) {
     XmlSerializerUtil.copyBean(object, this);
   }
 }

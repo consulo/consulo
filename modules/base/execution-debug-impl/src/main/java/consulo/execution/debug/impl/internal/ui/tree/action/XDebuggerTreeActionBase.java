@@ -25,9 +25,8 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
@@ -38,21 +37,21 @@ import java.util.List;
  * @author nik
  */
 public abstract class XDebuggerTreeActionBase extends AnAction {
-    protected XDebuggerTreeActionBase(@Nonnull LocalizeValue text) {
+    protected XDebuggerTreeActionBase(LocalizeValue text) {
         super(text);
     }
 
-    protected XDebuggerTreeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected XDebuggerTreeActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected XDebuggerTreeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected XDebuggerTreeActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         XValueNodeImpl node = getSelectedNode(e.getDataContext());
         if (node != null) {
             String nodeName = node.getName();
@@ -62,19 +61,19 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
         }
     }
 
-    protected abstract void perform(XValueNodeImpl node, @Nonnull String nodeName, AnActionEvent e);
+    protected abstract void perform(XValueNodeImpl node, String nodeName, AnActionEvent e);
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         XValueNodeImpl node = getSelectedNode(e.getDataContext());
         e.getPresentation().setEnabled(node != null && isEnabled(node, e));
     }
 
-    protected boolean isEnabled(@Nonnull XValueNodeImpl node, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(XValueNodeImpl node, AnActionEvent e) {
         return node.getName() != null;
     }
 
-    @Nonnull
+    
     public static List<XValueNodeImpl> getSelectedNodes(DataContext dataContext) {
         XDebuggerTree tree = XDebuggerTree.getTree(dataContext);
         if (tree == null) {
@@ -112,7 +111,7 @@ public abstract class XDebuggerTreeActionBase extends AnAction {
     }
 
     @Nullable
-    public static XValue getSelectedValue(@Nonnull DataContext dataContext) {
+    public static XValue getSelectedValue(DataContext dataContext) {
         XValueNodeImpl node = getSelectedNode(dataContext);
         return node != null ? node.getValueContainer() : null;
     }

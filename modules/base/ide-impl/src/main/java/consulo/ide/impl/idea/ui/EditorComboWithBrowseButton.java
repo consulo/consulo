@@ -23,7 +23,6 @@ import consulo.ui.ex.RecentsManager;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -35,7 +34,7 @@ public class EditorComboWithBrowseButton extends ComponentWithBrowseButton<Edito
     public EditorComboWithBrowseButton(
         ActionListener browseActionListener,
         String text,
-        @Nonnull Project project,
+        Project project,
         String recentsKey
     ) {
         super(new EditorComboBox(text, project, PlainTextFileType.INSTANCE), browseActionListener);

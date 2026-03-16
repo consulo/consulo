@@ -26,23 +26,22 @@ import consulo.platform.LineSeparator;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FileDocumentContentImpl extends DocumentContentImpl implements FileContent {
-  @Nonnull
+  
   private final VirtualFile myFile;
 
   public FileDocumentContentImpl(@Nullable Project project,
-                                 @Nonnull Document document,
-                                 @Nonnull VirtualFile file) {
+                                 Document document,
+                                 VirtualFile file) {
     super(project, document, file.getFileType(), file, getSeparator(file), file.getCharset(), file.getBOM() != null);
     myFile = file;
   }
 
   @Nullable
   @Override
-  public Navigatable getNavigatable(@Nonnull LineCol position) {
+  public Navigatable getNavigatable(LineCol position) {
     Project project = getProject();
     if (project == null || project.isDefault() || !myFile.isValid()) return null;
     return OpenFileDescriptorFactory.getInstance(project)
@@ -53,13 +52,13 @@ public class FileDocumentContentImpl extends DocumentContentImpl implements File
   }
 
   @Nullable
-  private static LineSeparator getSeparator(@Nonnull VirtualFile file) {
+  private static LineSeparator getSeparator(VirtualFile file) {
     String s = LoadTextUtil.detectLineSeparator(file, true);
     if (s == null) return null;
     return LineSeparator.fromString(s);
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getFile() {
     return myFile;

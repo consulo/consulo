@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.CommitExecutor;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 public abstract class BeforeCheckinDialogHandler {
@@ -35,7 +34,7 @@ public abstract class BeforeCheckinDialogHandler {
   /**
    * @return false to cancel commit
    */
-  public boolean beforeCommitDialogShown(@Nonnull Project project, @Nonnull List<Change> changes, @Nonnull Iterable<CommitExecutor> executors, boolean showVcsCommit) {
+  public boolean beforeCommitDialogShown(Project project, List<Change> changes, Iterable<CommitExecutor> executors, boolean showVcsCommit) {
     //noinspection deprecation
     return beforeCommitDialogShownCallback(executors, showVcsCommit);
   }

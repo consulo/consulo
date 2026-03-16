@@ -1,7 +1,6 @@
 package consulo.externalSystem.service.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -11,15 +10,15 @@ public abstract class AbstractExternalEntityData implements ExternalEntityData {
 
   private static final long serialVersionUID = 1L;
   
-  @Nonnull
+  
   private ProjectSystemId myOwner;
   
-  public AbstractExternalEntityData(@Nonnull ProjectSystemId owner) {
+  public AbstractExternalEntityData(ProjectSystemId owner) {
     myOwner = owner;
   }
 
   @Override
-  @Nonnull
+  
   public ProjectSystemId getOwner() {
     return myOwner;
   }

@@ -25,8 +25,7 @@ import consulo.ui.web.internal.base.VaadinComponentDelegate;
 import consulo.ui.web.internal.base.VaadinComponent;
 import consulo.web.gwt.shared.ui.ex.state.ThreeComponentSplitLayoutState;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -95,31 +94,31 @@ public class WebThreeComponentSplitLayoutImpl extends VaadinComponentDelegate<We
   }
 
   @Override
-  @Nonnull
+ 
   public Vaadin createVaadinComponent() {
     return new Vaadin();
   }
 
   @RequiredUIAccess
-  @Nonnull
+ 
   @Override
-  public ThreeComponentSplitLayout setFirstComponent(@Nullable consulo.ui.Component component) {
+  public ThreeComponentSplitLayout setFirstComponent(consulo.ui.@Nullable Component component) {
     getVaadinComponent().setFirstComponent(TargetVaddin.to(component));
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+ 
   @Override
-  public ThreeComponentSplitLayout setCenterComponent(@Nullable consulo.ui.Component component) {
+  public ThreeComponentSplitLayout setCenterComponent(consulo.ui.@Nullable Component component) {
     getVaadinComponent().setCenterComponent(TargetVaddin.to(component));
     return this;
   }
 
   @RequiredUIAccess
-  @Nonnull
+ 
   @Override
-  public ThreeComponentSplitLayout setSecondComponent(@Nullable consulo.ui.Component component) {
+  public ThreeComponentSplitLayout setSecondComponent(consulo.ui.@Nullable Component component) {
     getVaadinComponent().setSecondComponent(TargetVaddin.to(component));
     return this;
   }

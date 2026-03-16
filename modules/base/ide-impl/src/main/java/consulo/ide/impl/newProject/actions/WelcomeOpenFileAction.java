@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.ide.actions.OpenFileAction;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.ProjectManager;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -30,7 +29,7 @@ import jakarta.inject.Inject;
 @ActionImpl(id = "WelcomeScreen.OpenProject")
 public class WelcomeOpenFileAction extends OpenFileAction {
     @Inject
-    public WelcomeOpenFileAction(@Nonnull ProjectManager projectManager) {
+    public WelcomeOpenFileAction(ProjectManager projectManager) {
         super(
             ActionLocalize.actionWelcomescreenOpenprojectText(),
             ActionLocalize.actionWelcomescreenOpenprojectDescription(),

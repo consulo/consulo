@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.awt.valueEditor.IntegerValueEditor;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A validating text field to input integer numbers with minimum, maximum and default values.
@@ -63,12 +62,12 @@ public class IntegerField extends JBTextField {
     myValueEditor.setCanBeEmpty(canBeEmpty);
   }
 
-  @Nonnull
+  
   public Integer getValue() {
     return myValueEditor.getValue();
   }
 
-  public void setValue(@Nonnull Integer newValue) {
+  public void setValue(Integer newValue) {
     myValueEditor.setValue(newValue);
   }
 
@@ -85,15 +84,15 @@ public class IntegerField extends JBTextField {
     myValueEditor.validateContent();
   }
 
-  public void setDefaultValueText(@Nonnull String text) {
+  public void setDefaultValueText(String text) {
     getEmptyText().setText(text);
   }
 
-  public void setDefaultValue(@Nonnull Integer defaultValue) {
+  public void setDefaultValue(Integer defaultValue) {
     myValueEditor.setDefaultValue(defaultValue);
   }
 
-  @Nonnull
+  
   public Integer getDefaultValue() {
     return myValueEditor.getDefaultValue();
   }

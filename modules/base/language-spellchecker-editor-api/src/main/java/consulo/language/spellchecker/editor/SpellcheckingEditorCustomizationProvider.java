@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.codeEditor.EditorEx;
 
-import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -34,6 +33,6 @@ public interface SpellcheckingEditorCustomizationProvider {
     return Application.get().getInstance(SpellcheckingEditorCustomizationProvider.class);
   }
 
-  @Nonnull
+  
   Optional<Consumer<EditorEx>> getCustomizationOpt(boolean enabled);
 }

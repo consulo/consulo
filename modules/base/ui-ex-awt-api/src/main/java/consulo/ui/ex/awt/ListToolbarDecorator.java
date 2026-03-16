@@ -18,7 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.ui.ex.awt.dnd.RowsDnDSupport;
 import consulo.ui.ex.awt.util.ListUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**

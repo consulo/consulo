@@ -19,10 +19,9 @@ import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 
-import jakarta.annotation.Nonnull;
 
 public interface ContentUI extends Disposable {
-  void setManager(@Nonnull ContentManager manager);
+  void setManager(ContentManager manager);
 
   boolean isSingleSelection();
 
@@ -32,21 +31,21 @@ public interface ContentUI extends Disposable {
 
   void beforeDispose();
 
-  boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit);
+  boolean canChangeSelectionTo(Content content, boolean implicit);
 
-  @Nonnull
+  
   String getCloseActionName();
 
-  @Nonnull
+  
   String getCloseAllButThisActionName();
 
-  @Nonnull
+  
   String getPreviousContentActionName();
 
-  @Nonnull
+  
   String getNextContentActionName();
 
-  @Nonnull
+  
   default Component getUIComponent() {
     throw new AbstractMethodError();
   }

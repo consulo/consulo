@@ -2,9 +2,7 @@
 package consulo.language.editor.refactoring.postfixTemplate;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
-import org.jetbrains.annotations.Nls;
 
 import java.util.function.Predicate;
 
@@ -21,22 +19,22 @@ public interface PostfixTemplateExpressionCondition<T extends PsiElement> extend
   /**
    * @return presentable name for postfix editor dialog
    */
-  @Nonnull
-  @Nls
+  
+  
   String getPresentableName();
 
 
   /**
    * @return ID for serialization
    */
-  @Nonnull
+  
   String getId();
 
   boolean equals(Object o);
 
   int hashCode();
 
-  default void serializeTo(@Nonnull Element element) {
+  default void serializeTo(Element element) {
     element.setAttribute(ID_ATTR, getId());
   }
 
@@ -46,5 +44,5 @@ public interface PostfixTemplateExpressionCondition<T extends PsiElement> extend
    * {@code false} otherwise
    */
   @Override
-  boolean test(@Nonnull T t);
+  boolean test(T t);
 }

@@ -8,8 +8,7 @@ import consulo.document.event.DocumentListener;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -18,13 +17,13 @@ import java.util.function.Supplier;
  * @author peter
  */
 public class LookupOffsets implements DocumentListener {
-  @Nonnull
+  
   private String myAdditionalPrefix = "";
 
   private boolean myStableStart;
   @Nullable
   private Supplier<String> myStartMarkerDisposeInfo = null;
-  @Nonnull
+  
   private RangeMarker myLookupStartMarker;
   private int myRemovedPrefix;
   private final RangeMarker myLookupOriginalStartMarker;
@@ -39,7 +38,7 @@ public class LookupOffsets implements DocumentListener {
   }
 
   @Override
-  public void documentChanged(@Nonnull DocumentEvent e) {
+  public void documentChanged(DocumentEvent e) {
     if (myStartMarkerDisposeInfo == null && !myLookupStartMarker.isValid()) {
       Throwable throwable = new Throwable();
       String eString = e.toString();
@@ -58,7 +57,7 @@ public class LookupOffsets implements DocumentListener {
                                                                                                                     .getOffset();
   }
 
-  @Nonnull
+  
   public String getAdditionalPrefix() {
     return myAdditionalPrefix;
   }

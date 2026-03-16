@@ -17,8 +17,7 @@ package consulo.language.extension;
 
 import consulo.language.Language;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 
 /**
@@ -27,10 +26,10 @@ import java.util.Objects;
  */
 public interface ByLanguageValue<V> {
   @Nullable
-  V get(@Nonnull Language language);
+  V get(Language language);
 
-  @Nonnull
-  default V requiredGet(@Nonnull Language language) {
+  
+  default V requiredGet(Language language) {
     return Objects.requireNonNull(get(language), () -> "value required for language: " + language.toString());
   }
 }

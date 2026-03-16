@@ -3,7 +3,6 @@ package consulo.externalSystem.model.project;
 import consulo.externalSystem.service.project.ExternalEntityData;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Implementations of this interface are not obliged to be thread-safe.
@@ -15,12 +14,12 @@ public interface DependencyData<T extends ExternalEntityData> extends ExternalEn
   
   boolean isExported();
 
-  @Nonnull
+  
   DependencyScope getScope();
 
-  @Nonnull
+  
   ModuleData getOwnerModule();
   
-  @Nonnull
+  
   T getTarget();
 }

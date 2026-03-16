@@ -17,7 +17,6 @@ package consulo.versionControlSystem.log.impl.internal.ui.render;
 
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.versionControlSystem.ui.awt.TableLinkMouseListener;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -26,7 +25,7 @@ import java.awt.event.MouseEvent;
 
 public class SimpleColoredComponentLinkMouseListener extends TableLinkMouseListener {
   @Override
-  protected Object tryGetTag(@Nonnull MouseEvent e, @Nonnull JTable table, int row, int column) {
+  protected Object tryGetTag(MouseEvent e, JTable table, int row, int column) {
     TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
     Component component = cellRenderer.getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row, column);
     if (component instanceof SimpleColoredComponent) {

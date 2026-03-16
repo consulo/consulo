@@ -19,8 +19,7 @@ package consulo.ide.impl.idea.ui.tabs;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.ColorUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 /**
@@ -79,7 +78,7 @@ class FileColorConfiguration implements Cloneable {
         }
     }
 
-    public void save(@Nonnull Element e) {
+    public void save(Element e) {
         if (!isValid(null)) {
             return;
         }
@@ -131,7 +130,7 @@ class FileColorConfiguration implements Cloneable {
     }
 
     @Nullable
-    public static FileColorConfiguration load(@Nonnull Element e) {
+    public static FileColorConfiguration load(Element e) {
         String path = e.getAttributeValue(SCOPE_NAME);
         if (path == null) {
             return null;

@@ -20,24 +20,23 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2024-12-05
  */
 public class ClosePopupAction extends DumbAwareAction {
-    @Nonnull
+    
     private final AbstractPopup myPopup;
 
-    public ClosePopupAction(@Nonnull LocalizeValue text, @Nonnull Image icon, @Nonnull AbstractPopup popup) {
+    public ClosePopupAction(LocalizeValue text, Image icon, AbstractPopup popup) {
         super(text, LocalizeValue.empty(), icon);
         myPopup = popup;
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         myPopup.cancel(e.getInputEvent());
     }
 }

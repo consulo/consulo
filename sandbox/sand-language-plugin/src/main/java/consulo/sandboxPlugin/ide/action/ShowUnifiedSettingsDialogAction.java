@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -44,7 +43,7 @@ public class ShowUnifiedSettingsDialogAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         IdeInternal internal = Application.get().getInstance(IdeInternal.class);
 
         ShowSettingsUtil unifiedShowSettingsUtil = internal.createUnifiedSettingsUtil();

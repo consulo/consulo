@@ -23,8 +23,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
@@ -62,7 +61,7 @@ public class TextFieldWithBrowseButton extends ComponentWithBrowseButton<JTextFi
     installPathCompletion(fileChooserDescriptor);
   }
 
-  public void addBrowseFolderListener(@Nonnull TextBrowseFolderListener listener) {
+  public void addBrowseFolderListener(TextBrowseFolderListener listener) {
     listener.setOwnerComponent(this);
     addBrowseFolderListener(null, listener, true);
     installPathCompletion(listener.getFileChooserDescriptor());

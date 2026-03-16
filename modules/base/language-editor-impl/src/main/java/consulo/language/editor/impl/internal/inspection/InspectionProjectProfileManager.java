@@ -27,7 +27,6 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -35,7 +34,7 @@ import jakarta.annotation.Nonnull;
  */
 public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
         implements SeverityProvider, PersistentStateComponent<Element>, consulo.language.editor.inspection.scheme.InspectionProjectProfileManager {
-  public InspectionProjectProfileManager(@Nonnull Project project, @Nonnull InspectionProfileManager inspectionProfileManager, @Nonnull DependencyValidationManager holder) {
+  public InspectionProjectProfileManager(Project project, InspectionProfileManager inspectionProfileManager, DependencyValidationManager holder) {
     super(project, inspectionProfileManager, holder);
   }
 
@@ -53,7 +52,7 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
     return (InspectionProfileImpl)getInspectionProfile();
   }
 
-  @Nonnull
+  
   public InspectionProfile getInspectionProfile() {
     return (InspectionProfile)getProjectProfileImpl();
   }
@@ -62,17 +61,17 @@ public abstract class InspectionProjectProfileManager extends DefaultProjectProf
    * @deprecated use {@link #getInspectionProfile()} instead
    */
   @SuppressWarnings({"UnusedDeclaration"})
-  @Nonnull
+  
   public InspectionProfile getInspectionProfile(PsiElement element) {
     return getInspectionProfile();
   }
 
   public abstract boolean isProfileLoaded();
 
-  public abstract void initProfileWrapper(@Nonnull Profile profile);
+  public abstract void initProfileWrapper(Profile profile);
 
   @Override
-  public Profile getProfile(@Nonnull String name) {
+  public Profile getProfile(String name) {
     return getProfile(name, true);
   }
 }

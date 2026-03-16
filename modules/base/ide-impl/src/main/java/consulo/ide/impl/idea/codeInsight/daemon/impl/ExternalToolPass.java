@@ -38,7 +38,6 @@ import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -69,7 +68,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
     }
   }
 
-  public ExternalToolPass(@Nonnull ExternalToolPassFactory externalToolPassFactory, @Nonnull PsiFile file, @Nonnull Editor editor, int startOffset, int endOffset) {
+  public ExternalToolPass(ExternalToolPassFactory externalToolPassFactory, PsiFile file, Editor editor, int startOffset, int endOffset) {
     super(file.getProject(), editor.getDocument(), false);
     myEditor = editor;
     myFile = file;
@@ -83,7 +82,7 @@ public class ExternalToolPass extends TextEditorHighlightingPass {
 
   @RequiredReadAction
   @Override
-  public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+  public void doCollectInformation(ProgressIndicator progress) {
     myDocumentChanged = false;
 
     FileViewProvider viewProvider = myFile.getViewProvider();

@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.wm.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;
@@ -43,7 +42,7 @@ public class AltStateManager implements AWTEventListener {
     }
   }
 
-  @Nonnull
+  
   public static AltStateManager getInstance() {
     return ourInstance;
   }

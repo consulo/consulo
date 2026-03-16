@@ -46,8 +46,7 @@ import consulo.ui.ex.awt.hint.LightweightHint;
 import consulo.ui.ex.awt.hint.LightweightHintFactory;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.swing.*;
@@ -81,7 +80,7 @@ public abstract class AbstractValueHint {
     private TextRange myCurrentRange;
     private Runnable myHideRunnable;
 
-    public AbstractValueHint(@Nonnull Project project, @Nonnull Editor editor, @Nonnull Point point, @Nonnull ValueHintType type,
+    public AbstractValueHint(Project project, Editor editor, Point point, ValueHintType type,
                              TextRange textRange) {
         myPoint = point;
         myProject = project;
@@ -119,7 +118,7 @@ public abstract class AbstractValueHint {
         return myCurrentRange != null && myCurrentRange.contains(calculateOffset(editor, point));
     }
 
-    public static int calculateOffset(@Nonnull Editor editor, @Nonnull Point point) {
+    public static int calculateOffset(Editor editor, Point point) {
         return editor.logicalPositionToOffset(editor.xyToLogicalPosition(point));
     }
 
@@ -186,7 +185,7 @@ public abstract class AbstractValueHint {
         return myProject;
     }
 
-    @Nonnull
+    
     protected Editor getEditor() {
         return myEditor;
     }
@@ -258,7 +257,7 @@ public abstract class AbstractValueHint {
         JComponent component = HintUtil.createInformationLabel(text, PlatformIconGroup.generalAdd());
         addClickListenerToHierarchy(component, new ClickListener() {
             @Override
-            public boolean onClick(@Nonnull MouseEvent event, int clickCount) {
+            public boolean onClick(MouseEvent event, int clickCount) {
                 if (myCurrentHint != null) {
                     myCurrentHint.hide();
                 }
@@ -306,7 +305,7 @@ public abstract class AbstractValueHint {
         return myCurrentHint != null && myCurrentHint.isInsideHint(new RelativePoint(editor.getContentComponent(), point));
     }
 
-    protected <D> void showTreePopup(@Nonnull DebuggerTreeCreator<D> creator, @Nonnull D descriptor) {
+    protected <D> void showTreePopup(DebuggerTreeCreator<D> creator, D descriptor) {
         DebuggerTreeWithHistoryPopup.showTreePopup(creator, descriptor, getEditor(), myPoint, getProject(), myHideRunnable);
     }
 

@@ -7,7 +7,6 @@ import consulo.externalSystem.impl.internal.service.remote.RemoteExternalSystemT
 import consulo.externalSystem.model.setting.ExternalSystemExecutionSettings;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.externalSystem.model.task.ExternalSystemTaskType;
-import jakarta.annotation.Nonnull;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -25,58 +24,58 @@ import java.util.Set;
  */
 public class ExternalSystemFacadeWrapper<S extends ExternalSystemExecutionSettings> implements RemoteExternalSystemFacade<S> {
 
-  @Nonnull
+  
   private final RemoteExternalSystemFacade<S>                   myDelegate;
-  @Nonnull
+  
   private final RemoteExternalSystemProgressNotificationManager myProgressManager;
 
-  public ExternalSystemFacadeWrapper(@Nonnull RemoteExternalSystemFacade<S> delegate,
-                                     @Nonnull RemoteExternalSystemProgressNotificationManager progressManager)
+  public ExternalSystemFacadeWrapper(RemoteExternalSystemFacade<S> delegate,
+                                     RemoteExternalSystemProgressNotificationManager progressManager)
   {
     myDelegate = delegate;
     myProgressManager = progressManager;
   }
 
-  @Nonnull
+  
   public RemoteExternalSystemFacade<S> getDelegate() {
     return myDelegate;
   }
 
-  @Nonnull
+  
   @Override
   public RemoteExternalSystemProjectResolver<S> getResolver() throws RemoteException, IllegalStateException {
     return new ExternalSystemProjectResolverWrapper<S>(myDelegate.getResolver(), myProgressManager);
   }
 
-  @Nonnull
+  
   @Override
   public RemoteExternalSystemTaskManager<S> getTaskManager() throws RemoteException {
     return new ExternalSystemTaskManagerWrapper<S>(myDelegate.getTaskManager(), myProgressManager);
   }
 
   @Override
-  public void applySettings(@Nonnull S settings) throws RemoteException {
+  public void applySettings(S settings) throws RemoteException {
     myDelegate.applySettings(settings);
   }
 
   @Override
-  public void applyProgressManager(@Nonnull RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
+  public void applyProgressManager(RemoteExternalSystemProgressNotificationManager progressManager) throws RemoteException {
     myDelegate.applyProgressManager(progressManager);
   }
 
   @Override
-  public boolean isTaskInProgress(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+  public boolean isTaskInProgress(ExternalSystemTaskId id) throws RemoteException {
     return myDelegate.isTaskInProgress(id);
   }
 
-  @Nonnull
+  
   @Override
   public Map<ExternalSystemTaskType, Set<ExternalSystemTaskId>> getTasksInProgress() throws RemoteException {
     return myDelegate.getTasksInProgress();
   }
 
   @Override
-  public boolean cancelTask(@Nonnull ExternalSystemTaskId id) throws RemoteException {
+  public boolean cancelTask(ExternalSystemTaskId id) throws RemoteException {
     return myDelegate.cancelTask(id);
   }
 }

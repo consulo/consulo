@@ -2,7 +2,7 @@
 package consulo.application.util.mac.foundation;
 
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.application.util.mac.foundation.Foundation.invoke;
 import static consulo.application.util.mac.foundation.Foundation.toStringViaUTF8;

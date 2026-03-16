@@ -20,8 +20,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.change.ChangeList;
 import consulo.versionControlSystem.change.LocalChangeList;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -35,8 +34,8 @@ public class ChangeListChooser extends DialogWrapper {
   private final ChangeListChooserPanel myPanel;
 
   @RequiredUIAccess
-  public ChangeListChooser(@Nonnull Project project,
-                           @Nonnull Collection<? extends ChangeList> changelists,
+  public ChangeListChooser(Project project,
+                           Collection<? extends ChangeList> changelists,
                            @Nullable ChangeList defaultSelection,
                            String title,
                            @Nullable String suggestedName) {

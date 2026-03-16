@@ -17,7 +17,7 @@
 package consulo.versionControlSystem.change;
 
 import consulo.versionControlSystem.VcsException;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ByteBackedContentRevision extends ContentRevision {
   /**

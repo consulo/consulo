@@ -24,8 +24,7 @@ import consulo.versionControlSystem.impl.internal.patch.apply.AppliedTextPatch;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -33,23 +32,23 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     @Nullable
     private final Project myProject;
 
-    @Nonnull
+    
     private final DocumentContent myResultContent;
-    @Nonnull
+    
     private final AppliedTextPatch myAppliedPatch;
 
-    @Nonnull
+    
     private final CharSequence myOriginalContent;
-    @Nonnull
+    
     private final String myLocalContent;
 
     @Nullable
     private final String myWindowTitle;
-    @Nonnull
+    
     private final String myLocalTitle;
-    @Nonnull
+    
     private final String myResultTitle;
-    @Nonnull
+    
     private final String myPatchTitle;
 
     @Nullable
@@ -57,13 +56,13 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
 
     public ApplyPatchMergeRequest(
         @Nullable Project project,
-        @Nonnull DocumentContent resultContent,
-        @Nonnull AppliedTextPatch appliedPatch,
-        @Nonnull String localContent,
+        DocumentContent resultContent,
+        AppliedTextPatch appliedPatch,
+        String localContent,
         @Nullable String windowTitle,
-        @Nonnull String localTitle,
-        @Nonnull String resultTitle,
-        @Nonnull String patchTitle,
+        String localTitle,
+        String resultTitle,
+        String patchTitle,
         @Nullable Consumer<MergeResult> callback
     ) {
         myProject = project;
@@ -88,19 +87,19 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     }
 
     @Override
-    @Nonnull
+    
     public DocumentContent getResultContent() {
         return myResultContent;
     }
 
     @Override
-    @Nonnull
+    
     public String getLocalContent() {
         return myLocalContent;
     }
 
     @Override
-    @Nonnull
+    
     public AppliedTextPatch getPatch() {
         return myAppliedPatch;
     }
@@ -112,26 +111,26 @@ public class ApplyPatchMergeRequest extends MergeRequest implements ApplyPatchRe
     }
 
     @Override
-    @Nonnull
+    
     public String getLocalTitle() {
         return myLocalTitle;
     }
 
     @Override
-    @Nonnull
+    
     public String getResultTitle() {
         return myResultTitle;
     }
 
     @Override
-    @Nonnull
+    
     public String getPatchTitle() {
         return myPatchTitle;
     }
 
     @Override
     @RequiredUIAccess
-    public void applyResult(@Nonnull MergeResult result) {
+    public void applyResult(MergeResult result) {
         CharSequence applyContent = switch (result) {
             case CANCEL -> myOriginalContent;
             case LEFT -> myLocalContent;

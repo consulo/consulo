@@ -30,22 +30,20 @@ import consulo.ui.image.Image;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
-    protected BaseShowDiffAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected BaseShowDiffAction(LocalizeValue text, LocalizeValue description) {
         this(text, description, null);
     }
 
-    protected BaseShowDiffAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected BaseShowDiffAction(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
         setEnabledInModalContext(true);
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return Coroutine.first(UIAction.apply((o, continuation) -> {
             Presentation presentation = e.getPresentation();
             boolean canShow = isAvailable(e);
@@ -58,13 +56,13 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
 
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         DiffRequest request = getDiffRequest(e);
         if (request == null) {
@@ -74,12 +72,12 @@ public abstract class BaseShowDiffAction extends AnAction implements DumbAware {
         DiffManager.getInstance().showDiff(project, request);
     }
 
-    protected abstract boolean isAvailable(@Nonnull AnActionEvent e);
+    protected abstract boolean isAvailable(AnActionEvent e);
 
     protected static boolean hasContent(VirtualFile file) {
         return !(file instanceof VirtualFileWithoutContent);
     }
 
     @Nullable
-    protected abstract DiffRequest getDiffRequest(@Nonnull AnActionEvent e);
+    protected abstract DiffRequest getDiffRequest(AnActionEvent e);
 }

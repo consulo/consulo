@@ -17,8 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.nodes;
 
 import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -31,9 +30,9 @@ public class PackagingNodeSource {
   private final CompositePackagingElement<?> mySourceParentElement;
   private final Collection<PackagingNodeSource> myParentSources;
 
-  public PackagingNodeSource(@Nonnull ComplexPackagingElement<?> sourceElement,
-                             @Nonnull PackagingElementNode<?> sourceParentNode,
-                             @Nonnull CompositePackagingElement<?> sourceParentElement,
+  public PackagingNodeSource(ComplexPackagingElement<?> sourceElement,
+                             PackagingElementNode<?> sourceParentNode,
+                             CompositePackagingElement<?> sourceParentElement,
                              @Nullable Collection<PackagingNodeSource> parentSources) {
     mySourceElement = sourceElement;
     mySourceParentNode = sourceParentNode;
@@ -41,17 +40,17 @@ public class PackagingNodeSource {
     myParentSources = parentSources;
   }
 
-  @Nonnull
+  
   public ComplexPackagingElement<?> getSourceElement() {
     return mySourceElement;
   }
 
-  @Nonnull
+  
   public PackagingElementNode<?> getSourceParentNode() {
     return mySourceParentNode;
   }
 
-  @Nonnull
+  
   public CompositePackagingElement<?> getSourceParentElement() {
     return mySourceParentElement;
   }

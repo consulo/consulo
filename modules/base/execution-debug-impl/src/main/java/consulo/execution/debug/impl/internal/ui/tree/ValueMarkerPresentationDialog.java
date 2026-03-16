@@ -15,7 +15,7 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik

@@ -15,7 +15,6 @@
  */
 package consulo.application;
 
-import jakarta.annotation.Nonnull;
 
 public abstract class AccessToken implements AutoCloseable {
   @Override
@@ -31,13 +30,13 @@ public abstract class AccessToken implements AutoCloseable {
     }
   };
 
-  @Nonnull
+  
   public static AccessToken of() {
     return EMPTY_ACCESS_TOKEN;
   }
 
-  @Nonnull
-  public static AccessToken of(@Nonnull Runnable r) {
+  
+  public static AccessToken of(Runnable r) {
     return new AccessToken() {
       @Override
       public void finish() {

@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -52,7 +51,7 @@ public final class ShowLibraryFramesAction extends ToggleAction {
   }
 
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
     super.update(e);
 
     Presentation presentation = e.getPresentation();
@@ -85,7 +84,7 @@ public final class ShowLibraryFramesAction extends ToggleAction {
   }
 
   @Override
-  public boolean isSelected(@Nonnull AnActionEvent e) {
+  public boolean isSelected(AnActionEvent e) {
     return !getSettingsImpl().getDataViewSettings().isShowLibraryStackFrames();
   }
 

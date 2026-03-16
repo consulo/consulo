@@ -53,8 +53,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class InjectLanguageAction implements IntentionAction {
         return list;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return LanguageInjectAdvancedLocalize.intentionInjectLanguageActionText();
@@ -88,7 +87,7 @@ public class InjectLanguageAction implements IntentionAction {
 
     @Override
     @RequiredReadAction
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         PsiLanguageInjectionHost host = findInjectionHost(editor, file);
         if (host == null) {
             return false;
@@ -115,7 +114,7 @@ public class InjectLanguageAction implements IntentionAction {
     }
 
     @Override
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         doChooseLanguageToInject(editor, injectable -> project.getApplication().runReadAction(() -> {
             if (!project.isDisposed()) {
                 invokeImpl(project, editor, file, injectable);
@@ -188,7 +187,7 @@ public class InjectLanguageAction implements IntentionAction {
         IPopupChooserBuilder<Injectable> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(injectables);
         builder = builder.setRenderer(new ColoredListCellRenderer<Injectable>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, Injectable value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, Injectable value, int index, boolean selected, boolean hasFocus) {
                 setIcon(value.getIcon());
                 append(value.getDisplayName());
                 String description = value.getAdditionalDescription();

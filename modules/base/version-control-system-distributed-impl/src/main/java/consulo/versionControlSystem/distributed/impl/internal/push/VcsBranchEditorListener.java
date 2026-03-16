@@ -21,8 +21,7 @@ import consulo.logging.Logger;
 
 import consulo.versionControlSystem.distributed.ui.awt.PushLogTreeUtil;
 import consulo.versionControlSystem.distributed.ui.awt.VcsLinkedTextComponent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -64,12 +63,12 @@ public class VcsBranchEditorListener extends LinkMouseListenerBase {
 
     @Nullable
     @Override
-    protected Object getTagAt(@Nonnull MouseEvent e) {
+    protected Object getTagAt(MouseEvent e) {
         return PushLogTreeImplUtil.getTagAtForRenderer(myRenderer, e);
     }
 
     @Override
-    protected void handleTagClick(@Nullable Object tag, @Nonnull MouseEvent event) {
+    protected void handleTagClick(@Nullable Object tag, MouseEvent event) {
         if (tag instanceof VcsLinkedTextComponent linkedText) {
             TreePath path = myRenderer.getTextRenderer().getTree().getPathForLocation(event.getX(), event.getY());
             if (path == null) {

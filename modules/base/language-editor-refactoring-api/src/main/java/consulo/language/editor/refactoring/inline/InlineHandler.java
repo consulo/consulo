@@ -32,8 +32,7 @@ import consulo.localize.LocalizeValue;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -49,8 +48,8 @@ public interface InlineHandler extends LanguageExtension {
     ExtensionPointCacheKey<InlineHandler, ByLanguageValue<List<InlineHandler>>> KEY =
         ExtensionPointCacheKey.create("InlineHandler", LanguageOneToMany.build(false));
 
-    @Nonnull
-    static List<InlineHandler> forLanguage(@Nonnull Language language) {
+    
+    static List<InlineHandler> forLanguage(Language language) {
         return Application.get().getExtensionPoint(InlineHandler.class).getOrBuildCache(KEY).requiredGet(language);
     }
 
@@ -74,13 +73,13 @@ public interface InlineHandler extends LanguageExtension {
      * @return <code>Settings</code> object in case refactoring should be performed or null otherwise
      */
     @Nullable
-    Settings prepareInlineElement(@Nonnull PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
+    Settings prepareInlineElement(PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
 
     /**
      * @param element inlined element
      */
     @RequiredWriteAction
-    void removeDefinition(@Nonnull PsiElement element, @Nonnull Settings settings);
+    void removeDefinition(PsiElement element, Settings settings);
 
     /**
      * @param element  inlined element
@@ -88,7 +87,7 @@ public interface InlineHandler extends LanguageExtension {
      * @return Inliner instance to be used for inlining references in this language
      */
     @Nullable
-    Inliner createInliner(@Nonnull PsiElement element, @Nonnull Settings settings);
+    Inliner createInliner(PsiElement element, Settings settings);
 
     interface Inliner {
         /**
@@ -99,7 +98,7 @@ public interface InlineHandler extends LanguageExtension {
          */
         @Nullable
         @RequiredReadAction
-        MultiMap<PsiElement, LocalizeValue> getConflicts(@Nonnull PsiReference reference, @Nonnull PsiElement referenced);
+        MultiMap<PsiElement, LocalizeValue> getConflicts(PsiReference reference, PsiElement referenced);
 
         /**
          * Perform actual inline of element to the point where it is referenced
@@ -108,6 +107,6 @@ public interface InlineHandler extends LanguageExtension {
          * @param referenced inlined element
          */
         @RequiredWriteAction
-        void inlineUsage(@Nonnull UsageInfo usage, @Nonnull PsiElement referenced);
+        void inlineUsage(UsageInfo usage, PsiElement referenced);
     }
 }

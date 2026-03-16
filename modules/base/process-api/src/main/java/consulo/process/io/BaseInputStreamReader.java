@@ -15,7 +15,6 @@
  */
 package consulo.process.io;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +27,12 @@ import java.nio.charset.Charset;
 public class BaseInputStreamReader extends InputStreamReader {
   private final InputStream myInputStream;
 
-  public BaseInputStreamReader(@Nonnull InputStream in) {
+  public BaseInputStreamReader(InputStream in) {
     super(in);
     myInputStream = in;
   }
 
-  public BaseInputStreamReader(@Nonnull InputStream in, @Nonnull Charset cs) {
+  public BaseInputStreamReader(InputStream in, Charset cs) {
     super(in, cs);
     myInputStream = in;
   }

@@ -15,8 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Svetlana.Zemlyanskaya
@@ -24,19 +22,19 @@ import jakarta.annotation.Nonnull;
 public class StdInvertibleArrangementSettingsToken extends StdArrangementSettingsToken implements InvertibleArrangementSettingsToken {
   private static final String NOT = "not ";
 
-  private StdInvertibleArrangementSettingsToken(@Nonnull String id,
-                                                @Nonnull String uiName,
-                                                @Nonnull StdArrangementTokenType tokenType) {
+  private StdInvertibleArrangementSettingsToken(String id,
+                                                String uiName,
+                                                StdArrangementTokenType tokenType) {
     super(id, uiName, tokenType);
   }
 
-  @Nonnull
-  public static StdInvertibleArrangementSettingsToken invertibleTokenById(@NonNls @Nonnull String id,
-                                                                          @Nonnull StdArrangementTokenType tokenType) {
+  
+  public static StdInvertibleArrangementSettingsToken invertibleTokenById(String id,
+                                                                          StdArrangementTokenType tokenType) {
     return new StdInvertibleArrangementSettingsToken(id, id.toLowerCase().replace("_", " "), tokenType);
   }
 
-  @Nonnull
+  
   @Override
   public String getInvertedRepresentationValue() {
     return NOT + getRepresentationValue();

@@ -31,7 +31,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -41,13 +40,13 @@ public interface WordCompletionElementFilter extends LanguageExtension {
   ExtensionPointCacheKey<WordCompletionElementFilter, ByLanguageValue<WordCompletionElementFilter>> KEY =
           ExtensionPointCacheKey.create("WordCompletionElementFilter", LanguageOneToOne.build(new DefaultWordCompletionFilter()));
 
-  @Nonnull
-  static WordCompletionElementFilter forLanguage(@Nonnull Language language) {
+  
+  static WordCompletionElementFilter forLanguage(Language language) {
     return Application.get().getExtensionPoint(WordCompletionElementFilter.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
   @RequiredReadAction
-  static boolean isEnabledIn(@Nonnull ASTNode astNode) {
+  static boolean isEnabledIn(ASTNode astNode) {
     PsiElement psi = astNode.getPsi();
     if (psi == null) {
       return false;

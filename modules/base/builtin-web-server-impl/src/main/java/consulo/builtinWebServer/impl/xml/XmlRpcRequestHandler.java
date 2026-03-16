@@ -22,19 +22,18 @@ import consulo.builtinWebServer.http.HttpResponse;
 import consulo.builtinWebServer.xml.XmlRpcServer;
 import consulo.http.HttpMethod;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 @ExtensionImpl(order = "last")
 public final class XmlRpcRequestHandler extends HttpRequestHandler {
   @Override
-  public boolean isSupported(@Nonnull HttpRequest request) {
+  public boolean isSupported(HttpRequest request) {
     return request.method() == HttpMethod.POST || request.method() == HttpMethod.OPTIONS;
   }
 
-  @Nonnull
+  
   @Override
-  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
+  public HttpResponse process(HttpRequest request) throws IOException {
     return XmlRpcServer.getInstance().process(request.path(), request, null);
   }
 }

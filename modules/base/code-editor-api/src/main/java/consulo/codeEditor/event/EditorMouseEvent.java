@@ -18,8 +18,7 @@ package consulo.codeEditor.event;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.ui.event.details.InputDetails;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -46,7 +45,7 @@ public class EditorMouseEvent extends EventObject {
         }
     }
 
-    @Nonnull
+    
     private final MouseEvent myMouseEvent;
     @Nullable
     private final InputDetails myInputDetails;
@@ -62,22 +61,22 @@ public class EditorMouseEvent extends EventObject {
     private final Inlay myInlay;
     private final GutterIconRenderer myGutterIconRenderer;
 
-    public EditorMouseEvent(@Nonnull Editor editor, @Nonnull MouseEvent mouseEvent, EditorMouseEventArea area) {
+    public EditorMouseEvent(Editor editor, MouseEvent mouseEvent, EditorMouseEventArea area) {
         this(editor, mouseEvent, null, mouseEvent.isPopupTrigger(), area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
     }
 
-    public EditorMouseEvent(@Nonnull Editor editor, @Nonnull InputDetails inputDetails, boolean popupTrigger, EditorMouseEventArea area) {
+    public EditorMouseEvent(Editor editor, InputDetails inputDetails, boolean popupTrigger, EditorMouseEventArea area) {
         this(editor, FakeHolder.createFake(), inputDetails, popupTrigger, area, 0, new LogicalPosition(0, 0), new VisualPosition(0, 0), true, null, null, null);
     }
 
-    public EditorMouseEvent(@Nonnull Editor editor,
-                            @Nonnull MouseEvent mouseEvent,
+    public EditorMouseEvent(Editor editor,
+                            MouseEvent mouseEvent,
                             @Nullable InputDetails inputDetails,
                             boolean popupTrigger,
                             EditorMouseEventArea area,
                             int offset,
-                            @Nonnull LogicalPosition logicalPosition,
-                            @Nonnull VisualPosition visualPosition,
+                            LogicalPosition logicalPosition,
+                            VisualPosition visualPosition,
                             boolean isOverText,
                             FoldRegion collapsedFoldRegion,
                             Inlay inlay,
@@ -97,12 +96,12 @@ public class EditorMouseEvent extends EventObject {
         myGutterIconRenderer = gutterIconRenderer;
     }
 
-    @Nonnull
+    
     public Editor getEditor() {
         return (Editor) getSource();
     }
 
-    @Nonnull
+    
     public MouseEvent getMouseEvent() {
         return myMouseEvent;
     }
@@ -148,13 +147,13 @@ public class EditorMouseEvent extends EventObject {
     }
 
     public
-    @Nonnull
+    
     LogicalPosition getLogicalPosition() {
         return myLogicalPosition;
     }
 
     public
-    @Nonnull
+    
     VisualPosition getVisualPosition() {
         return myVisualPosition;
     }

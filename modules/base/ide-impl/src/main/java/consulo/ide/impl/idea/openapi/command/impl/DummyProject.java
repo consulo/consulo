@@ -22,8 +22,7 @@ import consulo.ui.UIAccess;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.function.BooleanSupplier;
@@ -36,7 +35,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
         private static final DummyProject ourInstance = new DummyProject();
     }
 
-    @Nonnull
     public static Project getInstance() {
         return DummyProjectHolder.ourInstance;
     }
@@ -49,14 +47,12 @@ public class DummyProject extends UserDataHolderBase implements Project {
         return null;
     }
 
-    @Nonnull
     @Override
     public Application getApplication() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Nonnull
     public String getName() {
         return "";
     }
@@ -69,18 +65,16 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    @Nonnull
     @NonNls
     public String getLocationHash() {
         return "dummy";
     }
 
     @Override
-    public void save(@Nonnull UIAccess uiAccess) {
+    public void save(UIAccess uiAccess) {
     }
 
     @Override
-    @Nonnull
     public String getProjectFilePath() {
         return "";
     }
@@ -107,7 +101,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
     }
 
     @Override
-    @Nonnull
     public BooleanSupplier getDisposed() {
         return this::isDisposed;
     }
@@ -132,7 +125,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
         return null;
     }
 
-    @Nonnull
     @Override
     public CoroutineContext coroutineContext() {
         throw new UnsupportedOperationException();

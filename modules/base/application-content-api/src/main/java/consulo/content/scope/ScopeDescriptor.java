@@ -5,7 +5,7 @@ import consulo.application.util.ColoredItem;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna

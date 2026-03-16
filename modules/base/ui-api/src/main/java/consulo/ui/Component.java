@@ -27,8 +27,7 @@ import consulo.ui.font.Font;
 import consulo.ui.style.ComponentColors;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -41,25 +40,25 @@ public interface Component extends UserDataHolder {
     Key<Component> KEY = Key.of(Component.class);
 
     @Override
-    <T> void putUserData(@Nonnull Key<T> key, @Nullable T value);
+    <T> void putUserData(Key<T> key, @Nullable T value);
 
     @RequiredUIAccess
-    default void addBorder(@Nonnull BorderPosition borderPosition) {
+    default void addBorder(BorderPosition borderPosition) {
         addBorder(borderPosition, BorderStyle.LINE, ComponentColors.BORDER, 1);
     }
 
     @RequiredUIAccess
-    default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle) {
+    default void addBorder(BorderPosition borderPosition, BorderStyle borderStyle) {
         addBorder(borderPosition, borderStyle, ComponentColors.BORDER, 1);
     }
 
     @RequiredUIAccess
-    default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey) {
+    default void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorKey) {
         addBorder(borderPosition, borderStyle, colorKey, 1);
     }
 
     @RequiredUIAccess
-    default void addBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
+    default void addBorders(BorderStyle borderStyle, @Nullable ColorValue colorKey, int width) {
         for (BorderPosition position : BorderPosition.values()) {
             addBorder(position, borderStyle, colorKey, width);
         }
@@ -73,7 +72,7 @@ public interface Component extends UserDataHolder {
     }
 
     @RequiredUIAccess
-    default void addMirrorBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
+    default void addMirrorBorders(BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
         if (topBottom > 0) {
             addBorder(BorderPosition.TOP, borderStyle, colorValue, topBottom);
             addBorder(BorderPosition.BOTTOM, borderStyle, colorValue, topBottom);
@@ -85,12 +84,12 @@ public interface Component extends UserDataHolder {
     }
 
     @RequiredUIAccess
-    default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, int width) {
+    default void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, int width) {
         addBorder(borderPosition, borderStyle, null, width);
     }
 
     @RequiredUIAccess
-    void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int width);
+    void addBorder(BorderPosition borderPosition, BorderStyle borderStyle, @Nullable ColorValue colorValue, int width);
 
     @RequiredUIAccess
     default void removeBorders() {
@@ -100,7 +99,7 @@ public interface Component extends UserDataHolder {
     }
 
     @RequiredUIAccess
-    void removeBorder(@Nonnull BorderPosition borderPosition);
+    void removeBorder(BorderPosition borderPosition);
 
     boolean isVisible();
 
@@ -108,7 +107,6 @@ public interface Component extends UserDataHolder {
     void setVisible(boolean value);
 
     @RequiredUIAccess
-    @Nonnull
     default Component withVisible(boolean visible) {
         setVisible(visible);
         return this;
@@ -134,23 +132,20 @@ public interface Component extends UserDataHolder {
     Component getParent();
 
     @RequiredUIAccess
-    void setSize(@Nonnull Size2D size);
+    void setSize(Size2D size);
 
-    @Nonnull
     @RequiredUIAccess
-    default Component withSize(@Nonnull Size2D size) {
+    default Component withSize(Size2D size) {
         setSize(size);
         return this;
     }
 
-    @Nonnull
     Font getFont();
 
-    void setFont(@Nonnull Font font);
+    void setFont(Font font);
 
-    @Nonnull
     @RequiredUIAccess
-    default Component withFont(@Nonnull Font font) {
+    default Component withFont(Font font) {
         setFont(font);
         return this;
     }
@@ -164,7 +159,6 @@ public interface Component extends UserDataHolder {
         throw new AbstractMethodError("not supported");
     }
 
-    @Nonnull
     default Component withForegroundColor(@Nullable ColorValue foreground) {
         setForegroundColor(foreground);
         return this;
@@ -179,23 +173,20 @@ public interface Component extends UserDataHolder {
         throw new AbstractMethodError("not supported");
     }
 
-    @Nonnull
     default Component withCursor(@Nullable Cursor cursor) {
         setCursor(cursor);
         return this;
     }
 
-    default void setToolTipText(@Nonnull LocalizeValue value) {
+    default void setToolTipText(LocalizeValue value) {
         throw new AbstractMethodError("not supported");
     }
 
-    @Nonnull
     default LocalizeValue getToolTipText() {
         return LocalizeValue.empty();
     }
 
-    @Nonnull
-    default Component withToolTipText(@Nonnull LocalizeValue value) {
+    default Component withToolTipText(LocalizeValue value) {
         setToolTipText(value);
         return this;
     }
@@ -203,37 +194,30 @@ public interface Component extends UserDataHolder {
     /**
      * @return runner for unregister listener
      */
-    @Nonnull
     <C extends Component, E extends ComponentEvent<C>> Disposable addListener(
-        @Nonnull Class<? extends E> eventClass,
-        @Nonnull ComponentEventListener<C, E> listener
+        Class<? extends E> eventClass,
+        ComponentEventListener<C, E> listener
     );
 
-    @Nonnull
-    <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(@Nonnull Class<E> eventClass);
+    <C extends Component, E extends ComponentEvent<C>> ComponentEventListener<C, E> getListenerDispatcher(Class<E> eventClass);
 
-    @Nonnull
-    default Disposable addKeyPressedListener(@Nonnull ComponentEventListener<Component, KeyPressedEvent> keyListener) {
+    default Disposable addKeyPressedListener(ComponentEventListener<Component, KeyPressedEvent> keyListener) {
         return addListener(KeyPressedEvent.class, keyListener);
     }
 
-    @Nonnull
-    default Disposable addKeyReleasedListener(@Nonnull ComponentEventListener<Component, KeyReleasedEvent> keyListener) {
+    default Disposable addKeyReleasedListener(ComponentEventListener<Component, KeyReleasedEvent> keyListener) {
         return addListener(KeyReleasedEvent.class, keyListener);
     }
 
-    @Nonnull
-    default Disposable addAttachListener(@Nonnull ComponentEventListener<Component, AttachEvent> attachListener) {
+    default Disposable addAttachListener(ComponentEventListener<Component, AttachEvent> attachListener) {
         return addListener(AttachEvent.class, attachListener);
     }
 
-    @Nonnull
-    default Disposable addDetachListener(@Nonnull ComponentEventListener<Component, DetachEvent> detachListener) {
+    default Disposable addDetachListener(ComponentEventListener<Component, DetachEvent> detachListener) {
         return addListener(DetachEvent.class, detachListener);
     }
 
-    @Nonnull
-    default Disposable addClickListener(@Nonnull ComponentEventListener<Component, ClickEvent> clickListener) {
+    default Disposable addClickListener(ComponentEventListener<Component, ClickEvent> clickListener) {
         return addListener(ClickEvent.class, clickListener);
     }
 

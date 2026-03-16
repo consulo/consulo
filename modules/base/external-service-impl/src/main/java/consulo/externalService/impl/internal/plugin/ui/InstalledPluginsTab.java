@@ -30,7 +30,7 @@ import consulo.ui.ex.awt.StatusText;
 import consulo.util.io.FileUtil;
 import consulo.util.io.zip.ZipUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

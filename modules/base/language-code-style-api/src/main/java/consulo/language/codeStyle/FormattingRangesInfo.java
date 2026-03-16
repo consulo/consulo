@@ -16,12 +16,11 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
-import jakarta.annotation.Nonnull;
 
 public interface FormattingRangesInfo {
-    boolean isWhitespaceReadOnly(@Nonnull TextRange range);
+    boolean isWhitespaceReadOnly(TextRange range);
 
-    boolean isReadOnly(@Nonnull TextRange range);
+    boolean isReadOnly(TextRange range);
 
     boolean isOnInsertedLine(int offset);
 }

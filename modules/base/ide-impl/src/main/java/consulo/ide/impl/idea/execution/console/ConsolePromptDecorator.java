@@ -31,8 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.color.ColorValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -93,7 +92,7 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
 
     @Nullable
     @Override
-    public Collection<LineExtensionInfo> getLineExtensions(@Nonnull Project project, @Nonnull VirtualFile file, int lineNumber) {
+    public Collection<LineExtensionInfo> getLineExtensions(Project project, VirtualFile file, int lineNumber) {
         return null;
     }
 
@@ -109,7 +108,7 @@ public class ConsolePromptDecorator extends EditorLinePainter implements TextAnn
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getToolTipValue(int line, Editor editor) {
         return LocalizeValue.empty();

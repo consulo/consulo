@@ -15,12 +15,11 @@
  */
 package consulo.document;
 
-import jakarta.annotation.Nonnull;
 
 public class ReadOnlyModificationException extends RuntimeException {
   private final Document myDocument;
 
-  public ReadOnlyModificationException(@Nonnull Document document) {
+  public ReadOnlyModificationException(Document document) {
     super(DocumentBundle.message("attempt.to.modify.read.only.document.error.message"));
     myDocument = document;
   }

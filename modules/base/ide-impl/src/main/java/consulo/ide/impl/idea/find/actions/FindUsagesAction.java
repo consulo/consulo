@@ -39,7 +39,6 @@ import consulo.usage.PsiElementUsageTarget;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageView;
 import consulo.util.concurrent.coroutine.Coroutine;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "FindUsages")
@@ -49,14 +48,14 @@ public class FindUsagesAction extends AnAction {
         this(ActionLocalize.actionFindusagesText(), ActionLocalize.actionFindusagesDescription());
     }
 
-    protected FindUsagesAction(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected FindUsagesAction(LocalizeValue text, LocalizeValue description) {
         super(text, description);
         setInjectedContext(true);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -83,13 +82,12 @@ public class FindUsagesAction extends AnAction {
         }
     }
 
-    protected void startFindUsages(@Nonnull PsiElement element) {
+    protected void startFindUsages(PsiElement element) {
         FindManager.getInstance(element.getProject()).findUsages(element);
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return OptionalReadLock.apply(o -> {
             FindUsagesInFileAction.updateFindUsagesAction(e);
             return null;
@@ -98,9 +96,9 @@ public class FindUsagesAction extends AnAction {
 
     @RequiredUIAccess
     static void chooseAmbiguousTargetAndPerform(
-        @Nonnull Project project,
+        Project project,
         Editor editor,
-        @Nonnull PsiElementProcessor<PsiElement> processor
+        PsiElementProcessor<PsiElement> processor
     ) {
         if (editor == null) {
             Messages.showMessageDialog(

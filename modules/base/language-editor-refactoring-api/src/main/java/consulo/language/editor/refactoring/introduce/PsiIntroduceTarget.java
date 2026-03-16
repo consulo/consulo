@@ -6,19 +6,18 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PsiIntroduceTarget<T extends PsiElement> implements IntroduceTarget {
-    protected final @Nonnull SmartPsiElementPointer<T> myPointer;
+    protected final SmartPsiElementPointer<T> myPointer;
 
-    public PsiIntroduceTarget(@Nonnull T psi) {
+    public PsiIntroduceTarget(T psi) {
         myPointer = SmartPointerManager.getInstance(psi.getProject()).createSmartPsiElementPointer(psi);
     }
 
     @RequiredReadAction
     @Override
-    public @Nonnull TextRange getTextRange() {
+    public TextRange getTextRange() {
         return getPlace().getTextRange();
     }
 
@@ -30,7 +29,7 @@ public class PsiIntroduceTarget<T extends PsiElement> implements IntroduceTarget
 
     @RequiredReadAction
     @Override
-    public @Nonnull String render() {
+    public String render() {
         return getPlace().getText();
     }
 

@@ -41,8 +41,7 @@ import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import gnu.trove.TIntHashSet;
 import gnu.trove.TIntObjectHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -61,9 +60,9 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
         private final int[] completionPredecessorIds;
 
         private PassConfig(
-            @Nonnull TextEditorHighlightingPassFactory passFactory,
-            @Nonnull int[] completionPredecessorIds,
-            @Nonnull int[] startingPredecessorIds
+            TextEditorHighlightingPassFactory passFactory,
+            int[] completionPredecessorIds,
+            int[] startingPredecessorIds
         ) {
             this.completionPredecessorIds = completionPredecessorIds;
             this.startingPredecessorIds = startingPredecessorIds;
@@ -74,7 +73,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
     class RegistrarImpl implements TextEditorHighlightingPassFactory.Registrar {
         @Override
         public int registerTextEditorHighlightingPass(
-            @Nonnull TextEditorHighlightingPassFactory factory,
+            TextEditorHighlightingPassFactory factory,
             @Nullable int[] runAfterCompletionOf,
             @Nullable int[] runAfterOfStartingOf,
             boolean runIntentionsPassAfter,
@@ -125,12 +124,12 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
     }
 
     @Override
-    @Nonnull
+    
     @SuppressWarnings("unchecked")
     public List<TextEditorHighlightingPass> instantiatePasses(
-        @Nonnull PsiFile psiFile,
-        @Nonnull Editor editor,
-        @Nonnull int[] passesToIgnore
+        PsiFile psiFile,
+        Editor editor,
+        int[] passesToIgnore
     ) {
         synchronized (this) {
             if (!checkedForCycles) {
@@ -195,18 +194,18 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
         return (List)Arrays.asList(id2Pass.getValues());
     }
 
-    @Nonnull
+    
     @Override
-    public List<TextEditorHighlightingPass> instantiateMainPasses(@Nonnull PsiFile psiFile, @Nonnull Document document) {
+    public List<TextEditorHighlightingPass> instantiateMainPasses(PsiFile psiFile, Document document) {
         return instantiateMainPasses(psiFile, document, new DefaultHighlightInfoProcessor());
     }
 
-    @Nonnull
+    
     @Override
     public List<TextEditorHighlightingPass> instantiateMainPasses(
-        @Nonnull PsiFile psiFile,
-        @Nonnull Document document,
-        @Nonnull HighlightInfoProcessor highlightInfoProcessor
+        PsiFile psiFile,
+        Document document,
+        HighlightInfoProcessor highlightInfoProcessor
     ) {
         Set<TextEditorHighlightingPass> ids = new HashSet<>();
         myRegisteredPassFactories.forEachKey(passId -> {
@@ -256,7 +255,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
         });
     }
 
-    @Nonnull
+    
     @Override
     public List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories() {
         return myDirtyScopeTrackingFactories;

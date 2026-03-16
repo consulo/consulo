@@ -19,11 +19,10 @@ package consulo.ide.impl.idea.ide.projectView.impl;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
 import consulo.project.ui.view.tree.ModuleGroup;
-import org.jetbrains.annotations.NonNls;
 
 
 public class ModuleGroupUrl extends AbstractUrl {
-  @NonNls private static final String ELEMENT_TYPE = "module_group";
+  private static final String ELEMENT_TYPE = "module_group";
 
   public ModuleGroupUrl(String url) {
     super(url, null, ELEMENT_TYPE);

@@ -22,8 +22,7 @@ import consulo.externalSystem.model.execution.ExternalTaskPojo;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,13 +32,13 @@ import java.util.List;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ExternalSystemInternalHelper {
-    ExternalSystemTask createExecuteSystemTask(@Nonnull ProjectSystemId externalSystemId,
-                                               @Nonnull Project project,
-                                               @Nonnull List<ExternalTaskPojo> tasksToExecute,
+    ExternalSystemTask createExecuteSystemTask(ProjectSystemId externalSystemId,
+                                               Project project,
+                                               List<ExternalTaskPojo> tasksToExecute,
                                                @Nullable String vmOptions,
                                                @Nullable String scriptParameters,
                                                @Nullable String debuggerSetup);
 
     @RequiredUIAccess
-    void ensureToolWindowInitialized(@Nonnull Project project, @Nonnull ProjectSystemId externalSystemId);
+    void ensureToolWindowInitialized(Project project, ProjectSystemId externalSystemId);
 }

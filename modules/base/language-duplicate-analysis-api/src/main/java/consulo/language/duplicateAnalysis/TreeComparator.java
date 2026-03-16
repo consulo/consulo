@@ -1,7 +1,6 @@
 package consulo.language.duplicateAnalysis;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -9,7 +8,7 @@ public class TreeComparator {
   private TreeComparator() {
   }
 
-  public static boolean areEqual(@Nonnull PsiElement x, @Nonnull PsiElement y, NodeSpecificHasher hasher, int discardCost) {
+  public static boolean areEqual(PsiElement x, PsiElement y, NodeSpecificHasher hasher, int discardCost) {
     int costX = hasher.getNodeCost(x);
     int costY = hasher.getNodeCost(y);
     if (costX == -1 || costY == -1) return false;

@@ -25,8 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.web.internal.ui.base.FromVaadinComponentWrapper;
 import consulo.web.internal.ui.vaadin.WebBooleanValueComponentBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -67,21 +66,21 @@ public class WebCheckBoxImpl extends WebBooleanValueComponentBase<WebCheckBoxImp
 
     }
 
-    @Nonnull
+    
     @Override
     public Vaadin createVaadinComponent() {
         return new Vaadin();
     }
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getLabelText() {
         return toVaadinComponent().getLabelText();
     }
 
     @RequiredUIAccess
     @Override
-    public void setLabelText(@Nonnull LocalizeValue textValue) {
+    public void setLabelText(LocalizeValue textValue) {
         UIAccess.assertIsUIThread();
 
         toVaadinComponent().setLabelText(textValue);

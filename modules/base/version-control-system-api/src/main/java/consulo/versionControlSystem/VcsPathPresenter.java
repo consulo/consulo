@@ -20,8 +20,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -40,7 +39,7 @@ public abstract class VcsPathPresenter {
    * @param file the file for which the path is requested.
    * @return the relative path.
    */
-  @Nonnull
+  
   public abstract String getPresentableRelativePathFor(VirtualFile file);
 
   @Nullable

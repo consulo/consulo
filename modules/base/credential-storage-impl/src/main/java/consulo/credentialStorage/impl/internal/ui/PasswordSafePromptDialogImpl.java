@@ -24,8 +24,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.ref.Ref;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -45,7 +44,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param message the message on the dialog
      * @param type
      */
-    private PasswordSafePromptDialogImpl(@Nullable Project project, @Nonnull String title, @Nonnull PasswordPromptComponent component) {
+    private PasswordSafePromptDialogImpl(@Nullable Project project, String title, PasswordPromptComponent component) {
         super(project, true);
         setTitle(title);
         myComponent = component;
@@ -80,7 +79,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
     @Nullable
-    public static String askPassword(Project project, String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error) {
+    public static String askPassword(Project project, String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
         return askPassword(project, title, message, requestor, key, resetPassword, error, null, null);
     }
 
@@ -96,7 +95,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
     @Nullable
-    public static String askPassword(String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword) {
+    public static String askPassword(String title, String message, Class<?> requestor, String key, boolean resetPassword) {
         return askPassword(null, title, message, requestor, key, resetPassword, null);
     }
 
@@ -114,7 +113,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
      * @param error         the error to show in the dialog       @return null if dialog was cancelled or password (stored in database or a entered by user)
      */
     @Nullable
-    public static String askPassphrase(Project project, String title, String message, @Nonnull Class<?> requestor, String key, boolean resetPassword, String error) {
+    public static String askPassphrase(Project project, String title, String message, Class<?> requestor, String key, boolean resetPassword, String error) {
         return askPassword(project, title, message, requestor, key, resetPassword, error, "Passphrase:", "Remember the passphrase");
     }
 
@@ -138,7 +137,7 @@ public class PasswordSafePromptDialogImpl extends DialogWrapper {
     static String askPassword(Project project,
                               String title,
                               String message,
-                              @Nonnull Class<?> requestor,
+                              Class<?> requestor,
                               String key,
                               boolean resetPassword,
                               String error,

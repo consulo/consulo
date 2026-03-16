@@ -14,8 +14,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +40,7 @@ public class TraceTreeCellRenderer extends ColoredTreeCellRenderer {
     }
 
     @Override
-    public void customizeCellRenderer(@Nonnull JTree tree,
+    public void customizeCellRenderer(JTree tree,
                                       Object value,
                                       boolean selected,
                                       boolean expanded,
@@ -90,7 +89,7 @@ public class TraceTreeCellRenderer extends ColoredTreeCellRenderer {
     }
 
     @Override
-    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
+    public void append(String fragment, SimpleTextAttributes attributes, Object tag) {
         if (tag instanceof XDebuggerTreeNodeHyperlink && ((XDebuggerTreeNodeHyperlink) tag).alwaysOnScreen()) {
             myHaveLink = true;
             myLink.append(fragment, attributes, tag);
@@ -115,7 +114,7 @@ public class TraceTreeCellRenderer extends ColoredTreeCellRenderer {
     }
 
     @Override
-    public @Nonnull Dimension getPreferredSize() {
+    public Dimension getPreferredSize() {
         Dimension size = super.getPreferredSize();
         if (myHaveLink) {
             size.width += myLinkWidth;
@@ -135,7 +134,7 @@ public class TraceTreeCellRenderer extends ColoredTreeCellRenderer {
         private int myHeight;
 
         @Override
-        public void customizeCellRenderer(@Nonnull JTree tree,
+        public void customizeCellRenderer(JTree tree,
                                           Object value,
                                           boolean selected,
                                           boolean expanded,

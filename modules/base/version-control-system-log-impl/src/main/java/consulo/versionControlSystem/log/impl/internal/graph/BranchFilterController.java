@@ -19,18 +19,17 @@ import consulo.versionControlSystem.log.graph.GraphElement;
 import consulo.versionControlSystem.log.graph.LinearGraph;
 import consulo.versionControlSystem.log.graph.PermanentGraphInfo;
 import consulo.versionControlSystem.log.impl.internal.util.UnsignedBitSet;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
 public class BranchFilterController extends CascadeController {
-  @Nonnull
+  
   private CollapsedGraph myCollapsedGraph;
   private final Set<Integer> myIdsOfVisibleBranches;
 
-  public BranchFilterController(@Nonnull CascadeController delegateLinearGraphController,
-                                @Nonnull PermanentGraphInfo<?> permanentGraphInfo,
+  public BranchFilterController(CascadeController delegateLinearGraphController,
+                                PermanentGraphInfo<?> permanentGraphInfo,
                                 @Nullable Set<Integer> idsOfVisibleBranches) {
     super(delegateLinearGraphController, permanentGraphInfo);
     myIdsOfVisibleBranches = idsOfVisibleBranches;
@@ -43,20 +42,20 @@ public class BranchFilterController extends CascadeController {
     myCollapsedGraph = CollapsedGraph.newInstance(getDelegateController().getCompiledGraph(), initVisibility);
   }
 
-  @Nonnull
+  
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer) {
     if (delegateAnswer.getGraphChanges() != null) updateCollapsedGraph();
     return delegateAnswer;
   }
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(LinearGraphAction action) {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getCompiledGraph() {
     return myCollapsedGraph.getCompiledGraph();
@@ -64,7 +63,7 @@ public class BranchFilterController extends CascadeController {
 
   @Nullable
   @Override
-  protected GraphElement convertToDelegate(@Nonnull GraphElement graphElement) {
+  protected GraphElement convertToDelegate(GraphElement graphElement) {
     return CollapsedController.convertToDelegate(graphElement, myCollapsedGraph);
   }
 }

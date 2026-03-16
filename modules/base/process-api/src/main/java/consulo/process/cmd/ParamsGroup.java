@@ -16,8 +16,6 @@
 package consulo.process.cmd;
 
 import consulo.logging.Logger;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class ParamsGroup implements Cloneable {
   private String myGroupId;
   private ParametersList myGroupParams = new ParametersList();
 
-  public ParamsGroup(@Nonnull String groupId) {
+  public ParamsGroup(String groupId) {
     myGroupId = groupId;
   }
 
@@ -45,11 +43,11 @@ public class ParamsGroup implements Cloneable {
     return myGroupId;
   }
 
-  public void addParameter(@Nonnull @NonNls String parameter) {
+  public void addParameter(String parameter) {
     myGroupParams.add(parameter);
   }
 
-  public void addParameterAt(int index, @Nonnull @NonNls String parameter) {
+  public void addParameterAt(int index, String parameter) {
     myGroupParams.addAt(index, parameter);
   }
 
@@ -59,13 +57,13 @@ public class ParamsGroup implements Cloneable {
     }
   }
 
-  public void addParameters(@Nonnull List<String> parameters) {
+  public void addParameters(List<String> parameters) {
     for (String parameter : parameters) {
       addParameter(parameter);
     }
   }
 
-  public void addParametersString(@Nonnull @NonNls String parametersString) {
+  public void addParametersString(String parametersString) {
     addParameters(ParametersList.parse(parametersString));
   }
 

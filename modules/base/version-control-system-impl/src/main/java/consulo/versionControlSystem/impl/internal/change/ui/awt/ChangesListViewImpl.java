@@ -42,8 +42,7 @@ import consulo.versionControlSystem.internal.ChangesListView;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -70,7 +69,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
   public static final Key<List<FilePath>> MISSING_FILES_DATA_KEY = Key.create("ChangeListView.MissingFiles");
   public static final Key<List<LocallyDeletedChange>> LOCALLY_DELETED_CHANGES = Key.create("ChangeListView.LocallyDeletedChanges");
 
-  public ChangesListViewImpl(@Nonnull Project project) {
+  public ChangesListViewImpl(Project project) {
     myProject = project;
 
     setModel(TreeModelBuilder.buildEmpty(project));
@@ -102,7 +101,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
     myShowFlatten = showFlatten;
   }
 
-  public void updateModel(@Nonnull DefaultTreeModel newModel) {
+  public void updateModel(DefaultTreeModel newModel) {
     TreeState state = TreeState.createOn(this, getRoot());
     state.setScrollToSelection(false);
     DefaultTreeModel oldModel = getModel();
@@ -136,7 +135,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(VcsDataKeys.CHANGES, getSelectedChanges().toArray(Change[]::new));
     sink.set(VcsDataKeys.CHANGE_LEAD_SELECTION, getLeadSelection().toArray(Change[]::new));
     sink.set(VcsDataKeys.CHANGE_LISTS, getSelectedChangeLists().toArray(ChangeList[]::new));
@@ -169,34 +168,34 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
     }
   }
 
-  @Nonnull
+  
   private Stream<VirtualFile> getSelectedUnversionedFiles() {
     return getSelectedVirtualFiles(UNVERSIONED_FILES_TAG);
   }
 
-  @Nonnull
+  
   private Stream<VirtualFile> getSelectedIgnoredFiles() {
     return getSelectedVirtualFiles(IGNORED_FILES_TAG);
   }
 
-  @Nonnull
+  
   private Stream<VirtualFile> getSelectedModifiedWithoutEditing() {
     return getSelectedVirtualFiles(MODIFIED_WITHOUT_EDITING_TAG);
   }
 
-  @Nonnull
+  
   private Stream<VirtualFile> getSelectedVirtualFiles(@Nullable Object tag) {
     return getSelectionNodesStream(tag)
       .flatMap(ChangesBrowserNode::getFilesUnderStream)
       .distinct();
   }
 
-  @Nonnull
+  
   private Stream<ChangesBrowserNode<?>> getSelectionNodesStream() {
     return getSelectionNodesStream(null);
   }
 
-  @Nonnull
+  
   private Stream<ChangesBrowserNode<?>> getSelectionNodesStream(@Nullable Object tag) {
     return Streams.stream(getSelectionPaths())
                   .filter(path -> isUnderTag(path, tag))
@@ -204,12 +203,12 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
                   .map(node -> ((ChangesBrowserNode<?>)node));
   }
 
-  @Nonnull
+  
   private Stream<Object> getSelectionObjectsStream() {
     return getSelectionNodesStream().map(ChangesBrowserNode::getUserObject);
   }
 
-  @Nonnull
+  
   public static Stream<VirtualFile> getVirtualFiles(@Nullable TreePath[] paths, @Nullable Object tag) {
     return Streams.stream(paths)
                   .filter(path -> isUnderTag(path, tag))
@@ -219,7 +218,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
                   .distinct();
   }
 
-  public static boolean isUnderTag(@Nonnull TreePath path, @Nullable Object tag) {
+  public static boolean isUnderTag(TreePath path, @Nullable Object tag) {
     boolean result = true;
 
     if (tag != null) {
@@ -229,8 +228,8 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
     return result;
   }
 
-  @Nonnull
-  public static Stream<Change> getChanges(@Nonnull Project project, @Nullable TreePath[] paths) {
+  
+  public static Stream<Change> getChanges(Project project, @Nullable TreePath[] paths) {
     Stream<Change> changes = Streams.stream(paths)
                                     .map(TreePath::getLastPathComponent)
                                     .map(node -> ((ChangesBrowserNode<?>)node))
@@ -244,7 +243,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
   }
 
   @Nullable
-  private static Change toHijackedChange(@Nonnull Project project, @Nonnull VirtualFile file) {
+  private static Change toHijackedChange(Project project, VirtualFile file) {
     VcsCurrentRevisionProxy before = VcsCurrentRevisionProxy.create(file, project);
     if (before != null) {
       ContentRevision afterRevision = new CurrentContentRevision(VcsUtil.getFilePath(file));
@@ -253,19 +252,19 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
     return null;
   }
 
-  @Nonnull
+  
   private Stream<LocallyDeletedChange> getSelectedLocallyDeletedChanges() {
     return getSelectionNodesStream(LOCALLY_DELETED_NODE_TAG)
       .flatMap(node -> node.getObjectsUnderStream(LocallyDeletedChange.class))
       .distinct();
   }
 
-  @Nonnull
+  
   private Stream<FilePath> getSelectedMissingFiles() {
     return getSelectedLocallyDeletedChanges().map(LocallyDeletedChange::getPath);
   }
 
-  @Nonnull
+  
   protected Stream<VirtualFile> getSelectedFiles() {
     return Stream.concat(
       getAfterRevisionsFiles(getSelectedChanges()),
@@ -279,7 +278,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
       node -> node instanceof ChangesBrowserChangeNode || node instanceof ChangesBrowserChangeListNode && node.getChildCount() > 0);
   }
 
-  @Nonnull
+  
   private Stream<Change> getLeadSelection() {
     return getSelectionNodesStream()
       .filter(node -> node instanceof ChangesBrowserChangeNode)
@@ -288,22 +287,22 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
       .distinct();
   }
 
-  @Nonnull
+  
   public ChangesBrowserNode<?> getRoot() {
     return (ChangesBrowserNode<?>)getModel().getRoot();
   }
 
-  @Nonnull
+  
   public Stream<Change> getChanges() {
     return getRoot().getObjectsUnderStream(Change.class);
   }
 
-  @Nonnull
+  
   public Stream<Change> getSelectedChanges() {
     return getChanges(myProject, getSelectionPaths());
   }
 
-  @Nonnull
+  
   private Stream<ChangeList> getSelectedChangeLists() {
     return getSelectionObjectsStream()
       .filter(userObject -> userObject instanceof ChangeList)
@@ -322,7 +321,7 @@ public class ChangesListViewImpl extends Tree implements ChangesListView, UiData
   }
 
   @Override
-  @Nonnull
+  
   public JComponent getComponent() {
     return this;
   }

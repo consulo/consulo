@@ -21,7 +21,6 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageState;
-import jakarta.annotation.Nonnull;
 
 public abstract class BranchActionGroup extends ActionGroup implements DumbAware {
     private boolean myIsFavorite;
@@ -40,10 +39,10 @@ public abstract class BranchActionGroup extends ActionGroup implements DumbAware
     }
 
     protected void setIcons(
-        @Nonnull Image favorite,
-        @Nonnull Image notFavorite,
-        @Nonnull Image favoriteOnHover,
-        @Nonnull Image notFavoriteOnHover
+        Image favorite,
+        Image notFavorite,
+        Image favoriteOnHover,
+        Image notFavoriteOnHover
     ) {
         getTemplatePresentation().setIcon(Image.stated(myIconState, it -> it ? favorite : notFavorite));
         getTemplatePresentation().setSelectedIcon(Image.stated(myIconState, it -> it ? favoriteOnHover : notFavoriteOnHover));

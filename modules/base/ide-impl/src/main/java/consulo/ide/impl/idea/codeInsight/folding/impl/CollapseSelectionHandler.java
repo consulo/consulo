@@ -28,7 +28,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ven
@@ -39,7 +38,7 @@ public class CollapseSelectionHandler implements CodeInsightActionHandler {
 
   @RequiredUIAccess
   @Override
-  public void invoke(@Nonnull Project project, @Nonnull final Editor editor, @Nonnull PsiFile file) {
+  public void invoke(Project project, final Editor editor, PsiFile file) {
     editor.getFoldingModel().runBatchFoldingOperation(
             new Runnable() {
               @Override

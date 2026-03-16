@@ -24,8 +24,7 @@ import consulo.util.lang.ExceptionUtil;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
@@ -46,7 +45,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
 
   private Function<Object[], T> myConstructorFactory;
 
-  @Nonnull
+  
   private PostInjectListener<T> myAfterInjectionListener = (time, object) -> {
   };
 
@@ -63,7 +62,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
     myImplementationKey = interfaceKey;
   }
 
-  public void setAfterInjectionListener(@Nonnull PostInjectListener<T> afterInjectionListener) {
+  public void setAfterInjectionListener(PostInjectListener<T> afterInjectionListener) {
     myAfterInjectionListener = afterInjectionListener;
   }
 
@@ -87,7 +86,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
     myConstructorFactory = constructorFactory;
   }
 
-  @Nonnull
+  
   @Override
   public Class getComponentClass() {
     return myInterfaceKey.getTargetClass();
@@ -110,7 +109,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @Override
-  public T getComponentInstance(@Nonnull InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
+  public T getComponentInstance(InstanceContainer container) throws PicoInitializationException, PicoIntrospectionException {
     T instance = myInstanceIfSingleton;
     if (instance != null) {
       return instance;

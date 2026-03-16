@@ -21,39 +21,38 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class to provide vcs-specific info
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public abstract class PushSupport<Repo extends Repository, Source extends PushSource, Target extends PushTarget> {
-  @Nonnull
+  
   public abstract AbstractVcs getVcs();
 
-  @Nonnull
+  
   public abstract Pusher<Repo, Source, Target> getPusher();
 
-  @Nonnull
+  
   public abstract OutgoingCommitsProvider<Repo, Source, Target> getOutgoingCommitsProvider();
 
   /**
    * @return Default push destination
    */
   @Nullable
-  public abstract Target getDefaultTarget(@Nonnull Repo repository);
+  public abstract Target getDefaultTarget(Repo repository);
 
   /**
    * @return current source(branch) for repository
    */
-  @Nonnull
-  public abstract Source getSource(@Nonnull Repo repository);
+  
+  public abstract Source getSource(Repo repository);
 
   /**
    * @return RepositoryManager for vcs
    */
-  @Nonnull
+  
   public abstract RepositoryManager<Repo> getRepositoryManager();
 
   @Nullable
@@ -61,8 +60,8 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
     return null;
   }
 
-  @Nonnull
-  public abstract PushTargetPanel<Target> createTargetPanel(@Nonnull Repo repository, @Nullable Target defaultTarget);
+  
+  public abstract PushTargetPanel<Target> createTargetPanel(Repo repository, @Nullable Target defaultTarget);
 
   public boolean shouldRequestIncomingChangesForNotCheckedRepositories() {
     return true;
@@ -74,7 +73,7 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
    * Force push may be completely disabled for the project which is checked by {@link #isForcePushEnabled()},
    * or it might depend e.g. on the branch user is pushing to.
    */
-  public abstract boolean isForcePushAllowed(@Nonnull Repo repo, Target target);
+  public abstract boolean isForcePushAllowed(Repo repo, Target target);
 
   /**
    * Checks if force push is allowed for this VCS at all.
@@ -83,9 +82,9 @@ public abstract class PushSupport<Repo extends Repository, Source extends PushSo
    */
   public abstract boolean isForcePushEnabled();
 
-  public abstract boolean isSilentForcePushAllowed(@Nonnull Target target);
+  public abstract boolean isSilentForcePushAllowed(Target target);
 
-  public abstract void saveSilentForcePushTarget(@Nonnull Target target);
+  public abstract void saveSilentForcePushTarget(Target target);
 
   public boolean mayChangeTargetsSync() {
     return false;

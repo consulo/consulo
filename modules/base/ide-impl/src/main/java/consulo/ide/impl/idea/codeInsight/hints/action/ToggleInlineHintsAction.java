@@ -18,7 +18,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "ToggleInlineHintsAction")
@@ -32,7 +31,7 @@ public class ToggleInlineHintsAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         PsiFile file = e.getData(PsiFile.KEY);
         Presentation presentation = e.getPresentation();
         if (file == null || !myApplication.getExtensionPoint(InlayParameterHintsProvider.class).hasAnyExtensions()) {

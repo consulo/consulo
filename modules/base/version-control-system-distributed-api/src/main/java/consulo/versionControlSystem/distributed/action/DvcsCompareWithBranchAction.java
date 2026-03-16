@@ -40,8 +40,7 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.internal.VersionControlSystemInternal;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -57,7 +56,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
         VirtualFile file = getAffectedFile(event);
         T repository = ObjectUtil.assertNotNull(getRepositoryManager(project).getRepositoryForFile(file));
@@ -79,17 +78,17 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
             .showCenteredInCurrentWindow(project);
     }
 
-    @Nonnull
-    protected abstract List<String> getBranchNamesExceptCurrent(@Nonnull T repository);
+    
+    protected abstract List<String> getBranchNamesExceptCurrent(T repository);
 
-    private static VirtualFile getAffectedFile(@Nonnull AnActionEvent event) {
+    private static VirtualFile getAffectedFile(AnActionEvent event) {
         VirtualFile[] vFiles = event.getData(VirtualFile.KEY_OF_ARRAY);
         assert vFiles != null && vFiles.length == 1 && vFiles[0] != null : "Illegal virtual files selected: " + Arrays.toString(vFiles);
         return vFiles[0];
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
         Project project = e.getData(Project.KEY);
         VirtualFile file = VcsUtil.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
@@ -102,16 +101,16 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         return repository != null && !repository.isFresh() && !noBranchesToCompare(repository);
     }
 
-    @Nonnull
-    protected abstract AbstractRepositoryManager<T> getRepositoryManager(@Nonnull Project project);
+    
+    protected abstract AbstractRepositoryManager<T> getRepositoryManager(Project project);
 
-    protected abstract boolean noBranchesToCompare(@Nonnull T repository);
+    protected abstract boolean noBranchesToCompare(T repository);
 
-    @Nonnull
+    
     protected abstract Collection<Change> getDiffChanges(
-        @Nonnull Project project,
-        @Nonnull VirtualFile file,
-        @Nonnull String branchToCompare
+        Project project,
+        VirtualFile file,
+        String branchToCompare
     ) throws VcsException;
 
     private class OnBranchChooseRunnable implements Consumer<String> {
@@ -119,7 +118,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         private final VirtualFile myFile;
         private final String myHead;
 
-        private OnBranchChooseRunnable(@Nonnull Project project, @Nonnull VirtualFile file, @Nonnull String head) {
+        private OnBranchChooseRunnable(Project project, VirtualFile file, String head) {
             myProject = project;
             myFile = file;
             myHead = head;
@@ -132,16 +131,16 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     }
 
     private void showDiffWithBranchUnderModalProgress(
-        @Nonnull final Project project,
-        @Nonnull final VirtualFile file,
-        @Nonnull final String head,
-        @Nonnull final String compare
+        final Project project,
+        final VirtualFile file,
+        final String head,
+        final String compare
     ) {
         new Task.Backgroundable(project, LocalizeValue.localizeTODO("Collecting Changes..."), true) {
             private Collection<Change> changes;
 
             @Override
-            public void run(@Nonnull ProgressIndicator indicator) {
+            public void run(ProgressIndicator indicator) {
                 try {
                     changes = getDiffChanges(project, file, compare);
                 }
@@ -172,7 +171,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
         }.queue();
     }
 
-    protected static String fileDoesntExistInBranchError(@Nonnull VirtualFile file, @Nonnull String branchToCompare) {
+    protected static String fileDoesntExistInBranchError(VirtualFile file, String branchToCompare) {
         return String
             .format(
                 "%s <code>%s</code> doesn't exist in branch <code>%s</code>",

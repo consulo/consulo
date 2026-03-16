@@ -23,8 +23,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.WrappedLayout;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +63,7 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
             return getTargetComponent().requestFocus(temporary);
         }
 
-        @Nonnull
+        
         @Override
         public Component toUIComponent() {
             return DesktopWrappedLayoutImpl.this;
@@ -88,7 +87,7 @@ public class DesktopWrappedLayoutImpl extends SwingComponentDelegate<JPanel> imp
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public WrappedLayout set(@Nullable Component component) {
         setContent(component == null ? null : (JComponent) TargetAWT.to(component));

@@ -4,7 +4,6 @@ package consulo.versionControlSystem.internal;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.VcsRootError;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -12,24 +11,24 @@ import java.util.Objects;
  */
 public class VcsRootErrorImpl implements VcsRootError {
 
-  @Nonnull
+  
   private final Type myType;
-  @Nonnull
+  
   private final VcsDirectoryMapping myMapping;
 
-  public VcsRootErrorImpl(@Nonnull Type type, @Nonnull VcsDirectoryMapping mapping) {
+  public VcsRootErrorImpl(Type type, VcsDirectoryMapping mapping) {
     myType = type;
     myMapping = mapping;
   }
 
   @Override
-  @Nonnull
+  
   public Type getType() {
     return myType;
   }
 
   @Override
-  @Nonnull
+  
   public VcsDirectoryMapping getMapping() {
     return myMapping;
   }

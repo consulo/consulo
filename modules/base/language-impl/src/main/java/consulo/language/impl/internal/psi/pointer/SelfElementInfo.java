@@ -17,8 +17,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   private int myStartOffset;
   private int myEndOffset;
 
-  SelfElementInfo(@Nullable ProperTextRange range, @Nonnull Identikit identikit, @Nonnull PsiFile containingFile, boolean forInjected) {
+  SelfElementInfo(@Nullable ProperTextRange range, Identikit identikit, PsiFile containingFile, boolean forInjected) {
     myForInjected = forInjected;
     myIdentikit = identikit;
 
@@ -38,18 +37,17 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     setRange(range);
   }
 
-  void switchToAnchor(@Nonnull PsiElement element) {
+  void switchToAnchor(PsiElement element) {
     switchTo(element, findAnchor(element));
   }
 
-  @Nullable
-  private Pair<IdentikitImpl.ByAnchor, PsiElement> findAnchor(@Nonnull PsiElement element) {
+  private Pair<IdentikitImpl.@Nullable ByAnchor, PsiElement> findAnchor(PsiElement element) {
     Language language = myIdentikit.getFileLanguage();
     if (language == null) return null;
     return IdentikitImpl.withAnchor(element, language);
   }
 
-  private void switchTo(@Nonnull PsiElement element, @Nullable Pair<IdentikitImpl.ByAnchor, PsiElement> pair) {
+  private void switchTo(PsiElement element, @Nullable Pair<IdentikitImpl.ByAnchor, PsiElement> pair) {
     if (pair != null) {
       assert pair.first.hashCode() == myIdentikit.hashCode();
       myIdentikit = pair.first;
@@ -60,7 +58,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     }
   }
 
-  boolean updateRangeToPsi(@Nonnull Segment pointerRange, PsiElement cachedElement) {
+  boolean updateRangeToPsi(Segment pointerRange, PsiElement cachedElement) {
     Pair<IdentikitImpl.ByAnchor, PsiElement> pair = findAnchor(cachedElement);
     TextRange range = (pair != null ? pair.second : cachedElement).getTextRange();
     if (range != null && range.intersects(pointerRange)) {
@@ -104,7 +102,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  PsiElement restoreElement(@Nonnull SmartPointerManagerImpl manager) {
+  PsiElement restoreElement(SmartPointerManagerImpl manager) {
     Segment segment = getPsiRange(manager);
     if (segment == null) return null;
 
@@ -116,7 +114,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
 
   @Nullable
   @Override
-  TextRange getPsiRange(@Nonnull SmartPointerManagerImpl manager) {
+  TextRange getPsiRange(SmartPointerManagerImpl manager) {
     return calcPsiRange();
   }
 
@@ -131,7 +129,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
 
   @Override
   @Nullable
-  PsiFile restoreFile(@Nonnull SmartPointerManagerImpl manager) {
+  PsiFile restoreFile(SmartPointerManagerImpl manager) {
     Language language = myIdentikit.getFileLanguage();
     if (language == null) return null;
     return restoreFileFromVirtual(getVirtualFile(), manager.getProject(), language);
@@ -143,7 +141,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
-  public static PsiFile restoreFileFromVirtual(@Nonnull VirtualFile virtualFile, @Nonnull Project project, @Nonnull Language language) {
+  public static PsiFile restoreFileFromVirtual(VirtualFile virtualFile, Project project, Language language) {
     return ReadAction.compute(() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
@@ -158,7 +156,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
-  public static PsiDirectory restoreDirectoryFromVirtual(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
+  public static PsiDirectory restoreDirectoryFromVirtual(VirtualFile virtualFile, Project project) {
     return ReadAction.compute(() -> {
       if (project.isDisposed()) return null;
       VirtualFile child = restoreVFile(virtualFile);
@@ -170,7 +168,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Nullable
-  private static VirtualFile restoreVFile(@Nonnull VirtualFile virtualFile) {
+  private static VirtualFile restoreVFile(VirtualFile virtualFile) {
     VirtualFile child;
     if (virtualFile.isValid()) {
       child = virtualFile;
@@ -190,7 +188,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  boolean pointsToTheSameElementAs(@Nonnull SmartPointerElementInfo other, @Nonnull SmartPointerManagerImpl manager) {
+  boolean pointsToTheSameElementAs(SmartPointerElementInfo other, SmartPointerManagerImpl manager) {
     if (other instanceof SelfElementInfo) {
       SelfElementInfo otherInfo = (SelfElementInfo)other;
       if (!getVirtualFile().equals(other.getVirtualFile()) || myIdentikit != otherInfo.myIdentikit) return false;
@@ -205,14 +203,14 @@ public class SelfElementInfo extends SmartPointerElementInfo {
   }
 
   @Override
-  @Nonnull
+ 
   final VirtualFile getVirtualFile() {
     return myFile;
   }
 
   @Override
   @Nullable
-  Segment getRange(@Nonnull SmartPointerManagerImpl manager) {
+  Segment getRange(SmartPointerManagerImpl manager) {
     if (hasRange()) {
       Document document = getDocumentToSynchronize();
       if (document != null) {
@@ -234,7 +232,7 @@ public class SelfElementInfo extends SmartPointerElementInfo {
     return "psi:range=" + calcPsiRange() + ",type=" + myIdentikit;
   }
 
-  public static Segment calcActualRangeAfterDocumentEvents(@Nonnull PsiFile containingFile, @Nonnull Document document, @Nonnull Segment segment, boolean isSegmentGreedy) {
+  public static Segment calcActualRangeAfterDocumentEvents(PsiFile containingFile, Document document, Segment segment, boolean isSegmentGreedy) {
     Project project = containingFile.getProject();
     PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase)PsiDocumentManager.getInstance(project);
     List<DocumentEvent> events = documentManager.getEventsSinceCommit(document);

@@ -26,7 +26,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 @ActionImpl(id = "CloseProject")
@@ -49,7 +48,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent event) {
+    public void actionPerformed(AnActionEvent event) {
         Project project = event.getRequiredData(Project.KEY);
 
         myProjectManager.closeProjectAsync(project, UIAccess.current()).whenComplete((closed, e) -> {
@@ -61,7 +60,7 @@ public class CloseProjectAction extends AnAction implements DumbAware {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         Project project = event.getData(Project.KEY);
         event.getPresentation().setEnabled(project != null && !project.isWelcomeProject());
     }

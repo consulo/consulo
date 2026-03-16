@@ -37,7 +37,6 @@ import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -57,23 +56,23 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
     protected static final String MAKE_PROJECT_ON_RUN_KEY = "makeProjectOnRun";
 
     @Inject
-    public CompileStepBeforeRun(@Nonnull Project project) {
+    public CompileStepBeforeRun(Project project) {
         super(project);
     }
 
-    @Nonnull
+    
     @Override
     public Key<MakeBeforeRunTask> getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return ExecutionLocalize.beforeLaunchCompileStep();
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDescription(MakeBeforeRunTask task) {
         return ExecutionLocalize.beforeLaunchCompileStep();
@@ -92,7 +91,7 @@ public class CompileStepBeforeRun extends CompileStepBeforeRunBase<CompileStepBe
         return task;
     }
 
-    @Nonnull
+    
     @Override
     public AsyncResult<Void> executeTaskAsync(
         UIAccess uiAccess,

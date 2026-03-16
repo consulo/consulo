@@ -21,8 +21,7 @@ import consulo.language.psi.stub.StubElement;
 import consulo.language.psi.stub.StubTree;
 import consulo.language.psi.stub.StubbedSpine;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ import java.util.List;
 public class StubSpine implements StubbedSpine {
   private final StubTree myTree;
 
-  public StubSpine(@Nonnull StubTree tree) {
+  public StubSpine(StubTree tree) {
     myTree = tree;
   }
 

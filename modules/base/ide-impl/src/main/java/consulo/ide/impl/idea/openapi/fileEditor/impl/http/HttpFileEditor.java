@@ -31,8 +31,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import kava.beans.PropertyChangeListener;
@@ -51,7 +50,7 @@ public class HttpFileEditor implements TextEditor {
     myPanel = new RemoteFilePanel(project, virtualFile);
   }
 
-  @Nonnull
+  
   public JComponent getComponent() {
     return myPanel.getMainPanel();
   }
@@ -64,12 +63,12 @@ public class HttpFileEditor implements TextEditor {
     return myPanel.getMainPanel();
   }
 
-  @Nonnull
+  
   public String getName() {
     return "Http";
   }
 
-  @Nonnull
+  
   public Editor getEditor() {
     TextEditor fileEditor = myPanel.getFileEditor();
     if (fileEditor != null) {
@@ -81,8 +80,8 @@ public class HttpFileEditor implements TextEditor {
     return myMockTextEditor;
   }
 
-  @Nonnull
-  public FileEditorState getState(@Nonnull FileEditorStateLevel level) {
+  
+  public FileEditorState getState(FileEditorStateLevel level) {
     TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
       return textEditor.getState(level);
@@ -90,7 +89,7 @@ public class HttpFileEditor implements TextEditor {
     return new TextEditorState();
   }
 
-  public void setState(@Nonnull FileEditorState state) {
+  public void setState(FileEditorState state) {
     TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
       textEditor.setState(state);
@@ -113,11 +112,11 @@ public class HttpFileEditor implements TextEditor {
     myPanel.deselectNotify();
   }
 
-  public void addPropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
     myPanel.addPropertyChangeListener(listener);
   }
 
-  public void removePropertyChangeListener(@Nonnull PropertyChangeListener listener) {
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
     myPanel.removePropertyChangeListener(listener);
   }
 
@@ -129,7 +128,7 @@ public class HttpFileEditor implements TextEditor {
     return null;
   }
 
-  public boolean canNavigateTo(@Nonnull Navigatable navigatable) {
+  public boolean canNavigateTo(Navigatable navigatable) {
     TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
       return textEditor.canNavigateTo(navigatable);
@@ -137,14 +136,14 @@ public class HttpFileEditor implements TextEditor {
     return false;
   }
 
-  public void navigateTo(@Nonnull Navigatable navigatable) {
+  public void navigateTo(Navigatable navigatable) {
     TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
       textEditor.navigateTo(navigatable);
     }
   }
 
-  public <T> T getUserData(@Nonnull Key<T> key) {
+  public <T> T getUserData(Key<T> key) {
     TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
       return textEditor.getUserData(key);
@@ -152,7 +151,7 @@ public class HttpFileEditor implements TextEditor {
     return myUserDataHolder.getUserData(key);
   }
 
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
+  public <T> void putUserData(Key<T> key, @Nullable T value) {
     TextEditor textEditor = myPanel.getFileEditor();
     if (textEditor != null) {
       textEditor.putUserData(key, value);

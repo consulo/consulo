@@ -6,8 +6,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.LargeFileEditor;
 import consulo.fileEditor.history.IdeDocumentHistory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class LfeEditorActionTextStartEndHandler extends LfeBaseEditorActionHandler {
 
@@ -18,8 +17,8 @@ public abstract class LfeEditorActionTextStartEndHandler extends LfeBaseEditorAc
     }
 
     @Override
-    protected void doExecuteInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                  @Nonnull Editor editor,
+    protected void doExecuteInLfe(LargeFileEditor largeFileEditor,
+                                  Editor editor,
                                   @Nullable Caret caret,
                                   DataContext dataContext) {
         if (isStart) {
@@ -37,9 +36,9 @@ public abstract class LfeEditorActionTextStartEndHandler extends LfeBaseEditorAc
     }
 
     @Override
-    protected boolean isEnabledInLfe(@Nonnull LargeFileEditor largeFileEditor,
-                                     @Nonnull Editor editor,
-                                     @Nonnull Caret caret,
+    protected boolean isEnabledInLfe(LargeFileEditor largeFileEditor,
+                                     Editor editor,
+                                     Caret caret,
                                      DataContext dataContext) {
         return true;
     }

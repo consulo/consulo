@@ -22,8 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,20 +44,20 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         myFilter = project == null ? null : createLanguageFilter(project);
     }
 
-    @Nonnull
+    
     @Override
     public String getGroupName() {
         return GotoClassPresentationUpdater.getTabTitle(true);
     }
 
-    @Nonnull
+    
     @Override
     public String getFullGroupName() {
         String[] split = GotoClassPresentationUpdater.getActionTitle().split("/");
         return Arrays.stream(split).map(StringUtil::pluralize).collect(Collectors.joining("/"));
     }
 
-    @Nonnull
+    
     public LocalizeValue includeNonProjectItemsText() {
         return IdeLocalize.checkboxIncludeNonProjectClasses();
     }
@@ -68,9 +67,9 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return 100;
     }
 
-    @Nonnull
+    
     @Override
-    protected FilteringGotoByModel<Language> createModel(@Nonnull Project project) {
+    protected FilteringGotoByModel<Language> createModel(Project project) {
         GotoClassModel2 model = new GotoClassModel2(project);
         if (myFilter != null) {
             model.setFilterItems(myFilter.getSelectedElements());
@@ -78,15 +77,15 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return model;
     }
 
-    @Nonnull
+    
     @Override
-    public List<AnAction> getActions(@Nonnull Runnable onChanged) {
+    public List<AnAction> getActions(Runnable onChanged) {
         return doGetActions(includeNonProjectItemsText(), myFilter, onChanged);
     }
 
-    @Nonnull
+    
     @Override
-    public String filterControlSymbols(@Nonnull String pattern) {
+    public String filterControlSymbols(String pattern) {
         if (pattern.indexOf('#') != -1) {
             pattern = applyPatternFilter(pattern, ourPatternToDetectMembers);
         }
@@ -99,7 +98,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
     }
 
     @Override
-    public int getElementPriority(@Nonnull Object element, @Nonnull String searchPattern) {
+    public int getElementPriority(Object element, String searchPattern) {
         return super.getElementPriority(element, searchPattern) + 5;
     }
 
@@ -177,8 +176,8 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return StringUtil.isEmpty(name) ? null : name;
     }
 
-    @Nonnull
-    static PersistentSearchEverywhereContributorFilter<Language> createLanguageFilter(@Nonnull Project project) {
+    
+    static PersistentSearchEverywhereContributorFilter<Language> createLanguageFilter(Project project) {
         List<Language> items = Language.getRegisteredLanguages()
             .stream()
             .filter(lang -> lang != Language.ANY && !(lang instanceof DependentLanguage))

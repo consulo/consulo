@@ -30,8 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +41,11 @@ import java.util.List;
  */
 class HighlightInfoBuilder implements HighlightInfo.Builder {
     class MyFixBuilder extends AbstractHighlightInfoFixBuilder<FixBuilder> implements FixBuilder {
-        public MyFixBuilder(@Nonnull IntentionAction action) {
+        public MyFixBuilder(IntentionAction action) {
             super(action);
         }
 
-        @Nonnull
+        
         @Override
         public HighlightInfo.Builder register() {
             return registerFix(myAction, myOptions, myDisplayName, myFixRange, myKey);
@@ -56,9 +55,9 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     private static final Logger LOG = Logger.getInstance(HighlightInfoBuilder.class);
 
     private record FixInfo(
-        @Nonnull IntentionAction action,
+        IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nonnull LocalizeValue displayName,
+        LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     ) {
@@ -88,7 +87,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
     private final List<FixInfo> myFixes = new ArrayList<>();
     private boolean myCreated;
 
-    HighlightInfoBuilder(@Nonnull HighlightInfoType type) {
+    HighlightInfoBuilder(HighlightInfoType type) {
         this.myType = type;
     }
 
@@ -96,79 +95,79 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         assert !myCreated : "Must not call this method after Builder.create() was called";
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
+    public HighlightInfo.Builder gutterIconRenderer(GutterIconRenderer gutterIconRenderer) {
         assertNotCreated();
         assert this.myGutterIconRenderer == null : "gutterIconRenderer already set";
         this.myGutterIconRenderer = gutterIconRenderer;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder problemGroup(@Nonnull ProblemGroup problemGroup) {
+    public HighlightInfo.Builder problemGroup(ProblemGroup problemGroup) {
         assertNotCreated();
         assert this.myProblemGroup == null : "problemGroup already set";
         this.myProblemGroup = problemGroup;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder inspectionToolId(@Nonnull String inspectionToolId) {
+    public HighlightInfo.Builder inspectionToolId(String inspectionToolId) {
         assertNotCreated();
         assert this.myInspectionToolId == null : "inspectionToolId already set";
         this.myInspectionToolId = inspectionToolId;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder description(@Nonnull LocalizeValue description) {
+    public HighlightInfo.Builder description(LocalizeValue description) {
         assertNotCreated();
         assert myEscapedDescription.isEmpty() : "description already set";
         myEscapedDescription = description;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder textAttributes(@Nonnull TextAttributes attributes) {
+    public HighlightInfo.Builder textAttributes(TextAttributes attributes) {
         assertNotCreated();
         assert myForcedTextAttributes == null : "textAttributes already set";
         myForcedTextAttributes = attributes;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder textAttributes(@Nonnull TextAttributesKey attributesKey) {
+    public HighlightInfo.Builder textAttributes(TextAttributesKey attributesKey) {
         assertNotCreated();
         assert myForcedTextAttributesKey == null : "textAttributesKey already set";
         myForcedTextAttributesKey = attributesKey;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder unescapedToolTip(@Nonnull LocalizeValue unescapedToolTip) {
+    public HighlightInfo.Builder unescapedToolTip(LocalizeValue unescapedToolTip) {
         assertNotCreated();
         assert myEscapedToolTip.isEmpty() : "Tooltip was already set";
         myEscapedToolTip = unescapedToolTip.map(HighlightInfoImpl::htmlEscapeToolTip);
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder escapedToolTip(@Nonnull LocalizeValue escapedToolTip) {
+    public HighlightInfo.Builder escapedToolTip(LocalizeValue escapedToolTip) {
         assertNotCreated();
         assert this.myEscapedToolTip.isEmpty(): "Tooltip was already set";
         this.myEscapedToolTip = escapedToolTip;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder range(int start, int end) {
         assertNotCreated();
@@ -180,26 +179,26 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public HighlightInfo.Builder range(@Nonnull PsiElement element) {
+    public HighlightInfo.Builder range(PsiElement element) {
         assertNotCreated();
         assert myPsiElement == null : " psiElement already set";
         myPsiElement = element;
         return range(element.getTextRange());
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder range(@Nonnull PsiElement element, int start, int end) {
+    public HighlightInfo.Builder range(PsiElement element, int start, int end) {
         assertNotCreated();
         assert myPsiElement == null : " psiElement already set";
         myPsiElement = element;
         return range(start, end);
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder endOfLine() {
         assertNotCreated();
@@ -207,7 +206,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder needsUpdateOnTyping(boolean update) {
         assertNotCreated();
@@ -216,16 +215,16 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public HighlightInfo.Builder severity(@Nonnull HighlightSeverity severity) {
+    public HighlightInfo.Builder severity(HighlightSeverity severity) {
         assertNotCreated();
         assert this.mySeverity == null : " severity already set";
         this.mySeverity = severity;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder fileLevelAnnotation() {
         assertNotCreated();
@@ -233,7 +232,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder navigationShift(int navigationShift) {
         assertNotCreated();
@@ -241,7 +240,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder group(int group) {
         assertNotCreated();
@@ -249,12 +248,12 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfo.Builder registerFix(
-        @Nonnull IntentionAction action,
+        IntentionAction action,
         @Nullable List<IntentionAction> options,
-        @Nonnull LocalizeValue displayName,
+        LocalizeValue displayName,
         @Nullable TextRange fixRange,
         @Nullable HighlightDisplayKey key
     ) {
@@ -263,9 +262,9 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public FixBuilder newFix(@Nonnull IntentionAction action) {
+    public FixBuilder newFix(IntentionAction action) {
         assertNotCreated();
         return new MyFixBuilder(action);
     }
@@ -289,7 +288,7 @@ class HighlightInfoBuilder implements HighlightInfo.Builder {
         return info;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightInfoImpl createUnconditionally() {
         assertNotCreated();

@@ -18,8 +18,7 @@ package consulo.language.inject.impl.internal;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +28,7 @@ class ClassMapCachingNulls<T> {
   private final List<? extends T> myOrderingArray;
   private final Map<Class<?>, T[]> myMap = new ConcurrentHashMap<>();
 
-  ClassMapCachingNulls(@Nonnull Map<Class<?>, T[]> backingMap, T[] emptyArray, @Nonnull List<? extends T> orderingArray) {
+  ClassMapCachingNulls(Map<Class<?>, T[]> backingMap, T[] emptyArray, List<? extends T> orderingArray) {
     myBackingMap = backingMap;
     myEmptyArray = emptyArray;
     myOrderingArray = orderingArray;

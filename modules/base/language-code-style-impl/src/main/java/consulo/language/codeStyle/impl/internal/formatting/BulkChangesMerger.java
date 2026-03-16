@@ -17,7 +17,6 @@ package consulo.language.codeStyle.impl.internal.formatting;
 
 import consulo.codeEditor.TextChange;
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +44,7 @@ public class BulkChangesMerger {
      *                   are sorted by offsets in ascending order
      * @return merge result
      */
-    public CharSequence mergeToCharSequence(@Nonnull char[] text, int textLength, @Nonnull List<? extends TextChange> changes) {
+    public CharSequence mergeToCharSequence(char[] text, int textLength, List<? extends TextChange> changes) {
         return new String(mergeToCharArray(text, textLength, changes));
     }
 
@@ -58,7 +57,7 @@ public class BulkChangesMerger {
      *                   are sorted by offsets in ascending order
      * @return merge result
      */
-    public char[] mergeToCharArray(@Nonnull char[] text, int textLength, @Nonnull List<? extends TextChange> changes) {
+    public char[] mergeToCharArray(char[] text, int textLength, List<? extends TextChange> changes) {
         int newLength = textLength;
         for (TextChange change : changes) {
             newLength += change.getText().length() - (change.getEnd() - change.getStart());
@@ -103,7 +102,7 @@ public class BulkChangesMerger {
      * @param changes change to apply to the target text
      * @throws IllegalArgumentException if given array is not big enough to contain the resulting text
      */
-    public void mergeInPlace(@Nonnull char[] data, int length, @Nonnull List<? extends TextChange> changes)
+    public void mergeInPlace(char[] data, int length, List<? extends TextChange> changes)
         throws IllegalArgumentException {
         // Consider two corner cases:
         //     1. Every given change increases text length, i.e. change text length is more than changed region length. We can calculate
@@ -166,7 +165,7 @@ public class BulkChangesMerger {
         }
     }
 
-    private static void copy(@Nonnull char[] data, int offset, @Nonnull CharSequence text) {
+    private static void copy(char[] data, int offset, CharSequence text) {
         for (int i = 0; i < text.length(); i++) {
             data[i + offset] = text.charAt(i);
         }
@@ -176,7 +175,7 @@ public class BulkChangesMerger {
      * Given an offset of some location in the document, returns offset of this location after application of given changes. List of changes
      * is supposed to satisfy the same constraints as required by {@link #mergeToCharSequence(char[], int, List)} method.
      */
-    public int updateOffset(int originalOffset, @Nonnull List<? extends TextChange> changes) {
+    public int updateOffset(int originalOffset, List<? extends TextChange> changes) {
         int offset = originalOffset;
         for (TextChange change : changes) {
             if (originalOffset > change.getStart()) {
@@ -200,7 +199,7 @@ public class BulkChangesMerger {
         private int myFirstChangeShift;
         private int myLastChangeShift;
 
-        Context(@Nonnull List<? extends TextChange> changes, @Nonnull char[] data, int inputLength, int outputLength) {
+        Context(List<? extends TextChange> changes, char[] data, int inputLength, int outputLength) {
             myChanges = changes;
             myData = data;
             myInputLength = inputLength;

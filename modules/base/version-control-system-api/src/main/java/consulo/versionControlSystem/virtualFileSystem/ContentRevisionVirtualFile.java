@@ -26,7 +26,6 @@ import consulo.util.collection.Maps;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -36,14 +35,14 @@ import java.util.Map;
  * @author yole
  */
 public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
-  @Nonnull
+  
   private final ContentRevision myContentRevision;
   private byte[] myContent;
   private boolean myContentLoadFailed;
 
   private static final Map<ContentRevision, ContentRevisionVirtualFile> ourMap = Maps.newWeakHashMap();
 
-  public static ContentRevisionVirtualFile create(@Nonnull ContentRevision contentRevision) {
+  public static ContentRevisionVirtualFile create(ContentRevision contentRevision) {
     synchronized(ourMap) {
       ContentRevisionVirtualFile revisionVirtualFile = ourMap.get(contentRevision);
       if (revisionVirtualFile == null) {
@@ -54,7 +53,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     }
   }
 
-  private ContentRevisionVirtualFile(@Nonnull ContentRevision contentRevision) {
+  private ContentRevisionVirtualFile(ContentRevision contentRevision) {
     super(contentRevision.getFile().getPath(), VcsFileSystem.getInstance());
     myContentRevision = contentRevision;
     setCharset(StandardCharsets.UTF_8);
@@ -66,7 +65,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
   }
 
   @Override
-  @Nonnull
+  
   @RequiredUIAccess
   public byte[] contentsToByteArray() throws IOException {
     if (myContentLoadFailed || myProcessingBeforeContentsChange) {
@@ -129,7 +128,7 @@ public class ContentRevisionVirtualFile extends AbstractVcsVirtualFile {
     }
   }
 
-  @Nonnull
+  
   public ContentRevision getContentRevision() {
     return myContentRevision;
   }

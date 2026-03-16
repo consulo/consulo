@@ -19,7 +19,6 @@ import consulo.module.Module;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -55,7 +54,7 @@ public class AnalyzeDependenciesDialog extends DialogWrapper {
   /**
    * {@inheritDoc}
    */
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction()};

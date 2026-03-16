@@ -18,7 +18,6 @@ package consulo.component.impl.internal.inject;
 import consulo.util.lang.reflect.ReflectionUtil;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.function.Function;
@@ -31,13 +30,13 @@ class NewConstructorInjectionComponentAdapter<T> extends ConstructorInjectionCom
   private final Type[] myConstructorParameterTypes;
   private final Function<Object[], T> myConstructorFactory;
 
-  NewConstructorInjectionComponentAdapter(@Nonnull Class<? super T> componentKey, @Nonnull Class<T> componentImplementation, Type[] constructorParameterTypes, Function<Object[], T> constructorFactory) {
+  NewConstructorInjectionComponentAdapter(Class<? super T> componentKey, Class<T> componentImplementation, Type[] constructorParameterTypes, Function<Object[], T> constructorFactory) {
     super(componentKey, componentImplementation);
     myConstructorParameterTypes = constructorParameterTypes;
     myConstructorFactory = constructorFactory;
   }
 
-  @Nonnull
+  
   @Override
   protected T doGetComponentInstance(InstanceContainer guardedContainer) {
     Object[] args = getConstructorArguments(guardedContainer);

@@ -15,15 +15,14 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface ProvidingTreeModel extends TreeModel {
-  @Nonnull
+  
   Collection<NodeProvider> getNodeProviders();
 
-  boolean isEnabled(@Nonnull NodeProvider provider);
+  boolean isEnabled(NodeProvider provider);
 }

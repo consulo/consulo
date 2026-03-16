@@ -17,8 +17,7 @@ package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -27,7 +26,7 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use LazyValue")
 public abstract class NullableLazyValue<T> implements Supplier<T>{
-  public static <E> NullableLazyValue<E> createValue(@Nonnull final Supplier<? extends E> factory) {
+  public static <E> NullableLazyValue<E> createValue(final Supplier<? extends E> factory) {
     return new NullableLazyValue<E>() {
       @Nullable
       @Override
@@ -37,7 +36,7 @@ public abstract class NullableLazyValue<T> implements Supplier<T>{
     };
   }
 
-  public static <E> NullableLazyValue<E> of(@Nonnull Supplier<E> factory) {
+  public static <E> NullableLazyValue<E> of(Supplier<E> factory) {
     return createValue(factory);
   }
 

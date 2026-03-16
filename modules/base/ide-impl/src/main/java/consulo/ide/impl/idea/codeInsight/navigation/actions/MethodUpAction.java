@@ -29,7 +29,6 @@ import consulo.language.psi.PsiFile;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "MethodUp")
 public class MethodUpAction extends BaseCodeInsightAction {
@@ -41,7 +40,7 @@ public class MethodUpAction extends BaseCodeInsightAction {
         );
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new MethodUpHandler();
@@ -54,7 +53,7 @@ public class MethodUpAction extends BaseCodeInsightAction {
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         return checkValidForFile(file);
     }
 

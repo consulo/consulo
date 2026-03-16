@@ -20,8 +20,7 @@ import consulo.document.Document;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -43,7 +42,7 @@ public abstract class BreakpointPanelProvider<B> {
   public abstract int getPriority();
 
   @Nullable
-  public abstract B findBreakpoint(@Nonnull Project project, @Nonnull Document document, int offset);
+  public abstract B findBreakpoint(Project project, Document document, int offset);
 
   @Nullable
   public abstract GutterIconRenderer getBreakpointGutterIconRenderer(Object breakpoint);

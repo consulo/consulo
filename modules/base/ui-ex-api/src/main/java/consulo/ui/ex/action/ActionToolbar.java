@@ -22,7 +22,6 @@ import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -100,7 +99,7 @@ public interface ActionToolbar {
     /**
      * @return component which represents the tool bar on UI
      */
-    @Nonnull
+    
     default javax.swing.JComponent getComponent() {
         return (javax.swing.JComponent) TargetAWT.to(getUIComponent());
     }
@@ -108,7 +107,7 @@ public interface ActionToolbar {
     /**
      * @return component which represents the tool bar on UI
      */
-    @Nonnull
+    
     default Component getUIComponent() {
         throw new AbstractMethodError();
     }
@@ -136,7 +135,7 @@ public interface ActionToolbar {
     @RequiredUIAccess
     void updateActionsImmediately();
 
-    @Nonnull
+    
     @RequiredUIAccess
     CompletableFuture<List<? extends AnAction>> updateActionsAsync();
 
@@ -147,13 +146,13 @@ public interface ActionToolbar {
         throw new AbstractMethodError();
     }
 
-    default void setTargetUIComponent(@Nonnull Component component) {
+    default void setTargetUIComponent(Component component) {
         setTargetComponent((javax.swing.JComponent) TargetAWT.to(component));
     }
 
     DataContext getToolbarDataContext();
 
-    @Nonnull
+    
     List<AnAction> getActions();
 
     @Deprecated

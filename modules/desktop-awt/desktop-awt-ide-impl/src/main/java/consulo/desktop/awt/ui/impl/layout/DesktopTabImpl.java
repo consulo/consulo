@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.tab.TabInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
@@ -50,12 +49,12 @@ public class DesktopTabImpl implements Tab {
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             myCloseHandler.accept(myTabInfo, myTabInfo.myComponent);
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setIcon(PlatformIconGroup.actionsCancel());
             e.getPresentation().setTextValue(LocalizeValue.localizeTODO("Close"));
         }
@@ -91,7 +90,7 @@ public class DesktopTabImpl implements Tab {
                 myTabInfo.setText("");
             }
 
-            @Nonnull
+            
             @Override
             public TextItemPresentation withIcon(@Nullable Image image) {
                 myTabInfo.setIcon(image);
@@ -99,7 +98,7 @@ public class DesktopTabImpl implements Tab {
             }
 
             @Override
-            public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+            public void append(LocalizeValue text, TextAttribute textAttribute) {
                 String oldText = myTabInfo.getText();
                 myTabInfo.setText(StringUtil.notNullize(oldText) + text.getValue());
             }
@@ -107,7 +106,7 @@ public class DesktopTabImpl implements Tab {
     }
 
     @Override
-    public void setRenderer(@Nonnull BiConsumer<Tab, TextItemPresentation> renderer) {
+    public void setRenderer(BiConsumer<Tab, TextItemPresentation> renderer) {
         myRenderer = renderer;
     }
 

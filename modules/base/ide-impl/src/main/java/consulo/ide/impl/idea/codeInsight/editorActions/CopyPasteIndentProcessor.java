@@ -35,7 +35,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.CharFilter;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.awt.datatransfer.DataFlavor;
@@ -57,7 +56,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
     myApplication = application;
   }
 
-  @Nonnull
+  
   @Override
   public List<IndentTransferableData> collectTransferableData(PsiFile file,
                                                               Editor editor,
@@ -73,7 +72,7 @@ public class CopyPasteIndentProcessor extends CopyPastePostProcessor<IndentTrans
     return myApplication.getExtensionPoint(PreserveIndentOnPaste.class).computeSafeIfAny(it -> it.accept(fileType)) != null;
   }
 
-  @Nonnull
+  
   @Override
   public List<IndentTransferableData> extractTransferableData(Transferable content) {
     IndentTransferableData indentData = new IndentTransferableData(-1);

@@ -6,7 +6,7 @@ import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.debug.DebugConnector;
-import jakarta.annotation.Nonnull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -28,19 +28,19 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
   }
 
   @Override
-  @Nonnull
+  
   public DeploymentSource getSource() {
     return mySource;
   }
 
   @Override
-  @Nonnull
+  
   public D getConfiguration() {
     return myConfiguration;
   }
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
@@ -50,12 +50,12 @@ public class DeploymentTaskImpl<D extends DeploymentConfiguration> implements De
     return myDebugConnector != null;
   }
 
-  @jakarta.annotation.Nullable
+  @Nullable
   public DebugConnector<?, ?> getDebugConnector() {
     return myDebugConnector;
   }
 
-  @Nonnull
+  
   public ExecutionEnvironment getExecutionEnvironment() {
     return myExecutionEnvironment;
   }

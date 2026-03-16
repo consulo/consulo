@@ -18,7 +18,7 @@ package consulo.localHistory.impl.internal.revision;
 
 import consulo.localHistory.impl.internal.tree.Entry;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;

@@ -28,7 +28,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.HasValidator;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -46,7 +45,7 @@ public class SwingValidator<V> {
 
   private WeakReference<JBPopup> myLastPopup;
 
-  @Nonnull
+  
   public Disposable addValidator(HasValidator.Validator<V> validator) {
     myValidators.add(validator);
     return () -> myValidators.remove(validator);
@@ -98,7 +97,7 @@ public class SwingValidator<V> {
     myLastPopup = new WeakReference<>(popup);
   }
 
-  public static boolean withinComponent(@Nonnull ValidationInfo info, @Nonnull MouseEvent e) {
+  public static boolean withinComponent(ValidationInfo info, MouseEvent e) {
     if (info.component != null && info.component.isShowing()) {
       Rectangle screenBounds = new Rectangle(info.component.getLocationOnScreen(), info.component.getSize());
       return screenBounds.contains(e.getLocationOnScreen());

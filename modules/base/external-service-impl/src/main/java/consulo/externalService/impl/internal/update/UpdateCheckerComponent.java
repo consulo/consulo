@@ -24,7 +24,6 @@ import consulo.disposer.Disposable;
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
 import consulo.externalService.internal.UpdateSettingsEx;
 import consulo.externalService.update.UpdateSettings;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,7 +46,7 @@ public class UpdateCheckerComponent implements Disposable {
     private Future<?> myCheckFuture = CompletableFuture.completedFuture(null);
 
     @Inject
-    public UpdateCheckerComponent(@Nonnull UpdateSettings updateSettings) {
+    public UpdateCheckerComponent(UpdateSettings updateSettings) {
         myUpdateSettings = (UpdateSettingsEx) updateSettings;
 
         myCheckRunnable = () -> PlatformOrPluginUpdateChecker.updateAndShowResult().doWhenDone(() -> {

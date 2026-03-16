@@ -16,8 +16,7 @@
 
 package consulo.virtualFileSystem;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 
@@ -39,7 +38,7 @@ public class VirtualFileWrapper {
    *
    * @param file java.io.File
    */
-  public VirtualFileWrapper(@Nonnull File file) {
+  public VirtualFileWrapper(File file) {
     myFile = file;
   }
 
@@ -95,7 +94,7 @@ public class VirtualFileWrapper {
    *
    * @return original java.io.File
    */
-  @Nonnull
+  
   public File getFile() {
     return myFile;
   }

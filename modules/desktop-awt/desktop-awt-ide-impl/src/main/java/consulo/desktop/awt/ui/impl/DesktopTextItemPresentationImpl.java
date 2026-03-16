@@ -24,8 +24,7 @@ import consulo.ui.TextItemPresentation;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -45,14 +44,14 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
     mySimpleColoredComponent.setIcon(icon);
   }
 
-  @Nonnull
+  
   @Override
-  public TextItemPresentation withFont(@Nonnull Font font) {
+  public TextItemPresentation withFont(Font font) {
     mySimpleColoredComponent.setFont(TargetAWT.to(font));
     return this;
   }
 
-  @Nonnull
+  
   @Override
   public TextItemPresentation withIcon(@Nullable Image icon) {
     mySimpleColoredComponent.setIcon(icon);
@@ -60,7 +59,7 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
   }
 
   @Override
-  public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
+  public void append(LocalizeValue text, TextAttribute textAttribute) {
     mySimpleColoredComponent.append(text.get(), DesktopAWTTargetAWTImpl.from(textAttribute));
   }
 }

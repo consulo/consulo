@@ -6,8 +6,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +17,13 @@ import java.util.function.Function;
 public class DropDownLink<T> extends LinkLabel<Object> {
   private T chosenItem;
 
-  public DropDownLink(@Nonnull T value, @Nonnull Runnable clickAction) {
+  public DropDownLink(T value, Runnable clickAction) {
     super(value.toString(), UIUtil.getTreeExpandedIcon(), (s, d) -> clickAction.run(), null, null);
     chosenItem = value;
     init();
   }
 
-  public DropDownLink(@Nonnull T value, @Nonnull Function<? super DropDownLink, ? extends JBPopup> popupBuilder) {
+  public DropDownLink(T value, Function<? super DropDownLink, ? extends JBPopup> popupBuilder) {
     super(value.toString(), UIUtil.getTreeExpandedIcon(), null, null, null);
     chosenItem = value;
 
@@ -37,12 +36,12 @@ public class DropDownLink<T> extends LinkLabel<Object> {
     init();
   }
 
-  public DropDownLink(@Nonnull T initialItem, @Nonnull List<T> items, @Nullable Consumer<? super T> itemChosenAction, boolean updateLabel) {
+  public DropDownLink(T initialItem, List<T> items, @Nullable Consumer<? super T> itemChosenAction, boolean updateLabel) {
     this(initialItem, linkLabel -> {
       IPopupChooserBuilder<T> popupBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(items).
               setRenderer(new ColoredListCellRenderer() {
                   @Override
-                  protected void customizeCellRenderer(@Nonnull JList list, Object value, int index, boolean selected, boolean hasFocus) {
+                  protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
                       append(value == null ? "" : value.toString());
                   }
               }).

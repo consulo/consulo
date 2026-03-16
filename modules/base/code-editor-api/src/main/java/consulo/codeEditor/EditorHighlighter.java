@@ -19,17 +19,16 @@ package consulo.codeEditor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.event.DocumentListener;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 public interface EditorHighlighter extends DocumentListener {
     Key<EditorHighlighter> KEY = Key.of(EditorHighlighter.class);
 
-    @Nonnull
+    
     HighlighterIterator createIterator(int startOffset);
 
-    void setText(@Nonnull CharSequence text);
+    void setText(CharSequence text);
 
-    void setEditor(@Nonnull HighlighterClient editor);
+    void setEditor(HighlighterClient editor);
 
-    void setColorScheme(@Nonnull EditorColorsScheme scheme);
+    void setColorScheme(EditorColorsScheme scheme);
 }

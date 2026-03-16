@@ -28,8 +28,7 @@ import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna
@@ -49,8 +48,8 @@ public interface ImplementationTextSelectioner extends LanguageExtension {
     }
 
     @RequiredReadAction
-    int getTextStartOffset(@Nonnull PsiElement element);
+    int getTextStartOffset(PsiElement element);
 
     @RequiredReadAction
-    int getTextEndOffset(@Nonnull PsiElement element);
+    int getTextEndOffset(PsiElement element);
 }

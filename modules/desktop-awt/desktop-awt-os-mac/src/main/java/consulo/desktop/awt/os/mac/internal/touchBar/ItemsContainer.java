@@ -3,8 +3,7 @@ package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.application.util.mac.foundation.ID;
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 final class ItemsContainer {
-    private final @Nonnull String myName;    // just for logging/debugging
-    private final @Nonnull List<TBItem> myItems = new ArrayList<>();
+    private final String myName;    // just for logging/debugging
+    private final List<TBItem> myItems = new ArrayList<>();
 
     private long myCounter = 0; // for unique id generation
 
-    ItemsContainer(@Nonnull String name) {
+    ItemsContainer(String name) {
         myName = name;
     }
 
@@ -38,7 +37,7 @@ final class ItemsContainer {
         return myName;
     }
 
-    synchronized @Nonnull String getDescription() {
+    synchronized String getDescription() {
         if (myItems.isEmpty()) {
             return "empty_container";
         }
@@ -50,11 +49,11 @@ final class ItemsContainer {
         return res.toString();
     }
 
-    void addItem(@Nonnull TBItem item) {
+    void addItem(TBItem item) {
         addItem(item, -1);
     }
 
-    synchronized void addItem(@Nonnull TBItem item, int index) {
+    synchronized void addItem(TBItem item, int index) {
         if (item.getUid() == null || item.getUid().isEmpty()) {
             item.setUid(_genNewID(item.getName()));
         }
@@ -66,7 +65,7 @@ final class ItemsContainer {
         }
     }
 
-    synchronized void addItem(@Nonnull TBItem item, @Nullable TBItem positionAnchor) {
+    synchronized void addItem(TBItem item, @Nullable TBItem positionAnchor) {
         int index = positionAnchor != null ? myItems.indexOf(positionAnchor) : -1;
         addItem(item, index);
     }
@@ -106,7 +105,7 @@ final class ItemsContainer {
         myItems.clear();
     }
 
-    synchronized @Nonnull String[] getVisibleIds() {
+    synchronized String[] getVisibleIds() {
         String[] ids = new String[myItems.size()];
         int c = 0;
         for (TBItem item : myItems) {
@@ -117,7 +116,7 @@ final class ItemsContainer {
         return c == myItems.size() ? ids : Arrays.copyOf(ids, c);
     }
 
-    @Nonnull
+    
     synchronized ID[] getNativePeers() {
         ID[] ids = new ID[myItems.size()];
         int c = 0;
@@ -130,7 +129,7 @@ final class ItemsContainer {
         return c == myItems.size() ? ids : Arrays.copyOf(ids, c);
     }
 
-    synchronized void softClear(@Nonnull Map<AnAction, TBItemAnActionButton> actPool, @Nonnull Map<Integer, TBItemGroup> groupPool) {
+    synchronized void softClear(Map<AnAction, TBItemAnActionButton> actPool, Map<Integer, TBItemGroup> groupPool) {
         myItems.forEach((item -> {
             if (item instanceof TBItemAnActionButton actItem) {
                 TBItemAnActionButton prev = actPool.put(actItem.getAnAction(), actItem);
@@ -158,7 +157,7 @@ final class ItemsContainer {
         return null;
     }
 
-    private @Nonnull String _genNewID(String desc) {
+    private String _genNewID(String desc) {
         return String.format("%s.%s.%d", myName, desc, myCounter++);
     }
 }

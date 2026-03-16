@@ -48,8 +48,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -57,21 +56,17 @@ import java.util.List;
 public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditorHolder> {
     public static final Logger LOG = Logger.getInstance(TwosideTextDiffViewer.class);
 
-    @Nonnull
     private final List<? extends EditorEx> myEditableEditors;
     @Nullable
     private List<? extends EditorEx> myEditors;
 
-    @Nonnull
     protected final SetEditorSettingsAction myEditorSettingsAction;
 
-    @Nonnull
     private final MyVisibleAreaListener myVisibleAreaListener = new MyVisibleAreaListener();
 
-    @Nullable
-    private SyncScrollSupport.TwosideSyncScrollSupport mySyncScrollSupport;
+    private SyncScrollSupport.@Nullable TwosideSyncScrollSupport mySyncScrollSupport;
 
-    public TwosideTextDiffViewer(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
+    public TwosideTextDiffViewer(DiffContext context, ContentDiffRequest request) {
         super(context, request, TextEditorHolder.TextEditorHolderFactory.INSTANCE);
 
         new MyFocusOppositePaneAction(true).install(myPanel);
@@ -107,9 +102,8 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         super.onDispose();
     }
 
-    @Nonnull
     @Override
-    protected List<TextEditorHolder> createEditorHolders(@Nonnull EditorHolderFactory<TextEditorHolder> factory) {
+    protected List<TextEditorHolder> createEditorHolders(EditorHolderFactory<TextEditorHolder> factory) {
         List<TextEditorHolder> holders = super.createEditorHolders(factory);
 
         boolean[] forceReadOnly = TextDiffViewerUtil.checkForceReadOnly(myContext, myRequest);
@@ -128,7 +122,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return holders;
     }
 
-    @Nonnull
     @Override
     protected List<JComponent> createTitles() {
         return AWTDiffUtil.createSyncHeightComponents(AWTDiffUtil.createTextTitles(myRequest, getEditors()));
@@ -138,19 +131,17 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     // Diff
     //
 
-    @Nonnull
     public TextDiffSettingsHolder.TextDiffSettings getTextSettings() {
         return TextDiffViewerUtil.getTextSettings(myContext);
     }
 
-    @Nonnull
     protected List<AnAction> createEditorPopupActions() {
         return TextDiffViewerUtil.createEditorPopupActions();
     }
 
     @Override
     @RequiredUIAccess
-    protected void onDocumentChange(@Nonnull DocumentEvent event) {
+    protected void onDocumentChange(DocumentEvent event) {
         super.onDocumentChange(event);
         myContentPanel.repaintDivider();
     }
@@ -200,13 +191,11 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
 
-    @Nonnull
     protected List<? extends DocumentContent> getContents() {
         //noinspection unchecked
         return (List) myRequest.getContents();
     }
 
-    @Nonnull
     public List<? extends EditorEx> getEditors() {
         if (myEditors == null) {
             myEditors = ContainerUtil.map(getEditorHolders(), holder -> holder.getEditor());
@@ -214,54 +203,44 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return myEditors;
     }
 
-    @Nonnull
     protected List<? extends EditorEx> getEditableEditors() {
         return myEditableEditors;
     }
 
-    @Nonnull
     public EditorEx getCurrentEditor() {
         return getEditor(getCurrentSide());
     }
 
-    @Nonnull
     public DocumentContent getCurrentContent() {
         return getContent(getCurrentSide());
     }
 
-    @Nonnull
     public EditorEx getEditor1() {
         return getEditor(Side.LEFT);
     }
 
-    @Nonnull
     public EditorEx getEditor2() {
         return getEditor(Side.RIGHT);
     }
 
 
-    @Nonnull
-    public EditorEx getEditor(@Nonnull Side side) {
+    public EditorEx getEditor(Side side) {
         return side.select(getEditors());
     }
 
-    @Nonnull
-    public DocumentContent getContent(@Nonnull Side side) {
+    public DocumentContent getContent(Side side) {
         return side.select(getContents());
     }
 
-    @Nonnull
     public DocumentContent getContent1() {
         return getContent(Side.LEFT);
     }
 
-    @Nonnull
     public DocumentContent getContent2() {
         return getContent(Side.RIGHT);
     }
 
-    @Nullable
-    public SyncScrollSupport.TwosideSyncScrollSupport getSyncScrollSupport() {
+    public SyncScrollSupport.@Nullable TwosideSyncScrollSupport getSyncScrollSupport() {
         return mySyncScrollSupport;
     }
 
@@ -270,8 +249,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
     @RequiredUIAccess
-    @Nonnull
-    protected LineCol transferPosition(@Nonnull Side baseSide, @Nonnull LineCol position) {
+    protected LineCol transferPosition(Side baseSide, LineCol position) {
         if (mySyncScrollSupport == null) {
             return position;
         }
@@ -280,13 +258,12 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     }
 
     @RequiredUIAccess
-    protected void scrollToLine(@Nonnull Side side, int line) {
+    protected void scrollToLine(Side side, int line) {
         DiffImplUtil.scrollEditor(getEditor(side), line, false);
         setCurrentSide(side);
     }
 
-    @Nullable
-    protected abstract SyncScrollSupport.SyncScrollable getSyncScrollable();
+    protected abstract SyncScrollSupport.@Nullable SyncScrollable getSyncScrollable();
 
     //
     // Misc
@@ -308,7 +285,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
         return getContent(side.other()).getNavigatable(otherPosition);
     }
 
-    public static boolean canShowRequest(@Nonnull DiffContext context, @Nonnull DiffRequest request) {
+    public static boolean canShowRequest(DiffContext context, DiffRequest request) {
         return canShowRequest(context, request, TextEditorHolder.TextEditorHolderFactory.INSTANCE);
     }
 
@@ -323,7 +300,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             Side currentSide = getCurrentSide();
             Side targetSide = currentSide.other();
 
@@ -344,7 +321,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
 
     private class MyOpenInEditorWithMouseAction extends OpenInEditorWithMouseAction {
         @Override
-        protected Navigatable getNavigatable(@Nonnull Editor editor, int line) {
+        protected Navigatable getNavigatable(Editor editor, int line) {
             Side side = Side.fromValue(getEditors(), editor);
             if (side == null) {
                 return null;
@@ -365,7 +342,7 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     //
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         super.uiDataSnapshot(sink);
         sink.set(DiffDataKeys.CURRENT_EDITOR, getCurrentEditor());
     }
@@ -382,7 +359,6 @@ public abstract class TwosideTextDiffViewer extends TwosideDiffViewer<TextEditor
     }
 
     protected abstract class MyInitialScrollPositionHelper extends InitialScrollPositionSupport.TwosideInitialScrollHelper {
-        @Nonnull
         @Override
         protected List<? extends Editor> getEditors() {
             return TwosideTextDiffViewer.this.getEditors();

@@ -10,7 +10,6 @@ import consulo.remoteServer.runtime.ServerConnectionManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import static consulo.remoteServer.impl.internal.ui.tree.ServersTreeActionUtils.getRemoteServerTarget;
 
@@ -21,7 +20,7 @@ public class RemoteServerDisconnectAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         boolean visible = node != null;
         e.getPresentation().setVisible(visible);
@@ -30,7 +29,7 @@ public class RemoteServerDisconnectAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         ServersTreeStructure.RemoteServerNode node = getRemoteServerTarget(e);
         ServerConnection<?> connection = node == null ? null : ServerConnectionManager.getInstance().getConnection(node.getValue());
         if (connection != null) {

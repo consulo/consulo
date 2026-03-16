@@ -29,7 +29,6 @@ import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class OneProjectItemCompileScope extends ExportableUserDataHolderBase imp
         myUrl = file.isDirectory() ? url + "/" : url;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getFiles(FileType fileType) {
         List<VirtualFile> files = new ArrayList<>(1);
@@ -70,7 +69,7 @@ public class OneProjectItemCompileScope extends ExportableUserDataHolderBase imp
         return FileUtil.pathsEqual(url, myUrl);
     }
 
-    @Nonnull
+    
     @Override
     public Module[] getAffectedModules() {
         Module module = ModuleUtilCore.findModuleForFile(myFile, myProject);

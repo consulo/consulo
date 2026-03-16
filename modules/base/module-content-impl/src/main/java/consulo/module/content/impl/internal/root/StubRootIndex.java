@@ -22,8 +22,7 @@ import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -32,34 +31,34 @@ import jakarta.annotation.Nullable;
 public class StubRootIndex implements RootIndex {
     public static final StubRootIndex INSTANCE = new StubRootIndex();
 
-    @Nonnull
+    
     @Override
-    public Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources) {
+    public Query<VirtualFile> getDirectoriesByPackageName(String packageName, boolean includeLibrarySources) {
         return EmptyQuery.getEmptyQuery();
     }
 
-    @Nonnull
+    
     @Override
-    public DirectoryInfo getInfoForFile(@Nonnull VirtualFile file) {
+    public DirectoryInfo getInfoForFile(VirtualFile file) {
         return NonProjectDirectoryInfo.INVALID;
     }
 
     @Nullable
     @Override
-    public ContentFolderTypeProvider getContentFolderType(@Nonnull DirectoryInfo directoryInfo) {
+    public ContentFolderTypeProvider getContentFolderType(DirectoryInfo directoryInfo) {
         return null;
     }
 
     @Nullable
     @Override
-    public String getPackageName(@Nonnull VirtualFile dir) {
+    public String getPackageName(VirtualFile dir) {
         return null;
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info) {
+    public OrderEntry[] getOrderEntries(DirectoryInfo info) {
         return OrderEntry.EMPTY_ARRAY;
     }
 }

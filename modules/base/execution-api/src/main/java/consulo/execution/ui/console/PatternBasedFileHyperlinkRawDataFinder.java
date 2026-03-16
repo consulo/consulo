@@ -17,8 +17,7 @@ package consulo.execution.ui.console;
 
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,13 +28,13 @@ public class PatternBasedFileHyperlinkRawDataFinder implements FileHyperlinkRawD
 
   private final PatternHyperlinkFormat[] myLinkFormats;
 
-  public PatternBasedFileHyperlinkRawDataFinder(@Nonnull PatternHyperlinkFormat [] linkFormats) {
+  public PatternBasedFileHyperlinkRawDataFinder(PatternHyperlinkFormat [] linkFormats) {
     myLinkFormats = linkFormats;
   }
 
-  @Nonnull
+  
   @Override
-  public List<FileHyperlinkRawData> find(@Nonnull String line) {
+  public List<FileHyperlinkRawData> find(String line) {
     Pair<Matcher, PatternHyperlinkFormat> pair = findMatcher(line);
     if (pair == null) {
       return Collections.emptyList();
@@ -105,7 +104,7 @@ public class PatternBasedFileHyperlinkRawDataFinder implements FileHyperlinkRawD
   }
 
   @Nullable
-  private Pair<Matcher, PatternHyperlinkFormat> findMatcher(@Nonnull String line) {
+  private Pair<Matcher, PatternHyperlinkFormat> findMatcher(String line) {
     for (PatternHyperlinkFormat linkFormat : myLinkFormats) {
       Matcher matcher = linkFormat.getPattern().matcher(line);
       if (matcher.find()) {

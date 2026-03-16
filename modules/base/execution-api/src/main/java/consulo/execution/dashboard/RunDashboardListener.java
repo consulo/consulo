@@ -19,12 +19,11 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.execution.configuration.RunConfiguration;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author konstantin.aleev
  */
 @TopicAPI(value = ComponentScope.PROJECT, direction = TopicBroadcastDirection.TO_PARENT)
 public interface RunDashboardListener {
-  void configurationChanged(@Nonnull RunConfiguration configuration, boolean withStructure);
+  void configurationChanged(RunConfiguration configuration, boolean withStructure);
 }

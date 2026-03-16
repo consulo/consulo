@@ -19,8 +19,7 @@ import consulo.navigation.Navigatable;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -32,6 +31,6 @@ public abstract class ExecutionNode<T extends ExecutionNode<T>> extends Presenta
     super(parentDescriptor);
   }
 
-  @Nonnull
+  
   public abstract List<Navigatable> getNavigatables();
 }

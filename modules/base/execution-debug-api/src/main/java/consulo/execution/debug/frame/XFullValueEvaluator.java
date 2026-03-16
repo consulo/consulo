@@ -18,8 +18,7 @@ package consulo.execution.debug.frame;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 
@@ -45,7 +44,7 @@ public abstract class XFullValueEvaluator {
   /**
    * @param linkText text of the link what will be appended to a variables tree node text
    */
-  protected XFullValueEvaluator(@Nonnull LocalizeValue linkText) {
+  protected XFullValueEvaluator(LocalizeValue linkText) {
     myLinkText = linkText;
   }
 
@@ -62,16 +61,16 @@ public abstract class XFullValueEvaluator {
    * Start fetching full text of the value. Note that this method is called from the Event Dispatch Thread so it should return quickly
    * @param callback used to notify that the full text has been successfully evaluated or an error occurs
    */
-  public abstract void startEvaluation(@Nonnull XFullValueEvaluationCallback callback);
+  public abstract void startEvaluation(XFullValueEvaluationCallback callback);
 
-  @Nonnull
+  
   public LocalizeValue getLinkText() {
     return myLinkText;
   }
 
   public interface XFullValueEvaluationCallback extends Obsolescent, XValueCallback {
-    void evaluated(@Nonnull String fullValue);
+    void evaluated(String fullValue);
 
-    void evaluated(@Nonnull String fullValue, @Nullable Font font);
+    void evaluated(String fullValue, @Nullable Font font);
   }
 }

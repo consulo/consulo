@@ -15,13 +15,12 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
  * @author max
  */
 public interface DeferredIcon extends Icon {
-  @Nonnull
+  
   Icon evaluate();
 }

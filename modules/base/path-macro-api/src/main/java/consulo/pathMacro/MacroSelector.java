@@ -22,8 +22,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 /**
@@ -37,10 +36,10 @@ public interface MacroSelector {
   }
 
   @RequiredUIAccess
-  default void select(@Nullable Project project, @RequiredUIAccess @Nonnull Consumer<Macro> macroConsumer) {
+  default void select(@Nullable Project project, @RequiredUIAccess Consumer<Macro> macroConsumer) {
     select(project, null, macroConsumer);
   }
 
   @RequiredUIAccess
-  void select(@Nullable Project project, @Nullable Module module, @RequiredUIAccess @Nonnull Consumer<Macro> macroConsumer);
+  void select(@Nullable Project project, @Nullable Module module, @RequiredUIAccess Consumer<Macro> macroConsumer);
 }

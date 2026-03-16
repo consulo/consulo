@@ -20,14 +20,13 @@ import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.Pair;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public abstract class MainConfigurationStateSplitter extends StateSplitterEx {
   @Override
-  public final List<Pair<Element, String>> splitState(@Nonnull Element state) {
+  public final List<Pair<Element, String>> splitState(Element state) {
     UniqueNameGenerator generator = new UniqueNameGenerator();
     List<Pair<Element, String>> result = new ArrayList<>();
     for (Iterator<Element> iterator = state.getChildren(getSubStateTagName()).iterator(); iterator.hasNext(); ) {
@@ -42,16 +41,16 @@ public abstract class MainConfigurationStateSplitter extends StateSplitterEx {
   }
 
   @Override
-  public final void mergeStateInto(@Nonnull Element target, @Nonnull Element subState) {
+  public final void mergeStateInto(Element target, Element subState) {
     mergeStateInto(target, subState, getSubStateTagName());
   }
 
-  @Nonnull
-  protected abstract String getSubStateFileName(@Nonnull Element element);
+  
+  protected abstract String getSubStateFileName(Element element);
 
-  @Nonnull
+  
   protected abstract String getComponentStateFileName();
 
-  @Nonnull
+  
   protected abstract String getSubStateTagName();
 }

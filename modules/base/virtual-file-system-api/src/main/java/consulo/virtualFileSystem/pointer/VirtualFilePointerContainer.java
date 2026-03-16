@@ -21,8 +21,7 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -31,30 +30,30 @@ import java.util.List;
 public interface VirtualFilePointerContainer {
   void killAll();
 
-  void add(@Nonnull VirtualFile file);
+  void add(VirtualFile file);
 
-  void add(@Nonnull String url);
+  void add(String url);
 
-  void remove(@Nonnull VirtualFilePointer pointer);
+  void remove(VirtualFilePointer pointer);
 
-  @Nonnull
+  
   List<VirtualFilePointer> getList();
 
-  void addAll(@Nonnull VirtualFilePointerContainer that);
+  void addAll(VirtualFilePointerContainer that);
 
-  @Nonnull
+  
   String[] getUrls();
 
   boolean isEmpty();
 
-  @Nonnull
+  
   VirtualFile[] getFiles();
 
-  @Nonnull
+  
   VirtualFile[] getDirectories();
 
   @Nullable
-  VirtualFilePointer findByUrl(@Nonnull String url);
+  VirtualFilePointer findByUrl(String url);
 
   void clear();
 
@@ -69,19 +68,19 @@ public interface VirtualFilePointerContainer {
    * </myroot>
    * }</pre>
    */
-  void readExternal(@Nonnull Element rootChild, @Nonnull String childElementName, boolean externalizeJarDirectories) throws InvalidDataException;
+  void readExternal(Element rootChild, String childElementName, boolean externalizeJarDirectories) throws InvalidDataException;
 
-  void writeExternal(@Nonnull Element element, @Nonnull String childElementName, boolean externalizeJarDirectories);
+  void writeExternal(Element element, String childElementName, boolean externalizeJarDirectories);
 
-  void moveUp(@Nonnull String url);
+  void moveUp(String url);
 
-  void moveDown(@Nonnull String url);
+  void moveDown(String url);
 
-  @Nonnull
-  VirtualFilePointerContainer clone(@Nonnull Disposable parent);
+  
+  VirtualFilePointerContainer clone(Disposable parent);
 
-  @Nonnull
-  VirtualFilePointerContainer clone(@Nonnull Disposable parent, @Nullable VirtualFilePointerListener listener);
+  
+  VirtualFilePointerContainer clone(Disposable parent, @Nullable VirtualFilePointerListener listener);
 
   /**
    * Adds {@code directory} as a root of jar files.
@@ -89,7 +88,7 @@ public interface VirtualFilePointerContainer {
    * (and, if {@code recursively} was set, the jar files in all-subdirectories).
    * {@link #getUrls()} will additionally return the {@code directoryUrl}.
    */
-  void addJarDirectory(@Nonnull String directoryUrl, boolean recursively);
+  void addJarDirectory(String directoryUrl, boolean recursively);
 
   /**
    * Removes {@code directory} from the roots of jar files.
@@ -97,11 +96,11 @@ public interface VirtualFilePointerContainer {
    *
    * @return true if removed
    */
-  boolean removeJarDirectory(@Nonnull String directoryUrl);
+  boolean removeJarDirectory(String directoryUrl);
 
   /**
    * Returns list of (directory url, isRecursive) which were added via {@link #addJarDirectory(String, boolean)} }
    */
-  @Nonnull
+  
   List<Pair<String, Boolean>> getJarDirectories();
 }

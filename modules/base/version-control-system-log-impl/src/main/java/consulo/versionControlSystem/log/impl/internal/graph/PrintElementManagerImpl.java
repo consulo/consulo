@@ -16,8 +16,7 @@
 package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,25 +24,25 @@ import java.util.Set;
 import java.util.function.Function;
 
 class PrintElementManagerImpl implements PrintElementManager {
-  @Nonnull
+  
   private final Comparator<GraphElement> myGraphElementComparator;
-  @Nonnull
+  
   private final ColorGetterByLayoutIndex myColorGetter;
-  @Nonnull
+  
   private final LinearGraph myLinearGraph;
-  @Nonnull
+  
   private Set<Integer> mySelectedNodeIds = Collections.emptySet();
   @Nullable
   private PrintElementWithGraphElement mySelectedPrintElement = null;
 
   @SuppressWarnings("unchecked")
-  PrintElementManagerImpl(@Nonnull final LinearGraph linearGraph,
-                          @Nonnull final PermanentGraphInfo myPermanentGraph,
-                          @Nonnull GraphColorManager colorManager) {
+  PrintElementManagerImpl(final LinearGraph linearGraph,
+                          final PermanentGraphInfo myPermanentGraph,
+                          GraphColorManager colorManager) {
     myLinearGraph = linearGraph;
     myColorGetter = new ColorGetterByLayoutIndex(linearGraph, myPermanentGraph, colorManager);
     myGraphElementComparator = new GraphElementComparatorByLayoutIndex(new Function<Integer, Integer>() {
-      @Nonnull
+      
       @Override
       public Integer apply(Integer nodeIndex) {
         int nodeId = linearGraph.getNodeId(nodeIndex);
@@ -54,7 +53,7 @@ class PrintElementManagerImpl implements PrintElementManager {
   }
 
   @Override
-  public boolean isSelected(@Nonnull PrintElementWithGraphElement printElement) {
+  public boolean isSelected(PrintElementWithGraphElement printElement) {
     if (printElement.equals(mySelectedPrintElement)) return true;
 
     GraphElement graphElement = printElement.getGraphElement();
@@ -73,22 +72,22 @@ class PrintElementManagerImpl implements PrintElementManager {
     return false;
   }
 
-  void setSelectedElement(@Nonnull PrintElementWithGraphElement printElement) {
+  void setSelectedElement(PrintElementWithGraphElement printElement) {
     mySelectedNodeIds = Collections.emptySet();
     mySelectedPrintElement = printElement;
   }
 
-  void setSelectedElements(@Nonnull Set<Integer> selectedNodeId) {
+  void setSelectedElements(Set<Integer> selectedNodeId) {
     mySelectedPrintElement = null;
     mySelectedNodeIds = selectedNodeId;
   }
 
   @Override
-  public int getColorId(@Nonnull GraphElement element) {
+  public int getColorId(GraphElement element) {
     return myColorGetter.getColorId(element);
   }
 
-  @Nonnull
+  
   @Override
   public Comparator<GraphElement> getGraphElementComparator() {
     return myGraphElementComparator;

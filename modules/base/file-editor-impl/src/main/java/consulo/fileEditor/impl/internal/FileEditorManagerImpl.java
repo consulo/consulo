@@ -101,8 +101,7 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
@@ -157,9 +156,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     public FileEditorManagerImpl(
-        @Nonnull Application application,
-        @Nonnull ApplicationConcurrency applicationConcurrency,
-        @Nonnull Project project,
+        Application application,
+        ApplicationConcurrency applicationConcurrency,
+        Project project,
         DockManager dockManager
     ) {
         myProject = project;
@@ -179,7 +178,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                 new FileEditorManagerListener() {
                     @Override
                     @RequiredUIAccess
-                    public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
+                    public void selectionChanged(FileEditorManagerEvent event) {
                         FileEditorsSplitters splitters = getSplitters();
                         openAssociatedFile(UIAccess.current(), event.getNewFile(), splitters.getCurrentWindow(), splitters);
                     }
@@ -203,14 +202,14 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         );
         connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
             @Override
-            public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectOpened(Project project, UIAccess uiAccess) {
                 if (project == myProject) {
                     FileEditorManagerImpl.this.projectOpened(connection);
                 }
             }
 
             @Override
-            public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+            public void projectClosed(Project project, UIAccess uiAccess) {
                 if (project == myProject) {
                     // Dispose created editors. We do not use use closeEditor method because
                     // it fires event and changes history.
@@ -220,12 +219,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         });
     }
 
-    @Nonnull
     protected FileEditorWithProviderComposite createEditorWithProviderComposite(
-        @Nonnull VirtualFile file,
-        @Nonnull FileEditor[] editors,
-        @Nonnull FileEditorProvider[] providers,
-        @Nonnull FileEditorManagerEx fileEditorManager
+        VirtualFile file,
+        FileEditor[] editors,
+        FileEditorProvider[] providers,
+        FileEditorManagerEx fileEditorManager
     ) {
         throw new UnsupportedOperationException();
     }
@@ -256,21 +254,19 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         refreshIconsAsync();
     }
 
-    public static boolean isDumbAware(@Nonnull FileEditor editor) {
+    public static boolean isDumbAware(FileEditor editor) {
         return Boolean.TRUE.equals(editor.getUserData(DUMB_AWARE))
             && !(editor instanceof PossiblyDumbAware possiblyDumbAware && !possiblyDumbAware.isDumbAware());
     }
 
     //-------------------------------------------------------------------------------
 
-    @Nonnull
     public FileEditorsSplitters getMainSplitters() {
         initUI();
 
         return mySplitters;
     }
 
-    @Nonnull
     @Override
     public Set<FileEditorsSplitters> getAllSplitters() {
         Set<FileEditorsSplitters> all = new LinkedHashSet<>();
@@ -285,7 +281,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return Collections.unmodifiableSet(all);
     }
 
-    @Nonnull
     private AsyncResult<FileEditorsSplitters> getActiveSplittersAsync() {
         AsyncResult<FileEditorsSplitters> result = new AsyncResult<>();
         IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
@@ -357,7 +352,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      * @return color of the {@code file} which corresponds to the
      * file's status
      */
-    public ColorValue getFileColor(@Nonnull VirtualFile file) {
+    public ColorValue getFileColor(VirtualFile file) {
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
         ColorValue statusColor = fileStatusManager.getStatus(file).getColor();
         if (statusColor == null) {
@@ -366,12 +361,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return statusColor;
     }
 
-    public boolean isProblem(@Nonnull VirtualFile file) {
+    public boolean isProblem(VirtualFile file) {
         return false;
     }
 
-    @Nonnull
-    public String getFileTooltipText(@Nonnull VirtualFile file) {
+    public String getFileTooltipText(VirtualFile file) {
         List<EditorTabTitleProvider> availableProviders = DumbService.getDumbAwareExtensions(myProject, EditorTabTitleProvider.EP_NAME);
         for (EditorTabTitleProvider provider : availableProviders) {
             String text = provider.getEditorTabTooltipText(myProject, file);
@@ -383,7 +377,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public void updateFilePresentation(@Nonnull VirtualFile file) {
+    public void updateFilePresentation(VirtualFile file) {
         if (!isFileOpen(file)) {
             return;
         }
@@ -398,14 +392,14 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      * Updates tab color for the specified {@code file}. The {@code file}
      * should be opened in the myEditor, otherwise the method throws an assertion.
      */
-    private void updateFileColor(@Nonnull VirtualFile file) {
+    private void updateFileColor(VirtualFile file) {
         Set<FileEditorsSplitters> all = getAllSplitters();
         for (FileEditorsSplitters each : all) {
             each.updateFileColor(file);
         }
     }
 
-    private void updateFileBackgroundColor(@Nonnull VirtualFile file) {
+    private void updateFileBackgroundColor(VirtualFile file) {
         Set<FileEditorsSplitters> all = getAllSplitters();
         for (FileEditorsSplitters each : all) {
             each.updateFileBackgroundColor(file);
@@ -416,7 +410,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      * Updates tab icon for the specified {@code file}. The {@code file}
      * should be opened in the myEditor, otherwise the method throws an assertion.
      */
-    protected void updateFileIconAsync(@Nonnull VirtualFile file) {
+    protected void updateFileIconAsync(VirtualFile file) {
         Set<FileEditorsSplitters> all = getAllSplitters();
         for (FileEditorsSplitters each : all) {
             each.updateFileIconAsync(file);
@@ -446,7 +440,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
 
     @Override
-    public VirtualFile getFile(@Nonnull FileEditor editor) {
+    public VirtualFile getFile(FileEditor editor) {
         FileEditorWithProviderComposite editorComposite = getEditorComposite(editor);
         if (editorComposite != null) {
             return editorComposite.getFile();
@@ -486,7 +480,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     public FileEditorWindow[] getWindows() {
         List<FileEditorWindow> windows = new ArrayList<>();
         Set<FileEditorsSplitters> all = getAllSplitters();
@@ -500,7 +493,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     @RequiredUIAccess
-    public FileEditorWindow getNextWindow(@Nonnull FileEditorWindow window) {
+    public FileEditorWindow getNextWindow(FileEditorWindow window) {
         FileEditorWindow[] windows = getSplitters().getOrderedWindows();
         for (int i = 0; i != windows.length; ++i) {
             if (windows[i].equals(window)) {
@@ -513,7 +506,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     @RequiredUIAccess
-    public FileEditorWindow getPrevWindow(@Nonnull FileEditorWindow window) {
+    public FileEditorWindow getPrevWindow(FileEditorWindow window) {
         FileEditorWindow[] windows = getSplitters().getOrderedWindows();
         for (int i = 0; i != windows.length; ++i) {
             if (windows[i].equals(window)) {
@@ -570,7 +563,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     public AsyncResult<FileEditorWindow> getActiveWindow() {
         return getActiveSplittersAsync().subResult(FileEditorsSplitters::getCurrentWindow);
     }
@@ -592,7 +584,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void closeFile(@Nonnull VirtualFile file, @Nonnull FileEditorWindow window, boolean transferFocus) {
+    public void closeFile(VirtualFile file, FileEditorWindow window, boolean transferFocus) {
         assertDispatchThread();
         ourOpenFilesSetModificationCount.incrementAndGet();
 
@@ -609,7 +601,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     @RequiredUIAccess
-    public void closeFile(@Nonnull VirtualFile file, @Nonnull FileEditorWindow window) {
+    public void closeFile(VirtualFile file, FileEditorWindow window) {
         closeFile(file, window, true);
     }
 
@@ -617,12 +609,12 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     @RequiredUIAccess
-    public void closeFile(@Nonnull VirtualFile file) {
+    public void closeFile(VirtualFile file) {
         closeFile(file, true, false);
     }
 
     @RequiredUIAccess
-    public void closeFile(@Nonnull VirtualFile file, boolean moveFocus, boolean closeAllCopies) {
+    public void closeFile(VirtualFile file, boolean moveFocus, boolean closeAllCopies) {
         assertDispatchThread();
 
         CommandProcessor.getInstance().newCommand()
@@ -631,7 +623,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredUIAccess
-    private void closeFileImpl(@Nonnull VirtualFile file, boolean moveFocus, boolean closeAllCopies) {
+    private void closeFileImpl(VirtualFile file, boolean moveFocus, boolean closeAllCopies) {
         assertDispatchThread();
         ourOpenFilesSetModificationCount.incrementAndGet();
         runChange(splitters -> splitters.closeFile(file, moveFocus), closeAllCopies ? null : getActiveSplittersSync());
@@ -640,10 +632,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     //-------------------------------------- Open File ----------------------------------------
 
     @Override
-    @Nonnull
     @RequiredUIAccess
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
-        @Nonnull VirtualFile file,
+        VirtualFile file,
         boolean focusEditor,
         boolean searchForSplitter
     ) {
@@ -693,7 +684,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return openFileImpl2(uiAccess, wndToOpenIn, file, focusEditor);
     }
 
-    public Pair<FileEditor[], FileEditorProvider[]> openFileInNewWindow(@Nonnull VirtualFile file) {
+    public Pair<FileEditor[], FileEditorProvider[]> openFileInNewWindow(VirtualFile file) {
         return ((FileEditorDockManager)DockManager.getInstance(getProject())).createNewDockContainerFor(file, this);
     }
 
@@ -706,7 +697,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         UIAccess uiAccess,
         VirtualFile file,
         FileEditorWindow wndToOpenIn,
-        @Nonnull FileEditorsSplitters splitters
+        FileEditorsSplitters splitters
     ) {
         FileEditorWindow[] windows = splitters.getWindows();
 
@@ -726,12 +717,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredUIAccess
-    @Nonnull
     @Override
     public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(
-        @Nonnull VirtualFile file,
+        VirtualFile file,
         boolean focusEditor,
-        @Nonnull FileEditorWindow window
+        FileEditorWindow window
     ) {
         if (!file.isValid()) {
             throw new IllegalArgumentException("file is not valid: " + file);
@@ -741,12 +731,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return openFileImpl2(UIAccess.get(), window, file, focusEditor);
     }
 
-    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public CompletableFuture<FileEditorOpenResult> openFileAsync(
-        @Nonnull VirtualFile file,
-        @Nonnull FileEditorOpenOptions options
+        VirtualFile file,
+        FileEditorOpenOptions options
     ) {
         if (!file.isValid()) {
             return CompletableFuture.failedFuture(
@@ -984,12 +973,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }).toFuture();
     }
 
-    @Nonnull
     @RequiredUIAccess
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl2(
-        @Nonnull UIAccess uiAccess,
-        @Nonnull FileEditorWindow window,
-        @Nonnull VirtualFile file,
+        UIAccess uiAccess,
+        FileEditorWindow window,
+        VirtualFile file,
         boolean focusEditor
     ) {
         SimpleReference<Pair<FileEditor[], FileEditorProvider[]>> result = new SimpleReference<>();
@@ -1007,11 +995,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      *              passed file is valid.
      * @param entry map between FileEditorProvider and FileEditorState. If this parameter
      */
-    @Nonnull
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl3(
-        @Nonnull UIAccess uiAccess,
-        @Nonnull FileEditorWindow window,
-        @Nonnull VirtualFile file,
+        UIAccess uiAccess,
+        FileEditorWindow window,
+        VirtualFile file,
         boolean focusEditor,
         @Nullable HistoryEntry entry,
         boolean current
@@ -1021,9 +1008,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Deprecated
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(
-        @Nonnull UIAccess uiAccess,
-        @Nonnull FileEditorWindow window,
-        @Nonnull VirtualFile file,
+        UIAccess uiAccess,
+        FileEditorWindow window,
+        VirtualFile file,
         @Nullable HistoryEntry entry,
         boolean current,
         boolean focusEditor,
@@ -1042,11 +1029,10 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     /**
      * This method can be invoked from background thread. Of course, UI for returned editors should be accessed from EDT in any case.
      */
-    @Nonnull
     public Pair<FileEditor[], FileEditorProvider[]> openFileImpl4(
-        @Nonnull UIAccess uiAccess,
-        @Nonnull FileEditorWindow window,
-        @Nonnull VirtualFile file,
+        UIAccess uiAccess,
+        FileEditorWindow window,
+        VirtualFile file,
         @Nullable HistoryEntry entry,
         FileEditorOpenOptions options
     ) {
@@ -1235,9 +1221,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Nullable
     private FileEditorWithProviderComposite createComposite(
-        @Nonnull VirtualFile file,
-        @Nonnull FileEditor[] editors,
-        @Nonnull FileEditorProvider[] providers
+        VirtualFile file,
+        FileEditor[] editors,
+        FileEditorProvider[] providers
     ) {
         if (NullUtils.hasNull(editors) || NullUtils.hasNull(providers)) {
             List<FileEditor> editorList = new ArrayList<>(editors.length);
@@ -1260,9 +1246,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     private void restoreEditorState(
-        @Nonnull VirtualFile file,
-        @Nonnull FileEditorProvider provider,
-        @Nonnull FileEditor editor,
+        VirtualFile file,
+        FileEditorProvider provider,
+        FileEditor editor,
         HistoryEntry entry,
         boolean newEditor
     ) {
@@ -1287,13 +1273,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    @Nonnull
     @Override
-    public ActionCallback notifyPublisher(@Nonnull Runnable runnable) {
+    public ActionCallback notifyPublisher(Runnable runnable) {
         IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
         AsyncResult<Void> done = new AsyncResult<>();
         return myBusyObject.execute(new ActiveRunnable() {
-            @Nonnull
             @Override
             public AsyncResult<Void> run() {
                 focusManager.doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {
@@ -1310,7 +1294,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     @RequiredUIAccess
-    public void setSelectedEditor(@Nonnull VirtualFile file, @Nonnull String fileEditorProviderId) {
+    public void setSelectedEditor(VirtualFile file, String fileEditorProviderId) {
         FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
         if (composite == null) {
             List<FileEditorWithProviderComposite> composites = getEditorComposites(file);
@@ -1371,10 +1355,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return newComposite;
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
-    public List<FileEditor> openEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor) {
+    public List<FileEditor> openEditor(OpenFileDescriptor descriptor, boolean focusEditor) {
         assertDispatchThread();
         if (descriptor.getFile() instanceof VirtualFileWindow delegate) {
             int hostOffset = delegate.getDocumentWindow().injectedToHost(descriptor.getOffset());
@@ -1415,7 +1398,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return result;
     }
 
-    private boolean navigateAndSelectEditor(@Nonnull NavigatableFileEditor editor, @Nonnull OpenFileDescriptor descriptor) {
+    private boolean navigateAndSelectEditor(NavigatableFileEditor editor, OpenFileDescriptor descriptor) {
         if (editor.canNavigateTo(descriptor)) {
             setSelectedEditor(editor);
             editor.navigateTo(descriptor);
@@ -1425,7 +1408,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return false;
     }
 
-    private void setSelectedEditor(@Nonnull FileEditor editor) {
+    private void setSelectedEditor(FileEditor editor) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite == null) {
             return;
@@ -1443,7 +1426,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     public Project getProject() {
         return myProject;
     }
@@ -1451,7 +1433,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Override
     @Nullable
     @RequiredUIAccess
-    public Editor openTextEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor) {
+    public Editor openTextEditor(OpenFileDescriptor descriptor, boolean focusEditor) {
         Collection<FileEditor> fileEditors = openEditor(descriptor, focusEditor);
         for (FileEditor fileEditor : fileEditors) {
             if (fileEditor instanceof TextEditor textEditor) {
@@ -1464,7 +1446,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return null;
     }
 
-    protected Editor getOpenedEditor(@Nonnull Editor editor, boolean focusEditor) {
+    protected Editor getOpenedEditor(Editor editor, boolean focusEditor) {
         return editor;
     }
 
@@ -1487,12 +1469,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public boolean isFileOpen(@Nonnull VirtualFile file) {
+    public boolean isFileOpen(VirtualFile file) {
         return !getEditorComposites(file).isEmpty();
     }
 
     @Override
-    @Nonnull
     public VirtualFile[] getOpenFiles() {
         Set<VirtualFile> openFiles = new HashSet<>();
         for (FileEditorsSplitters each : getAllSplitters()) {
@@ -1501,7 +1482,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return VirtualFileUtil.toVirtualFileArray(openFiles);
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
     public VirtualFile[] getSelectedFiles() {
@@ -1517,7 +1497,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     public FileEditor[] getSelectedEditors() {
         Set<FileEditor> selectedEditors = new HashSet<>();
         for (FileEditorsSplitters each : getAllSplitters()) {
@@ -1528,7 +1507,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     @RequiredUIAccess
     public FileEditorsSplitters getSplitters() {
         FileEditorsSplitters active = null;
@@ -1541,7 +1519,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Nullable
     @Override
     @RequiredUIAccess
-    public FileEditor getSelectedEditor(@Nonnull VirtualFile file) {
+    public FileEditor getSelectedEditor(VirtualFile file) {
         FileEditorWithProvider selectedEditorWithProvider = getSelectedEditorWithProvider(file);
         return selectedEditorWithProvider == null ? null : selectedEditorWithProvider.getFileEditor();
     }
@@ -1549,7 +1527,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     @Nullable
     @Override
     @RequiredUIAccess
-    public FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file) {
+    public FileEditorWithProvider getSelectedEditorWithProvider(VirtualFile file) {
         if (file instanceof VirtualFileWindow virtualFileWindow) {
             file = virtualFileWindow.getDelegate();
         }
@@ -1562,10 +1540,9 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return composites.isEmpty() ? null : composites.get(0).getSelectedEditorWithProvider();
     }
 
-    @Nonnull
     @Override
     @RequiredUIAccess
-    public Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file) {
+    public Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(VirtualFile file) {
         UIAccess.assertIsUIThread();
 
         FileEditorWithProviderComposite composite = getCurrentEditorWithProviderComposite(file);
@@ -1581,9 +1558,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     @RequiredUIAccess
-    public FileEditor[] getEditors(@Nonnull VirtualFile file) {
+    public FileEditor[] getEditors(VirtualFile file) {
         if (file instanceof VirtualFileWindow virtualFileWindow) {
             file = virtualFileWindow.getDelegate();
         }
@@ -1600,9 +1576,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return EMPTY_EDITOR_ARRAY;
     }
 
-    @Nonnull
     @Override
-    public FileEditor[] getAllEditors(@Nonnull VirtualFile file) {
+    public FileEditor[] getAllEditors(VirtualFile file) {
         List<FileEditorWithProviderComposite> editorComposites = getEditorComposites(file);
         if (editorComposites.isEmpty()) {
             return EMPTY_EDITOR_ARRAY;
@@ -1616,7 +1591,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Nullable
     @RequiredUIAccess
-    private FileEditorWithProviderComposite getCurrentEditorWithProviderComposite(@Nonnull VirtualFile virtualFile) {
+    private FileEditorWithProviderComposite getCurrentEditorWithProviderComposite(VirtualFile virtualFile) {
         FileEditorWindow editorWindow = getSplitters().getCurrentWindow();
         if (editorWindow != null) {
             return editorWindow.findFileComposite(virtualFile);
@@ -1624,8 +1599,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return null;
     }
 
-    @Nonnull
-    private List<FileEditorWithProviderComposite> getEditorComposites(@Nonnull VirtualFile file) {
+    private List<FileEditorWithProviderComposite> getEditorComposites(VirtualFile file) {
         List<FileEditorWithProviderComposite> result = new ArrayList<>();
         Set<FileEditorsSplitters> all = getAllSplitters();
         for (FileEditorsSplitters each : all) {
@@ -1635,7 +1609,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
     @RequiredUIAccess
     public FileEditor[] getAllEditors() {
         UIAccess.assertIsUIThread();
@@ -1651,14 +1624,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return result.toArray(new FileEditor[result.size()]);
     }
 
-    @Nonnull
-    public List<JComponent> getTopComponents(@Nonnull FileEditor editor) {
+    public List<JComponent> getTopComponents(FileEditor editor) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         return composite != null ? composite.getTopComponents(editor) : Collections.emptyList();
     }
 
     @Override
-    public void addTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
+    public void addTopComponent(FileEditor editor, JComponent component) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
             composite.addTopComponent(editor, component);
@@ -1667,7 +1639,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Nullable
     @Override
-    public Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component) {
+    public Disposable addTopComponent(FileEditor editor, ComponentContainer component) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
             return composite.addTopComponent(editor, component);
@@ -1676,7 +1648,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public void removeTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
+    public void removeTopComponent(FileEditor editor, JComponent component) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
             composite.removeTopComponent(editor, component);
@@ -1684,7 +1656,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public void addBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
+    public void addBottomComponent(FileEditor editor, JComponent component) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
             composite.addBottomComponent(editor, component);
@@ -1692,7 +1664,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public void removeBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component) {
+    public void removeBottomComponent(FileEditor editor, JComponent component) {
         FileEditorWithProviderComposite composite = getEditorComposite(editor);
         if (composite != null) {
             composite.removeBottomComponent(editor, component);
@@ -1701,13 +1673,13 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     @Override
     public void addFileEditorManagerListener(
-        @Nonnull FileEditorManagerListener listener,
-        @Nonnull Disposable parentDisposable
+        FileEditorManagerListener listener,
+        Disposable parentDisposable
     ) {
         myProject.getMessageBus().connect(parentDisposable).subscribe(FileEditorManagerListener.class, listener);
     }
 
-    protected void projectOpened(@Nonnull MessageBusConnection connection) {
+    protected void projectOpened(MessageBusConnection connection) {
         getMainSplitters().startListeningFocus();
 
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
@@ -1724,7 +1696,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         connection.subscribe(UISettingsListener.class, new MyUISettingsListener());
     }
 
-    @Nonnull
     @Override
     public Coroutine<?, Element> getStateAsync() {
         return Coroutine.first(UIAction.<Void, Element>apply(ignored -> {
@@ -1745,7 +1716,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Nullable
-    private FileEditorWithProviderComposite getEditorComposite(@Nonnull FileEditor editor) {
+    private FileEditorWithProviderComposite getEditorComposite(FileEditor editor) {
         for (FileEditorsSplitters splitters : getAllSplitters()) {
             FileEditorWithProviderComposite[] editorsComposites = splitters.getEditorsComposites();
             for (int i = editorsComposites.length - 1; i >= 0; i--) {
@@ -1808,7 +1779,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
     }
 
-    @Nonnull
     private static Trinity<VirtualFile, FileEditor, FileEditorProvider> extract(@Nullable FileEditorComposite composite) {
         VirtualFile file;
         FileEditor editor;
@@ -1828,7 +1798,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    public boolean isChanged(@Nonnull FileEditorComposite editor) {
+    public boolean isChanged(FileEditorComposite editor) {
         FileStatusManager fileStatusManager = FileStatusManager.getInstance(myProject);
         if (fileStatusManager == null) {
             return false;
@@ -1838,7 +1808,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @RequiredUIAccess
-    public void disposeComposite(@Nonnull FileEditorWithProviderComposite editor) {
+    public void disposeComposite(FileEditorWithProviderComposite editor) {
         if (getAllEditors().length == 0) {
             setCurrentWindow(null);
         }
@@ -1879,7 +1849,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     /**
      * @param splitters - taken getAllSplitters() value if parameter is null
      */
-    public void runChange(@Nonnull Consumer<FileEditorsSplitters> change, @Nullable FileEditorsSplitters splitters) {
+    public void runChange(Consumer<FileEditorsSplitters> change, @Nullable FileEditorsSplitters splitters) {
         Set<FileEditorsSplitters> target = new HashSet<>();
         if (splitters == null) {
             target.addAll(getAllSplitters());
@@ -1907,7 +1877,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     private final class MyVirtualFileListener implements VirtualFileListener {
         @Override
         @RequiredUIAccess
-        public void beforeFileDeletion(@Nonnull VirtualFileEvent e) {
+        public void beforeFileDeletion(VirtualFileEvent e) {
             assertDispatchThread();
 
             VirtualFile file = e.getFile();
@@ -1921,7 +1891,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
         @Override
         @RequiredUIAccess
-        public void propertyChanged(@Nonnull VirtualFilePropertyEvent e) {
+        public void propertyChanged(VirtualFilePropertyEvent e) {
             if (VirtualFile.PROP_NAME.equals(e.getPropertyName())) {
                 assertDispatchThread();
                 VirtualFile file = e.getFile();
@@ -1952,7 +1922,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         }
 
         @Override
-        public void fileMoved(@Nonnull VirtualFileMoveEvent e) {
+        public void fileMoved(VirtualFileMoveEvent e) {
             VirtualFile file = e.getFile();
             VirtualFile[] openFiles = getOpenFiles();
             for (VirtualFile openFile : openFiles) {
@@ -1973,7 +1943,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     private final class MyEditorPropertyChangeListener implements PropertyChangeListener {
         @Override
         @RequiredUIAccess
-        public void propertyChange(@Nonnull PropertyChangeEvent e) {
+        public void propertyChange(PropertyChangeEvent e) {
             assertDispatchThread();
 
             String propertyName = e.getPropertyName();
@@ -2027,7 +1997,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
         @Override
         @RequiredUIAccess
-        public void fileStatusChanged(@Nonnull VirtualFile file) { // update color of the file (if necessary)
+        public void fileStatusChanged(VirtualFile file) { // update color of the file (if necessary)
             assertDispatchThread();
             if (isFileOpen(file)) {
                 updateFileStatus(file);
@@ -2046,7 +2016,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     private final class MyFileTypeListener implements FileTypeListener {
         @Override
         @RequiredUIAccess
-        public void fileTypesChanged(@Nonnull FileTypeEvent event) {
+        public void fileTypesChanged(FileTypeEvent event) {
             assertDispatchThread();
             VirtualFile[] openFiles = getOpenFiles();
             for (int i = openFiles.length - 1; i >= 0; i--) {
@@ -2179,12 +2149,11 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     @Override
-    @Nonnull
-    public VirtualFile[] getSiblings(@Nonnull VirtualFile file) {
+    public VirtualFile[] getSiblings(VirtualFile file) {
         return getOpenFiles();
     }
 
-    public void queueUpdateFile(@Nonnull VirtualFile file) {
+    public void queueUpdateFile(VirtualFile file) {
         myQueue.queue(() -> {
             if (isFileOpen(file)) {
                 updateFileIconAsync(file);
@@ -2209,7 +2178,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return splitters;
     }
 
-    @Nonnull
     public List<Pair<VirtualFile, FileEditorWindow>> getSelectionHistory() {
         List<Pair<VirtualFile, FileEditorWindow>> copy = new ArrayList<>();
         for (Pair<VirtualFile, FileEditorWindow> pair : mySelectionHistory) {
@@ -2231,20 +2199,19 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         return mySelectionHistory;
     }
 
-    public void addSelectionRecord(@Nonnull VirtualFile file, @Nonnull FileEditorWindow window) {
+    public void addSelectionRecord(VirtualFile file, FileEditorWindow window) {
         Pair<VirtualFile, FileEditorWindow> record = Pair.create(file, window);
         mySelectionHistory.remove(record);
         mySelectionHistory.add(0, record);
     }
 
-    public void removeSelectionRecord(@Nonnull VirtualFile file, @Nonnull FileEditorWindow window) {
+    public void removeSelectionRecord(VirtualFile file, FileEditorWindow window) {
         mySelectionHistory.remove(Pair.create(file, window));
         updateFileName(file);
     }
 
-    @Nonnull
     @Override
-    public AsyncResult<Void> getReady(@Nonnull Object requestor) {
+    public AsyncResult<Void> getReady(Object requestor) {
         return myBusyObject.getReady(requestor);
     }
 }

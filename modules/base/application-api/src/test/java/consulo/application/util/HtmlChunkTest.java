@@ -2,7 +2,6 @@
 package consulo.application.util;
 
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -204,7 +203,7 @@ public class HtmlChunkTest {
             .hasToString("<span>label:</span>description");
     }
 
-    static LocalizeValue loc(@Nonnull String value) {
+    static LocalizeValue loc(String value) {
         return new TestLocalizedValue(value);
     }
 }

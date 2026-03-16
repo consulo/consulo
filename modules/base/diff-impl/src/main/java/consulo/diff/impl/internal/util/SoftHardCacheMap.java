@@ -18,14 +18,13 @@ package consulo.diff.impl.internal.util;
 import consulo.util.collection.SLRUMap;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 public class SoftHardCacheMap<K, V> {
-  @Nonnull
+  
   private final SLRUMap<K, V> mySLRUMap;
-  @Nonnull
+  
   private final Map<K, V> mySoftLinkMap;
 
   public SoftHardCacheMap(int protectedQueueSize, int probationalQueueSize) {
@@ -34,7 +33,7 @@ public class SoftHardCacheMap<K, V> {
   }
 
   @Nullable
-  public V get(@Nonnull K key) {
+  public V get(K key) {
     V val = mySLRUMap.get(key);
     if (val != null) return val;
 
@@ -44,12 +43,12 @@ public class SoftHardCacheMap<K, V> {
     return val;
   }
 
-  public void put(@Nonnull K key, @Nonnull V value) {
+  public void put(K key, V value) {
     mySLRUMap.put(key, value);
     mySoftLinkMap.put(key, value);
   }
 
-  public boolean remove(@Nonnull K key) {
+  public boolean remove(K key) {
     boolean remove1 = mySLRUMap.remove(key);
     boolean remove2 = mySoftLinkMap.remove(key) != null;
     return remove1 || remove2;

@@ -3,8 +3,7 @@ package consulo.execution.debug.stream.trace.impl;
 
 import consulo.execution.debug.stream.trace.TraceElement;
 import consulo.execution.debug.stream.trace.Value;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vitaliy.Bibaev
@@ -48,7 +47,7 @@ public class TraceElementImpl implements TraceElement, Comparable<TraceElement> 
   }
 
   @Override
-  public int compareTo(@Nonnull TraceElement other) {
+  public int compareTo(TraceElement other) {
     return Integer.compare(myTime, other.getTime());
   }
 }

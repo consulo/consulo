@@ -2,20 +2,19 @@ package consulo.language.editor.problemView;
 
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface Problem {
     /**
      * The problem provider that the problem belongs to.
      */
-    @Nonnull
+    
     ProblemsProvider getProvider();
 
     /**
      * One line description of the problem.
      */
-    @Nonnull
+    
     String getText();
 
     /**
@@ -37,7 +36,7 @@ public interface Problem {
     /**
      * The problem icon.
      */
-    @Nonnull
+    
     default Image getIcon() {
         return HighlightDisplayLevel.ERROR.getIcon();
     }

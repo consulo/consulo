@@ -25,7 +25,6 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -35,12 +34,12 @@ public class IdentifierHighlighterPassFactory implements TextEditorHighlightingP
   public static boolean ourTestingIdentifierHighlighting = false;
 
   @Override
-  public void register(@Nonnull Registrar registrar) {
+  public void register(Registrar registrar) {
     registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.UPDATE_ALL}, false, -1);
   }
 
   @Override
-  public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
+  public TextEditorHighlightingPass createHighlightingPass(PsiFile file, Editor editor) {
     if (editor.isOneLineMode()) return null;
 
     if (CodeInsightSettings.getInstance().HIGHLIGHT_IDENTIFIER_UNDER_CARET && (!ApplicationManager.getApplication().isHeadlessEnvironment() || ourTestingIdentifierHighlighting)) {

@@ -34,7 +34,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -58,7 +57,7 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
     }
 
     @Override
-    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void projectOpened(Project project, UIAccess uiAccess) {
         if (project.getProjectType() != ProjectType.REGULAR) {
             return;
         }
@@ -129,7 +128,7 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
                                 monitor.startAsyncScan(projectId);
                                 new Task.Backgroundable(project, CompilerLocalize.compilerInitialScanningProgressText(), false) {
                                     @Override
-                                    public void run(@Nonnull ProgressIndicator indicator) {
+                                    public void run(ProgressIndicator indicator) {
                                         try {
                                             if (newRoots.size() > 0) {
                                                 monitor.scanSourceContent(projRef, newRoots, newRoots.size(), true);
@@ -164,7 +163,7 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
     }
 
     @Override
-    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    public void projectClosed(Project project, UIAccess uiAccess) {
         if (project.getProjectType() != ProjectType.REGULAR) {
             return;
         }
@@ -179,7 +178,6 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
         }
     }
 
-    @Nonnull
     TranslatingCompilerFilesMonitorImpl getMonitor() {
         return (TranslatingCompilerFilesMonitorImpl) myMonitorProvider.get();
     }

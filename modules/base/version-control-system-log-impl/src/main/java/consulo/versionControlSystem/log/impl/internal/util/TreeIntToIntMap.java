@@ -16,13 +16,12 @@
 
 package consulo.versionControlSystem.log.impl.internal.util;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
 public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableIntToIntMap {
 
-  public static UpdatableIntToIntMap newInstance(@Nonnull Predicate<Integer> thisIsVisible, int longSize) {
+  public static UpdatableIntToIntMap newInstance(Predicate<Integer> thisIsVisible, int longSize) {
     if (longSize < 0) throw new NegativeArraySizeException("size < 0: " + longSize);
 
     if (longSize == 0) return IDIntToIntMap.EMPTY;
@@ -50,14 +49,14 @@ public class TreeIntToIntMap extends AbstractIntToIntMap implements UpdatableInt
     return count;
   }
 
-  @Nonnull
+  
   private final Predicate<Integer> myThisIsVisible;
 
   private final int myLongSize;
   private final int myCountLevels;
   private final int[] myTree;
 
-  private TreeIntToIntMap(@Nonnull Predicate<Integer> thisIsVisible, int longSize, int countLevels, int[] tree) {
+  private TreeIntToIntMap(Predicate<Integer> thisIsVisible, int longSize, int countLevels, int[] tree) {
     myThisIsVisible = thisIsVisible;
     myLongSize = longSize;
     myCountLevels = countLevels;

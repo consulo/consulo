@@ -20,8 +20,7 @@ import consulo.util.io.ByteSequence;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.HashBangChecker;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public abstract class HashBangFileTypeDetector implements FileTypeDetector {
   private final String myMarker;
   private final LocalizeValue myDescription;
 
-  public HashBangFileTypeDetector(@Nonnull FileType fileType, @Nonnull String marker, @Nonnull LocalizeValue description) {
+  public HashBangFileTypeDetector(FileType fileType, String marker, LocalizeValue description) {
     myFileType = fileType;
     myMarker = marker;
     myDescription = description;
@@ -41,7 +40,7 @@ public abstract class HashBangFileTypeDetector implements FileTypeDetector {
 
   @Nullable
   @Override
-  public FileType detect(@Nonnull VirtualFile file, @Nonnull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText) {
+  public FileType detect(VirtualFile file, ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText) {
     if (HashBangChecker.isHashBangLine(firstCharsIfText, myMarker)) {
       return myFileType;
     }
@@ -54,17 +53,17 @@ public abstract class HashBangFileTypeDetector implements FileTypeDetector {
     return List.of(myFileType);
   }
 
-  @Nonnull
+  
   public final LocalizeValue getDescription() {
     return myDescription;
   }
 
-  @Nonnull
+  
   public final String getMarker() {
     return myMarker;
   }
 
-  @Nonnull
+  
   public final FileType getFileType() {
     return myFileType;
   }

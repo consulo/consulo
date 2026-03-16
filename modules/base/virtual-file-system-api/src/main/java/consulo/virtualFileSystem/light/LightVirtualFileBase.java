@@ -22,8 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -48,7 +47,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         myFileType = fileType;
     }
 
-    @Nonnull
+    
     @Override
     public FileType getFileType() {
         if (myFileType == null) {
@@ -73,49 +72,49 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         }
 
         @Override
-        public void deleteFile(Object requestor, @Nonnull VirtualFile vFile) throws IOException {
+        public void deleteFile(Object requestor, VirtualFile vFile) throws IOException {
 
         }
 
         @Override
-        public void moveFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull VirtualFile newParent) throws IOException {
+        public void moveFile(Object requestor, VirtualFile vFile, VirtualFile newParent) throws IOException {
 
         }
 
         @Override
-        public void renameFile(Object requestor, @Nonnull VirtualFile vFile, @Nonnull String newName) throws IOException {
+        public void renameFile(Object requestor, VirtualFile vFile, String newName) throws IOException {
 
         }
 
         @Override
-        public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String fileName) throws IOException {
+        public VirtualFile createChildFile(Object requestor, VirtualFile vDir, String fileName) throws IOException {
             return null;
         }
 
-        @Nonnull
+        
         @Override
-        public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile vDir, @Nonnull String dirName) throws IOException {
+        public VirtualFile createChildDirectory(Object requestor, VirtualFile vDir, String dirName) throws IOException {
             return null;
         }
 
         @Override
         public VirtualFile copyFile(Object requestor,
-                                    @Nonnull VirtualFile virtualFile,
-                                    @Nonnull VirtualFile newParent,
-                                    @Nonnull String copyName)
+                                    VirtualFile virtualFile,
+                                    VirtualFile newParent,
+                                    String copyName)
             throws IOException {
             return null;
         }
 
         @Override
-        @Nonnull
+        
         public String getProtocol() {
             return PROTOCOL;
         }
 
         @Override
         @Nullable
-        public VirtualFile findFileByPath(@Nonnull String path) {
+        public VirtualFile findFileByPath(String path) {
             return null;
         }
 
@@ -125,7 +124,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
 
         @Override
         @Nullable
-        public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+        public VirtualFile refreshAndFindFileByPath(String path) {
             return null;
         }
     }
@@ -133,7 +132,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     private static final MyVirtualFileSystem ourFileSystem = new MyVirtualFileSystem();
 
     @Override
-    @Nonnull
+    
     public VirtualFileSystem getFileSystem() {
         return ourFileSystem;
     }
@@ -143,14 +142,14 @@ public abstract class LightVirtualFileBase extends VirtualFile {
         return myFileType;
     }
 
-    @Nonnull
+    
     @Override
     public String getPath() {
         return "/" + getName();
     }
 
     @Override
-    @Nonnull
+    
     public String getName() {
         return myName;
     }
@@ -221,7 +220,7 @@ public abstract class LightVirtualFileBase extends VirtualFile {
     }
 
     @Override
-    public void rename(Object requestor, @Nonnull String newName) throws IOException {
+    public void rename(Object requestor, String newName) throws IOException {
         myName = newName;
     }
 }

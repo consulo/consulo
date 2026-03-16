@@ -20,14 +20,13 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
 public class ArchiveFileDiffElement extends VirtualFileDiffElement {
   @SuppressWarnings({"ConstantConditions"})
-  public ArchiveFileDiffElement(@Nonnull VirtualFile file) {
+  public ArchiveFileDiffElement(VirtualFile file) {
     super(file.getFileSystem() instanceof ArchiveFileSystem ? file : ArchiveVfsUtil.getArchiveRootForLocalFile(file));
   }
 

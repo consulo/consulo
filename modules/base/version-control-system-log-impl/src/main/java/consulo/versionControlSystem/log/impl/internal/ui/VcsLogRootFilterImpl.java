@@ -17,19 +17,18 @@ package consulo.versionControlSystem.log.impl.internal.ui;
 
 import consulo.versionControlSystem.log.VcsLogRootFilter;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
 public class VcsLogRootFilterImpl implements VcsLogRootFilter {
-  @Nonnull
+  
   private final Collection<VirtualFile> myRoots;
 
-  public VcsLogRootFilterImpl(@Nonnull Collection<VirtualFile> roots) {
+  public VcsLogRootFilterImpl(Collection<VirtualFile> roots) {
     myRoots = roots;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<VirtualFile> getRoots() {
     return myRoots;

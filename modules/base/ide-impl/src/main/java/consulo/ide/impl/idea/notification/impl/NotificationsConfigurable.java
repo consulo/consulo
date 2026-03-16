@@ -22,8 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsConfigurablePanel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -35,7 +34,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
   private NotificationsConfigurablePanel myComponent;
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "notifications";
   }
@@ -46,7 +45,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
     return StandardConfigurableIds.GENERAL_GROUP;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Notifications");
@@ -54,7 +53,7 @@ public class NotificationsConfigurable implements Configurable, SearchableConfig
 
   @RequiredUIAccess
   @Override
-  public JComponent createComponent(@Nonnull Disposable uiDisposable) {
+  public JComponent createComponent(Disposable uiDisposable) {
     if (myComponent == null) {
       myComponent = new NotificationsConfigurablePanel();
       Disposer.register(uiDisposable, myComponent);

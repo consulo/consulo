@@ -6,8 +6,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreadLocalCachedValue;
 import consulo.util.lang.function.ThrowableSupplier;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +24,7 @@ public class IOUtil {
   private IOUtil() {
   }
 
-  public static String readString(@Nonnull DataInput stream) throws IOException {
+  public static String readString(DataInput stream) throws IOException {
     try {
       int length = stream.readInt();
       if (length == -1) return null;
@@ -43,7 +42,7 @@ public class IOUtil {
     }
   }
 
-  public static void writeString(@Nullable String s, @Nonnull DataOutput stream) throws IOException {
+  public static void writeString(@Nullable String s, DataOutput stream) throws IOException {
     if (s == null) {
       stream.writeInt(-1);
       return;
@@ -66,7 +65,7 @@ public class IOUtil {
     stream.write(bytes);
   }
 
-  public static void writeUTFTruncated(@Nonnull DataOutput stream, @Nonnull String text) throws IOException {
+  public static void writeUTFTruncated(DataOutput stream, String text) throws IOException {
     // we should not compare number of symbols to 65635 -> it is number of bytes what should be compared
     // ? 4 bytes per symbol - rough estimation
     if (text.length() > 16383) {
@@ -78,27 +77,27 @@ public class IOUtil {
   }
 
   private static final ThreadLocalCachedValue<byte[]> ourReadWriteBuffersCache = new ThreadLocalCachedValue<byte[]>() {
-    @Nonnull
+    
     @Override
     protected byte[] create() {
       return allocReadWriteUTFBuffer();
     }
   };
 
-  public static void writeUTF(@Nonnull DataOutput storage, @Nonnull String value) throws IOException {
+  public static void writeUTF(DataOutput storage, String value) throws IOException {
     writeUTFFast(ourReadWriteBuffersCache.getValue(), storage, value);
   }
 
-  public static String readUTF(@Nonnull DataInput storage) throws IOException {
+  public static String readUTF(DataInput storage) throws IOException {
     return readUTFFast(ourReadWriteBuffersCache.getValue(), storage);
   }
 
-  @Nonnull
+  
   public static byte[] allocReadWriteUTFBuffer() {
     return new byte[STRING_LENGTH_THRESHOLD + STRING_HEADER_SIZE];
   }
 
-  public static void writeUTFFast(@Nonnull byte[] buffer, @Nonnull DataOutput storage, @Nonnull String value) throws IOException {
+  public static void writeUTFFast(byte[] buffer, DataOutput storage, String value) throws IOException {
     int len = value.length();
     if (len < STRING_LENGTH_THRESHOLD) {
       buffer[0] = (byte)len;
@@ -127,7 +126,7 @@ public class IOUtil {
     }
   }
 
-  public static String readUTFFast(@Nonnull byte[] buffer, @Nonnull DataInput storage) throws IOException {
+  public static String readUTFFast(byte[] buffer, DataInput storage) throws IOException {
     int len = 0xFF & (int)storage.readByte();
     if (len == 0xFF) {
       String result = storage.readUTF();
@@ -144,11 +143,11 @@ public class IOUtil {
     return new String(buffer, 0, len, StandardCharsets.ISO_8859_1);
   }
 
-  public static boolean isAscii(@Nonnull String str) {
+  public static boolean isAscii(String str) {
     return StringUtil.isAscii(str);
   }
 
-  public static boolean isAscii(@Nonnull CharSequence str) {
+  public static boolean isAscii(CharSequence str) {
     return StringUtil.isAscii(str);
   }
 
@@ -156,7 +155,7 @@ public class IOUtil {
     return StringUtil.isAscii(c);
   }
 
-  public static boolean deleteAllFilesStartingWith(@Nonnull File file) {
+  public static boolean deleteAllFilesStartingWith(File file) {
     String baseName = file.getName();
     File parentFile = file.getParentFile();
     File[] files = parentFile != null ? parentFile.listFiles(pathname -> pathname.getName().startsWith(baseName)) : null;
@@ -171,7 +170,7 @@ public class IOUtil {
     return ok;
   }
 
-  public static void syncStream(@Nonnull OutputStream stream) throws IOException {
+  public static void syncStream(OutputStream stream) throws IOException {
     stream.flush();
 
     try {
@@ -195,11 +194,11 @@ public class IOUtil {
     }
   }
 
-  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableSupplier<T, ? extends IOException> factoryComputable, @Nonnull File file) throws IOException {
+  public static <T> T openCleanOrResetBroken(ThrowableSupplier<T, ? extends IOException> factoryComputable, File file) throws IOException {
     return openCleanOrResetBroken(factoryComputable, () -> deleteAllFilesStartingWith(file));
   }
 
-  public static <T> T openCleanOrResetBroken(@Nonnull ThrowableSupplier<T, ? extends IOException> factoryComputable, @Nonnull Runnable cleanupCallback) throws IOException {
+  public static <T> T openCleanOrResetBroken(ThrowableSupplier<T, ? extends IOException> factoryComputable, Runnable cleanupCallback) throws IOException {
     try {
       return factoryComputable.get();
     }
@@ -210,15 +209,15 @@ public class IOUtil {
     return factoryComputable.get();
   }
 
-  public static void writeStringList(@Nonnull DataOutput out, @Nonnull Collection<String> list) throws IOException {
+  public static void writeStringList(DataOutput out, Collection<String> list) throws IOException {
     DataInputOutputUtil.writeINT(out, list.size());
     for (String s : list) {
       writeUTF(out, s);
     }
   }
 
-  @Nonnull
-  public static List<String> readStringList(@Nonnull DataInput in) throws IOException {
+  
+  public static List<String> readStringList(DataInput in) throws IOException {
     int size = DataInputOutputUtil.readINT(in);
     List<String> strings = new ArrayList<>(size);
     for (int i = 0; i < size; i++) {

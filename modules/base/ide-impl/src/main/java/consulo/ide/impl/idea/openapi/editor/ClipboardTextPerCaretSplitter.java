@@ -15,16 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ClipboardTextPerCaretSplitter {
-  @Nonnull
-  public List<String> split(@Nonnull String input, @Nullable CaretStateTransferableData caretData, int caretCount) {
+  
+  public List<String> split(String input, @Nullable CaretStateTransferableData caretData, int caretCount) {
     if (caretCount <= 0) {
       throw new IllegalArgumentException("Caret count must be positive");
     }

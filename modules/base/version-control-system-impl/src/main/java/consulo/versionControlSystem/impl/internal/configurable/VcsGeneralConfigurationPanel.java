@@ -32,8 +32,7 @@ import consulo.versionControlSystem.internal.VcsShowOptionsSettingImpl;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.internal.ReadonlyStatusHandlerInternal;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -300,7 +299,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
     return StringUtil.join(result, ", ");
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.localizeTODO("Confirmation");
@@ -316,7 +315,7 @@ public class VcsGeneralConfigurationPanel implements SearchableConfigurable {
   }
 
   @Override
-  @Nonnull
+  
   public String getId() {
     return "project.propVCSSupport.Confirmation";
   }

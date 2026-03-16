@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -54,40 +53,40 @@ public abstract class RunManagerEx extends RunManager {
    * @return
    * @deprecated use {@link RunManager#createRunConfiguration(String, ConfigurationFactory)} instead
    */
-  @Nonnull
+  
   public abstract RunnerAndConfigurationSettings createConfiguration(String name, ConfigurationFactory type);
 
-  public abstract RunnerAndConfigurationSettings createConfiguration(@Nonnull RunConfiguration configuration, boolean isTemplate);
+  public abstract RunnerAndConfigurationSettings createConfiguration(RunConfiguration configuration, boolean isTemplate);
 
   public abstract void addConfiguration(RunnerAndConfigurationSettings settings, boolean isShared, List<BeforeRunTask> tasks, boolean addTemplateTasksIfAbsent);
 
   public abstract boolean isConfigurationShared(RunnerAndConfigurationSettings settings);
 
   @Override
-  @Nonnull
+  
   public abstract List<BeforeRunTask> getBeforeRunTasks(RunConfiguration settings);
 
   @Override
   public abstract void setBeforeRunTasks(RunConfiguration runConfiguration, List<BeforeRunTask> tasks, boolean addEnabledTemplateTasksIfAbsent);
 
-  @Nonnull
+  
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(RunConfiguration settings, Key<T> taskProviderID);
 
-  @Nonnull
+  
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
 
   public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable String name);
 
-  @Nonnull
-  public abstract Image getConfigurationIcon(@Nonnull RunnerAndConfigurationSettings settings);
+  
+  public abstract Image getConfigurationIcon(RunnerAndConfigurationSettings settings);
 
-  @Nonnull
+  
   public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();
 
   public abstract void removeConfiguration(@Nullable RunnerAndConfigurationSettings settings);
 
-  @Nonnull
-  public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(@Nonnull ConfigurationType type);
+  
+  public abstract Map<String, List<RunnerAndConfigurationSettings>> getStructure(ConfigurationType type);
 
   public abstract void fireBeforeRunTasksUpdated();
 }

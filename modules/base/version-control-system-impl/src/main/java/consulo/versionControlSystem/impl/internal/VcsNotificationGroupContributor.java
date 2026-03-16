@@ -21,7 +21,6 @@ import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import consulo.versionControlSystem.VcsNotifier;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,7 +30,7 @@ import java.util.function.Consumer;
 @ExtensionImpl
 public class VcsNotificationGroupContributor implements NotificationGroupContributor {
   @Override
-  public void contribute(@Nonnull Consumer<NotificationGroup> registrator) {
+  public void contribute(Consumer<NotificationGroup> registrator) {
      registrator.accept(VcsNotifier.IMPORTANT_ERROR_NOTIFICATION);
      registrator.accept(VcsNotifier.NOTIFICATION_GROUP_ID);
      registrator.accept(VcsNotifier.SILENT_NOTIFICATION);

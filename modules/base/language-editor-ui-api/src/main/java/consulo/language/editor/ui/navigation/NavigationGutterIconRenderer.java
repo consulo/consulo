@@ -37,8 +37,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -49,18 +48,18 @@ import java.util.function.Supplier;
  * @author peter
  */
 public abstract class NavigationGutterIconRenderer extends GutterIconRenderer implements GutterIconNavigationHandler<PsiElement> {
-    @Nonnull
+    
     private final LocalizeValue myPopupTitle;
-    @Nonnull
+    
     private final LocalizeValue myEmptyText;
     private final Supplier<PsiElementListCellRenderer> myCellRenderer;
     private final Supplier<List<SmartPsiElementPointer>> myPointers;
 
     protected NavigationGutterIconRenderer(
-        @Nonnull LocalizeValue popupTitle,
-        @Nonnull LocalizeValue emptyText,
-        @Nonnull Supplier<PsiElementListCellRenderer> cellRenderer,
-        @Nonnull Supplier<List<SmartPsiElementPointer>> pointers
+        LocalizeValue popupTitle,
+        LocalizeValue emptyText,
+        Supplier<PsiElementListCellRenderer> cellRenderer,
+        Supplier<List<SmartPsiElementPointer>> pointers
     ) {
         myPopupTitle = popupTitle;
         myEmptyText = emptyText;
@@ -109,7 +108,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
         return new AnAction() {
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 navigate((MouseEvent)e.getInputEvent(), null);
             }
         };

@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.util.concurrent.coroutine.Continuation;
 import consulo.util.concurrent.coroutine.CoroutineStep;
-import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -31,7 +30,7 @@ import java.util.function.Supplier;
  * @since 2026-01-30
  */
 public final class ReadLock<I, O> extends CoroutineStep<I, O> {
-    public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction @Nonnull Function<I, O> function) {
+    public static <I, O> CoroutineStep<I, O> apply(@RequiredReadAction Function<I, O> function) {
         return new ReadLock<>(function);
     }
 

@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.util.containers;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -27,7 +26,7 @@ public final class StripedReentrantLocks extends StripedLockHolder<ReentrantLock
     super(ReentrantLock.class);
   }
 
-  @Nonnull
+  
   @Override
   protected ReentrantLock create() {
     return new ReentrantLock();

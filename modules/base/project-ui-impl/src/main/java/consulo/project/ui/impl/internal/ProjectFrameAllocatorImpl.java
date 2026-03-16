@@ -29,7 +29,6 @@ import consulo.ui.ex.coroutine.UIAction;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -54,7 +53,7 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
 
     @RequiredUIAccess
     @Override
-    public Object allocateFrame(@Nonnull Project project, @Nonnull ProjectOpenContext context) {
+    public Object allocateFrame(Project project, ProjectOpenContext context) {
         IdeFrameState state = context.getUserData(IdeFrameState.KEY);
 
         IdeFrameEx frame = myWindowManager.allocateFrame(project, state);
@@ -65,7 +64,7 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
     }
 
     @Override
-    public <I, O extends Project> Coroutine<I, O> allocateFrame(@Nonnull ProjectOpenContext context, @Nonnull Coroutine<I, O> in) {
+    public <I, O extends Project> Coroutine<I, O> allocateFrame(ProjectOpenContext context, Coroutine<I, O> in) {
         IdeFrameState state = context.getUserData(IdeFrameState.KEY);
 
         return in
@@ -91,7 +90,7 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
     }
 
     @Override
-    public <I, O> Coroutine<I, O> initializeSteps(@Nonnull Project project, @Nonnull Coroutine<I, O> in) {
+    public <I, O> Coroutine<I, O> initializeSteps(Project project, Coroutine<I, O> in) {
         return in
             .then(UIAction.apply((o, c) -> {
                 ToolWindowManagerBase manager = (ToolWindowManagerBase) ToolWindowManager.getInstance(project);
@@ -138,7 +137,7 @@ public class ProjectFrameAllocatorImpl implements ProjectFrameAllocator {
     }
 
     @Override
-    public <I, O> Coroutine<I, O> postSteps(@Nonnull Project project, @Nonnull Coroutine<I, O> in) {
+    public <I, O> Coroutine<I, O> postSteps(Project project, Coroutine<I, O> in) {
         return in.then(UIAction.apply((o, c) -> {
             UIAccess uiAccess = c.getConfiguration(UIAccess.KEY);
 

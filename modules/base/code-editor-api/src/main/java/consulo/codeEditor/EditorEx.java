@@ -31,8 +31,7 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.PasteProvider;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -52,7 +51,7 @@ public interface EditorEx extends Editor {
     Key<TextRange> LAST_PASTED_REGION = Key.create("LAST_PASTED_REGION");
 
     @Override
-    @Nonnull
+    
     MarkupModelEx getMarkupModel();
 
     /**
@@ -67,16 +66,16 @@ public interface EditorEx extends Editor {
      * @see consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Predicate<RangeHighlighter>)
      * @see consulo.ide.impl.idea.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
      */
-    @Nonnull
+    
     MarkupModelEx getFilteredDocumentMarkupModel();
 
-    @Nonnull
+    
     EditorGutterComponentEx getGutterComponentEx();
 
-    @Nonnull
+    
     EditorHighlighter getHighlighter();
 
-    void setHighlighter(@Nonnull EditorHighlighter highlighter);
+    void setHighlighter(EditorHighlighter highlighter);
 
     default JComponent getPermanentHeaderComponent() {
         throw new UnsupportedOperationException("Unsupported platform");
@@ -91,7 +90,7 @@ public interface EditorEx extends Editor {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
-    void setColorsScheme(@Nonnull EditorColorsScheme scheme);
+    void setColorsScheme(EditorColorsScheme scheme);
 
     void setInsertMode(boolean val);
 
@@ -125,11 +124,11 @@ public interface EditorEx extends Editor {
 
     void reinitSettings();
 
-    void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable);
+    void addPropertyChangeListener(PropertyChangeListener listener, Disposable parentDisposable);
 
-    void addPropertyChangeListener(@Nonnull PropertyChangeListener listener);
+    void addPropertyChangeListener(PropertyChangeListener listener);
 
-    void removePropertyChangeListener(@Nonnull PropertyChangeListener listener);
+    void removePropertyChangeListener(PropertyChangeListener listener);
 
     int getMaxWidthInRange(int startOffset, int endOffset);
 
@@ -137,13 +136,13 @@ public interface EditorEx extends Editor {
 
     boolean setCaretEnabled(boolean enabled);
 
-    void addFocusListener(@Nonnull FocusChangeListener listener);
+    void addFocusListener(FocusChangeListener listener);
 
-    void addFocusListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable);
+    void addFocusListener(FocusChangeListener listener, Disposable parentDisposable);
 
     void setOneLineMode(boolean b);
 
-    @Nonnull
+    
     default JScrollPane getScrollPane() {
         throw new UnsupportedOperationException("Unsupported platform");
     }
@@ -154,10 +153,10 @@ public interface EditorEx extends Editor {
 
     void setFile(VirtualFile vFile);
 
-    @Nonnull
+    
     DataContext getDataContext();
 
-    default boolean processKeyTyped(@Nonnull KeyEvent e) {
+    default boolean processKeyTyped(KeyEvent e) {
         throw new UnsupportedOperationException("Unsupported platform");
     }
 
@@ -181,22 +180,22 @@ public interface EditorEx extends Editor {
 
     TextDrawingCallback getTextDrawingCallback();
 
-    @Nonnull
+    
     @Override
     FoldingModelEx getFoldingModel();
 
-    @Nonnull
+    
     @Override
     SoftWrapModelEx getSoftWrapModel();
 
-    @Nonnull
+    
     @Override
     ScrollingModelEx getScrollingModel();
 
     /**
      * Creates color scheme delegate which is bound to current editor. E.g. all schema changes will update editor state.
      */
-    @Nonnull
+    
     EditorColorsScheme createBoundColorSchemeDelegate(@Nullable EditorColorsScheme customGlobalScheme);
 
     /**
@@ -327,14 +326,14 @@ public interface EditorEx extends Editor {
      *
      * @see #uninstallPopupHandler(EditorPopupHandler)
      */
-    void installPopupHandler(@Nonnull EditorPopupHandler popupHandler);
+    void installPopupHandler(EditorPopupHandler popupHandler);
 
     /**
      * Removes previously installed {@link EditorPopupHandler}.
      *
      * @see #installPopupHandler(EditorPopupHandler)
      */
-    void uninstallPopupHandler(@Nonnull EditorPopupHandler popupHandler);
+    void uninstallPopupHandler(EditorPopupHandler popupHandler);
 
     /**
      * If {@code cursor} parameter value is not {@code null}, sets custom cursor to {@link #getContentComponent() editor's content component},
@@ -342,9 +341,9 @@ public interface EditorEx extends Editor {
      * restoring requests). 'Restoring' call for a requestor, which hasn't set a cursor previously, has no effect. If multiple requestors have
      * currently set custom cursors, one of them will be used (it is unspecified, which one).
      */
-    void setCustomCursor(@Nonnull Object requestor, @Nullable Cursor cursor);
+    void setCustomCursor(Object requestor, @Nullable Cursor cursor);
 
-    default void setStatusComponent(@Nonnull JComponent component) {
+    default void setStatusComponent(JComponent component) {
         // nothing
     }
 

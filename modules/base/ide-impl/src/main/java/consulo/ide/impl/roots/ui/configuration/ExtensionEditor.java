@@ -48,8 +48,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.Layout;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -106,9 +105,9 @@ public class ExtensionEditor extends ModuleElementsEditor {
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
-    protected JComponent createComponentImpl(@Nonnull Disposable parentUIDisposable) {
+    protected JComponent createComponentImpl(Disposable parentUIDisposable) {
         JPanel rootPane = new JPanel(new BorderLayout());
 
         mySplitter = new OnePixelSplitter();
@@ -167,7 +166,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     @Nullable
     @RequiredUIAccess
     @SuppressWarnings("deprecation")
-    private JComponent createConfigurationPanel(@Nonnull MutableModuleExtension extension) {
+    private JComponent createConfigurationPanel(MutableModuleExtension extension) {
         myConfigurablePanelExtension = extension;
         @RequiredUIAccess Runnable updateOnCheck = () -> extensionChanged(extension);
 
@@ -270,7 +269,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     public void saveData() {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return LocalizeValue.localizeTODO("Extensions");

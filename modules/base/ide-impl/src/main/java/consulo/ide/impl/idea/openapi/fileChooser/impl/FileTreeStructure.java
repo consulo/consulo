@@ -30,8 +30,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +57,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+    public boolean isToBuildChildrenInBackground(Object element) {
         return true;
     }
 
@@ -70,15 +69,15 @@ public class FileTreeStructure extends AbstractTreeStructure {
         myShowHidden = showHidden;
     }
 
-    @Nonnull
+    
     @Override
     public final Object getRootElement() {
         return myRootElement;
     }
 
-    @Nonnull
+    
     @Override
-    public Object[] getChildElements(@Nonnull Object nodeElement) {
+    public Object[] getChildElements(Object nodeElement) {
         if (!(nodeElement instanceof FileElement)) {
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
         }
@@ -126,7 +125,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
 
     @Override
     @Nullable
-    public Object getParentElement(@Nonnull Object element) {
+    public Object getParentElement(Object element) {
         if (element instanceof FileElement fileElement) {
             VirtualFile elementFile = getValidFile(fileElement);
             if (elementFile != null && myRootElement.getFile() != null && myRootElement.getFile().equals(elementFile)) {
@@ -185,7 +184,7 @@ public class FileTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    @Nonnull
+    
     public NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         LOG.assertTrue(element instanceof FileElement, element.getClass().getName());
         VirtualFile file = ((FileElement) element).getFile();

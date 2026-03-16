@@ -22,7 +22,6 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.usage.UsageInfo;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 
@@ -35,7 +34,7 @@ public interface AutomaticRenamerFactory {
 
   boolean isApplicable(PsiElement element);
 
-  @Nonnull
+  
   default LocalizeValue getOptionName() {
     return LocalizeValue.empty();
   }

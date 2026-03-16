@@ -25,8 +25,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -41,13 +40,13 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     static final ScopeType DIRECTORY = new ScopeType("Directory", FindLocalize.findPopupScopeDirectory());
     static final ScopeType SCOPE = new ScopeType("Scope", FindLocalize.findPopupScopeScope());
 
-    @Nonnull
+    
     private final FindUIHelper myHelper;
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final FindPopupPanel myFindPopupPanel;
-    @Nonnull
+    
     private final List<Pair<ScopeType, JComponent>> myComponents;
 
     private ComboBox<String> myModuleComboBox;
@@ -55,7 +54,7 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
     private ScopeChooserCombo myScopeCombo;
 
     @RequiredUIAccess
-    FindPopupScopeUIImpl(@Nonnull FindPopupPanel panel) {
+    FindPopupScopeUIImpl(FindPopupPanel panel) {
         myHelper = panel.getHelper();
         myProject = panel.getProject();
         myFindPopupPanel = panel;
@@ -152,19 +151,19 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
         Disposer.register(myFindPopupPanel.getDisposable(), myScopeCombo);
     }
 
-    @Nonnull
+    
     @Override
     public List<Pair<ScopeType, JComponent>> getComponents() {
         return myComponents;
     }
 
     @Override
-    public void applyTo(@Nonnull FindSettings findSettings, @Nonnull FindPopupScopeUI.ScopeType selectedScope) {
+    public void applyTo(FindSettings findSettings, FindPopupScopeUI.ScopeType selectedScope) {
         findSettings.setDefaultScopeName(myScopeCombo.getSelectedScopeName());
     }
 
     @Override
-    public void applyTo(@Nonnull FindModel findModel, @Nonnull FindPopupScopeUI.ScopeType selectedScope) {
+    public void applyTo(FindModel findModel, FindPopupScopeUI.ScopeType selectedScope) {
         if (selectedScope == PROJECT) {
             findModel.setProjectScope(true);
         }
@@ -184,9 +183,8 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
         }
     }
 
-    @Nullable
     @Override
-    public ValidationInfo validate(@Nonnull FindModel model, FindPopupScopeUI.ScopeType selectedScope) {
+    public ValidationInfo validate(FindModel model, FindPopupScopeUI.@Nullable ScopeType selectedScope) {
         if (selectedScope == DIRECTORY) {
             return myDirectoryChooser.validate(model);
         }
@@ -205,9 +203,9 @@ class FindPopupScopeUIImpl implements FindPopupScopeUI {
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public ScopeType initByModel(@Nonnull FindModel findModel) {
+    public ScopeType initByModel(FindModel findModel) {
         myDirectoryChooser.initByModel(findModel);
 
         String dirName = findModel.getDirectoryName();

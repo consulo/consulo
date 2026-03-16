@@ -22,7 +22,6 @@ import consulo.language.editor.impl.internal.hint.EditorMouseHoverPopupManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import jakarta.annotation.Nonnull;
 
 @ExtensionImpl
 final class EditorMouseHoverPopupManagerMouseListener implements EditorMouseListener {
@@ -34,14 +33,14 @@ final class EditorMouseHoverPopupManagerMouseListener implements EditorMouseList
   }
 
   @Override
-  public void mouseEntered(@Nonnull EditorMouseEvent event) {
+  public void mouseEntered(EditorMouseEvent event) {
     // we receive MOUSE_MOVED event after MOUSE_ENTERED even if mouse wasn't physically moved,
     // e.g. if a popup overlapping editor has been closed
     myEditorMouseHoverPopupManager.get().skipNextMovement();
   }
 
   @Override
-  public void mouseExited(@Nonnull EditorMouseEvent event) {
+  public void mouseExited(EditorMouseEvent event) {
     myEditorMouseHoverPopupManager.get().cancelCurrentProcessing();
   }
 }

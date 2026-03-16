@@ -31,8 +31,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;
@@ -43,7 +42,7 @@ import java.util.concurrent.CompletableFuture;
 public abstract class FileEditorManager {
   public static final Key<Boolean> CLOSING_TO_REOPEN = Key.create("CLOSING_TO_REOPEN");
 
-  public static FileEditorManager getInstance(@Nonnull Project project) {
+  public static FileEditorManager getInstance(Project project) {
     return project.getComponent(FileEditorManager.class);
   }
 
@@ -51,8 +50,7 @@ public abstract class FileEditorManager {
    * @param file file to open. Parameter cannot be null. File should be valid.
    * @return array of opened editors
    */
-  @Nonnull
-  public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor) {
+  public FileEditor[] openFile(VirtualFile file, boolean focusEditor) {
     return openFileWithProviders(file, focusEditor, false).getFirst();
   }
 
@@ -63,8 +61,7 @@ public abstract class FileEditorManager {
    * @param focusEditor <code>true</code> if need to focus
    * @return array of opened editors
    */
-  @Nonnull
-  public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
+  public FileEditor[] openFile(VirtualFile file, boolean focusEditor, boolean searchForOpen) {
     return openFileWithProviders(file, focusEditor, searchForOpen).getFirst();
   }
 
@@ -73,7 +70,7 @@ public abstract class FileEditorManager {
    *
    * @param file file to be closed. Cannot be null.
    */
-  public abstract void closeFile(@Nonnull VirtualFile file);
+  public abstract void closeFile(VirtualFile file);
 
   /**
    * Works as {@link #openFile(VirtualFile, boolean)} but forces opening of text editor.
@@ -82,7 +79,7 @@ public abstract class FileEditorManager {
    * @return opened text editor. The method returns <code>null</code> in case if text editor wasn't opened.
    */
   @Nullable
-  public abstract Editor openTextEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor);
+  public abstract Editor openTextEditor(OpenFileDescriptor descriptor, boolean focusEditor);
 
   /**
    * @return currently selected text editor. The method returns <code>null</code> in case
@@ -102,25 +99,22 @@ public abstract class FileEditorManager {
   /**
    * @return <code>true</code> if <code>file</code> is opened, <code>false</code> otherwise
    */
-  public abstract boolean isFileOpen(@Nonnull VirtualFile file);
+  public abstract boolean isFileOpen(VirtualFile file);
 
   /**
    * @return all opened files. Order of files in the array corresponds to the order of editor tabs.
    */
-  @Nonnull
   public abstract VirtualFile[] getOpenFiles();
 
   /**
    * @return files currently selected. The method returns empty array if there are no selected files.
    * If more than one file is selected (split), the file with most recent focused editor is returned first.
    */
-  @Nonnull
   public abstract VirtualFile[] getSelectedFiles();
 
   /**
    * @return editors currently selected. The method returns empty array if no editors are open.
    */
-  @Nonnull
   public abstract FileEditor[] getSelectedEditors();
 
   /**
@@ -129,40 +123,37 @@ public abstract class FileEditorManager {
    * The method returns <code>null</code> if <code>file</code> is not opened.
    */
   @Nullable
-  public abstract FileEditor getSelectedEditor(@Nonnull VirtualFile file);
+  public abstract FileEditor getSelectedEditor(VirtualFile file);
 
   /**
    * @param file cannot be null
    * @return current editors for the specified <code>file</code>
    */
-  @Nonnull
-  public abstract FileEditor[] getEditors(@Nonnull VirtualFile file);
+  public abstract FileEditor[] getEditors(VirtualFile file);
 
   /**
    * @param file cannot be null
    * @return all editors for the specified <code>file</code>
    */
-  @Nonnull
-  public abstract FileEditor[] getAllEditors(@Nonnull VirtualFile file);
+  public abstract FileEditor[] getAllEditors(VirtualFile file);
 
   /**
    * @return all open editors
    */
-  @Nonnull
   @RequiredUIAccess
   public abstract FileEditor[] getAllEditors();
 
   /**
    * @deprecated use addTopComponent
    */
-  public void showEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
+  public void showEditorAnnotation(FileEditor editor, JComponent annotationComponent) {
     addTopComponent(editor, annotationComponent);
   }
 
   /**
    * @deprecated use removeTopComponent
    */
-  public void removeEditorAnnotation(@Nonnull FileEditor editor, @Nonnull JComponent annotationComponent) {
+  public void removeEditorAnnotation(FileEditor editor, JComponent annotationComponent) {
     removeTopComponent(editor, annotationComponent);
   }
 
@@ -171,27 +162,26 @@ public abstract class FileEditorManager {
    * @return disposer for removing it from editor. null mean not added, if editor not found in registry
    */
   @Nullable
-  public abstract Disposable addTopComponent(@Nonnull FileEditor editor, @Nonnull ComponentContainer component);
+  public abstract Disposable addTopComponent(FileEditor editor, ComponentContainer component);
 
   @Deprecated
   @DeprecationInfo("addTopComponent(FileEditor, ComponentContainer)")
-  public abstract void addTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
+  public abstract void addTopComponent(FileEditor editor, JComponent component);
 
-  public abstract void removeTopComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
+  public abstract void removeTopComponent(FileEditor editor, JComponent component);
 
-  public abstract void addBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
+  public abstract void addBottomComponent(FileEditor editor, JComponent component);
 
-  public abstract void removeBottomComponent(@Nonnull FileEditor editor, @Nonnull JComponent component);
+  public abstract void removeBottomComponent(FileEditor editor, JComponent component);
 
   /**
    * @deprecated Use {@link FileEditorManagerListener#FILE_EDITOR_MANAGER} instead
    */
-  public abstract void addFileEditorManagerListener(@Nonnull FileEditorManagerListener listener, @Nonnull Disposable parentDisposable);
+  public abstract void addFileEditorManagerListener(FileEditorManagerListener listener, Disposable parentDisposable);
 
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use async version")
-  public abstract List<FileEditor> openEditor(@Nonnull OpenFileDescriptor descriptor, boolean focusEditor);
+  public abstract List<FileEditor> openEditor(OpenFileDescriptor descriptor, boolean focusEditor);
 
   /**
    * Returns the project with which the file editor manager is associated.
@@ -199,7 +189,6 @@ public abstract class FileEditorManager {
    * @return the project instance.
    * @since 5.0.1
    */
-  @Nonnull
   public abstract Project getProject();
 
   /**
@@ -209,17 +198,15 @@ public abstract class FileEditorManager {
    * @param fileEditorProviderId the ID of the file editor to open; matches the return value of
    *                             {@link consulo.ide.impl.idea.openapi.fileEditor.FileEditorProvider#getEditorTypeId()}
    */
-  public abstract void setSelectedEditor(@Nonnull VirtualFile file, @Nonnull String fileEditorProviderId);
+  public abstract void setSelectedEditor(VirtualFile file, String fileEditorProviderId);
 
   /**
    * @return <code>JComponent</code> which represent the place where all editors are located
    */
-  @Nonnull
   public javax.swing.JComponent getComponent() {
     throw new UnsupportedOperationException("Not supported at this platform");
   }
 
-  @Nonnull
   public Component getUIComponent() {
     throw new UnsupportedOperationException("Not supported at this platform");
   }
@@ -230,23 +217,20 @@ public abstract class FileEditorManager {
    * but it also tracks (and remember) focus movement inside tabbed container.
    * @see consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopEditorComposite#getPreferredFocusedComponent()
    */
-  @Nullable
-  public abstract javax.swing.JComponent getPreferredFocusedComponent();
+  public abstract javax.swing.@Nullable JComponent getPreferredFocusedComponent();
 
-  @Nonnull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(VirtualFile file);
 
   @Nullable
-  public abstract VirtualFile getFile(@Nonnull FileEditor editor);
+  public abstract VirtualFile getFile(FileEditor editor);
 
-  public abstract void updateFilePresentation(@Nonnull VirtualFile file);
+  public abstract void updateFilePresentation(VirtualFile file);
 
   /**
    * @return current window in splitters
    */
   public abstract FileEditorWindow getCurrentWindow();
 
-  @Nonnull
   public abstract AsyncResult<FileEditorWindow> getActiveWindow();
 
   public abstract void setCurrentWindow(FileEditorWindow window);
@@ -256,7 +240,7 @@ public abstract class FileEditorManager {
    *
    * @param file file to be closed. Cannot be null.
    */
-  public abstract void closeFile(@Nonnull VirtualFile file, @Nonnull FileEditorWindow window);
+  public abstract void closeFile(VirtualFile file, FileEditorWindow window);
 
   public abstract void unsplitWindow();
 
@@ -266,7 +250,6 @@ public abstract class FileEditorManager {
 
   public abstract boolean hasSplitOrUndockedWindows();
 
-  @Nonnull
   public abstract FileEditorWindow[] getWindows();
 
   /**
@@ -275,8 +258,7 @@ public abstract class FileEditorManager {
    * is not open. The returned files have the same order as they have in the
    * tabbed container.
    */
-  @Nonnull
-  public abstract VirtualFile[] getSiblings(@Nonnull VirtualFile file);
+  public abstract VirtualFile[] getSiblings(VirtualFile file);
 
   public abstract void createSplitter(int orientation, @Nullable FileEditorWindow window);
 
@@ -290,7 +272,7 @@ public abstract class FileEditorManager {
   public abstract VirtualFile getCurrentFile();
 
   @Nullable
-  public abstract FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file);
+  public abstract FileEditorWithProvider getSelectedEditorWithProvider(VirtualFile file);
 
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
@@ -300,19 +282,16 @@ public abstract class FileEditorManager {
    */
   public abstract void closeAllFiles();
 
-  @Nonnull
   public abstract FileEditorsSplitters getSplitters();
 
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use async version")
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(VirtualFile file, boolean focusEditor, boolean searchForSplitter);
 
-  @Nonnull
   @RequiredUIAccess
   @Deprecated
   @DeprecationInfo("Use async version")
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull FileEditorWindow window);
+  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(VirtualFile file, boolean focusEditor, FileEditorWindow window);
 
   /**
    * Asynchronously opens a file and returns a future with the result.
@@ -322,14 +301,13 @@ public abstract class FileEditorManager {
    * @param options options for opening the file
    * @return a future that completes with the opened editors and providers
    */
-  @Nonnull
-  public abstract CompletableFuture<FileEditorOpenResult> openFileAsync(@Nonnull VirtualFile file, @Nonnull FileEditorOpenOptions options);
+  public abstract CompletableFuture<FileEditorOpenResult> openFileAsync(VirtualFile file, FileEditorOpenOptions options);
 
-  public abstract boolean isChanged(@Nonnull FileEditorComposite editor);
+  public abstract boolean isChanged(FileEditorComposite editor);
 
-  public abstract FileEditorWindow getNextWindow(@Nonnull FileEditorWindow window);
+  public abstract FileEditorWindow getNextWindow(FileEditorWindow window);
 
-  public abstract FileEditorWindow getPrevWindow(@Nonnull FileEditorWindow window);
+  public abstract FileEditorWindow getPrevWindow(FileEditorWindow window);
 
   public abstract boolean isInsideChange();
 
@@ -346,6 +324,5 @@ public abstract class FileEditorManager {
 
   public abstract FileEditorsSplitters getSplittersFor(java.awt.Component c);
 
-  @Nonnull
-  public abstract ActionCallback notifyPublisher(@Nonnull Runnable runnable);
+  public abstract ActionCallback notifyPublisher(Runnable runnable);
 }

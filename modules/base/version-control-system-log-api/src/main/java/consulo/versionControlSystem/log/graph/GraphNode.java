@@ -16,18 +16,17 @@
 
 package consulo.versionControlSystem.log.graph;
 
-import jakarta.annotation.Nonnull;
 
 public final class GraphNode implements GraphElement {
   private final int myNodeIndex;
-  @Nonnull
+  
   private final GraphNodeType myType;
 
   public GraphNode(int nodeIndex) {
     this(nodeIndex, GraphNodeType.USUAL);
   }
 
-  public GraphNode(int nodeIndex, @Nonnull GraphNodeType type) {
+  public GraphNode(int nodeIndex, GraphNodeType type) {
     myNodeIndex = nodeIndex;
     myType = type;
   }
@@ -36,7 +35,7 @@ public final class GraphNode implements GraphElement {
     return myNodeIndex;
   }
 
-  @Nonnull
+  
   public GraphNodeType getType() {
     return myType;
   }

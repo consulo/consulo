@@ -8,14 +8,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Describes context in which live template supposed to be used.
  */
 public final class TemplateActionContext {
-  @Nonnull
+  
   private final PsiFile myFile;
   @Nullable
   private final Editor myEditor;
@@ -24,7 +23,7 @@ public final class TemplateActionContext {
   private final int myEndOffset;
   private final boolean myIsSurrounding;
 
-  private TemplateActionContext(@Nonnull PsiFile file, @Nullable Editor editor, int startOffset, int endOffset, boolean isSurrounding) {
+  private TemplateActionContext(PsiFile file, @Nullable Editor editor, int startOffset, int endOffset, boolean isSurrounding) {
     myFile = file;
     myStartOffset = startOffset;
     myEndOffset = endOffset;
@@ -32,7 +31,7 @@ public final class TemplateActionContext {
     myEditor = editor;
   }
 
-  @Nonnull
+  
   public PsiFile getFile() {
     return myFile;
   }
@@ -55,8 +54,8 @@ public final class TemplateActionContext {
   /**
    * @return a copy of current context with specific {@code file}
    */
-  @Nonnull
-  public TemplateActionContext withFile(@Nonnull PsiFile file) {
+  
+  public TemplateActionContext withFile(PsiFile file) {
     return new TemplateActionContext(file, myEditor, myStartOffset, myEndOffset, myIsSurrounding);
   }
 
@@ -74,20 +73,20 @@ public final class TemplateActionContext {
     return myEndOffset;
   }
 
-  @Nonnull
-  public static TemplateActionContext expanding(@Nonnull PsiFile psiFile, @Nonnull Editor editor) {
+  
+  public static TemplateActionContext expanding(PsiFile psiFile, Editor editor) {
     int editorOffset = editor.getCaretModel().getOffset();
     return create(psiFile, editor, editorOffset, editorOffset, false);
   }
 
-  @Nonnull
-  public static TemplateActionContext expanding(@Nonnull PsiFile psiFile, int offset) {
+  
+  public static TemplateActionContext expanding(PsiFile psiFile, int offset) {
     return create(psiFile, null, offset, offset, false);
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  public static TemplateActionContext surrounding(@Nonnull PsiFile psiFile, @Nonnull Editor editor) {
+  public static TemplateActionContext surrounding(PsiFile psiFile, Editor editor) {
     SelectionModel selectionModel = editor.getSelectionModel();
     int start = selectionModel.getSelectionStart();
     int end = selectionModel.getSelectionEnd();
@@ -102,8 +101,8 @@ public final class TemplateActionContext {
     return create(psiFile, editor, start, end, true);
   }
 
-  @Nonnull
-  public static TemplateActionContext create(@Nonnull PsiFile psiFile, @Nullable Editor editor, int startOffset, int endOffset, boolean isSurrounding) {
+  
+  public static TemplateActionContext create(PsiFile psiFile, @Nullable Editor editor, int startOffset, int endOffset, boolean isSurrounding) {
     return new TemplateActionContext(psiFile, editor, startOffset, endOffset, isSurrounding);
   }
 }

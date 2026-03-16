@@ -19,7 +19,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +30,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
 
   @Override
   @RequiredUIAccess
-  public void registerEmptyScope(@Nonnull Editor editor, int offset, int tabOutOffset) {
+  public void registerEmptyScope(Editor editor, int offset, int tabOutOffset) {
     UIAccess.assertIsUIThread();
     if (editor.isDisposed()) throw new IllegalArgumentException("Editor is already disposed");
     if (tabOutOffset <= offset) throw new IllegalArgumentException("tabOutOffset should be larger than offset");
@@ -51,19 +50,19 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
 
   @RequiredUIAccess
   @Override
-  public boolean hasScopeEndingAt(@Nonnull Editor editor, int offset) {
+  public boolean hasScopeEndingAt(Editor editor, int offset) {
     return checkOrRemoveScopeEndingAt(editor, offset, false) > 0;
   }
 
   @RequiredUIAccess
   @Override
-  public int removeScopeEndingAt(@Nonnull Editor editor, int offset) {
+  public int removeScopeEndingAt(Editor editor, int offset) {
     int caretShift = checkOrRemoveScopeEndingAt(editor, offset, true);
     return caretShift > 0 ? offset + caretShift : -1;
   }
 
   @RequiredUIAccess
-  private static int checkOrRemoveScopeEndingAt(@Nonnull Editor editor, int offset, boolean removeScope) {
+  private static int checkOrRemoveScopeEndingAt(Editor editor, int offset, boolean removeScope) {
     UIAccess.assertIsUIThread();
 
     if (!CodeInsightSettings.getInstance().TAB_EXITS_BRACKETS_AND_QUOTES) return 0;
@@ -87,7 +86,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
 
     private final Editor myEditor;
 
-    private static Tracker forEditor(@Nonnull RealEditor editor, boolean createIfAbsent) {
+    private static Tracker forEditor(RealEditor editor, boolean createIfAbsent) {
       Tracker tracker = editor.getUserData(TRACKER);
       if (tracker == null && createIfAbsent) {
         editor.putUserData(TRACKER, tracker = new Tracker(editor));
@@ -95,7 +94,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
       return tracker;
     }
 
-    private Tracker(@Nonnull RealEditor editor) {
+    private Tracker(RealEditor editor) {
       myEditor = editor;
       Disposable editorDisposable = editor.getDisposable();
       myEditor.getDocument().addDocumentListener(this, editorDisposable);
@@ -133,7 +132,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
     }
 
     @Override
-    public void beforeDocumentChange(@Nonnull DocumentEvent event) {
+    public void beforeDocumentChange(DocumentEvent event) {
       List<RangeMarker> scopes = getCurrentScopes(false);
       if (scopes == null) return;
       int caretOffset = myEditor.getCaretModel().getOffset();
@@ -150,7 +149,7 @@ public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
     }
 
     @Override
-    public void bulkUpdateStarting(@Nonnull Document document) {
+    public void bulkUpdateStarting(Document document) {
       for (Caret caret : myEditor.getCaretModel().getAllCarets()) {
         caret.putUserData(TRACKED_SCOPES, null);
       }

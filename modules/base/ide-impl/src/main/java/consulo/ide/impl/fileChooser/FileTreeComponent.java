@@ -24,7 +24,7 @@ import consulo.ui.Tree;
 import consulo.ui.TreeNode;
 import consulo.ui.ex.tree.TreeStructureWrappenModel;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Comparator;
 
 /**

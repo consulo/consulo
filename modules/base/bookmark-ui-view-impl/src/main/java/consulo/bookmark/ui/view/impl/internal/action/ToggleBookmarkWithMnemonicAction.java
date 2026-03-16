@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -38,7 +37,7 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         super.actionPerformed(e);
 
         Project project = e.getRequiredData(Project.KEY);
@@ -81,7 +80,7 @@ public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
 
         event.getPresentation().setTextValue(BookmarkLocalize.actionBookmarkToggleWithMnemonicText());

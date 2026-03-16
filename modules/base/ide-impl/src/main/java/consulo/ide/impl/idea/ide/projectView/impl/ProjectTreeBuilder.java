@@ -41,19 +41,18 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
 public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
-  public ProjectTreeBuilder(@Nonnull Project project,
-                            @Nonnull JTree tree,
-                            @Nonnull DefaultTreeModel treeModel,
+  public ProjectTreeBuilder(Project project,
+                            JTree tree,
+                            DefaultTreeModel treeModel,
                             @Nullable Comparator<NodeDescriptor> comparator,
-                            @Nonnull ProjectAbstractTreeStructureBase treeStructure) {
+                            ProjectAbstractTreeStructureBase treeStructure) {
     super(project, tree, treeModel, treeStructure, comparator);
 
     MessageBusConnection connection = project.getMessageBus().connect(this);
@@ -112,21 +111,21 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
   private final class MyBookmarksListener implements BookmarksListener {
     @Override
-    public void bookmarkAdded(@Nonnull Bookmark b) {
+    public void bookmarkAdded(Bookmark b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkRemoved(@Nonnull Bookmark b) {
+    public void bookmarkRemoved(Bookmark b) {
       updateForFile(b.getFile());
     }
 
     @Override
-    public void bookmarkChanged(@Nonnull Bookmark b) {
+    public void bookmarkChanged(Bookmark b) {
       updateForFile(b.getFile());
     }
 
-    private void updateForFile(@Nonnull VirtualFile file) {
+    private void updateForFile(VirtualFile file) {
       PsiElement element = findPsi(file);
       if (element != null) {
         queueUpdateFrom(element, false);
@@ -141,13 +140,13 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     }
 
     @Override
-    public void fileStatusChanged(@Nonnull VirtualFile vFile) {
+    public void fileStatusChanged(VirtualFile vFile) {
       queueUpdate(false);
     }
   }
 
   @RequiredReadAction
-  private PsiElement findPsi(@Nonnull VirtualFile vFile) {
+  private PsiElement findPsi(VirtualFile vFile) {
     if (!vFile.isValid()) return null;
     PsiManager psiManager = PsiManager.getInstance(myProject);
     return vFile.isDirectory() ? psiManager.findDirectory(vFile) : psiManager.findFile(vFile);
@@ -158,16 +157,16 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     private final Collection<VirtualFile> myFilesToRefresh = new HashSet<>();
 
     @Override
-    public void problemsAppeared(@Nonnull VirtualFile file) {
+    public void problemsAppeared(VirtualFile file) {
       queueUpdate(file);
     }
 
     @Override
-    public void problemsDisappeared(@Nonnull VirtualFile file) {
+    public void problemsDisappeared(VirtualFile file) {
       queueUpdate(file);
     }
 
-    private void queueUpdate(@Nonnull VirtualFile fileToRefresh) {
+    private void queueUpdate(VirtualFile fileToRefresh) {
       synchronized (myFilesToRefresh) {
         if (myFilesToRefresh.add(fileToRefresh)) {
           myUpdateProblemAlarm.cancelAllRequests();
@@ -190,7 +189,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     }
   }
 
-  private void updateNodesContaining(@Nonnull Collection<VirtualFile> filesToRefresh, @Nonnull DefaultMutableTreeNode rootNode) {
+  private void updateNodesContaining(Collection<VirtualFile> filesToRefresh, DefaultMutableTreeNode rootNode) {
     if (!(rootNode.getUserObject() instanceof ProjectViewNode)) return;
     ProjectViewNode node = (ProjectViewNode)rootNode.getUserObject();
     Collection<VirtualFile> containingFiles = null;

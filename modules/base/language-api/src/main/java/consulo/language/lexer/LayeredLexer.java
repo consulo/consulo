@@ -18,7 +18,6 @@ package consulo.language.lexer;
 import consulo.language.ast.IElementType;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,7 +84,7 @@ public class LayeredLexer extends DelegateLexer {
     }
 
     @Override
-    public void start(@Nonnull CharSequence buffer, int startOffset, int endOffset, int initialState) {
+    public void start(CharSequence buffer, int startOffset, int endOffset, int initialState) {
         LOG.assertTrue(initialState != IN_LAYER_STATE, "Restoring to layer is not supported.");
         myState = initialState;
         myCurrentLayerLexer = null;
@@ -170,14 +169,14 @@ public class LayeredLexer extends DelegateLexer {
         myState = isLayerActive() ? IN_LAYER_STATE : super.getState();
     }
 
-    @Nonnull
+    
     @Override
     public LexerPosition getCurrentPosition() {
         return new LexerPositionImpl(getTokenStart(), getState());
     }
 
     @Override
-    public void restore(@Nonnull LexerPosition position) {
+    public void restore(LexerPosition position) {
         start(getBufferSequence(), position.getOffset(), getBufferEnd(), position.getState());
     }
 

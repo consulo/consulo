@@ -21,7 +21,6 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -33,13 +32,13 @@ import java.util.function.Function;
  * @since 2019-04-26
  */
 public class ConsuloExpandableSupport<T extends JTextComponent> extends ExpandableSupport<T> {
-    public ConsuloExpandableSupport(@Nonnull T jTextComponent, Function<? super String, String> onShow, Function<? super String, String> onHide) {
+    public ConsuloExpandableSupport(T jTextComponent, Function<? super String, String> onShow, Function<? super String, String> onHide) {
         super(jTextComponent, onShow, onHide);
     }
 
-    @Nonnull
+    
     @Override
-    protected Content prepare(@Nonnull T field, @Nonnull Function<? super String, String> onShow) {
+    protected Content prepare(T field, Function<? super String, String> onShow) {
         Font font = field.getFont();
         FontMetrics metrics = font == null ? null : field.getFontMetrics(font);
         int height = metrics == null ? 16 : metrics.getHeight();
@@ -72,7 +71,7 @@ public class ConsuloExpandableSupport<T extends JTextComponent> extends Expandab
         scrollPane.setPreferredSize(size);
 
         return new Content() {
-            @Nonnull
+            
             @Override
             public JComponent getContentComponent() {
                 return mainPanel;
@@ -84,7 +83,7 @@ public class ConsuloExpandableSupport<T extends JTextComponent> extends Expandab
             }
 
             @Override
-            public void cancel(@Nonnull Function<? super String, String> onHide) {
+            public void cancel(Function<? super String, String> onHide) {
                 if (field.isEditable()) {
                     field.setText(onHide.apply(area.getText()));
                     copyCaretPosition(area, field);

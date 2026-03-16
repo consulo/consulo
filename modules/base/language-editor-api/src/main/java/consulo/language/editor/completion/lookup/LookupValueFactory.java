@@ -19,8 +19,7 @@ package consulo.language.editor.completion.lookup;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
@@ -32,13 +31,13 @@ public class LookupValueFactory {
   private LookupValueFactory() {
   }
 
-  @Nonnull
-  public static Object createLookupValue(@Nonnull String name, @Nullable Image icon) {
+  
+  public static Object createLookupValue(String name, @Nullable Image icon) {
     return icon == null ? name : new LookupValueWithIcon(name, icon);
   }
 
-  @Nonnull
-  public static Object createLookupValueWithHint(@Nonnull String name, @Nullable Image icon, String hint) {
+  
+  public static Object createLookupValueWithHint(String name, @Nullable Image icon, String hint) {
     return new LookupValueWithIconAndHint(name, icon, hint);
   }
 
@@ -46,7 +45,7 @@ public class LookupValueFactory {
     private final String myName;
     private final Image myIcon;
 
-    protected LookupValueWithIcon(@Nonnull String name, @Nullable Image icon) {
+    protected LookupValueWithIcon(String name, @Nullable Image icon) {
       myName = name;
       myIcon = icon;
     }

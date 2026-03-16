@@ -23,7 +23,6 @@ import consulo.language.psi.stub.*;
 import consulo.sandboxPlugin.lang.SandLanguage;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 
 /**
@@ -35,26 +34,26 @@ public class SandClassStubElementType extends IStubElementType<SandClassStub, Sa
     super("CLASS", SandLanguage.INSTANCE);
   }
 
-  @Nonnull
+  
   @Override
   public String getExternalId() {
     return "sand." + toString();
   }
 
   @Override
-  public void serialize(@Nonnull SandClassStub stub, @Nonnull StubOutputStream dataStream) throws IOException {
+  public void serialize(SandClassStub stub, StubOutputStream dataStream) throws IOException {
     dataStream.writeName(stub.getName());
   }
 
-  @Nonnull
+  
   @Override
-  public SandClassStub deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+  public SandClassStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
     StringRef name = dataStream.readName();
     return new SandClassStub(parentStub, this, name);
   }
 
   @Override
-  public void indexStub(@Nonnull SandClassStub stub, @Nonnull IndexSink sink) {
+  public void indexStub(SandClassStub stub, IndexSink sink) {
     String name = stub.getName();
     if (name == null) {
       return;
@@ -63,19 +62,19 @@ public class SandClassStubElementType extends IStubElementType<SandClassStub, Sa
   }
 
   @Override
-  public SandClass createPsi(@Nonnull SandClassStub stub) {
+  public SandClass createPsi(SandClassStub stub) {
     return new SandClass(stub, this);
   }
 
-  @Nonnull
+  
   @Override
-  public SandClassStub createStub(@Nonnull SandClass psi, StubElement parentStub) {
+  public SandClassStub createStub(SandClass psi, StubElement parentStub) {
     return new SandClassStub(parentStub, this, psi.getName());
   }
 
-  @Nonnull
+  
   @Override
-  public PsiElement createElement(@Nonnull ASTNode astNode) {
+  public PsiElement createElement(ASTNode astNode) {
     return new SandClass(astNode);
   }
 }

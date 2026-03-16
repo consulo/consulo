@@ -19,7 +19,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.versionControlSystem.log.TimedVcsCommit;
 import consulo.versionControlSystem.log.VcsLogHelper;
 import consulo.versionControlSystem.log.impl.internal.data.VcsLogSorter;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
 import java.util.Collection;
@@ -33,7 +32,7 @@ import java.util.List;
 @Singleton
 public class VcsLogHelperImpl implements VcsLogHelper {
     @Override
-    public <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(@Nonnull Collection<Commit> commits) {
+    public <Commit extends TimedVcsCommit> List<Commit> sortByDateTopoOrder(Collection<Commit> commits) {
         return VcsLogSorter.sortByDateTopoOrder(commits);
     }
 }

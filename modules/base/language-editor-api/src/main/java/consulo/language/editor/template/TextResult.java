@@ -20,16 +20,15 @@ import consulo.document.Document;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
-import jakarta.annotation.Nonnull;
 
 public class TextResult implements Result {
   private final String myText;
 
-  public TextResult(@Nonnull String text) {
+  public TextResult(String text) {
     myText = text;
   }
 
-  @Nonnull
+  
   public String getText() {
     return myText;
   }

@@ -24,8 +24,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.FSRecordsProxy;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TObjectLongHashMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -193,12 +192,12 @@ class StubVersionMap {
     }
   }
 
-  @Nonnull
+  
   private static File allIndexedFilesRegistryFile() {
     return new File(new File(IndexInfrastructure.getIndexRootDir(StubUpdatingIndex.INDEX_ID), ".fileTypes"), INDEXED_FILETYPES);
   }
 
-  @Nonnull
+  
   private static String typeAndVersion(Object owner) {
     return info(owner) + "," + version(owner);
   }
@@ -236,7 +235,7 @@ class StubVersionMap {
 
   private static final FileAttribute VERSION_STAMP = new FileAttribute("stubIndex.versionStamp", 2, true);
 
-  public void persistIndexedState(int fileId, @Nonnull VirtualFile file) throws IOException {
+  public void persistIndexedState(int fileId, VirtualFile file) throws IOException {
     try (DataOutputStream stream = FSRecordsProxy.getInstance().writeAttribute(fileId, VERSION_STAMP)) {
       FileType[] type = {null};
       ProgressManager.getInstance().executeNonCancelableSection(() -> {
@@ -246,7 +245,7 @@ class StubVersionMap {
     }
   }
 
-  public boolean isIndexed(int fileId, @Nonnull VirtualFile file) throws IOException {
+  public boolean isIndexed(int fileId, VirtualFile file) throws IOException {
     DataInputStream stream = FSRecordsProxy.getInstance().readAttributeWithLock(fileId, VERSION_STAMP);
     int diff = stream != null ? DataInputOutputUtil.readINT(stream) : 0;
     if (diff == 0) return false;

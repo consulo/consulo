@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -35,12 +34,12 @@ public class FileContentUtilCore {
   public static final String FORCE_RELOAD_REQUESTOR = consulo.virtualFileSystem.internal.FileContentUtilCore.FORCE_RELOAD_REQUESTOR;
 
   @RequiredUIAccess
-  public static void reparseFiles(@Nonnull VirtualFile... files) {
+  public static void reparseFiles(VirtualFile... files) {
     reparseFiles(Arrays.asList(files));
   }
 
   @RequiredUIAccess
-  public static void reparseFiles(@Nonnull Collection<? extends VirtualFile> files) {
+  public static void reparseFiles(Collection<? extends VirtualFile> files) {
     ApplicationManager.getApplication().runWriteAction(() -> {
       // files must be processed under one write action to prevent firing event for invalid files.
       Set<VFilePropertyChangeEvent> events = new HashSet<>();
@@ -56,7 +55,7 @@ public class FileContentUtilCore {
   }
 
   @RequiredWriteAction
-  private static void saveOrReload(VirtualFile file, @Nonnull Collection<VFilePropertyChangeEvent> events) {
+  private static void saveOrReload(VirtualFile file, Collection<VFilePropertyChangeEvent> events) {
     if (file == null || file.isDirectory() || !file.isValid()) {
       return;
     }

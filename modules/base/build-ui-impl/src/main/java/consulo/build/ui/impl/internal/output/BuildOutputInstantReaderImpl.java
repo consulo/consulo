@@ -9,8 +9,7 @@ import consulo.build.ui.progress.BuildProgressListener;
 import consulo.logging.Logger;
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.util.concurrent.ConcurrencyUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -39,17 +38,17 @@ public class BuildOutputInstantReaderImpl implements BuildOutputInstantReader.Pr
 
     private final Runnable readerRunnable;
 
-    public BuildOutputInstantReaderImpl(@Nonnull Object buildId,
-                                        @Nonnull Object parentEventId,
-                                        @Nonnull BuildProgressListener buildProgressListener,
-                                        @Nonnull List<BuildOutputParser> parsers) {
+    public BuildOutputInstantReaderImpl(Object buildId,
+                                        Object parentEventId,
+                                        BuildProgressListener buildProgressListener,
+                                        List<BuildOutputParser> parsers) {
         this(buildId, parentEventId, buildProgressListener, parsers, 50, 64);
     }
 
-    public BuildOutputInstantReaderImpl(@Nonnull Object buildId,
-                                        @Nonnull Object parentEventId,
-                                        @Nonnull BuildProgressListener buildProgressListener,
-                                        @Nonnull List<BuildOutputParser> parsers,
+    public BuildOutputInstantReaderImpl(Object buildId,
+                                        Object parentEventId,
+                                        BuildProgressListener buildProgressListener,
+                                        List<BuildOutputParser> parsers,
                                         int pushBackBufferSize,
                                         int channelBufferCapacity) {
         this.buildId = buildId;
@@ -114,18 +113,18 @@ public class BuildOutputInstantReaderImpl implements BuildOutputInstantReader.Pr
     }
 
     @Override
-    public @Nonnull Object getParentEventId() {
+    public Object getParentEventId() {
         return parentEventId;
     }
 
     @Override
-    public BuildOutputInstantReaderImpl append(@Nonnull CharSequence csq) {
+    public BuildOutputInstantReaderImpl append(CharSequence csq) {
         appendedLineProcessor.append(csq);
         return this;
     }
 
     @Override
-    public BuildOutputInstantReaderImpl append(@Nonnull CharSequence csq, int start, int end) {
+    public BuildOutputInstantReaderImpl append(CharSequence csq, int start, int end) {
         appendedLineProcessor.append(csq, start, end);
         return this;
     }
@@ -201,7 +200,7 @@ public class BuildOutputInstantReaderImpl implements BuildOutputInstantReader.Pr
 
     private final class AppendedLineProcessor extends LineProcessor {
         @Override
-        protected void process(@Nonnull String line) {
+        protected void process(String line) {
             if (state.get() == State.Closed) {
                 throw new IllegalStateException(BuildLocalize.errorCanTAppendToClosedStream(line).get());
             }
@@ -230,7 +229,7 @@ public class BuildOutputInstantReaderImpl implements BuildOutputInstantReader.Pr
         }
 
         @Override
-        public @Nonnull Object getParentEventId() {
+        public Object getParentEventId() {
             return reader.getParentEventId();
         }
 

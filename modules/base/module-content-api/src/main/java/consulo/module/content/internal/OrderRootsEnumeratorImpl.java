@@ -35,7 +35,6 @@ import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.PathsList;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +55,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
     private static final BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, VirtualFile[]> ourRuntimeToFileFunc =
         new BiFunction<>() {
-            @Nonnull
+            
             @Override
             public VirtualFile[] apply(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
                 RuntimeRootProvider compilerPathsManager = RuntimeRootProvider.getInstance(t.getModule());
@@ -69,7 +68,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
 
     private static final BiFunction<ModuleRootModel, Predicate<ContentFolderTypeProvider>, String[]> ourRuntimeToUrlFunc =
         new BiFunction<>() {
-            @Nonnull
+            
             @Override
             public String[] apply(ModuleRootModel t, Predicate<ContentFolderTypeProvider> v) {
                 RuntimeRootProvider compilerPathsManager = RuntimeRootProvider.getInstance(t.getModule());
@@ -88,19 +87,19 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     private Function<OrderEntry, VirtualFile[]> myCustomRootProvider;
     private boolean myWithoutSelfModuleOutput;
 
-    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, @Nonnull OrderRootType rootType) {
+    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, OrderRootType rootType) {
         myOrderEnumerator = orderEnumerator;
         myRootType = rootType;
         myRootTypeProvider = null;
     }
 
-    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, @Nonnull Function<OrderEntry, OrderRootType> rootTypeProvider) {
+    public OrderRootsEnumeratorImpl(OrderEnumeratorBase orderEnumerator, Function<OrderEntry, OrderRootType> rootTypeProvider) {
         myOrderEnumerator = orderEnumerator;
         myRootTypeProvider = rootTypeProvider;
         myRootType = null;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile[] getRoots() {
         if (myUsingCache) {
@@ -120,7 +119,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         return VirtualFileUtil.toVirtualFileArray(computeRoots());
     }
 
-    @Nonnull
+    
     @Override
     public String[] getUrls() {
         if (myUsingCache) {
@@ -188,7 +187,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         return result;
     }
 
-    @Nonnull
+    
     private Collection<String> computeRootsUrls() {
         Collection<String> result = new LinkedHashSet<>();
         myOrderEnumerator.forEach(orderEntry -> {
@@ -224,7 +223,7 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
         return result;
     }
 
-    @Nonnull
+    
     @Override
     public PathsList getPathsList() {
         PathsList list = new PathsList();
@@ -233,27 +232,27 @@ public class OrderRootsEnumeratorImpl implements OrderRootsEnumerator {
     }
 
     @Override
-    public void collectPaths(@Nonnull PathsList list) {
+    public void collectPaths(PathsList list) {
         list.addVirtualFiles(getRoots());
     }
 
-    @Nonnull
+    
     @Override
     public OrderRootsEnumerator usingCache() {
         myUsingCache = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public OrderRootsEnumerator withoutSelfModuleOutput() {
         myWithoutSelfModuleOutput = true;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public OrderRootsEnumerator usingCustomRootProvider(@Nonnull Function<OrderEntry, VirtualFile[]> provider) {
+    public OrderRootsEnumerator usingCustomRootProvider(Function<OrderEntry, VirtualFile[]> provider) {
         myCustomRootProvider = provider;
         return this;
     }

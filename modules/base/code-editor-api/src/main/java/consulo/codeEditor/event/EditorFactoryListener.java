@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.EventListener;
 
@@ -32,13 +31,13 @@ public interface EditorFactoryListener extends EventListener {
   /**
    * Called after {@link Editor} instance has been created.
    */
-  default void editorCreated(@Nonnull EditorFactoryEvent event) {
+  default void editorCreated(EditorFactoryEvent event) {
   }
 
   /**
    * Called before {@link Editor} instance will be released.
    */
-  default void editorReleased(@Nonnull EditorFactoryEvent event) {
+  default void editorReleased(EditorFactoryEvent event) {
   }
 }
 

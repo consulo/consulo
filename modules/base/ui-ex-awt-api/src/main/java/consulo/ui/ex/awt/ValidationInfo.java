@@ -18,8 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Objects;
@@ -31,7 +30,7 @@ import java.util.Objects;
  * @see DialogWrapper#doValidate()
  */
 public final class ValidationInfo {
-    @Nonnull
+    
     public final LocalizeValue message;
 
     @Nullable
@@ -47,7 +46,7 @@ public final class ValidationInfo {
      * @param message   the error message to display.
      * @param component the component containing the invalid data.
      */
-    public ValidationInfo(@Nonnull LocalizeValue message, @Nullable JComponent component) {
+    public ValidationInfo(LocalizeValue message, @Nullable JComponent component) {
         this.message = message;
         this.component = component;
     }
@@ -61,7 +60,7 @@ public final class ValidationInfo {
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizaValue")
-    public ValidationInfo(@Nonnull String message, @Nullable JComponent component) {
+    public ValidationInfo(String message, @Nullable JComponent component) {
         this(LocalizeValue.of(message), component);
     }
 
@@ -70,7 +69,7 @@ public final class ValidationInfo {
      *
      * @param message the error message to display.
      */
-    public ValidationInfo(@Nonnull LocalizeValue message) {
+    public ValidationInfo(LocalizeValue message) {
         this(message, null);
     }
 
@@ -81,7 +80,7 @@ public final class ValidationInfo {
      */
     @Deprecated
     @DeprecationInfo("Use variant with LocalizaValue")
-    public ValidationInfo(@Nonnull String message) {
+    public ValidationInfo(String message) {
         this(message, null);
     }
 

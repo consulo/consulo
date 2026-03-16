@@ -31,7 +31,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.ToolbarDecorator;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +49,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
     private final FileColorSettingsTable myLocalTable;
     private final FileColorSettingsTable mySharedTable;
 
-    public FileColorsConfigurablePanel(@Nonnull Project project, @Nonnull FileColorManagerImpl manager) {
+    public FileColorsConfigurablePanel(Project project, FileColorManagerImpl manager) {
         setLayout(new BorderLayout());
         myManager = manager;
 
@@ -80,7 +79,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
         final List<FileColorConfiguration> localConfigurations = manager.getLocalConfigurations();
         myLocalTable = new FileColorSettingsTable(project, manager, localConfigurations) {
             @Override
-            protected void apply(@Nonnull List<FileColorConfiguration> configurations) {
+            protected void apply(List<FileColorConfiguration> configurations) {
                 List<FileColorConfiguration> copied = new ArrayList<>();
                 try {
                     for (FileColorConfiguration configuration : configurations) {
@@ -101,12 +100,12 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
             ) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     share();
                 }
 
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     e.getPresentation().setEnabled(myLocalTable.getSelectedRow() != -1);
                 }
             })
@@ -118,7 +117,7 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
 
         mySharedTable = new FileColorSettingsTable(project, manager, manager.getSharedConfigurations()) {
             @Override
-            protected void apply(@Nonnull List<FileColorConfiguration> configurations) {
+            protected void apply(List<FileColorConfiguration> configurations) {
                 List<FileColorConfiguration> copied = new ArrayList<>();
                 for (FileColorConfiguration configuration : configurations) {
                     try {
@@ -142,12 +141,12 @@ public class FileColorsConfigurablePanel extends JPanel implements Disposable {
             ) {
                 @Override
                 @RequiredUIAccess
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     unshare();
                 }
 
                 @Override
-                public void update(@Nonnull AnActionEvent e) {
+                public void update(AnActionEvent e) {
                     e.getPresentation().setEnabled(mySharedTable.getSelectedRow() != -1);
                 }
             })

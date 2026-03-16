@@ -6,8 +6,7 @@ import consulo.language.ast.IElementType;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.AbstractList;
 import java.util.Collections;
 import java.util.List;
@@ -72,7 +71,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
     return myStubData.get(childrenCountIndex(id));
   }
 
-  void addStub(@Nonnull StubBase<?> stub, @Nullable StubBase<?> parent, @Nullable IStubElementType<?, ?> type) {
+  void addStub(StubBase<?> stub, @Nullable StubBase<?> parent, @Nullable IStubElementType<?, ?> type) {
     int stubId = size();
     stub.id = stubId;
 
@@ -183,7 +182,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
   }
 
   @Nullable
-  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(int id, @Nonnull IStubElementType<S, P> elementType) {
+  <P extends PsiElement, S extends StubElement<P>> S findChildStubByType(int id, IStubElementType<S, P> elementType) {
     int count = getChildrenCount(id);
     int start = getChildrenStart(id);
     switch (getChildrenStorage(start)) {
@@ -212,7 +211,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
    * Ensures stubs are in DFS order and the optimizes memory layout. Might return an optimized copy of this list,
    * with all stubs re-targeted to that copy.
    */
-  @Nonnull
+  
   StubList finalizeLoadingStage() {
     if (myTempState != null) {
       myTempState = null;
@@ -222,7 +221,7 @@ public abstract class StubList extends AbstractList<StubBase<?>> {
     return this;
   }
 
-  @Nonnull
+  
   List<StubElement<?>> toPlainList() {
     //noinspection unchecked
     return (List)this;

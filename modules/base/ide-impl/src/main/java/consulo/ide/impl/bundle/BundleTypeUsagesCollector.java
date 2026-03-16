@@ -24,8 +24,7 @@ import consulo.externalService.statistic.UsageDescriptor;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class BundleTypeUsagesCollector extends UsagesCollector {
     mySdkTable = sdkTable;
   }
 
-  @Nonnull
+  
   @Override
   public Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException {
     Map<String, UsageDescriptor> usages = new LinkedHashMap<>();
@@ -60,7 +59,7 @@ public class BundleTypeUsagesCollector extends UsagesCollector {
     return new LinkedHashSet<>(usages.values());
   }
 
-  @Nonnull
+  
   @Override
   public String getGroupId() {
     return "consulo.platform.base:bundle.type";

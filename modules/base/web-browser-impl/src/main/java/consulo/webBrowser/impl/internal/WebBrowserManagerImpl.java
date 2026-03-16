@@ -20,8 +20,7 @@ import consulo.util.lang.function.Predicates;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.webBrowser.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -79,7 +78,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         );
     }
 
-    @Nonnull
+    
     private static String getEdgeExecutionPath() {
         if (SystemInfo.isWindows) {
             return "msedge";
@@ -110,19 +109,19 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return (WebBrowserManagerImpl) WebBrowserManager.getInstance();
     }
 
-    public static boolean isYandexBrowser(@Nonnull WebBrowser browser) {
+    public static boolean isYandexBrowser(WebBrowser browser) {
         return browser.getFamily().equals(BrowserFamily.CHROME)
             && (browser.getId().equals(PREDEFINED_YANDEX_ID) || checkNameAndPath("Yandex", browser));
     }
 
-    public static boolean isEdge(@Nonnull WebBrowser browser) {
+    public static boolean isEdge(WebBrowser browser) {
         return browser.getFamily() == BrowserFamily.CHROME &&
             (browser.getId().equals(PREDEFINED_EDGE_ID) ||
                 checkNameAndPath(getEdgeExecutionPath(), browser) ||
                 checkNameAndPath("MicrosoftEdge", browser));
     }
 
-    static boolean checkNameAndPath(@Nonnull String what, @Nonnull WebBrowser browser) {
+    static boolean checkNameAndPath(String what, WebBrowser browser) {
         if (StringUtil.containsIgnoreCase(browser.getName(), what)) {
             return true;
         }
@@ -134,7 +133,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return false;
     }
 
-    public boolean isPredefinedBrowser(@Nonnull ConfigurableWebBrowser browser) {
+    public boolean isPredefinedBrowser(ConfigurableWebBrowser browser) {
         UUID id = browser.getId();
         for (UUID predefinedBrowserId : PREDEFINED_BROWSER_IDS) {
             if (id.equals(predefinedBrowserId)) {
@@ -145,7 +144,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    @Nonnull
+    
     public DefaultBrowserPolicy getDefaultBrowserPolicy() {
         return myDefaultBrowserPolicy;
     }
@@ -190,7 +189,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    public void loadState(@Nonnull WebBrowserManagerState state) {
+    public void loadState(WebBrowserManagerState state) {
         myDefaultBrowserPolicy = state.defaultBrowserPolicy;
         myShowBrowserHover = state.showBrowserHover;
         myBrowserPath = state.browserPath;
@@ -259,8 +258,8 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     @Nullable
     private static UUID readId(
         @Nullable UUID uuid,
-        @Nonnull BrowserFamily family,
-        @Nonnull List<ConfigurableWebBrowser> existingBrowsers
+        BrowserFamily family,
+        List<ConfigurableWebBrowser> existingBrowsers
     ) {
         if (uuid == null) {
             UUID id;
@@ -299,42 +298,42 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @RequiredUIAccess
-    @Nonnull
+    
     @Override
     public CompletableFuture<?> showSettings() {
         return myApplication.getInstance(ShowConfigurableService.class).show(null, BrowserSettings.class);
     }
 
     @Override
-    @Nonnull
+    
     public List<WebBrowser> getBrowsers() {
         return Collections.unmodifiableList(browsers);
     }
 
-    @Nonnull
+    
     List<ConfigurableWebBrowser> getList() {
         return browsers;
     }
 
-    void setList(@Nonnull List<ConfigurableWebBrowser> value) {
+    void setList(List<ConfigurableWebBrowser> value) {
         browsers = value;
         incModificationCount();
     }
 
     @Override
-    @Nonnull
+    
     public List<WebBrowser> getActiveBrowsers() {
         return getBrowsers(Predicates.alwaysTrue(), true);
     }
 
     @Override
-    @Nonnull
-    public List<WebBrowser> getBrowsers(@Nonnull Predicate<? super WebBrowser> condition) {
+    
+    public List<WebBrowser> getBrowsers(Predicate<? super WebBrowser> condition) {
         return getBrowsers(condition, true);
     }
 
-    @Nonnull
-    public List<WebBrowser> getBrowsers(@Nonnull Predicate<? super WebBrowser> condition, boolean onlyActive) {
+    
+    public List<WebBrowser> getBrowsers(Predicate<? super WebBrowser> condition, boolean onlyActive) {
         List<WebBrowser> result = new SmartList<>();
         for (ConfigurableWebBrowser browser : browsers) {
             if ((!onlyActive || browser.isActive()) && condition.test(browser)) {
@@ -345,22 +344,22 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     public void setBrowserSpecificSettings(
-        @Nonnull WebBrowser browser,
-        @Nonnull BrowserSpecificSettings specificSettings
+        WebBrowser browser,
+        BrowserSpecificSettings specificSettings
     ) {
         ((ConfigurableWebBrowser) browser).setSpecificSettings(specificSettings);
     }
 
-    public void setBrowserPath(@Nonnull WebBrowser browser, @Nullable String path, boolean isActive) {
+    public void setBrowserPath(WebBrowser browser, @Nullable String path, boolean isActive) {
         ((ConfigurableWebBrowser) browser).setPath(path);
         ((ConfigurableWebBrowser) browser).setActive(isActive);
         incModificationCount();
     }
 
     public WebBrowser addBrowser(
-        @Nonnull UUID id,
-        @Nonnull BrowserFamily family,
-        @Nonnull String name,
+        UUID id,
+        BrowserFamily family,
+        String name,
         @Nullable String path,
         boolean active,
         BrowserSpecificSettings specificSettings
@@ -372,7 +371,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Nullable
-    private static UUID parseUuid(@Nonnull String id) {
+    private static UUID parseUuid(String id) {
         if (id.indexOf('-') == -1) {
             return null;
         }
@@ -385,7 +384,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         }
     }
 
-    @Nonnull
+    
     @Override
     public String getAlternativeBrowserPath() {
         if (!StringUtil.isEmptyOrSpaces(myBrowserPath)) {
@@ -394,7 +393,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return getDefaultAlternativeBrowserPath();
     }
 
-    @Nonnull
+    
     private String getDefaultAlternativeBrowserPath() {
         if (Platform.current().os().isWindows()) {
             return "C:\\Program Files\\Internet Explorer\\IExplore.exe";
@@ -440,7 +439,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Nullable
-    public WebBrowser getFirstBrowserOrNull(@Nonnull BrowserFamily family) {
+    public WebBrowser getFirstBrowserOrNull(BrowserFamily family) {
         for (ConfigurableWebBrowser browser : browsers) {
             if (browser.isActive() && family.equals(browser.getFamily())) {
                 return browser;
@@ -456,8 +455,8 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
         return null;
     }
 
-    @Nonnull
-    public WebBrowser getFirstBrowser(@Nonnull BrowserFamily family) {
+    
+    public WebBrowser getFirstBrowser(BrowserFamily family) {
         WebBrowser result = getFirstBrowserOrNull(family);
         if (result == null) {
             throw new IllegalStateException("Must be at least one browser per family");
@@ -466,7 +465,7 @@ public class WebBrowserManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    public boolean isActive(@Nonnull WebBrowser browser) {
+    public boolean isActive(WebBrowser browser) {
         return !(browser instanceof ConfigurableWebBrowser) || ((ConfigurableWebBrowser) browser).isActive();
     }
 

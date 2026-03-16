@@ -22,8 +22,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An interface for fast indentation calculation as an alternative to formatter-based logic. Used in editor actions like Enter handling.
@@ -60,9 +59,9 @@ public interface LineIndentProvider {
      */
     @Nullable
     String getLineIndent(
-        @Nonnull Project project,
-        @Nonnull Document document,
-        @Nonnull SemanticEditorPositionFactory factory,
+        Project project,
+        Document document,
+        SemanticEditorPositionFactory factory,
         Language language,
         int offset
     );

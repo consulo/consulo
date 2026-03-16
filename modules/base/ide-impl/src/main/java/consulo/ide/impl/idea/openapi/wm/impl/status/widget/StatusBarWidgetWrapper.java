@@ -13,8 +13,7 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +21,8 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public interface StatusBarWidgetWrapper {
-    @Nonnull
-    static JComponent wrap(@Nonnull StatusBarWidget widget, @Nonnull StatusBarWidget.WidgetPresentation presentation) {
+    
+    static JComponent wrap(StatusBarWidget widget, StatusBarWidget.WidgetPresentation presentation) {
         return switch (presentation) {
             case StatusBarWidget.IconPresentation iconPresentation -> new StatusBarWidgetWrapper.Icon(widget, iconPresentation);
             case StatusBarWidget.TextPresentation textPresentation -> new StatusBarWidgetWrapper.Text(widget, textPresentation);
@@ -34,13 +33,13 @@ public interface StatusBarWidgetWrapper {
         };
     }
 
-    @Nonnull
+    
     StatusBarWidget.WidgetPresentation getPresentation();
 
     @RequiredUIAccess
     void beforeUpdate();
 
-    static void setWidgetTooltip(JComponent widgetComponent, @Nonnull LocalizeValue toolTipText, @Nullable String shortcutText) {
+    static void setWidgetTooltip(JComponent widgetComponent, LocalizeValue toolTipText, @Nullable String shortcutText) {
         HelpTooltipImpl.dispose(widgetComponent);
 
         if (toolTipText.isNotEmpty()) {
@@ -59,7 +58,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.MultipleTextValuesPresentation myPresentation;
 
-        public MultipleTextValues(StatusBarWidget widget, @Nonnull StatusBarWidget.MultipleTextValuesPresentation presentation) {
+        public MultipleTextValues(StatusBarWidget widget, StatusBarWidget.MultipleTextValuesPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
             setVisible(StringUtil.isNotEmpty(myPresentation.getSelectedValue()));
@@ -69,7 +68,7 @@ public interface StatusBarWidgetWrapper {
                 private final PopupState<JBPopup> myPopupState = PopupState.forPopup();
 
                 @Override
-                public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+                public boolean onClick(MouseEvent e, int clickCount) {
                     if (myPopupState.isRecentlyHidden()) {
                         return false; // do not show new popup
                     }
@@ -98,7 +97,7 @@ public interface StatusBarWidgetWrapper {
             setWidgetTooltip(this, myPresentation.getTooltipText(), myPresentation.getShortcutText());
         }
 
-        @Nonnull
+        
         @Override
         public StatusBarWidget.WidgetPresentation getPresentation() {
             return myPresentation;
@@ -109,7 +108,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.TextPresentation myPresentation;
 
-        public Text(StatusBarWidget widget, @Nonnull StatusBarWidget.TextPresentation presentation) {
+        public Text(StatusBarWidget widget, StatusBarWidget.TextPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
             setTextAlignment(presentation.getAlignment());
@@ -121,7 +120,7 @@ public interface StatusBarWidgetWrapper {
             }
         }
 
-        @Nonnull
+        
         @Override
         public StatusBarWidget.WidgetPresentation getPresentation() {
             return myPresentation;
@@ -143,7 +142,7 @@ public interface StatusBarWidgetWrapper {
         private final StatusBarWidget myWidget;
         private final StatusBarWidget.IconPresentation myPresentation;
 
-        public Icon(StatusBarWidget widget, @Nonnull StatusBarWidget.IconPresentation presentation) {
+        public Icon(StatusBarWidget widget, StatusBarWidget.IconPresentation presentation) {
             myWidget = widget;
             myPresentation = presentation;
             setTextAlignment(Component.CENTER_ALIGNMENT);
@@ -156,7 +155,7 @@ public interface StatusBarWidgetWrapper {
             }
         }
 
-        @Nonnull
+        
         @Override
         public StatusBarWidget.WidgetPresentation getPresentation() {
             return myPresentation;
@@ -176,12 +175,12 @@ public interface StatusBarWidgetWrapper {
     class StatusBarWidgetClickListener extends ClickListener {
         private final Consumer<? super MouseEvent> myClickConsumer;
 
-        public StatusBarWidgetClickListener(@Nonnull Consumer<? super MouseEvent> consumer) {
+        public StatusBarWidgetClickListener(Consumer<? super MouseEvent> consumer) {
             myClickConsumer = consumer;
         }
 
         @Override
-        public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
+        public boolean onClick(MouseEvent e, int clickCount) {
             if (!e.isPopupTrigger() && MouseEvent.BUTTON1 == e.getButton()) {
                 myClickConsumer.accept(e);
             }

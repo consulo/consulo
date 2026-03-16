@@ -2,7 +2,6 @@
 package consulo.ui.ex.awt.tree;
 
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -19,7 +18,7 @@ public enum ExpandOnDoubleClick {
   /**
    * Changes the default behaviour for the given tree.
    */
-  public void installOn(@Nonnull JTree tree) {
+  public void installOn(JTree tree) {
     tree.putClientProperty(KEY, this);
   }
 
@@ -27,8 +26,8 @@ public enum ExpandOnDoubleClick {
    * @return the preferable behaviour for the given tree.
    * @see EditSourceOnDoubleClickHandler#isExpandPreferable
    */
-  @Nonnull
-  public static ExpandOnDoubleClick getBehavior(@Nonnull JTree tree) {
+  
+  public static ExpandOnDoubleClick getBehavior(JTree tree) {
     Object property = tree.getClientProperty(KEY);
     if (property instanceof ExpandOnDoubleClick) return (ExpandOnDoubleClick)property;
     //String option = Registry.get(KEY).getSelectedOption();

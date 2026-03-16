@@ -29,8 +29,7 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -68,7 +67,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         return myProject;
     }
 
-    @Nonnull
+    
     @Override
     public Map<VirtualFile, T> getMappings() {
         synchronized (myMappings) {
@@ -141,7 +140,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
 
     @Nullable
-    protected T getNotInHierarchy(@Nullable VirtualFile file, @Nonnull Map<VirtualFile, T> mappings) {
+    protected T getNotInHierarchy(@Nullable VirtualFile file, Map<VirtualFile, T> mappings) {
         if (getProject() == null || file == null || file.getFileSystem() instanceof NonPhysicalFileSystem || !getProject().isDefault() && ProjectFileIndex.getInstance(
             getProject()).isInContent(file)) {
             return mappings.get(null);
@@ -149,7 +148,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         return null;
     }
 
-    private static <T> T getMappingForHierarchy(@Nullable VirtualFile file, @Nonnull Map<VirtualFile, T> mappings) {
+    private static <T> T getMappingForHierarchy(@Nullable VirtualFile file, Map<VirtualFile, T> mappings) {
         for (VirtualFile cur = file; cur != null; cur = cur.getParent()) {
             T t = mappings.get(cur);
             if (t != null) {
@@ -175,7 +174,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
 
     @Override
-    public void setMappings(@Nonnull Map<VirtualFile, T> mappings) {
+    public void setMappings(Map<VirtualFile, T> mappings) {
         Collection<VirtualFile> oldFiles;
         synchronized (myMappings) {
             myDeferredMappings = null;
@@ -229,7 +228,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         }
     }
 
-    @Nonnull
+    
     public abstract List<T> getAvailableValues();
 
     @Nullable
@@ -272,7 +271,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
 
     @SuppressWarnings("DeprecatedIsStillUsed")
-    @Nonnull
+    
     @Deprecated
     // better to not override
     protected String getValueAttribute() {
@@ -280,7 +279,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
     }
 
     @Override
-    public void loadState(@Nonnull Element element) {
+    public void loadState(Element element) {
         // read not under lock
         List<PerFileMappingState> list = PerFileMappingState.read(element, getValueAttribute());
         synchronized (myMappings) {
@@ -358,7 +357,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
                 WeakReference<MyUndoableAction> lastAction;
 
                 @Override
-                public void before(@Nonnull List<? extends VFileEvent> events) {
+                public void before(List<? extends VFileEvent> events) {
                     if (CommandProcessor.getInstance().isUndoTransparentActionInProgress()) {
                         return;
                     }
@@ -377,7 +376,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
                 }
 
                 @Override
-                public void after(@Nonnull List<? extends VFileEvent> events) {
+                public void after(List<? extends VFileEvent> events) {
                     MyUndoableAction action = SoftReference.dereference(lastAction);
                     lastAction = null;
                     if (action != null) {
@@ -386,7 +385,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
                 }
 
                 @Nullable
-                MyUndoableAction createUndoableAction(@Nonnull List<? extends VFileEvent> events) {
+                MyUndoableAction createUndoableAction(List<? extends VFileEvent> events) {
                     // NOTE: VFS handles renames, so the code for RENAME events is deleted (see history)
                     List<? extends VFileEvent> eventsFiltered = JBIterable.from(events).filter(VFileDeleteEvent.class).toList();
                     if (eventsFiltered.isEmpty()) {

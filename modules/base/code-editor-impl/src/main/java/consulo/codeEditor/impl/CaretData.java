@@ -5,7 +5,6 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
 import consulo.util.collection.ArrayUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public final class CaretData {
 
     private static final CaretData NULL_CARET = new CaretData(-1, -1, ArrayUtil.EMPTY_INT_ARRAY, ArrayUtil.EMPTY_INT_ARRAY);
 
-    public static @Nonnull CaretData createCaretData(@Nonnull Document document, @Nonnull CaretModel caretModel) {
+    public static CaretData createCaretData(Document document, CaretModel caretModel) {
         int caretRowStart = caretModel.getVisualLineStart();
         int caretRowEnd = caretModel.getVisualLineEnd();
         if (caretRowEnd == document.getTextLength() &&
@@ -33,7 +32,7 @@ public final class CaretData {
         return new CaretData(caretRowStart, caretRowEnd, selectionStarts, selectionEnds);
     }
 
-    public static @Nonnull CaretData getNullCaret() {
+    public static CaretData getNullCaret() {
         return NULL_CARET;
     }
 

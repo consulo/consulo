@@ -17,7 +17,6 @@ package consulo.component.extension;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 
@@ -31,10 +30,10 @@ import java.util.Set;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface SPIClassLoaderExtension {
-    @Nonnull
+    
     Class<?> getTargetClass();
 
-    @Nonnull
+    
     default Set<String> getSupportedFileExtensions() {
         return Set.of();
     }

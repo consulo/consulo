@@ -19,8 +19,7 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.util.TextWithMnemonic;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,8 +41,8 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     public ActionGroupPopup(
         String title,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         boolean showNumbers,
         boolean useAlphaAsNumbers,
         boolean showDisabledActions,
@@ -53,7 +52,7 @@ public class ActionGroupPopup extends ListPopupImpl {
         Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace,
         boolean forceHeavyPopup,
-        @Nonnull BiPredicate<Object, Boolean> customFilter
+        BiPredicate<Object, Boolean> customFilter
     ) {
         this(
             title,
@@ -76,8 +75,8 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     public ActionGroupPopup(
         String title,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         boolean showNumbers,
         boolean useAlphaAsNumbers,
         boolean showDisabledActions,
@@ -88,7 +87,7 @@ public class ActionGroupPopup extends ListPopupImpl {
         @Nullable String actionPlace,
         boolean autoSelection,
         boolean forceHeavyPopup,
-        @Nonnull BiPredicate<Object, Boolean> customFilter
+        BiPredicate<Object, Boolean> customFilter
     ) {
         this(
             title,
@@ -111,8 +110,8 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     public ActionGroupPopup(
         String title,
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         boolean showNumbers,
         boolean useAlphaAsNumbers,
         boolean showDisabledActions,
@@ -121,10 +120,10 @@ public class ActionGroupPopup extends ListPopupImpl {
         int maxRowCount,
         Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace,
-        @Nonnull PresentationFactory presentationFactory,
+        PresentationFactory presentationFactory,
         boolean autoSelection,
         boolean forceHeavyPopup,
-        @Nonnull BiPredicate<Object, Boolean> customFilter
+        BiPredicate<Object, Boolean> customFilter
     ) {
         this(
             null,
@@ -172,13 +171,13 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     public ActionGroupPopup(
         @Nullable WizardPopup aParent,
-        @Nonnull ListPopupStep step,
+        ListPopupStep step,
         @Nullable Runnable disposeCallback,
-        @Nonnull DataContext dataContext,
+        DataContext dataContext,
         @Nullable String actionPlace,
         int maxRowCount,
         boolean forceHeavyPopup,
-        @Nonnull BiPredicate<Object, Boolean> customFilter
+        BiPredicate<Object, Boolean> customFilter
     ) {
         super(dataContext.getData(Project.KEY), aParent, step, null, forceHeavyPopup);
         setMaxRowCount(maxRowCount);
@@ -204,8 +203,7 @@ public class ActionGroupPopup extends ListPopupImpl {
         });
     }
 
-    @Nonnull
-    private Presentation updateActionItem(@Nonnull ActionPopupItem actionItem) {
+    private Presentation updateActionItem(ActionPopupItem actionItem) {
         AnAction action = actionItem.getAction();
         Presentation presentation = new Presentation();
         presentation.setDescriptionValue(action.getTemplatePresentation().getDescriptionValue());
@@ -225,13 +223,13 @@ public class ActionGroupPopup extends ListPopupImpl {
 
     private static ListPopupStep<ActionPopupItem> createStep(
         String title,
-        @Nonnull DataContext dataContext,
+        DataContext dataContext,
         boolean showNumbers,
         boolean showDisabledActions,
         boolean honorActionMnemonics,
         Predicate<? super AnAction> preselectActionCondition,
         @Nullable String actionPlace,
-        @Nonnull PresentationFactory presentationFactory,
+        PresentationFactory presentationFactory,
         boolean autoSelection
     ) {
         Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
@@ -260,10 +258,9 @@ public class ActionGroupPopup extends ListPopupImpl {
      * @deprecated Use {@link ActionPopupStep#createActionItems(ActionGroup, DataContext, boolean, boolean, boolean, boolean, String, PresentationFactory)} instead.
      */
     @Deprecated
-    @Nonnull
     public static CompletableFuture<java.util.List<ActionPopupItem>> getActionItems(
-        @Nonnull ActionGroup actionGroup,
-        @Nonnull DataContext dataContext,
+        ActionGroup actionGroup,
+        DataContext dataContext,
         boolean showNumbers,
         boolean useAlphaAsNumbers,
         boolean showDisabledActions,
@@ -338,8 +335,8 @@ public class ActionGroupPopup extends ListPopupImpl {
     @Nullable
     private static <T> T getActionByClass(
         @Nullable Object value,
-        @Nonnull ActionPopupStep actionPopupStep,
-        @Nonnull Class<T> actionClass
+        ActionPopupStep actionPopupStep,
+        Class<T> actionClass
     ) {
         ActionPopupItem item = value instanceof ActionPopupItem ? (ActionPopupItem) value : null;
         if (item == null) {

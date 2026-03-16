@@ -24,8 +24,7 @@ import consulo.language.psi.PsiManager;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,12 +53,12 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     myProviders = providers;
   }
 
-  @Nonnull
+  
   public List<DocumentationProvider> getAllProviders() {
     return ContainerUtil.concat(getProviders(), Application.get().getExtensionList(UnrestrictedDocumentationProvider.class));
   }
 
-  @Nonnull
+  
   public List<DocumentationProvider> getProviders() {
     return myProviders;
   }
@@ -99,9 +98,9 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
     return false;
   }
 
-  @Nonnull
+  
   @Override
-  public String fetchExternalDocumentation(@Nonnull String link, @Nullable PsiElement element) {
+  public String fetchExternalDocumentation(String link, @Nullable PsiElement element) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof ExternalDocumentationHandler && ((ExternalDocumentationHandler)provider).canFetchDocumentationLink(link)) {
         return ((ExternalDocumentationHandler)provider).fetchExternalDocumentation(link, element);
@@ -132,7 +131,7 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
   }
 
   @Override
-  public String generateHoverDoc(@Nonnull PsiElement element, @Nullable PsiElement originalElement) {
+  public String generateHoverDoc(PsiElement element, @Nullable PsiElement originalElement) {
     for (DocumentationProvider provider : getAllProviders()) {
       String result = provider.generateHoverDoc(element, originalElement);
       if (result != null) {
@@ -240,8 +239,8 @@ public class CompositeDocumentationProvider extends DocumentationProviderEx impl
 
   @Nullable
   @Override
-  public PsiElement getCustomDocumentationElement(@Nonnull Editor editor,
-                                                  @Nonnull PsiFile file,
+  public PsiElement getCustomDocumentationElement(Editor editor,
+                                                  PsiFile file,
                                                   @Nullable PsiElement contextElement) {
     for (DocumentationProvider provider : getAllProviders()) {
       if (provider instanceof DocumentationProviderEx) {

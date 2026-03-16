@@ -22,7 +22,6 @@ import consulo.language.template.TemplateLanguage;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -67,24 +66,24 @@ public class IStubFileElementType<T extends PsiFileStub> extends StubFileElement
     return new DefaultStubBuilder();
   }
 
-  @Nonnull
+  
   @Override
   public String getExternalId() {
     return DEFAULT_EXTERNAL_ID;
   }
 
   @Override
-  public void serialize(@Nonnull T stub, @Nonnull StubOutputStream dataStream) throws IOException {
+  public void serialize(T stub, StubOutputStream dataStream) throws IOException {
   }
 
-  @Nonnull
+  
   @Override
-  public T deserialize(@Nonnull StubInputStream dataStream, StubElement parentStub) throws IOException {
+  public T deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
     return (T)new PsiFileStubImpl(null);
   }
 
   @Override
-  public void indexStub(@Nonnull PsiFileStub stub, @Nonnull IndexSink sink) {
+  public void indexStub(PsiFileStub stub, IndexSink sink) {
   }
 
   public boolean shouldBuildStubFor(VirtualFile file) {

@@ -17,7 +17,6 @@ package consulo.ui.ex.action;
 
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -26,11 +25,11 @@ public interface ActionButtonComponent {
 
   int getHeight();
 
-  @Nonnull
+  
   default JComponent getComponent() {
     return (JComponent)TargetAWT.to(getUIComponent());
   }
 
-  @Nonnull
+  
   Component getUIComponent();
 }

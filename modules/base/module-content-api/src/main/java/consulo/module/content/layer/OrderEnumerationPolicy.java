@@ -20,7 +20,6 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.module.Module;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -29,9 +28,9 @@ import jakarta.annotation.Nonnull;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface OrderEnumerationPolicy {
 
-  boolean isApplicable(@Nonnull Project project);
+  boolean isApplicable(Project project);
 
-  boolean isApplicable(@Nonnull Module module);
+  boolean isApplicable(Module module);
 
   default boolean shouldAddRuntimeDependenciesToTestCompilationClasspath() {
     return false;

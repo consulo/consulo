@@ -54,8 +54,7 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.MagicConstant;
@@ -132,14 +131,13 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     private boolean isDuplicatesCacheUpdating = false;
 
     @Inject
-    public RecentProjectsManagerImpl(@Nonnull Application application) {
+    public RecentProjectsManagerImpl(Application application) {
         MessageBusConnection connection = application.getMessageBus().connect();
         connection.subscribe(AppLifecycleListener.class, new MyAppLifecycleListener());
         connection.subscribe(ProjectManagerListener.class, new MyProjectListener());
     }
 
     @Override
-    @Nonnull
     public State getState() {
         synchronized (myStateLock) {
             myState.validateRecentProjects();
@@ -267,8 +265,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
     }
 
-    @Nonnull
-    protected String getProjectDisplayName(@Nonnull Project project) {
+    protected String getProjectDisplayName(Project project) {
         return "";
     }
 
@@ -294,7 +291,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return new HashSet<>();
     }
 
-    @Nonnull
     @Override
     public AnAction[] getRecentProjectsActions(@MagicConstant(flags = {RECENT_ACTIONS_USE_GROUPS_WELCOME_MENU, RECENT_ACTIONS_USE_GROUPS_CONTEXT_MENU}) int flags) {
         Set<String> paths;
@@ -380,7 +376,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         return consulo.util.collection.ContainerUtil.toArray(actions, AnAction.ARRAY_FACTORY);
     }
 
-    @Nonnull
     private AnAction createOpenAction(String path, Set<String> duplicates, Collection<String> openedPaths) {
         String projectName = getProjectName(path);
         String displayName;
@@ -443,7 +438,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     }
 
     @Nullable
-    private String getProjectPath(@Nonnull Project project) {
+    private String getProjectPath(Project project) {
         VirtualFile baseDirVFile = project.getBaseDir();
         return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
     }
@@ -456,7 +451,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     private class MyProjectListener implements ProjectManagerListener {
         @Override
         @RequiredReadAction
-        public void projectOpened(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
+        public void projectOpened(final Project project, UIAccess uiAccess) {
             if (project.isWelcomeProject()) {
                 return;
             }
@@ -477,7 +472,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
 
         @Override
-        public void projectClosing(@Nonnull Project project) {
+        public void projectClosing(Project project) {
             if (project.isWelcomeProject()) {
                 return;
             }
@@ -499,7 +494,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
         @Override
         @RequiredReadAction
-        public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+        public void projectClosed(Project project, UIAccess uiAccess) {
             if (project.isWelcomeProject()) {
                 return;
             }
@@ -515,14 +510,13 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
     }
 
-    @Nonnull
-    public String getProjectName(@Nonnull String path) {
+    public String getProjectName(String path) {
         return ProjectStoreImpl.readProjectName(new File(path));
     }
 
     @Override
     @RequiredReadAction
-    public void updateProjectModuleExtensions(@Nonnull Project project) {
+    public void updateProjectModuleExtensions(Project project) {
         String projectPath = getProjectPath(project);
         if (projectPath == null) {
             return;
@@ -578,7 +572,6 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         }
     }
 
-    @Nonnull
     @Override
     public List<ProjectGroup> getGroups() {
         return Collections.unmodifiableList(myState.groups);
@@ -617,7 +610,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         public Set<String> extensions = new HashSet<>();
 
         @RequiredReadAction
-        public static RecentProjectMetaInfo create(@Nonnull Project project) {
+        public static RecentProjectMetaInfo create(Project project) {
             RecentProjectMetaInfo info = new RecentProjectMetaInfo();
 
             ModuleManager moduleManager = ModuleManager.getInstance(project);

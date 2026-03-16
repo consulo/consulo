@@ -19,8 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.ComponentManager;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -28,21 +27,21 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface NewErrorTreeViewPanelFactory {
-  @Nonnull
+  
   default NewErrorTreeViewPanel createPanel(ComponentManager project, String helpId) {
     return createPanel(project, helpId, true);
   }
 
-  @Nonnull
+  
   default NewErrorTreeViewPanel createPanel(ComponentManager project, String helpId, boolean createExitAction) {
     return createPanel(project, helpId, createExitAction, true);
   }
 
-  @Nonnull
+  
   default NewErrorTreeViewPanel createPanel(ComponentManager project, String helpId, boolean createExitAction, boolean createToolbar) {
     return createPanel(project, helpId, createExitAction, createToolbar, null);
   }
 
-  @Nonnull
+  
   NewErrorTreeViewPanel createPanel(ComponentManager project, String helpId, boolean createExitAction, boolean createToolbar, @Nullable Runnable rerunAction);
 }

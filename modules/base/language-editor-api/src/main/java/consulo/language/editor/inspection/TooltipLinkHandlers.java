@@ -18,14 +18,13 @@ package consulo.language.editor.inspection;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
  */
 public class TooltipLinkHandlers {
-  public static boolean handleLink(@Nonnull String ref, @Nonnull Editor editor) {
+  public static boolean handleLink(String ref, Editor editor) {
     for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
         String refSuffix = ref.substring(handler.getPrefix().length());
@@ -36,7 +35,7 @@ public class TooltipLinkHandlers {
   }
 
   @Nullable
-  public static String getDescription(@Nonnull String ref, @Nonnull Editor editor) {
+  public static String getDescription(String ref, Editor editor) {
     for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
         String refSuffix = ref.substring(handler.getPrefix().length());
@@ -46,8 +45,8 @@ public class TooltipLinkHandlers {
     return null;
   }
 
-  @Nonnull
-  public static String getDescriptionTitle(@Nonnull String ref, @Nonnull Editor editor) {
+  
+  public static String getDescriptionTitle(String ref, Editor editor) {
     for (TooltipLinkHandler handler : Application.get().getExtensionList(TooltipLinkHandler.class)) {
       if (ref.startsWith(handler.getPrefix())) {
         String refSuffix = ref.substring(handler.getPrefix().length());

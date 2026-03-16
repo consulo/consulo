@@ -16,7 +16,6 @@
 package consulo.ui.ex.action;
 
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,7 +33,7 @@ public class MoreActionGroup extends DefaultActionGroup {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation presentation = e.getPresentation();
 
         presentation.setIcon(myHorizontal ? PlatformIconGroup.actionsMorehorizontal() : PlatformIconGroup.actionsMorevertical());

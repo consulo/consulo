@@ -19,9 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -35,12 +34,12 @@ public interface XAttachHostProvider<T extends XAttachHost> {
   /**
    * @return the group to which all connections provided by this provider belong
    */
-  @Nonnull
+  
   XAttachPresentationGroup<? extends XAttachHost> getPresentationGroup();
 
   /**
    * @return a list of connections of this type, which is characterized by the provider
    */
-  @Nonnull
+  
   List<T> getAvailableHosts(@Nullable Project project);
 }

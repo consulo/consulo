@@ -12,8 +12,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionGroupExpander;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.action.*;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.Timer;
 import java.util.*;
@@ -27,21 +26,21 @@ final class TBPanelActionGroup extends TBPanel {
     private static final Logger LOG = Logger.getInstance(TBPanelActionGroup.class);
     private static final boolean IS_AUTOCLOSE_DISABLED = Boolean.getBoolean("touchbar.autoclose.disable");
 
-    private final @Nonnull ActionGroup myActionGroup;
-    private final @Nonnull PresentationFactory myFactory = new BasePresentationFactory();
+    private final ActionGroup myActionGroup;
+    private final PresentationFactory myFactory = new BasePresentationFactory();
     private final @Nullable Collection<AnAction> myAutoCloseActions;
     private final @Nullable Customizer myCustomizer;
 
-    private final @Nonnull Updater myUpdateTimer = new Updater();
+    private final Updater myUpdateTimer = new Updater();
     private CompletableFuture<List<? extends AnAction>> myLastUpdate;
     private long myLastUpdateNs = 0;
     private long myStartShowNs = 0;
 
-    private final @Nonnull Map<AnAction, TBItemAnActionButton> myActionButtonPool = new HashMap<>();
-    private final @Nonnull Map<Integer, TBItemGroup> myGroupPool = new HashMap<>();
+    private final Map<AnAction, TBItemAnActionButton> myActionButtonPool = new HashMap<>();
+    private final Map<Integer, TBItemGroup> myGroupPool = new HashMap<>();
 
-    TBPanelActionGroup(@Nonnull String touchbarName,
-                       @Nonnull ActionGroup actionGroup,
+    TBPanelActionGroup(String touchbarName,
+                       ActionGroup actionGroup,
                        @Nullable Customizer customizations) {
         super(touchbarName, customizations != null ? customizations.getCrossEscInfo() : null, false);
         myActionGroup = actionGroup;
@@ -187,7 +186,7 @@ final class TBPanelActionGroup extends TBPanel {
     private static final String ourLargeSeparatorText = "type.large";
     private static final String ourFlexibleSeparatorText = "type.flexible";
 
-    private void _rebuildButtons(@Nonnull List<? extends AnAction> actions) {
+    private void _rebuildButtons(List<? extends AnAction> actions) {
         //
         // clear all items
         //
@@ -282,7 +281,7 @@ final class TBPanelActionGroup extends TBPanel {
             }
 
             // 3. update button with use of presentation
-            @Nonnull Presentation presentation = myFactory.getPresentation(action);
+            Presentation presentation = myFactory.getPresentation(action);
 
             butt.myIsVisible = presentation.isVisible();
 
@@ -323,7 +322,7 @@ final class TBPanelActionGroup extends TBPanel {
 
     // returns AnAction that caused auto-close
     // (some of AutoClose-actions was disabled or hidden)
-    private AnAction _checkAutoClose(@Nonnull List<? extends AnAction> actions) {
+    private AnAction _checkAutoClose(List<? extends AnAction> actions) {
         if (IS_AUTOCLOSE_DISABLED
             || myAutoCloseActions == null
             || myAutoCloseActions.isEmpty()
@@ -339,7 +338,7 @@ final class TBPanelActionGroup extends TBPanel {
             }
 
             // 2. if autoclose action is disabled (or hidden) then we must close this touchbar
-            @Nonnull Presentation presentation = myFactory.getPresentation(autocloseAction);
+            Presentation presentation = myFactory.getPresentation(autocloseAction);
             if (!presentation.isVisible() || !presentation.isEnabled()) {
                 return autocloseAction;
             }
@@ -369,8 +368,8 @@ final class TBPanelActionGroup extends TBPanel {
     }
 
     @Override
-    @Nonnull
-    TBItemAnActionButton createActionButton(@Nonnull AnAction action) {
+    
+    TBItemAnActionButton createActionButton(AnAction action) {
         TBItemAnActionButton cached = myActionButtonPool.remove(action);
         if (cached != null) {
             cached.setAnAction(action);
@@ -488,7 +487,7 @@ final class TBPanelActionGroup extends TBPanel {
     }
 
     // check that all autoClose actions are presented in actionGroup
-    private static void validateAutoCloseActions(@Nonnull ActionGroup actionGroup, @Nonnull Collection<AnAction> autoCloseActions) {
+    private static void validateAutoCloseActions(ActionGroup actionGroup, Collection<AnAction> autoCloseActions) {
         Collection<AnAction> actionsFromGroup = new HashSet<>();
         Helpers.collectLeafActions(actionGroup, actionsFromGroup);
         if (!actionsFromGroup.containsAll(autoCloseActions)) {

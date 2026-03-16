@@ -24,8 +24,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -82,21 +81,21 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     myState.DIFF_DEFAULT = value;
   }
 
-  @Nonnull
+  
   public String getDiffExePath() {
     return StringUtil.notNullize(myState.DIFF_EXE_PATH);
   }
 
-  public void setDiffExePath(@Nonnull String path) {
+  public void setDiffExePath(String path) {
     myState.DIFF_EXE_PATH = path;
   }
 
-  @Nonnull
+  
   public String getDiffParameters() {
     return myState.DIFF_PARAMETERS;
   }
 
-  public void setDiffParameters(@Nonnull String path) {
+  public void setDiffParameters(String path) {
     myState.DIFF_PARAMETERS = path;
   }
 
@@ -109,21 +108,21 @@ public class ExternalDiffSettings implements PersistentStateComponent<ExternalDi
     myState.MERGE_ENABLED = value;
   }
 
-  @Nonnull
+  
   public String getMergeExePath() {
     return StringUtil.notNullize(myState.MERGE_EXE_PATH);
   }
 
-  public void setMergeExePath(@Nonnull String path) {
+  public void setMergeExePath(String path) {
     myState.MERGE_EXE_PATH = path;
   }
 
-  @Nonnull
+  
   public String getMergeParameters() {
     return StringUtil.notNullize(myState.MERGE_PARAMETERS);
   }
 
-  public void setMergeParameters(@Nonnull String path) {
+  public void setMergeParameters(String path) {
     myState.MERGE_PARAMETERS = path;
   }
 

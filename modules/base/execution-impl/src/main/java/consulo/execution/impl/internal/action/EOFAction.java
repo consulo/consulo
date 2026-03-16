@@ -25,7 +25,6 @@ import consulo.process.ProcessHandler;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -47,7 +46,7 @@ public class EOFAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
         ProcessHandler handler = descriptor != null ? descriptor.getProcessHandler() : null;
         e.getPresentation().setEnabledAndVisible(
@@ -57,7 +56,7 @@ public class EOFAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
         ProcessHandler activeProcessHandler = descriptor != null ? descriptor.getProcessHandler() : null;
         if (activeProcessHandler == null || activeProcessHandler.isProcessTerminated()) {

@@ -25,8 +25,7 @@ import consulo.language.editor.internal.SharedLayoutProcessors;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -60,7 +59,7 @@ public class SharedLayoutProcessorsImpl implements SharedLayoutProcessors {
     }
 
     @Override
-    public LayoutCodeProcessor createCodeCleanupProcessor(@Nonnull AnalysisScope scope, @Nullable Runnable postRunnable) {
+    public LayoutCodeProcessor createCodeCleanupProcessor(AnalysisScope scope, @Nullable Runnable postRunnable) {
         return () -> {
             GlobalInspectionContextBase.codeCleanup(myProject, scope, postRunnable);
         };

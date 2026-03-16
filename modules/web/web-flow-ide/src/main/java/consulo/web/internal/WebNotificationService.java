@@ -19,8 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationService;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -31,6 +30,6 @@ import jakarta.inject.Singleton;
 @ServiceImpl
 public class WebNotificationService implements NotificationService {
     @Override
-    public void notify(@Nonnull Notification notification, @Nullable Project project) {
+    public void notify(Notification notification, @Nullable Project project) {
     }
 }

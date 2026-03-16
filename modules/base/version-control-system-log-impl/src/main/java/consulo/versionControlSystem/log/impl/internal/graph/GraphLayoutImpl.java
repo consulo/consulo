@@ -18,20 +18,19 @@ package consulo.versionControlSystem.log.impl.internal.graph;
 import consulo.versionControlSystem.log.graph.GraphLayout;
 import consulo.versionControlSystem.log.impl.internal.util.CompressedIntList;
 import consulo.versionControlSystem.log.impl.internal.util.IntList;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class GraphLayoutImpl implements GraphLayout {
-  @Nonnull
+  
   private final IntList myLayoutIndex;
 
-  @Nonnull
+  
   private final List<Integer> myHeadNodeIndex;
-  @Nonnull
+  
   private final int[] myStartLayoutIndexForHead;
 
-  public GraphLayoutImpl(@Nonnull int[] layoutIndex, @Nonnull List<Integer> headNodeIndex, @Nonnull int[] startLayoutIndexForHead) {
+  public GraphLayoutImpl(int[] layoutIndex, List<Integer> headNodeIndex, int[] startLayoutIndexForHead) {
     myLayoutIndex = CompressedIntList.newInstance(layoutIndex);
     myHeadNodeIndex = headNodeIndex;
     myStartLayoutIndexForHead = startLayoutIndexForHead;
@@ -51,7 +50,7 @@ public class GraphLayoutImpl implements GraphLayout {
     return myHeadNodeIndex.get(getHeadOrder(layoutIndex));
   }
 
-  @Nonnull
+  
   public List<Integer> getHeadNodeIndex() {
     return myHeadNodeIndex;
   }

@@ -16,7 +16,7 @@
 package consulo.awt.hacking;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import sun.awt.AWTAccessor;
 
 import java.awt.*;

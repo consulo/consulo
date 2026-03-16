@@ -23,7 +23,6 @@ import consulo.document.Document;
 import consulo.document.internal.DocumentFactory;
 import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -39,9 +38,9 @@ public class DesktopEditorFactoryImpl extends EditorFactoryImpl {
         super(application, documentFactory);
     }
 
-    @Nonnull
+    
     @Override
-    protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+    protected RealEditor createEditorImpl(Document document, boolean isViewer, Project project, EditorKind kind) {
         return new DesktopEditorImpl(document, isViewer, project, kind);
     }
 }

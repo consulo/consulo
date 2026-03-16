@@ -6,7 +6,7 @@ package consulo.language.editor.internal;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.ui.Component;
 import consulo.ui.RadioButton;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final record ModelScopeItemView(RadioButton button,
                                        @Nullable Component additionalComponent,

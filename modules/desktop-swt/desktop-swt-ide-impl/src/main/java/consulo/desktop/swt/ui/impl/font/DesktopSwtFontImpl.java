@@ -17,7 +17,6 @@ package consulo.desktop.swt.ui.impl.font;
 
 import consulo.ui.font.Font;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -34,19 +33,19 @@ public class DesktopSwtFontImpl implements Font {
     myFontStyle = fontStyle;
   }
 
-  @Nonnull
+  
   @Override
   public String getName() {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public String getFontName() {
     return null;
   }
 
-  @Nonnull
+  
   @Override
   public String getFamily() {
     return null;
@@ -62,7 +61,7 @@ public class DesktopSwtFontImpl implements Font {
     return 0;
   }
 
-  @Nonnull
+  
   @Override
   public Font buildNewFont(int newSize) {
     return new DesktopSwtFontImpl(myFontName, newSize, myFontStyle);

@@ -22,8 +22,7 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.execution.internal.RunConfigurationStartHistory;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Set;
@@ -49,13 +48,13 @@ public class RunConfigurationStartHistoryImpl implements RunConfigurationStartHi
         XmlSerializerUtil.copyBean(state, myState);
     }
 
-    @Nonnull
+    
     @Override
     public Set<String> getPinned() {
         return myState.getPinned();
     }
 
-    @Nonnull
+    
     @Override
     public Set<String> getHistory() {
         return myState.getHistory();

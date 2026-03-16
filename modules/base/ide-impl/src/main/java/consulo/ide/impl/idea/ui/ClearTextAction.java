@@ -23,7 +23,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.text.JTextComponent;
 
@@ -39,14 +38,14 @@ public class ClearTextAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent) {
             textComponent.setText("");
         }
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabled(
             e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTextComponent textComponent
                 && textComponent.getText().length() > 0

@@ -26,14 +26,13 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.ActionCallback;
-import jakarta.annotation.Nonnull;
 
 public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     protected HierarchyNodeDescriptor myBaseDescriptor;
     private HierarchyNodeDescriptor myRoot;
     protected final Project myProject;
 
-    protected HierarchyTreeStructure(@Nonnull Project project, HierarchyNodeDescriptor baseDescriptor) {
+    protected HierarchyTreeStructure(Project project, HierarchyNodeDescriptor baseDescriptor) {
         myBaseDescriptor = baseDescriptor;
         myProject = project;
         myRoot = baseDescriptor;
@@ -43,7 +42,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
         return myBaseDescriptor;
     }
 
-    protected final void setBaseElement(@Nonnull HierarchyNodeDescriptor baseElement) {
+    protected final void setBaseElement(HierarchyNodeDescriptor baseElement) {
         myBaseDescriptor = baseElement;
         myRoot = baseElement;
         while (myRoot.getParentDescriptor() != null) {
@@ -52,8 +51,8 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    @Nonnull
-    public final NodeDescriptor createDescriptor(@Nonnull Object element, NodeDescriptor parentDescriptor) {
+    
+    public final NodeDescriptor createDescriptor(Object element, NodeDescriptor parentDescriptor) {
         if (element instanceof HierarchyNodeDescriptor descriptor) {
             return descriptor;
         }
@@ -64,7 +63,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public final boolean isToBuildChildrenInBackground(@Nonnull Object element) {
+    public final boolean isToBuildChildrenInBackground(Object element) {
         if (element instanceof HierarchyNodeDescriptor descriptor) {
             Object[] cachedChildren = descriptor.getCachedChildren();
             if (cachedChildren == null && descriptor.isValid()) {
@@ -74,9 +73,9 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
         return false;
     }
 
-    @Nonnull
+    
     @Override
-    public final Object[] getChildElements(@Nonnull Object element) {
+    public final Object[] getChildElements(Object element) {
         if (element instanceof HierarchyNodeDescriptor descriptor) {
             Object[] cachedChildren = descriptor.getCachedChildren();
             if (cachedChildren == null) {
@@ -93,7 +92,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
     }
 
     @Override
-    public final Object getParentElement(@Nonnull Object element) {
+    public final Object getParentElement(Object element) {
         if (element instanceof HierarchyNodeDescriptor descriptor) {
             return descriptor.getParentDescriptor();
         }
@@ -111,7 +110,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
         return PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments();
     }
 
-    @Nonnull
+    
     @Override
     public ActionCallback asyncCommit() {
         return PsiDocumentManager.asyncCommitDocuments(myProject);
@@ -119,7 +118,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
 
     protected abstract Object[] buildChildren(HierarchyNodeDescriptor descriptor);
 
-    @Nonnull
+    
     @Override
     public final Object getRootElement() {
         return myRoot;

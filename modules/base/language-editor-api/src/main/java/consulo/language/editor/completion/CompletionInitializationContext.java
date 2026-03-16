@@ -8,7 +8,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ObjectUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author peter
@@ -24,7 +23,7 @@ public class CompletionInitializationContext {
   public static final String DUMMY_IDENTIFIER = CompletionUtilCore.DUMMY_IDENTIFIER;
   public static final String DUMMY_IDENTIFIER_TRIMMED = CompletionUtilCore.DUMMY_IDENTIFIER_TRIMMED;
   private final Editor myEditor;
-  @Nonnull
+  
   private final Caret myCaret;
   private final PsiFile myFile;
   private final CompletionType myCompletionType;
@@ -33,7 +32,7 @@ public class CompletionInitializationContext {
   private String myDummyIdentifier = DUMMY_IDENTIFIER;
   private final Language myPositionLanguage;
 
-  public CompletionInitializationContext(Editor editor, @Nonnull Caret caret, Language language, PsiFile file, CompletionType completionType, int invocationCount) {
+  public CompletionInitializationContext(Editor editor, Caret caret, Language language, PsiFile file, CompletionType completionType, int invocationCount) {
     myEditor = editor;
     myCaret = caret;
     myPositionLanguage = language;
@@ -64,11 +63,11 @@ public class CompletionInitializationContext {
     return idEnd;
   }
 
-  public void setDummyIdentifier(@Nonnull String dummyIdentifier) {
+  public void setDummyIdentifier(String dummyIdentifier) {
     myDummyIdentifier = dummyIdentifier;
   }
 
-  @Nonnull
+  
   public Language getPositionLanguage() {
     return ObjectUtil.assertNotNull(myPositionLanguage);
   }
@@ -77,32 +76,32 @@ public class CompletionInitializationContext {
     return myDummyIdentifier;
   }
 
-  @Nonnull
+  
   public Editor getEditor() {
     return myEditor;
   }
 
-  @Nonnull
+  
   public Caret getCaret() {
     return myCaret;
   }
 
-  @Nonnull
+  
   public CompletionType getCompletionType() {
     return myCompletionType;
   }
 
-  @Nonnull
+  
   public Project getProject() {
     return myFile.getProject();
   }
 
-  @Nonnull
+  
   public PsiFile getFile() {
     return myFile;
   }
 
-  @Nonnull
+  
   public OffsetMap getOffsetMap() {
     return myOffsetMap;
   }

@@ -36,8 +36,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NonNls;
 
@@ -73,33 +72,33 @@ public class Messages {
 
     private static final Logger LOG = Logger.getInstance(Messages.class);
 
-    @Nonnull
+   
     public static Image getErrorIcon() {
         return UIUtil.getErrorIcon();
     }
 
-    @Nonnull
+   
     public static Image getInformationIcon() {
         return UIUtil.getInformationIcon();
     }
 
-    @Nonnull
+   
     public static Image getWarningIcon() {
         return UIUtil.getWarningIcon();
     }
 
-    @Nonnull
+   
     public static Image getQuestionIcon() {
         return UIUtil.getQuestionIcon();
     }
 
-    @Nonnull
+   
     public static Runnable createMessageDialogRemover(@Nullable Project project) {
         consulo.ui.Window projectWindow = project == null ? null : WindowManager.getInstance().suggestParentWindow(project);
         return () -> UIUtil.invokeLaterIfNeeded(() -> makeCurrentMessageDialogGoAway(projectWindow != null ? TargetAWT.to(projectWindow).getOwnedWindows() : Window.getWindows()));
     }
 
-    private static void makeCurrentMessageDialogGoAway(@Nonnull Window[] checkWindows) {
+    private static void makeCurrentMessageDialogGoAway(Window[] checkWindows) {
         for (Window w : checkWindows) {
             JDialog dialog = w instanceof JDialog ? (JDialog) w : null;
             if (dialog == null || !dialog.isModal()) {
@@ -117,7 +116,7 @@ public class Messages {
      *
      * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
      */
-    public static int showDialog(@Nullable Project project, String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
+    public static int showDialog(@Nullable Project project, String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon) {
         return showDialog(project, message, title, options, defaultOptionIndex, icon, null);
     }
 
@@ -129,11 +128,11 @@ public class Messages {
     @RequiredUIAccess
     public static int showDialog(@Nullable Project project,
                                  String message,
-                                 @Nonnull String title,
-                                 @Nonnull String[] options,
+                                 String title,
+                                 String[] options,
                                  int defaultOptionIndex,
                                  @Nullable Image icon,
-                                 @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+                                 DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         return showIdeaMessageDialog(project, message, title, options, defaultOptionIndex, icon, doNotAskOption);
     }
 
@@ -144,10 +143,10 @@ public class Messages {
     public static int showIdeaMessageDialog(@Nullable Project project,
                                             String message,
                                             String title,
-                                            @Nonnull String[] options,
+                                            String[] options,
                                             int defaultOptionIndex,
                                             @Nullable Image icon,
-                                            @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+                                            DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         MessageDialog dialog = new MessageDialog(project, message, title, options, defaultOptionIndex, -1, icon, doNotAskOption, false);
         dialog.show();
         return dialog.getExitCode();
@@ -159,9 +158,9 @@ public class Messages {
     @RequiredUIAccess
     public static int showDialog(Project project,
                                  String message,
-                                 @Nonnull String title,
+                                 String title,
                                  @Nullable String moreInfo,
-                                 @Nonnull String[] options,
+                                 String[] options,
                                  int defaultOptionIndex,
                                  int focusedOptionIndex,
                                  Image icon) {
@@ -179,7 +178,7 @@ public class Messages {
      * @return number of button pressed: from 0 up to options.length-1 inclusive, or -1 for Cancel
      */
     @RequiredUIAccess
-    public static int showDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
+    public static int showDialog(Component parent, String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon) {
         MessageDialog dialog = new MessageDialog(parent, message, title, options, defaultOptionIndex, defaultOptionIndex, icon, false);
         dialog.show();
         return dialog.getExitCode();
@@ -194,12 +193,12 @@ public class Messages {
      */
     @RequiredUIAccess
     public static int showDialog(String message,
-                                 @Nonnull String title,
-                                 @Nonnull String[] options,
+                                 String title,
+                                 String[] options,
                                  int defaultOptionIndex,
                                  int focusedOptionIndex,
                                  @Nullable Image icon,
-                                 @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+                                 DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         MessageDialog dialog = new MessageDialog(message, title, options, defaultOptionIndex, focusedOptionIndex, icon, doNotAskOption);
         dialog.show();
         return dialog.getExitCode();
@@ -213,7 +212,7 @@ public class Messages {
      * @see #showDialog(Component, String, String, String[], int, Image)
      */
     @RequiredUIAccess
-    public static int showDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon, @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+    public static int showDialog(String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon, DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         return showDialog(message, title, options, defaultOptionIndex, defaultOptionIndex, icon, doNotAskOption);
     }
 
@@ -225,7 +224,7 @@ public class Messages {
      * @see #showDialog(Component, String, String, String[], int, Image)
      */
     @RequiredUIAccess
-    public static int showDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
+    public static int showDialog(String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon) {
         return showDialog(message, title, options, defaultOptionIndex, icon, null);
     }
 
@@ -233,12 +232,12 @@ public class Messages {
      * @see DialogWrapper#DialogWrapper(Project, boolean)
      */
     @RequiredUIAccess
-    public static void showMessageDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Image icon) {
+    public static void showMessageDialog(@Nullable Project project, String message, String title, @Nullable Image icon) {
         showDialog(project, message, title, new String[]{OK_BUTTON}, 0, icon);
     }
 
     @RequiredUIAccess
-    public static void showMessageDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nullable Image icon) {
+    public static void showMessageDialog(Component parent, String message, String title, @Nullable Image icon) {
         showDialog(parent, message, title, new String[]{OK_BUTTON}, 0, icon);
     }
 
@@ -249,7 +248,7 @@ public class Messages {
      * @see #showMessageDialog(Component, String, String, Image)
      */
     @RequiredUIAccess
-    public static void showMessageDialog(String message, @Nonnull String title, @Nullable Image icon) {
+    public static void showMessageDialog(String message, String title, @Nullable Image icon) {
         showDialog(message, title, new String[]{OK_BUTTON}, 0, icon);
     }
 
@@ -262,7 +261,7 @@ public class Messages {
      */
     @YesNoResult
     @RequiredUIAccess
-    public static int showYesNoDialog(@Nullable Project project, String message, @Nonnull String title, @Nonnull String yesText, @Nonnull String noText, @Nullable Image icon) {
+    public static int showYesNoDialog(@Nullable Project project, String message, String title, String yesText, String noText, @Nullable Image icon) {
         int result = showDialog(project, message, title, new String[]{yesText, noText}, 0, icon) == 0 ? YES : NO;
         //noinspection ConstantConditions
         LOG.assertTrue(result == YES || result == NO, result);
@@ -274,7 +273,7 @@ public class Messages {
      */
     @YesNoResult
     @RequiredUIAccess
-    public static int showYesNoDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Image icon) {
+    public static int showYesNoDialog(@Nullable Project project, String message, String title, @Nullable Image icon) {
         int result = showYesNoDialog(project, message, title, YES_BUTTON, NO_BUTTON, icon);
 
         LOG.assertTrue(result == YES || result == NO, result);
@@ -287,7 +286,7 @@ public class Messages {
      */
     @YesNoResult
     @RequiredUIAccess
-    public static int showYesNoDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nullable Image icon) {
+    public static int showYesNoDialog(Component parent, String message, String title, @Nullable Image icon) {
         int result = showDialog(parent, message, title, new String[]{YES_BUTTON, NO_BUTTON}, 0, icon) == 0 ? YES : NO;
         //noinspection ConstantConditions
         LOG.assertTrue(result == YES || result == NO, result);
@@ -304,11 +303,11 @@ public class Messages {
     @YesNoResult
     @RequiredUIAccess
     public static int showYesNoDialog(String message,
-                                      @Nonnull String title,
-                                      @Nonnull String yesText,
-                                      @Nonnull String noText,
+                                      String title,
+                                      String yesText,
+                                      String noText,
                                       @Nullable Image icon,
-                                      @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+                                      DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         int result = showDialog(message, title, new String[]{yesText, noText}, 0, icon, doNotAskOption) == 0 ? YES : NO;
         //noinspection ConstantConditions
         LOG.assertTrue(result == YES || result == NO, result);
@@ -337,7 +336,7 @@ public class Messages {
      */
     @YesNoResult
     @RequiredUIAccess
-    public static int showYesNoDialog(String message, @Nonnull String title, @Nullable Image icon) {
+    public static int showYesNoDialog(String message, String title, @Nullable Image icon) {
         int result = showYesNoDialog(message, title, YES_BUTTON, NO_BUTTON, icon);
         LOG.assertTrue(result == YES || result == NO, result);
         return result;
@@ -354,9 +353,9 @@ public class Messages {
     @RequiredUIAccess
     public static int showOkCancelDialog(Project project,
                                          String message,
-                                         @Nonnull String title,
-                                         @Nonnull String okText,
-                                         @Nonnull String cancelText,
+                                         String title,
+                                         String okText,
+                                         String cancelText,
                                          Image icon,
                                          DialogWrapper.DoNotAskOption doNotAskOption) {
         return showDialog(project, message, title, new String[]{okText, cancelText}, 0, icon, doNotAskOption) == 0 ? OK : CANCEL;
@@ -367,7 +366,7 @@ public class Messages {
      */
     @OkCancelResult
     @RequiredUIAccess
-    public static int showOkCancelDialog(Project project, String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Image icon) {
+    public static int showOkCancelDialog(Project project, String message, String title, String okText, String cancelText, Image icon) {
         return showOkCancelDialog(project, message, title, okText, cancelText, icon, null);
     }
 
@@ -385,7 +384,7 @@ public class Messages {
      */
     @OkCancelResult
     @RequiredUIAccess
-    public static int showOkCancelDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Image icon) {
+    public static int showOkCancelDialog(Component parent, String message, String title, String okText, String cancelText, Image icon) {
         return showDialog(parent, message, title, new String[]{okText, cancelText}, 0, icon) == 0 ? OK : CANCEL;
     }
 
@@ -394,7 +393,7 @@ public class Messages {
      */
     @OkCancelResult
     @RequiredUIAccess
-    public static int showOkCancelDialog(@Nonnull Component parent, String message, String title, Image icon) {
+    public static int showOkCancelDialog(Component parent, String message, String title, Image icon) {
         return showOkCancelDialog(parent, message, title, OK_BUTTON, CANCEL_BUTTON, icon);
     }
 
@@ -433,7 +432,7 @@ public class Messages {
      */
     @OkCancelResult
     @RequiredUIAccess
-    public static int showOkCancelDialog(String message, @Nonnull String title, @Nonnull String okText, @Nonnull String cancelText, Image icon, @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+    public static int showOkCancelDialog(String message, String title, String okText, String cancelText, Image icon, DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         return showDialog(message, title, new String[]{okText, cancelText}, 0, icon, doNotAskOption) == 0 ? OK : CANCEL;
     }
 
@@ -451,7 +450,7 @@ public class Messages {
     @RequiredUIAccess
     public static int showCheckboxMessageDialog(String message,
                                                 String title,
-                                                @Nonnull String[] options,
+                                                String[] options,
                                                 String checkboxText,
                                                 boolean checked,
                                                 int defaultOptionIndex,
@@ -469,17 +468,17 @@ public class Messages {
     }
 
     @RequiredUIAccess
-    public static void showErrorDialog(@Nullable Project project, String message, @Nonnull String title) {
+    public static void showErrorDialog(@Nullable Project project, String message, String title) {
         showDialog(project, message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
     }
 
     @RequiredUIAccess
-    public static void showErrorDialog(@Nonnull Component component, String message, @Nonnull String title) {
+    public static void showErrorDialog(Component component, String message, String title) {
         showDialog(component, message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
     }
 
     @RequiredUIAccess
-    public static void showErrorDialog(@Nonnull Component component, String message) {
+    public static void showErrorDialog(Component component, String message) {
         showDialog(component, message, CommonBundle.getErrorTitle(), new String[]{OK_BUTTON}, 0, getErrorIcon());
     }
 
@@ -490,17 +489,17 @@ public class Messages {
      * @see #showErrorDialog(Component, String, String)
      */
     @RequiredUIAccess
-    public static void showErrorDialog(String message, @Nonnull String title) {
+    public static void showErrorDialog(String message, String title) {
         showDialog(message, title, new String[]{OK_BUTTON}, 0, getErrorIcon());
     }
 
     @RequiredUIAccess
-    public static void showWarningDialog(@Nullable Project project, String message, @Nonnull String title) {
+    public static void showWarningDialog(@Nullable Project project, String message, String title) {
         showDialog(project, message, title, new String[]{OK_BUTTON}, 0, getWarningIcon());
     }
 
     @RequiredUIAccess
-    public static void showWarningDialog(@Nonnull Component component, String message, @Nonnull String title) {
+    public static void showWarningDialog(Component component, String message, String title) {
         showDialog(component, message, title, new String[]{OK_BUTTON}, 0, getWarningIcon());
     }
 
@@ -511,7 +510,7 @@ public class Messages {
      * @see #showWarningDialog(Component, String, String)
      */
     @RequiredUIAccess
-    public static void showWarningDialog(String message, @Nonnull String title) {
+    public static void showWarningDialog(String message, String title) {
         showDialog(message, title, new String[]{OK_BUTTON}, 0, getWarningIcon());
     }
 
@@ -524,7 +523,7 @@ public class Messages {
      */
     @YesNoCancelResult
     @RequiredUIAccess
-    public static int showYesNoCancelDialog(Project project, String message, @Nonnull String title, @Nonnull String yes, @Nonnull String no, @Nonnull String cancel, @Nullable Image icon) {
+    public static int showYesNoCancelDialog(Project project, String message, String title, String yes, String no, String cancel, @Nullable Image icon) {
         int buttonNumber = showDialog(project, message, title, new String[]{yes, no, cancel}, 0, icon);
         return buttonNumber == 0 ? YES : buttonNumber == 1 ? NO : CANCEL;
     }
@@ -543,7 +542,7 @@ public class Messages {
      */
     @YesNoCancelResult
     @RequiredUIAccess
-    public static int showYesNoCancelDialog(@Nonnull Component parent, String message, @Nonnull String title, @Nonnull String yes, @Nonnull String no, @Nonnull String cancel, Image icon) {
+    public static int showYesNoCancelDialog(Component parent, String message, String title, String yes, String no, String cancel, Image icon) {
         int buttonNumber = showDialog(parent, message, title, new String[]{yes, no, cancel}, 0, icon);
         return buttonNumber == 0 ? YES : buttonNumber == 1 ? NO : CANCEL;
     }
@@ -553,7 +552,7 @@ public class Messages {
      */
     @YesNoCancelResult
     @RequiredUIAccess
-    public static int showYesNoCancelDialog(@Nonnull Component parent, String message, String title, Image icon) {
+    public static int showYesNoCancelDialog(Component parent, String message, String title, Image icon) {
         return showYesNoCancelDialog(parent, message, title, YES_BUTTON, NO_BUTTON, CANCEL_BUTTON, icon);
     }
 
@@ -567,12 +566,12 @@ public class Messages {
     @YesNoCancelResult
     @RequiredUIAccess
     public static int showYesNoCancelDialog(String message,
-                                            @Nonnull String title,
-                                            @Nonnull String yes,
-                                            @Nonnull String no,
-                                            @Nonnull String cancel,
+                                            String title,
+                                            String yes,
+                                            String no,
+                                            String cancel,
                                             Image icon,
-                                            @Nullable DialogWrapper.DoNotAskOption doNotAskOption) {
+                                            DialogWrapper.@Nullable DoNotAskOption doNotAskOption) {
         int buttonNumber = showDialog(message, title, new String[]{yes, no, cancel}, 0, icon, doNotAskOption);
         return buttonNumber == 0 ? YES : buttonNumber == 1 ? NO : CANCEL;
     }
@@ -646,7 +645,7 @@ public class Messages {
      */
     @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(@Nonnull Component parent, String message, String title, @Nullable Image icon) {
+    public static String showInputDialog(Component parent, String message, String title, @Nullable Image icon) {
         return showInputDialog(parent, message, title, icon, null, null);
     }
 
@@ -699,7 +698,7 @@ public class Messages {
 
     @Nullable
     @RequiredUIAccess
-    public static String showInputDialog(@Nonnull Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
+    public static String showInputDialog(Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
         InputDialog dialog = new InputDialog(parent, message, title, icon, initialValue, validator);
         dialog.show();
         return dialog.getInputString();
@@ -727,7 +726,7 @@ public class Messages {
         return dialog.getInputString();
     }
 
-    @Nonnull
+   
     @RequiredUIAccess
     public static Pair<String, Boolean> showInputDialogWithCheckBox(String message,
                                                                     String title,
@@ -770,7 +769,7 @@ public class Messages {
      */
     @Deprecated
     @RequiredUIAccess
-    public static int showChooseDialog(@Nonnull Component parent, String message, String title, String[] values, String initialValue, Image icon) {
+    public static int showChooseDialog(Component parent, String message, String title, String[] values, String initialValue, Image icon) {
         ChooseDialog dialog = new ChooseDialog(parent, message, title, icon, values, initialValue);
         dialog.show();
         return dialog.getSelectedIndex();
@@ -792,7 +791,7 @@ public class Messages {
      * Shows dialog with given message and title, information icon {@link #getInformationImage ()} and OK button
      */
     @RequiredUIAccess
-    public static void showInfoMessage(Component component, String message, @Nonnull String title) {
+    public static void showInfoMessage(Component component, String message, String title) {
         showMessageDialog(component, message, title, getInformationIcon());
     }
 
@@ -800,7 +799,7 @@ public class Messages {
      * Shows dialog with given message and title, information icon {@link #getInformationImage ()} and OK button
      */
     @RequiredUIAccess
-    public static void showInfoMessage(@Nullable Project project, String message, @Nonnull String title) {
+    public static void showInfoMessage(@Nullable Project project, String message, String title) {
         showMessageDialog(project, message, title, getInformationIcon());
     }
 
@@ -813,7 +812,7 @@ public class Messages {
      * @see #showInputDialog(Component, String, String, Image, String, InputValidator)
      */
     @RequiredUIAccess
-    public static void showInfoMessage(String message, @Nonnull String title) {
+    public static void showInfoMessage(String message, String title) {
         showMessageDialog(message, title, getInformationIcon());
     }
 
@@ -863,7 +862,7 @@ public class Messages {
         @Nullable
         private final String myInfoText;
 
-        public MoreInfoMessageDialog(Project project, String message, String title, @Nullable String moreInfo, @Nonnull String[] options, int defaultOptionIndex, int focusedOptionIndex, Image icon) {
+        public MoreInfoMessageDialog(Project project, String message, String title, @Nullable String moreInfo, String[] options, int defaultOptionIndex, int focusedOptionIndex, Image icon) {
             super(project);
             myInfoText = moreInfo;
             _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, null);
@@ -906,14 +905,14 @@ public class Messages {
         protected Image myImage;
         private MyBorderLayout myLayout;
 
-        public MessageDialog(@Nullable Project project, String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon, boolean canBeParent) {
+        public MessageDialog(@Nullable Project project, String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon, boolean canBeParent) {
             this(project, message, title, options, defaultOptionIndex, -1, icon, canBeParent);
         }
 
         public MessageDialog(@Nullable Project project,
                              String message,
                              String title,
-                             @Nonnull String[] options,
+                             String[] options,
                              int defaultOptionIndex,
                              int focusedOptionIndex,
                              @Nullable Image icon,
@@ -926,7 +925,7 @@ public class Messages {
         public MessageDialog(@Nullable Project project,
                              String message,
                              String title,
-                             @Nonnull String[] options,
+                             String[] options,
                              int defaultOptionIndex,
                              int focusedOptionIndex,
                              @Nullable Image icon,
@@ -935,18 +934,18 @@ public class Messages {
             _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, null);
         }
 
-        public MessageDialog(@Nonnull Component parent, String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
+        public MessageDialog(Component parent, String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon) {
             this(parent, message, title, options, defaultOptionIndex, icon, false);
         }
 
-        public MessageDialog(@Nonnull Component parent, String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon, boolean canBeParent) {
+        public MessageDialog(Component parent, String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon, boolean canBeParent) {
             this(parent, message, title, options, defaultOptionIndex, -1, icon, canBeParent);
         }
 
-        public MessageDialog(@Nonnull Component parent,
+        public MessageDialog(Component parent,
                              String message,
                              String title,
-                             @Nonnull String[] options,
+                             String[] options,
                              int defaultOptionIndex,
                              int focusedOptionIndex,
                              @Nullable Image icon,
@@ -955,21 +954,21 @@ public class Messages {
             _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, null);
         }
 
-        public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon) {
+        public MessageDialog(String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon) {
             this(message, title, options, defaultOptionIndex, icon, false);
         }
 
-        public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, @Nullable Image icon, boolean canBeParent) {
+        public MessageDialog(String message, String title, String[] options, int defaultOptionIndex, @Nullable Image icon, boolean canBeParent) {
             super(canBeParent);
             _init(title, message, options, defaultOptionIndex, -1, icon, null);
         }
 
-        public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, int focusedOptionIndex, @Nullable Image icon, @Nullable DoNotAskOption doNotAskOption) {
+        public MessageDialog(String message, String title, String[] options, int defaultOptionIndex, int focusedOptionIndex, @Nullable Image icon, @Nullable DoNotAskOption doNotAskOption) {
             super(false);
             _init(title, message, options, defaultOptionIndex, focusedOptionIndex, icon, doNotAskOption);
         }
 
-        public MessageDialog(String message, String title, @Nonnull String[] options, int defaultOptionIndex, Image icon, DoNotAskOption doNotAskOption) {
+        public MessageDialog(String message, String title, String[] options, int defaultOptionIndex, Image icon, DoNotAskOption doNotAskOption) {
             this(message, title, options, defaultOptionIndex, -1, icon, doNotAskOption);
         }
 
@@ -981,7 +980,7 @@ public class Messages {
             super(project, false);
         }
 
-        protected void _init(String title, String message, @Nonnull String[] options, int defaultOptionIndex, int focusedOptionIndex, @Nullable Image icon, @Nullable DoNotAskOption doNotAskOption) {
+        protected void _init(String title, String message, String[] options, int defaultOptionIndex, int focusedOptionIndex, @Nullable Image icon, @Nullable DoNotAskOption doNotAskOption) {
             setTitle(title);
             if (false) {
                 setUndecorated(true);
@@ -996,7 +995,7 @@ public class Messages {
             init();
         }
 
-        @Nonnull
+       
         @Override
         protected Action[] createActions() {
             Action[] actions = new Action[myOptions.length];
@@ -1189,7 +1188,7 @@ public class Messages {
         configureMessagePaneUi(messageComponent, "<html></html>");
     }
 
-    @Nonnull
+   
     public static JTextPane configureMessagePaneUi(JTextPane messageComponent, String message) {
         JTextPane pane = configureMessagePaneUi(messageComponent, message, null);
         if (UIUtil.HTML_MIME.equals(pane.getContentType())) {
@@ -1198,8 +1197,8 @@ public class Messages {
         return pane;
     }
 
-    @Nonnull
-    public static JTextPane configureMessagePaneUi(@Nonnull JTextPane messageComponent, @Nullable String message, @Nullable UIUtil.FontSize fontSize) {
+   
+    public static JTextPane configureMessagePaneUi(JTextPane messageComponent, @Nullable String message, UIUtil.@Nullable FontSize fontSize) {
         UIUtil.FontSize fixedFontSize = fontSize == null ? UIUtil.FontSize.NORMAL : fontSize;
         messageComponent.setFont(UIUtil.getLabelFont(fixedFontSize));
         if (BasicHTML.isHTMLString(message)) {
@@ -1235,7 +1234,7 @@ public class Messages {
 
         public TwoStepConfirmationDialog(String message,
                                          String title,
-                                         @Nonnull String[] options,
+                                         String[] options,
                                          String checkboxText,
                                          boolean checked,
                                          int defaultOptionIndexed,
@@ -1310,7 +1309,7 @@ public class Messages {
                            @Nullable Image icon,
                            @Nullable String initialValue,
                            @Nullable InputValidator validator,
-                           @Nonnull String[] options,
+                           String[] options,
                            int defaultOption) {
             super(project, message, title, options, defaultOption, icon, true);
             myValidator = validator;
@@ -1321,7 +1320,7 @@ public class Messages {
             this(project, message, title, icon, initialValue, validator, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0);
         }
 
-        public InputDialog(@Nonnull Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
+        public InputDialog(Component parent, String message, String title, @Nullable Image icon, @Nullable String initialValue, @Nullable InputValidator validator) {
             super(parent, message, title, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0, icon, true);
             myValidator = validator;
             myField.setText(initialValue);
@@ -1333,7 +1332,7 @@ public class Messages {
             myField.setText(initialValue);
         }
 
-        @Nonnull
+       
         @Override
         protected Action[] createActions() {
             final Action[] actions = new Action[myOptions.length];
@@ -1452,7 +1451,7 @@ public class Messages {
                                     @Nullable Image icon,
                                     @Nullable String initialValue,
                                     @Nullable InputValidator validator,
-                                    @Nonnull String[] options,
+                                    String[] options,
                                     int defaultOption) {
             super(project, message, title, icon, initialValue, validator, options, defaultOption);
         }
@@ -1525,7 +1524,7 @@ public class Messages {
         private ComboBox myComboBox;
         private InputValidator myValidator;
 
-        public ChooseDialog(Project project, String message, String title, @Nullable Image icon, String[] values, String initialValue, @Nonnull String[] options, int defaultOption) {
+        public ChooseDialog(Project project, String message, String title, @Nullable Image icon, String[] values, String initialValue, String[] options, int defaultOption) {
             super(project, message, title, options, defaultOption, icon, true);
             myComboBox.setModel(new DefaultComboBoxModel(values));
             myComboBox.setSelectedItem(initialValue);
@@ -1535,7 +1534,7 @@ public class Messages {
             this(project, message, title, icon, values, initialValue, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0);
         }
 
-        public ChooseDialog(@Nonnull Component parent, String message, String title, @Nullable Image icon, String[] values, String initialValue) {
+        public ChooseDialog(Component parent, String message, String title, @Nullable Image icon, String[] values, String initialValue) {
             super(parent, message, title, new String[]{OK_BUTTON, CANCEL_BUTTON}, 0, icon);
             myComboBox.setModel(new DefaultComboBoxModel(values));
             myComboBox.setSelectedItem(initialValue);
@@ -1547,7 +1546,7 @@ public class Messages {
             myComboBox.setSelectedItem(initialValue);
         }
 
-        @Nonnull
+       
         @Override
         protected Action[] createActions() {
             final Action[] actions = new Action[myOptions.length];

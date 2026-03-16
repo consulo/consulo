@@ -44,8 +44,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.style.StyleManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -93,7 +92,7 @@ public class FrameWrapper implements Disposable, UiDataProvider {
         myDimensionKey = dimensionKey;
     }
 
-    public void setProject(@Nonnull Project project) {
+    public void setProject(Project project) {
         myProject = project;
 
         ProjectManager.getInstance().addProjectManagerListener(project, myProjectListener);
@@ -263,12 +262,12 @@ public class FrameWrapper implements Disposable, UiDataProvider {
         return getPeerFactory().createJDialog(this, parent);
     }
 
-    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(@Nonnull Class<? extends E> extensioClass) {
+    public <E extends IdeRootPaneNorthExtension> E getNorthExtension(Class<? extends E> extensioClass) {
         return null;
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         sink.set(Project.KEY, myProject);
     }
 
@@ -315,7 +314,7 @@ public class FrameWrapper implements Disposable, UiDataProvider {
         myTitle = title;
     }
 
-    public void addDisposable(@Nonnull Disposable disposable) {
+    public void addDisposable(Disposable disposable) {
         Disposer.register(this, disposable);
     }
 
@@ -334,7 +333,6 @@ public class FrameWrapper implements Disposable, UiDataProvider {
         getFrame().setSize(size);
     }
 
-    @Nonnull
     private static WindowStateService getWindowStateService(@Nullable Project project) {
         return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
     }

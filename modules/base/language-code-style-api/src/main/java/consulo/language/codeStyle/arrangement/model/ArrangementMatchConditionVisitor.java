@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.model;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -23,7 +22,7 @@ import jakarta.annotation.Nonnull;
  */
 public interface ArrangementMatchConditionVisitor {
 
-  void visit(@Nonnull ArrangementAtomMatchCondition condition);
+  void visit(ArrangementAtomMatchCondition condition);
   
-  void visit(@Nonnull ArrangementCompositeMatchCondition condition);
+  void visit(ArrangementCompositeMatchCondition condition);
 }

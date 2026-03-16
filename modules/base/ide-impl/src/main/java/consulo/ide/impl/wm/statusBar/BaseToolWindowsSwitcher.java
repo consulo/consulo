@@ -29,7 +29,6 @@ import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -94,7 +93,7 @@ public class BaseToolWindowsSwitcher implements Disposable, UISettingsListener {
     return myStatusBar != null && myStatusBar.getProject() != null;
   }
 
-  @Nonnull
+  
   public Component getUIComponent() {
     return myLabel;
   }

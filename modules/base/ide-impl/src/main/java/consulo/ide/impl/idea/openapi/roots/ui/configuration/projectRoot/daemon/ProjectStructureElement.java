@@ -2,8 +2,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ public abstract class ProjectStructureElement {
 
   public abstract String getId();
 
-  public abstract void check(@Nonnull Project project, ProjectStructureProblemsHolder problemsHolder);
+  public abstract void check(Project project, ProjectStructureProblemsHolder problemsHolder);
 
   public abstract List<ProjectStructureElementUsage> getUsagesInElement();
 
@@ -31,7 +30,7 @@ public abstract class ProjectStructureElement {
   }
 
   @Nullable
-  public ProjectStructureProblemDescription createUnusedElementWarning(@Nonnull Project project) {
+  public ProjectStructureProblemDescription createUnusedElementWarning(Project project) {
     return null;
   }
 

@@ -16,8 +16,7 @@
 package consulo.language.editor.impl.internal.inlay;
 
 import consulo.language.editor.inlay.HintInfo;
-import jakarta.annotation.Nonnull;
 
 public interface HintInfoFilter {
-    boolean showHint(@Nonnull HintInfo info);
+    boolean showHint(HintInfo info);
 }

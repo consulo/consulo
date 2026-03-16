@@ -17,7 +17,6 @@ package consulo.component.internal.inject;
 
 import consulo.annotation.component.*;
 import consulo.component.bind.InjectingBinding;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +54,7 @@ public class InjectingBindingLoader extends BindingLoader<InjectingBinding> {
     myActions.clear();
   }
 
-  @Nonnull
+  
   @Override
   protected Class<InjectingBinding> getBindingClass() {
     return InjectingBinding.class;
@@ -66,8 +65,8 @@ public class InjectingBindingLoader extends BindingLoader<InjectingBinding> {
     getHolder(binding.getComponentAnnotationClass(), binding.getComponentScope()).addBinding(binding);
   }
 
-  @Nonnull
-  public InjectingBindingHolder getHolder(@Nonnull Class<?> annotationClass, @Nonnull ComponentScope componentScope) {
+  
+  public InjectingBindingHolder getHolder(Class<?> annotationClass, ComponentScope componentScope) {
     if (annotationClass == ServiceAPI.class) {
       return myServices.computeIfAbsent(componentScope, c -> new InjectingBindingHolder(myLocked));
     }

@@ -15,8 +15,6 @@
  */
 package consulo.ui.color;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 2018-06-17
@@ -29,8 +27,6 @@ final class WithAlphaColorValue implements ColorValue {
     myColorValue = colorValue;
     myAlpha = alpha;
   }
-
-  @Nonnull
   @Override
   public RGBColor toRGB() {
     RGBColor rgbColor = myColorValue.toRGB();

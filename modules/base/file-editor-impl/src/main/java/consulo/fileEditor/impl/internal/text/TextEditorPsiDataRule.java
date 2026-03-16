@@ -32,8 +32,7 @@ import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashSet;
 
@@ -55,7 +54,7 @@ import static consulo.util.collection.ContainerUtil.addIfNotNull;
 @ExtensionImpl
 public class TextEditorPsiDataRule implements UiDataRule {
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink, @Nonnull DataSnapshot snapshot) {
+    public void uiDataSnapshot(DataSink sink, DataSnapshot snapshot) {
         Editor editor = snapshot.get(Editor.KEY);
         if (editor == null || !(editor instanceof EditorEx)) {
             return;
@@ -108,7 +107,6 @@ public class TextEditorPsiDataRule implements UiDataRule {
                         }
                     }
 
-                    @Nonnull
                     @Override
                     public PsiDirectory[] getDirectories() {
                         return new PsiDirectory[]{psiDirectory};
@@ -187,8 +185,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         });
     }
 
-    @Nonnull
-    private static Editor getInjectedEditor(@Nonnull Editor editor, @Nonnull Caret caret, @Nonnull VirtualFile file) {
+    private static Editor getInjectedEditor(Editor editor, Caret caret, VirtualFile file) {
         Project project = editor.getProject();
         if (project == null || PsiDocumentManager.getInstance(project).isUncommited(editor.getDocument())) {
             return editor;
@@ -198,8 +195,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return injected != null ? injected : editor;
     }
 
-    @Nonnull
-    private static Caret getInjectedCaret(@Nonnull Editor editor, @Nonnull Caret hostCaret) {
+    private static Caret getInjectedCaret(Editor editor, Caret hostCaret) {
         if (!(editor instanceof EditorWindow) || hostCaret instanceof CaretDelegate) {
             return hostCaret;
         }
@@ -213,7 +209,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
     }
 
     @Nullable
-    private static PsiFile getPsiFile(@Nonnull Editor editor, @Nonnull VirtualFile file) {
+    private static PsiFile getPsiFile(Editor editor, VirtualFile file) {
         if (!file.isValid()) {
             return null;
         }
@@ -226,7 +222,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
     }
 
     @Nullable
-    private static PsiElement getPsiElementIn(@Nonnull Editor editor, @Nonnull Caret caret, @Nonnull VirtualFile file) {
+    private static PsiElement getPsiElementIn(Editor editor, Caret caret, VirtualFile file) {
         PsiFile psiFile = getPsiFile(editor, file);
         if (psiFile == null) {
             return null;
@@ -240,7 +236,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         }
     }
 
-    private static Language getLanguageAtCurrentPositionInEditor(@Nonnull Caret caret, @Nonnull PsiFile psiFile) {
+    private static Language getLanguageAtCurrentPositionInEditor(Caret caret, PsiFile psiFile) {
         int caretOffset = caret.getOffset();
         int mostProbablyCorrectLanguageOffset =
             caretOffset == caret.getSelectionStart() || caretOffset == caret.getSelectionEnd()
@@ -252,7 +248,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
         return PsiUtilCore.getLanguageAtOffset(psiFile, mostProbablyCorrectLanguageOffset);
     }
 
-    private static Language getLanguageAtOffset(@Nonnull PsiFile psiFile, int mostProbablyCorrectLanguageOffset, int end) {
+    private static Language getLanguageAtOffset(PsiFile psiFile, int mostProbablyCorrectLanguageOffset, int end) {
         PsiElement elt = psiFile.findElementAt(mostProbablyCorrectLanguageOffset);
         if (elt == null) {
             return psiFile.getLanguage();
@@ -267,7 +263,7 @@ public class TextEditorPsiDataRule implements UiDataRule {
     }
 
     @Nullable
-    private static Language[] computeLanguages(@Nonnull Editor editor, @Nonnull Caret caret, @Nonnull VirtualFile file) {
+    private static Language[] computeLanguages(Editor editor, Caret caret, VirtualFile file) {
         LinkedHashSet<Language> set = new LinkedHashSet<>(4);
 
         // Injected language

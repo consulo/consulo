@@ -24,8 +24,7 @@ import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.*;
@@ -49,7 +48,7 @@ public class IdeaWideProxySelector extends ProxySelector {
     }
 
     @Override
-    public List<Proxy> select(@Nonnull URI uri) {
+    public List<Proxy> select(URI uri) {
         LOG.debug("IDEA-wide proxy selector asked for " + uri.toString());
 
         String scheme = uri.getScheme();

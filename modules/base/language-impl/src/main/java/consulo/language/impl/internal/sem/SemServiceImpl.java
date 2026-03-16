@@ -38,8 +38,7 @@ import consulo.util.collection.primitive.ints.IntMaps;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -116,7 +115,7 @@ public class SemServiceImpl extends SemService {
   }
 
   @Override
-  public void performAtomicChange(@Nonnull Runnable change) {
+  public void performAtomicChange(Runnable change) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
 
     boolean oldValue = myBulkChange;
@@ -139,7 +138,7 @@ public class SemServiceImpl extends SemService {
 
   @Override
   @Nullable
-  public <T extends SemElement> List<T> getSemElements(SemKey<T> key, @Nonnull PsiElement psi) {
+  public <T extends SemElement> List<T> getSemElements(SemKey<T> key, PsiElement psi) {
     List<T> cached = _getCachedSemElements(key, true, psi);
     if (cached != null) {
       return cached;
@@ -173,7 +172,7 @@ public class SemServiceImpl extends SemService {
     }
   }
 
-  @Nonnull
+  
   private List<SemElement> createSemElements(SemKey key, PsiElement psi) {
     List<SemElement> result = null;
     Collection<Function<PsiElement, ? extends SemElement>> producers = myProducers.get(key);
@@ -197,7 +196,7 @@ public class SemServiceImpl extends SemService {
 
   @Override
   @Nullable
-  public <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @Nonnull PsiElement psi) {
+  public <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, PsiElement psi) {
     return _getCachedSemElements(key, false, psi);
   }
 
@@ -248,12 +247,12 @@ public class SemServiceImpl extends SemService {
   }
 
   @Override
-  public <T extends SemElement> void setCachedSemElement(SemKey<T> key, @Nonnull PsiElement psi, @Nullable T semElement) {
+  public <T extends SemElement> void setCachedSemElement(SemKey<T> key, PsiElement psi, @Nullable T semElement) {
     getOrCreateChunk(psi).putSemElements(key, ContainerUtil.createMaybeSingletonList(semElement));
   }
 
   @Override
-  public void clearCachedSemElements(@Nonnull PsiElement psi) {
+  public void clearCachedSemElements(PsiElement psi) {
     myCache.remove(psi);
   }
 

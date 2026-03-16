@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.util.PopupUtil;
 import consulo.util.collection.Lists;
 import consulo.versionControlSystem.distributed.push.PushTarget;
 import consulo.versionControlSystem.distributed.push.PushTargetPanel;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,14 +37,14 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
     private final JLabel myArrowLabel;
     private final JLabel myRepositoryLabel;
     private final ColoredTreeCellRenderer myTextRenderer;
-    @Nonnull
+    
     private final List<RepositoryNodeListener<T>> myListeners = Lists.newLockFreeCopyOnWriteList();
 
     public RepositoryWithBranchPanel(
-        @Nonnull Project project,
-        @Nonnull String repoName,
-        @Nonnull String sourceName,
-        @Nonnull PushTargetPanel<T> destPushTargetPanelComponent
+        Project project,
+        String repoName,
+        String sourceName,
+        PushTargetPanel<T> destPushTargetPanelComponent
     ) {
         super();
         setLayout(new BorderLayout());
@@ -62,7 +61,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
             @RequiredUIAccess
             @Override
             public void customizeCellRenderer(
-                @Nonnull JTree tree,
+                JTree tree,
                 Object value,
                 boolean selected,
                 boolean expanded,
@@ -100,7 +99,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
         add(panel, BorderLayout.CENTER);
     }
 
-    @Nonnull
+    
     public String getRepositoryName() {
         return myRepositoryLabel.getText();
     }
@@ -113,7 +112,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
         return myArrowLabel.getText();
     }
 
-    @Nonnull
+    
     public Component getTreeCellEditorComponent(
         JTree tree,
         Object value,
@@ -150,7 +149,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
         return this;
     }
 
-    public void addRepoNodeListener(@Nonnull RepositoryNodeListener<T> listener) {
+    public void addRepoNodeListener(RepositoryNodeListener<T> listener) {
         myListeners.add(listener);
         myDestPushTargetPanelComponent.addTargetEditorListener(value -> {
             for (RepositoryNodeListener listener1 : myListeners) {

@@ -4,7 +4,6 @@ import consulo.codeEditor.HighlighterIterator;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.IElementType;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * In some cases brace matching should be terminated to prevent search for a paired brace beyond some element types.
@@ -28,5 +27,5 @@ public interface BraceMatcherTerminationAspect extends PairedBraceMatcher {
    * @param iterator  The iterator at the current position to be checked.
    * @return  True if the search should be stopped or false if it should continue.
    */
-  boolean shouldStopMatch(boolean forward, @Nonnull IElementType braceType, @Nonnull HighlighterIterator iterator);
+  boolean shouldStopMatch(boolean forward, IElementType braceType, HighlighterIterator iterator);
 }

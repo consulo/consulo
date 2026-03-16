@@ -17,7 +17,6 @@ package consulo.language.ast;
 
 import consulo.language.psi.PsiElement;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -25,6 +24,6 @@ import jakarta.annotation.Nonnull;
  * @since 24.08.14
  */
 public interface IElementTypeAsPsiFactory {
-  @Nonnull
-  PsiElement createElement(@Nonnull ASTNode astNode);
+  
+  PsiElement createElement(ASTNode astNode);
 }

@@ -26,32 +26,31 @@ import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.ScalarIndexExtension;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 
 @ExtensionImpl
 public class FilenameIndexImpl extends ScalarIndexExtension<String> {
   static final ID<String, Void> NAME = FilenameIndex.NAME;
 
-  @Nonnull
+  
   @Override
   public ID<String, Void> getName() {
     return NAME;
   }
 
-  @Nonnull
+  
   @Override
   public DataIndexer<String, Void, FileContent> getIndexer() {
     return inputData -> Collections.singletonMap(inputData.getFileName(), null);
   }
 
-  @Nonnull
+  
   @Override
   public KeyDescriptor<String> getKeyDescriptor() {
     return EnumeratorStringDescriptor.INSTANCE;
   }
 
-  @Nonnull
+  
   @Override
   public FileBasedIndex.InputFilter getInputFilter() {
     return (project, file) -> true;

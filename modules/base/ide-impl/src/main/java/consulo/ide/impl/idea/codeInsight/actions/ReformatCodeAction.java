@@ -46,8 +46,7 @@ import consulo.util.lang.function.Predicates;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -176,8 +175,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     @Nullable
     @RequiredUIAccess
     private static DirectoryFormattingOptions getDirectoryFormattingOptions(
-        @Nonnull Project project,
-        @Nonnull PsiDirectory dir
+        Project project,
+        PsiDirectory dir
     ) {
         LayoutDirectoryDialog dialog = new LayoutDirectoryDialog(
             project,
@@ -198,9 +197,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     private static void reformatDirectory(
-        @Nonnull Project project,
-        @Nonnull PsiDirectory dir,
-        @Nonnull DirectoryFormattingOptions options
+        Project project,
+        PsiDirectory dir,
+        DirectoryFormattingOptions options
     ) {
         AbstractLayoutCodeProcessor processor = new ReformatCodeProcessor(
             project, dir, options.isIncludeSubdirectories(), options.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT
@@ -221,9 +220,9 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @RequiredUIAccess
     private static void reformatModule(
-        @Nonnull Project project,
+        Project project,
         @Nullable Module moduleContext,
-        @Nonnull ReformatFilesOptions selectedFlags
+        ReformatFilesOptions selectedFlags
     ) {
         boolean shouldOptimizeImports = selectedFlags.isOptimizeImports() && !DumbService.getInstance(project).isDumb();
         boolean processOnlyChangedText = selectedFlags.getTextRangeType() == TextRangeType.VCS_CHANGED_TEXT;
@@ -251,7 +250,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
     }
 
     public static void registerScopeFilter(
-        @Nonnull AbstractLayoutCodeProcessor processor,
+        AbstractLayoutCodeProcessor processor,
         @Nullable SearchScope scope
     ) {
         if (scope == null) {
@@ -261,7 +260,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         processor.addFileFilter(scope::contains);
     }
 
-    public static void registerFileMaskFilter(@Nonnull AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
+    public static void registerFileMaskFilter(AbstractLayoutCodeProcessor processor, @Nullable String fileTypeMask) {
         if (fileTypeMask == null) {
             return;
         }
@@ -293,9 +292,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
         return PsiUtilCore.toPsiFileArray(result);
     }
 
-    @Nonnull
     @Override
-    public Coroutine<?, ?> updateAsync(@Nonnull AnActionEvent e) {
+    public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return OptionalReadLock.apply(o -> {
             Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
@@ -366,7 +364,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @Nullable
     @RequiredUIAccess
-    private static ReformatFilesOptions getReformatFilesOptions(@Nonnull Project project, @Nonnull VirtualFile[] files) {
+    private static ReformatFilesOptions getReformatFilesOptions(Project project, VirtualFile[] files) {
         if (Application.get().isUnitTestMode()) {
             return myTestOptions;
         }
@@ -379,7 +377,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware {
 
     @Nullable
     @RequiredUIAccess
-    private static ReformatFilesOptions getLayoutProjectOptions(@Nonnull Project project, @Nullable Module module) {
+    private static ReformatFilesOptions getLayoutProjectOptions(Project project, @Nullable Module module) {
         if (Application.get().isUnitTestMode()) {
             return myTestOptions;
         }

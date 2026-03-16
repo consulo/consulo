@@ -20,8 +20,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.content.scope.NamedScope;
 import consulo.util.lang.ref.SimpleReference;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.function.Consumer;
  * @since 2022-09-20
  */
 public class CustomScopesProviders {
-    @Nonnull
+    
     public static List<NamedScope> getFilteredScopes(CustomScopesProvider provider) {
         List<NamedScope> result = new ArrayList<>();
         acceptFilteredScopes(provider, result::add);

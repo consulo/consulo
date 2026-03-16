@@ -23,8 +23,7 @@ import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.tree.MutableTreeNode;
 
 /**
@@ -36,13 +35,13 @@ public class RefElementNode extends InspectionTreeNode {
   protected final InspectionToolPresentation myToolPresentation;
   private final Image myIcon;
 
-  public RefElementNode(@Nonnull Object userObject, @Nonnull InspectionToolPresentation presentation) {
+  public RefElementNode(Object userObject, InspectionToolPresentation presentation) {
     super(userObject);
     myToolPresentation = presentation;
     myIcon = userObject instanceof RefEntity ? ((RefEntity)userObject).getIcon(false) : null;
   }
 
-  public RefElementNode(@Nonnull RefElement element, @Nonnull InspectionToolPresentation presentation) {
+  public RefElementNode(RefElement element, InspectionToolPresentation presentation) {
     this((Object)element, presentation);
   }
 
@@ -111,7 +110,7 @@ public class RefElementNode extends InspectionTreeNode {
     }
   }
 
-  public void setProblem(@Nonnull CommonProblemDescriptor descriptor) {
+  public void setProblem(CommonProblemDescriptor descriptor) {
     mySingleDescriptor = descriptor;
   }
 

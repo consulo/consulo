@@ -23,8 +23,7 @@ import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
@@ -34,7 +33,7 @@ import java.util.Map;
  */
 @ExtensionImpl
 public class SandColorSettingsPage implements ColorSettingsPage {
-  @Nonnull
+  
   @Override
   public ColorDescriptor[] getColorDescriptors() {
     return new ColorDescriptor[]{
@@ -42,25 +41,25 @@ public class SandColorSettingsPage implements ColorSettingsPage {
     };
   }
 
-  @Nonnull
+  
   @Override
   public SyntaxHighlighter getHighlighter() {
     return new DefaultSyntaxHighlighter();
   }
 
-  @Nonnull
+  
   @Override
   public String getDemoText() {
     return " ";
   }
 
-  @Nonnull
+  
   @Override
   public AttributesDescriptor[] getAttributeDescriptors() {
     return new AttributesDescriptor[0];
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getDisplayName() {
     return LocalizeValue.ofNullable("Sand");

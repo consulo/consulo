@@ -29,8 +29,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -64,10 +63,10 @@ public class DefaultArrangementEntryMatcherSerializer {
     }
   };
 
-  @Nonnull
+  
   private static final Logger LOG = Logger.getInstance(DefaultArrangementEntryMatcherSerializer.class);
 
-  @Nonnull
+  
   private static final String COMPOSITE_CONDITION_NAME = "AND";
 
   private final DefaultArrangementSettingsSerializer.Mixin myMixin;
@@ -78,7 +77,7 @@ public class DefaultArrangementEntryMatcherSerializer {
 
   @SuppressWarnings("MethodMayBeStatic")
   @Nullable
-  public <T extends ArrangementEntryMatcher> Element serialize(@Nonnull T matcher) {
+  public <T extends ArrangementEntryMatcher> Element serialize(T matcher) {
     if (matcher instanceof StdArrangementEntryMatcher) {
       return serialize(((StdArrangementEntryMatcher)matcher).getCondition());
     }
@@ -89,8 +88,8 @@ public class DefaultArrangementEntryMatcherSerializer {
     return null;
   }
 
-  @Nonnull
-  private static Element serialize(@Nonnull ArrangementMatchCondition condition) {
+  
+  private static Element serialize(ArrangementMatchCondition condition) {
     MySerializationVisitor visitor = new MySerializationVisitor();
     condition.invite(visitor);
     return visitor.result;
@@ -98,13 +97,13 @@ public class DefaultArrangementEntryMatcherSerializer {
 
   @SuppressWarnings("MethodMayBeStatic")
   @Nullable
-  public StdArrangementEntryMatcher deserialize(@Nonnull Element matcherElement) {
+  public StdArrangementEntryMatcher deserialize(Element matcherElement) {
     ArrangementMatchCondition condition = deserializeCondition(matcherElement);
     return condition == null ? null : new StdArrangementEntryMatcher(condition);
   }
 
   @Nullable
-  private ArrangementMatchCondition deserializeCondition(@Nonnull Element matcherElement) {
+  private ArrangementMatchCondition deserializeCondition(Element matcherElement) {
     String name = matcherElement.getName();
     if (COMPOSITE_CONDITION_NAME.equals(name)) {
       ArrangementCompositeMatchCondition composite = new ArrangementCompositeMatchCondition();
@@ -122,7 +121,7 @@ public class DefaultArrangementEntryMatcherSerializer {
   }
 
   @Nullable
-  private ArrangementMatchCondition deserializeAtomCondition(@Nonnull Element matcherElement) {
+  private ArrangementMatchCondition deserializeAtomCondition(Element matcherElement) {
     String id = matcherElement.getName();
     ArrangementSettingsToken token = StdArrangementTokens.byId(id);
     boolean processInnerText = true;
@@ -165,7 +164,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     Element parent;
 
     @Override
-    public void visit(@Nonnull ArrangementAtomMatchCondition condition) {
+    public void visit(ArrangementAtomMatchCondition condition) {
       ArrangementSettingsToken type = condition.getType();
       Element element = new Element(type.getId());
       if (StdArrangementTokenType.REG_EXP.is(type)) {
@@ -175,7 +174,7 @@ public class DefaultArrangementEntryMatcherSerializer {
     }
 
     @Override
-    public void visit(@Nonnull ArrangementCompositeMatchCondition condition) {
+    public void visit(ArrangementCompositeMatchCondition condition) {
       Element composite = new Element(COMPOSITE_CONDITION_NAME);
       register(composite);
       parent = composite;
@@ -186,7 +185,7 @@ public class DefaultArrangementEntryMatcherSerializer {
       }
     }
 
-    private void register(@Nonnull Element element) {
+    private void register(Element element) {
       if (result == null) {
         result = element;
       }

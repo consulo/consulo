@@ -57,8 +57,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +75,7 @@ import java.util.List;
 public abstract class XDebuggerEditorBase {
     private final Project myProject;
     private final XDebuggerEditorsProvider myDebuggerEditorsProvider;
-    @Nonnull
+    
     private final EvaluationMode myMode;
     @Nullable
     private final String myHistoryId;
@@ -89,8 +88,8 @@ public abstract class XDebuggerEditorBase {
     private JBPopup myExpandedPopup;
 
     protected XDebuggerEditorBase(Project project,
-                                  @Nonnull XDebuggerEditorsProvider debuggerEditorsProvider,
-                                  @Nonnull EvaluationMode mode,
+                                  XDebuggerEditorsProvider debuggerEditorsProvider,
+                                  EvaluationMode mode,
                                   @Nullable String historyId,
                                   @Nullable XSourcePosition sourcePosition) {
         myProject = project;
@@ -107,7 +106,7 @@ public abstract class XDebuggerEditorBase {
             actions.add(new AnAction(language.getDisplayName(), LocalizeValue.empty(), language.getAssociatedFileType().getIcon()) {
                 @RequiredUIAccess
                 @Override
-                public void actionPerformed(@Nonnull AnActionEvent e) {
+                public void actionPerformed(AnActionEvent e) {
                     XExpression currentExpression = getExpression();
                     setExpression(new XExpressionImpl(currentExpression.getExpression(), language, currentExpression.getCustomInfo()));
                     requestFocusInEditor();
@@ -119,7 +118,7 @@ public abstract class XDebuggerEditorBase {
         return JBPopupFactory.getInstance().createActionGroupPopup("Choose Language", actions.build(), dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
     }
 
-    @Nonnull
+    
     private Collection<Language> getSupportedLanguages() {
         XDebuggerEditorsProvider editorsProvider = getEditorsProvider();
         if (myContext != null && editorsProvider instanceof XDebuggerEditorsProviderBase) {
@@ -162,7 +161,7 @@ public abstract class XDebuggerEditorBase {
 
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 expand();
             }
         };
@@ -201,7 +200,7 @@ public abstract class XDebuggerEditorBase {
         }
     }
 
-    @Nonnull
+    
     public EvaluationMode getMode() {
         return myMode;
     }
@@ -279,8 +278,8 @@ public abstract class XDebuggerEditorBase {
         }
     }
 
-    @Nonnull
-    protected FileType getFileType(@Nonnull XExpression expression) {
+    
+    protected FileType getFileType(XExpression expression) {
         FileType fileType = LanguageUtil.getLanguageFileType(expression.getLanguage());
         if (fileType != null) {
             return fileType;

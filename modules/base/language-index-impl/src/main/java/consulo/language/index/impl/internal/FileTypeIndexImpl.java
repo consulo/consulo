@@ -18,7 +18,6 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeDetector;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
-import jakarta.annotation.Nonnull;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -30,25 +29,25 @@ import java.util.Map;
 public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> implements FileBasedIndex.InputFilter, KeyDescriptor<FileType>, DataIndexer<FileType, Void, FileContent> {
     static final ID<FileType, Void> NAME = FileTypeIndex.NAME;
 
-    @Nonnull
+    
     @Override
     public ID<FileType, Void> getName() {
         return NAME;
     }
 
-    @Nonnull
+    
     @Override
     public DataIndexer<FileType, Void, FileContent> getIndexer() {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public KeyDescriptor<FileType> getKeyDescriptor() {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
         return this;
@@ -75,17 +74,17 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
     }
 
     @Override
-    public boolean acceptInput(Project project, @Nonnull VirtualFile file) {
+    public boolean acceptInput(Project project, VirtualFile file) {
         return !file.isDirectory();
     }
 
     @Override
-    public void save(@Nonnull DataOutput out, FileType value) throws IOException {
+    public void save(DataOutput out, FileType value) throws IOException {
         EnumeratorStringDescriptor.INSTANCE.save(out, value.getId());
     }
 
     @Override
-    public FileType read(@Nonnull DataInput in) throws IOException {
+    public FileType read(DataInput in) throws IOException {
         String read = EnumeratorStringDescriptor.INSTANCE.read(in);
         return FileTypeRegistry.getInstance().findFileTypeByName(read);
     }
@@ -106,9 +105,9 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
         return Comparing.equal(val1, val2);
     }
 
-    @Nonnull
+    
     @Override
-    public Map<FileType, Void> map(@Nonnull FileContent inputData) {
+    public Map<FileType, Void> map(FileContent inputData) {
         return Collections.singletonMap(inputData.getFileType(), null);
     }
 }

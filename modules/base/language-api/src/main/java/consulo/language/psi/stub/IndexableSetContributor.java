@@ -23,7 +23,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -38,14 +37,14 @@ public abstract class IndexableSetContributor {
 
   private static final Logger LOG = Logger.getInstance(IndexableSetContributor.class);
 
-  @Nonnull
-  public static Set<VirtualFile> getProjectRootsToIndex(@Nonnull IndexableSetContributor contributor, @Nonnull Project project) {
+  
+  public static Set<VirtualFile> getProjectRootsToIndex(IndexableSetContributor contributor, Project project) {
     Set<VirtualFile> roots = contributor.getAdditionalProjectRootsToIndex(project);
     return filterOutNulls(contributor, "getAdditionalProjectRootsToIndex(Project)", roots);
   }
 
-  @Nonnull
-  public static Set<VirtualFile> getRootsToIndex(@Nonnull IndexableSetContributor contributor) {
+  
+  public static Set<VirtualFile> getRootsToIndex(IndexableSetContributor contributor) {
     Set<VirtualFile> roots = contributor.getAdditionalRootsToIndex();
     return filterOutNulls(contributor, "getAdditionalRootsToIndex()", roots);
   }
@@ -54,8 +53,8 @@ public abstract class IndexableSetContributor {
    * @return an additional project-dependent set of {@link VirtualFile} instances to index,
    * the returned set should not contain nulls or invalid files
    */
-  @Nonnull
-  public Set<VirtualFile> getAdditionalProjectRootsToIndex(@Nonnull Project project) {
+  
+  public Set<VirtualFile> getAdditionalProjectRootsToIndex(Project project) {
     return Collections.emptySet();
   }
 
@@ -63,11 +62,11 @@ public abstract class IndexableSetContributor {
    * @return an additional project-independent set of {@link VirtualFile} instances to index,
    * the returned set should not contain nulls or invalid files
    */
-  @Nonnull
+  
   public abstract Set<VirtualFile> getAdditionalRootsToIndex();
 
-  @Nonnull
-  private static Set<VirtualFile> filterOutNulls(@Nonnull IndexableSetContributor contributor, @Nonnull String methodInfo, @Nonnull Set<VirtualFile> roots) {
+  
+  private static Set<VirtualFile> filterOutNulls(IndexableSetContributor contributor, String methodInfo, Set<VirtualFile> roots) {
     for (VirtualFile root : roots) {
       if (root == null || !root.isValid()) {
         LOG.error("Please fix " +

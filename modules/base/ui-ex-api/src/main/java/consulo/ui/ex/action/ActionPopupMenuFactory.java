@@ -18,8 +18,7 @@ package consulo.ui.ex.action;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -27,7 +26,7 @@ import jakarta.annotation.Nullable;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ActionPopupMenuFactory {
-    @Nonnull
+    
     static ActionPopupMenuFactory getInstance() {
         return Application.get().getInstance(ActionPopupMenuFactory.class);
     }
@@ -43,12 +42,12 @@ public interface ActionPopupMenuFactory {
      * @return An instance of <code>ActionPopupMenu</code>
      */
     ActionPopupMenu createActionPopupMenu(String place,
-                                          @Nonnull ActionGroup group);
+                                          ActionGroup group);
 
     ActionPopupMenu createActionPopupMenuForceHide(String place,
-                                                   @Nonnull ActionGroup group);
+                                                   ActionGroup group);
 
-    ActionPopupMenu createActionPopupMenu(@Nonnull String place,
-                                          @Nonnull ActionGroup group,
+    ActionPopupMenu createActionPopupMenu(String place,
+                                          ActionGroup group,
                                           @Nullable PresentationFactory presentationFactory);
 }

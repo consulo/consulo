@@ -22,7 +22,6 @@ import consulo.application.ApplicationManager;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author spleaner
@@ -33,7 +32,7 @@ public abstract class ExecutorRegistry {
     return ApplicationManager.getApplication().getInstance(ExecutorRegistry.class);
   }
 
-  @Nonnull
+  
   public abstract Executor[] getRegisteredExecutors();
 
   public abstract Executor getExecutorById(String executorId);
@@ -43,5 +42,5 @@ public abstract class ExecutorRegistry {
    */
   public abstract boolean isStarting(Project project, String executorId, String runnerId);
 
-  public abstract boolean isStarting(@Nonnull ExecutionEnvironment environment);
+  public abstract boolean isStarting(ExecutionEnvironment environment);
 }

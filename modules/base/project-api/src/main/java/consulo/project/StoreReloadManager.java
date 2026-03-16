@@ -18,7 +18,6 @@ package consulo.project;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.AccessToken;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -26,7 +25,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface StoreReloadManager {
-  static StoreReloadManager getInstance(@Nonnull Project project) {
+  static StoreReloadManager getInstance(Project project) {
     return project.getInstance(StoreReloadManager.class);
   }
 
@@ -34,6 +33,6 @@ public interface StoreReloadManager {
 
   void unblockReloadingProjectOnExternalChanges();
 
-  @Nonnull
+  
   AccessToken blockReloadingOnExternalChanges();
 }

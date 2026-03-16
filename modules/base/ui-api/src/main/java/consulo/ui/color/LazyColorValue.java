@@ -15,7 +15,6 @@
  */
 package consulo.ui.color;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Supplier;
 
 /**
@@ -28,8 +27,6 @@ class LazyColorValue implements ColorValue {
   LazyColorValue(Supplier<? extends ColorValue> colorSupplier) {
     myColorSupplier = colorSupplier;
   }
-
-  @Nonnull
   @Override
   public RGBColor toRGB() {
     return myColorSupplier.get().toRGB();

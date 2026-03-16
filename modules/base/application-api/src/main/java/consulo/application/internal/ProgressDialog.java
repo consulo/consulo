@@ -17,7 +17,6 @@ package consulo.application.internal;
 
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +27,7 @@ import java.util.function.Predicate;
  * @since 2020-05-11
  */
 public interface ProgressDialog extends Disposable {
-    void startBlocking(@Nonnull CompletableFuture<?> stopCondition, @Nonnull Predicate<AWTEvent> isCancellationEvent);
+    void startBlocking(CompletableFuture<?> stopCondition, Predicate<AWTEvent> isCancellationEvent);
 
     void hide();
 
@@ -48,7 +47,7 @@ public interface ProgressDialog extends Disposable {
 
     void runRepaintRunnable();
 
-    void changeCancelButtonText(@Nonnull LocalizeValue text);
+    void changeCancelButtonText(LocalizeValue text);
 
     void enableCancelButtonIfNeeded(boolean value);
 

@@ -18,7 +18,6 @@ package consulo.ui.model;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.internal.UIInternal;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -26,22 +25,17 @@ import java.util.Collection;
  * @since 12-Jun-16
  */
 public interface ListModel<E> extends Iterable<E> {
-  @Nonnull
-  static <T> ListModel<T> of(@Nonnull Collection<? extends T> items) {
+  static <T> ListModel<T> of(Collection<? extends T> items) {
     return UIInternal.get()._ListModel_create(items);
   }
-
-  @Nonnull
   @Deprecated
   @DeprecationInfo("Use #of()")
-  static <T> ListModel<T> create(@Nonnull Collection<? extends T> items) {
+  static <T> ListModel<T> create(Collection<? extends T> items) {
     return UIInternal.get()._ListModel_create(items);
   }
 
   int getSize();
-
-  @Nonnull
   E get(int index);
 
-  int indexOf(@Nonnull E value);
+  int indexOf(E value);
 }

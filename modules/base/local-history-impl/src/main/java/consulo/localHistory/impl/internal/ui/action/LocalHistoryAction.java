@@ -28,8 +28,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.util.collection.Streams;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static consulo.util.lang.ObjectUtil.notNull;
 
@@ -37,12 +36,12 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     protected LocalHistoryAction() {
     }
 
-    protected LocalHistoryAction(@Nonnull LocalizeValue text) {
+    protected LocalHistoryAction(LocalizeValue text) {
         super(text);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Presentation p = e.getPresentation();
 
         if (!e.hasData(Project.KEY)) {
@@ -60,33 +59,33 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         actionPerformed(e.getRequiredData(Project.KEY), notNull(getGateway()), e);
     }
 
-    @Nonnull
-    protected LocalizeValue getTextValue(@Nonnull AnActionEvent e) {
+    
+    protected LocalizeValue getTextValue(AnActionEvent e) {
         return e.getPresentation().getTextValue();
     }
 
-    protected boolean isEnabled(@Nonnull LocalHistoryFacade vcs, @Nonnull IdeaGateway gw, @Nonnull AnActionEvent e) {
+    protected boolean isEnabled(LocalHistoryFacade vcs, IdeaGateway gw, AnActionEvent e) {
         return isEnabled(vcs, gw, getFile(e), e);
     }
 
-    protected void actionPerformed(@Nonnull Project p, @Nonnull IdeaGateway gw, @Nonnull AnActionEvent e) {
+    protected void actionPerformed(Project p, IdeaGateway gw, AnActionEvent e) {
         actionPerformed(p, gw, notNull(getFile(e)), e);
     }
 
     protected boolean isEnabled(
-        @Nonnull LocalHistoryFacade vcs,
-        @Nonnull IdeaGateway gw,
+        LocalHistoryFacade vcs,
+        IdeaGateway gw,
         @Nullable VirtualFile f,
-        @Nonnull AnActionEvent e
+        AnActionEvent e
     ) {
         return true;
     }
 
-    protected void actionPerformed(@Nonnull Project p, @Nonnull IdeaGateway gw, @Nonnull VirtualFile f, @Nonnull AnActionEvent e) {
+    protected void actionPerformed(Project p, IdeaGateway gw, VirtualFile f, AnActionEvent e) {
     }
 
     @Nullable
@@ -100,7 +99,7 @@ public abstract class LocalHistoryAction extends AnAction implements DumbAware {
     }
 
     @Nullable
-    protected VirtualFile getFile(@Nonnull AnActionEvent e) {
+    protected VirtualFile getFile(AnActionEvent e) {
         return Streams.getIfSingle(e.getData(VcsDataKeys.VIRTUAL_FILE_STREAM));
     }
 }

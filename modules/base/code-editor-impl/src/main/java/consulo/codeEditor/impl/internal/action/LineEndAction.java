@@ -21,7 +21,6 @@ import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -35,7 +34,7 @@ public class LineEndAction extends TextComponentEditorAction {
         }
 
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToLineEnd(editor, false);
         }
     }

@@ -15,8 +15,7 @@ import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.project.Project;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -30,12 +29,12 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
   }
 
   @Override
-  public boolean executeInCommand(@Nonnull Editor editor, DataContext dataContext) {
+  public boolean executeInCommand(Editor editor, DataContext dataContext) {
     return LookupManager.getActiveLookup(editor) == null;
   }
 
   @Override
-  public void doExecute(@Nonnull Editor editor, Caret caret, DataContext dataContext) {
+  public void doExecute(Editor editor, Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     if (lookup == null || !lookup.isAvailableToUser()) {
       Project project = editor.getProject();
@@ -53,7 +52,7 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
   protected abstract void executeInLookup(LookupEx lookup, DataContext context, @Nullable Caret caret);
 
   @Override
-  public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     LookupEx lookup = LookupManager.getActiveLookup(editor);
     return lookup != null || myOriginalHandler.isEnabled(editor, caret, dataContext);
   }
@@ -84,17 +83,17 @@ public abstract class LookupActionHandler extends EditorActionHandler implements
     }
 
     @Override
-    public boolean executeInCommand(@Nonnull Editor editor, DataContext dataContext) {
+    public boolean executeInCommand(Editor editor, DataContext dataContext) {
       return false;
     }
 
     @Override
-    protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+    protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
       return LookupManager.getActiveLookup(editor) != null;
     }
 
     @Override
-    protected void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+    protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
       FeatureUsageTracker.getInstance().triggerFeatureUsed(CodeCompletionFeatures.EDITING_COMPLETION_CONTROL_ARROWS);
       LookupEx lookup = LookupManager.getActiveLookup(editor);
       assert lookup != null : LookupDispose.getLastLookupDisposeTrace();

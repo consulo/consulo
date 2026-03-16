@@ -38,8 +38,7 @@ import consulo.ui.ex.awt.transferable.TextTransferable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -96,14 +95,14 @@ public class XDebuggerFramesList extends DebuggerFramesList {
         }
 
         @Override
-        public int getSourceActions(@Nonnull JComponent c) {
+        public int getSourceActions(JComponent c) {
             return COPY;
         }
     };
 
     private XStackFrame mySelectedFrame;
 
-    public XDebuggerFramesList(@Nonnull Project project) {
+    public XDebuggerFramesList(Project project) {
         myProject = project;
 
         doInit();
@@ -194,12 +193,12 @@ public class XDebuggerFramesList extends DebuggerFramesList {
     private class XDebuggerFrameListRenderer extends ColoredListCellRenderer {
         private final FileColorManager myColorsManager;
 
-        public XDebuggerFrameListRenderer(@Nonnull Project project) {
+        public XDebuggerFrameListRenderer(Project project) {
             myColorsManager = FileColorManager.getInstance(project);
         }
 
         @Override
-        protected void customizeCellRenderer(@Nonnull JList list,
+        protected void customizeCellRenderer(JList list,
                                              Object value,
                                              int index,
                                              boolean selected,

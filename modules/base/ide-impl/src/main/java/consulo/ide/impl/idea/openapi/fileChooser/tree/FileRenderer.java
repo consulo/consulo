@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +40,7 @@ public class FileRenderer {
   public <T> ColoredListCellRenderer<T> forList() {
     return new ColoredListCellRenderer<T>() {
       @Override
-      protected void customizeCellRenderer(@Nonnull JList<? extends T> list, T value, int index, boolean selected, boolean focused) {
+      protected void customizeCellRenderer(JList<? extends T> list, T value, int index, boolean selected, boolean focused) {
         customize(this, value, selected, focused);
       }
     };
@@ -59,7 +58,7 @@ public class FileRenderer {
   public ColoredTreeCellRenderer forTree() {
     return new ColoredTreeCellRenderer() {
       @Override
-      public void customizeCellRenderer(@Nonnull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean focused) {
+      public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean focused) {
         customize(this, value, selected, focused);
       }
     };

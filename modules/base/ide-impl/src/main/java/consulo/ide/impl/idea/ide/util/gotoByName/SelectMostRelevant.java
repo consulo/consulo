@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import java.util.List;
 public class SelectMostRelevant implements SelectionPolicy {
   public static final SelectMostRelevant INSTANCE = new SelectMostRelevant();
 
-  @Nonnull
+  
   @Override
   public List<Integer> performSelection(ChooseByNameBase popup, SmartPointerListModel<?> model) {
     return Collections.singletonList(popup.calcSelectedIndex(model.getItems().toArray(), popup.getTrimmedText()));

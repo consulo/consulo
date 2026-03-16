@@ -15,13 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
  * from kotlin
  */
 public interface SelectionPolicy {
-  @Nonnull
+  
   List<Integer> performSelection(ChooseByNameBase popup, SmartPointerListModel<?> model);
 }

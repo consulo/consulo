@@ -26,8 +26,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.versionControlSystem.checkout.CheckoutProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.SortedMap;
@@ -45,14 +44,14 @@ public class CheckoutActionGroup extends ActionGroup implements DumbAware {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         super.update(e);
         if (!myApplication.getExtensionPoint(CheckoutProvider.class).hasAnyExtensions()) {
             e.getPresentation().setVisible(false);
         }
     }
 
-    @Nonnull
+    
     @Override
     public AnAction[] getChildren(@Nullable AnActionEvent e) {
         SortedMap<LocalizeValue, AnAction> actions = myApplication.getExtensionPoint(CheckoutProvider.class)

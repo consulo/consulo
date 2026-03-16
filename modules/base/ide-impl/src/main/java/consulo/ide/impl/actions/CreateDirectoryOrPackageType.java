@@ -30,7 +30,6 @@ import consulo.language.psi.PsiPackageManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,45 +37,45 @@ import jakarta.annotation.Nonnull;
  */
 public enum CreateDirectoryOrPackageType {
     Directory {
-        @Nonnull
+        
         @Override
         public LocalizeValue getName() {
             return IdeLocalize.actionDirectory();
         }
 
-        @Nonnull
+        
         @Override
         public String getSeparator() {
             return "\\/";
         }
 
-        @Nonnull
+        
         @Override
         public String getDefaultValue(PsiDirectory directory) {
             return "";
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
-        public PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) {
+        public PsiDirectory createDirectory(PsiDirectory psiDirectory, String name) {
             return DirectoryUtil.createSubdirectories(name, psiDirectory, "/");
         }
     },
     Package {
-        @Nonnull
+        
         @Override
         public LocalizeValue getName() {
             return IdeLocalize.actionPackage();
         }
 
-        @Nonnull
+        
         @Override
         public String getSeparator() {
             return ".";
         }
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
         public String getDefaultValue(PsiDirectory directory) {
@@ -90,10 +89,10 @@ public enum CreateDirectoryOrPackageType {
             return "";
         }
 
-        @Nonnull
+        
         @Override
         @RequiredUIAccess
-        public PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name) {
+        public PsiDirectory createDirectory(PsiDirectory psiDirectory, String name) {
             ProjectFileIndex projectFileIndex = ProjectFileIndex.getInstance(psiDirectory.getProject());
             ContentFolder contentFolder = projectFileIndex.getContentFolder(psiDirectory.getVirtualFile());
             if (contentFolder == null) {
@@ -108,17 +107,17 @@ public enum CreateDirectoryOrPackageType {
         }
     };
 
-    @Nonnull
+    
     public abstract LocalizeValue getName();
 
-    @Nonnull
+    
     public abstract String getSeparator();
 
-    @Nonnull
+    
     public abstract String getDefaultValue(PsiDirectory directory);
 
-    @Nonnull
+    
     @RequiredUIAccess
-    public abstract PsiDirectory createDirectory(@Nonnull PsiDirectory psiDirectory, @Nonnull String name)
+    public abstract PsiDirectory createDirectory(PsiDirectory psiDirectory, String name)
         throws IncorrectOperationException;
 }

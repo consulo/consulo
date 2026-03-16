@@ -23,7 +23,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.component.messagebus.MessageBusConnection;
-import jakarta.annotation.Nonnull;
 
 import static consulo.application.util.mac.foundation.Foundation.invoke;
 import static consulo.application.util.mac.foundation.Foundation.nsString;
@@ -58,7 +57,7 @@ class MountainLionNotifications implements SystemNotificationsImpl.Notifier {
   }
 
   @Override
-  public void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description) {
+  public void notify(String name, String title, String description) {
     ID notification = invoke(Foundation.getObjcClass("NSUserNotification"), "new");
     invoke(notification, "setTitle:", nsString(StringUtil.stripHtml(title, true).replace("%", "%%")));
     invoke(notification, "setInformativeText:", nsString(StringUtil.stripHtml(description, true).replace("%", "%%")));

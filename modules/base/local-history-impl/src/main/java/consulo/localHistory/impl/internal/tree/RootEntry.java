@@ -17,7 +17,6 @@
 package consulo.localHistory.impl.internal.tree;
 
 import consulo.localHistory.impl.internal.Paths;
-import jakarta.annotation.Nonnull;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class RootEntry extends DirectoryEntry {
     throw new UnsupportedOperationException();
   }
 
-  @Nonnull
+  
   @Override
   public RootEntry copy() {
     return (RootEntry)super.copy();

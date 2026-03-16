@@ -20,7 +20,6 @@ import consulo.localize.LocalizeValue;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -32,7 +31,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
   private final String myAdministrativePattern;
   private boolean myIsNone;
 
-  public VcsDescriptor(String administrativePattern, @Nonnull LocalizeValue displayName, String id, boolean crawlUpToCheckUnderVcs) {
+  public VcsDescriptor(String administrativePattern, LocalizeValue displayName, String id, boolean crawlUpToCheckUnderVcs) {
     myAdministrativePattern = administrativePattern;
     myDisplayName = displayName;
     myId = id;
@@ -66,7 +65,7 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
     });
   }
 
-  @Nonnull
+  
   public LocalizeValue getDisplayName() {
     return myDisplayName;
   }

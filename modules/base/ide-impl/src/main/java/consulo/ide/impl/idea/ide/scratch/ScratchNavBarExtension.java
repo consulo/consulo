@@ -27,8 +27,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -58,7 +57,7 @@ public class ScratchNavBarExtension extends AbstractNavBarModelExtension {
         return rootType.substituteName(project, virtualFile);
     }
 
-    @Nonnull
+    
     @Override
     public Collection<VirtualFile> additionalRoots(Project project) {
         Set<VirtualFile> result = new LinkedHashSet<>();

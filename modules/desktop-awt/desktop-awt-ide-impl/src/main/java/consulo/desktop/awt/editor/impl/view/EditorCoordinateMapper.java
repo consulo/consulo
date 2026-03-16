@@ -13,7 +13,6 @@ import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.util.lang.IntPair;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.geom.Point2D;
@@ -101,17 +100,17 @@ final class EditorCoordinateMapper {
         return EditorUtil.getInlaysHeight(myInlayModel, visualLine, above);
     }
 
-    @Nonnull
+    
     LogicalPosition offsetToLogicalPosition(int offset) {
         return myView.getLogicalPositionCache().offsetToLogicalPosition(offset);
     }
 
-    int logicalPositionToOffset(@Nonnull LogicalPosition pos) {
+    int logicalPositionToOffset(LogicalPosition pos) {
         return myView.getLogicalPositionCache().logicalPositionToOffset(pos);
     }
 
-    @Nonnull
-    VisualPosition logicalToVisualPosition(@Nonnull LogicalPosition pos, boolean beforeSoftWrap) {
+    
+    VisualPosition logicalToVisualPosition(LogicalPosition pos, boolean beforeSoftWrap) {
         int line = pos.line;
         int column = pos.column;
         int logicalLineCount = Math.max(1, myDocument.getLineCount());
@@ -191,8 +190,8 @@ final class EditorCoordinateMapper {
         return remainingVisColumns - inlayCount;
     }
 
-    @Nonnull
-    LogicalPosition visualToLogicalPosition(@Nonnull VisualPosition pos) {
+    
+    LogicalPosition visualToLogicalPosition(VisualPosition pos) {
         int line = pos.line;
         int column = pos.column;
         int visualLineCount = myView.getVisibleLineCount();
@@ -265,7 +264,7 @@ final class EditorCoordinateMapper {
         }
     }
 
-    @Nonnull
+    
     VisualPosition offsetToVisualPosition(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
         return logicalToVisualPosition(offsetToLogicalPosition(offset).leanForward(leanTowardsLargerOffsets), beforeSoftWrap);
     }
@@ -367,8 +366,8 @@ final class EditorCoordinateMapper {
         }
     }
 
-    @Nonnull
-    VisualPosition xyToVisualPosition(@Nonnull Point2D p) {
+    
+    VisualPosition xyToVisualPosition(Point2D p) {
         int visualLine = yToVisualLine((int) p.getY());
         int lastColumn = 0;
         float x = getStartX(visualLine);
@@ -440,8 +439,8 @@ final class EditorCoordinateMapper {
         return new VisualPosition(visualLine, lastColumn + additionalColumns, remainingShift > additionalColumns * plainSpaceWidth);
     }
 
-    @Nonnull
-    Point2D visualPositionToXY(@Nonnull VisualPosition pos) {
+    
+    Point2D visualPositionToXY(VisualPosition pos) {
         int visualLine = pos.line;
         int column = pos.column;
         int y = visualLineToY(visualLine);
@@ -494,7 +493,7 @@ final class EditorCoordinateMapper {
         return new Point2D.Double(x + additionalShift, y);
     }
 
-    @Nonnull
+    
     Point2D offsetToXY(int offset, boolean leanTowardsLargerOffsets, boolean beforeSoftWrap) {
         offset = Math.max(0, Math.min(myDocument.getTextLength(), offset));
         offset = DocumentUtil.alignToCodePointBoundary(myDocument, offset);

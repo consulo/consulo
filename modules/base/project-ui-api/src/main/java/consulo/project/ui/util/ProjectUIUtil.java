@@ -23,7 +23,6 @@ import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.AppIcon;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -50,7 +49,7 @@ public class ProjectUIUtil {
         }
     }
 
-    @Nonnull
+    
     public static Project guessCurrentProject(JComponent component) {
         Project project = null;
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();

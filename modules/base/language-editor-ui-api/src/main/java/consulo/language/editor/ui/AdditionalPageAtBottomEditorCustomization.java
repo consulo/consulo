@@ -17,7 +17,6 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -33,7 +32,7 @@ public class AdditionalPageAtBottomEditorCustomization extends SimpleEditorCusto
   }
 
   @Override
-  public void customize(@Nonnull EditorEx editor) {
+  public void customize(EditorEx editor) {
     editor.getSettings().setAdditionalPageAtBottom(isEnabled());
   }
 }

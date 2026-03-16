@@ -21,8 +21,7 @@ import consulo.language.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerAnchorProvider;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -31,7 +30,7 @@ public class WrappedElementAnchor implements PsiAnchor {
   private final SmartPointerAnchorProvider myAnchorProvider;
   private final PsiAnchor myBaseAnchor;
 
-  public WrappedElementAnchor(@Nonnull SmartPointerAnchorProvider provider, @Nonnull PsiAnchor anchor) {
+  public WrappedElementAnchor(SmartPointerAnchorProvider provider, PsiAnchor anchor) {
     myAnchorProvider = provider;
     myBaseAnchor = anchor;
   }

@@ -22,8 +22,7 @@ import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
 import consulo.ide.impl.psi.search.scope.ProjectFilesScope;
 import consulo.language.editor.scope.NonProjectFilesScope;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -59,7 +58,7 @@ public class DefaultScopesProvider implements CustomScopesProvider {
   }
 
   @Override
-  public void acceptScopes(@Nonnull Consumer<NamedScope> consumer) {
+  public void acceptScopes(Consumer<NamedScope> consumer) {
     myScopes.forEach(consumer);
   }
 

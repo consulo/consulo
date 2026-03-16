@@ -17,17 +17,16 @@ package consulo.language.pom.event;
 
 import consulo.language.ast.ASTNode;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author ik
  */
 public interface TreeChangeEvent extends PomChangeSet {
-  @Nonnull
+  
   ASTNode getRootElement();
 
-  @Nonnull
+  
   ASTNode[] getChangedElements();
 
-  TreeChange getChangesByElement(@Nonnull ASTNode element);
+  TreeChange getChangesByElement(ASTNode element);
 }

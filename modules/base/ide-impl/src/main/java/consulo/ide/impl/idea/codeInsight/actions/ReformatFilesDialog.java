@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.versionControlSystem.FormatChangedTextUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -44,7 +43,7 @@ public class ReformatFilesDialog extends DialogWrapper implements ReformatFilesO
 
     private final LastRunReformatCodeOptionsProvider myLastRunSettings;
 
-    public ReformatFilesDialog(@Nonnull Project project, @Nonnull VirtualFile[] files) {
+    public ReformatFilesDialog(Project project, VirtualFile[] files) {
         super(project, true);
 
         $$$setupUI$$$();

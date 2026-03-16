@@ -17,8 +17,7 @@ package consulo.language.codeStyle.arrangement.std;
 
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -33,21 +32,21 @@ public interface ArrangementStandardSettingsManager {
   @Nullable
   public List<CompositeArrangementSettingsToken> getSupportedMatchingTokens();
 
-  public boolean isEnabled(@Nonnull ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
+  public boolean isEnabled(ArrangementSettingsToken token, @Nullable ArrangementMatchCondition current);
 
-  @Nonnull
+  
   public Collection<Set<ArrangementSettingsToken>> getMutexes();
 
-  public List<ArrangementSettingsToken> sort(@Nonnull Collection<ArrangementSettingsToken> tokens);
+  public List<ArrangementSettingsToken> sort(Collection<ArrangementSettingsToken> tokens);
 
   @Nullable
   public List<CompositeArrangementSettingsToken> getSupportedGroupingTokens();
 
-  @Nonnull
+  
   public Collection<StdArrangementRuleAliasToken> getRuleAliases();
 
-  @Nonnull
+  
   public ArrangementStandardSettingsAware getDelegate();
 
-  public int getWidth(@Nonnull ArrangementSettingsToken token);
+  public int getWidth(ArrangementSettingsToken token);
 }

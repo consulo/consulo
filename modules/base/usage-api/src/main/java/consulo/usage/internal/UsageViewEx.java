@@ -5,7 +5,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -15,12 +14,12 @@ public interface UsageViewEx extends UsageView {
 
     void cancelCurrentSearch();
 
-    void associateProgress(@Nonnull ProgressIndicator indicator);
+    void associateProgress(ProgressIndicator indicator);
 
     void waitForUpdateRequestsCompletion();
 
-    @Nonnull
-    CompletableFuture<?> appendUsagesInBulk(@Nonnull Collection<? extends Usage> usages);
+    
+    CompletableFuture<?> appendUsagesInBulk(Collection<? extends Usage> usages);
 
     void setSearchInProgress(boolean searchInProgress);
 

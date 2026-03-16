@@ -21,8 +21,7 @@ import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.extension.ModuleExtension;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -35,17 +34,17 @@ public class ModuleExtensionBase<T extends ModuleExtension<T>> implements Module
   protected final String myId;
   protected final ModuleRootLayer myModuleRootLayer;
 
-  public ModuleExtensionBase(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
+  public ModuleExtensionBase(String id, ModuleRootLayer moduleRootLayer) {
     myId = id;
     myModuleRootLayer = moduleRootLayer;
   }
 
-  @Nonnull
+  
   public ModuleRootLayer getModuleRootLayer() {
     return myModuleRootLayer;
   }
 
-  @Nonnull
+  
   @Override
   public String getId() {
     return myId;
@@ -56,7 +55,7 @@ public class ModuleExtensionBase<T extends ModuleExtension<T>> implements Module
     return myIsEnabled;
   }
 
-  @Nonnull
+  
   @Override
   public Module getModule() {
     return myModuleRootLayer.getModule();
@@ -64,7 +63,7 @@ public class ModuleExtensionBase<T extends ModuleExtension<T>> implements Module
 
   @RequiredReadAction
   @Override
-  public void commit(@Nonnull T mutableModuleExtension) {
+  public void commit(T mutableModuleExtension) {
     myIsEnabled = mutableModuleExtension.isEnabled();
   }
 
@@ -82,7 +81,7 @@ public class ModuleExtensionBase<T extends ModuleExtension<T>> implements Module
     return element;
   }
 
-  protected void getStateImpl(@Nonnull Element element) {
+  protected void getStateImpl(Element element) {
 
   }
 
@@ -95,7 +94,7 @@ public class ModuleExtensionBase<T extends ModuleExtension<T>> implements Module
   }
 
   @RequiredReadAction
-  protected void loadStateImpl(@Nonnull Element element) {
+  protected void loadStateImpl(Element element) {
 
   }
 

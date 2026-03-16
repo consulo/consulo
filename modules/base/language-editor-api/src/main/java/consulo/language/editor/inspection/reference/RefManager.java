@@ -10,8 +10,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public interface RefManager {
      *
      * @param visitor the visitor to run.
      */
-    void iterate(@Nonnull RefVisitor visitor);
+    void iterate(RefVisitor visitor);
 
     /**
      * Returns the analysis scope for which the reference graph has been built.
@@ -43,7 +42,7 @@ public interface RefManager {
      *
      * @return the project instance.
      */
-    @Nonnull
+    
     Project getProject();
 
     /**
@@ -52,7 +51,7 @@ public interface RefManager {
      *
      * @return the node for the project.
      */
-    @Nonnull
+    
     RefProject getRefProject();
 
     /**
@@ -87,16 +86,16 @@ public interface RefManager {
 
     long getLastUsedMask();
 
-    <T> T getExtension(@Nonnull Key<T> key);
+    <T> T getExtension(Key<T> key);
 
     @Nullable
-    String getType(@Nonnull RefEntity ref);
+    String getType(RefEntity ref);
 
-    @Nonnull
-    RefEntity getRefinedElement(@Nonnull RefEntity ref);
+    
+    RefEntity getRefinedElement(RefEntity ref);
 
     @Nullable
-    default Element export(@Nonnull RefEntity entity, @Nonnull Element parent, int actualLine) {
+    default Element export(RefEntity entity, Element parent, int actualLine) {
         Element element = export(entity, actualLine);
         if (element == null) {
             return null;
@@ -106,21 +105,21 @@ public interface RefManager {
     }
 
     @Nullable
-    default Element export(@Nonnull RefEntity entity, int actualLine) {
+    default Element export(RefEntity entity, int actualLine) {
         throw new UnsupportedOperationException();
     }
 
     @Nullable
-    String getGroupName(@Nonnull RefElement entity);
+    String getGroupName(RefElement entity);
 
     boolean belongsToScope(@Nullable PsiElement psiElement);
 
     @Nullable
     String getQualifiedName(@Nullable RefEntity refEntity);
 
-    void removeRefElement(@Nonnull RefElement refElement, @Nonnull List<RefElement> deletedRefs);
+    void removeRefElement(RefElement refElement, List<RefElement> deletedRefs);
 
-    @Nonnull
+    
     PsiManager getPsiManager();
 
     /**
@@ -132,7 +131,7 @@ public interface RefManager {
     }
 
     @Nullable
-    default PsiNamedElement getContainerElement(@Nonnull PsiElement element) {
+    default PsiNamedElement getContainerElement(PsiElement element) {
         return null;
     }
 }

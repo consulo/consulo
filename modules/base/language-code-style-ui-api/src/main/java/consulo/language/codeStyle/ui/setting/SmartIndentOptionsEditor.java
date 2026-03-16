@@ -21,9 +21,8 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import jakarta.annotation.Nonnull;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +68,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
     myArrayElementIndentOption = createContinuationOption("Array element indent:", options -> options.ARRAY_ELEMENT_INDENT, (options, value) -> options.ARRAY_ELEMENT_INDENT = value, -1);
   }
 
-  private ContinuationOption createContinuationOption(@Nonnull String labelText,
+  private ContinuationOption createContinuationOption(String labelText,
                                                       Function<CommonCodeStyleSettings.IndentOptions, Integer> getter,
                                                       BiConsumer<CommonCodeStyleSettings.IndentOptions, Integer> setter,
                                                       int defaultValue) {
@@ -99,7 +98,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
     add(myCbKeepIndentsOnEmptyLines);
   }
 
-  private void updateDefaults(@Nonnull Integer value) {
+  private void updateDefaults(Integer value) {
     for (ContinuationOption option : myContinuationOptions) {
       if (option != myContinuationOption) {
         option.setDefaultValueToDisplay(value);
@@ -129,7 +128,7 @@ public class SmartIndentOptionsEditor extends IndentOptionsEditor {
   }
 
   @Override
-  public void reset(@Nonnull CodeStyleSettings settings, @Nonnull CommonCodeStyleSettings.IndentOptions options) {
+  public void reset(CodeStyleSettings settings, CommonCodeStyleSettings.IndentOptions options) {
     super.reset(settings, options);
     for (ContinuationOption continuationOption : myContinuationOptions) {
       continuationOption.reset(options);

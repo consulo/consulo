@@ -21,31 +21,30 @@ import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Eugene Zhuravlev
  * @since 2008-03-28
  */
 public interface FileContent extends UserDataHolder {
-  @Nonnull
+  
   FileType getFileType();
 
-  @Nonnull
+  
   VirtualFile getFile();
 
-  @Nonnull
+  
   String getFileName();
 
   byte[] getContent();
 
-  @Nonnull
+  
   CharSequence getContentAsText();
 
   @Nullable
   Project getProject();
 
-  @Nonnull
+  
   PsiFile getPsiFile();
 }

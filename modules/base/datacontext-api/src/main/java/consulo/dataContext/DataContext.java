@@ -18,8 +18,7 @@ package consulo.dataContext;
 import consulo.dataContext.internal.BuilderDataContext;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +33,7 @@ import java.util.Map;
 public interface DataContext {
     DataContext EMPTY_CONTEXT = new DataContext() {
         @Override
-        public <T> T getData(@Nonnull Key<T> key) {
+        public <T> T getData(Key<T> key) {
             return null;
         }
     };
@@ -46,7 +45,7 @@ public interface DataContext {
      * @return the value, or null if no value is available in the current context for this identifier.
      */
     @Nullable
-    <T> T getData(@Nonnull Key<T> key);
+    <T> T getData(Key<T> key);
 
     /**
      * Returns not null value corresponding to the specified data key.
@@ -54,8 +53,8 @@ public interface DataContext {
      * @param key the data key for which the value is requested.
      * @return not null value, or throws {@link IllegalArgumentException}.
      */
-    @Nonnull
-    default <T> T getRequiredData(@Nonnull Key<T> key) {
+    
+    default <T> T getRequiredData(Key<T> key) {
         T data = getData(key);
         if (data == null) {
             throw new IllegalArgumentException("There no data for key: " + key);
@@ -69,11 +68,11 @@ public interface DataContext {
      * @param key the data key for which the value is requested.
      * @return {@code true} if not null data exists, {@code false} otherwise.
      */
-    default <T> boolean hasData(@Nonnull Key<T> key) {
+    default <T> boolean hasData(Key<T> key) {
         return getData(key) != null;
     }
 
-    @Nonnull
+    
     public static Builder builder() {
         return new Builder(null);
     }
@@ -91,8 +90,8 @@ public interface DataContext {
             return this;
         }
 
-        @Nonnull
-        public <T> Builder add(@Nonnull Key<? super T> dataKey, @Nullable T value) {
+        
+        public <T> Builder add(Key<? super T> dataKey, @Nullable T value) {
             if (value != null) {
                 if (myMap == null) {
                     myMap = new HashMap<>();
@@ -102,8 +101,8 @@ public interface DataContext {
             return this;
         }
 
-        @Nonnull
-        public Builder addAll(@Nonnull DataContext dataContext, @Nonnull Key<?>... keys) {
+        
+        public Builder addAll(DataContext dataContext, Key<?>... keys) {
             for (Key<?> key : keys) {
                 //noinspection unchecked
                 add((Key<Object>) key, dataContext.getData(key));
@@ -111,7 +110,7 @@ public interface DataContext {
             return this;
         }
 
-        @Nonnull
+        
         public DataContext build() {
             if (myMap == null && myParent == null) {
                 return EMPTY_CONTEXT;

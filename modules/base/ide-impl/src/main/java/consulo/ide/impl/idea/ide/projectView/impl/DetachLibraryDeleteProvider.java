@@ -14,25 +14,24 @@ import consulo.project.localize.ProjectLocalize;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.awt.Messages;
 import consulo.undoRedo.CommandProcessor;
-import jakarta.annotation.Nonnull;
 
 final class DetachLibraryDeleteProvider implements DeleteProvider {
 
     private final Project myProject;
     private final LibraryOrderEntry myOrderEntry;
 
-    DetachLibraryDeleteProvider(@Nonnull Project project, @Nonnull LibraryOrderEntry orderEntry) {
+    DetachLibraryDeleteProvider(Project project, LibraryOrderEntry orderEntry) {
         myProject = project;
         myOrderEntry = orderEntry;
     }
 
     @Override
-    public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+    public boolean canDeleteElement(DataContext dataContext) {
         return true;
     }
 
     @Override
-    public void deleteElement(@Nonnull DataContext dataContext) {
+    public void deleteElement(DataContext dataContext) {
         Module module = myOrderEntry.getOwnerModule();
         String libraryName = myOrderEntry.getPresentableName();
         String moduleName = module.getName();

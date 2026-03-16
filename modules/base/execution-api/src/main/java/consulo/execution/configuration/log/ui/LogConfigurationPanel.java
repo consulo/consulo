@@ -32,7 +32,6 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -262,7 +261,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
   }
 
   @Override
-  @Nonnull
+  
   protected JComponent createEditor() {
     return myWholePanel;
   }
@@ -272,7 +271,7 @@ public class LogConfigurationPanel<T extends RunConfigurationBase> extends Setti
   }
 
   @RequiredUIAccess
-  private static boolean showEditorDialog(@Nonnull LogFileOptions options) {
+  private static boolean showEditorDialog(LogFileOptions options) {
     EditLogPatternDialog dialog = new EditLogPatternDialog();
     dialog.init(options.getName(), options.getPathPattern(), options.isShowAll());
     dialog.show();

@@ -18,9 +18,7 @@ package consulo.codeEditor.impl;
 import consulo.codeEditor.TextChange;
 import consulo.codeEditor.internal.TextChangeImpl;
 import consulo.util.lang.CharArrayUtil;
-import org.jetbrains.annotations.NonNls;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +41,7 @@ public class TextChangesStorage {
    *            text and that returned list is sorted by start offset in ascending order
    * @see #store(TextChange)
    */
-  @Nonnull
+  
   public List<TextChangeImpl> getChanges() {
     if (myChanges.isEmpty()) return Collections.emptyList();
     List<TextChangeImpl> result = new ArrayList<TextChangeImpl>(myChanges.size());
@@ -62,7 +60,7 @@ public class TextChangesStorage {
    * @param end     target range end offset (exclusive)
    * @return        list that contains all registered changes that have intersections with the target text range
    */
-  @Nonnull
+  
   public List<? extends TextChange> getChanges(int start, int end) {
     assert start <= end;
     
@@ -126,7 +124,7 @@ public class TextChangesStorage {
    *
    * @param change    change to store
    */
-  public void store(@Nonnull TextChange change) {
+  public void store(TextChange change) {
     if (myChanges.isEmpty()) {
       myChanges.add(new ChangeEntry(new TextChangeImpl(change.getText(), change.getStart(), change.getEnd()), change.getStart()));
       return;
@@ -160,7 +158,7 @@ public class TextChangesStorage {
    *                    already registered range
    */
   @SuppressWarnings({"AssignmentToForLoopParameter"})
-  private int doStore(@Nonnull TextChange change) {
+  private int doStore(TextChange change) {
     int newChangeStart = change.getStart();
     int newChangeEnd = change.getEnd();
     int insertionIndex = getChangeIndex(change.getStart());
@@ -343,7 +341,7 @@ public class TextChangesStorage {
    * @param index             target symbol index (is assumed to be 'client text' index)
    * @return                  'client text' symbol at the given index
    */
-  public char charAt(@Nonnull char[] originalData, int index) {
+  public char charAt(char[] originalData, int index) {
     int changeIndex = getChangeIndex(index);
     if (changeIndex >= 0) {
       // Target char is contained at the stored change text
@@ -375,7 +373,7 @@ public class TextChangesStorage {
    * @param end               target substring end offset (against the 'client text'; exclusive)
    * @return                  substring for the given text range
    */
-  public CharSequence substring(@Nonnull char[] originalData, int start, int end) {
+  public CharSequence substring(char[] originalData, int start, int end) {
     if (myChanges.isEmpty()) {
       return new String(originalData, start, end - start);
     }
@@ -510,7 +508,7 @@ public class TextChangesStorage {
       return clientStartOffset + change.getText().length();
     }
     
-    @NonNls
+    
     @Override
     public String toString() {
       return "client start offset: " + clientStartOffset + ", change: " + change;

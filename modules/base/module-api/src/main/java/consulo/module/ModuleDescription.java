@@ -15,7 +15,6 @@
  */
 package consulo.module;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -27,12 +26,12 @@ import java.util.List;
  * @author nik
  */
 public interface ModuleDescription {
-  @Nonnull
+  
   String getName();
 
   /**
    * Names of the modules on which the current module depend.
    */
-  @Nonnull
+  
   List<String> getDependencyModuleNames();
 }

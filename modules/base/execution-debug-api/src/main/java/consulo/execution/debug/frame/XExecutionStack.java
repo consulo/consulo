@@ -19,8 +19,7 @@ import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -46,12 +45,12 @@ public abstract class XExecutionStack {
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
    * @param icon icon to be shown in the combobox in 'Frames' tab
    */
-  protected XExecutionStack(@Nonnull String displayName, @Nullable Image icon) {
+  protected XExecutionStack(String displayName, @Nullable Image icon) {
     myDisplayName = displayName;
     myIcon = icon;
   }
 
-  @Nonnull
+  
   public final String getDisplayName() {
     return myDisplayName;
   }
@@ -91,6 +90,6 @@ public abstract class XExecutionStack {
      * @param stackFrames stack frames to add
      * @param last <code>true</code> if all frames are added
      */
-    void addStackFrames(@Nonnull List<? extends XStackFrame> stackFrames, boolean last);
+    void addStackFrames(List<? extends XStackFrame> stackFrames, boolean last);
   }
 }

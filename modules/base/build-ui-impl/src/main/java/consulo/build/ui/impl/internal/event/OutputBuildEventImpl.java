@@ -17,8 +17,7 @@ package consulo.build.ui.impl.internal.event;
 
 import consulo.build.ui.event.BuildEventsNls;
 import consulo.build.ui.event.OutputBuildEvent;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Vladislav.Soroka
@@ -26,11 +25,11 @@ import jakarta.annotation.Nullable;
 public class OutputBuildEventImpl extends AbstractBuildEvent implements OutputBuildEvent {
   private final boolean myStdOut;
 
-  public OutputBuildEventImpl(@Nullable Object parentId, @Nonnull @BuildEventsNls.Message  String message, boolean stdOut) {
+  public OutputBuildEventImpl(@Nullable Object parentId, @BuildEventsNls.Message  String message, boolean stdOut) {
     this(new Object(), parentId, message, stdOut);
   }
 
-  public OutputBuildEventImpl(@Nonnull Object eventId, @Nullable Object parentId, @Nonnull @BuildEventsNls.Message String message, boolean stdOut) {
+  public OutputBuildEventImpl(Object eventId, @Nullable Object parentId, @BuildEventsNls.Message String message, boolean stdOut) {
     super(eventId, parentId, -1, message);
     myStdOut = stdOut;
   }

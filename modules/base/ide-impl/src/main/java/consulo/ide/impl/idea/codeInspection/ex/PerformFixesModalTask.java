@@ -26,19 +26,18 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.application.progress.SequentialModalProgressTask;
 import consulo.application.progress.SequentialTask;
-import jakarta.annotation.Nonnull;
 
 public abstract class PerformFixesModalTask implements SequentialTask {
-  @Nonnull
+  
   protected final Project myProject;
   private final CommonProblemDescriptor[] myDescriptors;
   private final SequentialModalProgressTask myTask;
   private final PsiDocumentManager myDocumentManager;
   private int myCount = 0;
 
-  public PerformFixesModalTask(@Nonnull Project project,
-                               @Nonnull CommonProblemDescriptor[] descriptors,
-                               @Nonnull SequentialModalProgressTask task) {
+  public PerformFixesModalTask(Project project,
+                               CommonProblemDescriptor[] descriptors,
+                               SequentialModalProgressTask task) {
     myProject = project;
     myDescriptors = descriptors;
     myTask = task;

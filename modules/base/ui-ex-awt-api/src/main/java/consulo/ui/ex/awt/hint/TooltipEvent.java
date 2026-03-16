@@ -18,7 +18,7 @@ package consulo.ui.ex.awt.hint;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.event.InputEvent;
 
 public class TooltipEvent {

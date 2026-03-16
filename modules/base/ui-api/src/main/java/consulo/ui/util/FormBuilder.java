@@ -26,8 +26,8 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.TableLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,6 @@ import java.util.List;
  * @since 06-Nov-17
  */
 public class FormBuilder {
-  @Nonnull
   public static FormBuilder create() {
     return new FormBuilder();
   }
@@ -44,16 +43,16 @@ public class FormBuilder {
   private int myLineCount;
   private TableLayout myLayout = TableLayout.create(StaticPosition.TOP);
 
-  private Component myBottomComponent;
+  @Nullable
+  private Component myBottomComponent = null;
   private List<Component> myBottomComponents = new ArrayList<>();
 
   private FormBuilder() {
   }
 
-  @Nonnull
-  @RequiredUIAccess
   @Deprecated
-  public FormBuilder addLabeled(@Nonnull String labelText, @Nonnull Component component) {
+  @RequiredUIAccess
+  public FormBuilder addLabeled(String labelText, Component component) {
     if (!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
@@ -70,9 +69,8 @@ public class FormBuilder {
     return this;
   }
 
-  @Nonnull
   @RequiredUIAccess
-  public FormBuilder addLabeled(@Nonnull LocalizeValue labelText, @Nonnull Component component) {
+  public FormBuilder addLabeled(LocalizeValue labelText, Component component) {
     if(!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
@@ -87,9 +85,8 @@ public class FormBuilder {
     return this;
   }
 
-  @Nonnull
   @RequiredUIAccess
-  public FormBuilder addLabeled(@Nonnull Component label, @Nonnull Component component) {
+  public FormBuilder addLabeled(Component label, Component component) {
     if (!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Can't add labeled, after adding bottom components");
     }
@@ -103,7 +100,7 @@ public class FormBuilder {
     return this;
   }
 
-  public void setBottom(@Nonnull Component bottomComponent) {
+  public void setBottom(Component bottomComponent) {
     if (!myBottomComponents.isEmpty()) {
       throw new IllegalArgumentException("Bottom components already set");
     }
@@ -111,7 +108,7 @@ public class FormBuilder {
     myBottomComponent = bottomComponent;
   }
 
-  public void addBottom(@Nonnull Component component) {
+  public void addBottom(Component component) {
     if (myBottomComponent != null) {
       throw new IllegalArgumentException("Bottom component already set");
     }
@@ -119,7 +116,6 @@ public class FormBuilder {
     myBottomComponents.add(component);
   }
 
-  @Nonnull
   @RequiredUIAccess
   public Component build() {
     if(myBottomComponents.isEmpty() && myBottomComponent == null) {

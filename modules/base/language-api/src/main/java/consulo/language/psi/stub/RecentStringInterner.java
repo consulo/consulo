@@ -19,7 +19,6 @@ import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.util.collection.SLRUCache;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,7 +27,7 @@ class RecentStringInterner {
   private final SLRUCache<String, String>[] myInterns;
   private final Lock[] myStripeLocks;
 
-  RecentStringInterner(@Nonnull Disposable parentDisposable) {
+  RecentStringInterner(Disposable parentDisposable) {
     final int stripes = 16;
     //noinspection unchecked
     myInterns = new SLRUCache[stripes];
@@ -36,14 +35,14 @@ class RecentStringInterner {
     int capacity = 8192;
     for (int i = 0; i < myInterns.length; ++i) {
       myInterns[i] = new SLRUCache<>(capacity / stripes, capacity / stripes) {
-        @Nonnull
+        
         @Override
         public String createValue(String key) {
           return key;
         }
 
         @Override
-        protected void putToProtectedQueue(String key, @Nonnull String value) {
+        protected void putToProtectedQueue(String key, String value) {
           super.putToProtectedQueue(value, value);
         }
       };

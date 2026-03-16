@@ -22,8 +22,7 @@ import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,25 +33,25 @@ import java.util.Objects;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface RepositoryManager<T extends Repository> {
-    @Nonnull
-    static <R extends Repository> RepositoryManager<R> getInstance(@Nonnull Project project,
-                                                                   @Nonnull Class<RepositoryManager<R>> managerClass) {
+    
+    static <R extends Repository> RepositoryManager<R> getInstance(Project project,
+                                                                   Class<RepositoryManager<R>> managerClass) {
         return project.getExtensionPoint(RepositoryManager.class)
             .findExtensionOrFail(managerClass);
     }
 
     @Nullable
     @SuppressWarnings("unchecked")
-    static <R extends Repository> RepositoryManager<R> getInstance(@Nonnull Project project,
-                                                                   @Nonnull VcsKey vcsKey) {
+    static <R extends Repository> RepositoryManager<R> getInstance(Project project,
+                                                                   VcsKey vcsKey) {
         return project.getExtensionPoint(RepositoryManager.class)
             .findFirstSafe(m -> Objects.equals(m.getVcsKey(), vcsKey));
     }
 
-    @Nonnull
+    
     VcsKey getVcsKey();
 
-    @Nonnull
+    
     AbstractVcs getVcs();
 
     /**
@@ -65,35 +64,35 @@ public interface RepositoryManager<T extends Repository> {
     @Nullable
     T getRepositoryForRoot(@Nullable VirtualFile root);
 
-    boolean isExternal(@Nonnull T repository);
+    boolean isExternal(T repository);
 
     /**
      * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git or Hg repository.
      */
     @Nullable
-    T getRepositoryForFile(@Nonnull VirtualFile file);
+    T getRepositoryForFile(VirtualFile file);
 
     /**
      * Returns the {@link Repository} which the given file belongs to, or {@code null} if the file is not under any Git ot Hg repository.
      */
     @Nullable
-    T getRepositoryForFile(@Nonnull FilePath file);
+    T getRepositoryForFile(FilePath file);
 
     /**
      * @return all repositories tracked by the manager.
      */
-    @Nonnull
+    
     List<T> getRepositories();
 
     /**
      * Registers a repository which doesn't belong to the project.
      */
-    void addExternalRepository(@Nonnull VirtualFile root, @Nonnull T repository);
+    void addExternalRepository(VirtualFile root, T repository);
 
     /**
      * Removes the repository not from the project, when it is not interesting anymore.
      */
-    void removeExternalRepository(@Nonnull VirtualFile root);
+    void removeExternalRepository(VirtualFile root);
 
     boolean moreThanOneRoot();
 

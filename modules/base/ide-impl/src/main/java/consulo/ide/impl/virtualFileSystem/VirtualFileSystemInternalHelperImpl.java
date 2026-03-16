@@ -31,8 +31,7 @@ import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.concurrent.Callable;
@@ -61,19 +60,19 @@ public class VirtualFileSystemInternalHelperImpl implements VirtualFileSystemInt
     }
 
     @Override
-    public Image getFileIcon(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    public Image getFileIcon(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return VfsIconUtil.getIcon(file, flags, (Project) project);
     }
 
     @RequiredReadAction
-    @Nonnull
+    
     @Override
-    public Image getFileIconNoDefer(@Nonnull VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
+    public Image getFileIconNoDefer(VirtualFile file, @Nullable ComponentManager project, @Iconable.IconFlags int flags) {
         return VfsIconUtil.getIconNoDefer(file, flags, project);
     }
 
     @Override
-    public void notifyAboutSlowFileWatcher(@Nonnull LocalizeValue cause) {
+    public void notifyAboutSlowFileWatcher(LocalizeValue cause) {
         Application application = Application.get();
         application.invokeLater(
             () -> NotificationService.getInstance()

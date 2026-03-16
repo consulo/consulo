@@ -18,7 +18,6 @@ package consulo.compiler.artifact.impl.internal;
 import consulo.compiler.artifact.impl.internal.state.ArtifactState;
 import consulo.component.persist.StateSplitterEx;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
  */
 final class ArtifactManagerStateSplitter extends StateSplitterEx {
   @Override
-  public List<Pair<Element, String>> splitState(@Nonnull Element state) {
+  public List<Pair<Element, String>> splitState(Element state) {
     return splitState(state, ArtifactState.NAME_ATTRIBUTE);
   }
 }

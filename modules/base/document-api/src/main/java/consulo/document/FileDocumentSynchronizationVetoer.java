@@ -19,18 +19,17 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class FileDocumentSynchronizationVetoer {
-    public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
+    public boolean maySaveDocument(Document document, boolean isSaveExplicit) {
         return true;
     }
 
-    public boolean mayReloadFileContent(VirtualFile file, @Nonnull Document document) {
+    public boolean mayReloadFileContent(VirtualFile file, Document document) {
         return true;
     }
 }

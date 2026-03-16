@@ -17,7 +17,6 @@ package consulo.virtualFileSystem.internal;
 
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.concurrent.ConcurrencyUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -31,8 +30,8 @@ public class FlushingDaemon {
     private FlushingDaemon() {
     }
 
-    @Nonnull
-    public static ScheduledFuture<?> everyFiveSeconds(@Nonnull Runnable r) {
+    
+    public static ScheduledFuture<?> everyFiveSeconds(Runnable r) {
         return AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(ConcurrencyUtil.underThreadNameRunnable(NAME, r), 5, 5, TimeUnit.SECONDS);
     }
 }

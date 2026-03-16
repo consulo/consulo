@@ -2,7 +2,6 @@
 package consulo.language.duplicateAnalysis.iterator;
 
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
 
 public abstract class NodeIterator implements Cloneable {
   public abstract boolean hasNext();
@@ -18,7 +17,7 @@ public abstract class NodeIterator implements Cloneable {
     }
   }
 
-  public void rewindTo(@Nonnull PsiElement element) {
+  public void rewindTo(PsiElement element) {
     while (current() != element) {
       rewind();
     }

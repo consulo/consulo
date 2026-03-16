@@ -20,8 +20,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class TextChunk {
     public static final TextChunk[] EMPTY_ARRAY = new TextChunk[0];
@@ -30,22 +29,22 @@ public class TextChunk {
     private final String myText;
     private final UsageType myType;
 
-    public TextChunk(@Nonnull TextAttributes attributes, @Nonnull String text) {
+    public TextChunk(TextAttributes attributes, String text) {
         this(attributes, text, null);
     }
 
-    public TextChunk(@Nonnull TextAttributes attributes, @Nonnull String text, @Nullable UsageType type) {
+    public TextChunk(TextAttributes attributes, String text, @Nullable UsageType type) {
         myAttributes = attributes.getFlyweight();
         myText = text;
         myType = type;
     }
 
-    @Nonnull
+    
     public TextAttributes getAttributes() {
         return TextAttributes.fromFlyweight(myAttributes);
     }
 
-    @Nonnull
+    
     public String getText() {
         return myText;
     }
@@ -59,7 +58,7 @@ public class TextChunk {
         return myType;
     }
 
-    @Nonnull
+    
     public SimpleTextAttributes getSimpleAttributesIgnoreBackground() {
         SimpleTextAttributes simples = TextAttributesUtil.fromTextAttributes(getAttributes());
         simples = new SimpleTextAttributes(null, simples.getFgColor(), simples.getWaveColor(), simples.getStyle());

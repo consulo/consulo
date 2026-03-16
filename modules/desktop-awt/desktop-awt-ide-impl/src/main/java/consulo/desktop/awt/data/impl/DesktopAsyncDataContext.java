@@ -10,8 +10,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ class DesktopAsyncDataContext implements AsyncDataContext {
 
     @Nullable
     @Override
-    public <T> T getData(@Nonnull Key<T> dataId) {
+    public <T> T getData(Key<T> dataId) {
         return myDelegate.getData(dataId);
     }
 }

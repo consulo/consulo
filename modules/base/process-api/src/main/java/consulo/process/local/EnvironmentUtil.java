@@ -12,8 +12,7 @@ import consulo.process.io.BaseOutputReader;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
 
@@ -86,7 +85,7 @@ public final class EnvironmentUtil {
    *
    * @return unmodifiable map of the process environment.
    */
-  @Nonnull
+  
   public static Map<String, String> getEnvironmentMap() {
     CompletableFuture<Map<String, String>> getter = ourEnvGetter.get();
     if (getter == null) {
@@ -105,7 +104,7 @@ public final class EnvironmentUtil {
   }
 
   @Nullable
-  public static Boolean loadEnvironment(@Nonnull Runnable activity) {
+  public static Boolean loadEnvironment(Runnable activity) {
     if (!shouldLoadShellEnv()) {
       ourEnvGetter.set(CompletableFuture.completedFuture(getSystemEnv()));
       return null;
@@ -156,7 +155,7 @@ public final class EnvironmentUtil {
     return true;
   }
 
-  @Nonnull
+  
   private static Map<String, String> getSystemEnv() {
     PlatformOperatingSystem os = Platform.current().os();
     if (os.isWindows()) {
@@ -188,7 +187,7 @@ public final class EnvironmentUtil {
    * @see #getEnvironmentMap()
    */
   @Nullable
-  public static String getValue(@Nonnull String name) {
+  public static String getValue(String name) {
     return getEnvironmentMap().get(name);
   }
 
@@ -218,7 +217,7 @@ public final class EnvironmentUtil {
   public static final String DISABLE_OMZ_AUTO_UPDATE = "DISABLE_AUTO_UPDATE";
   private static final String INTELLIJ_ENVIRONMENT_READER = "INTELLIJ_ENVIRONMENT_READER";
 
-  @Nonnull
+  
   private static Map<String, String> getShellEnv() throws IOException {
     return new ShellEnvReader().readShellEnv(null, null);
   }
@@ -243,7 +242,7 @@ public final class EnvironmentUtil {
       myTimeoutMillis = timeoutMillis;
     }
 
-    @Nonnull
+    
     public final Map<String, String> readShellEnv(@Nullable Path file, @Nullable Map<String, String> additionalEnvironment) throws IOException {
       Platform platform = Platform.current();
       String fileName = platform.os().isMac() ? platform.mapExecutableName("printenv") : "printenv.py";
@@ -295,8 +294,8 @@ public final class EnvironmentUtil {
      * @see #runProcessAndReadOutputAndEnvs(List, Path, Consumer, Path)
      */
     protected final
-    @Nonnull
-    Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(@Nonnull List<String> command, @Nullable Path workingDir, @Nonnull Path envFile) throws IOException {
+    
+    Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(List<String> command, @Nullable Path workingDir, Path envFile) throws IOException {
       return runProcessAndReadOutputAndEnvs(command, workingDir, emptyMap(), envFile);
     }
 
@@ -311,11 +310,11 @@ public final class EnvironmentUtil {
      * @see #runProcessAndReadOutputAndEnvs(List, Path, Consumer, Path)
      */
     protected final
-    @Nonnull
-    Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(@Nonnull List<String> command,
+    
+    Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(List<String> command,
                                                                           @Nullable Path workingDir,
                                                                           @Nullable Map<String, String> scriptEnvironment,
-                                                                          @Nonnull Path envFile) throws IOException {
+                                                                          Path envFile) throws IOException {
       return runProcessAndReadOutputAndEnvs(command, workingDir, (it) -> {
         if (scriptEnvironment != null) {
           // we might need default environment for the process to launch correctly
@@ -334,11 +333,11 @@ public final class EnvironmentUtil {
      * @see #runProcessAndReadOutputAndEnvs(List, Path, Path)
      * @see #runProcessAndReadOutputAndEnvs(List, Path, Map, Path)
      */
-    @Nonnull
-    protected final Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(@Nonnull List<String> command,
+    
+    protected final Map.Entry<String, Map<String, String>> runProcessAndReadOutputAndEnvs(List<String> command,
                                                                                           @Nullable Path workingDir,
-                                                                                          @Nonnull Consumer<Map<String, String>> scriptEnvironmentProcessor,
-                                                                                          @Nonnull Path envFile) throws IOException {
+                                                                                          Consumer<Map<String, String>> scriptEnvironmentProcessor,
+                                                                                          Path envFile) throws IOException {
       ProcessBuilder builder = new ProcessBuilder(command).redirectErrorStream(true);
 
       /*
@@ -364,7 +363,7 @@ public final class EnvironmentUtil {
     }
 
     protected
-    @Nonnull
+    
     List<String> getShellProcessCommand() {
       String shellScript = getShell();
       if (shellScript == null || shellScript.isEmpty()) {
@@ -392,8 +391,8 @@ public final class EnvironmentUtil {
    * @param isCommand     true iff command should accept a command, instead of script name, usually {@code -c} parameter
    * @return list of commands for starting a process, e.g. {@code /bin/bash -l -i -c}
    */
-  @Nonnull
-  public static List<String> buildShellProcessCommand(@Nonnull String shellScript, boolean isLogin, boolean isInteractive, boolean isCommand) {
+  
+  public static List<String> buildShellProcessCommand(String shellScript, boolean isLogin, boolean isInteractive, boolean isCommand) {
     List<String> commands = new ArrayList<>();
     commands.add(shellScript);
     if (isLogin && !(shellScript.endsWith("/tcsh") || shellScript.endsWith("/csh"))) {
@@ -411,8 +410,8 @@ public final class EnvironmentUtil {
   }
 
   @SuppressWarnings("SSBasedInspection")
-  @Nonnull
-  public static Map<String, String> parseEnv(@Nonnull String[] lines) {
+  
+  public static Map<String, String> parseEnv(String[] lines) {
     Set<String> toIgnore = new HashSet<>(Arrays.asList("_", "PWD", "SHLVL", DISABLE_OMZ_AUTO_UPDATE, INTELLIJ_ENVIRONMENT_READER));
     Map<String, String> env = System.getenv();
     Map<String, String> newEnv = new HashMap<>();
@@ -436,15 +435,15 @@ public final class EnvironmentUtil {
   }
 
   private static
-  @Nonnull
-  Map<String, String> parseEnv(@Nonnull String text) {
+  
+  Map<String, String> parseEnv(String text) {
     return parseEnv(text.split("\0"));
   }
 
   /**
    * @param timeoutMillis the time-out (in milliseconds) for {@code process} to terminate.
    */
-  private static int waitAndTerminateAfter(@Nonnull Process process, long timeoutMillis) {
+  private static int waitAndTerminateAfter(Process process, long timeoutMillis) {
     Integer exitCode = waitFor(process, timeoutMillis);
     if (exitCode != null) {
       return exitCode;
@@ -483,7 +482,7 @@ public final class EnvironmentUtil {
    */
   private static
   @Nullable
-  Integer waitFor(@Nonnull Process process, long timeoutMillis) {
+  Integer waitFor(Process process, long timeoutMillis) {
     try {
       if (process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)) {
         return process.exitValue();
@@ -495,7 +494,7 @@ public final class EnvironmentUtil {
     return null;
   }
 
-  private static void setCharsetVar(@Nonnull Map<String, String> env) {
+  private static void setCharsetVar(Map<String, String> env) {
     if (!isCharsetVarDefined(env)) {
       String value = setLocaleEnv(env, Charset.defaultCharset());
       LOG.info("LC_CTYPE=" + value);
@@ -513,8 +512,8 @@ public final class EnvironmentUtil {
   }
 
   public static
-  @Nonnull
-  String setLocaleEnv(@Nonnull Map<String, String> env, @Nonnull Charset charset) {
+  
+  String setLocaleEnv(Map<String, String> env, Charset charset) {
     Locale locale = Locale.getDefault();
     String language = locale.getLanguage();
     String country = locale.getCountry();
@@ -532,15 +531,15 @@ public final class EnvironmentUtil {
     return result;
   }
 
-  private static boolean isCharsetVarDefined(@Nonnull Map<String, String> env) {
+  private static boolean isCharsetVarDefined(Map<String, String> env) {
     return !env.isEmpty() && (env.containsKey(LANG) || env.containsKey(LC_ALL) || env.containsKey(LC_CTYPE));
   }
 
-  public static void inlineParentOccurrences(@Nonnull Map<String, String> envs) {
+  public static void inlineParentOccurrences(Map<String, String> envs) {
     inlineParentOccurrences(envs, getEnvironmentMap());
   }
 
-  public static void inlineParentOccurrences(@Nonnull Map<String, String> envs, @Nonnull Map<String, String> parentEnv) {
+  public static void inlineParentOccurrences(Map<String, String> envs, Map<String, String> parentEnv) {
     for (Map.Entry<String, String> entry : envs.entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
@@ -563,7 +562,7 @@ public final class EnvironmentUtil {
   }
 
   @TestOnly
-  static Map<String, String> testParser(@Nonnull String lines) {
+  static Map<String, String> testParser(String lines) {
     try {
       return parseEnv(lines);
     }
@@ -587,7 +586,7 @@ public final class EnvironmentUtil {
 
     private final StringBuffer myBuffer;
 
-    StreamGobbler(@Nonnull InputStream stream) {
+    StreamGobbler(InputStream stream) {
       super(stream, Charset.defaultCharset(), OPTIONS);
       myBuffer = new StringBuffer();
       startWithoutChangingThreadName();
@@ -595,18 +594,18 @@ public final class EnvironmentUtil {
 
     @Override
     protected
-    @Nonnull
-    Future<?> executeOnPooledThread(@Nonnull Runnable runnable) {
+    
+    Future<?> executeOnPooledThread(Runnable runnable) {
       return ForkJoinPool.commonPool().submit(runnable);
     }
 
     @Override
-    protected void onTextAvailable(@Nonnull String text) {
+    protected void onTextAvailable(String text) {
       myBuffer.append(text);
     }
 
     public
-    @Nonnull
+    
     String getText() {
       return myBuffer.toString();
     }

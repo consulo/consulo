@@ -17,12 +17,11 @@ package consulo.navigation;
 
 import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public interface NavigatableWithText extends Navigatable {
-    @Nonnull
+    
     LocalizeValue getNavigateActionText(boolean focusEditor);
 }

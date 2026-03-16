@@ -15,7 +15,6 @@
  */
 package consulo.language.psi;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author yole
@@ -24,8 +23,8 @@ public class ElementDescriptionUtil {
     private ElementDescriptionUtil() {
     }
 
-    @Nonnull
-    public static String getElementDescription(@Nonnull PsiElement element, @Nonnull ElementDescriptionLocation location) {
+    
+    public static String getElementDescription(PsiElement element, ElementDescriptionLocation location) {
         for (ElementDescriptionProvider provider : ElementDescriptionProvider.EP_NAME.getExtensionList()) {
             String result = provider.getElementDescription(element, location);
             if (result != null) {

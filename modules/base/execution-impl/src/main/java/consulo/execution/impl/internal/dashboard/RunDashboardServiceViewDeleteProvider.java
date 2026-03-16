@@ -18,7 +18,6 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,7 +33,7 @@ final class RunDashboardServiceViewDeleteProvider implements ServiceViewContribu
   }
 
   @Override
-  public void deleteElement(@Nonnull DataContext dataContext) {
+  public void deleteElement(DataContext dataContext) {
     List<ConfigurationType> targetTypes = getTargetTypes(dataContext);
     if (targetTypes.isEmpty()) {
       if (myDelegate != null) {
@@ -72,7 +71,7 @@ final class RunDashboardServiceViewDeleteProvider implements ServiceViewContribu
   }
 
   @Override
-  public boolean canDeleteElement(@Nonnull DataContext dataContext) {
+  public boolean canDeleteElement(DataContext dataContext) {
     List<ConfigurationType> targetTypes = getTargetTypes(dataContext);
     return !targetTypes.isEmpty() || (myDelegate != null && myDelegate.canDeleteElement(dataContext));
   }

@@ -23,7 +23,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiWhiteSpace;
 
-import jakarta.annotation.Nonnull;
 
 public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
   public PsiWhiteSpaceImpl(CharSequence text) {
@@ -31,7 +30,7 @@ public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
   }
 
   @Override
-  public void accept(@Nonnull PsiElementVisitor visitor){
+  public void accept(PsiElementVisitor visitor){
     visitor.visitWhiteSpace(this);
   }
 
@@ -41,7 +40,7 @@ public class PsiWhiteSpaceImpl extends LeafPsiElement implements PsiWhiteSpace {
 
   @RequiredReadAction
   @Override
-  @Nonnull
+  
   public Language getLanguage() {
     PsiElement master = getParent();
     return master != null ?  master.getLanguage() : Language.ANY;

@@ -22,32 +22,31 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.text.TrigramBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSearchEngine {
     @Nullable
     @Override
-    public FindInProjectSearcher createSearcher(@Nonnull FindModel findModel, @Nonnull Project project) {
+    public FindInProjectSearcher createSearcher(FindModel findModel, Project project) {
         return new MyFindInProjectSearcher(project, findModel);
     }
 
     private static class MyFindInProjectSearcher implements FindInProjectSearcher {
-        @Nonnull
+        
         private final ProjectFileIndex myFileIndex;
-        @Nonnull
+        
         private final FileBasedIndex myFileBasedIndex;
-        @Nonnull
+        
         private final Project myProject;
-        @Nonnull
+        
         private final FindModel myFindModel;
 
         private final boolean myHasTrigrams;
         private final String myStringToFindInIndices;
 
-        MyFindInProjectSearcher(@Nonnull Project project, @Nonnull FindModel findModel) {
+        MyFindInProjectSearcher(Project project, FindModel findModel) {
             myProject = project;
             myFindModel = findModel;
             myFileIndex = ProjectFileIndex.getInstance(myProject);
@@ -63,7 +62,7 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
             myHasTrigrams = hasTrigrams(myStringToFindInIndices);
         }
 
-        @Nonnull
+        
         @Override
         @RequiredReadAction
         public Collection<VirtualFile> searchForOccurrences() {
@@ -144,16 +143,16 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
         }
 
         @Override
-        public boolean isCovered(@Nonnull VirtualFile file) {
+        public boolean isCovered(VirtualFile file) {
             return myHasTrigrams && isCoveredByIndex(file) && (myFileIndex.isInContent(file) || myFileIndex.isInLibrary(file));
         }
 
-        private boolean isCoveredByIndex(@Nonnull VirtualFile file) {
+        private boolean isCoveredByIndex(VirtualFile file) {
             FileType fileType = file.getFileType();
             return TrigramIndex.isIndexable(fileType) && myFileBasedIndex.isIndexingCandidate(file, TrigramIndex.INDEX_ID);
         }
 
-        private static boolean hasTrigrams(@Nonnull String text) {
+        private static boolean hasTrigrams(String text) {
             return !TrigramBuilder.processTrigrams(text, new TrigramBuilder.TrigramProcessor() {
                 @Override
                 public boolean test(int value) {
@@ -162,8 +161,8 @@ public class IdeaIndexBasedFindInProjectSearchEngine implements FindInProjectSea
             });
         }
 
-        @Nonnull
-        private static String getStringToFindInIndexes(@Nonnull FindModel findModel, @Nonnull Project project) {
+        
+        private static String getStringToFindInIndexes(FindModel findModel, Project project) {
             String stringToFind = findModel.getStringToFind();
 
             if (findModel.isRegularExpressions()) {

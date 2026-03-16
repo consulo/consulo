@@ -20,7 +20,6 @@ import consulo.language.file.FileTypeManager;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
@@ -36,12 +35,12 @@ public class FileTypeRenderer extends ColoredListCellRenderer<FileType> {
     this(new DefaultFileTypeListProvider());
   }
 
-  public FileTypeRenderer(@Nonnull FileTypeListProvider fileTypeListProvider) {
+  public FileTypeRenderer(FileTypeListProvider fileTypeListProvider) {
     myFileTypeListProvider = fileTypeListProvider;
   }
 
   @Override
-  protected void customizeCellRenderer(@Nonnull JList<? extends FileType> list, FileType type, int index, boolean selected, boolean hasFocus) {
+  protected void customizeCellRenderer(JList<? extends FileType> list, FileType type, int index, boolean selected, boolean hasFocus) {
     setEnabled(list.isEnabled());
     
     setIcon(type.getIcon());

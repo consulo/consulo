@@ -15,8 +15,6 @@
  */
 package consulo.language.editor.impl.internal.hint;
 
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -26,7 +24,7 @@ public class TooltipGroup implements Comparable<TooltipGroup> {
   // the higher priority the more probable this tooltip will overlap other tooltips
   private final int myPriority;
 
-  public TooltipGroup(@Nonnull @NonNls String name, int priority) {
+  public TooltipGroup(String name, int priority) {
     myName = name;
     myPriority = priority;
   }

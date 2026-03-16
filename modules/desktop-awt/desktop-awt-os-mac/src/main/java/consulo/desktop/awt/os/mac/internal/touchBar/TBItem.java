@@ -2,21 +2,19 @@
 package consulo.desktop.awt.os.mac.internal.touchBar;
 
 import consulo.application.util.mac.foundation.ID;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 public abstract class TBItem {
-    private final @Nonnull String myName;
+    private final String myName;
     private @Nullable String myUid;
 
-    protected @Nonnull ID myNativePeer = ID.NIL; // java wrapper holds native object
+    protected ID myNativePeer = ID.NIL; // java wrapper holds native object
 
     final @Nullable ItemListener myListener;
     boolean myIsVisible = true;
 
-    TBItem(@Nonnull @NonNls String name, @Nullable ItemListener listener) {
+    TBItem(String name, @Nullable ItemListener listener) {
         myName = name;
         myListener = listener;
     }
@@ -26,13 +24,13 @@ public abstract class TBItem {
         return myUid == null ? String.format("%s [null-uid]", myName) : myUid;
     }
 
-    @Nonnull
+    
     String getName() {
         return myName;
     }
 
     @TestOnly
-    public @Nonnull ID getNativePeer() {
+    public ID getNativePeer() {
         return myNativePeer;
     }
 
@@ -46,7 +44,7 @@ public abstract class TBItem {
     }
 
     synchronized
-    @Nonnull ID createNativePeer() {
+    ID createNativePeer() {
         // called from AppKit (when NSTouchBarDelegate create items)
         if (myNativePeer == ID.NIL) {
             myNativePeer = _createNativePeer();

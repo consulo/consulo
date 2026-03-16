@@ -4,7 +4,6 @@ package consulo.language.editor.inspection;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
-import jakarta.annotation.Nonnull;
 
 public enum ProblemHighlightType {
 
@@ -65,8 +64,8 @@ public enum ProblemHighlightType {
      */
     LIKE_MARKED_FOR_REMOVAL;
 
-    @Nonnull
-    public static ProblemHighlightType from(@Nonnull HighlightInfoType infoType) {
+    
+    public static ProblemHighlightType from(HighlightInfoType infoType) {
         if (infoType == HighlightInfoType.ERROR || infoType == HighlightInfoType.WRONG_REF) {
             return ProblemHighlightType.ERROR;
         }
@@ -79,9 +78,9 @@ public enum ProblemHighlightType {
         return ProblemHighlightType.WEAK_WARNING;
     }
 
-    @Nonnull
+    
     @SuppressWarnings("deprecation")
-    public static ProblemHighlightType from(@Nonnull HighlightSeverity severity) {
+    public static ProblemHighlightType from(HighlightSeverity severity) {
         if (severity == HighlightSeverity.ERROR) {
             return ProblemHighlightType.ERROR;
         }

@@ -31,19 +31,18 @@ import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public abstract class ListenerDiffViewerBase extends DiffViewerBase {
-  @Nonnull
+  
   private final DocumentListener myDocumentListener;
   @Nullable private final VirtualFileListener myFileListener;
 
-  public ListenerDiffViewerBase(@Nonnull DiffContext context, @Nonnull ContentDiffRequest request) {
+  public ListenerDiffViewerBase(DiffContext context, ContentDiffRequest request) {
     super(context, request);
     myDocumentListener = createDocumentListener();
     myFileListener = createFileListener(request);
@@ -65,7 +64,7 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
     super.onDispose();
   }
 
-  @Nonnull
+  
   protected DocumentListener createDocumentListener() {
     return new DocumentAdapter() {
       @Override
@@ -80,8 +79,8 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
     };
   }
 
-  @jakarta.annotation.Nullable
-  protected VirtualFileListener createFileListener(@Nonnull ContentDiffRequest request) {
+  @Nullable
+  protected VirtualFileListener createFileListener(ContentDiffRequest request) {
     final List<VirtualFile> files = new ArrayList<VirtualFile>(0);
     for (DiffContent content : request.getContents()) {
       if (content instanceof FileContent && !(content instanceof DocumentContent)) {
@@ -93,14 +92,14 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
 
     return new VirtualFileAdapter() {
       @Override
-      public void contentsChanged(@Nonnull VirtualFileEvent event) {
+      public void contentsChanged(VirtualFileEvent event) {
         if (files.contains(event.getFile())) {
           onFileChange(event);
         }
       }
 
       @Override
-      public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
+      public void propertyChanged(VirtualFilePropertyEvent event) {
         if (files.contains(event.getFile())) {
           onFileChange(event);
         }
@@ -113,16 +112,16 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
   //
 
   @RequiredUIAccess
-  protected void onDocumentChange(@Nonnull DocumentEvent event) {
+  protected void onDocumentChange(DocumentEvent event) {
     scheduleRediff();
   }
 
   @RequiredUIAccess
-  protected void onBeforeDocumentChange(@Nonnull DocumentEvent event) {
+  protected void onBeforeDocumentChange(DocumentEvent event) {
   }
 
   @RequiredUIAccess
-  protected void onFileChange(@Nonnull VirtualFileEvent event) {
+  protected void onFileChange(VirtualFileEvent event) {
     scheduleRediff();
   }
 
@@ -130,7 +129,7 @@ public abstract class ListenerDiffViewerBase extends DiffViewerBase {
   // Helpers
   //
 
-  @Nonnull
+  
   private Set<Document> getDocuments() {
     Set<Document> documents = new HashSet<Document>();
     for (DiffContent content : myRequest.getContents()) {

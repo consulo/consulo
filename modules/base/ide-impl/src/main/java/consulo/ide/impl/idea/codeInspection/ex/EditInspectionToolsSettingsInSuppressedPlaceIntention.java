@@ -33,8 +33,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
     private LocalizeValue myDisplayName;
 
     @Override
-    @Nonnull
+    
     public LocalizeValue getText() {
         return myDisplayName == null
             ? InspectionLocalize.editOptionsOfReporterInspectionFamily()
@@ -84,7 +83,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
 
     @Override
     @RequiredReadAction
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         myId = getSuppressedId(editor, file);
         if (myId != null) {
             InspectionToolWrapper toolWrapper = getTool(project, file);
@@ -105,7 +104,7 @@ public class EditInspectionToolsSettingsInSuppressedPlaceIntention implements In
 
     @Override
     @RequiredUIAccess
-    public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+    public void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
         InspectionToolWrapper toolWrapper = getTool(project, file);
         if (toolWrapper == null) {
             return;

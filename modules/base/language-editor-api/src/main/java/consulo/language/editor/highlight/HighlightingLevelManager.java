@@ -20,7 +20,6 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class HighlightingLevelManager {
@@ -28,7 +27,7 @@ public abstract class HighlightingLevelManager {
     return project.getInstance(HighlightingLevelManager.class);
   }
 
-  public abstract boolean shouldHighlight(@Nonnull PsiElement psiRoot);
+  public abstract boolean shouldHighlight(PsiElement psiRoot);
 
-  public abstract boolean shouldInspect(@Nonnull PsiElement psiRoot);
+  public abstract boolean shouldInspect(PsiElement psiRoot);
 }

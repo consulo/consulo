@@ -33,8 +33,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PsiEditorUtil {
   private static final Logger LOG = Logger.getInstance(PsiEditorUtil.class);
@@ -56,7 +55,7 @@ public class PsiEditorUtil {
    */
   @Nullable
   @RequiredUIAccess
-  public static Editor findEditor(@Nonnull PsiElement element) {
+  public static Editor findEditor(PsiElement element) {
     PsiFile psiFile = element.getContainingFile();
     VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
     if (virtualFile == null) {
@@ -89,7 +88,7 @@ public class PsiEditorUtil {
     return null;
   }
 
-  @Nonnull
+  
   public static PsiFile getPsiFile(Editor editor) {
     Project project = editor.getProject();
     assert project != null;

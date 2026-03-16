@@ -1,13 +1,12 @@
 package consulo.language.editor.problemView;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 public interface FileProblem extends Problem {
     /**
      * The file that the problem belongs to.
      */
-    @Nonnull
+    
     VirtualFile getFile();
 
     /**

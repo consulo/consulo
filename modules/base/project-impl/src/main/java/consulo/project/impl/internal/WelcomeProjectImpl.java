@@ -21,8 +21,7 @@ import consulo.project.ProjectManager;
 import consulo.project.ProjectType;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -33,9 +32,9 @@ public class WelcomeProjectImpl extends ProjectImpl {
 
     private Element myStateElement;
 
-    WelcomeProjectImpl(@Nonnull Application application,
-                       @Nonnull ProjectManager manager,
-                       @Nonnull ComponentBinding componentBinding) {
+    WelcomeProjectImpl(Application application,
+                       ProjectManager manager,
+                       ComponentBinding componentBinding) {
         super(application, manager, "", WELCOME_PROJECT_NAME, true, componentBinding);
     }
 
@@ -48,7 +47,6 @@ public class WelcomeProjectImpl extends ProjectImpl {
         myStateElement = stateElement;
     }
 
-    @Nonnull
     @Override
     public ProjectType getProjectType() {
         return ProjectType.WELCOME;

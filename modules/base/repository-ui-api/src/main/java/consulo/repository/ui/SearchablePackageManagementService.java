@@ -15,7 +15,6 @@
  */
 package consulo.repository.ui;
 
-import jakarta.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,8 +28,8 @@ import java.util.List;
  * This implementation not support view all packages, only return of search. Query will be empty, if no search query
  */
 public interface SearchablePackageManagementService {
-  @Nonnull
-  List<RepoPackage> getPackages(@Nonnull String searchQuery, int from, int to);
+  
+  List<RepoPackage> getPackages(String searchQuery, int from, int to);
 
   int getPageSize();
 }

@@ -5,15 +5,14 @@ import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.event.FocusChangeListener;
 import consulo.disposer.Disposable;
 import consulo.document.internal.EditReadOnlyListener;
-import jakarta.annotation.Nonnull;
 import kava.beans.PropertyChangeListener;
 
 public interface EditorEventMulticasterEx extends EditorEventMulticaster {
-    void addErrorStripeListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parentDisposable);
+    void addErrorStripeListener(ErrorStripeListener listener, Disposable parentDisposable);
 
-    void addEditReadOnlyListener(@Nonnull EditReadOnlyListener listener, @Nonnull Disposable parentDisposable);
+    void addEditReadOnlyListener(EditReadOnlyListener listener, Disposable parentDisposable);
 
-    void addPropertyChangeListener(@Nonnull PropertyChangeListener listener, @Nonnull Disposable parentDisposable);
+    void addPropertyChangeListener(PropertyChangeListener listener, Disposable parentDisposable);
 
-    void addFocusChangeListener(@Nonnull FocusChangeListener listener, @Nonnull Disposable parentDisposable);
+    void addFocusChangeListener(FocusChangeListener listener, Disposable parentDisposable);
 }

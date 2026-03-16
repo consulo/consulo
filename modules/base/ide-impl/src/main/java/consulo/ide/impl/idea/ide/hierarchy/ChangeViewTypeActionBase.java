@@ -25,7 +25,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author cdr
@@ -37,11 +36,11 @@ abstract class ChangeViewTypeActionBase extends ToggleAction {
         super(shortDescription, longDescription, icon);
     }
 
-    protected ChangeViewTypeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected ChangeViewTypeActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected ChangeViewTypeActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, Image icon) {
+    protected ChangeViewTypeActionBase(LocalizeValue text, LocalizeValue description, Image icon) {
         super(text, description, icon);
     }
 
@@ -54,7 +53,7 @@ abstract class ChangeViewTypeActionBase extends ToggleAction {
     protected abstract String getTypeName();
 
     @Override
-    public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+    public final void setSelected(AnActionEvent event, boolean flag) {
         if (flag) {
             TypeHierarchyBrowserBase browser = getTypeHierarchyBrowser(event.getDataContext());
             //        setWaitCursor();
@@ -68,7 +67,7 @@ abstract class ChangeViewTypeActionBase extends ToggleAction {
 
     @Override
     @RequiredUIAccess
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         // its important to assign the myTypeHierarchyBrowser first
         super.update(event);
         Presentation presentation = event.getPresentation();

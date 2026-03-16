@@ -11,8 +11,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         clearIndexes();
     }
 
-    @Nonnull
+    
     protected abstract List<RunAnythingGroup> getGroups();
 
     void clearIndexes() {
@@ -39,7 +38,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         RunAnythingGroup.shiftIndexes(getGroups(), baseIndex, shift);
     }
 
-    @Nonnull
+    
     LocalizeValue getTitle(int titleIndex) {
         return RunAnythingGroup.getTitle(getGroups(), titleIndex);
     }
@@ -85,7 +84,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
     }
 
     public static class RunAnythingMainListModel extends RunAnythingSearchListModel {
-        @Nonnull
+        
         @Override
         public List<RunAnythingGroup> getGroups() {
             List<RunAnythingGroup> groups = ContainerUtil.newArrayList(RunAnythingRecentGroup.INSTANCE);
@@ -98,7 +97,7 @@ public abstract class RunAnythingSearchListModel extends CollectionListModel<Obj
         @Nullable
         private List<RunAnythingGroup> myHelpGroups;
 
-        @Nonnull
+        
         @Override
         protected List<RunAnythingGroup> getGroups() {
             if (myHelpGroups == null) {

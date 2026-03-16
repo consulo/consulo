@@ -22,14 +22,13 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.BidiTextDirection;
-import jakarta.annotation.Nonnull;
 
 public abstract class SetEditorBidiTextDirectionAction extends ToggleAction {
     private final BidiTextDirection myDirection;
 
     protected SetEditorBidiTextDirectionAction(
-        @Nonnull LocalizeValue text,
-        @Nonnull LocalizeValue description,
+        LocalizeValue text,
+        LocalizeValue description,
         BidiTextDirection direction
     ) {
         super(text, description);
@@ -37,13 +36,13 @@ public abstract class SetEditorBidiTextDirectionAction extends ToggleAction {
     }
 
     @Override
-    public boolean isSelected(@Nonnull AnActionEvent e) {
+    public boolean isSelected(AnActionEvent e) {
         return EditorSettingsExternalizable.getInstance().getBidiTextDirection() == myDirection;
     }
 
     @Override
     @RequiredUIAccess
-    public void setSelected(@Nonnull AnActionEvent e, boolean state) {
+    public void setSelected(AnActionEvent e, boolean state) {
         if (myDirection != EditorSettingsExternalizable.getInstance().getBidiTextDirection()) {
             EditorSettingsExternalizable.getInstance().setBidiTextDirection(myDirection);
             EditorFactory.getInstance().refreshAllEditors();

@@ -17,7 +17,7 @@ package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiNamedElement;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max

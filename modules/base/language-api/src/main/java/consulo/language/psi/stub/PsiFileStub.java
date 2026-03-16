@@ -18,8 +18,7 @@ package consulo.language.psi.stub;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.UserDataHolder;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author max
@@ -29,7 +28,7 @@ public interface PsiFileStub<T extends PsiFile> extends StubElement<T>, UserData
 
   StubFileElementType getType();
 
-  @Nonnull
+  
   PsiFileStub[] getStubRoots();
 
   @Nullable

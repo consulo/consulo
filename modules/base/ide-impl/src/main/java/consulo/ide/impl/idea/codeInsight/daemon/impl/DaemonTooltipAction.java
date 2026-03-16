@@ -24,8 +24,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.InputEvent;
 import java.util.List;
@@ -43,14 +42,14 @@ public class DaemonTooltipAction implements TooltipAction {
     myActualOffset = actualOffset;
   }
 
-  @Nonnull
+  
   @Override
   public LocalizeValue getText() {
     return myFixText;
   }
 
   @Override
-  public void execute(@Nonnull Editor editor, @Nullable InputEvent event) {
+  public void execute(Editor editor, @Nullable InputEvent event) {
     Project project = editor.getProject();
 
     if (project == null) {
@@ -80,7 +79,7 @@ public class DaemonTooltipAction implements TooltipAction {
   }
 
   @Override
-  public void showAllActions(@Nonnull Editor editor) {
+  public void showAllActions(Editor editor) {
     editor.getCaretModel().moveToOffset(myActualOffset);
 
     Project project = editor.getProject();

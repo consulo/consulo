@@ -32,8 +32,7 @@ import consulo.usage.rule.UsageInFile;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -47,7 +46,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
 
   @Override
   @Nullable
-  public UsageGroup groupUsage(@Nonnull Usage usage) {
+  public UsageGroup groupUsage(Usage usage) {
     if (usage instanceof UsageInFile) {
       UsageInFile usageInFile = (UsageInFile)usage;
       VirtualFile file = usageInFile.getFile();
@@ -92,7 +91,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       String url = myDir.getPresentableUrl();
       return url != null ? url : "<invalid>";
@@ -147,7 +146,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       if (!isValid()) return;
       sink.set(VirtualFile.KEY, myDir);
       sink.lazy(PsiElement.KEY, () -> getDirectory());
@@ -173,7 +172,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    @Nonnull
+    
     public String getText(UsageView view) {
       return myPackage.getQualifiedName();
     }
@@ -219,7 +218,7 @@ public class DirectoryGroupingRule implements UsageGroupingRule {
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
       if (!isValid()) return;
       sink.set(PsiElement.KEY, myPackage);
     }

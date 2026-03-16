@@ -20,8 +20,7 @@ import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
@@ -36,15 +35,15 @@ public abstract class MacroBase extends Macro {
   }
 
   @Nullable
-  protected abstract Result calculateResult(@Nonnull Expression[] params, ExpressionContext context, boolean quick);
+  protected abstract Result calculateResult(Expression[] params, ExpressionContext context, boolean quick);
 
   @Override
-  public Result calculateResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateResult(Expression[] params, ExpressionContext context) {
     return calculateResult(params, context, false);
   }
 
   @Override
-  public Result calculateQuickResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public Result calculateQuickResult(Expression[] params, ExpressionContext context) {
     return calculateResult(params, context, true);
   }
 
@@ -58,19 +57,19 @@ public abstract class MacroBase extends Macro {
     return myDescription;
   }
 
-  @Nonnull
+  
   @Override
   public String getDefaultValue() {
     return "a";
   }
 
   @Nullable
-  public static String getTextResult(@Nonnull Expression[] params, ExpressionContext context) {
+  public static String getTextResult(Expression[] params, ExpressionContext context) {
     return getTextResult(params, context, false);
   }
 
   @Nullable
-  public static String getTextResult(@Nonnull Expression[] params, ExpressionContext context, boolean useSelection) {
+  public static String getTextResult(Expression[] params, ExpressionContext context, boolean useSelection) {
     if (params.length == 1) {
       Result result = params[0].calculateResult(context);
       if (result == null && useSelection) {

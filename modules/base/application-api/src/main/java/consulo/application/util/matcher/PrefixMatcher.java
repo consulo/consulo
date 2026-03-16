@@ -2,7 +2,6 @@ package consulo.application.util.matcher;
 
 import consulo.application.progress.ProgressManager;
 
-import jakarta.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -16,7 +15,7 @@ public abstract class PrefixMatcher {
     myPrefix = prefix;
   }
 
-  public boolean prefixMatches(@Nonnull CompositeStringHolder element) {
+  public boolean prefixMatches(CompositeStringHolder element) {
     for (String s : element.getAllStrings()) {
       if (prefixMatches(s)) {
         return true;
@@ -38,15 +37,15 @@ public abstract class PrefixMatcher {
     return prefixMatches(name);
   }
 
-  public abstract boolean prefixMatches(@Nonnull String name);
+  public abstract boolean prefixMatches(String name);
 
-  @Nonnull
+  
   public final String getPrefix() {
     return myPrefix;
   }
 
-  @Nonnull
-  public abstract PrefixMatcher cloneWithPrefix(@Nonnull String prefix);
+  
+  public abstract PrefixMatcher cloneWithPrefix(String prefix);
 
   public int matchingDegree(String string) {
     return 0;
@@ -57,8 +56,8 @@ public abstract class PrefixMatcher {
    * "Start matching" items go first, then others.
    * Within both groups names are sorted lexicographically in a case-insensitive way.
    */
-  @Nonnull
-  public LinkedHashSet<String> sortMatching(@Nonnull Collection<String> _names) {
+  
+  public LinkedHashSet<String> sortMatching(Collection<String> _names) {
     ProgressManager.checkCanceled();
     if (getPrefix().isEmpty()) {
       return new LinkedHashSet<>(_names);

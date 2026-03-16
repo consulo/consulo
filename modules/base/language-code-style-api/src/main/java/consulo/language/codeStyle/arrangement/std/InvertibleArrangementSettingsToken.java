@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle.arrangement.std;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Tokens that can be used in conditions in inverted state,
@@ -28,6 +27,6 @@ public interface InvertibleArrangementSettingsToken {
   /**
    * Inverted representation value that will be used in UI
    */
-  @Nonnull
+  
   String getInvertedRepresentationValue();
 }

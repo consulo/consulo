@@ -23,8 +23,7 @@ import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author nik
@@ -170,7 +169,7 @@ public class BreakpointState<B extends XBreakpoint<P>, P extends XBreakpointProp
     myDependencyState = dependencyState;
   }
 
-  public XBreakpointBase<B,P,?> createBreakpoint(@Nonnull T type, @Nonnull XBreakpointManagerImpl breakpointManager) {
+  public XBreakpointBase<B,P,?> createBreakpoint(T type, XBreakpointManagerImpl breakpointManager) {
     return new XBreakpointBase<B, P, BreakpointState<B,P,?>>(type, breakpointManager, this);
   }
 

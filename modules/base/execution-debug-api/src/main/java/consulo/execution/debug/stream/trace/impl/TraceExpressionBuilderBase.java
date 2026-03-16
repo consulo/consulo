@@ -13,7 +13,6 @@ import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
 import consulo.execution.debug.stream.wrapper.StreamChain;
 import consulo.execution.debug.stream.wrapper.TerminatorStreamCall;
 import consulo.execution.debug.stream.wrapper.impl.StreamChainImpl;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +25,14 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
     private final HandlerFactory handlerFactory;
     protected final String resultVariableName = "myRes";
 
-    protected TraceExpressionBuilderBase(@Nonnull Dsl dsl, @Nonnull HandlerFactory handlerFactory) {
+    protected TraceExpressionBuilderBase(Dsl dsl, HandlerFactory handlerFactory) {
         this.dsl = dsl;
         this.handlerFactory = handlerFactory;
     }
 
-    @Nonnull
+    
     @Override
-    public String createTraceExpression(@Nonnull StreamChain chain) {
+    public String createTraceExpression(StreamChain chain) {
         List<IntermediateCallHandler> intermediateHandlers = new ArrayList<>();
         List<IntermediateStreamCall> intermediateCalls = chain.getIntermediateCalls();
         for (int i = 0; i < intermediateCalls.size(); i++) {
@@ -75,11 +74,11 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
         });
     }
 
-    @Nonnull
+    
     private StreamChain buildTraceChain(
-        @Nonnull StreamChain chain,
-        @Nonnull List<IntermediateCallHandler> intermediateCallHandlers,
-        @Nonnull TerminatorCallHandler terminatorHandler
+        StreamChain chain,
+        List<IntermediateCallHandler> intermediateCallHandlers,
+        TerminatorCallHandler terminatorHandler
     ) {
         List<IntermediateStreamCall> newIntermediateCalls = new ArrayList<>();
 
@@ -106,17 +105,17 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
         return new StreamChainImpl(chain.getQualifierExpression(), newIntermediateCalls, terminatorCall, chain.getContext());
     }
 
-    @Nonnull
-    private IntermediateStreamCall createTimePeekCall(@Nonnull GenericType elementType) {
+    
+    private IntermediateStreamCall createTimePeekCall(GenericType elementType) {
         return dsl.createPeekCall(elementType, dsl.lambda("x", lambda -> {
             lambda.doReturn(dsl.updateTime());
         }));
     }
 
-    @Nonnull
+    
     private CodeBlock buildDeclarations(
-        @Nonnull List<IntermediateCallHandler> intermediateCallsHandlers,
-        @Nonnull TerminatorCallHandler terminatorHandler
+        List<IntermediateCallHandler> intermediateCallsHandlers,
+        TerminatorCallHandler terminatorHandler
     ) {
         return dsl.block(block -> {
             for (IntermediateCallHandler handler : intermediateCallsHandlers) {
@@ -130,8 +129,8 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
         });
     }
 
-    @Nonnull
-    private CodeBlock buildStreamExpression(@Nonnull StreamChain chain, @Nonnull Variable streamResult) {
+    
+    private CodeBlock buildStreamExpression(StreamChain chain, Variable streamResult) {
         GenericType resultType = chain.getTerminationCall().getResultType();
         return dsl.block(block -> {
             block.declare(streamResult, dsl.getNullExpression(), true);
@@ -159,16 +158,16 @@ public abstract class TraceExpressionBuilderBase implements TraceExpressionBuild
         });
     }
 
-    @Nonnull
-    protected GenericType evaluationResultArrayElementType(@Nonnull GenericType resultType) {
+    
+    protected GenericType evaluationResultArrayElementType(GenericType resultType) {
         return resultType;
     }
 
-    @Nonnull
+    
     private CodeBlock buildFillInfo(
-        @Nonnull List<IntermediateCallHandler> intermediateCallsHandlers,
-        @Nonnull TerminatorCallHandler terminatorHandler,
-        @Nonnull ArrayVariable info
+        List<IntermediateCallHandler> intermediateCallsHandlers,
+        TerminatorCallHandler terminatorHandler,
+        ArrayVariable info
     ) {
         List<TraceHandler> handlers = new ArrayList<>(intermediateCallsHandlers);
         handlers.add(terminatorHandler);

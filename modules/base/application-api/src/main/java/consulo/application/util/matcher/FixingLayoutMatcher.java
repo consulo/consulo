@@ -4,15 +4,14 @@ package consulo.application.util.matcher;
 
 import consulo.application.internal.InternalKeyboardLayoutUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Dmitry Avdeev
  * @see NameUtil#buildMatcher(String)
  */
 public class FixingLayoutMatcher extends MatcherWithFallback {
-  public FixingLayoutMatcher(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+  public FixingLayoutMatcher(String pattern, NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
     super(new MinusculeMatcherImpl(pattern, options, hardSeparators), withFixedLayout(pattern, options, hardSeparators));
   }
 
@@ -44,8 +43,7 @@ public class FixingLayoutMatcher extends MatcherWithFallback {
     return null;
   }
 
-  @Nullable
-  private static MinusculeMatcher withFixedLayout(@Nonnull String pattern, @Nonnull NameUtil.MatchingCaseSensitivity options, String hardSeparators) {
+  private static MinusculeMatcher withFixedLayout(String pattern, NameUtil.@Nullable MatchingCaseSensitivity options, String hardSeparators) {
     String s = fixLayout(pattern);
     if (s != null && !s.equals(pattern)) {
       return new MinusculeMatcherImpl(s, options, hardSeparators);

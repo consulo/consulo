@@ -14,8 +14,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.util.List;
@@ -36,7 +35,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         myCachedValuesFactory = cachedValuesFactory;
     }
 
-    @Nonnull
+   
     private Data<T> computeData(Supplier<? extends CachedValueProvider.Result<T>> doCompute) {
         CachedValueProvider.Result<T> result;
         CachedValueProfiler.ValueTracker tracker;
@@ -79,8 +78,8 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         myData = data == null ? null : new SoftReference<>(data);
     }
 
-    @Nonnull
-    protected Object[] normalizeDependencies(@Nonnull CachedValueProvider.Result<T> result) {
+   
+    protected Object[] normalizeDependencies(CachedValueProvider.Result<T> result) {
         Object[] items = result.getDependencyItems();
         T value = result.getValue();
         Object[] rawDependencies = myTrackValue && value != null ? ArrayUtil.append(items, value) : items;
@@ -104,7 +103,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return data != null && checkUpToDate(data) ? data : null;
     }
 
-    private boolean checkUpToDate(@Nonnull Data<T> data) {
+    private boolean checkUpToDate(Data<T> data) {
         if (isUpToDate(data)) {
             return true;
         }
@@ -119,7 +118,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return SoftReference.dereference(myData);
     }
 
-    protected boolean isUpToDate(@Nonnull Data<T> data) {
+    protected boolean isUpToDate(Data<T> data) {
         for (int i = 0; i < data.myDependencies.length; i++) {
             Object dependency = data.myDependencies[i];
             if (isDependencyOutOfDate(dependency, data.myTimeStamps[i])) {
@@ -130,7 +129,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return true;
     }
 
-    protected boolean isDependencyOutOfDate(@Nonnull Object dependency, long oldTimeStamp) {
+    protected boolean isDependencyOutOfDate(Object dependency, long oldTimeStamp) {
         if (dependency instanceof CachedValueBase cachedValueBase) {
             return !cachedValueBase.hasUpToDateValue();
         }
@@ -138,7 +137,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         return timeStamp < 0 || timeStamp != oldTimeStamp;
     }
 
-    private static void collectDependencies(@Nonnull List<Object> resultingDeps, Object[] dependencies) {
+    private static void collectDependencies(List<Object> resultingDeps, Object[] dependencies) {
         for (Object dependency : dependencies) {
             if (dependency == ObjectUtil.NULL) {
                 continue;
@@ -152,7 +151,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
         }
     }
 
-    protected long getTimeStamp(@Nonnull Object dependency) {
+    protected long getTimeStamp(Object dependency) {
         return switch (dependency) {
             case VirtualFile virtualFile -> virtualFile.getModificationStamp();
             case ModificationTracker modificationTracker -> modificationTracker.getModificationCount();
@@ -175,7 +174,7 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
     }
 
     @Override
-    public T setValue(@Nonnull CachedValueProvider.Result<T> result) {
+    public T setValue(CachedValueProvider.Result<T> result) {
         Data<T> data = computeData(() -> result);
         setData(data);
         return data.getValue();
@@ -185,26 +184,25 @@ public abstract class CachedValueBase<T> implements ProjectCachedValueEx<T> {
 
     public static class Data<T> implements Supplier<T> {
         private final T myValue;
-        @Nonnull
+       
         private final Object[] myDependencies;
-        @Nonnull
+       
         private final long[] myTimeStamps;
-        @Nullable
-        final CachedValueProfiler.ValueTracker trackingInfo;
+        final CachedValueProfiler.@Nullable ValueTracker trackingInfo;
 
-        Data(T value, @Nonnull Object[] dependencies, @Nonnull long[] timeStamps, @Nullable CachedValueProfiler.ValueTracker trackingInfo) {
+        Data(T value, Object[] dependencies, long[] timeStamps, CachedValueProfiler.@Nullable ValueTracker trackingInfo) {
             myValue = value;
             myDependencies = dependencies;
             myTimeStamps = timeStamps;
             this.trackingInfo = trackingInfo;
         }
 
-        @Nonnull
+       
         public Object[] getDependencies() {
             return myDependencies;
         }
 
-        @Nonnull
+       
         public long[] getTimeStamps() {
             return myTimeStamps;
         }

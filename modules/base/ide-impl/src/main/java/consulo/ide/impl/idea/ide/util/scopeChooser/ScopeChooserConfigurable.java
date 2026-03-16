@@ -40,8 +40,7 @@ import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -289,7 +288,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         return false;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getDisplayName() {
         return IdeLocalize.scopesDisplayName();
@@ -342,7 +341,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
     @RequiredUIAccess
-    private void createScope(final boolean isLocal, @Nonnull LocalizeValue title, PackageSet set) {
+    private void createScope(final boolean isLocal, LocalizeValue title, PackageSet set) {
         String newName = Messages.showInputDialog(
             myTree,
             IdeLocalize.addScopeNameLabel().get(),
@@ -376,7 +375,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
     }
 
     @Override
-    @Nonnull
+    
     public String getId() {
         return PROJECT_SCOPES;
     }
@@ -407,7 +406,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
         @Override
         @RequiredUIAccess
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             super.update(e);
             if (myFromPopup) {
                 setPopup(false);
@@ -415,7 +414,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
         }
 
         @Override
-        @Nonnull
+        
         public AnAction[] getChildren(@Nullable AnActionEvent e) {
             if (myChildren == null) {
                 myChildren = new AnAction[2];
@@ -426,7 +425,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
                 ) {
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         createScope(true, IdeLocalize.addScopeDialogTitle(), null);
                     }
                 };
@@ -437,7 +436,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
                 ) {
                     @RequiredUIAccess
                     @Override
-                    public void actionPerformed(@Nonnull AnActionEvent e) {
+                    public void actionPerformed(AnActionEvent e) {
                         createScope(false, IdeLocalize.addScopeDialogTitle(), null);
                     }
                 };
@@ -486,7 +485,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreeUtil.moveSelectedRow(myTree, myDirection);
         }
 
@@ -522,7 +521,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             NamedScope scope = (NamedScope) getSelectedObject();
             if (scope != null) {
                 NamedScope newScope = scope.createCopy();
@@ -550,7 +549,7 @@ public class ScopeChooserConfigurable extends MasterDetailsComponent implements 
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             TreePath selectionPath = myTree.getSelectionPath();
             if (selectionPath != null) {
                 MyNode node = (MyNode) selectionPath.getLastPathComponent();

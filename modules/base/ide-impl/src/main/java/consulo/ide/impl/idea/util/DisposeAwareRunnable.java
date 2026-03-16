@@ -21,8 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 
@@ -33,19 +32,19 @@ public class DisposeAwareRunnable extends WeakReference<Object> implements Runna
 
   protected final Runnable myDelegate;
 
-  public static Runnable create(@Nonnull Runnable delegate, @Nullable PsiElement disposable) {
+  public static Runnable create(Runnable delegate, @Nullable PsiElement disposable) {
     return create(delegate, (Object)disposable);
   }
 
-  public static Runnable create(@Nonnull Runnable delegate, @Nullable Project disposable) {
+  public static Runnable create(Runnable delegate, @Nullable Project disposable) {
     return create(delegate, (Object)disposable);
   }
 
-  public static Runnable create(@Nonnull Runnable delegate, @Nullable Module disposable) {
+  public static Runnable create(Runnable delegate, @Nullable Module disposable) {
     return create(delegate, (Object)disposable);
   }
 
-  private static Runnable create(@Nonnull Runnable delegate, @Nullable Object disposable) {
+  private static Runnable create(Runnable delegate, @Nullable Object disposable) {
     if (disposable == null) {
       return delegate;
     }
@@ -61,7 +60,7 @@ public class DisposeAwareRunnable extends WeakReference<Object> implements Runna
     return new DisposeAwareRunnable(delegate, disposable);
   }
 
-  private DisposeAwareRunnable(@Nonnull Runnable delegate, @Nonnull Object disposable) {
+  private DisposeAwareRunnable(Runnable delegate, Object disposable) {
     super(disposable);
     myDelegate = delegate;
     assert disposable instanceof PsiElement || disposable instanceof ComponentManager : "Unknown type of "+disposable;

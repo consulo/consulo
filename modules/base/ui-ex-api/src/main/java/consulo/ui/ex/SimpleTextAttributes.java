@@ -17,7 +17,7 @@ package consulo.ui.ex;
 
 import consulo.ui.ex.util.LafProperty;
 import consulo.util.lang.Comparing;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.intellij.lang.annotations.MagicConstant;
 

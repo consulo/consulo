@@ -24,7 +24,6 @@ import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.welcomeScreen.impl.internal.editor.WelcomeConfigurationFileEditorProvider;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.Map;
@@ -43,7 +42,7 @@ public class ReopenWelcomeFileEditorManagerListener implements FileEditorManager
     }
 
     @Override
-    public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+    public void fileClosed(FileEditorManager source, VirtualFile file) {
         if (file instanceof ConfigurationEditorVirtualFile cev && cev.getProvider() instanceof WelcomeConfigurationFileEditorProvider) {
             myProject.getUIAccess().execute(() -> {
                 ConfigurationFileEditorManager editorManager = myProject.getApplication().getInstance(ConfigurationFileEditorManager.class);

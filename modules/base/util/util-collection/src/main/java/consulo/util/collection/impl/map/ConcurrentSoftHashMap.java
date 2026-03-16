@@ -1,43 +1,19 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.util.collection.impl.map;
 
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.impl.map.ConcurrentRefHashMap;
-
+import consulo.util.collection.Maps;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 
 /**
  * Concurrent soft key:K -> strong value:V map
- * Null keys are allowed
+ * Null keys are NOT allowed
  * Null values are NOT allowed
- * Use {@link ContainerUtil#createConcurrentSoftMap()} to create this
+ * To create, use {@link Maps#newConcurrentSoftHashMap()}
  */
 public final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
-  public ConcurrentSoftHashMap() {
-  }
-
-  public ConcurrentSoftHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
-    super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
-  }
-
   private static class SoftKey<K> extends SoftReference<K> implements KeyReference<K> {
     private final int myHash; // Hashcode of key, stored here since the key may be tossed by the GC
     private final HashingStrategy<? super K> myStrategy;
@@ -52,17 +28,25 @@ public final class ConcurrentSoftHashMap<K, V> extends ConcurrentRefHashMap<K, V
     public boolean equals(Object o) {
       if (this == o) return true;
       if (!(o instanceof KeyReference)) return false;
-      K t = get();
-      K u = ((KeyReference<K>)o).get();
-      if (t == u) return true;
-      if (t == null || u == null) return false;
-      return myStrategy.equals(t, u);
+      K key = get();
+      @SuppressWarnings("unchecked")
+      K otherKey = ((KeyReference<K>)o).get();
+      if (key == otherKey) return true;
+      if (key == null || otherKey == null) return false;
+      return myStrategy.equals(key, otherKey);
     }
 
     @Override
     public int hashCode() {
       return myHash;
     }
+  }
+
+  public ConcurrentSoftHashMap() {
+  }
+
+  public ConcurrentSoftHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
+    super(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }
 
   @Override

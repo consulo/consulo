@@ -24,7 +24,6 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -62,7 +61,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     return tableIsNotEmpty && !myComponent.isEditing() && super.isSpeedSearchEnabled();
   }
 
-  @Nonnull
+  
   @Override
   protected ListIterator<Object> getElementIterator(int startingIndex) {
     return new MyListIterator(startingIndex);
@@ -97,7 +96,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     return row > -1 && col > -1 ? row * myComponent.getColumnCount() + col : -1;
   }
 
-  @Nonnull
+  
   @Override
   protected Object[] getAllElements() {
     throw new UnsupportedOperationException("Not implemented");
@@ -167,7 +166,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     }
   }
 
-  @Nonnull
+  
   private IntList findAllFilteredRows(String s) {
     IntList rows = IntLists.newArrayList();
     String _s = s.trim();
@@ -185,12 +184,12 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
   }
 
   private static class MySelectAllAction extends DumbAwareAction {
-    @Nonnull
+    
     private final JTable myTable;
-    @Nonnull
+    
     private final TableSpeedSearch mySearch;
 
-    MySelectAllAction(@Nonnull JTable table, @Nonnull TableSpeedSearch search) {
+    MySelectAllAction(JTable table, TableSpeedSearch search) {
       myTable = table;
       mySearch = search;
       copyShortcutFrom(ActionManager.getInstance().getAction(IdeActions.ACTION_SELECT_ALL));
@@ -198,7 +197,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(
         mySearch.isPopupActive()
           && myTable.getRowSelectionAllowed()
@@ -208,7 +207,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
       ListSelectionModel sm = myTable.getSelectionModel();
 
       String query = mySearch.getEnteredPrefix();

@@ -28,8 +28,7 @@ import consulo.platform.LineSeparator;
 import consulo.platform.Platform;
 import consulo.ui.NotificationType;
 import consulo.util.jdom.JDOMUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -48,16 +47,16 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     private LineSeparator myLineSeparator;
 
     public PathFileBasedStorage(
-        @Nonnull String filePath,
-        @Nonnull String fileSpec,
+        String filePath,
+        String fileSpec,
         @Nullable RoamingType roamingType,
         @Nullable TrackingPathMacroSubstitutor pathMacroManager,
-        @Nonnull String rootElementName,
-        @Nonnull Disposable parentDisposable,
+        String rootElementName,
+        Disposable parentDisposable,
         @Nullable StateStorageListener listener,
         @Nullable StreamProvider streamProvider,
         boolean useXmlProlog,
-        @Nonnull PathMacrosService pathMacrosService
+        PathMacrosService pathMacrosService
     ) {
         super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, pathMacrosService);
 
@@ -89,12 +88,12 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     }
 
     @Override
-    protected XmlElementStorageSaveSession createSaveSession(@Nonnull StorageData storageData) {
+    protected XmlElementStorageSaveSession createSaveSession(StorageData storageData) {
         return new FileSaveSession(storageData);
     }
 
     private class FileSaveSession extends XmlElementStorageSaveSession {
-        protected FileSaveSession(@Nonnull StorageData storageData) {
+        protected FileSaveSession(StorageData storageData) {
             super(storageData);
         }
 
@@ -128,18 +127,18 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     }
 
     @Override
-    @Nonnull
+    
     protected StorageData createStorageData() {
         return new StorageData(myRootElementName, myPathMacrosService);
     }
 
-    @Nonnull
+    
     public Path getFile() {
         return myFile;
     }
 
     @Override
-    @Nonnull
+    
     public String getFilePath() {
         return myFile.toString();
     }
@@ -198,7 +197,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     }
 
     @Override
-    public void setDefaultState(@Nonnull Element element) {
+    public void setDefaultState(Element element) {
         element.setName(myRootElementName);
         super.setDefaultState(element);
     }

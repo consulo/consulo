@@ -34,8 +34,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "AutoIndentLines")
 public class AutoIndentLinesAction extends BaseCodeInsightAction implements DumbAware {
@@ -46,7 +45,7 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
     @Nullable
     @Override
     @RequiredUIAccess
-    protected Editor getEditor(@Nonnull DataContext dataContext, @Nonnull Project project, boolean forUpdate) {
+    protected Editor getEditor(DataContext dataContext, Project project, boolean forUpdate) {
         Editor editor = getBaseEditor(dataContext, project);
         if (editor == null) {
             return null;
@@ -64,7 +63,7 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
         return InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(editor, psiFile, startLineOffset);
     }
 
-    @Nonnull
+    
     @Override
     protected CodeInsightActionHandler getHandler() {
         return new AutoIndentLinesHandler();
@@ -72,7 +71,7 @@ public class AutoIndentLinesAction extends BaseCodeInsightAction implements Dumb
 
     @Override
     @RequiredReadAction
-    protected boolean isValidForFile(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    protected boolean isValidForFile(Project project, Editor editor, PsiFile file) {
         FileType fileType = file.getFileType();
         return fileType instanceof LanguageFileType languageFileType
             && FormattingModelBuilder.forContext(languageFileType.getLanguage(), file) != null;

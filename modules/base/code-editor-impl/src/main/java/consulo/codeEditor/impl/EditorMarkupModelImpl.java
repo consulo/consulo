@@ -27,8 +27,7 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -50,7 +49,7 @@ public class EditorMarkupModelImpl<E extends CodeEditorBase> extends MarkupModel
 
     private volatile EditorAnalyzeStatus myLastEditorStatus;
 
-    public EditorMarkupModelImpl(@Nonnull E editor) {
+    public EditorMarkupModelImpl(E editor) {
         super(editor.getDocument());
         myEditor = editor;
 
@@ -58,12 +57,12 @@ public class EditorMarkupModelImpl<E extends CodeEditorBase> extends MarkupModel
         ApplicationConcurrency concurrency = project.getApplication().getInstance(ApplicationConcurrency.class);
         myStatusUpdates = new MergingProcessingQueue<>(concurrency, project, 100) {
             @Override
-            protected UIAccess getUIAccess(@Nonnull Project project) {
+            protected UIAccess getUIAccess(Project project) {
                 return project.getUIAccess();
             }
 
             @Override
-            protected void calculateValue(@Nonnull Project project, @Nonnull String key, @Nonnull Consumer<EditorAnalyzeStatus> consumer) {
+            protected void calculateValue(Project project, String key, Consumer<EditorAnalyzeStatus> consumer) {
                 ErrorStripeRenderer renderer = myErrorStripeRenderer;
                 if (renderer == null) {
                     return;
@@ -73,7 +72,7 @@ public class EditorMarkupModelImpl<E extends CodeEditorBase> extends MarkupModel
             }
 
             @Override
-            protected void updateValueInsideUI(@Nonnull Project project, @Nonnull String key, @Nonnull EditorAnalyzeStatus newStatus) {
+            protected void updateValueInsideUI(Project project, String key, EditorAnalyzeStatus newStatus) {
                 tryToUpdateStatus(newStatus);
 
                 repaintErrorPanel();
@@ -107,7 +106,7 @@ public class EditorMarkupModelImpl<E extends CodeEditorBase> extends MarkupModel
     }
 
     @Override
-    public void addErrorMarkerListener(@Nonnull ErrorStripeListener listener, @Nonnull Disposable parent) {
+    public void addErrorMarkerListener(ErrorStripeListener listener, Disposable parent) {
         DisposerUtil.add(listener, myErrorMarkerListeners, parent);
     }
 
@@ -126,7 +125,6 @@ public class EditorMarkupModelImpl<E extends CodeEditorBase> extends MarkupModel
         return myErrorStripeRenderer;
     }
 
-    @Nonnull
     public Editor getEditor() {
         return myEditor;
     }

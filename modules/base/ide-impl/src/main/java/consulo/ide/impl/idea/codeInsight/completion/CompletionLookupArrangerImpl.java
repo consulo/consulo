@@ -24,8 +24,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -72,16 +71,16 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
         return inputBySorter;
     }
 
-    @Nonnull
+    
     private CompletionSorterImpl obtainSorter(LookupElement element) {
         //noinspection ConstantConditions
         return element.getUserData(mySorterKey);
     }
 
-    @Nonnull
+    
     @Override
     public Map<LookupElement, List<Pair<String, Object>>> getRelevanceObjects(
-        @Nonnull Iterable<LookupElement> items,
+        Iterable<LookupElement> items,
         boolean hideSingleValued
     ) {
         Map<LookupElement, List<Pair<String, Object>>> map = ContainerUtil.newIdentityHashMap();
@@ -142,10 +141,10 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
     @Override
     public void addElement(
-        @Nonnull LookupElement element,
-        @Nonnull CompletionSorter sorter,
-        @Nonnull PrefixMatcher prefixMatcher,
-        @Nonnull LookupElementPresentation presentation
+        LookupElement element,
+        CompletionSorter sorter,
+        PrefixMatcher prefixMatcher,
+        LookupElementPresentation presentation
     ) {
         registerMatcher(element, prefixMatcher);
         associateSorter(element, (CompletionSorterImpl)sorter);
@@ -153,7 +152,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     }
 
     @Override
-    public void addElement(@Nonnull CompletionResult result) {
+    public void addElement(CompletionResult result) {
         LookupElementPresentation presentation = new LookupElementPresentation();
         result.getLookupElement().renderElement(presentation);
         addElement(result.getLookupElement(), result.getSorter(), result.getPrefixMatcher(), presentation);
@@ -300,12 +299,12 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     }
 
     @Override
-    public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
+    public Pair<List<LookupElement>, Integer> arrangeItems(Lookup lookup, boolean onExplicitAction) {
         return doArrangeItems((LookupElementListPresenter)lookup, onExplicitAction);
     }
 
-    @Nonnull
-    private Pair<List<LookupElement>, Integer> doArrangeItems(@Nonnull LookupElementListPresenter lookup, boolean onExplicitAction) {
+    
+    private Pair<List<LookupElement>, Integer> doArrangeItems(LookupElementListPresenter lookup, boolean onExplicitAction) {
         List<LookupElement> items = getMatchingItems();
         Iterable<LookupElement> sortedByRelevance = sortByRelevance(groupItemsBySorter(items));
 
@@ -558,7 +557,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
     }
 
     @Override
-    public void prefixTruncated(@Nonnull LookupEx lookup, int hideOffset) {
+    public void prefixTruncated(LookupEx lookup, int hideOffset) {
         if (hideOffset < lookup.getEditor().getCaretModel().getOffset()) {
             myProcess.scheduleRestart();
             return;
@@ -578,18 +577,18 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
             super(null, "empty");
         }
 
-        @Nonnull
+        
         @Override
         public List<Pair<LookupElement, Object>> getSortingWeights(
-            @Nonnull Iterable<LookupElement> items,
-            @Nonnull ProcessingContext context
+            Iterable<LookupElement> items,
+            ProcessingContext context
         ) {
             return Collections.emptyList();
         }
 
-        @Nonnull
+        
         @Override
-        public Iterable<LookupElement> classify(@Nonnull Iterable<LookupElement> source, @Nonnull ProcessingContext context) {
+        public Iterable<LookupElement> classify(Iterable<LookupElement> source, ProcessingContext context) {
             return source;
         }
 

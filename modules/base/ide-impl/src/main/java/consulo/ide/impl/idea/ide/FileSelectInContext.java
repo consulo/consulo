@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.project.ui.view.SelectInContext;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
@@ -28,18 +27,18 @@ public class FileSelectInContext implements SelectInContext {
   private final Project myProject;
   private final VirtualFile myFile;
 
-  public FileSelectInContext(@Nonnull Project project, @Nonnull VirtualFile file) {
+  public FileSelectInContext(Project project, VirtualFile file) {
     myProject = project;
     myFile = file;
   }
 
-  @Nonnull
+  
   @Override
   public Project getProject() {
     return myProject;
   }
 
-  @Nonnull
+  
   @Override
   public VirtualFile getVirtualFile() {
     return myFile;

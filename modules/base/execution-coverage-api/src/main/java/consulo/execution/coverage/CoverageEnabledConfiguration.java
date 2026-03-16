@@ -10,8 +10,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
 import java.io.File;
@@ -119,7 +118,7 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
     }
 
 
-    public static boolean isApplicableTo(@Nonnull RunConfigurationBase runConfiguration) {
+    public static boolean isApplicableTo(RunConfigurationBase runConfiguration) {
         CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
         //noinspection SimplifiableIfStatement
         if (configuration != null) {
@@ -130,8 +129,8 @@ public abstract class CoverageEnabledConfiguration implements JDOMExternalizable
             .anyMatchSafe(engine -> engine.isApplicableTo(runConfiguration));
     }
 
-    @Nonnull
-    public static CoverageEnabledConfiguration getOrCreate(@Nonnull RunConfigurationBase runConfiguration) {
+    
+    public static CoverageEnabledConfiguration getOrCreate(RunConfigurationBase runConfiguration) {
         CoverageEnabledConfiguration configuration = runConfiguration.getCopyableUserData(COVERAGE_KEY);
         if (configuration == null) {
             configuration = Application.get().getExtensionPoint(CoverageEngine.class).computeSafeIfAny(

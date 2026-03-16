@@ -30,8 +30,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.rmi.RemoteUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -53,28 +52,28 @@ import java.util.concurrent.ExecutorService;
 @ServiceImpl
 public class ExternalSystemNotificationManagerImpl implements ExternalSystemNotificationManager {
 
-    @Nonnull
+    
     private final ExecutorService myUpdater =
         SequentialTaskExecutor.createSequentialApplicationPoolExecutor("ExternalSystemNotificationManager pool");
 
-    @Nonnull
+    
     private final Project myProject;
-    @Nonnull
+    
     private final ExternalSystemInternalNotificationHelper myNotificationHelper;
-    @Nonnull
+    
     private final NotificationService myNotificationService;
-    @Nonnull
+    
     private final List<Notification> myNotifications = new ArrayList<>();
-    @Nonnull
+    
     private final Set<ProjectSystemId> initializedExternalSystem = new HashSet<>();
-    @Nonnull
+    
     private final MessageCounter myMessageCounter = new MessageCounter();
 
     @Inject
     public ExternalSystemNotificationManagerImpl(
-        @Nonnull Project project,
-        @Nonnull ExternalSystemInternalNotificationHelper notificationHelper,
-        @Nonnull NotificationService notificationService
+        Project project,
+        ExternalSystemInternalNotificationHelper notificationHelper,
+        NotificationService notificationService
     ) {
         myProject = project;
         myNotificationHelper = notificationHelper;
@@ -83,9 +82,9 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
 
     @Override
     public void processExternalProjectRefreshError(
-        @Nonnull Throwable error,
-        @Nonnull String externalProjectName,
-        @Nonnull ProjectSystemId externalSystemId
+        Throwable error,
+        String externalProjectName,
+        ProjectSystemId externalSystemId
     ) {
         if (myProject.isDisposed() || !myProject.isOpen()) {
             return;
@@ -136,7 +135,7 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
         showNotification(externalSystemId, notificationData);
     }
 
-    public void showNotification(@Nonnull ProjectSystemId externalSystemId, @Nonnull NotificationData notificationData) {
+    public void showNotification(ProjectSystemId externalSystemId, NotificationData notificationData) {
         myUpdater.execute(() -> {
             if (myProject.isDisposed()) {
                 return;
@@ -185,9 +184,9 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
 
     @RequiredUIAccess
     private void addMessage(
-        @Nonnull Notification notification,
-        @Nonnull ProjectSystemId externalSystemId,
-        @Nonnull NotificationData notificationData
+        Notification notification,
+        ProjectSystemId externalSystemId,
+        NotificationData notificationData
     ) {
         VirtualFile virtualFile =
             notificationData.getFilePath() != null ? ExternalSystemUtil.waitForTheFile(notificationData.getFilePath()) : null;
@@ -201,8 +200,8 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
 
     @Override
     public void clearNotifications(
-        @Nonnull NotificationSource notificationSource,
-        @Nonnull ProjectSystemId externalSystemId
+        NotificationSource notificationSource,
+        ProjectSystemId externalSystemId
     ) {
         @Deprecated
         String groupName = null;
@@ -232,23 +231,23 @@ public class ExternalSystemNotificationManagerImpl implements ExternalSystemNoti
     }
 
     public int getMessageCount(
-        @Nonnull NotificationSource notificationSource,
+        NotificationSource notificationSource,
         @Nullable NotificationCategory notificationCategory,
-        @Nonnull ProjectSystemId externalSystemId
+        ProjectSystemId externalSystemId
     ) {
         return getMessageCount(null, notificationSource, notificationCategory, externalSystemId);
     }
 
     public int getMessageCount(
         @Nullable String groupName,
-        @Nonnull NotificationSource notificationSource,
+        NotificationSource notificationSource,
         @Nullable NotificationCategory notificationCategory,
-        @Nonnull ProjectSystemId externalSystemId
+        ProjectSystemId externalSystemId
     ) {
         return myMessageCounter.getCount(groupName, notificationSource, notificationCategory, externalSystemId);
     }
 
-    private void applyNotification(@Nonnull Notification notification) {
+    private void applyNotification(Notification notification) {
         if (!myProject.isDisposed() && myProject.isOpen()) {
             notification.notify(myProject);
         }

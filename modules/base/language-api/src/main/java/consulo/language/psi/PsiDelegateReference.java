@@ -4,8 +4,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Sergey Evdokimov
@@ -14,7 +13,7 @@ public class PsiDelegateReference implements PsiReference {
 
   private final PsiReference myDelegate;
 
-  public PsiDelegateReference(@Nonnull PsiReference delegate) {
+  public PsiDelegateReference(PsiReference delegate) {
     myDelegate = delegate;
   }
 
@@ -25,7 +24,7 @@ public class PsiDelegateReference implements PsiReference {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public TextRange getRangeInElement() {
     return myDelegate.getRangeInElement();
@@ -39,7 +38,7 @@ public class PsiDelegateReference implements PsiReference {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public String getCanonicalText() {
     return myDelegate.getCanonicalText();
@@ -53,7 +52,7 @@ public class PsiDelegateReference implements PsiReference {
 
   @RequiredWriteAction
   @Override
-  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+  public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
     return myDelegate.bindToElement(element);
   }
 
@@ -64,7 +63,7 @@ public class PsiDelegateReference implements PsiReference {
   }
 
   @RequiredReadAction
-  @Nonnull
+  
   @Override
   public Object[] getVariants() {
     return myDelegate.getVariants();

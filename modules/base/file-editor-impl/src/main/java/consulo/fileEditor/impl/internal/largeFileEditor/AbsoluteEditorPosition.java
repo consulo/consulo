@@ -1,7 +1,6 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.fileEditor.impl.internal.largeFileEditor;
 
-import jakarta.annotation.Nonnull;
 
 public final class AbsoluteEditorPosition {
 
@@ -18,7 +17,7 @@ public final class AbsoluteEditorPosition {
         this.verticalScrollOffset = newVerticalScrollBarOffset;
     }
 
-    void copyFrom(@Nonnull AbsoluteEditorPosition from) {
+    void copyFrom(AbsoluteEditorPosition from) {
         pageNumber = from.pageNumber;
         verticalScrollOffset = from.verticalScrollOffset;
     }

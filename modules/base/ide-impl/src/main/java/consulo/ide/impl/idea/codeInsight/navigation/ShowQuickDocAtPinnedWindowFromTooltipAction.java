@@ -22,7 +22,6 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionsBundle;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -39,7 +38,7 @@ public class ShowQuickDocAtPinnedWindowFromTooltipAction extends AbstractDocumen
   }
 
   @Override
-  protected void doActionPerformed(@Nonnull DataContext context, @Nonnull PsiElement docAnchor, @Nonnull PsiElement originalElement) {
+  protected void doActionPerformed(DataContext context, PsiElement docAnchor, PsiElement originalElement) {
     Project project = context.getData(Project.KEY);
     if (project == null) {
       return;

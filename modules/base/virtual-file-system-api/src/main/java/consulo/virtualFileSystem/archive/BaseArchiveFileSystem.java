@@ -29,8 +29,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +57,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * or null if the file does not host this file system.
      */
     @Nullable
-    public VirtualFile getRootByLocal(@Nonnull VirtualFile file) {
+    public VirtualFile getRootByLocal(VirtualFile file) {
         return findFileByPath(composeRootPath(file.getPath()));
     }
 
@@ -68,12 +67,12 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * or null if the file does not belong to this file system.
      */
     @Nullable
-    public VirtualFile getRootByEntry(@Nonnull VirtualFile entry) {
+    public VirtualFile getRootByEntry(VirtualFile entry) {
         return entry.getFileSystem() != this ? null : VirtualFileUtil.getRootFile(entry);
     }
 
-    @Nonnull
-    public String getRootPathByLocal(@Nonnull VirtualFile file) {
+    
+    public String getRootPathByLocal(VirtualFile file) {
         return composeRootPath(file.getPath());
     }
 
@@ -83,7 +82,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * or null if the file does not belong to this file system.
      */
     @Nullable
-    public VirtualFile getLocalByEntry(@Nonnull VirtualFile entry) {
+    public VirtualFile getLocalByEntry(VirtualFile entry) {
         if (entry.getFileSystem() != this) {
             return null;
         }
@@ -105,16 +104,16 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     /**
      * Strips any separator chars from a root path (obtained via {@link #extractRootPath(String)}) to obtain a path to a local file.
      */
-    @Nonnull
-    public String extractLocalPath(@Nonnull String rootPath) {
+    
+    public String extractLocalPath(String rootPath) {
         return StringUtil.trimEnd(rootPath, URLUtil.ARCHIVE_SEPARATOR);
     }
 
     /**
      * A reverse to {@link #extractLocalPath(String)} - i.e. dresses a local file path to make it a suitable root path for this filesystem.
      */
-    @Nonnull
-    public String composeRootPath(@Nonnull String localPath) {
+    
+    public String composeRootPath(String localPath) {
         return localPath + URLUtil.ARCHIVE_SEPARATOR;
     }
 
@@ -126,7 +125,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
 
     @Override
     @Nullable
-    public VirtualFile findLocalVirtualFileByPath(@Nonnull String path) {
+    public VirtualFile findLocalVirtualFileByPath(String path) {
         if (!path.contains(URLUtil.ARCHIVE_SEPARATOR)) {
             path += URLUtil.ARCHIVE_SEPARATOR;
         }
@@ -139,18 +138,18 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     }
 
     @Nullable
-    public VirtualFile getJarRootForLocalFile(@Nonnull VirtualFile file) {
+    public VirtualFile getJarRootForLocalFile(VirtualFile file) {
         return getRootByLocal(file);
     }
 
-    @Nonnull
+    
     @Override
-    public String extractPresentableUrl(@Nonnull String path) {
+    public String extractPresentableUrl(String path) {
         return super.extractPresentableUrl(StringUtil.trimEnd(path, URLUtil.ARCHIVE_SEPARATOR));
     }
 
     @Override
-    public String normalize(@Nonnull String path) {
+    public String normalize(String path) {
         int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
         if (jarSeparatorIndex > 0) {
             String root = path.substring(0, jarSeparatorIndex);
@@ -159,16 +158,16 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
         return super.normalize(path);
     }
 
-    @Nonnull
+    
     @Override
-    public String extractRootPath(@Nonnull String path) {
+    public String extractRootPath(String path) {
         int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
         assert jarSeparatorIndex >= 0 : "Path passed to ArchiveFileSystem must have archive separator '!/': " + path;
         return path.substring(0, jarSeparatorIndex + URLUtil.ARCHIVE_SEPARATOR.length());
     }
 
-    @Nonnull
-    public abstract ArchiveHandler getHandler(@Nonnull VirtualFile entryFile);
+    
+    public abstract ArchiveHandler getHandler(VirtualFile entryFile);
 
     // standard implementations
 
@@ -177,46 +176,46 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
         return LocalFileSystem.getInstance().getRank() + 1;
     }
 
-    @Nonnull
+    
     @Override
     public VirtualFile copyFile(
             Object requestor,
-            @Nonnull VirtualFile file,
-            @Nonnull VirtualFile newParent,
-            @Nonnull String copyName
+            VirtualFile file,
+            VirtualFile newParent,
+            String copyName
     ) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
-    @Nonnull
+    
     @Override
-    public VirtualFile createChildDirectory(Object requestor, @Nonnull VirtualFile parent, @Nonnull String dir) throws IOException {
+    public VirtualFile createChildDirectory(Object requestor, VirtualFile parent, String dir) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(parent.getUrl()).get());
     }
 
-    @Nonnull
+    
     @Override
-    public VirtualFile createChildFile(Object requestor, @Nonnull VirtualFile parent, @Nonnull String file) throws IOException {
+    public VirtualFile createChildFile(Object requestor, VirtualFile parent, String file) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(parent.getUrl()).get());
     }
 
     @Override
-    public void deleteFile(Object requestor, @Nonnull VirtualFile file) throws IOException {
+    public void deleteFile(Object requestor, VirtualFile file) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
     @Override
-    public void moveFile(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile newParent) throws IOException {
+    public void moveFile(Object requestor, VirtualFile file, VirtualFile newParent) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
     @Override
-    public void renameFile(Object requestor, @Nonnull VirtualFile file, @Nonnull String newName) throws IOException {
+    public void renameFile(Object requestor, VirtualFile file, String newName) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
-    @Nonnull
-    protected String getRelativePath(@Nonnull VirtualFile file) {
+    
+    protected String getRelativePath(VirtualFile file) {
         String path = file.getPath();
         String relativePath = path.substring(extractRootPath(path).length());
         return StringUtil.startsWithChar(relativePath, '/') ? relativePath.substring(1) : relativePath;
@@ -224,18 +223,18 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
 
     @Nullable
     @Override
-    public FileAttributes getAttributes(@Nonnull VirtualFile file) {
+    public FileAttributes getAttributes(VirtualFile file) {
         return myAttrGetter.apply(file);
     }
 
-    @Nonnull
+    
     @Override
-    public String[] list(@Nonnull VirtualFile file) {
+    public String[] list(VirtualFile file) {
         return myChildrenGetter.apply(file);
     }
 
     @Override
-    public boolean exists(@Nonnull VirtualFile file) {
+    public boolean exists(VirtualFile file) {
         if (file.getParent() == null) {
             return getLocalByEntry(file) != null;
         } else {
@@ -244,7 +243,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     }
 
     @Override
-    public boolean isDirectory(@Nonnull VirtualFile file) {
+    public boolean isDirectory(VirtualFile file) {
         if (file.getParent() == null) {
             return true;
         }
@@ -253,12 +252,12 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     }
 
     @Override
-    public boolean isWritable(@Nonnull VirtualFile file) {
+    public boolean isWritable(VirtualFile file) {
         return false;
     }
 
     @Override
-    public long getTimeStamp(@Nonnull VirtualFile file) {
+    public long getTimeStamp(VirtualFile file) {
         if (file.getParent() == null) {
             VirtualFile host = getLocalByEntry(file);
             if (host != null) {
@@ -274,7 +273,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     }
 
     @Override
-    public long getLength(@Nonnull VirtualFile file) {
+    public long getLength(VirtualFile file) {
         if (file.getParent() == null) {
             VirtualFile host = getLocalByEntry(file);
             if (host != null) {
@@ -289,31 +288,31 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
         return ArchiveHandler.DEFAULT_LENGTH;
     }
 
-    @Nonnull
+    
     @Override
-    public byte[] contentsToByteArray(@Nonnull VirtualFile file) throws IOException {
+    public byte[] contentsToByteArray(VirtualFile file) throws IOException {
         return getHandler(file).contentsToByteArray(getRelativePath(file));
     }
 
-    @Nonnull
+    
     @Override
-    public InputStream getInputStream(@Nonnull VirtualFile file) throws IOException {
+    public InputStream getInputStream(VirtualFile file) throws IOException {
         return new BufferExposingByteArrayInputStream(contentsToByteArray(file));
     }
 
     @Override
-    public void setTimeStamp(@Nonnull VirtualFile file, long timeStamp) throws IOException {
+    public void setTimeStamp(VirtualFile file, long timeStamp) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
     @Override
-    public void setWritable(@Nonnull VirtualFile file, boolean writableFlag) throws IOException {
+    public void setWritable(VirtualFile file, boolean writableFlag) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
-    @Nonnull
+    
     @Override
-    public OutputStream getOutputStream(@Nonnull VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
+    public OutputStream getOutputStream(VirtualFile file, Object requestor, long modStamp, long timeStamp) throws IOException {
         throw new IOException(VirtualFileSystemLocalize.jarModificationNotSupportedError(file.getUrl()).get());
     }
 
@@ -323,7 +322,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      * or {@code null} if the local file is of incorrect type.
      */
     @Nullable
-    public VirtualFile findLocalByRootPath(@Nonnull String rootPath) {
+    public VirtualFile findLocalByRootPath(String rootPath) {
         String localPath = extractLocalPath(rootPath);
         VirtualFile local = StandardFileSystems.local().findFileByPath(localPath);
         return local != null && isCorrectFileType(local) ? local : null;
@@ -332,23 +331,23 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     /**
      * Implementations should return {@code false} if the given file may not host this file system.
      */
-    protected boolean isCorrectFileType(@Nonnull VirtualFile local) {
+    protected boolean isCorrectFileType(VirtualFile local) {
         FileType fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getNameSequence());
         return fileType instanceof ArchiveFileType archiveFileType && archiveFileType.getFileSystem() == this;
     }
 
     @Override
-    public VirtualFile findFileByPath(@Nonnull String path) {
+    public VirtualFile findFileByPath(String path) {
         return VfsImplUtil.findFileByPath(this, path);
     }
 
     @Override
-    public VirtualFile findFileByPathIfCached(@Nonnull String path) {
+    public VirtualFile findFileByPathIfCached(String path) {
         return VfsImplUtil.findFileByPathIfCached(this, path);
     }
 
     @Override
-    public VirtualFile refreshAndFindFileByPath(@Nonnull String path) {
+    public VirtualFile refreshAndFindFileByPath(String path) {
         return VfsImplUtil.refreshAndFindFileByPath(this, path);
     }
 

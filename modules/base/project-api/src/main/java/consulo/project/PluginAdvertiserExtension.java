@@ -18,7 +18,6 @@ package consulo.project;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.preview.ExtensionPreview;
-import jakarta.annotation.Nonnull;
 
 import java.util.Set;
 import java.util.function.Consumer;
@@ -29,8 +28,8 @@ import java.util.function.Consumer;
  */
 @ExtensionAPI(ComponentScope.PROJECT)
 public interface PluginAdvertiserExtension {
-    void extend(@Nonnull Consumer<ExtensionPreview> consumer);
+    void extend(Consumer<ExtensionPreview> consumer);
 
-    @Nonnull
+    
     Set<Class<?>> acceptExtensionAPIs();
 }

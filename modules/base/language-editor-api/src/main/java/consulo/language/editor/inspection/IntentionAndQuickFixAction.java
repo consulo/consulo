@@ -22,8 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Gregory.Shrago
@@ -32,24 +31,24 @@ public abstract class IntentionAndQuickFixAction implements LocalQuickFix, Inten
   public static IntentionAndQuickFixAction[] EMPTY_ARRAY = new IntentionAndQuickFixAction[0];
 
   @Override
-  @Nonnull
+  
   public abstract LocalizeValue getName();
 
   public abstract void applyFix(Project project, PsiFile file, @Nullable Editor editor);
 
   @Override
-  @Nonnull
+  
   public final LocalizeValue getText() {
     return getName();
   }
 
   @Override
-  public final void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+  public final void applyFix(Project project, ProblemDescriptor descriptor) {
     applyFix(project, descriptor.getPsiElement().getContainingFile(), null);
   }
 
   @Override
-  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     applyFix(project, file, editor);
   }
 
@@ -57,7 +56,7 @@ public abstract class IntentionAndQuickFixAction implements LocalQuickFix, Inten
    *  In general case will be called if invoked as IntentionAction.
    */
   @Override
-  public boolean isAvailable(@Nonnull Project project, @Nullable Editor editor, PsiFile file) {
+  public boolean isAvailable(Project project, @Nullable Editor editor, PsiFile file) {
     return true;
   }
 

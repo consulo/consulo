@@ -29,8 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.fileType.FileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -107,7 +106,7 @@ public class SettingsImpl implements EditorSettings {
         this(null, null, EditorKind.MAIN_EDITOR);
     }
 
-    public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, @Nonnull EditorKind kind) {
+    public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, EditorKind kind) {
         myEditor = editor;
         if (editor != null && project != null) {
             myLanguageSupplier = () -> getDocumentLanguage(project, editor.getDocument());
@@ -235,7 +234,7 @@ public class SettingsImpl implements EditorSettings {
     }
 
     @Nullable
-    private static Language getDocumentLanguage(@Nullable Project project, @Nonnull Document document) {
+    private static Language getDocumentLanguage(@Nullable Project project, Document document) {
         if (project != null) {
             SimpleReference<Language> result = SimpleReference.create();
             Application.get().tryRunReadAction(result, () -> {
@@ -276,7 +275,6 @@ public class SettingsImpl implements EditorSettings {
         fireEditorRefresh();
     }
 
-    @Nonnull
     @Override
     public List<Integer> getSoftMargins() {
         if (mySoftMargins != null) {

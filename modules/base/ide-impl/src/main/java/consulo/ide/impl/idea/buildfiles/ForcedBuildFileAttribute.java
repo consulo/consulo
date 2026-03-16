@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -44,7 +43,7 @@ public class ForcedBuildFileAttribute {
   private ForcedBuildFileAttribute() {
   }
 
-  public static boolean belongsToFramework(VirtualFile file, @Nonnull String frameworkId) {
+  public static boolean belongsToFramework(VirtualFile file, String frameworkId) {
     return frameworkId.equals(getFrameworkIdOfBuildFile(file));
   }
 

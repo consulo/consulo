@@ -7,8 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,15 +17,15 @@ import java.util.List;
  * This class provides ability to run an arbitrary activity for matched 'Run Anything' input text
  */
 public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<V> {
-    @Nonnull
+    
     @Override
-    public Collection<V> getValues(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Collection<V> getValues(DataContext dataContext, String pattern) {
         return Collections.emptyList();
     }
 
     @Override
     @Nullable
-    public V findMatchingValue(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public V findMatchingValue(DataContext dataContext, String pattern) {
         return getValues(dataContext, pattern).stream()
             .filter(value -> StringUtil.equals(pattern, getCommand(value)))
             .findFirst()
@@ -35,7 +34,7 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
 
     @Override
     @Nullable
-    public Image getIcon(@Nonnull V value) {
+    public Image getIcon(V value) {
         return null;
     }
 
@@ -45,15 +44,15 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
         return null;
     }
 
-    @Nonnull
+    
     @Override
-    public RunAnythingItem getMainListItem(@Nonnull DataContext dataContext, @Nonnull V value) {
+    public RunAnythingItem getMainListItem(DataContext dataContext, V value) {
         return new RunAnythingItemBase(getCommand(value), getIcon(value));
     }
 
     @Nullable
     @Override
-    public RunAnythingHelpItem getHelpItem(@Nonnull DataContext dataContext) {
+    public RunAnythingHelpItem getHelpItem(DataContext dataContext) {
         String placeholder = getHelpCommandPlaceholder();
         String commandPrefix = getHelpCommand();
         if (placeholder == null || commandPrefix == null) {
@@ -69,14 +68,14 @@ public abstract class RunAnythingProviderBase<V> implements RunAnythingProvider<
 
     @Nullable
     @Override
-    public Matcher getMatcher(@Nonnull DataContext dataContext, @Nonnull String pattern) {
+    public Matcher getMatcher(DataContext dataContext, String pattern) {
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public List<RunAnythingContext> getExecutionContexts(@Nonnull DataContext dataContext) {
+    public List<RunAnythingContext> getExecutionContexts(DataContext dataContext) {
         return RunAnythingContext.allContexts(dataContext.getData(Project.KEY));
     }
 

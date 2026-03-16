@@ -12,8 +12,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -41,50 +40,50 @@ public interface UsageView extends Disposable {
 
     Key<List<UsageInfo>> USAGE_INFO_LIST_KEY = Key.create("UsageInfo.List");
 
-    void appendUsage(@Nonnull Usage usage);
+    void appendUsage(Usage usage);
 
-    void removeUsage(@Nonnull Usage usage);
+    void removeUsage(Usage usage);
 
-    void includeUsages(@Nonnull Usage[] usages);
+    void includeUsages(Usage[] usages);
 
-    void excludeUsages(@Nonnull Usage[] usages);
+    void excludeUsages(Usage[] usages);
 
-    void selectUsages(@Nonnull Usage[] usages);
+    void selectUsages(Usage[] usages);
 
     void close();
 
     boolean isSearchInProgress();
 
     @Deprecated
-    default void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull String text) {
+    default void addButtonToLowerPane(Runnable runnable, String text) {
         addButtonToLowerPane(new AnAction(text) {
             @RequiredUIAccess
             @Override
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 runnable.run();
             }
         });
     }
 
-    default void addButtonToLowerPane(@Nonnull Runnable runnable, @Nonnull LocalizeValue actionText) {
+    default void addButtonToLowerPane(Runnable runnable, LocalizeValue actionText) {
         addButtonToLowerPane(DumbAwareAction.create(actionText, e -> runnable.run()));
     }
 
-    void addButtonToLowerPane(@Nonnull AnAction action);
+    void addButtonToLowerPane(AnAction action);
 
     /**
      * @param rerunAction this action is used to provide non-standard search restart. Disabled action makes toolbar button disabled too.
      */
-    default void setRerunAction(@Nonnull Action rerunAction) {
+    default void setRerunAction(Action rerunAction) {
     }
 
     void setAdditionalComponent(@Nullable JComponent component);
 
     default void addPerformOperationAction(
-        @Nonnull @RequiredUIAccess Runnable processRunnable,
-        @Nonnull LocalizeValue commandName,
-        @Nonnull LocalizeValue cannotMakeString,
-        @Nonnull LocalizeValue actionText
+        @RequiredUIAccess Runnable processRunnable,
+        LocalizeValue commandName,
+        LocalizeValue cannotMakeString,
+        LocalizeValue actionText
     ) {
         addPerformOperationAction(processRunnable, commandName, cannotMakeString, actionText, true);
     }
@@ -93,32 +92,32 @@ public interface UsageView extends Disposable {
      * @param checkReadOnlyStatus if false, check is performed inside processRunnable
      */
     void addPerformOperationAction(
-        @Nonnull Runnable processRunnable,
-        @Nonnull LocalizeValue commandName,
-        @Nonnull LocalizeValue cannotMakeString,
-        @Nonnull LocalizeValue actionText,
+        Runnable processRunnable,
+        LocalizeValue commandName,
+        LocalizeValue cannotMakeString,
+        LocalizeValue actionText,
         boolean checkReadOnlyStatus
     );
 
-    @Nonnull
+    
     UsageViewPresentation getPresentation();
 
-    @Nonnull
+    
     Set<Usage> getExcludedUsages();
 
-    @Nonnull
+    
     Set<Usage> getSelectedUsages();
 
-    @Nonnull
+    
     Set<Usage> getUsages();
 
-    @Nonnull
+    
     List<Usage> getSortedUsages();
 
-    @Nonnull
+    
     JComponent getComponent();
 
-    @Nonnull
+    
     default JComponent getPreferredFocusableComponent() {
         return getComponent();
     }
@@ -131,9 +130,9 @@ public interface UsageView extends Disposable {
      * Reloads the whole tree model once instead of firing individual remove event for each node.
      * Useful for processing huge number of usages faster, e.g. during "find in path/replace all".
      */
-    void removeUsagesBulk(@Nonnull Collection<Usage> usages);
+    void removeUsagesBulk(Collection<Usage> usages);
 
-    default void addExcludeListener(@Nonnull Disposable disposable, @Nonnull ExcludeListener listener) {
+    default void addExcludeListener(Disposable disposable, ExcludeListener listener) {
     }
 
     interface ExcludeListener {
@@ -141,7 +140,7 @@ public interface UsageView extends Disposable {
          * @param usages   unmodifiable set or nodes that were excluded or included
          * @param excluded if <code>true</code> usages were excluded otherwise they were included
          */
-        void fireExcluded(@Nonnull Set<? extends Usage> usages, boolean excluded);
+        void fireExcluded(Set<? extends Usage> usages, boolean excluded);
     }
 
     boolean isDisposed();
@@ -151,6 +150,6 @@ public interface UsageView extends Disposable {
     @RequiredUIAccess
     void select();
 
-    @Nonnull
+    
     Project getProject();
 }

@@ -22,8 +22,7 @@ import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.CredentialStore;
 import consulo.credentialStorage.Credentials;
 import consulo.credentialStorage.impl.internal.SharedLogger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.charset.StandardCharsets;
 
@@ -36,7 +35,7 @@ public class WindowsCredentialStore implements CredentialStore {
 
     @Nullable
     @Override
-    public Credentials get(@Nonnull CredentialAttributes attributes) {
+    public Credentials get(CredentialAttributes attributes) {
         CredAdvapi32.PCREDENTIAL pcredential = new CredAdvapi32.PCREDENTIAL();
 
         boolean read = false;
@@ -71,7 +70,7 @@ public class WindowsCredentialStore implements CredentialStore {
     }
 
     @Override
-    public void set(@Nonnull CredentialAttributes attributes, @Nullable Credentials credentials) {
+    public void set(CredentialAttributes attributes, @Nullable Credentials credentials) {
         String key = attributes.getServiceName();
 
         if (credentials == null) {

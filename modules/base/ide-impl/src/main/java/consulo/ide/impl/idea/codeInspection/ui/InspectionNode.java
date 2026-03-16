@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.codeInspection.ui;
 
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.ui.image.Image;
-import jakarta.annotation.Nonnull;
 
 import java.util.Enumeration;
 
@@ -28,7 +27,7 @@ import java.util.Enumeration;
 public class InspectionNode extends InspectionTreeNode {
   private boolean myTooBigForOnlineRefresh = false;
 
-  public InspectionNode(@Nonnull InspectionToolWrapper toolWrapper) {
+  public InspectionNode(InspectionToolWrapper toolWrapper) {
     super(toolWrapper);
   }
 
@@ -37,7 +36,7 @@ public class InspectionNode extends InspectionTreeNode {
     return getToolWrapper().getDisplayName().get();
   }
 
-  @Nonnull
+  
   public InspectionToolWrapper getToolWrapper() {
     return (InspectionToolWrapper)getUserObject();
   }

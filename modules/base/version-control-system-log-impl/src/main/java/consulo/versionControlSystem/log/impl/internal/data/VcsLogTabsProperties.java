@@ -22,8 +22,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.util.Map;
@@ -51,10 +50,10 @@ public class VcsLogTabsProperties implements PersistentStateComponent<VcsLogTabs
     myState = state;
   }
 
-  public MainVcsLogUiProperties createProperties(@Nonnull final String id) {
+  public MainVcsLogUiProperties createProperties(final String id) {
     myState.TAB_STATES.putIfAbsent(id, new VcsLogUiPropertiesImpl.State());
     return new VcsLogUiPropertiesImpl() {
-      @Nonnull
+      
       @Override
       public State getState() {
         State state = myState.TAB_STATES.get(id);

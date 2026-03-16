@@ -17,14 +17,11 @@ package consulo.ui;
 
 import consulo.ui.annotation.RequiredUIAccess;
 
-import jakarta.annotation.Nonnull;
-
 /**
  * @author VISTALL
  * @since 05-Feb-17
  */
 public interface PseudoComponent {
-  @Nonnull
   @RequiredUIAccess
   Component getComponent();
 }

@@ -17,8 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +51,7 @@ class SoftMargins implements Cloneable {
         }
     }
 
-    @Nonnull
+    
     List<Integer> getValues() {
         return myValues != null ? myValues : Collections.emptyList();
     }
@@ -99,13 +98,13 @@ class SoftMargins implements Cloneable {
         return sb.toString();
     }
 
-    public void serializeInto(@Nonnull Element element) {
+    public void serializeInto(Element element) {
         if (myValues != null && myValues.size() > 0) {
             XmlSerializer.serializeInto(this, element);
         }
     }
 
-    public void deserializeFrom(@Nonnull Element element) {
+    public void deserializeFrom(Element element) {
         XmlSerializer.deserializeInto(this, element);
     }
 }

@@ -21,7 +21,6 @@ import consulo.document.FileDocumentManager;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -31,11 +30,11 @@ public interface FileDocumentManagerEx extends FileDocumentManager {
     Key<Object> NOT_RELOADABLE_DOCUMENT_KEY = new Key<>("NOT_RELOADABLE_DOCUMENT_KEY");
     Key<Document> HARD_REF_TO_DOCUMENT_KEY = Key.create("HARD_REF_TO_DOCUMENT_KEY");
 
-    void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile);
+    void registerDocument(Document document, VirtualFile virtualFile);
 
     @Override
     @RequiredWriteAction
-    default void saveAllDocuments(@Nonnull UIAccess uiAccess) {
+    default void saveAllDocuments(UIAccess uiAccess) {
         saveAllDocuments(uiAccess, true);
     }
 
@@ -44,5 +43,5 @@ public interface FileDocumentManagerEx extends FileDocumentManager {
      * @param isExplicit caused by user directly (Save action) or indirectly (e.g. Compile)
      */
     @RequiredWriteAction
-    void saveAllDocuments(@Nonnull UIAccess uiAccess, boolean isExplicit);
+    void saveAllDocuments(UIAccess uiAccess, boolean isExplicit);
 }

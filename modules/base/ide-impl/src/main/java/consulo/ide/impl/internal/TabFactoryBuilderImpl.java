@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.internal.TabFactoryBuilder;
 import consulo.ui.ex.awt.internal.TabbedPaneHolder;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 
 /**
@@ -69,7 +68,7 @@ public class TabFactoryBuilderImpl implements TabFactoryBuilder {
     private final Disposable myParent;
     private final TabbedPaneWrapper myWrapper;
 
-    private JBTabsFactory(TabbedPaneWrapper wrapper, Project project, @Nonnull Disposable parent) {
+    private JBTabsFactory(TabbedPaneWrapper wrapper, Project project, Disposable parent) {
       myWrapper = wrapper;
       myProject = project;
       myParent = parent;
@@ -108,7 +107,7 @@ public class TabFactoryBuilderImpl implements TabFactoryBuilder {
   }
 
   public static class AsJBTabs extends TabbedPaneWrapper {
-    public AsJBTabs(@Nullable Project project, int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, @Nonnull Disposable parent) {
+    public AsJBTabs(@Nullable Project project, int tabPlacement, PrevNextActionsDescriptor installKeyboardNavigation, Disposable parent) {
       super(false);
       init(tabPlacement, installKeyboardNavigation, new JBTabsFactory(this, project, parent));
     }
@@ -131,7 +130,7 @@ public class TabFactoryBuilderImpl implements TabFactoryBuilder {
   }
 
   @Override
-  public TabFactory createEditorTabPanel(TabbedPaneWrapper wrapper, Project project, @Nonnull Disposable parent) {
+  public TabFactory createEditorTabPanel(TabbedPaneWrapper wrapper, Project project, Disposable parent) {
     return new JBTabsFactory(wrapper, project, parent);
   }
 }

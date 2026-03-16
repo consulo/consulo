@@ -17,8 +17,7 @@ package consulo.virtualFileSystem.event;
 
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides data for event which is fired when a virtual file is moved.
@@ -31,9 +30,9 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
   private final VirtualFile myNewParent;
 
   public VirtualFileMoveEvent(@Nullable Object requestor,
-                              @Nonnull VirtualFile file,
-                              @Nonnull VirtualFile oldParent,
-                              @Nonnull VirtualFile newParent) {
+                              VirtualFile file,
+                              VirtualFile oldParent,
+                              VirtualFile newParent) {
     super(requestor, file, file.getName(), file.getParent());
     myOldParent = oldParent;
     myNewParent = newParent;
@@ -44,7 +43,7 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
    *
    * @return the parent of the file before the move.
    */
-  @Nonnull
+  
   public VirtualFile getOldParent() {
     return myOldParent;
   }
@@ -54,7 +53,7 @@ public class VirtualFileMoveEvent extends VirtualFileEvent {
    *
    * @return the parent of the file after the move.
    */
-  @Nonnull
+  
   public VirtualFile getNewParent() {
     return myNewParent;
   }

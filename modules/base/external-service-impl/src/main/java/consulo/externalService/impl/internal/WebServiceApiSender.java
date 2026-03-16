@@ -27,7 +27,7 @@ import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.http.adapter.httpclient4.HttpClient4Factory;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ThreeState;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;

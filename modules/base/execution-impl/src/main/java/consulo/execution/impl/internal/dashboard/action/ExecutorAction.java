@@ -26,7 +26,6 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,7 @@ public abstract class ExecutorAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             update(e, false);
@@ -70,7 +69,7 @@ public abstract class ExecutorAction extends DumbAwareAction {
         presentation.setVisible(targetNodes.isNotEmpty());
     }
 
-    private boolean canRun(@Nonnull RunDashboardRunConfigurationNode node) {
+    private boolean canRun(RunDashboardRunConfigurationNode node) {
         ProgressManager.checkCanceled();
 
         Project project = node.getProject();
@@ -147,7 +146,7 @@ public abstract class ExecutorAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getData(Project.KEY);
         if (project == null) {
             return;
@@ -163,7 +162,7 @@ public abstract class ExecutorAction extends DumbAwareAction {
         }
     }
 
-    private void run(RunnerAndConfigurationSettings settings, RunContentDescriptor descriptor, @Nonnull DataContext context) {
+    private void run(RunnerAndConfigurationSettings settings, RunContentDescriptor descriptor, DataContext context) {
         runSubProcess(settings, null, descriptor, environment -> {
             environment.setDataContext(context);
         });
@@ -173,7 +172,7 @@ public abstract class ExecutorAction extends DumbAwareAction {
         RunnerAndConfigurationSettings settings,
         ExecutionTarget target,
         RunContentDescriptor descriptor,
-        @Nonnull Consumer<ExecutionEnvironment> envCustomization
+        Consumer<ExecutionEnvironment> envCustomization
     ) {
         RunConfiguration configuration = settings.getConfiguration();
         Project project = configuration.getProject();
@@ -209,5 +208,5 @@ public abstract class ExecutorAction extends DumbAwareAction {
 
     protected abstract Executor getExecutor();
 
-    protected abstract void update(@Nonnull AnActionEvent e, boolean running);
+    protected abstract void update(AnActionEvent e, boolean running);
 }

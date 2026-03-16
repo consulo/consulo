@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public interface XLineBreakpointTypeResolver {
             return map;
         });
 
-    @Nonnull
+    
     static List<XLineBreakpointTypeResolver> forFileType(FileType fileType) {
         ExtensionPoint<XLineBreakpointTypeResolver> extensionPoint = Application.get().getExtensionPoint(XLineBreakpointTypeResolver.class);
         Map<FileType, List<XLineBreakpointTypeResolver>> map = extensionPoint.getOrBuildCache(KEY);
@@ -55,7 +54,7 @@ public interface XLineBreakpointTypeResolver {
 
     @Nullable
     @RequiredReadAction
-    static XLineBreakpointType<?> forFile(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line) {
+    static XLineBreakpointType<?> forFile(Project project, VirtualFile virtualFile, int line) {
         for (XLineBreakpointTypeResolver resolver : forFileType(virtualFile.getFileType())) {
             XLineBreakpointType<?> breakpointType = resolver.resolveBreakpointType(project, virtualFile, line);
             if (breakpointType != null) {
@@ -67,8 +66,8 @@ public interface XLineBreakpointTypeResolver {
 
     @Nullable
     @RequiredReadAction
-    XLineBreakpointType<?> resolveBreakpointType(@Nonnull Project project, @Nonnull VirtualFile virtualFile, int line);
+    XLineBreakpointType<?> resolveBreakpointType(Project project, VirtualFile virtualFile, int line);
 
-    @Nonnull
+    
     FileType getFileType();
 }

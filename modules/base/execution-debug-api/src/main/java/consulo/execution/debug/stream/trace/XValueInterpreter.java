@@ -3,9 +3,7 @@ package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.frame.XValue;
-import org.jetbrains.annotations.Nls;
 
-import jakarta.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public interface XValueInterpreter {
@@ -15,13 +13,13 @@ public interface XValueInterpreter {
       private final boolean hasInnerExceptions;
       private final GenericEvaluationContext evaluationContext;
 
-      public Array(@Nonnull ArrayReference arrayReference, boolean hasInnerExceptions, @Nonnull GenericEvaluationContext evaluationContext) {
+      public Array(ArrayReference arrayReference, boolean hasInnerExceptions, GenericEvaluationContext evaluationContext) {
         this.arrayReference = arrayReference;
         this.hasInnerExceptions = hasInnerExceptions;
         this.evaluationContext = evaluationContext;
       }
 
-      @Nonnull
+      
       public ArrayReference getArrayReference() {
         return arrayReference;
       }
@@ -30,22 +28,22 @@ public interface XValueInterpreter {
         return hasInnerExceptions;
       }
 
-      @Nonnull
+      
       public GenericEvaluationContext getEvaluationContext() {
         return evaluationContext;
       }
     }
 
     final class Error implements Result {
-      @Nls
+      
       private final String message;
 
-      public Error(@Nls @Nonnull String message) {
+      public Error(String message) {
         this.message = message;
       }
 
-      @Nls
-      @Nonnull
+      
+      
       public String getMessage() {
         return message;
       }
@@ -59,6 +57,6 @@ public interface XValueInterpreter {
     }
   }
 
-  @Nonnull
-  CompletableFuture<Result> extract(@Nonnull XDebugSession session, @Nonnull XValue result);
+  
+  CompletableFuture<Result> extract(XDebugSession session, XValue result);
 }

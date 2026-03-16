@@ -18,8 +18,7 @@ package consulo.language.editor.internal;
 import consulo.language.editor.highlight.BraceMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ import java.util.Map;
 public class BraceMatcherInternal {
   private static final Map<FileType, BraceMatcher> BRACE_MATCHERS = new HashMap<>();
 
-  public static void registerBraceMatcher(@Nonnull FileType fileType, @Nonnull BraceMatcher braceMatcher) {
+  public static void registerBraceMatcher(FileType fileType, BraceMatcher braceMatcher) {
     BRACE_MATCHERS.put(fileType, braceMatcher);
   }
 

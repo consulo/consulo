@@ -16,7 +16,6 @@
 package consulo.externalService.impl.internal.update;
 
 import consulo.externalService.internal.PlatformOrPluginUpdateResultType;
-import jakarta.annotation.Nonnull;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,17 +35,17 @@ public class PlatformOrPluginUpdateResult {
     private final PlatformOrPluginUpdateResultType myType;
     private final List<PlatformOrPluginNode> myPlugins;
 
-    public PlatformOrPluginUpdateResult(@Nonnull PlatformOrPluginUpdateResultType type, @Nonnull List<PlatformOrPluginNode> plugins) {
+    public PlatformOrPluginUpdateResult(PlatformOrPluginUpdateResultType type, List<PlatformOrPluginNode> plugins) {
         myType = type;
         myPlugins = plugins;
     }
 
-    @Nonnull
+    
     public PlatformOrPluginUpdateResultType getType() {
         return myType;
     }
 
-    @Nonnull
+    
     public List<PlatformOrPluginNode> getPlugins() {
         return myPlugins;
     }

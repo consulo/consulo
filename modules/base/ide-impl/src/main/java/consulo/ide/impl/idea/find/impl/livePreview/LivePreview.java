@@ -40,8 +40,7 @@ import consulo.ui.style.StandardColors;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.PrintStream;
@@ -70,7 +69,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     private Balloon myReplacementBalloon;
 
     @Override
-    public void selectionChanged(@Nonnull SelectionEvent e) {
+    public void selectionChanged(SelectionEvent e) {
         updateInSelectionHighlighters();
     }
 
@@ -79,12 +78,11 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     }
 
     public interface Delegate {
-        @Nullable
-        String getStringToReplace(@Nonnull Editor editor, @Nullable FindResult findResult) throws FindManager.MalformedReplacementStringException;
+        String getStringToReplace(Editor editor, @Nullable FindResult findResult) throws FindManager.@Nullable MalformedReplacementStringException;
     }
 
     @Override
-    public void searchResultsUpdated(@Nonnull SearchResults sr) {
+    public void searchResultsUpdated(SearchResults sr) {
         if (mySuppressedUpdate) {
             mySuppressedUpdate = false;
             return;
@@ -175,7 +173,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         });
     }
 
-    private void removeHighlighterWithDependent(@Nonnull RangeHighlighter highlighter) {
+    private void removeHighlighterWithDependent(RangeHighlighter highlighter) {
         removeHighlighter(highlighter);
         RangeHighlighter additionalHighlighter = highlighter.getUserData(IN_SELECTION_KEY);
         if (additionalHighlighter != null) {
@@ -212,7 +210,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
     }
 
-    public LivePreview(@Nonnull SearchResults searchResults) {
+    public LivePreview(SearchResults searchResults) {
         mySearchResults = searchResults;
         searchResultsUpdated(searchResults);
         searchResults.addListener(this);
@@ -418,7 +416,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         }
     }
 
-    private RangeHighlighter addHighlighter(int startOffset, int endOffset, @Nonnull TextAttributes attributes) {
+    private RangeHighlighter addHighlighter(int startOffset, int endOffset, TextAttributes attributes) {
         Project project = mySearchResults.getProject();
         if (project == null || project.isDisposed()) {
             return null;
@@ -431,7 +429,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
         return highlighter;
     }
 
-    private void removeHighlighter(@Nonnull RangeHighlighter highlighter) {
+    private void removeHighlighter(RangeHighlighter highlighter) {
         Project project = mySearchResults.getProject();
         if (project == null || project.isDisposed()) {
             return;

@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 /**
@@ -37,12 +36,12 @@ public class VcsActionGroup extends DefaultActionGroup implements DumbAware {
         super(VcsLocalize.groupVcsGroupText(), false);
     }
 
-    protected VcsActionGroup(@Nonnull LocalizeValue text, boolean popup) {
+    protected VcsActionGroup(LocalizeValue text, boolean popup) {
         super(text, popup);
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent event) {
+    public void update(AnActionEvent event) {
         super.update(event);
         Project project = event.getData(Project.KEY);
         event.getPresentation().setEnabledAndVisible(project != null && project.isOpen());

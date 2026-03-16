@@ -18,7 +18,6 @@ package consulo.desktop.awt.action.menu;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 
@@ -31,8 +30,8 @@ public class ActionMenuItemImpl extends JMenuItem implements ActionMenuItem {
 
     public ActionMenuItemImpl(AnAction action,
                               Presentation presentation,
-                              @Nonnull String place,
-                              @Nonnull DataContext context,
+                              String place,
+                              DataContext context,
                               boolean enableMnemonics,
                               boolean prepareNow,
                               boolean insideCheckedGroup,

@@ -18,7 +18,6 @@ import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.project.content.scope.ProjectScopeProvider;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -44,17 +43,17 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
     }
 
     @Override
-    public boolean contains(@Nonnull VirtualFile file) {
+    public boolean contains(VirtualFile file) {
       return myFileIndexFacade.isInContent(file);
     }
 
     @Override
-    public int compare(@Nonnull VirtualFile file1, @Nonnull VirtualFile file2) {
+    public int compare(VirtualFile file1, VirtualFile file2) {
       return 0;
     }
 
     @Override
-    public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+    public boolean isSearchInModuleContent(Module aModule) {
       return true;
     }
 
@@ -77,7 +76,7 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
   private final Map<ProjectScope, ProjectAwareSearchScope> myScopes = new ConcurrentHashMap<>();
 
   @Inject
-  public ProjectScopeProviderImpl(@Nonnull Project project) {
+  public ProjectScopeProviderImpl(Project project) {
     myProject = project;
   }
 
@@ -85,12 +84,12 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
     return myScopes.computeIfAbsent(scope, it -> supplier.get());
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getEverythingScope() {
     return buildOrGet(ProjectScope.EVERYTHING, () -> new EverythingGlobalScope(myProject) {
       @Override
-      public boolean contains(@Nonnull VirtualFile file) {
+      public boolean contains(VirtualFile file) {
         RootType rootType = RootType.forFile(file);
         if (rootType != null && (rootType.isHidden() || rootType.isIgnored(myProject, file))) return false;
         return true;
@@ -98,22 +97,22 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
     });
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getLibrariesScope() {
     return buildOrGet(ProjectScope.LIBRARIES, () -> {
       ProjectAndLibrariesScope result = new ProjectAndLibrariesScope(myProject) {
         @Override
-        public boolean contains(@Nonnull VirtualFile file) {
+        public boolean contains(VirtualFile file) {
           return myProjectFileIndex.isInLibrary(file);
         }
 
         @Override
-        public boolean isSearchInModuleContent(@Nonnull Module aModule) {
+        public boolean isSearchInModuleContent(Module aModule) {
           return false;
         }
 
-        @Nonnull
+        
         @Override
         public Collection<UnloadedModuleDescription> getUnloadedModulesBelongingToScope() {
           return Collections.emptySet();
@@ -124,7 +123,7 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
     });
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getAllScope() {
     return buildOrGet(ProjectScope.ALL, () -> {
@@ -135,7 +134,7 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
 
       return new ProjectAndLibrariesScope(myProject) {
         @Override
-        public boolean contains(@Nonnull VirtualFile file) {
+        public boolean contains(VirtualFile file) {
           DirectoryInfo info = ((FileIndexBase)myProjectFileIndex).getInfoForFileOrDirectory(file);
           return info.isInProject(file) && (info.getModule() != null || info.hasLibraryClassRoot() || info.isInLibrarySource(file));
         }
@@ -143,13 +142,13 @@ public class ProjectScopeProviderImpl implements ProjectScopeProvider {
     });
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getProjectScope() {
     return buildOrGet(ProjectScope.PROJECT, () -> new ProjectScopeImpl(myProject, FileIndexFacade.getInstance(myProject)));
   }
 
-  @Nonnull
+  
   @Override
   public ProjectAwareSearchScope getContentScope() {
     return buildOrGet(ProjectScope.CONTENT, () -> new ContentSearchScope(myProject, FileIndexFacade.getInstance(myProject)));

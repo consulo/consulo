@@ -2,7 +2,6 @@
 package consulo.searchEverywhere;
 
 import consulo.application.progress.ProgressIndicator;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,24 +9,24 @@ import java.util.function.Predicate;
 
 public interface WeightedSearchEverywhereContributor<I> extends SearchEverywhereContributor<I> {
     void fetchWeightedElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super FoundItemDescriptor<I>> predicate
+        String pattern,
+        ProgressIndicator progressIndicator,
+        Predicate<? super FoundItemDescriptor<I>> predicate
     );
 
     @Override
     default void fetchElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
-        @Nonnull Predicate<? super I> predicate
+        String pattern,
+        ProgressIndicator progressIndicator,
+        Predicate<? super I> predicate
     ) {
         fetchWeightedElements(pattern, progressIndicator, descriptor -> predicate.test(descriptor.getItem()));
     }
 
-    @Nonnull
+    
     default ContributorSearchResult<? super FoundItemDescriptor<I>> searchWeightedElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator,
+        String pattern,
+        ProgressIndicator progressIndicator,
         int elementsLimit
     ) {
         ContributorSearchResult.Builder<? super FoundItemDescriptor<I>> builder = ContributorSearchResult.builder();
@@ -45,10 +44,10 @@ public interface WeightedSearchEverywhereContributor<I> extends SearchEverywhere
         return builder.build();
     }
 
-    @Nonnull
+    
     default List<? super FoundItemDescriptor<I>> searchWeightedElements(
-        @Nonnull String pattern,
-        @Nonnull ProgressIndicator progressIndicator
+        String pattern,
+        ProgressIndicator progressIndicator
     ) {
         List<? super FoundItemDescriptor<I>> res = new ArrayList<>();
         fetchWeightedElements(pattern, progressIndicator, res::add);

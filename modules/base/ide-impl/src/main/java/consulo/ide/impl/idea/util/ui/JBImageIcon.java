@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.ui.ex.awt.UIUtil;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -28,7 +27,7 @@ import java.awt.image.ImageObserver;
  * @author Konstantin Bulenkov
  */
 public class JBImageIcon extends ImageIcon implements consulo.ui.image.Image {
-  public JBImageIcon(@Nonnull Image image) {
+  public JBImageIcon(Image image) {
     super(image);
   }
 

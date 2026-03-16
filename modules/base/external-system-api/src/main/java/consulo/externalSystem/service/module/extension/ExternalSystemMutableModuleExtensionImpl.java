@@ -20,22 +20,21 @@ import consulo.externalSystem.model.ProjectSystemId;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 03-Jun-17
  */
 public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModuleExtensionImpl implements ExternalSystemMutableModuleExtension<ExternalSystemModuleExtensionImpl> {
-    public ExternalSystemMutableModuleExtensionImpl(@Nonnull String id,
-                                                    @Nonnull ModuleRootLayer moduleRootLayer,
-                                                    @Nonnull ProjectSystemId projectSystemId) {
+    public ExternalSystemMutableModuleExtensionImpl(String id,
+                                                    ModuleRootLayer moduleRootLayer,
+                                                    ProjectSystemId projectSystemId) {
         super(id, moduleRootLayer, projectSystemId);
     }
 
     @Override
-    public void setOption(@Nonnull String key, @Nullable String value) {
+    public void setOption(String key, @Nullable String value) {
         if (value == null) {
             myOptions.remove(key);
         }
@@ -45,7 +44,7 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
     }
 
     @Override
-    public void removeOption(@Nonnull String key) {
+    public void removeOption(String key) {
         myOptions.remove(key);
     }
 
@@ -57,7 +56,7 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
     @RequiredUIAccess
     @Nullable
     @Override
-    public Component createConfigurationComponent(@Nonnull Disposable uiDisposable, @Nonnull Runnable updateOnCheck) {
+    public Component createConfigurationComponent(Disposable uiDisposable, Runnable updateOnCheck) {
         return null;
     }
 
@@ -67,7 +66,7 @@ public class ExternalSystemMutableModuleExtensionImpl extends ExternalSystemModu
     }
 
     @Override
-    public boolean isModified(@Nonnull ExternalSystemModuleExtensionImpl originalExtension) {
+    public boolean isModified(ExternalSystemModuleExtensionImpl originalExtension) {
         return myIsEnabled != originalExtension.isEnabled() || !myOptions.equals(originalExtension.myOptions);
     }
 }

@@ -32,8 +32,7 @@ import consulo.versionControlSystem.checkin.CheckinProjectPanel;
 import consulo.versionControlSystem.ui.CheckBoxRefreshableOnComponent;
 import consulo.versionControlSystem.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +46,7 @@ import java.util.function.BiConsumer;
 @ExtensionImpl(id = "copyright", order = "after code-cleanup")
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
     @Override
-    @Nonnull
+    
     public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {
         return new CheckinHandler() {
             @RequiredUIAccess

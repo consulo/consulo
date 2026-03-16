@@ -7,7 +7,6 @@ import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 /**
  * Intention action that is used as a title of [IntentionActionWithChoice].
@@ -19,11 +18,11 @@ import jakarta.annotation.Nonnull;
 public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction implements CustomizableIntentionAction, SyntheticIntentionAction, LocalQuickFix, Comparable<IntentionAction> {
     private final LocalizeValue myTitle;
 
-    public ChoiceTitleIntentionAction(@Nonnull LocalizeValue title) {
+    public ChoiceTitleIntentionAction(LocalizeValue title) {
         myTitle = title;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getName() {
         return myTitle;
@@ -45,22 +44,22 @@ public class ChoiceTitleIntentionAction extends AbstractEmptyIntentionAction imp
     }
 
     @Override
-    public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+    public boolean isAvailable(Project project, Editor editor, PsiFile file) {
         return true;
     }
 
     @Override
-    public void applyFix(@Nonnull Project project, @Nonnull ProblemDescriptor descriptor) {
+    public void applyFix(Project project, ProblemDescriptor descriptor) {
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getText() {
         return myTitle;
     }
 
     @Override
-    public int compareTo(@Nonnull IntentionAction other) {
+    public int compareTo(IntentionAction other) {
         int i = getText().compareTo(other.getText());
         if (i != 0) {
             return i;

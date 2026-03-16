@@ -16,37 +16,36 @@
 package consulo.versionControlSystem.change.commited;
 
 import consulo.ui.ex.action.AnAction;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
 public class VcsCommittedViewAuxiliary {
 
-  @Nonnull
+  
   private final List<AnAction> myToolbarActions;
-  @Nonnull
+  
   private final List<AnAction> myPopupActions;
-  @Nonnull
+  
   private final Runnable myCalledOnViewDispose;
 
-  public VcsCommittedViewAuxiliary(@Nonnull List<AnAction> popupActions, @Nonnull Runnable calledOnViewDispose,
-                                   @Nonnull List<AnAction> toolbarActions) {
+  public VcsCommittedViewAuxiliary(List<AnAction> popupActions, Runnable calledOnViewDispose,
+                                   List<AnAction> toolbarActions) {
     myToolbarActions = toolbarActions;
     myPopupActions = popupActions;
     myCalledOnViewDispose = calledOnViewDispose;
   }
 
-  @Nonnull
+  
   public List<AnAction> getPopupActions() {
     return myPopupActions;
   }
 
-  @Nonnull
+  
   public Runnable getCalledOnViewDispose() {
     return myCalledOnViewDispose;
   }
 
-  @Nonnull
+  
   public List<AnAction> getToolbarActions() {
     return myToolbarActions;
   }

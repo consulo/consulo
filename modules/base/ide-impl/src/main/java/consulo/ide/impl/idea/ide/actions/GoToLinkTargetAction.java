@@ -26,7 +26,6 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = "GoToLinkTarget")
 public class GoToLinkTargetAction extends DumbAwareAction {
@@ -35,14 +34,14 @@ public class GoToLinkTargetAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         VirtualFile file = e.getData(VirtualFile.KEY);
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && file != null && file.is(VFileProperty.SYMLINK));
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         VirtualFile file = e.getRequiredData(VirtualFile.KEY);
         if (file.is(VFileProperty.SYMLINK)) {

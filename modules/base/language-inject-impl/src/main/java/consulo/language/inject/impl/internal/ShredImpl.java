@@ -24,8 +24,7 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.psi.SmartPsiFileRange;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class ShredImpl implements PsiLanguageInjectionHost.Shred {
   private final SmartPsiFileRange relevantRangeInHost;
@@ -36,11 +35,11 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
   private final boolean usePsiRange;
   private final boolean isOneLine;
 
-  ShredImpl(@Nonnull SmartPsiFileRange relevantRangeInHost,
-            @Nonnull SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer,
-            @Nonnull String prefix,
-            @Nonnull String suffix,
-            @Nonnull TextRange rangeInDecodedPSI,
+  ShredImpl(SmartPsiFileRange relevantRangeInHost,
+            SmartPsiElementPointer<PsiLanguageInjectionHost> hostElementPointer,
+            String prefix,
+            String suffix,
+            TextRange rangeInDecodedPSI,
             boolean usePsiRange, boolean isOneLine) {
     this.hostElementPointer = hostElementPointer;
     this.relevantRangeInHost = relevantRangeInHost;
@@ -61,13 +60,13 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
     assert host != null && host.isValid() : "no host: " + hostElementPointer;
   }
 
-  @Nonnull
+  
   ShredImpl withPsiRange() {
     return new ShredImpl(relevantRangeInHost, hostElementPointer, prefix, suffix, rangeInDecodedPSI, true, isOneLine);
   }
 
-  @Nonnull
-  ShredImpl withRange(@Nonnull TextRange rangeInDecodedPSI, @Nonnull TextRange rangeInHostElementPSI, @Nonnull PsiLanguageInjectionHost newHost) {
+  
+  ShredImpl withRange(TextRange rangeInDecodedPSI, TextRange rangeInHostElementPSI, PsiLanguageInjectionHost newHost) {
     SmartPsiFileRange rangeMarker = relevantRangeInHost;
     Segment oldRangeInHostElementPSI = calcRangeInsideHostElement(false);
     SmartPointerManagerImpl pointerManager = (SmartPointerManagerImpl)SmartPointerManager.getInstance(rangeMarker.getProject());
@@ -80,7 +79,7 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
     return new ShredImpl(rangeMarker, newHostPointer, prefix, suffix, rangeInDecodedPSI, usePsiRange, isOneLine);
   }
 
-  @Nonnull
+  
   SmartPsiElementPointer<PsiLanguageInjectionHost> getSmartPointer() {
     return hostElementPointer;
   }
@@ -95,12 +94,12 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
   }
 
   @Override
-  @Nonnull
+  
   public TextRange getRangeInsideHost() {
     return calcRangeInsideHostElement(true);
   }
 
-  @Nonnull
+  
   private TextRange calcRangeInsideHostElement(boolean usePsiRange) {
     PsiLanguageInjectionHost host = getHost();
     Segment psiRange = usePsiRange ? relevantRangeInHost.getPsiRange() : relevantRangeInHost.getRange();
@@ -168,19 +167,19 @@ class ShredImpl implements PsiLanguageInjectionHost.Shred {
     return hostElementPointer.getElement();
   }
 
-  @Nonnull
+  
   @Override
   public TextRange getRange() {
     return rangeInDecodedPSI;
   }
 
-  @Nonnull
+  
   @Override
   public String getPrefix() {
     return prefix;
   }
 
-  @Nonnull
+  
   @Override
   public String getSuffix() {
     return suffix;

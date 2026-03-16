@@ -24,8 +24,7 @@ import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -33,26 +32,26 @@ import java.util.function.Supplier;
 @DeprecationInfo("Removed it")
 public class VcsGuess {
 
-  @Nonnull
+  
   private final Project myProject;
-  @Nonnull
+  
   private final ProjectLevelVcsManagerImpl myVcsManager;
 
-  public VcsGuess(@Nonnull Project project) {
+  public VcsGuess(Project project) {
     myProject = project;
     myVcsManager = (ProjectLevelVcsManagerImpl)ProjectLevelVcsManager.getInstance(myProject);
   }
 
   @Nullable
-  public AbstractVcs getVcsForDirty(@Nonnull VirtualFile file) {
+  public AbstractVcs getVcsForDirty(VirtualFile file) {
     if (file.isInLocalFileSystem() && isFileInIndex(null, file)) {
       return myVcsManager.getVcsFor(file);
     }
     return null;
   }
 
-  @jakarta.annotation.Nullable
-  public AbstractVcs getVcsForDirty(@Nonnull FilePath filePath) {
+  @Nullable
+  public AbstractVcs getVcsForDirty(FilePath filePath) {
     if (filePath.isNonLocal()) {
       return null;
     }
@@ -63,7 +62,7 @@ public class VcsGuess {
     return null;
   }
 
-  private boolean isFileInIndex(@Nullable final FilePath filePath, @Nonnull final VirtualFile validParent) {
+  private boolean isFileInIndex(@Nullable final FilePath filePath, final VirtualFile validParent) {
     return ApplicationManager.getApplication().runReadAction(new Supplier<Boolean>() {
       public Boolean get() {
         if (myProject.isDisposed()) return false;
@@ -77,7 +76,7 @@ public class VcsGuess {
     });
   }
 
-  private static boolean isFileInBaseDir(@Nonnull FilePath filePath, @Nullable VirtualFile baseDir) {
+  private static boolean isFileInBaseDir(FilePath filePath, @Nullable VirtualFile baseDir) {
     VirtualFile parent = filePath.getVirtualFileParent();
     return !filePath.isDirectory() && parent != null && parent.equals(baseDir);
   }

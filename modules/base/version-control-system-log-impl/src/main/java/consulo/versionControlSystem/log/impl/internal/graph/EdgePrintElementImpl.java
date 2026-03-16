@@ -17,12 +17,11 @@
 package consulo.versionControlSystem.log.impl.internal.graph;
 
 import consulo.versionControlSystem.log.graph.*;
-import jakarta.annotation.Nonnull;
 
 public class EdgePrintElementImpl extends PrintElementWithGraphElement implements EdgePrintElement {
 
-  @Nonnull
-  public static EdgePrintElement.LineStyle convertToLineStyle(@Nonnull GraphEdgeType edgeType) {
+  
+  public static EdgePrintElement.LineStyle convertToLineStyle(GraphEdgeType edgeType) {
     switch (edgeType) {
       case USUAL:
       case NOT_LOAD_COMMIT:
@@ -36,9 +35,9 @@ public class EdgePrintElementImpl extends PrintElementWithGraphElement implement
     }
   }
 
-  @Nonnull
+  
   private final Type myType;
-  @Nonnull
+  
   private final LineStyle myLineStyle;
   private final int myPositionInOtherRow;
   private final boolean myHasArrow;
@@ -46,10 +45,10 @@ public class EdgePrintElementImpl extends PrintElementWithGraphElement implement
   public EdgePrintElementImpl(int rowIndex,
                               int positionInCurrentRow,
                               int positionInOtherRow,
-                              @Nonnull Type type,
-                              @Nonnull GraphEdge graphEdge,
+                              Type type,
+                              GraphEdge graphEdge,
                               boolean hasArrow,
-                              @Nonnull PrintElementManager printElementManager) {
+                              PrintElementManager printElementManager) {
     super(rowIndex, positionInCurrentRow, graphEdge, printElementManager);
     myType = type;
     myLineStyle = convertToLineStyle(graphEdge.getType());
@@ -62,13 +61,13 @@ public class EdgePrintElementImpl extends PrintElementWithGraphElement implement
     return myPositionInOtherRow;
   }
 
-  @Nonnull
+  
   @Override
   public Type getType() {
     return myType;
   }
 
-  @Nonnull
+  
   @Override
   public LineStyle getLineStyle() {
     return myLineStyle;

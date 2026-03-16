@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
@@ -29,5 +28,5 @@ public interface CustomMatcherModel {
    * @param userPattern Pattern defined by user in Choose by name popup
    * @return True if matches
    */
-  boolean matches(@Nonnull String popupItem, @Nonnull String userPattern);
+  boolean matches(String popupItem, String userPattern);
 }

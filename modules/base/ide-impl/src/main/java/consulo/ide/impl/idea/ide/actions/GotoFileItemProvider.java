@@ -30,8 +30,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -51,7 +50,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     private final Project myProject;
     private final GotoFileModel myModel;
 
-    public GotoFileItemProvider(@Nonnull Project project, @Nullable PsiElement context, GotoFileModel model) {
+    public GotoFileItemProvider(Project project, @Nullable PsiElement context, GotoFileModel model) {
         super(context);
         myProject = project;
         myModel = model;
@@ -60,20 +59,20 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     @Override
     @RequiredReadAction
     public boolean filterElementsWithWeights(
-        @Nonnull ChooseByNameBase base,
-        @Nonnull FindSymbolParameters parameters,
-        @Nonnull ProgressIndicator indicator,
-        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
+        ChooseByNameBase base,
+        FindSymbolParameters parameters,
+        ProgressIndicator indicator,
+        Predicate<FoundItemDescriptor<?>> consumer
     ) {
         return ProgressManager.getInstance().computePrioritized(() -> doFilterElements(base, parameters, indicator, consumer));
     }
 
     @RequiredReadAction
     private boolean doFilterElements(
-        @Nonnull ChooseByNameBase base,
-        @Nonnull FindSymbolParameters parameters,
-        @Nonnull ProgressIndicator indicator,
-        @Nonnull Predicate<FoundItemDescriptor<?>> consumer
+        ChooseByNameBase base,
+        FindSymbolParameters parameters,
+        ProgressIndicator indicator,
+        Predicate<FoundItemDescriptor<?>> consumer
     ) {
         long start = System.currentTimeMillis();
         try {
@@ -102,10 +101,10 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
     @RequiredReadAction
     private boolean processItemsForPattern(
-        @Nonnull ChooseByNameBase base,
-        @Nonnull FindSymbolParameters parameters,
-        @Nonnull Predicate<FoundItemDescriptor<?>> consumer,
-        @Nonnull ProgressIndicator indicator
+        ChooseByNameBase base,
+        FindSymbolParameters parameters,
+        Predicate<FoundItemDescriptor<?>> consumer,
+        ProgressIndicator indicator
     ) {
         String sanitized = getSanitizedPattern(parameters.getCompletePattern(), myModel);
         int qualifierEnd = sanitized.lastIndexOf('/') + 1;
@@ -135,7 +134,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
      * Invoke contributors directly, as multi-threading isn't of much value in Goto File,
      * and filling {@link ContributorsBasedGotoByModel#myContributorToItsSymbolsMap} is expensive for the default contributor.
      */
-    private void processNames(@Nonnull FindSymbolParameters parameters, @Nonnull Predicate<? super String> nameProcessor) {
+    private void processNames(FindSymbolParameters parameters, Predicate<? super String> nameProcessor) {
         List<GotoFileContributor> contributors =
             DumbService.getDumbAwareExtensions(myProject, myProject.getApplication().getExtensionPoint(GotoFileContributor.class));
         for (GotoFileContributor contributor : contributors) {
@@ -152,24 +151,24 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         }
     }
 
-    @Nonnull
-    public static String getSanitizedPattern(@Nonnull String pattern, GotoFileModel model) {
+    
+    public static String getSanitizedPattern(String pattern, GotoFileModel model) {
         return removeSlashes(StringUtil.replace(ChooseByNamePopup.getTransformedPattern(pattern, model), "\\", "/"));
     }
 
-    @Nonnull
-    public static MinusculeMatcher getQualifiedNameMatcher(@Nonnull String pattern) {
+    
+    public static MinusculeMatcher getQualifiedNameMatcher(String pattern) {
         pattern = "*" + StringUtil.replace(StringUtil.replace(pattern, "\\", "*\\*"), "/", "*/*");
         return NameUtil.buildMatcher(pattern).withCaseSensitivity(NameUtil.MatchingCaseSensitivity.NONE).preferringStartMatches().build();
     }
 
-    @Nonnull
+    
     private static String removeSlashes(String s) {
         return StringUtil.trimLeading(StringUtil.trimTrailing(s, '/'), '/');
     }
 
     @Nullable
-    private PsiFileSystemItem getFileByAbsolutePath(@Nonnull String pattern) {
+    private PsiFileSystemItem getFileByAbsolutePath(String pattern) {
         if (pattern.contains("/") || pattern.contains("\\")) {
             String path = FileUtil.toSystemIndependentName(ChooseByNamePopup.getTransformedPattern(pattern, myModel));
             VirtualFile vFile = LocalFileSystem.getInstance().findFileByPathIfCached(path);
@@ -207,7 +206,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     }
 
     @Nullable
-    private String getParentPath(@Nonnull PsiFileSystemItem item) {
+    private String getParentPath(PsiFileSystemItem item) {
         String fullName = myModel.getFullName(item);
         return fullName == null ? null : StringUtil.getPackageName(FileUtil.toSystemIndependentName(fullName), '/') + '/';
     }
@@ -226,12 +225,12 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     }
 
     // returns a lazy iterable, where the next element is calculated only when it's needed
-    @Nonnull
+    
     private JBIterable<FoundItemDescriptor<PsiFileSystemItem>> getFilesMatchingPath(
-        @Nonnull FindSymbolParameters parameters,
-        @Nonnull List<MatchResult> fileNames,
-        @Nonnull DirectoryPathMatcher dirMatcher,
-        @Nonnull ProgressIndicator indicator
+        FindSymbolParameters parameters,
+        List<MatchResult> fileNames,
+        DirectoryPathMatcher dirMatcher,
+        ProgressIndicator indicator
     ) {
         GlobalSearchScope scope = dirMatcher.narrowDown((GlobalSearchScope)parameters.getSearchScope());
         FindSymbolParameters adjusted = parameters.withScope(scope);
@@ -243,7 +242,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
     @RequiredReadAction
     private Iterable<FoundItemDescriptor<PsiFileSystemItem>> getItemsForNames(
-        @Nonnull ProgressIndicator indicator,
+        ProgressIndicator indicator,
         FindSymbolParameters parameters,
         List<MatchResult> matchResults
     ) {
@@ -294,7 +293,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
     private class NameGrouper {
         private final String namePattern;
-        @Nonnull
+        
         private final ProgressIndicator indicator;
 
         /**
@@ -304,7 +303,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
         private int index;
 
-        NameGrouper(@Nonnull String namePattern, @Nonnull ProgressIndicator indicator) {
+        NameGrouper(String namePattern, ProgressIndicator indicator) {
             this.namePattern = namePattern;
 
             candidateNames = IntStream.range(0, namePattern.length())
@@ -346,7 +345,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         final List<MatchResult> matchingNames = new ArrayList<>();
         final ProgressIndicator indicator;
 
-        SuffixMatches(String pattern, int from, @Nonnull ProgressIndicator indicator) {
+        SuffixMatches(String pattern, int from, ProgressIndicator indicator) {
             patternSuffix = pattern.substring(from);
             matcher = NameUtil.buildMatcher((from > 0 ? " " : "*") + patternSuffix, NameUtil.MatchingCaseSensitivity.NONE);
             this.indicator = indicator;
@@ -357,7 +356,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
             return "SuffixMatches{" + "patternSuffix='" + patternSuffix + '\'' + ", matchingNames=" + matchingNames + '}';
         }
 
-        boolean matchName(@Nonnull ChooseByNameBase base, String name) {
+        boolean matchName(ChooseByNameBase base, String name) {
             MatchResult result = matches(base, patternSuffix, matcher, name);
             if (result != null) {
                 matchingNames.add(result);
@@ -368,10 +367,10 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
 
         @RequiredReadAction
         boolean processFiles(
-            @Nonnull FindSymbolParameters parameters,
-            @Nonnull Predicate<FoundItemDescriptor<?>> processor,
-            @Nonnull SimpleReference<Boolean> hasSuggestions,
-            @Nonnull DirectoryPathMatcher dirMatcher
+            FindSymbolParameters parameters,
+            Predicate<FoundItemDescriptor<?>> processor,
+            SimpleReference<Boolean> hasSuggestions,
+            DirectoryPathMatcher dirMatcher
         ) {
             MinusculeMatcher qualifierMatcher = getQualifiedNameMatcher(parameters.getLocalPatternName());
 
@@ -413,9 +412,9 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         }
 
         private boolean hasSuggestionsOutsideProject(
-            @Nonnull String pattern,
-            @Nonnull List<List<MatchResult>> groups,
-            @Nonnull DirectoryPathMatcher dirMatcher
+            String pattern,
+            List<List<MatchResult>> groups,
+            DirectoryPathMatcher dirMatcher
         ) {
             return ContainerUtil.exists(
                 groups,
@@ -441,7 +440,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
         }
     }
 
-    private static <T> List<List<T>> sortAndGroup(@Nonnull List<T> items, @Nonnull Comparator<? super T> comparator) {
+    private static <T> List<List<T>> sortAndGroup(List<T> items, Comparator<? super T> comparator) {
         List<T> sorted = new ArrayList<>(items);
         sorted.sort(comparator);
 

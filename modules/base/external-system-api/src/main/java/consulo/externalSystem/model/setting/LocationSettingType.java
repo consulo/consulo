@@ -2,7 +2,6 @@ package consulo.externalSystem.model.setting;
 
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.ExternalSystemBundle;
-import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.swing.*;
@@ -28,17 +27,17 @@ public enum LocationSettingType {
 
   EXPLICIT_CORRECT("setting.type.location.explicit.correct");
   
-  @Nonnull
+  
   private final String myDescriptionKey;
-  @Nonnull
+  
   private final Color myColor;
 
-  LocationSettingType(@Nonnull String descriptionKey) {
+  LocationSettingType(String descriptionKey) {
     this(descriptionKey, "TextField.foreground");
   }
 
-  LocationSettingType(@Nonnull @PropertyKey(resourceBundle = ExternalSystemBundle.PATH_TO_BUNDLE) String descriptionKey,
-                      @Nonnull String ... colorKeys)
+  LocationSettingType(@PropertyKey(resourceBundle = ExternalSystemBundle.PATH_TO_BUNDLE) String descriptionKey,
+                      String ... colorKeys)
   {
     myDescriptionKey = descriptionKey;
     Color c = null;
@@ -56,11 +55,11 @@ public enum LocationSettingType {
   /**
    * @return human-readable description of the current setting type
    */
-  public String getDescription(@Nonnull ProjectSystemId externalSystemId) {
+  public String getDescription(ProjectSystemId externalSystemId) {
     return ExternalSystemBundle.message(myDescriptionKey, externalSystemId.getDisplayName().get());
   }
 
-  @Nonnull
+  
   public Color getColor() {
     return myColor;
   }

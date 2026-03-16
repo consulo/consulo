@@ -2,8 +2,8 @@
 package consulo.util.nodep.classloader;
 
 import consulo.util.nodep.LoggerRt;
-import consulo.util.nodep.collection.ContainerUtilRt;
 import consulo.util.nodep.io.FileUtilRt;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.net.URLClassLoader;
 import java.security.ProtectionDomain;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Function;
 
 /**
  * A class loader that allows for various customizations, e.g. not locking jars or using a special cache to speed up class loading.
@@ -65,7 +66,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     public static final class Builder {
         private List<URL> myURLs = Collections.emptyList();
         private Set<URL> myURLsWithProtectionDomain = new HashSet<>();
-        private ClassLoader myParent;
+        @Nullable
+        private ClassLoader myParent = null;
         private boolean myLockJars;
         private boolean myUseCache;
         private boolean myEnableJarIndex;
@@ -76,9 +78,11 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         private boolean myErrorOnMissingJar = true;
         private boolean myLazyClassloadingCaches;
 
-        private CachePoolImpl myCachePool;
+        @Nullable
+        private CachePoolImpl myCachePool = null;
 
-        private CachingCondition myCachingCondition;
+        @Nullable
+        private CachingCondition myCachingCondition = null;
 
         private Builder() {
         }
@@ -112,7 +116,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
          */
 
         public Builder urlsWithProtectionDomain(URL... urls) {
-            return urlsWithProtectionDomain(ContainerUtilRt.newHashSet(urls));
+            return urlsWithProtectionDomain(new HashSet<>(Arrays.asList(urls)));
         }
 
         /**
@@ -224,6 +228,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
 
     private final List<URL> myURLs;
     private final ClassPath myClassPath;
+    @Nullable
     private final ClassLoadingLocks myClassLoadingLocks;
     private final boolean myAllowBootstrapResources;
 
@@ -245,36 +250,34 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
      */
     protected UrlClassLoader(String name, Builder builder) {
         super(name, builder.myParent);
-        myURLs = ContainerUtilRt.map2List(builder.myURLs, UrlClassLoader::internProtocol);
+        myURLs = map2List(builder.myURLs, UrlClassLoader::internProtocol);
         myClassPath = createClassPath(builder, Collections.emptyMap());
         myAllowBootstrapResources = builder.myAllowBootstrapResources;
-        myClassLoadingLocks =
-            ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
+        myClassLoadingLocks = ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
     }
 
     /**
      * Java 9 Constructor. Do not call it lower java 9 version
      */
-    protected UrlClassLoader(String name, Map<URL, Set<String>> urlsIndex, Builder builder) {
+    protected UrlClassLoader(String name, @Nullable Map<URL, Set<String>> urlsIndex, Builder builder) {
         super(name, builder.myParent);
-        myURLs = ContainerUtilRt.map2List(builder.myURLs, UrlClassLoader::internProtocol);
+        myURLs = map2List(builder.myURLs, UrlClassLoader::internProtocol);
         myClassPath = createClassPath(builder, urlsIndex);
         myAllowBootstrapResources = builder.myAllowBootstrapResources;
-        myClassLoadingLocks =
-            ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
+        myClassLoadingLocks = ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
     }
 
     protected UrlClassLoader(Builder builder) {
         super(builder.myParent);
-        myURLs = ContainerUtilRt.map2List(builder.myURLs, UrlClassLoader::internProtocol);
+        myURLs = map2List(builder.myURLs, UrlClassLoader::internProtocol);
         myClassPath = createClassPath(builder, Collections.emptyMap());
         myAllowBootstrapResources = builder.myAllowBootstrapResources;
-        myClassLoadingLocks =
-            ourParallelCapableLoaders != null && ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
+        myClassLoadingLocks = ourParallelCapableLoaders.contains(getClass()) ? new ClassLoadingLocks() : null;
     }
 
-    protected final ClassPath createClassPath(Builder builder, Map<URL, Set<String>> urlsIndex) {
-        return new ClassPath(myURLs,
+    protected final ClassPath createClassPath(Builder builder, @Nullable Map<URL, Set<String>> urlsIndex) {
+        return new ClassPath(
+            myURLs,
             urlsIndex,
             builder.myLockJars,
             builder.myUseCache,
@@ -286,7 +289,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
             builder.myCachingCondition,
             builder.myErrorOnMissingJar,
             builder.myLazyClassloadingCaches,
-            builder.myURLsWithProtectionDomain);
+            builder.myURLsWithProtectionDomain
+        );
     }
 
     public static URL internProtocol(URL url) {
@@ -299,7 +303,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         }
         catch (MalformedURLException e) {
             LoggerRt.getInstance(UrlClassLoader.class).error(e);
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -333,6 +337,8 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     // java 9 module method. we can't use override annotation here
+    @Nullable
+    @Override
     protected Class<?> findClass(String moduleName, String name) {
         try {
             return findClass(name);
@@ -343,10 +349,13 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     }
 
     // java 9 module method. we can't use override annotation here
+    @Nullable
+    @Override
     protected URL findResource(String moduleName, String name) throws IOException {
         return findResource(name);
     }
 
+    @Nullable
     protected final Class _findClass(String name) {
         Resource res = getClassPath().getResource(name.replace('.', '/') + CLASS_EXTENSION);
         if (res == null) {
@@ -400,13 +409,14 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         return defineClass(name, b, 0, b.length, protectionDomain);
     }
 
+    @Nullable
     @Override
     public URL findResource(String name) {
         Resource res = findResourceImpl(name);
         return res != null ? res.getURL() : null;
     }
 
-
+    @Nullable
     private Resource findResourceImpl(String name) {
         String n = FileUtilRt.toCanonicalPath(name, '/', false);
         Resource resource = getClassPath().getResource(n);
@@ -421,6 +431,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
         myClassPath.close();
     }
 
+    @Nullable
     @Override
     public InputStream getResourceAsStream(String name) {
         if (myAllowBootstrapResources) {
@@ -443,6 +454,7 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
     // called by a parent class on Java 7+
     @SuppressWarnings("unused")
 
+    @Override
     protected Object getClassLoadingLock(String className) {
         //noinspection RedundantStringConstructorCall
         return myClassLoadingLocks != null ? myClassLoadingLocks.getOrCreateLock(className) : this;
@@ -481,5 +493,19 @@ public class UrlClassLoader extends ClassLoader implements AutoCloseable {
 
     public static CachePool createCachePool() {
         return new CachePoolImpl();
+    }
+
+    /**
+     * @return read-only list consisting of the elements from collection converted by mapper
+     */
+    private static <T, V> List<V> map2List(Collection<? extends T> collection, Function<T, V> mapper) {
+        if (collection.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<V> list = new ArrayList<>(collection.size());
+        for (T t : collection) {
+            list.add(mapper.apply(t));
+        }
+        return list;
     }
 }

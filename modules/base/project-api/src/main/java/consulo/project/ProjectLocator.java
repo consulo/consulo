@@ -21,8 +21,7 @@ import consulo.application.Application;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,10 +53,10 @@ public abstract class ProjectLocator {
    * @param file file to be located in projects.
    * @return list of open projects containing this file.
    */
-  @Nonnull
+  
   public abstract Collection<Project> getProjectsForFile(VirtualFile file);
 
-  public static <T, E extends Throwable> T computeWithPreferredProject(@Nonnull VirtualFile file, @Nonnull Project preferredProject, @Nonnull ThrowableComputable<T, E> action) throws E {
+  public static <T, E extends Throwable> T computeWithPreferredProject(VirtualFile file, Project preferredProject, ThrowableComputable<T, E> action) throws E {
     Map<VirtualFile, Project> local = ourPreferredProjects.get();
     local.put(file, preferredProject);
     try {
@@ -69,7 +68,7 @@ public abstract class ProjectLocator {
   }
 
   @Nullable
-  public static Project getPreferredProject(@Nonnull VirtualFile file) {
+  public static Project getPreferredProject(VirtualFile file) {
     return ourPreferredProjects.get().get(file);
   }
 

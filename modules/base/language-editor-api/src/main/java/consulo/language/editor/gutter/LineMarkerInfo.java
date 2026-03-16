@@ -36,17 +36,16 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 import consulo.util.lang.Comparing;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
 public class LineMarkerInfo<T extends PsiElement> {
-    @Nonnull
+    
     @RequiredReadAction
     public static LineMarkerInfo<PsiElement> createMethodSeparatorLineMarker(
-        @Nonnull PsiElement startFrom,
-        @Nonnull EditorColorsManager colorsManager
+        PsiElement startFrom,
+        EditorColorsManager colorsManager
     ) {
         LineMarkerInfo<PsiElement> info = new LineMarkerInfo<>(
             startFrom,
@@ -75,7 +74,7 @@ public class LineMarkerInfo<T extends PsiElement> {
     @Nullable
     private final Function<? super T, String> myTooltipProvider;
     private AnAction myNavigateAction = new NavigateAction<>(this);
-    @Nonnull
+    
     private final GutterIconRenderer.Alignment myIconAlignment;
     @Nullable
     private final GutterIconNavigationHandler<T> myNavigationHandler;
@@ -91,13 +90,13 @@ public class LineMarkerInfo<T extends PsiElement> {
      * @param navHandler      the handler executed when the gutter icon is clicked
      */
     public LineMarkerInfo(
-        @Nonnull T element,
-        @Nonnull TextRange range,
+        T element,
+        TextRange range,
         Image icon,
         int updatePass,
         @Nullable Function<? super T, String> tooltipProvider,
         @Nullable GutterIconNavigationHandler<T> navHandler,
-        @Nonnull GutterIconRenderer.Alignment alignment
+        GutterIconRenderer.Alignment alignment
     ) {
         myIcon = icon;
         myTooltipProvider = tooltipProvider;
@@ -113,13 +112,13 @@ public class LineMarkerInfo<T extends PsiElement> {
      * @deprecated use {@link LineMarkerInfo#LineMarkerInfo(PsiElement, TextRange, Image, int, Function, GutterIconNavigationHandler, GutterIconRenderer.Alignment)} instead
      */
     public LineMarkerInfo(
-        @Nonnull T element,
+        T element,
         int startOffset,
         Image icon,
         int updatePass,
         @Nullable Function<? super T, String> tooltipProvider,
         @Nullable GutterIconNavigationHandler<T> navHandler,
-        @Nonnull GutterIconRenderer.Alignment alignment
+        GutterIconRenderer.Alignment alignment
     ) {
         this(element, new TextRange(startOffset, startOffset), icon, updatePass, tooltipProvider, navHandler, alignment);
     }
@@ -128,7 +127,7 @@ public class LineMarkerInfo<T extends PsiElement> {
      * @deprecated use {@link LineMarkerInfo#LineMarkerInfo(PsiElement, TextRange, Image, int, Function, GutterIconNavigationHandler, GutterIconRenderer.Alignment)} instead
      */
     public LineMarkerInfo(
-        @Nonnull T element,
+        T element,
         int startOffset,
         Image icon,
         int updatePass,
@@ -146,7 +145,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return new LineMarkerGutterIconRenderer<>(this);
     }
 
-    @Nonnull
+    
     public LocalizeValue getLineMarkerTooltipValue() {
         if (myTooltipProvider == null) {
             return LocalizeValue.empty();
@@ -169,7 +168,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return elementRef.getElement();
     }
 
-    void setNavigateAction(@Nonnull AnAction navigateAction) {
+    void setNavigateAction(AnAction navigateAction) {
         myNavigateAction = navigateAction;
     }
 
@@ -178,7 +177,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         return myNavigationHandler;
     }
 
-    @Nonnull
+    
     public MarkupEditorFilter getEditorFilter() {
         return MarkupEditorFilter.EMPTY;
     }
@@ -186,7 +185,7 @@ public class LineMarkerInfo<T extends PsiElement> {
     public static class LineMarkerGutterIconRenderer<T extends PsiElement> extends GutterIconRenderer {
         private final LineMarkerInfo<T> myInfo;
 
-        public LineMarkerGutterIconRenderer(@Nonnull LineMarkerInfo<T> info) {
+        public LineMarkerGutterIconRenderer(LineMarkerInfo<T> info) {
             myInfo = info;
         }
 
@@ -195,7 +194,7 @@ public class LineMarkerInfo<T extends PsiElement> {
         }
 
         @Override
-        @Nonnull
+        
         public Image getIcon() {
             return myInfo.myIcon;
         }
@@ -210,7 +209,7 @@ public class LineMarkerInfo<T extends PsiElement> {
             return myInfo.myNavigationHandler != null;
         }
 
-        @Nonnull
+        
         @Override
         public LocalizeValue getTooltipValue() {
             try {
@@ -221,13 +220,13 @@ public class LineMarkerInfo<T extends PsiElement> {
             }
         }
 
-        @Nonnull
+        
         @Override
         public Alignment getAlignment() {
             return myInfo.myIconAlignment;
         }
 
-        protected boolean looksTheSameAs(@Nonnull LineMarkerGutterIconRenderer renderer) {
+        protected boolean looksTheSameAs(LineMarkerGutterIconRenderer renderer) {
             return myInfo.getElement() != null &&
                 renderer.myInfo.getElement() != null &&
                 myInfo.getElement() == renderer.myInfo.getElement() &&

@@ -15,7 +15,6 @@
  */
 package consulo.ui.model;
 
-import jakarta.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
@@ -23,7 +22,7 @@ import java.util.EventListener;
  * @since 2018-05-15
  */
 public interface MutableListModelListener<E> extends EventListener {
-  void itemAdded(@Nonnull E item);
+  void itemAdded(E item);
 
-  void itemRemoved(@Nonnull E item);
+  void itemRemoved(E item);
 }

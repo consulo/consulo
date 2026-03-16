@@ -27,8 +27,7 @@ import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class PluginManagerCore {
 
     private static final float PLUGINS_PROGRESS_MAX_VALUE = 0.3f;
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Use consulo.container.plugin.PluginManager#getPlugins()")
     @SuppressWarnings("deprecation")
@@ -57,7 +56,7 @@ public class PluginManagerCore {
     }
 
     @Nullable
-    public static PluginId getPluginId(@Nonnull Class<?> clazz) {
+    public static PluginId getPluginId(Class<?> clazz) {
         ClassLoader loader = clazz.getClassLoader();
         if (!(loader instanceof PluginClassLoader)) {
             return null;
@@ -80,7 +79,7 @@ public class PluginManagerCore {
 
     @Deprecated
     @DeprecationInfo("Must be never used from plugin or platform")
-    public static void loadDescriptors(@Nonnull File pluginsHome,
+    public static void loadDescriptors(File pluginsHome,
                                        List<PluginDescriptorImpl> result,
                                        @Nullable StartupProgress progress,
                                        int pluginsCount,
@@ -111,7 +110,7 @@ public class PluginManagerCore {
         }
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Must be never used from plugin or platform")
     public static List<PluginDescriptorImpl> loadDescriptorsFromPluginPath(@Nullable StartupProgress progress, boolean isHeadlessMode) {

@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.change.shelf;
 
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.List;
  * @since 2025-09-06
  */
 public interface ShelvedChangeList {
-    @Nonnull
+    
     String getName();
 
     String getPath();
@@ -43,6 +42,6 @@ public interface ShelvedChangeList {
 
     Date getDate();
 
-    @Nonnull
+    
     List<? extends ShelvedChange> getChanges(Project project);
 }

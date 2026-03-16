@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;

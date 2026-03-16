@@ -21,7 +21,6 @@ import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author anna
@@ -31,20 +30,20 @@ public class DefaultImplementationTextSelectioner implements ImplementationTextS
   private static final Logger LOG = Logger.getInstance(DefaultImplementationTextSelectioner.class);
 
   @Override
-  public int getTextStartOffset(@Nonnull PsiElement parent) {
+  public int getTextStartOffset(PsiElement parent) {
     TextRange textRange = parent.getTextRange();
     LOG.assertTrue(textRange != null, parent);
     return textRange.getStartOffset();
   }
 
   @Override
-  public int getTextEndOffset(@Nonnull PsiElement element) {
+  public int getTextEndOffset(PsiElement element) {
     TextRange textRange = element.getTextRange();
     LOG.assertTrue(textRange != null, element);
     return textRange.getEndOffset();
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

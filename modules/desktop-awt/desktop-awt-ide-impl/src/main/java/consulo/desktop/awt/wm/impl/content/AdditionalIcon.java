@@ -18,22 +18,21 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 
 /**
  * from kotlin
  */
 public abstract class AdditionalIcon {
-  @Nonnull
+  
   private final Image myRegularIcon;
-  @Nonnull
+  
   private final Image myHoveredImage;
 
   private int myX;
 
-  public AdditionalIcon(@Nonnull Image regularIcon, @Nonnull Image hoveredImage) {
+  public AdditionalIcon(Image regularIcon, Image hoveredImage) {
     myRegularIcon = regularIcon;
     myHoveredImage = hoveredImage;
   }

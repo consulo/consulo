@@ -20,8 +20,7 @@ import consulo.ui.ListBox;
 import consulo.ui.Size2D;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.model.ListModel;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
@@ -49,14 +48,13 @@ public class DesktopSwtListBoxImpl<E> extends SWTComponentDelegate<List> impleme
         component.setItems("1", "2");
     }
 
-    @Nonnull
     @Override
     public ListModel<E> getListModel() {
         return myModel;
     }
 
     @Override
-    public void setRenderer(@Nonnull ItemRenderer<E> renderer) {
+    public void setRenderer(ItemRenderer<E> renderer) {
     }
 
     @Override

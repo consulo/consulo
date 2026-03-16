@@ -19,9 +19,7 @@ import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.versionControlSystem.VcsBundle;
-import org.jetbrains.annotations.NonNls;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -45,7 +43,7 @@ public class IgnoredSettingsDialog extends DialogWrapper {
     return myPanel.createComponent();
   }
 
-  @Nonnull
+  
   @Override
   protected Action[] createActions() {
     return new Action[]{getOKAction(), getCancelAction(), getHelpAction()};
@@ -67,7 +65,7 @@ public class IgnoredSettingsDialog extends DialogWrapper {
   }
 
   @Override
-  @NonNls
+  
   protected String getDimensionServiceKey() {
     return "IgnoredSettingsDialog";
   }

@@ -42,8 +42,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -54,7 +53,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
 
     @RequiredUIAccess
     @Override
-    public void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file) {
+    public void invoke(Project project, Editor editor, PsiFile file) {
         EditorModificationUtil.fillVirtualSpaceUntilCaret(editor);
 
         PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
@@ -83,8 +82,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     }
 
     public static Map<Template, String> filterTemplatesByPrefix(
-        @Nonnull Collection<? extends Template> templates,
-        @Nonnull Editor editor,
+        Collection<? extends Template> templates,
+        Editor editor,
         int offset,
         boolean fullMatch,
         boolean searchInDescription
@@ -151,8 +150,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         Project project,
         Editor editor,
         PsiFile file,
-        @Nonnull Map<Template, String> matchingTemplates,
-        @Nonnull MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements
+        Map<Template, String> matchingTemplates,
+        MultiMap<String, CustomLiveTemplateLookupElement> customTemplatesLookupElements
     ) {
         LookupEx lookup =
             (LookupEx)LookupManager.getInstance(project).createLookup(editor, LookupElement.EMPTY_ARRAY, "", new TemplatesArranger());
@@ -171,8 +170,8 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     }
 
     public static MultiMap<String, CustomLiveTemplateLookupElement> getCustomTemplatesLookupItems(
-        @Nonnull Editor editor,
-        @Nonnull PsiFile file,
+        Editor editor,
+        PsiFile file,
         int offset
     ) {
         MultiMap<String, CustomLiveTemplateLookupElement> result = MultiMap.create();
@@ -236,7 +235,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
         lookup.showLookup();
     }
 
-    private static void showLookup(LookupEx lookup, @Nonnull PsiFile file) {
+    private static void showLookup(LookupEx lookup, PsiFile file) {
         Editor editor = lookup.getEditor();
         Project project = editor.getProject();
         lookup.addLookupListener(new MyLookupAdapter(project, editor, file));
@@ -313,7 +312,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
     private static class TemplatesArranger extends LookupArranger {
 
         @Override
-        public Pair<List<LookupElement>, Integer> arrangeItems(@Nonnull Lookup lookup, boolean onExplicitAction) {
+        public Pair<List<LookupElement>, Integer> arrangeItems(Lookup lookup, boolean onExplicitAction) {
             LinkedHashSet<LookupElement> result = new LinkedHashSet<>();
             List<LookupElement> items = getMatchingItems();
             for (LookupElement item : items) {

@@ -27,7 +27,6 @@ import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.CancellablePromise;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +42,9 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
     private final HintInfoFilter myHintInfoFilter;
     private final boolean myForceImmediateUpdate;
 
-    public ParameterHintsPass(@Nonnull PsiElement element,
-                              @Nonnull Editor editor,
-                              @Nonnull HintInfoFilter hintsFilter,
+    public ParameterHintsPass(PsiElement element,
+                              Editor editor,
+                              HintInfoFilter hintsFilter,
                               boolean forceImmediateUpdate) {
         super(editor, element.getContainingFile(), true);
         myRootElement = element;
@@ -58,7 +57,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
      * <p>
      * Return promise in EDT.
      */
-    public static @Nonnull CancellablePromise<?> asyncUpdate(@Nonnull PsiElement element, @Nonnull Editor editor) {
+    public static CancellablePromise<?> asyncUpdate(PsiElement element, Editor editor) {
         MethodInfoExcludeListFilter filter = MethodInfoExcludeListFilter.forLanguage(element.getLanguage());
         AsyncPromise<Object> promise = new AsyncPromise<>();
         SmartPsiElementPointer<PsiElement> elementPtr = SmartPointerManager.getInstance(element.getProject())
@@ -75,7 +74,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
     }
 
     @RequiredReadAction
-    private static ParameterHintsPass collectInlaysInPass(@Nonnull Editor editor,
+    private static ParameterHintsPass collectInlaysInPass(Editor editor,
                                                           MethodInfoExcludeListFilter filter,
                                                           SmartPsiElementPointer<PsiElement> elementPtr) {
         PsiElement element = elementPtr.getElement();
@@ -94,7 +93,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
 
     @Override
     @RequiredReadAction
-    public void doCollectInformation(@Nonnull ProgressIndicator progress) {
+    public void doCollectInformation(ProgressIndicator progress) {
         myHints.clear();
 
         Language language = myFile.getLanguage();
@@ -114,7 +113,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
         return HintUtils.isParameterHintsEnabledForLanguage(language);
     }
 
-    private void process(@Nonnull PsiElement element, @Nonnull InlayParameterHintsProvider provider) {
+    private void process(PsiElement element, InlayParameterHintsProvider provider) {
         List<InlayInfo> hints = provider.getParameterHints(element, myFile);
         if (hints.isEmpty()) {
             return;
@@ -186,7 +185,7 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
     }
 
     @RequiredReadAction
-    private @Nonnull List<Inlay<?>> hintsInRootElementArea(ParameterHintsPresentationManager manager) {
+    private List<Inlay<?>> hintsInRootElementArea(ParameterHintsPresentationManager manager) {
         TextRange range = myRootElement.getTextRange();
         int elementStart = range.getStartOffset();
         int elementEnd = range.getEndOffset();
@@ -226,14 +225,14 @@ public final class ParameterHintsPass extends EditorBoundHighlightingPass {
         final boolean relatesToPrecedingText;
         final HintWidthAdjustment widthAdjustment;
 
-        HintData(@Nonnull String text, boolean relatesToPrecedingText, HintWidthAdjustment widthAdjustment) {
+        HintData(String text, boolean relatesToPrecedingText, HintWidthAdjustment widthAdjustment) {
             presentationText = text;
             this.relatesToPrecedingText = relatesToPrecedingText;
             this.widthAdjustment = widthAdjustment;
         }
 
         @Override
-        public @Nonnull String toString() {
+        public String toString() {
             return '\'' + presentationText + '\'';
         }
     }

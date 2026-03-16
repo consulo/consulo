@@ -2,12 +2,11 @@
 package consulo.execution.debug.stream.trace;
 
 import consulo.execution.debug.stream.wrapper.StreamChain;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface TraceResultInterpreter {
-  @Nonnull
-  TracingResult interpret(@Nonnull StreamChain chain, @Nonnull ArrayReference evaluationResult, boolean isException);
+  
+  TracingResult interpret(StreamChain chain, ArrayReference evaluationResult, boolean isException);
 }

@@ -23,7 +23,7 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -33,7 +33,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -53,10 +52,10 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   private final NamedScopeManager myLocalScopesHolder;
 
   @Inject
-  public InspectionProjectProfileManagerImpl(@Nonnull Project project,
-                                             @Nonnull InspectionProfileManager inspectionProfileManager,
-                                             @Nonnull DependencyValidationManager holder,
-                                             @Nonnull NamedScopeManager localScopesHolder) {
+  public InspectionProjectProfileManagerImpl(Project project,
+                                             InspectionProfileManager inspectionProfileManager,
+                                             DependencyValidationManager holder,
+                                             NamedScopeManager localScopesHolder) {
     super(project, inspectionProfileManager, holder);
     myLocalScopesHolder = localScopesHolder;
     mySeverityRegistrar = new SeverityRegistrarImpl(project.getMessageBus());
@@ -71,7 +70,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
     return myName2Profile.containsKey(getInspectionProfile().getName());
   }
 
-  @Nonnull
+  
   public synchronized InspectionProfileWrapper getProfileWrapper() {
     InspectionProfile profile = getInspectionProfile();
     String profileName = profile.getName();
@@ -86,13 +85,13 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   }
 
   @Override
-  public void updateProfile(@Nonnull Profile profile) {
+  public void updateProfile(Profile profile) {
     super.updateProfile(profile);
     initProfileWrapper(profile);
   }
 
   @Override
-  public void deleteProfile(@Nonnull String name) {
+  public void deleteProfile(String name) {
     super.deleteProfile(name);
     InspectionProfileWrapper profileWrapper = myName2Profile.remove(name);
     if (profileWrapper != null) {
@@ -121,7 +120,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   }
 
   @Override
-  public void initProfileWrapper(@Nonnull Profile profile) {
+  public void initProfileWrapper(Profile profile) {
     InspectionProfileWrapper wrapper = new InspectionProfileWrapper((InspectionProfile)profile);
     myName2Profile.put(profile.getName(), wrapper);
   }
@@ -133,13 +132,13 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
     }
   }
 
-  @Nonnull
+  
   @Override
   public SeverityRegistrarImpl getSeverityRegistrar() {
     return mySeverityRegistrar;
   }
 
-  @Nonnull
+  
   @Override
   public SeverityRegistrarImpl getOwnSeverityRegistrar() {
     return mySeverityRegistrar;
@@ -169,7 +168,7 @@ public class InspectionProjectProfileManagerImpl extends consulo.language.editor
   }
 
   @Override
-  public Profile getProfile(@Nonnull String name) {
+  public Profile getProfile(String name) {
     return getProfile(name, true);
   }
 

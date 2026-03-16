@@ -20,7 +20,6 @@ import consulo.language.ast.IElementType;
 import consulo.language.lexer.Lexer;
 import consulo.language.version.LanguageVersion;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -33,7 +32,7 @@ public abstract class LanguageVersionableSyntaxHighlighter extends SyntaxHighlig
     myLanguageVersion = languageVersion;
   }
 
-  @Nonnull
+  
   @Override
   public Lexer getHighlightingLexer() {
     return getHighlightingLexer(myLanguageVersion);
@@ -41,13 +40,13 @@ public abstract class LanguageVersionableSyntaxHighlighter extends SyntaxHighlig
 
   public abstract Lexer getHighlightingLexer(LanguageVersion languageVersion);
 
-  @Nonnull
+  
   @Override
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
     return getTokenHighlights(myLanguageVersion, tokenType);
   }
 
-  @Nonnull
+  
   public TextAttributesKey[] getTokenHighlights(LanguageVersion languageVersion, IElementType tokenType) {
     return SyntaxHighlighterBase.EMPTY;
   }

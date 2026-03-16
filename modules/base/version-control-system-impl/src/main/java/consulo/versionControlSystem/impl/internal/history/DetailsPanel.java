@@ -29,8 +29,7 @@ import consulo.ui.ex.awt.util.StringHtmlUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.history.VcsHistoryUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -40,14 +39,11 @@ import static consulo.versionControlSystem.ui.awt.IssueLinkHtmlRenderer.formatTe
 import static consulo.versionControlSystem.ui.awt.VcsFontUtil.getHtmlWithFonts;
 
 class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
-  @Nonnull
   private final Project myProject;
-  @Nonnull
   private final StatusText myStatusText;
-  @Nonnull
   private String myText = "";
 
-  public DetailsPanel(@Nonnull Project project) {
+  public DetailsPanel(Project project) {
     myProject = project;
     myStatusText = new StatusText() {
       @Override
@@ -67,7 +63,7 @@ class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
     myStatusText.paint(this, g);
   }
 
-  public void update(@Nonnull List<TreeNodeOnVcsRevision> selection) {
+  public void update(List<TreeNodeOnVcsRevision> selection) {
     if (selection.isEmpty()) {
       setText("");
       return;
@@ -107,24 +103,24 @@ class DetailsPanel extends HtmlPanel implements UiDataProvider, CopyProvider {
   }
 
   @Override
-  public void performCopy(@Nonnull DataContext dataContext) {
+  public void performCopy(DataContext dataContext) {
     String selectedText = getSelectedText();
     if (selectedText == null || selectedText.isEmpty()) selectedText = StringHtmlUtil.removeHtmlTags(getText());
     CopyPasteManager.getInstance().setContents(new StringSelection(selectedText));
   }
 
   @Override
-  public boolean isCopyEnabled(@Nonnull DataContext dataContext) {
+  public boolean isCopyEnabled(DataContext dataContext) {
     return true;
   }
 
   @Override
-  public boolean isCopyVisible(@Nonnull DataContext dataContext) {
+  public boolean isCopyVisible(DataContext dataContext) {
     return true;
   }
 
   @Override
-  public void uiDataSnapshot(@Nonnull DataSink sink) {
+  public void uiDataSnapshot(DataSink sink) {
     sink.set(CopyProvider.KEY, this);
   }
 }

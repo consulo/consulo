@@ -16,8 +16,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.hint.HintHint;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,12 +136,12 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
   private static JComponent createPopupContent(NavBarPanel panel, int sourceItemIndex, Object[] siblings) {
     class MyList<E> extends JBList<E> implements UiDataProvider, Queryable {
       @Override
-      public void putInfo(@Nonnull Map<String, String> info) {
+      public void putInfo(Map<String, String> info) {
         panel.putInfo(info);
       }
 
       @Override
-      public void uiDataSnapshot(@Nonnull DataSink sink) {
+      public void uiDataSnapshot(DataSink sink) {
         sink.set(NavBarPanel.NAV_BAR_ITEMS, new ArrayList<>(getSelectedValuesList()));
         // Delegate non-selection data to panel
         sink.uiDataSnapshot(panel);
@@ -195,12 +194,11 @@ public class NavBarPopup extends LightweightHintImpl implements Disposable {
     list.registerKeyboardAction(action, KeyStroke.getKeyStroke(keyCode, 0), JComponent.WHEN_FOCUSED);
   }
 
-  @Nonnull
   public JBList<?> getList() {
     return ((JBList)getComponent().getClientProperty(JBLIST_KEY));
   }
 
-  private static Action createMoveAction(@Nonnull NavBarPanel panel, int direction) {
+  private static Action createMoveAction(NavBarPanel panel, int direction) {
     return new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {

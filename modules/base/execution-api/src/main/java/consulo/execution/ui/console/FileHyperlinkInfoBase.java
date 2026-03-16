@@ -25,8 +25,7 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
@@ -43,18 +42,18 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
   private final int myDocumentLine;
   private final int myDocumentColumn;
 
-  public FileHyperlinkInfoBase(@Nonnull Project project, boolean includeInOccurenceNavigation, int documentLine, int documentColumn) {
+  public FileHyperlinkInfoBase(Project project, boolean includeInOccurenceNavigation, int documentLine, int documentColumn) {
     myProject = project;
     myIncludeInOccurenceNavigation = includeInOccurenceNavigation;
     myDocumentLine = documentLine;
     myDocumentColumn = documentColumn;
   }
 
-  public FileHyperlinkInfoBase(@Nonnull Project project, int line) {
+  public FileHyperlinkInfoBase(Project project, int line) {
     this(project, line, 0);
   }
 
-  public FileHyperlinkInfoBase(@Nonnull Project project, int line, int column) {
+  public FileHyperlinkInfoBase(Project project, int line, int column) {
     this(project, true, line, column);
   }
 
@@ -110,7 +109,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
    * @param documentColumn zero-based column of the document
    * @return calculated offset or UNDEFINED_OFFSET if it's impossible to calculate
    */
-  private static int calculateOffset(@Nonnull VirtualFile file, int documentLine, int documentColumn) {
+  private static int calculateOffset(VirtualFile file, int documentLine, int documentColumn) {
     return Application.get().runReadAction((Supplier<Integer>)() -> {
       Document document = FileDocumentManager.getInstance().getDocument(file);
       if (document != null) {

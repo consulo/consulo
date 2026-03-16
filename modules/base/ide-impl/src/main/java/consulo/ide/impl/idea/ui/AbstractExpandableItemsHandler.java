@@ -32,8 +32,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,8 +60,8 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
   private Rectangle myKeyItemBounds;
   private BufferedImage myImage;
 
-  public static void setRelativeBounds(@Nonnull Component parent, @Nonnull Rectangle bounds,
-                                       @Nonnull Component child, @Nonnull Container validationParent) {
+  public static void setRelativeBounds(Component parent, Rectangle bounds,
+                                       Component child, Container validationParent) {
     validationParent.add(parent);
     parent.setBounds(bounds);
     parent.validate();
@@ -70,7 +69,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     validationParent.remove(parent);
   }
 
-  protected AbstractExpandableItemsHandler(@Nonnull ComponentType component) {
+  protected AbstractExpandableItemsHandler(ComponentType component) {
     myComponent = component;
     myComponent.add(myRendererPane);
     myComponent.validate();
@@ -189,7 +188,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     return myEnabled;
   }
 
-  @Nonnull
+  
   @Override
   public Collection<KeyType> getExpandedItems() {
     return myKey == null ? Collections.<KeyType>emptyList() : Collections.singleton(myKey);
@@ -235,7 +234,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
     }, 10);
   }
 
-  private boolean isHandleSelectionEnabled(@Nonnull KeyType selected, boolean processIfUnfocused) {
+  private boolean isHandleSelectionEnabled(KeyType selected, boolean processIfUnfocused) {
     return myEnabled &&
            myComponent.isEnabled() &&
            myComponent.isShowing() &&
@@ -244,7 +243,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
            !isPopup();
   }
 
-  private void doHandleSelectionChange(@Nonnull KeyType selected, boolean processIfUnfocused) {
+  private void doHandleSelectionChange(KeyType selected, boolean processIfUnfocused) {
     if (!isHandleSelectionEnabled(selected, processIfUnfocused)) {
       hideHint();
       return;
@@ -324,7 +323,7 @@ public abstract class AbstractExpandableItemsHandler<KeyType, ComponentType exte
   }
 
   @Nullable
-  private Point createToolTipImage(@Nonnull KeyType key) {
+  private Point createToolTipImage(KeyType key) {
     UIUtil.putClientProperty(myComponent, EXPANDED_RENDERER, true);
     Pair<Component, Rectangle> rendererAndBounds = getCellRendererAndBounds(key);
     UIUtil.putClientProperty(myComponent, EXPANDED_RENDERER, null);

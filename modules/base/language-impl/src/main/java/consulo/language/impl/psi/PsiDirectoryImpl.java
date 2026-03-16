@@ -48,8 +48,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,13 +61,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     private final PsiManagerImpl myManager;
     private final VirtualFile myFile;
 
-    public PsiDirectoryImpl(PsiManagerImpl manager, @Nonnull VirtualFile file) {
+    public PsiDirectoryImpl(PsiManagerImpl manager, VirtualFile file) {
         myManager = manager;
         myFile = file;
     }
 
     @Override
-    @Nonnull
+    
     public VirtualFile getVirtualFile() {
         return myFile;
     }
@@ -86,18 +85,18 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @RequiredReadAction
     @Override
-    @Nonnull
+    
     public Language getLanguage() {
         return Language.ANY;
     }
 
-    @Nonnull
+    
     @Override
     public PsiManager getManager() {
         return myManager;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public String getName() {
@@ -111,10 +110,10 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return ModuleContentUtil.findModuleForFile(myFile, myManager.getProject());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredWriteAction
-    public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
+    public PsiElement setName(String name) throws IncorrectOperationException {
         checkSetName(name);
 
         /*
@@ -180,7 +179,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return myManager.findDirectory(parentFile);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiDirectory[] getSubdirectories() {
@@ -195,7 +194,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return dirs.toArray(new PsiDirectory[dirs.size()]);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiFile[] getFiles() {
@@ -213,7 +212,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public PsiDirectory findSubdirectory(@Nonnull String name) {
+    public PsiDirectory findSubdirectory(String name) {
         VirtualFile childVFile = myFile.findChild(name);
         if (childVFile == null) {
             return null;
@@ -223,7 +222,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public PsiFile findFile(@Nonnull String name) {
+    public PsiFile findFile(String name) {
         VirtualFile childVFile = myFile.findChild(name);
         if (childVFile == null) {
             return null;
@@ -259,7 +258,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return true;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public PsiElement[] getChildren() {
@@ -293,7 +292,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public TextRange getTextRange() {
@@ -329,7 +328,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return ""; // TODO throw new UnsupportedOperationException()
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
     public char[] textToCharArray() {
@@ -338,13 +337,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull CharSequence text) {
+    public boolean textMatches(CharSequence text) {
         return false;
     }
 
     @Override
     @RequiredReadAction
-    public boolean textMatches(@Nonnull PsiElement element) {
+    public boolean textMatches(PsiElement element) {
         return false;
     }
 
@@ -367,10 +366,10 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         return null;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredWriteAction
-    public PsiDirectory createSubdirectory(@Nonnull String name) throws IncorrectOperationException {
+    public PsiDirectory createSubdirectory(String name) throws IncorrectOperationException {
         checkCreateSubdirectory(name);
 
         try {
@@ -387,7 +386,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    public void checkCreateSubdirectory(@Nonnull String name) throws IncorrectOperationException {
+    public void checkCreateSubdirectory(String name) throws IncorrectOperationException {
         // TODO : another check?
         //CheckUtil.checkIsIdentifier(name);
         VirtualFile existingFile = getVirtualFile().findChild(name);
@@ -397,10 +396,10 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         CheckUtil.checkWritable(this);
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public PsiFile createFile(@Nonnull String name) throws IncorrectOperationException {
+    public PsiFile createFile(String name) throws IncorrectOperationException {
         checkCreateFile(name);
 
         try {
@@ -412,10 +411,10 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
         }
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public PsiFile copyFileFrom(@Nonnull String newName, @Nonnull PsiFile originalFile) throws IncorrectOperationException {
+    public PsiFile copyFileFrom(String newName, PsiFile originalFile) throws IncorrectOperationException {
         checkCreateFile(newName);
 
         Document document = PsiDocumentManager.getInstance(getProject()).getDocument(originalFile);
@@ -469,7 +468,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
     }
 
     @Override
-    public void checkCreateFile(@Nonnull String name) throws IncorrectOperationException {
+    public void checkCreateFile(String name) throws IncorrectOperationException {
         VirtualFile existingFile = getVirtualFile().findChild(name);
         if (existingFile != null) {
             throw new IncorrectOperationException(VirtualFileSystemLocalize.fileAlreadyExistsError(existingFile.getPresentableUrl()));
@@ -484,7 +483,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public PsiElement add(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public PsiElement add(PsiElement element) throws IncorrectOperationException {
         checkAdd(element);
         if (element instanceof PsiDirectory) {
             LOG.error("not implemented");
@@ -544,7 +543,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public void checkAdd(@Nonnull PsiElement element) throws IncorrectOperationException {
+    public void checkAdd(PsiElement element) throws IncorrectOperationException {
         CheckUtil.checkWritable(this);
         if (element instanceof PsiDirectory directory) {
             String name = directory.getName();
@@ -578,13 +577,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredWriteAction
-    public PsiElement addBefore(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addBefore(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
     @Override
     @RequiredWriteAction
-    public PsiElement addAfter(@Nonnull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+    public PsiElement addAfter(PsiElement element, PsiElement anchor) throws IncorrectOperationException {
         throw new IncorrectOperationException();
     }
 
@@ -625,13 +624,13 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredWriteAction
-    public PsiElement replace(@Nonnull PsiElement newElement) throws IncorrectOperationException {
+    public PsiElement replace(PsiElement newElement) throws IncorrectOperationException {
         LOG.error("not implemented");
         return null;
     }
 
     @Override
-    public void accept(@Nonnull PsiElementVisitor visitor) {
+    public void accept(PsiElementVisitor visitor) {
         visitor.visitDirectory(this);
     }
 
@@ -663,7 +662,7 @@ public class PsiDirectoryImpl extends PsiElementBase implements PsiDirectory, Qu
 
     @Override
     @RequiredReadAction
-    public void putInfo(@Nonnull Map<String, String> info) {
+    public void putInfo(Map<String, String> info) {
         info.put("fileName", getName());
     }
 

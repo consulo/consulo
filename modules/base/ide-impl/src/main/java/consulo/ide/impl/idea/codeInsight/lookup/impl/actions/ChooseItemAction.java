@@ -28,8 +28,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         }
 
         @Override
-        public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+        public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
             LookupEx lookup = LookupManager.getActiveLookup(editor);
             assert lookup != null;
 
@@ -76,7 +75,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         }
 
         @Override
-        public boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+        public boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
             LookupEx lookup = LookupManager.getActiveLookup(editor);
             if (lookup == null) {
                 return false;
@@ -99,7 +98,7 @@ public abstract class ChooseItemAction extends EditorAction implements HintManag
         }
     }
 
-    protected ChooseItemAction(@Nonnull LocalizeValue text, Handler handler) {
+    protected ChooseItemAction(LocalizeValue text, Handler handler) {
         super(text, handler);
     }
 

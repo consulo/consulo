@@ -15,7 +15,6 @@
  */
 package org.intellij.lang.annotations;
 
-import org.jetbrains.annotations.NonNls;
 
 import java.lang.annotation.*;
 
@@ -60,8 +59,8 @@ public @interface Flow {
    * </ul>
    */
   String source() default org.intellij.lang.annotations.Flow.DEFAULT_SOURCE;
-  @NonNls String DEFAULT_SOURCE = "The method argument (if parameter was annotated) or this container (if instance method was annotated)";
-  @NonNls String THIS_SOURCE = "this";
+  String DEFAULT_SOURCE = "The method argument (if parameter was annotated) or this container (if instance method was annotated)";
+  String THIS_SOURCE = "this";
 
   /**
    * true if the data source is container and we should track not the expression but its contents.<br>
@@ -109,9 +108,9 @@ public @interface Flow {
    * </ul>
    */
   String target() default org.intellij.lang.annotations.Flow.DEFAULT_TARGET;
-  @NonNls String DEFAULT_TARGET = "This container (if the parameter was annotated) or the return value (if instance method was annotated)";
-  @NonNls String RETURN_METHOD_TARGET = "The return value of this method";
-  @NonNls String THIS_TARGET = "this";
+  String DEFAULT_TARGET = "This container (if the parameter was annotated) or the return value (if instance method was annotated)";
+  String RETURN_METHOD_TARGET = "The return value of this method";
+  String THIS_TARGET = "this";
 
   /**
    * true if the data target is container and we should track not the expression but its contents.<br>

@@ -23,8 +23,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -56,9 +55,9 @@ public class DesktopSwtIntBoxImpl extends SWTComponentDelegate<Spinner> implemen
         }
     }
 
-    @Nonnull
+    
     @Override
-    public Disposable addValidator(@Nonnull Validator<Integer> validator) {
+    public Disposable addValidator(Validator<Integer> validator) {
         return null;
     }
 

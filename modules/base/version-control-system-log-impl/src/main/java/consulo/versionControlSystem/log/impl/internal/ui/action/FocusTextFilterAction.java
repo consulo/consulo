@@ -26,7 +26,6 @@ import consulo.versionControlSystem.log.impl.internal.ui.MainFrame;
 import consulo.versionControlSystem.log.internal.VcsLogActionPlaces;
 import consulo.versionControlSystem.log.impl.internal.ui.VcsLogUiImpl;
 import consulo.versionControlSystem.log.localize.VersionControlSystemLogLocalize;
-import jakarta.annotation.Nonnull;
 
 @ActionImpl(id = VcsLogActionPlaces.VCS_LOG_FOCUS_TEXT_FILTER)
 public class FocusTextFilterAction extends DumbAwareAction {
@@ -35,13 +34,13 @@ public class FocusTextFilterAction extends DumbAwareAction {
     }
 
     @Override
-    public void update(@Nonnull AnActionEvent e) {
+    public void update(AnActionEvent e) {
         e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY) && e.getData(VcsLogUi.KEY) instanceof VcsLogUiImpl);
     }
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(@Nonnull AnActionEvent e) {
+    public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         MainFrame mainFrame = ((VcsLogUiImpl) e.getRequiredData(VcsLogUi.KEY)).getMainFrame();
         if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {

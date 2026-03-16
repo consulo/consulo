@@ -46,8 +46,7 @@ import consulo.versionControlSystem.impl.internal.change.ui.awt.ChangesTreeListI
 import consulo.versionControlSystem.internal.ShowDiffContext;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Contract;
 
@@ -86,7 +85,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     public static Key<ChangesBrowser> DATA_KEY = ChangesBrowser.DATA_KEY;
     private AnAction myDiffAction;
     private final VirtualFile myToSelect;
-    @Nonnull
+    
     private final DeleteProvider myDeleteProvider = new VirtualFileDeleteProvider();
 
     @Override
@@ -100,7 +99,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     }
 
     protected InternalChangesBrowserBase(Project project,
-                                 @Nonnull List<T> changes,
+                                 List<T> changes,
                                  final boolean capableOfExcludingChanges,
                                  final boolean highlightProblems,
                                  @Nullable final Runnable inclusionListener,
@@ -158,23 +157,23 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         myViewer.setDoubleClickHandler(getDoubleClickHandler());
     }
 
-    @Nonnull
+    
     protected abstract DefaultTreeModel buildTreeModel(List<T> changes, ChangeNodeDecorator changeNodeDecorator, boolean showFlatten);
 
-    @Nonnull
-    protected abstract List<T> getSelectedObjects(@Nonnull ChangesBrowserNode<T> node);
+    
+    protected abstract List<T> getSelectedObjects(ChangesBrowserNode<T> node);
 
     @Nullable
-    protected abstract T getLeadSelectedObject(@Nonnull ChangesBrowserNode node);
+    protected abstract T getLeadSelectedObject(ChangesBrowserNode node);
 
-    @Nonnull
+    
     protected Runnable getDoubleClickHandler() {
         return this::showDiff;
     }
 
     protected void setInitialSelection(
         List<? extends ChangeList> changeLists,
-        @Nonnull List<T> changes,
+        List<T> changes,
         ChangeList initialListSelection
     ) {
         mySelectedChangeList = initialListSelection;
@@ -208,13 +207,13 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     }
 
     @Override
-    @Nonnull
+    
     public JScrollPane getViewerScrollPane() {
         return myViewerScrollPane;
     }
 
     @Override
-    public void uiDataSnapshot(@Nonnull DataSink sink) {
+    public void uiDataSnapshot(DataSink sink) {
         List<Change> list = getSelectedChanges();
         if (list.isEmpty()) {
             list = getAllChanges();
@@ -283,7 +282,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         ShowDiffAction.showDiffForChange(myProject, Arrays.asList(changesArray), indexInSelection, context);
     }
 
-    protected void updateDiffContext(@Nonnull ShowDiffContext context) {
+    protected void updateDiffContext(ShowDiffContext context) {
     }
 
     private boolean canShowDiff() {
@@ -300,7 +299,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         afterDiffRefresh();
     }
 
-    @Nonnull
+    
     protected ChangesSelection getChangesSelection() {
         Change leadSelection = ObjectUtil.tryCast(myViewer.getLeadSelection(), Change.class);
         List<Change> changes = getSelectedChanges();
@@ -350,7 +349,7 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         myViewer.setAlwaysExpandList(value);
     }
 
-    @Nonnull
+    
     protected JComponent createToolbar() {
         DefaultActionGroup toolbarGroups = new DefaultActionGroup();
         myToolBarGroup = new DefaultActionGroup();
@@ -373,13 +372,13 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         myDiffAction = new DumbAwareAction() {
             @Override
             @RequiredUIAccess
-            public void update(@Nonnull AnActionEvent e) {
+            public void update(AnActionEvent e) {
                 e.getPresentation().setEnabled(canShowDiff());
             }
 
             @Override
             @RequiredUIAccess
-            public void actionPerformed(@Nonnull AnActionEvent e) {
+            public void actionPerformed(AnActionEvent e) {
                 showDiff();
             }
         };
@@ -388,24 +387,24 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
         toolBarGroup.add(myDiffAction);
     }
 
-    @Nonnull
+    
     public Set<AbstractVcs> getAffectedVcses() {
         return ChangesUtil.getAffectedVcses(getCurrentDisplayedChanges(), myProject);
     }
 
-    @Nonnull
+    
     public abstract List<Change> getCurrentIncludedChanges();
 
     @Override
-    @Nonnull
+    
     public List<Change> getCurrentDisplayedChanges() {
         return mySelectedChangeList != null ? new ArrayList<>(mySelectedChangeList.getChanges()) : Collections.emptyList();
     }
 
-    @Nonnull
+    
     public abstract List<T> getCurrentDisplayedObjects();
 
-    @Nonnull
+    
     public List<VirtualFile> getIncludedUnversionedFiles() {
         return Collections.emptyList();
     }
@@ -445,13 +444,13 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     }
 
     @Override
-    @Nonnull
+    
     public abstract List<Change> getSelectedChanges();
 
-    @Nonnull
+    
     public abstract List<Change> getAllChanges();
 
-    @Nonnull
+    
     protected Stream<VirtualFile> getSelectedFiles() {
         return Stream.concat(
             getAfterRevisionsFiles(getSelectedChanges().stream()),
@@ -478,12 +477,12 @@ public abstract class InternalChangesBrowserBase<T> extends JPanel implements Ui
     }
 
     @Contract(pure = true)
-    @Nonnull
-    protected static <T> List<Change> findChanges(@Nonnull Collection<T> items) {
+    
+    protected static <T> List<Change> findChanges(Collection<T> items) {
         return ContainerUtil.findAll(items, Change.class);
     }
 
-    public static boolean isUnderUnversioned(@Nonnull ChangesBrowserNode node) {
+    public static boolean isUnderUnversioned(ChangesBrowserNode node) {
         return isUnderTag(new TreePath(node.getPath()), UNVERSIONED_FILES_TAG);
     }
 }

@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.process.cmd.GeneralCommandLine;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -27,6 +26,6 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ProcessHandlerBuilderFactory {
-  @Nonnull
-  ProcessHandlerBuilder newBuilder(@Nonnull GeneralCommandLine cmd);
+  
+  ProcessHandlerBuilder newBuilder(GeneralCommandLine cmd);
 }

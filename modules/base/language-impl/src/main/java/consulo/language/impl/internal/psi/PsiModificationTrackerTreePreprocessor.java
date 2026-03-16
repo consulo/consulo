@@ -19,7 +19,6 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -37,7 +36,7 @@ public class PsiModificationTrackerTreePreprocessor implements PsiTreeChangePrep
   }
 
   @Override
-  public void treeChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void treeChanged(PsiTreeChangeEvent event) {
     PsiModificationTrackerImpl tracker = (PsiModificationTrackerImpl)myPsiModificationTrackerProvider.get();
 
     tracker.treeChanged(event);

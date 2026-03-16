@@ -22,7 +22,6 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,7 +29,7 @@ import jakarta.annotation.Nonnull;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ModifiableModelCommitter {
-  static ModifiableModelCommitter getInstance(@Nonnull Project project) {
+  static ModifiableModelCommitter getInstance(Project project) {
     return project.getInstance(ModifiableModelCommitter.class);
   }
 

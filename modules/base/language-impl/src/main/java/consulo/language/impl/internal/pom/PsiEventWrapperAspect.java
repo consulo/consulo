@@ -35,7 +35,6 @@ import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import java.util.Set;
@@ -50,7 +49,7 @@ public class PsiEventWrapperAspect implements PomModelAspect {
   }
 
   @Override
-  public void register(@Nonnull PomModelAspectRegistrator registrator) {
+  public void register(PomModelAspectRegistrator registrator) {
     TreeAspect aspect = registrator.getModelAspect(TreeAspect.class);
 
     registrator.register(PsiEventWrapperAspect.class, this, Set.of(aspect));

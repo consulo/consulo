@@ -21,7 +21,6 @@ import consulo.builtinWebServer.http.HttpResponse;
 import consulo.http.HttpMethod;
 import consulo.logging.Logger;
 import consulo.util.lang.ExceptionUtil;
-import jakarta.annotation.Nonnull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -35,28 +34,28 @@ public abstract class JsonPostRequestHandler<Request> extends JsonBaseRequestHan
 
   private Class<Request> myRequestClass;
 
-  protected JsonPostRequestHandler(@Nonnull String apiUrl, @Nonnull Class<Request> requestClass) {
+  protected JsonPostRequestHandler(String apiUrl, Class<Request> requestClass) {
     super(apiUrl);
     myRequestClass = requestClass;
   }
 
-  @Nonnull
+  
   @Override
   protected HttpMethod getMethod() {
     return HttpMethod.POST;
   }
 
-  @Nonnull
-  public abstract JsonResponse handle(@Nonnull Request request);
+  
+  public abstract JsonResponse handle(Request request);
 
-  @Nonnull
+  
   public Class<Request> getRequestClass() {
     return myRequestClass;
   }
 
-  @Nonnull
+  
   @Override
-  public HttpResponse process(@Nonnull HttpRequest request) throws IOException {
+  public HttpResponse process(HttpRequest request) throws IOException {
     Object handle = null;
     try {
       String json = request.getContentAsString(StandardCharsets.UTF_8);

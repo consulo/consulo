@@ -22,7 +22,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
 
-import jakarta.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -31,43 +30,43 @@ import java.util.function.Consumer;
  */
 public interface CustomOrderEntryTypeEditor<M extends CustomOrderEntryModel> extends OrderEntryTypeEditor<CustomOrderEntry<M>> {
   @Override
-  @Nonnull
-  default Consumer<ColoredTextContainer> getRender(@Nonnull CustomOrderEntry<M> orderEntry) {
+  
+  default Consumer<ColoredTextContainer> getRender(CustomOrderEntry<M> orderEntry) {
     return getRender(orderEntry, orderEntry.getModel());
   }
 
-  @Nonnull
+  
   @Override
-  default ClasspathTableItem<CustomOrderEntry<M>> createTableItem(@Nonnull CustomOrderEntry<M> orderEntry,
-                                                                  @Nonnull Project project,
-                                                                  @Nonnull ModulesConfigurator modulesConfigurator,
-                                                                  @Nonnull LibrariesConfigurator librariesConfigurator) {
+  default ClasspathTableItem<CustomOrderEntry<M>> createTableItem(CustomOrderEntry<M> orderEntry,
+                                                                  Project project,
+                                                                  ModulesConfigurator modulesConfigurator,
+                                                                  LibrariesConfigurator librariesConfigurator) {
     return createTableItem(orderEntry, orderEntry.getModel(), project, modulesConfigurator, librariesConfigurator);
   }
 
   @RequiredUIAccess
   @Override
-  default void navigate(@Nonnull CustomOrderEntry<M> orderEntry) {
+  default void navigate(CustomOrderEntry<M> orderEntry) {
     navigate(orderEntry, orderEntry.getModel());
   }
 
-  @Nonnull
-  default Consumer<ColoredTextContainer> getRender(@Nonnull CustomOrderEntry<M> orderEntry, @Nonnull M model) {
+  
+  default Consumer<ColoredTextContainer> getRender(CustomOrderEntry<M> orderEntry, M model) {
     return it -> it.append(orderEntry.getPresentableName());
   }
 
   @RequiredUIAccess
-  default void navigate(@Nonnull CustomOrderEntry<M> orderEntry, @Nonnull M model) {
+  default void navigate(CustomOrderEntry<M> orderEntry, M model) {
     Project project = orderEntry.getOwnerModule().getProject();
     ShowSettingsUtil.getInstance().showProjectStructureDialog(project, config -> config.selectOrderEntry(orderEntry.getOwnerModule(), orderEntry));
   }
 
-  @Nonnull
-  default ClasspathTableItem<CustomOrderEntry<M>> createTableItem(@Nonnull CustomOrderEntry<M> orderEntry,
-                                                                  @Nonnull M model,
-                                                                  @Nonnull Project project,
-                                                                  @Nonnull ModulesConfigurator modulesConfigurator,
-                                                                  @Nonnull LibrariesConfigurator librariesConfigurator) {
+  
+  default ClasspathTableItem<CustomOrderEntry<M>> createTableItem(CustomOrderEntry<M> orderEntry,
+                                                                  M model,
+                                                                  Project project,
+                                                                  ModulesConfigurator modulesConfigurator,
+                                                                  LibrariesConfigurator librariesConfigurator) {
     return new ClasspathTableItem<>(orderEntry);
   }
 }

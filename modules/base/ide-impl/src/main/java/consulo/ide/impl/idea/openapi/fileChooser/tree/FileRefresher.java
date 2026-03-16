@@ -21,7 +21,6 @@ import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.UIAccessScheduler;
 import consulo.virtualFileSystem.*;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class FileRefresher implements Disposable {
    * @param producer  a provider for modality state that can be invoked on background thread
    * @throws IllegalArgumentException if the specified delay is not positive
    */
-  public FileRefresher(boolean recursive, long delay, @Nonnull Supplier<? extends ModalityState> producer) {
+  public FileRefresher(boolean recursive, long delay, Supplier<? extends ModalityState> producer) {
     if (delay <= 0) throw new IllegalArgumentException("delay");
     this.recursive = recursive;
     this.delay = delay;

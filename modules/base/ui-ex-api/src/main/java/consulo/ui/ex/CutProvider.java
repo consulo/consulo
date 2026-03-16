@@ -18,14 +18,13 @@ package consulo.ui.ex;
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
-import jakarta.annotation.Nonnull;
 
 public interface CutProvider {
   Key<CutProvider> KEY = Key.create(CutProvider.class);
 
-  void performCut(@Nonnull DataContext dataContext);
+  void performCut(DataContext dataContext);
 
-  boolean isCutEnabled(@Nonnull DataContext dataContext);
+  boolean isCutEnabled(DataContext dataContext);
 
-  boolean isCutVisible(@Nonnull DataContext dataContext);
+  boolean isCutVisible(DataContext dataContext);
 }

@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.util;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Sergey.Malenkov
@@ -24,6 +23,6 @@ public interface InvokerSupplier {
   /**
    * @return preferable invoker to be used to access the supplier
    */
-  @Nonnull
+  
   Invoker getInvoker();
 }

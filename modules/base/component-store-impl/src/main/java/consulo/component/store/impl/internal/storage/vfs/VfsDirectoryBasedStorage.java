@@ -39,8 +39,7 @@ import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -63,11 +62,11 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     private DirectoryStorageData myStorageData;
 
     public VfsDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                    @Nonnull String dir,
-                                    @Nonnull StateSplitterEx splitter,
-                                    @Nonnull Disposable parentDisposable,
+                                    String dir,
+                                    StateSplitterEx splitter,
+                                    Disposable parentDisposable,
                                     @Nullable final StateStorageListener listener,
-                                    @Nonnull PathMacrosService pathMacrosService) {
+                                    PathMacrosService pathMacrosService) {
         super(pathMacroSubstitutor, pathMacrosService);
 
         myDir = new File(dir);
@@ -77,12 +76,12 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         if (listener != null) {
             virtualFileTracker.addTracker(LocalFileSystem.PROTOCOL_PREFIX + myDir.getAbsolutePath().replace(File.separatorChar, '/'), new VirtualFileAdapter() {
                 @Override
-                public void contentsChanged(@Nonnull VirtualFileEvent event) {
+                public void contentsChanged(VirtualFileEvent event) {
                     notifyIfNeed(event);
                 }
 
                 @Override
-                public void fileDeleted(@Nonnull VirtualFileEvent event) {
+                public void fileDeleted(VirtualFileEvent event) {
                     if (event.getFile().equals(myVirtualFile)) {
                         myVirtualFile = null;
                     }
@@ -90,11 +89,11 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
                 }
 
                 @Override
-                public void fileCreated(@Nonnull VirtualFileEvent event) {
+                public void fileCreated(VirtualFileEvent event) {
                     notifyIfNeed(event);
                 }
 
-                private void notifyIfNeed(@Nonnull VirtualFileEvent event) {
+                private void notifyIfNeed(VirtualFileEvent event) {
                     // storage directory will be removed if the only child was removed
                     if (event.getFile().isDirectory() || isStorageFile(event.getFile())) {
                         listener.storageFileChanged(event, VfsDirectoryBasedStorage.this);
@@ -105,7 +104,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     }
 
     @Override
-    public void analyzeExternalChangesAndUpdateIfNeed(@Nonnull Set<String> result) {
+    public void analyzeExternalChangesAndUpdateIfNeed(Set<String> result) {
         // todo reload only changed file, compute diff
         DirectoryStorageData oldData = myStorageData;
         DirectoryStorageData newData = loadState();
@@ -121,18 +120,18 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
 
     @Nullable
     @Override
-    protected Element getStateAndArchive(@Nonnull DirectoryStorageData storageData, @Nonnull String componentName) {
+    protected Element getStateAndArchive(DirectoryStorageData storageData, String componentName) {
         return storageData.getCompositeStateAndArchive(componentName, mySplitter);
     }
 
-    @Nonnull
+    
     private DirectoryStorageData loadState() {
         DirectoryStorageData storageData = new DirectoryStorageData();
         loadFrom(storageData, getVirtualFile(), myPathMacroSubstitutor);
         return storageData;
     }
 
-    public void loadFrom(@Nonnull DirectoryStorageData data, @Nullable VirtualFile dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
+    public void loadFrom(DirectoryStorageData data, @Nullable VirtualFile dir, @Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor) {
         if (dir == null || !dir.exists()) {
             return;
         }
@@ -177,7 +176,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         }
     }
 
-    public static boolean isStorageFile(@Nonnull VirtualFile file) {
+    public static boolean isStorageFile(VirtualFile file) {
         // ignore system files like .DS_Store on Mac
         return StringUtil.endsWithIgnoreCase(file.getNameSequence(), DirectoryStorageData.DEFAULT_EXT);
     }
@@ -192,7 +191,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
     }
 
     @Override
-    @Nonnull
+    
     protected DirectoryStorageData getStorageData(boolean reloadData) {
         if (myStorageData != null && !reloadData) {
             return myStorageData;
@@ -208,8 +207,8 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         return checkIsSavingDisabled() ? null : new MySaveSession(this, getStorageData());
     }
 
-    @Nonnull
-    public static VirtualFile createDir(@Nonnull File ioDir, @Nonnull Object requestor) {
+    
+    public static VirtualFile createDir(File ioDir, Object requestor) {
         //noinspection ResultOfMethodCallIgnored
         ioDir.mkdirs();
         String parentFile = ioDir.getParent();
@@ -220,8 +219,8 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         return getFile(ioDir.getName(), parentVirtualFile, requestor);
     }
 
-    @Nonnull
-    public static VirtualFile getFile(@Nonnull String fileName, @Nonnull VirtualFile parentVirtualFile, @Nonnull Object requestor) {
+    
+    public static VirtualFile getFile(String fileName, VirtualFile parentVirtualFile, Object requestor) {
         VirtualFile file = parentVirtualFile.findChild(fileName);
         if (file != null) {
             return file;
@@ -245,13 +244,13 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         private final Set<String> dirtyFileNames = new SmartHashSet<String>();
         private final Set<String> removedFileNames = new SmartHashSet<String>();
 
-        private MySaveSession(@Nonnull VfsDirectoryBasedStorage storage, @Nonnull DirectoryStorageData storageData) {
+        private MySaveSession(VfsDirectoryBasedStorage storage, DirectoryStorageData storageData) {
             this.storage = storage;
             originalStorageData = storageData;
         }
 
         @Override
-        public void setState(@Nonnull Object component, @Nonnull String componentName, @Nonnull Object state, Storage storageSpec) {
+        public void setState(Object component, String componentName, Object state, Storage storageSpec) {
             Element compositeState;
             try {
                 compositeState = DefaultStateSerializer.serializeState(state, storageSpec);
@@ -283,7 +282,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
             }
         }
 
-        private void doSetState(@Nonnull String componentName, @Nullable String fileName, @Nullable Element subState) {
+        private void doSetState(String componentName, @Nullable String fileName, @Nullable Element subState) {
             if (copiedStorageData == null) {
                 copiedStorageData = DirectoryStorageData.setStateAndCloneIfNeed(componentName, fileName, subState, originalStorageData);
                 if (copiedStorageData != null && fileName != null) {
@@ -332,7 +331,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
             storage.myStorageData = copiedStorageData;
         }
 
-        private void saveStates(@Nonnull VirtualFile dir) {
+        private void saveStates(VirtualFile dir) {
             Element storeElement = new Element(StorageData.COMPONENT);
 
             for (String componentName : copiedStorageData.getComponentNames()) {
@@ -370,7 +369,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
             }
         }
 
-        private void deleteFiles(@Nonnull VirtualFile dir) {
+        private void deleteFiles(VirtualFile dir) {
             Application.get().runWriteAction(() -> {
                 for (VirtualFile file : dir.getChildren()) {
                     if (removedFileNames.contains(file.getName())) {
@@ -381,7 +380,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
         }
     }
 
-    public static void deleteFile(@Nonnull VirtualFile file, @Nonnull Object requestor) {
+    public static void deleteFile(VirtualFile file, Object requestor) {
         try {
             file.delete(requestor);
         }

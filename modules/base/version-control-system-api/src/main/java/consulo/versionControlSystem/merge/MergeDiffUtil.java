@@ -25,7 +25,6 @@ import consulo.util.lang.Pair;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.diff.VcsDiffDataKeys;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 
@@ -34,14 +33,14 @@ import java.util.List;
  * @since 06-Jul-24
  */
 public class MergeDiffUtil {
-  public static void putRevisionInfos(@Nonnull MergeRequest request, @Nonnull MergeData data) {
+  public static void putRevisionInfos(MergeRequest request, MergeData data) {
     if (request instanceof ThreesideMergeRequest) {
       List<? extends DiffContent> contents = ((ThreesideMergeRequest)request).getContents();
       putRevisionInfo(contents, data);
     }
   }
 
-  public static void putRevisionInfos(@Nonnull DiffRequest request, @Nonnull MergeData data) {
+  public static void putRevisionInfos(DiffRequest request, MergeData data) {
     if (request instanceof ContentDiffRequest) {
       List<? extends DiffContent> contents = ((ContentDiffRequest)request).getContents();
       if (contents.size() == 3) {
@@ -50,7 +49,7 @@ public class MergeDiffUtil {
     }
   }
 
-  private static void putRevisionInfo(@Nonnull List<? extends DiffContent> contents, @Nonnull MergeData data) {
+  private static void putRevisionInfo(List<? extends DiffContent> contents, MergeData data) {
     for (ThreeSide side : ThreeSide.values()) {
       DiffContent content = side.select(contents);
       FilePath filePath = side.select(data.CURRENT_FILE_PATH, data.ORIGINAL_FILE_PATH, data.LAST_FILE_PATH);

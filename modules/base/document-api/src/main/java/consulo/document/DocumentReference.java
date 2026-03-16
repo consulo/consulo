@@ -16,7 +16,7 @@
 package consulo.document;
 
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Do not implement this directly. Use DocumentReferenceManager instead.

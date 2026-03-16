@@ -26,8 +26,7 @@ import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.TextComponentAccessor;
 import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.util.FormBuilder;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -49,16 +48,16 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   }
 
   @RequiredUIAccess
-  @Nonnull
+  
   @Override
-  public Component getComponent(@Nonnull C context, @Nonnull Disposable uiDisposable) {
+  public Component getComponent(C context, Disposable uiDisposable) {
     if (myRootPanel == null) {
       myRootPanel = buildComponent(uiDisposable);
     }
     return myRootPanel;
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   private Component buildComponent(Disposable uiDisposable) {
     myUserNameEntered = false;
@@ -135,23 +134,23 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   }
 
   @RequiredUIAccess
-  protected void extend(@Nonnull FormBuilder builder, Disposable uiDisposable) {
+  protected void extend(FormBuilder builder, Disposable uiDisposable) {
     // for plugins
   }
 
   @Override
-  public void onStepLeave(@Nonnull C c) {
+  public void onStepLeave(C c) {
     c.setName(getName());
     c.setPath(getPath());
   }
 
-  @Nonnull
+  
   @RequiredUIAccess
   public String getPath() {
     return myFileChooserController.getValue();
   }
 
-  @Nonnull
+  
   public String getName() {
     return myNameTextBox.getValueOrError();
   }

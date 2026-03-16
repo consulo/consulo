@@ -23,8 +23,7 @@ import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.AllVcses;
 import consulo.versionControlSystem.localize.VcsLocalize;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,12 +32,12 @@ import java.util.Comparator;
 import java.util.List;
 
 class StartUseVcsDialog extends DialogWrapper {
-    @Nonnull
+    
     private final Project myProject;
 
     private ComboBox<AbstractVcs> myVcsComboBox;
 
-    StartUseVcsDialog(@Nonnull Project project) {
+    StartUseVcsDialog(Project project) {
         super(project, true);
         myProject = project;
         setTitle(VcsLocalize.dialogEnableVersionControlIntegrationTitle());
@@ -82,7 +81,7 @@ class StartUseVcsDialog extends DialogWrapper {
         myVcsComboBox = new ComboBox<>(new CollectionComboBoxModel<>(vcses));
         myVcsComboBox.setRenderer(new ColoredListCellRenderer<>() {
             @Override
-            protected void customizeCellRenderer(@Nonnull JList list, AbstractVcs value, int index, boolean selected, boolean hasFocus) {
+            protected void customizeCellRenderer(JList list, AbstractVcs value, int index, boolean selected, boolean hasFocus) {
                 append(value == null ? LocalizeValue.empty() : value.getDisplayName());
             }
         });

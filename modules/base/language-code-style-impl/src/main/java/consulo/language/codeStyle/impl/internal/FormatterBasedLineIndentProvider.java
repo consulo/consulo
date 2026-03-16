@@ -25,8 +25,7 @@ import consulo.language.codeStyle.lineIndent.SemanticEditorPositionFactory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Formatter-based line indent provider which calculates indent using formatting model.
@@ -35,9 +34,9 @@ import jakarta.annotation.Nullable;
 public class FormatterBasedLineIndentProvider implements LineIndentProvider {
   @Nullable
   @Override
-  public String getLineIndent(@Nonnull Project project,
-                              @Nonnull Document document,
-                              @Nonnull SemanticEditorPositionFactory factory,
+  public String getLineIndent(Project project,
+                              Document document,
+                              SemanticEditorPositionFactory factory,
                               Language language,
                               int offset) {
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);

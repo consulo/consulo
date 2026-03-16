@@ -23,7 +23,6 @@ import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +59,7 @@ public class SelectInManager {
         myProject = project;
     }
 
-    @Nonnull
+    
     public List<SelectInTarget> getTargets() {
         List<SelectInTarget> targets = DumbService.getDumbAwareExtensions(myProject, myProject, SelectInTarget.EP_NAME);
         if (targets.isEmpty()) {

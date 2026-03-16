@@ -21,8 +21,7 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.*;
@@ -38,7 +37,7 @@ public interface HttpProxyManager {
     public static final int READ_TIMEOUT = SystemProperties.getIntProperty("consulo.read.timeout", 60000);
     public static final int REDIRECT_LIMIT = SystemProperties.getIntProperty("consulo.redirect.limit", 10);
 
-    @Nonnull
+    
     static HttpProxyManager getInstance() {
         return Application.get().getInstance(HttpProxyManager.class);
     }
@@ -50,10 +49,10 @@ public interface HttpProxyManager {
      * @return instance of {@link HttpURLConnection}
      * @throws IOException in case of any I/O troubles or if created connection isn't instance of HttpURLConnection.
      */
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Prefer HttpRequests")
-    default HttpURLConnection openHttpConnection(@Nonnull String location) throws IOException {
+    default HttpURLConnection openHttpConnection(String location) throws IOException {
         URLConnection urlConnection = openConnection(location);
         if (urlConnection instanceof HttpURLConnection) {
             return (HttpURLConnection) urlConnection;
@@ -63,10 +62,10 @@ public interface HttpProxyManager {
         }
     }
 
-    @Nonnull
+    
     @Deprecated
     @DeprecationInfo("Prefer HttpRequests")
-    URLConnection openConnection(@Nonnull String location) throws IOException;
+    URLConnection openConnection(String location) throws IOException;
 
     boolean isHttpProxyEnabled();
 
@@ -84,7 +83,7 @@ public interface HttpProxyManager {
      *
      * @param url URL for HTTP connection
      */
-    void prepareURL(@Nonnull String url) throws IOException;
+    void prepareURL(String url) throws IOException;
 
     String getProxyHost();
 
@@ -94,17 +93,17 @@ public interface HttpProxyManager {
 
     String getPlainProxyPassword();
 
-    @Nonnull
+    
     List<Pair<String, String>> getJvmProperties(boolean withAutodetection, @Nullable URI uri);
 
-    @Nonnull
+    
     List<String> getProxyExceptions();
 
-    boolean isRealProxy(@Nonnull Proxy proxy);
+    boolean isRealProxy(Proxy proxy);
 
-    @Nonnull
+    
     ProxySelector getOnlyBySettingsSelector();
 
     @Nullable
-    PasswordAuthentication getGenericPassword(@Nonnull String host, int port);
+    PasswordAuthentication getGenericPassword(String host, int port);
 }

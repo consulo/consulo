@@ -22,8 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Danila Ponomarenko
@@ -32,7 +31,7 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
   private volatile boolean useElementToTheLeft = false;
 
   @Override
-  public final boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
+  public final boolean isAvailable(Project project, Editor editor, PsiFile file) {
     if (!file.getManager().isInProject(file)) return false;
 
     useElementToTheLeft = false;
@@ -63,10 +62,10 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
    * @param element the element under caret.
    * @return true if the intention is available, false otherwise.
    */
-  public abstract boolean isAvailable(@Nonnull Project project, Editor editor, @Nonnull PsiElement element);
+  public abstract boolean isAvailable(Project project, Editor editor, PsiElement element);
 
   @Override
-  public final void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+  public final void invoke(Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
     PsiElement element = useElementToTheLeft ? getElementToTheLeft(editor, file) : getElementToTheRight(editor,file);
     if (element == null){
       return;
@@ -84,15 +83,15 @@ public abstract class BaseElementAtCaretIntentionAction extends BaseIntentionAct
    * @throws IncorrectOperationException
    *
    */
-  public abstract void invoke(@Nonnull Project project, Editor editor, @Nonnull PsiElement element) throws IncorrectOperationException;
+  public abstract void invoke(Project project, Editor editor, PsiElement element) throws IncorrectOperationException;
 
   @Nullable
-  protected static PsiElement getElementToTheRight(Editor editor, @Nonnull PsiFile file) {
+  protected static PsiElement getElementToTheRight(Editor editor, PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset());
   }
 
   @Nullable
-  protected static PsiElement getElementToTheLeft(Editor editor, @Nonnull PsiFile file) {
+  protected static PsiElement getElementToTheLeft(Editor editor, PsiFile file) {
     return file.findElementAt(editor.getCaretModel().getOffset() - 1);
   }
 

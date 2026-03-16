@@ -4,7 +4,6 @@ package consulo.execution.debug.stream.trace.dsl.impl;
 import consulo.execution.debug.stream.trace.dsl.*;
 import consulo.execution.debug.stream.trace.impl.handler.type.GenericType;
 import consulo.execution.debug.stream.wrapper.IntermediateStreamCall;
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,165 +18,165 @@ public class DslImpl implements Dsl {
   private final Expression nullExpression;
   private final Expression thisExpression;
 
-  public DslImpl(@Nonnull StatementFactory statementFactory) {
+  public DslImpl(StatementFactory statementFactory) {
     this.statementFactory = statementFactory;
     this.nullExpression = new TextExpression("null");
     this.thisExpression = new TextExpression("this");
   }
 
-  @Nonnull
+  
   @Override
   public Expression getNullExpression() {
     return nullExpression;
   }
 
-  @Nonnull
+  
   @Override
   public Expression getThisExpression() {
     return thisExpression;
   }
 
-  @Nonnull
+  
   @Override
   public Types getTypes() {
     return statementFactory.getTypes();
   }
 
-  @Nonnull
+  
   @Override
-  public Variable variable(@Nonnull GenericType type, @Nonnull String name) {
+  public Variable variable(GenericType type, String name) {
     return statementFactory.createVariable(type, name);
   }
 
-  @Nonnull
+  
   @Override
-  public String code(@Nonnull Consumer<CodeContext> init) {
+  public String code(Consumer<CodeContext> init) {
     MyContext fragment = new MyContext();
     init.accept(fragment);
     return fragment.toCode(0);
   }
 
-  @Nonnull
+  
   @Override
-  public CodeBlock block(@Nonnull Consumer<CodeContext> init) {
+  public CodeBlock block(Consumer<CodeContext> init) {
     MyContext fragment = new MyContext();
     init.accept(fragment);
     return fragment;
   }
 
-  @Nonnull
+  
   @Override
-  public ArrayVariable array(@Nonnull GenericType elementType, @Nonnull String name) {
+  public ArrayVariable array(GenericType elementType, String name) {
     return statementFactory.createArrayVariable(elementType, name);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression newArray(@Nonnull GenericType elementType, @Nonnull Expression... args) {
+  public Expression newArray(GenericType elementType, Expression... args) {
     return statementFactory.createNewArrayExpression(elementType, args);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression newSizedArray(@Nonnull GenericType elementType, @Nonnull Expression size) {
+  public Expression newSizedArray(GenericType elementType, Expression size) {
     return statementFactory.createNewSizedArray(elementType, size);
   }
 
-  @Nonnull
+  
   @Override
-  public MapVariable map(@Nonnull GenericType keyType,
-                         @Nonnull GenericType valueType,
-                         @Nonnull String name,
-                         @Nonnull Expression... args) {
+  public MapVariable map(GenericType keyType,
+                         GenericType valueType,
+                         String name,
+                         Expression... args) {
     return statementFactory.createMapVariable(keyType, valueType, name, false, args);
   }
 
-  @Nonnull
+  
   @Override
-  public ListVariable list(@Nonnull GenericType elementType, @Nonnull String name) {
+  public ListVariable list(GenericType elementType, String name) {
     return statementFactory.createListVariable(elementType, name);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression newList(@Nonnull GenericType elementType, @Nonnull Expression... args) {
+  public Expression newList(GenericType elementType, Expression... args) {
     return statementFactory.createNewListExpression(elementType, args);
   }
 
-  @Nonnull
+  
   @Override
-  public MapVariable linkedMap(@Nonnull GenericType keyType,
-                                @Nonnull GenericType valueType,
-                                @Nonnull String name,
-                                @Nonnull Expression... args) {
+  public MapVariable linkedMap(GenericType keyType,
+                                GenericType valueType,
+                                String name,
+                                Expression... args) {
     return statementFactory.createMapVariable(keyType, valueType, name, true, args);
   }
 
-  @Nonnull
+  
   @Override
-  public Lambda lambda(@Nonnull String argName, @Nonnull BiConsumer<LambdaBody, Expression> init) {
+  public Lambda lambda(String argName, BiConsumer<LambdaBody, Expression> init) {
     LambdaBody lambdaBody = statementFactory.createEmptyLambdaBody(argName);
     init.accept(lambdaBody, expr(argName));
     return statementFactory.createLambda(argName, lambdaBody);
   }
 
-  @Nonnull
+  
   @Override
-  public VariableDeclaration declaration(@Nonnull Variable variable, @Nonnull Expression init, boolean isMutable) {
+  public VariableDeclaration declaration(Variable variable, Expression init, boolean isMutable) {
     return statementFactory.createVariableDeclaration(variable, init, isMutable);
   }
 
-  @Nonnull
+  
   @Override
   public VariableDeclaration timeDeclaration() {
     return statementFactory.createTimeVariableDeclaration();
   }
 
-  @Nonnull
+  
   @Override
   public Expression currentTime() {
     return statementFactory.currentTimeExpression();
   }
 
-  @Nonnull
+  
   @Override
   public Expression updateTime() {
     return statementFactory.updateCurrentTimeExpression();
   }
 
-  @Nonnull
+  
   @Override
   public Expression currentNanoseconds() {
     return statementFactory.currentNanosecondsExpression();
   }
 
-  @Nonnull
+  
   @Override
-  public IntermediateStreamCall createPeekCall(@Nonnull GenericType elementType, @Nonnull Lambda lambda) {
+  public IntermediateStreamCall createPeekCall(GenericType elementType, Lambda lambda) {
     return statementFactory.createPeekCall(elementType, lambda);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression and(@Nonnull Expression left, @Nonnull Expression right) {
+  public Expression and(Expression left, Expression right) {
     return statementFactory.and(left, right);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression equals(@Nonnull Expression left, @Nonnull Expression right) {
+  public Expression equals(Expression left, Expression right) {
     return statementFactory.equals(left, right);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression same(@Nonnull Expression left, @Nonnull Expression right) {
+  public Expression same(Expression left, Expression right) {
     return statementFactory.same(left, right);
   }
 
-  @Nonnull
+  
   @Override
-  public Expression not(@Nonnull Expression expression) {
+  public Expression not(Expression expression) {
     return statementFactory.not(expression);
   }
 
@@ -189,153 +188,153 @@ public class DslImpl implements Dsl {
     }
 
     // Dsl methods delegation
-    @Nonnull
+    
     @Override
     public Expression getNullExpression() {
       return DslImpl.this.getNullExpression();
     }
 
-    @Nonnull
+    
     @Override
     public Expression getThisExpression() {
       return DslImpl.this.getThisExpression();
     }
 
-    @Nonnull
+    
     @Override
     public Types getTypes() {
       return DslImpl.this.getTypes();
     }
 
-    @Nonnull
+    
     @Override
-    public Variable variable(@Nonnull GenericType type, @Nonnull String name) {
+    public Variable variable(GenericType type, String name) {
       return DslImpl.this.variable(type, name);
     }
 
-    @Nonnull
+    
     @Override
-    public CodeBlock block(@Nonnull Consumer<CodeContext> init) {
+    public CodeBlock block(Consumer<CodeContext> init) {
       return DslImpl.this.block(init);
     }
 
-    @Nonnull
+    
     @Override
-    public String code(@Nonnull Consumer<CodeContext> init) {
+    public String code(Consumer<CodeContext> init) {
       return DslImpl.this.code(init);
     }
 
-    @Nonnull
+    
     @Override
-    public ArrayVariable array(@Nonnull GenericType elementType, @Nonnull String name) {
+    public ArrayVariable array(GenericType elementType, String name) {
       return DslImpl.this.array(elementType, name);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression newArray(@Nonnull GenericType elementType, @Nonnull Expression... args) {
+    public Expression newArray(GenericType elementType, Expression... args) {
       return DslImpl.this.newArray(elementType, args);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression newSizedArray(@Nonnull GenericType elementType, @Nonnull Expression size) {
+    public Expression newSizedArray(GenericType elementType, Expression size) {
       return DslImpl.this.newSizedArray(elementType, size);
     }
 
-    @Nonnull
+    
     @Override
-    public MapVariable map(@Nonnull GenericType keyType,
-                           @Nonnull GenericType valueType,
-                           @Nonnull String name,
-                           @Nonnull Expression... args) {
+    public MapVariable map(GenericType keyType,
+                           GenericType valueType,
+                           String name,
+                           Expression... args) {
       return DslImpl.this.map(keyType, valueType, name, args);
     }
 
-    @Nonnull
+    
     @Override
-    public ListVariable list(@Nonnull GenericType elementType, @Nonnull String name) {
+    public ListVariable list(GenericType elementType, String name) {
       return DslImpl.this.list(elementType, name);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression newList(@Nonnull GenericType elementType, @Nonnull Expression... args) {
+    public Expression newList(GenericType elementType, Expression... args) {
       return DslImpl.this.newList(elementType, args);
     }
 
-    @Nonnull
+    
     @Override
-    public MapVariable linkedMap(@Nonnull GenericType keyType,
-                                  @Nonnull GenericType valueType,
-                                  @Nonnull String name,
-                                  @Nonnull Expression... args) {
+    public MapVariable linkedMap(GenericType keyType,
+                                  GenericType valueType,
+                                  String name,
+                                  Expression... args) {
       return DslImpl.this.linkedMap(keyType, valueType, name, args);
     }
 
-    @Nonnull
+    
     @Override
-    public Lambda lambda(@Nonnull String argName, @Nonnull BiConsumer<LambdaBody, Expression> init) {
+    public Lambda lambda(String argName, BiConsumer<LambdaBody, Expression> init) {
       return DslImpl.this.lambda(argName, init);
     }
 
-    @Nonnull
+    
     @Override
-    public VariableDeclaration declaration(@Nonnull Variable variable, @Nonnull Expression init, boolean isMutable) {
+    public VariableDeclaration declaration(Variable variable, Expression init, boolean isMutable) {
       return DslImpl.this.declaration(variable, init, isMutable);
     }
 
-    @Nonnull
+    
     @Override
     public VariableDeclaration timeDeclaration() {
       return DslImpl.this.timeDeclaration();
     }
 
-    @Nonnull
+    
     @Override
     public Expression currentTime() {
       return DslImpl.this.currentTime();
     }
 
-    @Nonnull
+    
     @Override
     public Expression updateTime() {
       return DslImpl.this.updateTime();
     }
 
-    @Nonnull
+    
     @Override
     public Expression currentNanoseconds() {
       return DslImpl.this.currentNanoseconds();
     }
 
-    @Nonnull
+    
     @Override
-    public IntermediateStreamCall createPeekCall(@Nonnull GenericType elementType, @Nonnull Lambda lambda) {
+    public IntermediateStreamCall createPeekCall(GenericType elementType, Lambda lambda) {
       return DslImpl.this.createPeekCall(elementType, lambda);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression and(@Nonnull Expression left, @Nonnull Expression right) {
+    public Expression and(Expression left, Expression right) {
       return DslImpl.this.and(left, right);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression equals(@Nonnull Expression left, @Nonnull Expression right) {
+    public Expression equals(Expression left, Expression right) {
       return DslImpl.this.equals(left, right);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression same(@Nonnull Expression left, @Nonnull Expression right) {
+    public Expression same(Expression left, Expression right) {
       return DslImpl.this.same(left, right);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression not(@Nonnull Expression expression) {
+    public Expression not(Expression expression) {
       return DslImpl.this.not(expression);
     }
 
@@ -346,98 +345,98 @@ public class DslImpl implements Dsl {
     }
 
     @Override
-    public void addStatement(@Nonnull Statement statement) {
+    public void addStatement(Statement statement) {
       delegate.addStatement(statement);
     }
 
     @Override
-    public void statement(@Nonnull Supplier<Statement> statement) {
+    public void statement(Supplier<Statement> statement) {
       delegate.statement(statement);
     }
 
-    @Nonnull
+    
     @Override
-    public Variable declare(@Nonnull Variable variable, boolean isMutable) {
+    public Variable declare(Variable variable, boolean isMutable) {
       return delegate.declare(variable, isMutable);
     }
 
-    @Nonnull
+    
     @Override
-    public Variable declare(@Nonnull Variable variable, @Nonnull Expression init, boolean isMutable) {
+    public Variable declare(Variable variable, Expression init, boolean isMutable) {
       return delegate.declare(variable, init, isMutable);
     }
 
-    @Nonnull
+    
     @Override
-    public Variable declare(@Nonnull VariableDeclaration declaration) {
+    public Variable declare(VariableDeclaration declaration) {
       return delegate.declare(declaration);
     }
 
     @Override
-    public void forLoop(@Nonnull VariableDeclaration initialization,
-                        @Nonnull Expression condition,
-                        @Nonnull Expression afterThought,
-                        @Nonnull Consumer<ForLoopBody> init) {
+    public void forLoop(VariableDeclaration initialization,
+                        Expression condition,
+                        Expression afterThought,
+                        Consumer<ForLoopBody> init) {
       delegate.forLoop(initialization, condition, afterThought, init);
     }
 
-    @Nonnull
+    
     @Override
-    public TryBlock tryBlock(@Nonnull Consumer<CodeBlock> init) {
+    public TryBlock tryBlock(Consumer<CodeBlock> init) {
       return delegate.tryBlock(init);
     }
 
-    @Nonnull
+    
     @Override
-    public IfBranch ifBranch(@Nonnull Expression condition, @Nonnull Consumer<CodeBlock> init) {
+    public IfBranch ifBranch(Expression condition, Consumer<CodeBlock> init) {
       return delegate.ifBranch(condition, init);
     }
 
-    @Nonnull
+    
     @Override
-    public Expression call(@Nonnull Expression receiver, @Nonnull String methodName, @Nonnull Expression... args) {
+    public Expression call(Expression receiver, String methodName, Expression... args) {
       return delegate.call(receiver, methodName, args);
     }
 
     @Override
-    public void forEachLoop(@Nonnull Variable iterateVariable,
-                            @Nonnull Expression collection,
-                            @Nonnull Consumer<ForLoopBody> init) {
+    public void forEachLoop(Variable iterateVariable,
+                            Expression collection,
+                            Consumer<ForLoopBody> init) {
       delegate.forEachLoop(iterateVariable, collection, init);
     }
 
     @Override
-    public void scope(@Nonnull Consumer<CodeBlock> init) {
+    public void scope(Consumer<CodeBlock> init) {
       delegate.scope(init);
     }
 
     @Override
-    public void assign(@Nonnull Variable variable, @Nonnull Expression expression) {
+    public void assign(Variable variable, Expression expression) {
       delegate.assign(variable, expression);
     }
 
     @Override
-    public void doReturn(@Nonnull Expression expression) {
+    public void doReturn(Expression expression) {
       delegate.doReturn(expression);
     }
 
     @Override
-    public void add(@Nonnull CodeBlock block) {
+    public void add(CodeBlock block) {
       delegate.add(block);
     }
 
     @Override
-    public void addStatement(@Nonnull Convertable statement) {
+    public void addStatement(Convertable statement) {
       delegate.addStatement(statement);
     }
 
-    @Nonnull
+    
     @Override
     public List<Convertable> getStatements() {
       return delegate.getStatements();
     }
 
-    @Nonnull
+    
     @Override
     public String toCode(int indent) {
       return delegate.toCode(indent);

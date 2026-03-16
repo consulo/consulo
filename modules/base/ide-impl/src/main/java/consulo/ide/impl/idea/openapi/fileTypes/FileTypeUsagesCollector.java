@@ -27,7 +27,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,15 +36,15 @@ import java.util.Set;
  */
 @ExtensionImpl
 public class FileTypeUsagesCollector extends AbstractApplicationUsagesCollector {
-    @Nonnull
+    
     @Override
     public String getGroupId() {
         return "consulo.platform.base:file.type";
     }
 
-    @Nonnull
+    
     @Override
-    public Set<UsageDescriptor> getProjectUsages(@Nonnull Project project) throws CollectUsagesException {
+    public Set<UsageDescriptor> getProjectUsages(Project project) throws CollectUsagesException {
         Set<FileType> usedFileTypes = new HashSet<>();
         FileTypeManager fileTypeManager = FileTypeManager.getInstance();
         FileType[] registeredFileTypes = fileTypeManager.getRegisteredFileTypes();

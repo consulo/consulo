@@ -18,7 +18,6 @@ package consulo.task;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * This auxiliary interface was added to support creation of configured generic repositories.
@@ -27,13 +26,13 @@ import jakarta.annotation.Nonnull;
  * @author Mikhail Golubev
  */
 public interface TaskRepositorySubtype {
-  @Nonnull
+  
   String getId();
 
-  @Nonnull
+  
   LocalizeValue getPresentableName();
 
-  @Nonnull
+  
   Image getIcon();
 
   TaskRepository createRepository();

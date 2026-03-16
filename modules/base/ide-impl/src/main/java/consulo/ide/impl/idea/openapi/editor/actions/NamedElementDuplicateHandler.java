@@ -37,8 +37,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author peter
@@ -53,7 +52,7 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
   }
 
   @Override
-  protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
+  protected boolean isEnabledForCaret(Editor editor, Caret caret, DataContext dataContext) {
     return myOriginal.isEnabled(editor, caret, dataContext);
   }
 
@@ -102,7 +101,7 @@ public class NamedElementDuplicateHandler extends EditorWriteActionHandler imple
     myOriginal = originalHandler;
   }
 
-  @Nonnull
+  
   @Override
   public String getActionId() {
     return IdeActions.ACTION_EDITOR_DUPLICATE;

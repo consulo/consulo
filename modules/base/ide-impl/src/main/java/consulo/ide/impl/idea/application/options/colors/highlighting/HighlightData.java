@@ -15,8 +15,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.UIUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -46,7 +45,7 @@ public class HighlightData {
         myAdditionalColorKey = additionalColorKey;
     }
 
-    public void addToCollection(@Nonnull Collection<? super HighlightData> list, boolean highlighted) {
+    public void addToCollection(Collection<? super HighlightData> list, boolean highlighted) {
         list.add(this);
         if (highlighted) {
             list.add(new HighlightData(getStartOffset(), getEndOffset(), BLINKING_HIGHLIGHTS_ATTRIBUTES, getAdditionalColorKey()));

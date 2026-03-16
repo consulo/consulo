@@ -36,8 +36,7 @@ import consulo.ui.util.TextWithMnemonic;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,14 +58,14 @@ public class ActionImplUtil {
     private ActionImplUtil() {
     }
 
-    public static boolean recursiveContainsAction(@Nonnull ActionGroup group, @Nonnull AnAction action) {
+    public static boolean recursiveContainsAction(ActionGroup group, AnAction action) {
         return anyActionFromGroupMatches(group, true, Predicate.isEqual(action));
     }
 
     public static boolean anyActionFromGroupMatches(
-        @Nonnull ActionGroup group,
+        ActionGroup group,
         boolean processPopupSubGroups,
-        @Nonnull Predicate<? super AnAction> condition
+        Predicate<? super AnAction> condition
     ) {
         for (AnAction child : group.getChildren(null)) {
             if (condition.test(child)) {
@@ -82,8 +81,8 @@ public class ActionImplUtil {
     }
 
     public static void recursiveRegisterShortcutSet(
-        @Nonnull ActionGroup group,
-        @Nonnull JComponent component,
+        ActionGroup group,
+        JComponent component,
         @Nullable Disposable parentDisposable
     ) {
         for (AnAction action : group.getChildren(null)) {
@@ -94,7 +93,7 @@ public class ActionImplUtil {
         }
     }
 
-    public static void showDumbModeWarning(@Nonnull AnActionEvent... events) {
+    public static void showDumbModeWarning(AnActionEvent... events) {
         Project project = null;
         List<String> actionNames = new ArrayList<>();
         for (AnActionEvent event : events) {
@@ -116,8 +115,8 @@ public class ActionImplUtil {
         DumbService.getInstance(project).showDumbModeNotification(getActionUnavailableMessage(actionNames));
     }
 
-    @Nonnull
-    private static String getActionUnavailableMessage(@Nonnull List<String> actionNames) {
+    
+    private static String getActionUnavailableMessage(List<String> actionNames) {
         String message;
         String beAvailableUntil = " available while " + Application.get().getName() + " is updating indices";
         if (actionNames.isEmpty()) {
@@ -132,8 +131,8 @@ public class ActionImplUtil {
         return message;
     }
 
-    @Nonnull
-    public static String getUnavailableMessage(@Nonnull String action, boolean plural) {
+    
+    public static String getUnavailableMessage(String action, boolean plural) {
         return action + (plural ? " are" : " is") + " not available while " + Application.get().getName() + " is updating indices";
     }
 
@@ -147,8 +146,8 @@ public class ActionImplUtil {
      * @return true if update tried to access indices in dumb mode
      */
     public static boolean performDumbAwareUpdate(
-        @Nonnull AnAction action,
-        @Nonnull AnActionEvent e,
+        AnAction action,
+        AnActionEvent e,
         boolean beforeActionPerformed
     ) {
         Presentation presentation = e.getPresentation();
@@ -227,9 +226,9 @@ public class ActionImplUtil {
 
     @RequiredUIAccess
     public static void performActionDumbAwareWithCallbacks(
-        @Nonnull AnAction action,
-        @Nonnull AnActionEvent e,
-        @Nonnull DataContext context
+        AnAction action,
+        AnActionEvent e,
+        DataContext context
     ) {
         ActionManagerEx manager = ActionManagerEx.getInstanceEx();
         manager.fireBeforeActionPerformed(action, context, e);
@@ -258,23 +257,23 @@ public class ActionImplUtil {
         };
     }
 
-    @Nonnull
-    public static List<AnAction> getActions(@Nonnull JComponent component) {
+    
+    public static List<AnAction> getActions(JComponent component) {
         return ObjectUtil.notNull(UIUtil.getClientProperty(component, AnAction.ACTIONS_KEY), Collections.emptyList());
     }
 
-    public static void clearActions(@Nonnull JComponent component) {
+    public static void clearActions(JComponent component) {
         UIUtil.putClientProperty(component, AnAction.ACTIONS_KEY, null);
     }
 
-    public static void copyRegisteredShortcuts(@Nonnull JComponent to, @Nonnull JComponent from) {
+    public static void copyRegisteredShortcuts(JComponent to, JComponent from) {
         ActionUtil.copyRegisteredShortcuts(to, from);
     }
 
     public static void registerForEveryKeyboardShortcut(
-        @Nonnull JComponent component,
-        @Nonnull ActionListener action,
-        @Nonnull ShortcutSet shortcuts
+        JComponent component,
+        ActionListener action,
+        ShortcutSet shortcuts
     ) {
         ActionUtil.registerForEveryKeyboardShortcut(component, action, shortcuts);
     }
@@ -284,7 +283,7 @@ public class ActionImplUtil {
      *
      * @param actionId action id
      */
-    public static AnAction copyFrom(@Nonnull AnAction action, @Nonnull String actionId) {
+    public static AnAction copyFrom(AnAction action, String actionId) {
         return ActionUtil.copyFrom(action, actionId);
     }
 
@@ -294,15 +293,15 @@ public class ActionImplUtil {
      * @param action   action to merge to
      * @param actionId action id to merge from
      */
-    public static AnAction mergeFrom(@Nonnull AnAction action, @Nonnull String actionId) {
+    public static AnAction mergeFrom(AnAction action, String actionId) {
         return ActionUtil.mergeFrom(action, actionId);
     }
 
     @RequiredUIAccess
     public static void invokeAction(
-        @Nonnull AnAction action,
-        @Nonnull DataContext dataContext,
-        @Nonnull String place,
+        AnAction action,
+        DataContext dataContext,
+        String place,
         @Nullable InputEvent inputEvent,
         @Nullable Runnable onDone
     ) {
@@ -322,17 +321,17 @@ public class ActionImplUtil {
 
     @RequiredUIAccess
     public static void invokeAction(
-        @Nonnull AnAction action,
-        @Nonnull Component component,
-        @Nonnull String place,
+        AnAction action,
+        Component component,
+        String place,
         @Nullable InputEvent inputEvent,
         @Nullable Runnable onDone
     ) {
         invokeAction(action, DataManager.getInstance().getDataContext(component), place, inputEvent, onDone);
     }
 
-    @Nonnull
-    public static ActionListener createActionListener(@Nonnull String actionId, @Nonnull Component component, @Nonnull String place) {
+    
+    public static ActionListener createActionListener(String actionId, Component component, String place) {
         return e -> {
             AnAction action = ActionManager.getInstance().getAction(actionId);
             if (action == null) {
@@ -343,12 +342,12 @@ public class ActionImplUtil {
         };
     }
 
-    @Nonnull
+    
     public static AnActionEvent createEmptyEvent() {
         return AnActionEvent.createFromDataContext(ActionPlaces.UNKNOWN, null, DataContext.EMPTY_CONTEXT);
     }
 
-    public static void sortAlphabetically(@Nonnull List<? extends AnAction> list) {
+    public static void sortAlphabetically(List<? extends AnAction> list) {
         list.sort((o1, o2) -> Comparing.compare(o1.getTemplateText(), o2.getTemplateText()));
     }
 
@@ -356,9 +355,9 @@ public class ActionImplUtil {
      * Tries to find an 'action' and 'target action' by text and put the 'action' just before of after the 'target action'
      */
     public static void moveActionTo(
-        @Nonnull List<AnAction> list,
-        @Nonnull String actionText,
-        @Nonnull String targetActionText,
+        List<AnAction> list,
+        String actionText,
+        String targetActionText,
         boolean before
     ) {
         if (Comparing.equal(actionText, targetActionText)) {
@@ -387,7 +386,7 @@ public class ActionImplUtil {
     }
 
     @Nullable
-    public static ShortcutSet getMnemonicAsShortcut(@Nonnull AnAction action) {
+    public static ShortcutSet getMnemonicAsShortcut(AnAction action) {
         int mnemonic = KeyEvent.getExtendedKeyCodeForChar(
             TextWithMnemonic.parse(action.getTemplatePresentation().getTextValue().get()).getMnemonic()
         );
@@ -414,8 +413,8 @@ public class ActionImplUtil {
         return null;
     }
 
-    @Nonnull
-    public static ActionListener createActionListener(@Nonnull AnAction action, @Nonnull Component component, @Nonnull String place) {
+    
+    public static ActionListener createActionListener(AnAction action, Component component, String place) {
         return e -> invokeAction(action, component, place, null, null);
     }
 }

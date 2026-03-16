@@ -5,7 +5,6 @@ import consulo.ui.ex.awt.LoadingDecorator;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.disposer.Disposable;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +14,7 @@ public class ProgressBarLoadingDecorator extends LoadingDecorator {
   private final AtomicBoolean loadingStarted = new AtomicBoolean(false);
   private JProgressBar myProgressBar;
 
-  public ProgressBarLoadingDecorator(@Nonnull JPanel contentPanel, @Nonnull Disposable disposable, int startDelayMs) {
+  public ProgressBarLoadingDecorator(JPanel contentPanel, Disposable disposable, int startDelayMs) {
     super(contentPanel, disposable, startDelayMs, true);
   }
 
@@ -33,7 +32,7 @@ public class ProgressBarLoadingDecorator extends LoadingDecorator {
     return result;
   }
 
-  @Nonnull
+  
   public JProgressBar getProgressBar() {
     return myProgressBar;
   }

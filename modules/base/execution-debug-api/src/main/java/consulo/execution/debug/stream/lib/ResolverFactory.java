@@ -3,12 +3,11 @@ package consulo.execution.debug.stream.lib;
 
 import consulo.execution.debug.stream.resolve.ValuesOrderResolver;
 import consulo.execution.debug.stream.wrapper.StreamCallType;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Vitaliy.Bibaev
  */
 public interface ResolverFactory {
-  @Nonnull
-  ValuesOrderResolver getResolver(@Nonnull String callName, @Nonnull StreamCallType callType);
+  
+  ValuesOrderResolver getResolver(String callName, StreamCallType callType);
 }

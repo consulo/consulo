@@ -23,8 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
@@ -45,54 +44,54 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
     }
 
     @Override
-    public boolean isFileIgnored(@Nonnull String name) {
+    public boolean isFileIgnored(String name) {
         return false;
     }
 
     @Override
-    public boolean isFileIgnored(@Nonnull VirtualFile file) {
+    public boolean isFileIgnored(VirtualFile file) {
         return false;
     }
 
     @Override
-    public boolean isFileOfType(@Nonnull VirtualFile file, @Nonnull FileType type) {
+    public boolean isFileOfType(VirtualFile file, FileType type) {
         return file.getFileType() == type;
     }
 
-    @Nonnull
+    
     @Override
     public FileType[] getRegisteredFileTypes() {
         return myAllFileTypes.toArray(new FileType[myAllFileTypes.size()]);
     }
 
-    @Nonnull
+    
     @Override
-    public FileType getFileTypeByFile(@Nonnull VirtualFile file) {
+    public FileType getFileTypeByFile(VirtualFile file) {
         return getFileTypeByFileName(file.getName());
     }
 
-    @Nonnull
+    
     @Override
-    public FileType getFileTypeByFileName(@Nonnull String fileName) {
+    public FileType getFileTypeByFileName(String fileName) {
         String extension = FileUtil.getExtension(fileName);
         return getFileTypeByExtension(extension);
     }
 
-    @Nonnull
+    
     @Override
-    public FileType getFileTypeByFileName(@Nonnull CharSequence fileName) {
+    public FileType getFileTypeByFileName(CharSequence fileName) {
         String extension = FileUtil.getExtension(fileName.toString());
         return getFileTypeByExtension(extension);
     }
 
-    @Nonnull
+    
     @Override
-    public FileType getFileTypeByExtension(@Nonnull String extension) {
+    public FileType getFileTypeByExtension(String extension) {
         FileType result = myExtensionsMap.get(extension);
         return result == null ? UnknownFileType.INSTANCE : result;
     }
 
-    public void registerFileType(@Nonnull FileType fileType, @Nonnull String extension) {
+    public void registerFileType(FileType fileType, String extension) {
         myAllFileTypes.add(fileType);
         for (String ext : extension.split(";")) {
             myExtensionsMap.put(ext, fileType);
@@ -101,7 +100,7 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
 
     @Nullable
     @Override
-    public FileType findFileTypeByName(@Nonnull String fileTypeName) {
+    public FileType findFileTypeByName(String fileTypeName) {
         for (FileType type : myAllFileTypes) {
             if (type.getId().equals(fileTypeName)) {
                 return type;
@@ -112,14 +111,14 @@ public class LightFileTypeRegistry extends FileTypeRegistry {
 
     @Nullable
     @Override
-    public FileType getKnownFileTypeOrAssociate(@Nonnull VirtualFile file, @Nonnull ComponentManager project) {
+    public FileType getKnownFileTypeOrAssociate(VirtualFile file, ComponentManager project) {
         return null;
     }
 
     @RequiredUIAccess
     @Nullable
     @Override
-    public FileType getKnownFileTypeOrAssociate(@Nonnull String fileName) {
+    public FileType getKnownFileTypeOrAssociate(String fileName) {
         return null;
     }
 }

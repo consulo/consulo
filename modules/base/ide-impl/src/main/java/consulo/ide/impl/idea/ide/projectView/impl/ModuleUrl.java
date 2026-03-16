@@ -20,13 +20,12 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.AbstractUrl;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author cdr
  */
 public class ModuleUrl extends AbstractUrl {
-  @NonNls private static final String ELEMENT_TYPE = "module";
+  private static final String ELEMENT_TYPE = "module";
 
   public ModuleUrl(String url, String moduleName) {
     super(url, moduleName,ELEMENT_TYPE);

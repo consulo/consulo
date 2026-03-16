@@ -21,7 +21,6 @@ import consulo.execution.debug.breakpoint.SuspendPolicy;
 import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointBase;
 import consulo.execution.debug.impl.internal.breakpoint.XBreakpointManagerImpl;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,7 +47,7 @@ public class XSuspendPolicyPanel extends XBreakpointPropertiesSubPanel {
   private Delegate myDelegate;
 
   @Override
-  public void init(Project project, XBreakpointManager breakpointManager, @Nonnull XBreakpointBase breakpoint) {
+  public void init(Project project, XBreakpointManager breakpointManager, XBreakpointBase breakpoint) {
     super.init(project, breakpointManager, breakpoint);
 
     mySuspendCheckBox.addActionListener(new ActionListener() {

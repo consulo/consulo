@@ -29,7 +29,6 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,13 +45,13 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     }
 
     @Override
-    @Nonnull
+    
     protected LocalizeValue getPrevOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyMethodPrevOccurenceName();
     }
 
     @Override
-    @Nonnull
+    
     protected LocalizeValue getNextOccurrenceActionNameImpl() {
         return IdeLocalize.hierarchyMethodNextOccurenceName();
     }
@@ -99,19 +98,19 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
     }
 
     @Override
-    protected void prependActions(@Nonnull DefaultActionGroup actionGroup) {
+    protected void prependActions(DefaultActionGroup actionGroup) {
         actionGroup.add(new AlphaSortAction());
         actionGroup.add(new ShowImplementationsOnlyAction());
     }
 
     @Override
-    @Nonnull
+    
     protected Key getBrowserDataKey() {
         return DATA_KEY;
     }
 
     @Override
-    @Nonnull
+    
     protected String getActionPlace() {
         return ActionPlaces.METHOD_HIERARCHY_VIEW_TOOLBAR;
     }
@@ -122,13 +121,13 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
         }
 
         @Override
-        public final boolean isSelected(@Nonnull AnActionEvent event) {
+        public final boolean isSelected(AnActionEvent event) {
             return HierarchyBrowserManager.getInstance(myProject).getState().HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED;
         }
 
         @Override
         @RequiredUIAccess
-        public final void setSelected(@Nonnull AnActionEvent event, boolean flag) {
+        public final void setSelected(AnActionEvent event, boolean flag) {
             HierarchyBrowserManager.getInstance(myProject).getState().HIDE_CLASSES_WHERE_METHOD_NOT_IMPLEMENTED = flag;
 
             // invokeLater is called to update state of button before long tree building operation
@@ -137,7 +136,7 @@ public abstract class MethodHierarchyBrowserBase extends HierarchyBrowserBaseEx 
 
         @Override
         @RequiredUIAccess
-        public final void update(@Nonnull AnActionEvent event) {
+        public final void update(AnActionEvent event) {
             super.update(event);
             Presentation presentation = event.getPresentation();
             presentation.setEnabled(isValidBase());

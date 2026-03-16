@@ -20,11 +20,10 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.psi.OuterLanguageElement;
 
-import jakarta.annotation.Nonnull;
 
 class SimpleTreePatcher implements TreePatcher {
   @Override
-  public void insert(@Nonnull CompositeElement parent, TreeElement anchorBefore, @Nonnull OuterLanguageElement toInsert) {
+  public void insert(CompositeElement parent, TreeElement anchorBefore, OuterLanguageElement toInsert) {
     if (anchorBefore != null) {
       anchorBefore.rawInsertBeforeMe((TreeElement)toInsert);
     }
@@ -33,7 +32,7 @@ class SimpleTreePatcher implements TreePatcher {
     }
   }
 
-  @Nonnull
+  
   @Override
   public Language getLanguage() {
     return Language.ANY;

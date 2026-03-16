@@ -17,7 +17,7 @@ package consulo.ui.event;
 
 import consulo.ui.ValueComponent;
 import consulo.ui.event.details.InputDetails;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL

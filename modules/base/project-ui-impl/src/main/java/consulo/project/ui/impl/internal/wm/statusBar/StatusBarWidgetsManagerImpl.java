@@ -9,8 +9,7 @@ import consulo.project.Project;
 import consulo.project.ui.internal.StatusBarEx;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -27,11 +26,10 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     private final Map<StatusBarWidgetFactory, StatusBarWidget> myWidgetFactories = new LinkedHashMap<>();
 
     private final Project myProject;
-    @Nonnull
     private final WindowManager myWindowManager;
 
     @Inject
-    public StatusBarWidgetsManagerImpl(@Nonnull Project project, @Nonnull WindowManager windowManager) {
+    public StatusBarWidgetsManagerImpl(Project project, WindowManager windowManager) {
         myProject = project;
         myWindowManager = windowManager;
 
@@ -50,13 +48,12 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         //}, true, this);
     }
 
-    @Nonnull
     private StatusBarWidgetsCache getCache() {
         return myProject.getExtensionPoint(StatusBarWidgetFactory.class).getOrBuildCache(StatusBarWidgetsCache.CACHE_KEY);
     }
 
     @Override
-    public void updateAllWidgets(@Nullable IdeFrame frame, @Nonnull UIAccess uiAccess) {
+    public void updateAllWidgets(@Nullable IdeFrame frame, UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             for (StatusBarWidgetFactory factory : myWidgetFactories.keySet()) {
                 updateWidget(frame, factory, uiAccess);
@@ -64,7 +61,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    public void disableAllWidgets(@Nonnull UIAccess uiAccess) {
+    public void disableAllWidgets(UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             for (StatusBarWidgetFactory factory : myWidgetFactories.keySet()) {
                 disableWidget(null, factory, uiAccess);
@@ -73,7 +70,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    public void updateWidget(@Nonnull Class<? extends StatusBarWidgetFactory> factoryExtension, @Nonnull UIAccess uiAccess) {
+    public void updateWidget(Class<? extends StatusBarWidgetFactory> factoryExtension, UIAccess uiAccess) {
         StatusBarWidgetFactory factory = myProject.getExtensionPoint(StatusBarWidgetFactory.class).findExtension(factoryExtension);
         synchronized (myWidgetFactories) {
             if (factory == null || !myWidgetFactories.containsKey(factory)) {
@@ -85,13 +82,13 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     }
 
     @Override
-    public void updateWidget(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess) {
+    public void updateWidget(StatusBarWidgetFactory factory, UIAccess uiAccess) {
         updateWidget(null, factory, uiAccess);
     }
 
     public void updateWidget(@Nullable IdeFrame frame,
-                             @Nonnull StatusBarWidgetFactory factory,
-                             @Nonnull UIAccess uiAccess) {
+                             StatusBarWidgetFactory factory,
+                             UIAccess uiAccess) {
         if (factory.isAvailable(myProject) && (!factory.isConfigurable() || StatusBarWidgetSettings.getInstance().isEnabled(factory))) {
             enableWidget(frame, factory, uiAccess);
         }
@@ -115,18 +112,17 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
     }
 
     @Nullable
-    public StatusBarWidgetFactory findWidgetFactory(@Nonnull String widgetId) {
+    public StatusBarWidgetFactory findWidgetFactory(String widgetId) {
         return getCache().keyMap().get(widgetId);
     }
 
-    @Nonnull
     public Set<StatusBarWidgetFactory> getWidgetFactories() {
         synchronized (myWidgetFactories) {
             return myWidgetFactories.keySet();
         }
     }
 
-    private void enableWidget(@Nullable IdeFrame frame, @Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
+    private void enableWidget(@Nullable IdeFrame frame, StatusBarWidgetFactory factory, UIAccess uiAccess) {
         List<String> order = getCache().order();
 
         synchronized (myWidgetFactories) {
@@ -161,7 +157,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    private void disableWidget(@Nullable IdeFrame frame, @Nonnull StatusBarWidgetFactory factory, UIAccess uiAccess) {
+    private void disableWidget(@Nullable IdeFrame frame, StatusBarWidgetFactory factory, UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             StatusBarWidget createdWidget = myWidgetFactories.put(factory, null);
             if (createdWidget != null) {
@@ -181,11 +177,11 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    public boolean canBeEnabledOnStatusBar(@Nonnull StatusBarWidgetFactory factory, @Nonnull StatusBar statusBar) {
+    public boolean canBeEnabledOnStatusBar(StatusBarWidgetFactory factory, StatusBar statusBar) {
         return factory.isAvailable(myProject) && factory.isConfigurable() && factory.canBeEnabledOn(statusBar);
     }
 
-    private void addWidgetFactory(@Nonnull StatusBarWidgetFactory factory) {
+    private void addWidgetFactory(StatusBarWidgetFactory factory) {
         synchronized (myWidgetFactories) {
             if (myWidgetFactories.containsKey(factory)) {
                 LOG.error("Factory has been added already: " + factory.getId());
@@ -201,7 +197,7 @@ public final class StatusBarWidgetsManagerImpl extends SimpleModificationTracker
         }
     }
 
-    private void removeWidgetFactory(@Nonnull StatusBarWidgetFactory factory, @Nonnull UIAccess uiAccess) {
+    private void removeWidgetFactory(StatusBarWidgetFactory factory, UIAccess uiAccess) {
         synchronized (myWidgetFactories) {
             disableWidget(null, factory, uiAccess);
             myWidgetFactories.remove(factory);

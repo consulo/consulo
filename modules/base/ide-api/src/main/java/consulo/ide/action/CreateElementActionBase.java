@@ -26,8 +26,7 @@ import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -38,15 +37,15 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     protected CreateElementActionBase() {
     }
 
-    protected CreateElementActionBase(@Nonnull LocalizeValue text) {
+    protected CreateElementActionBase(LocalizeValue text) {
         super(text);
     }
 
-    protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description) {
+    protected CreateElementActionBase(LocalizeValue text, LocalizeValue description) {
         super(text, description);
     }
 
-    protected CreateElementActionBase(@Nonnull LocalizeValue text, @Nonnull LocalizeValue description, @Nullable Image icon) {
+    protected CreateElementActionBase(LocalizeValue text, LocalizeValue description, @Nullable Image icon) {
         super(text, description, icon);
     }
 
@@ -55,15 +54,15 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
     }
 
     protected abstract void invokeDialog(
-        @Nonnull Project project,
+        Project project,
         PsiDirectory directory,
-        @Nonnull Consumer<PsiElement[]> elementsConsumer
+        Consumer<PsiElement[]> elementsConsumer
     );
 
     /**
      * @return created elements. Never null.
      */
-    @Nonnull
+    
     @RequiredUIAccess
     protected abstract PsiElement[] create(String newName, PsiDirectory directory) throws Exception;
 
@@ -75,7 +74,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
 
     @Override
     @RequiredUIAccess
-    public final void actionPerformed(@Nonnull AnActionEvent e) {
+    public final void actionPerformed(AnActionEvent e) {
         IdeView view = e.getData(IdeView.KEY);
         if (view == null) {
             return;

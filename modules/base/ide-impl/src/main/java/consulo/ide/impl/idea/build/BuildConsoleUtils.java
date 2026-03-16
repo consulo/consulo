@@ -21,8 +21,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -44,7 +43,7 @@ public final class BuildConsoleUtils {
     private static final String A_CLOSING = "</a>";
     private static final Set<String> NEW_LINES = Set.of("<br>", "</br>", "<br/>", "<p>", "</p>", "<p/>", "<pre>", "</pre>");
 
-    public static void printDetails(@Nonnull ConsoleView consoleView, @Nullable Failure failure, @Nullable String details) {
+    public static void printDetails(ConsoleView consoleView, @Nullable Failure failure, @Nullable String details) {
         String text = failure == null ? details : ObjectUtil.chooseNotNull(failure.getDescription(), failure.getMessage());
         if (text == null && failure != null && failure.getError() != null) {
             text = failure.getError().getMessage();
@@ -56,7 +55,7 @@ public final class BuildConsoleUtils {
         print(consoleView, notification, text);
     }
 
-    public static void print(@Nonnull BuildTextConsoleView consoleView, @Nonnull NotificationGroup group, @Nonnull BuildIssue buildIssue) {
+    public static void print(BuildTextConsoleView consoleView, NotificationGroup group, BuildIssue buildIssue) {
         Project project = consoleView.getProject();
         Map<String, NotificationListener> listenerMap = new LinkedHashMap<>();
         for (BuildIssueQuickFix quickFix : buildIssue.getQuickFixes()) {
@@ -73,7 +72,7 @@ public final class BuildConsoleUtils {
             .hyperlinkListener(new NotificationListener.Adapter() {
                 @Override
                 @RequiredUIAccess
-                protected void hyperlinkActivated(@Nonnull Notification notification, @Nonnull HyperlinkEvent event) {
+                protected void hyperlinkActivated(Notification notification, HyperlinkEvent event) {
                     if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
                         return;
                     }
@@ -88,7 +87,7 @@ public final class BuildConsoleUtils {
         print(consoleView, notification, buildIssue.getDescription());
     }
 
-    private static void print(@Nonnull ConsoleView consoleView, @Nullable Notification notification, @Nonnull String text) {
+    private static void print(ConsoleView consoleView, @Nullable Notification notification, String text) {
         String content = StringUtil.convertLineSeparators(text);
         while (true) {
             Matcher tagMatcher = TAG_PATTERN.matcher(content);
@@ -131,8 +130,8 @@ public final class BuildConsoleUtils {
     }
 
     //@ApiStatus.Internal
-    @Nonnull
-    public static String getMessageTitle(@Nonnull String message) {
+    
+    public static String getMessageTitle(String message) {
         message = stripHtml(message, true);
         int sepIndex = message.indexOf(". ");
         int eolIndex = message.indexOf("\n");
@@ -146,15 +145,15 @@ public final class BuildConsoleUtils {
     }
 
     //@ApiStatus.Experimental
-    @Nonnull
-    public static DataProvider getDataProvider(@Nonnull Object buildId, @Nonnull AbstractViewManager buildListener) {
+    
+    public static DataProvider getDataProvider(Object buildId, AbstractViewManager buildListener) {
         BuildView buildView = buildListener.getBuildView(buildId);
         return (buildView != null) ? dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId) : dataId -> null;
     }
 
     //@ApiStatus.Experimental
-    @Nonnull
-    public static DataProvider getDataProvider(@Nonnull Object buildId, @Nonnull BuildProgressListener buildListener) {
+    
+    public static DataProvider getDataProvider(Object buildId, BuildProgressListener buildListener) {
         DataProvider provider;
         if (buildListener instanceof BuildView buildView) {
             provider = dataId -> DataManager.getInstance().getDataContext(buildView).getData(dataId);
@@ -171,7 +170,7 @@ public final class BuildConsoleUtils {
 
 
     @Nullable
-    private static BuildView findBuildView(@Nonnull Component component) {
+    private static BuildView findBuildView(Component component) {
         Component parent = component;
         while ((parent = parent.getParent()) != null) {
             if (parent instanceof BuildView buildView) {

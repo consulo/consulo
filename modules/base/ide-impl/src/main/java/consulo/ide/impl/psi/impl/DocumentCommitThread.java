@@ -42,11 +42,9 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -76,10 +74,10 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     @Override
-    public void commitAsynchronously(@Nonnull Project project,
-                                     @Nonnull Document document,
-                                     @NonNls @Nonnull Object reason,
-                                     @Nonnull ModalityState modality) {
+    public void commitAsynchronously(Project project,
+                                     Document document,
+                                     Object reason,
+                                     ModalityState modality) {
         assert !isDisposed : "already disposed";
         if (!project.isInitialized()) {
             return;
@@ -106,16 +104,16 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     @SuppressWarnings("unused")
-    private void log(Project project, @NonNls String msg, @Nullable CommitTask task, @NonNls Object... args) {
+    private void log(Project project, String msg, @Nullable CommitTask task, Object... args) {
         //System.out.println(msg + "; task: "+task + "; args: "+StringUtil.first(java.util.Arrays.toString(args), 80, true));
     }
 
     @Override
-    public void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile) {
+    public void commitSynchronously(Document document, Project project, PsiFile psiFile) {
         assert !isDisposed;
 
         if (!project.isInitialized() && !project.isDefault()) {
-            @NonNls String s = project + "; Disposed: " + project.isDisposed() + "; Open: " + project.isOpen();
+            String s = project + "; Disposed: " + project.isDisposed() + "; Open: " + project.isOpen();
             try {
                 Disposer.dispose(project);
             }
@@ -132,8 +130,8 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     // returns finish commit Runnable (to be invoked later in EDT) or null on failure
-    @Nonnull
-    private Runnable commitUnderProgress(@Nonnull CommitTask task, boolean synchronously) {
+    
+    private Runnable commitUnderProgress(CommitTask task, boolean synchronously) {
         Document document = task.getDocument();
         Project project = task.project;
         PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase) PsiDocumentManager.getInstance(project);
@@ -159,11 +157,11 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         return createFinishCommitRunnable(task, synchronously, finishProcessors, reparseInjectedProcessors);
     }
 
-    @Nonnull
-    private Runnable createFinishCommitRunnable(@Nonnull CommitTask task,
+    
+    private Runnable createFinishCommitRunnable(CommitTask task,
                                                 boolean synchronously,
-                                                @Nonnull List<? extends BooleanSupplier> finishProcessors,
-                                                @Nonnull List<? extends BooleanSupplier> reparseInjectedProcessors) {
+                                                List<? extends BooleanSupplier> finishProcessors,
+                                                List<? extends BooleanSupplier> reparseInjectedProcessors) {
         return () -> {
             Document document = task.getDocument();
             Project project = task.project;
@@ -192,9 +190,9 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         };
     }
 
-    @Nonnull
-    private BooleanSupplier handleCommitWithoutPsi(@Nonnull PsiDocumentManagerBase documentManager,
-                                                   @Nonnull CommitTask task) {
+    
+    private BooleanSupplier handleCommitWithoutPsi(PsiDocumentManagerBase documentManager,
+                                                   CommitTask task) {
         return () -> {
             log(task.project, "Finishing without PSI", task);
             Document document = task.getDocument();
@@ -213,24 +211,24 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     private static class CommitTask {
-        @Nonnull
+        
         private final Document document;
-        @Nonnull
+        
         final Project project;
         private final int modificationSequence;
         // store initial document modification sequence here to check if it changed later before commit in EDT
 
-        @Nonnull
+        
         final Object reason;
-        @Nonnull
+        
         final ModalityState myCreationModality;
         private final CharSequence myLastCommittedText;
 
-        CommitTask(@Nonnull Project project,
-                   @Nonnull Document document,
-                   @Nonnull Object reason,
-                   @Nonnull ModalityState modality,
-                   @Nonnull CharSequence lastCommittedText) {
+        CommitTask(Project project,
+                   Document document,
+                   Object reason,
+                   ModalityState modality,
+                   CharSequence lastCommittedText) {
             this.document = document;
             this.project = project;
             this.reason = reason;
@@ -239,7 +237,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             modificationSequence = ((DocumentEx) document).getModificationSequence();
         }
 
-        @NonNls
+        
         @Override
         public String toString() {
             Document document = getDocument();
@@ -275,7 +273,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
             return ((DocumentEx) document).getModificationSequence() == modificationSequence;
         }
 
-        @Nonnull
+        
         Document getDocument() {
             return document;
         }
@@ -283,12 +281,12 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     // returns runnable to execute under write action in AWT to finish the commit, updates "outChangedRange"
-    @Nonnull
-    private static BooleanSupplier doCommit(@Nonnull CommitTask task,
-                                            @Nonnull PsiFile file,
-                                            @Nonnull FileASTNode oldFileNode,
-                                            @Nonnull ProperTextRange changedPsiRange,
-                                            @Nonnull List<? super BooleanSupplier> outReparseInjectedProcessors) {
+    
+    private static BooleanSupplier doCommit(CommitTask task,
+                                            PsiFile file,
+                                            FileASTNode oldFileNode,
+                                            ProperTextRange changedPsiRange,
+                                            List<? super BooleanSupplier> outReparseInjectedProcessors) {
         Document document = task.getDocument();
         CharSequence newDocumentText = document.getImmutableCharSequence();
 
@@ -354,7 +352,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     }
 
     @RequiredReadAction
-    private static void assertAfterCommit(@Nonnull Document document, @Nonnull PsiFile file, @Nonnull ASTNode oldFileNode) {
+    private static void assertAfterCommit(Document document, PsiFile file, ASTNode oldFileNode) {
         if (oldFileNode.getTextLength() != document.getTextLength()) {
             String documentText = document.getText();
             String fileText = file.getText();

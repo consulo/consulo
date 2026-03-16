@@ -16,8 +16,7 @@
 package consulo.http.impl.internal.ssl;
 
 import consulo.logging.Logger;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -53,7 +52,7 @@ public class CertificateUtil {
     }
 
     @Nullable
-    public static X509Certificate loadX509Certificate(@Nonnull String path) {
+    public static X509Certificate loadX509Certificate(String path) {
         try {
             try (InputStream stream = new FileInputStream(path)) {
                 return (X509Certificate)ourFactory.generateCertificate(stream);
@@ -68,7 +67,7 @@ public class CertificateUtil {
     /**
      * @return subjects common name, usually it's domain name pattern, e.g. *.github.com
      */
-    public static String getCommonName(@Nonnull X509Certificate certificate) {
+    public static String getCommonName(X509Certificate certificate) {
         return new CertificateWrapper(certificate).getSubjectField(CertificateWrapper.CommonField.COMMON_NAME);
     }
 }

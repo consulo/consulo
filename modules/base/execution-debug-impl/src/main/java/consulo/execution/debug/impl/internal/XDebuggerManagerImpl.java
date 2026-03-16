@@ -69,8 +69,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -104,7 +103,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
 
         @RequiredUIAccess
         @Override
-        public void mouseMoved(@Nonnull EditorMouseEvent e) {
+        public void mouseMoved(EditorMouseEvent e) {
             if (!ShowBreakpointsOverLineNumbersAction.isSelected()) {
                 return;
             }
@@ -143,7 +142,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
             myLastIcon = null;
         }
 
-        private static void updateActiveLineNumberIcon(@Nonnull EditorGutterComponentEx gutter, @Nullable Image icon, @Nullable Integer line) {
+        private static void updateActiveLineNumberIcon(EditorGutterComponentEx gutter, @Nullable Image icon, @Nullable Integer line) {
             JComponent component = gutter.getComponent();
 
             if (component.getClientProperty("editor.gutter.context.menu") != null) {
@@ -169,7 +168,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         }
     }
 
-    @Nonnull
+    
     private final Project myProject;
     private final EditorFactory myEditorFactory;
     private final XBreakpointManagerImpl myBreakpointManager;
@@ -180,10 +179,10 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
 
     @Inject
     public XDebuggerManagerImpl(
-        @Nonnull Project project,
-        @Nonnull StartupManager startupManager,
-        @Nonnull EditorFactory editorFactory,
-        @Nonnull ApplicationConcurrency applicationConcurrency
+        Project project,
+        StartupManager startupManager,
+        EditorFactory editorFactory,
+        ApplicationConcurrency applicationConcurrency
     ) {
         myProject = project;
         myEditorFactory = editorFactory;
@@ -197,24 +196,24 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         MessageBusConnection messageBusConnection = myProject.getMessageBus().connect();
         messageBusConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
             @Override
-            public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+            public void fileContentLoaded(VirtualFile file, Document document) {
                 updateExecutionPoint(file, true);
             }
 
             @Override
-            public void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
+            public void fileContentReloaded(VirtualFile file, Document document) {
                 updateExecutionPoint(file, true);
             }
         });
         messageBusConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
             @Override
-            public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+            public void fileOpened(FileEditorManager source, VirtualFile file) {
                 updateExecutionPoint(file, false);
             }
         });
         myBreakpointManager.addBreakpointListener(new XBreakpointListener<>() {
             @Override
-            public void breakpointChanged(@Nonnull XBreakpoint<?> breakpoint) {
+            public void breakpointChanged(XBreakpoint<?> breakpoint) {
                 if (!(breakpoint instanceof XLineBreakpoint)) {
                     XDebugSessionImpl session = getCurrentSession();
                     if (session != null && breakpoint.equals(session.getActiveNonLineBreakpoint())) {
@@ -226,7 +225,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
             }
 
             @Override
-            public void breakpointRemoved(@Nonnull XBreakpoint<?> breakpoint) {
+            public void breakpointRemoved(XBreakpoint<?> breakpoint) {
                 XDebugSessionImpl session = getCurrentSession();
                 if (session != null && breakpoint == session.getActiveNonLineBreakpoint()) {
                     myExecutionPointHighlighter.updateGutterIcon(null);
@@ -236,7 +235,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
 
         messageBusConnection.subscribe(RunContentWithExecutorListener.class, new RunContentWithExecutorListener() {
             @Override
-            public void contentSelected(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
+            public void contentSelected(@Nullable RunContentDescriptor descriptor, Executor executor) {
                 if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {
                     XDebugSessionImpl session = mySessions.get(descriptor.getProcessHandler());
                     if (session != null) {
@@ -249,7 +248,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
             }
 
             @Override
-            public void contentRemoved(@Nullable RunContentDescriptor descriptor, @Nonnull Executor executor) {
+            public void contentRemoved(@Nullable RunContentDescriptor descriptor, Executor executor) {
                 if (descriptor != null && executor.equals(DefaultDebugExecutor.getDebugExecutorInstance())) {
                     mySessions.remove(descriptor.getProcessHandler());
                 }
@@ -261,7 +260,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         eventMulticaster.addEditorMouseMotionListener(bpPromoter, this);
     }
 
-    private void updateExecutionPoint(@Nonnull VirtualFile file, boolean navigate) {
+    private void updateExecutionPoint(VirtualFile file, boolean navigate) {
         if (file.equals(myExecutionPointHighlighter.getCurrentFile())) {
             myExecutionPointHighlighter.update(navigate);
         }
@@ -279,7 +278,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     @Override
-    @Nonnull
+    
     public XBreakpointManagerImpl getBreakpointManager() {
         return myBreakpointManager;
     }
@@ -293,19 +292,19 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     @Override
-    @Nonnull
-    public XDebugSession startSession(@Nonnull ExecutionEnvironment environment,
-                                      @Nonnull XDebugProcessStarter processStarter) throws ExecutionException {
+    
+    public XDebugSession startSession(ExecutionEnvironment environment,
+                                      XDebugProcessStarter processStarter) throws ExecutionException {
         return startSession(environment.getContentToReuse(), processStarter, new XDebugSessionImpl(environment, this));
     }
 
-    @Nonnull
+    
     @Override
-    public XDebugSession startSessionAndShowTab(@Nonnull String sessionName,
+    public XDebugSession startSessionAndShowTab(String sessionName,
                                                 Image icon,
                                                 @Nullable RunContentDescriptor contentToReuse,
                                                 boolean showToolWindowOnSuspendOnly,
-                                                @Nonnull XDebugProcessStarter starter) throws ExecutionException {
+                                                XDebugProcessStarter starter) throws ExecutionException {
         XDebugSessionImpl session = startSession(contentToReuse,
             starter,
             new XDebugSessionImpl(null,
@@ -324,8 +323,8 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse,
-                                           @Nonnull XDebugProcessStarter processStarter,
-                                           @Nonnull XDebugSessionImpl session) throws ExecutionException {
+                                           XDebugProcessStarter processStarter,
+                                           XDebugSessionImpl session) throws ExecutionException {
         XDebugProcess process = processStarter.start(session);
         myProject.getMessageBus().syncPublisher(XDebuggerManagerListener.class).processStarted(process);
 
@@ -342,7 +341,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         return session;
     }
 
-    public void removeSession(@Nonnull XDebugSessionImpl session) {
+    public void removeSession(XDebugSessionImpl session) {
         XDebugSessionTab sessionTab = session.getSessionTab();
         mySessions.remove(session.getDebugProcess().getProcessHandler());
         if (sessionTab != null &&
@@ -373,7 +372,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
     }
 
     @Override
-    @Nonnull
+    
     public XDebugSession[] getDebugSessions() {
         Collection<XDebugSessionImpl> sessions = mySessions.values();
         return sessions.toArray(new XDebugSessionImpl[sessions.size()]);
@@ -381,7 +380,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
 
     @Override
     @Nullable
-    public XDebugSession getDebugSession(@Nonnull ExecutionConsole executionConsole) {
+    public XDebugSession getDebugSession(ExecutionConsole executionConsole) {
         for (XDebugSessionImpl debuggerSession : mySessions.values()) {
             XDebugSessionTab sessionTab = debuggerSession.getSessionTab();
             if (sessionTab != null) {
@@ -394,7 +393,7 @@ public class XDebuggerManagerImpl implements XDebuggerManager, PersistentStateCo
         return null;
     }
 
-    @Nonnull
+    
     @Override
     public <T extends XDebugProcess> List<? extends T> getDebugProcesses(Class<T> processClass) {
         List<T> list = null;

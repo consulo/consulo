@@ -20,21 +20,20 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.psi.search.TodoAttributes;
 import consulo.platform.base.icon.PlatformIconGroup;
-import jakarta.annotation.Nonnull;
 
 public class TodoAttributesUtil {
-    @Nonnull
+    
     public static TodoAttributes createDefault() {
         return new TodoAttributes(PlatformIconGroup.generalTododefault(), getDefaultColorSchemeTextAttributes());
     }
 
-    @Nonnull
+    
     public static TextAttributes getDefaultColorSchemeTextAttributes() {
         return EditorColorsManager.getInstance().getGlobalScheme().getAttributes(CodeInsightColors.TODO_DEFAULT_ATTRIBUTES).clone();
     }
 
-    @Nonnull
-    public static TextAttributes getTextAttributes(@Nonnull TodoAttributes todoAttributes) {
+    
+    public static TextAttributes getTextAttributes(TodoAttributes todoAttributes) {
         if (todoAttributes.shouldUseCustomTodoColor()) {
             return todoAttributes.getTextAttributes();
         }

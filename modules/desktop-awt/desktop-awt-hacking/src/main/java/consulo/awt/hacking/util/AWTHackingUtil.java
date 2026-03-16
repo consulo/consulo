@@ -15,8 +15,7 @@
  */
 package consulo.awt.hacking.util;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
@@ -26,7 +25,7 @@ import java.lang.reflect.Method;
  * @since 2019-11-21
  */
 public class AWTHackingUtil {
-  @Nonnull
+  
   public static Method findMethodWithRuntimeException(Class<?> clazz, String name, Class... params) {
     try {
       Method declaredMethod = clazz.getDeclaredMethod(name, params);

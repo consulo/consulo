@@ -25,8 +25,7 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Customizes template data language-specific parsing in templates.
@@ -36,7 +35,7 @@ public interface OuterLanguageRangePatcher extends LanguageExtension {
   ExtensionPointCacheKey<OuterLanguageRangePatcher, ByLanguageValue<OuterLanguageRangePatcher>> KEY = ExtensionPointCacheKey.create("OuterLanguageRangePatcher", LanguageOneToOne.build());
 
   @Nullable
-  static OuterLanguageRangePatcher forLanguage(@Nonnull Language language) {
+  static OuterLanguageRangePatcher forLanguage(Language language) {
     return Application.get().getExtensionPoint(OuterLanguageRangePatcher.class).getOrBuildCache(KEY).get(language);
   }
 
@@ -45,5 +44,5 @@ public interface OuterLanguageRangePatcher extends LanguageExtension {
    * {@link TemplateDataElementType.RangeCollector#addOuterRange(TextRange, boolean)} where <tt>isInsertion == true</tt>
    */
   @Nullable
-  String getTextForOuterLanguageInsertionRange(@Nonnull TemplateDataElementType templateDataElementType, @Nonnull CharSequence outerElementText);
+  String getTextForOuterLanguageInsertionRange(TemplateDataElementType templateDataElementType, CharSequence outerElementText);
 }

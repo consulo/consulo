@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui;
 
 import consulo.ui.ex.awt.util.ColorUtil;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;

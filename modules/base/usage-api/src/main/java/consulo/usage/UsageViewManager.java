@@ -23,8 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.rule.PsiElementUsage;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -37,27 +36,27 @@ public abstract class UsageViewManager {
         return project.getInstance(UsageViewManager.class);
     }
 
-    @Nonnull
+    
     public abstract UsageView createUsageView(
-        @Nonnull UsageTarget[] targets,
-        @Nonnull Usage[] usages,
-        @Nonnull UsageViewPresentation presentation,
+        UsageTarget[] targets,
+        Usage[] usages,
+        UsageViewPresentation presentation,
         Supplier<UsageSearcher> usageSearcherFactory
     );
 
-    @Nonnull
+    
     public abstract UsageView showUsages(
-        @Nonnull UsageTarget[] searchedFor,
-        @Nonnull Usage[] foundUsages,
-        @Nonnull UsageViewPresentation presentation,
+        UsageTarget[] searchedFor,
+        Usage[] foundUsages,
+        UsageViewPresentation presentation,
         Supplier<UsageSearcher> factory
     );
 
-    @Nonnull
+    
     public abstract UsageView showUsages(
-        @Nonnull UsageTarget[] searchedFor,
-        @Nonnull Usage[] foundUsages,
-        @Nonnull UsageViewPresentation presentation
+        UsageTarget[] searchedFor,
+        Usage[] foundUsages,
+        UsageViewPresentation presentation
     );
 
     /**
@@ -65,33 +64,33 @@ public abstract class UsageViewManager {
      */
     @Nullable
     public abstract UsageView searchAndShowUsages(
-        @Nonnull UsageTarget[] searchFor,
-        @Nonnull Supplier<UsageSearcher> searcherFactory,
+        UsageTarget[] searchFor,
+        Supplier<UsageSearcher> searcherFactory,
         boolean showPanelIfOnlyOneUsage,
         boolean showNotFoundMessage,
-        @Nonnull UsageViewPresentation presentation,
+        UsageViewPresentation presentation,
         @Nullable UsageViewStateListener listener
     );
 
     public interface UsageViewStateListener {
-        void usageViewCreated(@Nonnull UsageView usageView);
+        void usageViewCreated(UsageView usageView);
 
         @RequiredUIAccess
         void findingUsagesFinished(UsageView usageView);
     }
 
     public abstract void searchAndShowUsages(
-        @Nonnull UsageTarget[] searchFor,
-        @Nonnull Supplier<UsageSearcher> searcherFactory,
-        @Nonnull FindUsagesProcessPresentation processPresentation,
-        @Nonnull UsageViewPresentation presentation,
+        UsageTarget[] searchFor,
+        Supplier<UsageSearcher> searcherFactory,
+        FindUsagesProcessPresentation processPresentation,
+        UsageViewPresentation presentation,
         @Nullable UsageViewStateListener listener
     );
 
     @Nullable
     public abstract UsageView getSelectedUsageView();
 
-    public static boolean isSelfUsage(@Nonnull Usage usage, @Nonnull UsageTarget[] searchForTarget) {
+    public static boolean isSelfUsage(Usage usage, UsageTarget[] searchForTarget) {
         if (!(usage instanceof PsiElementUsage elementUsage)) {
             return false;
         }
@@ -110,7 +109,7 @@ public abstract class UsageViewManager {
         });
     }
 
-    private static boolean isSelfUsage(@Nonnull PsiElement element, PsiElement psiElement) {
+    private static boolean isSelfUsage(PsiElement element, PsiElement psiElement) {
         return element.getParent() == psiElement; // self usage might be configurable
     }
 }

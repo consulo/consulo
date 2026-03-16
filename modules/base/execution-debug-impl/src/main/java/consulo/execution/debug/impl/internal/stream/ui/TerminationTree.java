@@ -8,7 +8,6 @@ import consulo.execution.debug.impl.internal.ui.tree.node.XValueContainerNode;
 import consulo.execution.debug.impl.internal.ui.tree.node.XValueNodeImpl;
 import consulo.execution.debug.stream.trace.*;
 import consulo.util.lang.ObjectUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +19,12 @@ public class TerminationTree extends CollectionTree {
 
   private final CollectionTreeBuilder myBuilder;
 
-  public TerminationTree(@Nonnull Value streamResult,
-                         @Nonnull List<TraceElement> traceElements,
-                         @Nonnull DebuggerCommandLauncher launcher,
-                         @Nonnull GenericEvaluationContext context,
-                         @Nonnull CollectionTreeBuilder builder,
-                         @Nonnull String debugName) {
+  public TerminationTree(Value streamResult,
+                         List<TraceElement> traceElements,
+                         DebuggerCommandLauncher launcher,
+                         GenericEvaluationContext context,
+                         CollectionTreeBuilder builder,
+                         String debugName) {
     super(traceElements, context, builder, debugName);
     myBuilder = builder;
 
@@ -39,7 +38,7 @@ public class TerminationTree extends CollectionTree {
 
     addTreeListener(new XDebuggerTreeListener() {
       @Override
-      public void nodeLoaded(@Nonnull RestorableStateNode node, @Nonnull String name) {
+      public void nodeLoaded(RestorableStateNode node, String name) {
         XDebuggerTreeListener listener = this;
         if (node instanceof XValueContainerNode<?>) {
           XValueContainer container = ((XValueContainerNode<?>)node).getValueContainer();
@@ -70,7 +69,7 @@ public class TerminationTree extends CollectionTree {
 
     addTreeListener(new XDebuggerTreeListener() {
       @Override
-      public void nodeLoaded(@Nonnull RestorableStateNode node, @Nonnull String name) {
+      public void nodeLoaded(RestorableStateNode node, String name) {
         if (node.getPath().getPathCount() == 2) {
           ApplicationManager.getApplication().invokeLater(() -> expandPath(node.getPath()));
           removeTreeListener(this);
@@ -83,20 +82,20 @@ public class TerminationTree extends CollectionTree {
     private final Value myValue;
     private final GenericEvaluationContext myContext;
 
-    MyValueRoot(@Nonnull Value value, @Nonnull GenericEvaluationContext context) {
+    MyValueRoot(Value value, GenericEvaluationContext context) {
       myValue = value;
       myContext = context;
     }
 
     @Override
-    public void computeChildren(@Nonnull XCompositeNode node) {
+    public void computeChildren(XCompositeNode node) {
       XValueChildrenList children = new XValueChildrenList();
       children.add(myBuilder.createXNamedValue(myValue, myContext));
       node.addChildren(children, true);
     }
 
     @Override
-    public void computePresentation(@Nonnull XValueNode node, @Nonnull XValuePlace place) {
+    public void computePresentation(XValueNode node, XValuePlace place) {
       node.setPresentation(null, "", "", true);
     }
   }

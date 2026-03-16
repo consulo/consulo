@@ -18,7 +18,6 @@ package consulo.ui.ex.dialog;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import jakarta.annotation.Nonnull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -29,23 +28,23 @@ import java.util.concurrent.CompletableFuture;
 public interface Dialog {
     Key<Dialog> KEY = Key.create(Dialog.class);
 
-    @Nonnull
+    
     @RequiredUIAccess
     CompletableFuture<DialogValue> showAsync();
 
     /**
      * Will done showAsync result with value
      */
-    void doOkAction(@Nonnull DialogValue value);
+    void doOkAction(DialogValue value);
 
     /**
      * Will reject showAsync result
      */
     void doCancelAction();
 
-    @Nonnull
+    
     DialogDescriptor getDescriptor();
 
-    @Nonnull
+    
     Window getWindow();
 }

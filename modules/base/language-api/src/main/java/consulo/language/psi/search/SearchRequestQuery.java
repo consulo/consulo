@@ -4,7 +4,6 @@ package consulo.language.psi.search;
 import consulo.application.util.query.AbstractQuery;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 import java.util.function.Predicate;
 
@@ -15,13 +14,13 @@ public class SearchRequestQuery extends AbstractQuery<PsiReference> {
     private final Project myProject;
     private final SearchRequestCollector myRequests;
 
-    public SearchRequestQuery(@Nonnull Project project, @Nonnull SearchRequestCollector requests) {
+    public SearchRequestQuery(Project project, SearchRequestCollector requests) {
         myProject = project;
         myRequests = requests;
     }
 
     @Override
-    protected boolean processResults(@Nonnull Predicate<? super PsiReference> consumer) {
+    protected boolean processResults(Predicate<? super PsiReference> consumer) {
         return PsiSearchHelper.getInstance(myProject).processRequests(myRequests, consumer);
     }
 

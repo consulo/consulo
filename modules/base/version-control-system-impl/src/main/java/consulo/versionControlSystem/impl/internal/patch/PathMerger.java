@@ -21,7 +21,7 @@ import consulo.versionControlSystem.base.FilePathImpl;
 import consulo.versionControlSystem.impl.internal.util.RelativePathCalculator;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;

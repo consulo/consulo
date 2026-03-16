@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.content.library.ProjectLibraryTable;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -76,14 +75,14 @@ public class ProjectLibraryTableImpl extends LibraryTableBase implements Project
     myLibraryOwner = () -> ProjectRootManagerImpl.getInstanceImpl(project).getRootsValidityChangedListener();
   }
 
-  @Nonnull
+  
   @Override
   protected LibraryOwner getLibraryOwner() {
     return myLibraryOwner;
   }
 
   @Override
-  @Nonnull
+  
   public Project getProject() {
     return myProject;
   }
@@ -100,7 +99,7 @@ public class ProjectLibraryTableImpl extends LibraryTableBase implements Project
 
   public final static class LibraryStateSplitter extends StateSplitterEx {
     @Override
-    public List<Pair<Element, String>> splitState(@Nonnull Element state) {
+    public List<Pair<Element, String>> splitState(Element state) {
       return splitState(state, LibraryImpl.LIBRARY_NAME_ATTR);
     }
   }

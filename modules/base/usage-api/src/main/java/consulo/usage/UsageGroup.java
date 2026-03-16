@@ -19,14 +19,13 @@ import consulo.navigation.Navigatable;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.status.FileStatus;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface UsageGroup extends Comparable<UsageGroup>, Navigatable {
     @Nullable
     Image getIcon();
 
-    @Nonnull
+    
     String getText(@Nullable UsageView view);
 
     @Nullable

@@ -26,8 +26,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.util.lang.CharArrayUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author yole
@@ -51,7 +50,7 @@ public class CodeDocumentationUtil {
     return createLine(lineData, commenter, settings);
   }
 
-  @Nonnull
+  
   private static String createLine(String lineData, CodeDocumentationAwareCommenter commenter, DocCommentSettings settings) {
     if (!settings.isLeadingAsteriskEnabled()) {
       return " " + lineData + " ";
@@ -81,7 +80,7 @@ public class CodeDocumentationUtil {
    * @return
    */
   @Nullable
-  public static String getIndentInsideJavadoc(@Nonnull Document document, int offset) {
+  public static String getIndentInsideJavadoc(Document document, int offset) {
     CharSequence text = document.getCharsSequence();
     if (offset >= text.length()) {
       return null;
@@ -110,13 +109,13 @@ public class CodeDocumentationUtil {
    * @param lineStartOffset start offset of the line that contains given offset
    * @return object that encapsulates information about comments at the given offset at the given text
    */
-  @Nonnull
-  public static CommentContext tryParseCommentContext(@Nonnull PsiFile file, @Nonnull CharSequence chars, int offset, int lineStartOffset) {
+  
+  public static CommentContext tryParseCommentContext(PsiFile file, CharSequence chars, int offset, int lineStartOffset) {
     Commenter langCommenter = Commenter.forLanguage(PsiUtilCore.getLanguageAtOffset(file, offset));
     return tryParseCommentContext(langCommenter, chars, lineStartOffset);
   }
 
-  public static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter, @Nonnull CharSequence chars, int lineStartOffset) {
+  public static CommentContext tryParseCommentContext(@Nullable Commenter langCommenter, CharSequence chars, int lineStartOffset) {
     boolean isInsideCommentLikeCode = langCommenter instanceof CodeDocumentationAwareCommenter;
     if (!isInsideCommentLikeCode) {
       return new CommentContext();

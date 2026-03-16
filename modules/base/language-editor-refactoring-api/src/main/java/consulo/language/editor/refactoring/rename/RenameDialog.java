@@ -44,8 +44,7 @@ import consulo.usage.UsageViewUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +63,7 @@ public class RenameDialog extends RefactoringDialog {
     private CheckBox myCbSearchTextOccurences;
     private final JLabel myNewNamePrefix = new JLabel("");
     private final String myHelpID;
-    @Nonnull
+    
     private final PsiElement myPsiElement;
     private final PsiElement myNameSuggestionContext;
     private final Editor myEditor;
@@ -75,8 +74,8 @@ public class RenameDialog extends RefactoringDialog {
 
     @RequiredUIAccess
     public RenameDialog(
-        @Nonnull Project project,
-        @Nonnull PsiElement psiElement,
+        Project project,
+        PsiElement psiElement,
         @Nullable PsiElement nameSuggestionContext,
         Editor editor
     ) {
@@ -120,13 +119,13 @@ public class RenameDialog extends RefactoringDialog {
         }
     }
 
-    @Nonnull
+    
     @RequiredReadAction
     protected String getLabelText() {
         return RefactoringLocalize.rename0AndItsUsagesTo(getFullName()).get();
     }
 
-    @Nonnull
+    
     public PsiElement getPsiElement() {
         return myPsiElement;
     }

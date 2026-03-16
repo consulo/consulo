@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.util;
 
 import consulo.application.util.function.Computable;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Nikolay Matveev
@@ -25,12 +24,12 @@ import jakarta.annotation.Nonnull;
 @Deprecated
 public interface NotNullComputable<T> extends Computable<T> {
 
-  @Nonnull
+  
   T compute();
 
   NotNullComputable<Boolean> TRUE = new NotNullComputable<Boolean>() {
 
-    @Nonnull
+    
     @Override
     public Boolean compute() {
       return Boolean.TRUE;

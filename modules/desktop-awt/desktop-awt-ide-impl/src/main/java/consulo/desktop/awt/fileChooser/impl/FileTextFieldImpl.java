@@ -35,8 +35,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ModalityState;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -158,7 +157,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
 
         new LazyUiDisposable<>(parent, field, this) {
             @Override
-            protected void initialize(@Nonnull Disposable parent, @Nonnull FileTextFieldImpl child, @Nullable Project project) {
+            protected void initialize(Disposable parent, FileTextFieldImpl child, @Nullable Project project) {
                 Disposer.register(child, myUiUpdater);
             }
         };
@@ -363,7 +362,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         PopupChooserBuilder<LookupFile> builder = new PopupChooserBuilder<>(myList);
         builder.addListener(new JBPopupListener() {
             @Override
-            public void beforeShown(@Nonnull LightweightWindowEvent event) {
+            public void beforeShown(LightweightWindowEvent event) {
                 myPathTextField.registerKeyboardAction(
                     myCancelAction,
                     KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
@@ -375,7 +374,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
             }
 
             @Override
-            public void onClosed(@Nonnull LightweightWindowEvent event) {
+            public void onClosed(LightweightWindowEvent event) {
                 myPathTextField.unregisterKeyboardAction(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
                 for (Action each : myDisabledTextActions) {
                     each.setEnabled(true);
@@ -421,7 +420,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         );
     }
 
-    @Nonnull
+    
     protected String getPathVariablesSeparatorText() {
         return IdeLocalize.fileChooserCompletionPathVariablesText().get();
     }
@@ -479,7 +478,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         FileTextFieldUtil.processCompletion(result, myFinder, myFilter, myFileSpitRegExp, macroMap);
     }
 
-    static void addMacroPaths(CompletionResult result, String typedText, @Nonnull Finder finder, Map<String, String> macroMap) {
+    static void addMacroPaths(CompletionResult result, String typedText, Finder finder, Map<String, String> macroMap) {
         result.myMacros = new ArrayList<>();
 
         MinusculeMatcher matcher = createMatcher(typedText);

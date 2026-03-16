@@ -21,8 +21,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An informational object for debugging stub-mismatch related issues. Should be as small as possible since it's stored in files's attributes.
@@ -45,12 +44,12 @@ public class IndexingStampInfo {
     return "indexed at " + indexingFileStamp + " with document " + dumpSize(indexingByteLength, indexingCharLength);
   }
 
-  @Nonnull
+  
   public static String dumpSize(long byteLength, int charLength) {
     return " byte size = " + byteLength + ", char size = " + charLength;
   }
 
-  public boolean isUpToDate(@Nullable Document document, @Nonnull VirtualFile file, @Nonnull PsiFile psi) {
+  public boolean isUpToDate(@Nullable Document document, VirtualFile file, PsiFile psi) {
     if (document == null || FileDocumentManager.getInstance().isDocumentUnsaved(document) || !PsiDocumentManager.getInstance(psi.getProject()).isCommitted(document)) {
       return false;
     }

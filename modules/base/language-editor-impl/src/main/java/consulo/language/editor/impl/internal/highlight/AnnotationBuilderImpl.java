@@ -24,7 +24,6 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.xml.XmlStringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +34,15 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     private static final Function<String, String> TOOLTIP_ESCAPE =
         message -> XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(message));
 
-    @Nonnull
+    
     private final AnnotationHolderImpl myHolder;
-    @Nonnull
+    
     private final LocalizeValue myMessage;
-    @Nonnull
+    
     private final PsiElement myCurrentElement;
-    @Nonnull
+    
     private final Object myCurrentAnnotator;
-    @Nonnull
+    
     private final HighlightSeverity mySeverity;
     private TextRange range;
     private Boolean afterEndOfLine;
@@ -62,11 +61,11 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     private Language myLanguage;
 
     AnnotationBuilderImpl(
-        @Nonnull AnnotationHolderImpl holder,
-        @Nonnull HighlightSeverity severity,
-        @Nonnull LocalizeValue message,
-        @Nonnull PsiElement currentElement,
-        @Nonnull Object currentAnnotator
+        AnnotationHolderImpl holder,
+        HighlightSeverity severity,
+        LocalizeValue message,
+        PsiElement currentElement,
+        Object currentAnnotator
     ) {
         myHolder = holder;
         mySeverity = severity;
@@ -96,28 +95,28 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     }
 
     private class FixB implements FixBuilder {
-        @Nonnull
+        
         IntentionAction fix;
         TextRange range;
         HighlightDisplayKey key;
         Boolean batch;
         Boolean universal;
 
-        FixB(@Nonnull IntentionAction fix) {
+        FixB(IntentionAction fix) {
             this.fix = fix;
         }
 
-        @Nonnull
+        
         @Override
-        public FixBuilder range(@Nonnull TextRange range) {
+        public FixBuilder range(TextRange range) {
             assertNotSet(this.range, "range");
             this.range = range;
             return this;
         }
 
-        @Nonnull
+        
         @Override
-        public FixBuilder key(@Nonnull HighlightDisplayKey key) {
+        public FixBuilder key(HighlightDisplayKey key) {
             assertNotSet(this.key, "key");
             this.key = key;
             return this;
@@ -125,7 +124,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
 
         @Override
         public
-        @Nonnull
+        
         FixBuilder batch() {
             assertNotSet(this.universal, "universal");
             assertNotSet(this.batch, "batch");
@@ -141,7 +140,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
             }
         }
 
-        @Nonnull
+        
         @Override
         public FixBuilder universal() {
             assertNotSet(this.universal, "universal");
@@ -151,7 +150,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
             return this;
         }
 
-        @Nonnull
+        
         @Override
         public AnnotationBuilder registerFix() {
             if (fixes == null) {
@@ -167,28 +166,28 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         }
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder withFix(@Nonnull IntentionAction fix) {
+    public AnnotationBuilder withFix(IntentionAction fix) {
         return newFix(fix).registerFix();
     }
 
-    @Nonnull
+    
     @Override
-    public FixBuilder newFix(@Nonnull IntentionAction fix) {
+    public FixBuilder newFix(IntentionAction fix) {
         return new FixB(fix);
     }
 
-    @Nonnull
+    
     @Override
-    public FixBuilder newLocalQuickFix(@Nonnull LocalQuickFix fix, @Nonnull ProblemDescriptor problemDescriptor) {
+    public FixBuilder newLocalQuickFix(LocalQuickFix fix, ProblemDescriptor problemDescriptor) {
         return new FixB(new LocalQuickFixAsIntentionAdapter(fix, problemDescriptor));
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public AnnotationBuilder range(@Nonnull TextRange range) {
+    public AnnotationBuilder range(TextRange range) {
         assertNotSet(this.range, "range");
         TextRange currentElementRange = myCurrentElement.getTextRange();
         if (!currentElementRange.contains(range)) {
@@ -201,21 +200,21 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public AnnotationBuilder range(@Nonnull ASTNode element) {
+    public AnnotationBuilder range(ASTNode element) {
         return range(element.getTextRange());
     }
 
-    @Nonnull
+    
     @Override
     @RequiredReadAction
-    public AnnotationBuilder range(@Nonnull PsiElement element) {
+    public AnnotationBuilder range(PsiElement element) {
         return range(element.getTextRange());
     }
 
-    @Nonnull
+    
     @Override
     public AnnotationBuilder afterEndOfLine() {
         assertNotSet(afterEndOfLine, "afterEndOfLine");
@@ -223,7 +222,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public AnnotationBuilder fileLevel() {
         assertNotSet(fileLevel, "fileLevel");
@@ -231,53 +230,53 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder gutterIconRenderer(@Nonnull GutterIconRenderer gutterIconRenderer) {
+    public AnnotationBuilder gutterIconRenderer(GutterIconRenderer gutterIconRenderer) {
         assertNotSet(this.gutterIconRenderer, "gutterIconRenderer");
         this.gutterIconRenderer = gutterIconRenderer;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder problemGroup(@Nonnull ProblemGroup problemGroup) {
+    public AnnotationBuilder problemGroup(ProblemGroup problemGroup) {
         assertNotSet(this.problemGroup, "problemGroup");
         this.problemGroup = problemGroup;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder enforcedTextAttributes(@Nonnull TextAttributes enforcedAttributes) {
+    public AnnotationBuilder enforcedTextAttributes(TextAttributes enforcedAttributes) {
         assertNotSet(this.enforcedAttributes, "enforcedAttributes");
         this.enforcedAttributes = enforcedAttributes;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder textAttributes(@Nonnull TextAttributesKey textAttributes) {
+    public AnnotationBuilder textAttributes(TextAttributesKey textAttributes) {
         assertNotSet(this.textAttributesKey, "textAttributes");
         this.textAttributesKey = textAttributes;
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder highlightType(@Nonnull ProblemHighlightType highlightType) {
+    public AnnotationBuilder highlightType(ProblemHighlightType highlightType) {
         assertNotSet(this.highlightType, "highlightType");
         this.highlightType = highlightType;
         return this;
     }
 
-    @Nonnull
+    
     @Override
     public AnnotationBuilder needsUpdateOnTyping() {
         return needsUpdateOnTyping(true);
     }
 
-    @Nonnull
+    
     @Override
     public AnnotationBuilder needsUpdateOnTyping(boolean value) {
         assertNotSet(this.needsUpdateOnTyping, "needsUpdateOnTyping");
@@ -285,9 +284,9 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         return this;
     }
 
-    @Nonnull
+    
     @Override
-    public AnnotationBuilder tooltip(@Nonnull LocalizeValue tooltip) {
+    public AnnotationBuilder tooltip(LocalizeValue tooltip) {
         assertNotSet(myTooltip, LocalizeValue.empty(), "tooltip");
         myTooltip = tooltip;
         return this;
@@ -356,9 +355,9 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
     }
 
     private static <T extends IntentionAction & LocalQuickFix> void registerBatchFix(
-        @Nonnull Annotation annotation,
-        @Nonnull Object fix,
-        @Nonnull TextRange range,
+        Annotation annotation,
+        Object fix,
+        TextRange range,
         HighlightDisplayKey key
     ) {
         //noinspection unchecked
@@ -375,7 +374,7 @@ class AnnotationBuilderImpl implements AnnotationBuilder {
         }
     }
 
-    @Nonnull
+    
     private static String omitIfEmpty(Object o, String name) {
         return o == null ? "" : ", " + name + "=" + o;
     }

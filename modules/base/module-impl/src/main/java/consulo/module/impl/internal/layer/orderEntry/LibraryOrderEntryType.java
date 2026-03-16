@@ -22,7 +22,6 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
-import jakarta.annotation.Nonnull;
 import org.jdom.Element;
 
 /**
@@ -33,7 +32,7 @@ import org.jdom.Element;
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
     public static final String ID = "library";
 
-    @Nonnull
+    
     public static LibraryOrderEntryType getInstance() {
         return EP_NAME.findExtensionOrFail(LibraryOrderEntryType.class);
     }
@@ -42,17 +41,17 @@ public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryIm
     private static final String LEVEL_ATTR = "level";
     private static final String EXPORTED_ATTR = "exploded";
 
-    @Nonnull
+    
     @Override
     public String getId() {
         return ID;
     }
 
-    @Nonnull
+    
     @Override
     public LibraryOrderEntryImpl loadOrderEntry(
-        @Nonnull Element element,
-        @Nonnull ModuleRootLayer moduleRootLayer
+        Element element,
+        ModuleRootLayer moduleRootLayer
     ) throws InvalidDataException {
         String name = element.getAttributeValue(NAME_ATTR);
         if (name == null) {
@@ -66,7 +65,7 @@ public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryIm
     }
 
     @Override
-    public void storeOrderEntry(@Nonnull Element element, @Nonnull LibraryOrderEntryImpl orderEntry) {
+    public void storeOrderEntry(Element element, LibraryOrderEntryImpl orderEntry) {
         String libraryLevel = orderEntry.getLibraryLevel();
         if (orderEntry.isExported()) {
             element.setAttribute(EXPORTED_ATTR, "");

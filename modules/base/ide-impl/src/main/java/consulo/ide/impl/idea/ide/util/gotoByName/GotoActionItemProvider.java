@@ -23,7 +23,6 @@ import consulo.ui.ex.internal.ActionManagerEx;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -43,19 +42,19 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         myIntentions = NotNullLazyValue.createValue(() -> AccessRule.read(myModel::getAvailableIntentions));
     }
 
-    @Nonnull
+    
     @Override
-    public List<String> filterNames(@Nonnull ChooseByNameBase base, @Nonnull String[] names, @Nonnull String pattern) {
+    public List<String> filterNames(ChooseByNameBase base, String[] names, String pattern) {
         return Collections.emptyList(); // no common prefix insertion in goto action
     }
 
     @Override
     public boolean filterElements(
-        @Nonnull ChooseByNameBase base,
-        @Nonnull String pattern,
+        ChooseByNameBase base,
+        String pattern,
         boolean everywhere,
-        @Nonnull ProgressIndicator cancelled,
-        @Nonnull Predicate<Object> consumer
+        ProgressIndicator cancelled,
+        Predicate<Object> consumer
     ) {
         return filterElements(
             pattern,
@@ -64,7 +63,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         );
     }
 
-    public boolean filterElements(@Nonnull String pattern, @Nonnull Predicate<? super MatchedValue> consumer) {
+    public boolean filterElements(String pattern, Predicate<? super MatchedValue> consumer) {
         DataContext dataContext = DataManager.getInstance().getDataContext(myModel.getContextComponent());
 
         return processAbbreviations(pattern, consumer, dataContext)
@@ -75,12 +74,12 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
             && processOptions(pattern, consumer, dataContext));
         }
 
-    private boolean processAbbreviations(@Nonnull String pattern, Predicate<? super MatchedValue> consumer, DataContext context) {
+    private boolean processAbbreviations(String pattern, Predicate<? super MatchedValue> consumer, DataContext context) {
         List<String> actionIds = AbbreviationManager.getInstance().findActions(pattern);
         JBIterable<MatchedValue> wrappers = JBIterable.from(actionIds).filterMap(myActionManager::getAction).transform(action -> {
             ActionWrapper wrapper = wrapAnAction(action, context);
             return new MatchedValue(wrapper, pattern) {
-                @Nonnull
+                
                 @Override
                 public String getValueText() {
                     return pattern;
@@ -195,7 +194,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         return processItems(pattern, actionWrappers, consumer);
     }
 
-    @Nonnull
+    
     static Matcher buildMatcher(String pattern) {
         return pattern.contains(" ")
             ? new WordPrefixMatcher(pattern)
@@ -216,8 +215,8 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         return processItems(pattern, intentions, consumer);
     }
 
-    @Nonnull
-    private ActionWrapper wrapAnAction(@Nonnull AnAction action, DataContext dataContext) {
+    
+    private ActionWrapper wrapAnAction(AnAction action, DataContext dataContext) {
         return new ActionWrapper(action, myModel.getGroupMapping(action), MatchMode.NAME, dataContext, myModel);
     }
 

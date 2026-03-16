@@ -25,7 +25,6 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Inject;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -38,7 +37,7 @@ final class EncodingProjectManagerStartUpActivity implements PostStartupActivity
   }
 
   @Override
-  public void runActivity(@Nonnull Project project, UIAccess uiAccess) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)EncodingProjectManager.getInstance(project)).reloadAlreadyLoadedDocuments(), ModalityState.nonModal(), project.getDisposed());
   }
 }

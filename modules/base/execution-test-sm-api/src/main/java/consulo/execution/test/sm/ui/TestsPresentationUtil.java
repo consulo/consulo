@@ -28,8 +28,7 @@ import consulo.ui.ex.awt.ColoredTableCellRenderer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
@@ -209,7 +208,7 @@ public class TestsPresentationUtil {
         renderer.append(testProxy.getPresentableName(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
 
-    @Nonnull
+    
     public static String getPresentableName(SMTestProxy testProxy) {
         SMTestProxy parent = testProxy.getParent();
         String name = testProxy.getName();
@@ -252,8 +251,8 @@ public class TestsPresentationUtil {
         return presentationCandidate;
     }
 
-    @Nonnull
-    public static String getPresentableNameTrimmedOnly(@Nonnull SMTestProxy testProxy) {
+    
+    public static String getPresentableNameTrimmedOnly(SMTestProxy testProxy) {
         String name = testProxy.getName();
         if (name != null) {
             name = name.trim();
@@ -264,7 +263,7 @@ public class TestsPresentationUtil {
         return name;
     }
 
-    @Nonnull
+    
     private static IconInfo getIcon(SMTestProxy testProxy, TestConsoleProperties consoleProperties) {
         TestStateInfo.Magnitude magnitude = testProxy.getMagnitudeInfo();
 
@@ -501,7 +500,7 @@ public class TestsPresentationUtil {
         }
     }
 
-    public static void printWithAnsiColoring(@Nonnull Printer printer, @Nonnull String text, @Nonnull Key processOutputType) {
+    public static void printWithAnsiColoring(Printer printer, String text, Key processOutputType) {
         AnsiEscapeDecoder decoder = new AnsiEscapeDecoder();
         decoder.escapeText(
             text,

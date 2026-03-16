@@ -5,7 +5,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
-import jakarta.annotation.Nonnull;
 
 /**
  * Represents the state and settings of a "choose by name" popup from the point of view of the logic which fills it with items.
@@ -16,7 +15,7 @@ import jakarta.annotation.Nonnull;
 public interface ChooseByNameViewModel {
   Project getProject();
 
-  @Nonnull
+  
   ChooseByNameModel getModel();
 
   /**
@@ -27,8 +26,8 @@ public interface ChooseByNameViewModel {
   /**
    * Transforms text entered by the user in the dialog into the search pattern (for example, removes irrelevant suffixes like "line ...")
    */
-  @Nonnull
-  String transformPattern(@Nonnull String pattern);
+  
+  String transformPattern(String pattern);
 
   /**
    * If true, top matching candidates should be shown in the popup also when the entered pattern is empty. If false, an empty list is

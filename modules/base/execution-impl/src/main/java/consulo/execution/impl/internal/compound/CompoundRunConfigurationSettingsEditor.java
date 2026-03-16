@@ -40,8 +40,7 @@ import consulo.ui.ex.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -55,14 +54,14 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
     private final SortedListModel<RunConfiguration> myModel;
     private CompoundRunConfiguration mySnapshot;
 
-    public CompoundRunConfigurationSettingsEditor(@Nonnull Project project) {
+    public CompoundRunConfigurationSettingsEditor(Project project) {
         myRunManager = RunManagerImpl.getInstanceImpl(project);
         myModel = new SortedListModel<>(CompoundRunConfiguration.COMPARATOR);
         myList = new JBList<>(myModel);
         myList.setCellRenderer(new ColoredListCellRenderer<>() {
             @Override
             protected void customizeCellRenderer(
-                @Nonnull JList list,
+                JList list,
                 RunConfiguration value,
                 int index,
                 boolean selected,
@@ -76,7 +75,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
         myList.setVisibleRowCount(15);
     }
 
-    private boolean canBeAdded(@Nonnull RunConfiguration candidate, @Nonnull CompoundRunConfiguration root) {
+    private boolean canBeAdded(RunConfiguration candidate, CompoundRunConfiguration root) {
         if (candidate.getType() == root.getType() && candidate.getName().equals(root.getName())) {
             return false;
         }
@@ -126,7 +125,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
         toRun.addAll(checked);
     }
 
-    @Nonnull
+    
     @Override
     protected JComponent createEditor() {
         ToolbarDecorator decorator = ToolbarDecorator.createDecorator(myList);
@@ -166,7 +165,7 @@ public class CompoundRunConfigurationSettingsEditor extends SettingsEditor<Compo
                     return true;
                 }
 
-                @Nonnull
+                
                 @Override
                 public String getTextFor(RunConfiguration value) {
                     return value.getName();

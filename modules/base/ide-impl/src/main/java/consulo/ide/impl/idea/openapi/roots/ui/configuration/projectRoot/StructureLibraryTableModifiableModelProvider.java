@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.impl.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author nik
@@ -32,7 +31,7 @@ public class StructureLibraryTableModifiableModelProvider implements LibraryTabl
     myConfigurator = configurator;
   }
 
-  @Nonnull
+  
   @Override
   public LibrariesModifiableModel getModifiableModel() {
     return myConfigurator.getLibrariesModifiableModel(myLevel);

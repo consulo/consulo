@@ -52,8 +52,7 @@ import consulo.usage.UsageView;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
@@ -87,7 +86,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
     private final ActionToolbar myToolbar;
     private JLabel myLabel;
 
-    public void setHint(JBPopup hint, @Nonnull LocalizeValue title) {
+    public void setHint(JBPopup hint, LocalizeValue title) {
         myHint = hint;
         myTitle = title.get();
     }
@@ -303,7 +302,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
     }
 
     @RequiredUIAccess
-    public void update(@Nonnull PsiElement[] elements, int index) {
+    public void update(PsiElement[] elements, int index) {
         update(
             elements,
             (psiElements, fileDescriptors) -> {
@@ -367,8 +366,8 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
     @RequiredUIAccess
     @SuppressWarnings("ReturnValueIgnored") // ignored result of fun call
     private static void update(
-        @Nonnull PsiElement[] elements,
-        @RequiredUIAccess @Nonnull BiFunction<PsiElement[], List<FileDescriptor>, Boolean> fun
+        PsiElement[] elements,
+        @RequiredUIAccess BiFunction<PsiElement[], List<FileDescriptor>, Boolean> fun
     ) {
         List<PsiElement> candidates = new ArrayList<>(elements.length);
         List<FileDescriptor> files = new ArrayList<>(elements.length);
@@ -574,12 +573,12 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             goBack();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             Presentation presentation = e.getPresentation();
             presentation.setEnabled(myIndex > 0);
         }
@@ -592,12 +591,12 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             goForward();
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myElements != null && myIndex < myElements.length - 1);
         }
     }
@@ -609,7 +608,7 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             super.actionPerformed(e);
             if (myHint.isVisible()) {
                 myHint.cancel();
@@ -632,13 +631,13 @@ public class ImplementationViewComponentImpl extends JPanel implements Implement
         }
 
         @Override
-        public void update(@Nonnull AnActionEvent e) {
+        public void update(AnActionEvent e) {
             e.getPresentation().setEnabled(myFileChooser == null || !myFileChooser.isPopupVisible());
         }
 
         @Override
         @RequiredUIAccess
-        public void actionPerformed(@Nonnull AnActionEvent e) {
+        public void actionPerformed(AnActionEvent e) {
             PsiElement element = myElements[myIndex];
             PsiElement navigationElement = element.getNavigationElement();
             PsiFile file = getContainingFile(navigationElement);

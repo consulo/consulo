@@ -15,7 +15,6 @@
  */
 package consulo.disposer;
 
-import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class CompositeDisposable implements Disposable {
   private final List<Disposable> myDisposables = new ArrayList<>();
   private boolean disposed;
 
-  public void add(@Nonnull Disposable disposable) {
+  public void add(Disposable disposable) {
     assert !disposed : "Already disposed";
     myDisposables.add(disposable);
   }

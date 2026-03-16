@@ -21,8 +21,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings({"deprecation"})
 public class DefaultStateSerializer {
@@ -30,7 +29,7 @@ public class DefaultStateSerializer {
   }
 
   @Nullable
-  public static Element serializeState(@Nonnull Object state, @Nullable Storage storage) throws WriteExternalException {
+  public static Element serializeState(Object state, @Nullable Storage storage) throws WriteExternalException {
     if (state instanceof Element) {
       return (Element)state;
     }

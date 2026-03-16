@@ -36,23 +36,22 @@ import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.FocusListener;
 
 public class BinaryEditorHolder extends EditorHolder {
-  @Nonnull
+  
   protected final FileEditor myEditor;
-  @Nonnull
+  
   protected final FileEditorProvider myEditorProvider;
 
-  public BinaryEditorHolder(@Nonnull FileEditor editor, @Nonnull FileEditorProvider editorProvider) {
+  public BinaryEditorHolder(FileEditor editor, FileEditorProvider editorProvider) {
     myEditor = editor;
     myEditorProvider = editorProvider;
   }
 
-  @Nonnull
+  
   public FileEditor getEditor() {
     return myEditor;
   }
@@ -62,14 +61,14 @@ public class BinaryEditorHolder extends EditorHolder {
     myEditorProvider.disposeEditor(myEditor);
   }
 
-  @Nonnull
+  
   @Override
   public JComponent getComponent() {
     return myEditor.getComponent();
   }
 
   @Override
-  public void installFocusListener(@Nonnull FocusListener listener) {
+  public void installFocusListener(FocusListener listener) {
     myEditor.getComponent().addFocusListener(listener);
   }
 
@@ -87,8 +86,8 @@ public class BinaryEditorHolder extends EditorHolder {
     public static BinaryEditorHolderFactory INSTANCE = new BinaryEditorHolderFactory();
 
     @Override
-    @Nonnull
-    public BinaryEditorHolder create(@Nonnull DiffContent content, @Nonnull DiffContext context) {
+    
+    public BinaryEditorHolder create(DiffContent content, DiffContext context) {
       Project project = context.getProject();
       if (content instanceof FileContent) {
         if (project == null) project = ProjectManager.getInstance().getDefaultProject();
@@ -125,7 +124,7 @@ public class BinaryEditorHolder extends EditorHolder {
     }
 
     @Override
-    public boolean canShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
+    public boolean canShowContent(DiffContent content, DiffContext context) {
       if (content instanceof DocumentContent) return true;
       if (content instanceof FileContent) {
         Project project = context.getProject();
@@ -138,7 +137,7 @@ public class BinaryEditorHolder extends EditorHolder {
     }
 
     @Override
-    public boolean wantShowContent(@Nonnull DiffContent content, @Nonnull DiffContext context) {
+    public boolean wantShowContent(DiffContent content, DiffContext context) {
       if (content instanceof FileContent) {
         if (content.getContentType() == null) return false;
         if (content.getContentType().isBinary()) return true;

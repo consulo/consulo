@@ -25,7 +25,6 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import static consulo.util.lang.ObjectUtil.notNull;
@@ -34,7 +33,7 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
   private final PsiModificationTracker myModificationTracker;
   private long myModificationCount;
 
-  protected ProjectViewPsiTreeChangeListener(@Nonnull Project project) {
+  protected ProjectViewPsiTreeChangeListener(Project project) {
     myModificationTracker = PsiManager.getInstance(project).getModificationTracker();
     myModificationCount = myModificationTracker.getModificationCount();
   }
@@ -46,21 +45,21 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
   protected abstract DefaultMutableTreeNode getRootNode();
 
   @Override
-  public final void childRemoved(@Nonnull PsiTreeChangeEvent event) {
+  public final void childRemoved(PsiTreeChangeEvent event) {
     PsiElement child = event.getOldChild();
     if (child instanceof PsiWhiteSpace) return; //optimization
     childrenChanged(event.getParent(), true);
   }
 
   @Override
-  public final void childAdded(@Nonnull PsiTreeChangeEvent event) {
+  public final void childAdded(PsiTreeChangeEvent event) {
     PsiElement child = event.getNewChild();
     if (child instanceof PsiWhiteSpace) return; //optimization
     childrenChanged(event.getParent(), true);
   }
 
   @Override
-  public final void childReplaced(@Nonnull PsiTreeChangeEvent event) {
+  public final void childReplaced(PsiTreeChangeEvent event) {
     PsiElement oldChild = event.getOldChild();
     PsiElement newChild = event.getNewChild();
     if (oldChild instanceof PsiWhiteSpace && newChild instanceof PsiWhiteSpace) return; //optimization
@@ -68,13 +67,13 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
   }
 
   @Override
-  public final void childMoved(@Nonnull PsiTreeChangeEvent event) {
+  public final void childMoved(PsiTreeChangeEvent event) {
     childrenChanged(event.getOldParent(), false);
     childrenChanged(event.getNewParent(), true);
   }
 
   @Override
-  public final void childrenChanged(@Nonnull PsiTreeChangeEvent event) {
+  public final void childrenChanged(PsiTreeChangeEvent event) {
     childrenChanged(event.getParent(), true);
   }
 
@@ -115,7 +114,7 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
   }
 
   @Override
-  public void propertyChanged(@Nonnull PsiTreeChangeEvent event) {
+  public void propertyChanged(PsiTreeChangeEvent event) {
     String propertyName = event.getPropertyName();
     PsiElement element = event.getElement();
     if (propertyName.equals(PsiTreeChangeEvent.PROP_ROOTS)) {
@@ -147,7 +146,7 @@ public abstract class ProjectViewPsiTreeChangeListener extends PsiTreeChangeAdap
     if (updater != null && root != null) updater.addSubtreeToUpdate(root);
   }
 
-  protected boolean addSubtreeToUpdateByElement(@Nonnull PsiElement element) {
+  protected boolean addSubtreeToUpdateByElement(PsiElement element) {
     AbstractTreeUpdater updater = getUpdater();
     return updater != null && updater.addSubtreeToUpdateByElement(element);
   }

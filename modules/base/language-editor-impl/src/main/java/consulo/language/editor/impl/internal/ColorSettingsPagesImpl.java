@@ -23,7 +23,7 @@ import consulo.colorScheme.setting.ColorAndFontDescriptors;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.language.editor.internal.ColorSettingsPages;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

@@ -27,7 +27,6 @@ import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
 import consulo.language.extension.LanguageOneToOne;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * Defines boundaries between regions for which bidi layout should be performed independently. This is required e.g. to make sure that
@@ -39,19 +38,19 @@ public abstract class BidiRegionsSeparator implements LanguageExtension {
   private static final ExtensionPointCacheKey<BidiRegionsSeparator, ByLanguageValue<BidiRegionsSeparator>> KEY =
           ExtensionPointCacheKey.create("BidiRegionsSeparator", LanguageOneToOne.build(new BidiRegionsSeparator() {
             @Override
-            public boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
+            public boolean createBorderBetweenTokens(IElementType previousTokenType, IElementType tokenType) {
               return false;
             }
 
-            @Nonnull
+            
             @Override
             public Language getLanguage() {
               return Language.ANY;
             }
           }));
 
-  @Nonnull
-  public static BidiRegionsSeparator forLanguage(@Nonnull Language language) {
+  
+  public static BidiRegionsSeparator forLanguage(Language language) {
     return Application.get().getExtensionPoint(BidiRegionsSeparator.class).getOrBuildCache(KEY).requiredGet(language);
   }
 
@@ -62,5 +61,5 @@ public abstract class BidiRegionsSeparator implements LanguageExtension {
    * @see HighlighterIterator
    * @see EditorHighlighter
    */
-  public abstract boolean createBorderBetweenTokens(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType);
+  public abstract boolean createBorderBetweenTokens(IElementType previousTokenType, IElementType tokenType);
 }

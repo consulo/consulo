@@ -29,8 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,13 +42,13 @@ import java.util.function.Predicate;
  * @since 2025-09-19
  */
 public interface InjectedLanguageManagerInternal extends InjectedLanguageManager {
-    DocumentWindow getDocumentWindow(@Nonnull PsiElement element);
+    DocumentWindow getDocumentWindow(PsiElement element);
 
-    void processInjectableElements(@Nonnull Collection<? extends PsiElement> in, @Nonnull Predicate<? super PsiElement> processor);
+    void processInjectableElements(Collection<? extends PsiElement> in, Predicate<? super PsiElement> processor);
 
-    void injectLanguagesFromConcatenationAdapter(@Nonnull MultiHostRegistrar registrar,
-                                                 @Nonnull PsiElement context,
-                                                 @Nonnull Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc);
+    void injectLanguagesFromConcatenationAdapter(MultiHostRegistrar registrar,
+                                                 PsiElement context,
+                                                 Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc);
 
     int hostToInjectedUnescaped(DocumentWindow window, int hostOffset);
 
@@ -60,26 +59,26 @@ public interface InjectedLanguageManagerInternal extends InjectedLanguageManager
      * For example, you can inject file reference into string literal.
      * After that, it won't be highlighted as an injected fragment but still can be subject to e.g. "Goto declaraion" action.
      */
-    void injectReference(@Nonnull MultiHostRegistrar registrar,
-                         @Nonnull Language language,
-                         @Nonnull String prefix,
-                         @Nonnull String suffix,
-                         @Nonnull PsiLanguageInjectionHost host,
-                         @Nonnull TextRange rangeInsideHost);
+    void injectReference(MultiHostRegistrar registrar,
+                         Language language,
+                         String prefix,
+                         String suffix,
+                         PsiLanguageInjectionHost host,
+                         TextRange rangeInsideHost);
 
-    <T> void putInjectedFileUserData(@Nonnull PsiElement element, @Nonnull Language language, @Nonnull Key<T> key, @Nullable T value);
+    <T> void putInjectedFileUserData(PsiElement element, Language language, Key<T> key, @Nullable T value);
 
     // null means failed to reparse
-    BooleanSupplier reparse(@Nonnull PsiFile injectedPsiFile,
-                            @Nonnull DocumentWindow injectedDocument,
-                            @Nonnull PsiFile hostPsiFile,
-                            @Nonnull Document hostDocument,
-                            @Nonnull FileViewProvider hostViewProvider,
-                            @Nonnull ProgressIndicator indicator,
-                            @Nonnull ASTNode oldRoot,
-                            @Nonnull ASTNode newRoot);
+    BooleanSupplier reparse(PsiFile injectedPsiFile,
+                            DocumentWindow injectedDocument,
+                            PsiFile hostPsiFile,
+                            Document hostDocument,
+                            FileViewProvider hostViewProvider,
+                            ProgressIndicator indicator,
+                            ASTNode oldRoot,
+                            ASTNode newRoot);
 
     void disposeInvalidEditors();
 
-    List<InjectedHighlightTokenInfo> getHighlightTokens(@Nonnull PsiFile file);
+    List<InjectedHighlightTokenInfo> getHighlightTokens(PsiFile file);
 }

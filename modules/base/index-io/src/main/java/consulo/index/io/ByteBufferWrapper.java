@@ -15,7 +15,7 @@
  */
 package consulo.index.io;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;

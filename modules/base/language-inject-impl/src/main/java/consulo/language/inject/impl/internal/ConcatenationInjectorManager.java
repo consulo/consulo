@@ -23,7 +23,6 @@ import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
 
 import java.util.List;
 import java.util.function.Function;
@@ -32,8 +31,8 @@ import java.util.function.Function;
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
 public final class ConcatenationInjectorManager extends SimpleModificationTracker {
-    @Nonnull
-    public static ConcatenationInjectorManager getInstance(@Nonnull Project project) {
+    
+    public static ConcatenationInjectorManager getInstance(Project project) {
         return project.getInstance(ConcatenationInjectorManager.class);
     }
 
@@ -42,7 +41,7 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
     private final Project myProject;
 
     @Inject
-    public ConcatenationInjectorManager(@Nonnull Project project) {
+    public ConcatenationInjectorManager(Project project) {
         myProject = project;
 
         List<ConcatenationAwareInjector> extensionList = ConcatenationAwareInjector.EP_NAME.getExtensionList(project);
@@ -56,10 +55,10 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
     }
 
     private static InjectionResult doCompute(
-        @Nonnull PsiFile containingFile,
-        @Nonnull Project project,
-        @Nonnull PsiElement anchor,
-        @Nonnull PsiElement[] operands
+        PsiFile containingFile,
+        Project project,
+        PsiElement anchor,
+        PsiElement[] operands
     ) {
         PsiDocumentManager docManager = PsiDocumentManager.getInstance(project);
         InjectionRegistrarImpl registrar = new InjectionRegistrarImpl(project, containingFile, anchor, docManager);
@@ -81,9 +80,9 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
     private static final Key<Integer> NO_CONCAT_INJECTION_TIMESTAMP = Key.create("NO_CONCAT_INJECTION_TIMESTAMP");
 
     public void injectLanguagesFromConcatenationAdapter(
-        @Nonnull MultiHostRegistrar registrar,
-        @Nonnull PsiElement context,
-        @Nonnull Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc
+        MultiHostRegistrar registrar,
+        PsiElement context,
+        Function<PsiElement, Pair<PsiElement, PsiElement[]>> computeAnchorAndOperandsFunc
     ) {
         ConcatenationInjectorManager manager = getInstance(myProject);
         if (manager.myConcatenationInjectors.isEmpty()) {
@@ -142,12 +141,12 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
         }
     }
 
-    private void registerConcatenationInjector(@Nonnull ConcatenationAwareInjector injector) {
+    private void registerConcatenationInjector(ConcatenationAwareInjector injector) {
         myConcatenationInjectors.add(injector);
         concatenationInjectorsChanged();
     }
 
-    private boolean unregisterConcatenationInjector(@Nonnull ConcatenationAwareInjector injector) {
+    private boolean unregisterConcatenationInjector(ConcatenationAwareInjector injector) {
         boolean removed = myConcatenationInjectors.remove(injector);
         concatenationInjectorsChanged();
         return removed;

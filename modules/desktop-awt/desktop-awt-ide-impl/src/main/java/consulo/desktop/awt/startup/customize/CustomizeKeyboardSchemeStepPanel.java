@@ -22,14 +22,12 @@ import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import jakarta.annotation.Nonnull;
-import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-@NonNls
+
 public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardStep {
     private boolean myInitial = true;
 
@@ -79,7 +77,7 @@ public class CustomizeKeyboardSchemeStepPanel extends AbstractCustomizeWizardSte
         myInitial = false;
     }
 
-    private void applyKeymap(@Nonnull String keymapName) {
+    private void applyKeymap(String keymapName) {
         if (myInitial) {
             return;
         }

@@ -19,19 +19,18 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.TopicAPI;
 import consulo.bookmark.Bookmark;
 
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
  */
 @TopicAPI(ComponentScope.PROJECT)
 public interface BookmarksListener {
-  default void bookmarkAdded(@Nonnull Bookmark b) {
+  default void bookmarkAdded(Bookmark b) {
   }
 
-  default void bookmarkRemoved(@Nonnull Bookmark b) {
+  default void bookmarkRemoved(Bookmark b) {
   }
 
-  default void bookmarkChanged(@Nonnull Bookmark b) {
+  default void bookmarkChanged(Bookmark b) {
   }
 }

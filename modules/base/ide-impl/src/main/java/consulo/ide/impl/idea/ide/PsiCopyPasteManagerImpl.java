@@ -35,8 +35,7 @@ import consulo.util.lang.StringUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -62,7 +61,7 @@ public class PsiCopyPasteManagerImpl implements PsiCopyPasteManager {
     myCopyPasteManager = (CopyPasteManagerEx) copyPasteManager;
     application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
-      public void projectClosing(@Nonnull Project project) {
+      public void projectClosing(Project project) {
         if (myRecentData != null && myRecentData.getProject() == project) {
           myRecentData = null;
         }

@@ -1,7 +1,6 @@
 package consulo.externalSystem.service.project;
 
 import consulo.externalSystem.model.ProjectSystemId;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
@@ -11,16 +10,16 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
 
   private static final long serialVersionUID = 1L;
 
-  @Nonnull
+  
   private String myExternalName;
-  @Nonnull
+  
   private String myInternalName;
 
-  public AbstractNamedData(@Nonnull ProjectSystemId owner, @Nonnull String externalName) {
+  public AbstractNamedData(ProjectSystemId owner, String externalName) {
     this(owner, externalName, externalName);
   }
 
-  public AbstractNamedData(@Nonnull ProjectSystemId owner, @Nonnull String externalName, @Nonnull String internalName) {
+  public AbstractNamedData(ProjectSystemId owner, String externalName, String internalName) {
     super(owner);
     myExternalName = externalName;
     myInternalName = internalName;
@@ -29,7 +28,7 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
   /**
    * please use {@link #getExternalName()} or {@link #getInternalName()} instead
    */
-  @Nonnull
+  
   @Deprecated
   @Override
   public String getName() {
@@ -41,29 +40,29 @@ public abstract class AbstractNamedData extends AbstractExternalEntityData imple
    */
   @Deprecated
   @Override
-  public void setName(@Nonnull String name) {
+  public void setName(String name) {
     setExternalName(name);
   }
 
-  @Nonnull
+  
   @Override
   public String getExternalName() {
     return myExternalName;
   }
 
   @Override
-  public void setExternalName(@Nonnull String name) {
+  public void setExternalName(String name) {
     myExternalName = name;
   }
 
-  @Nonnull
+  
   @Override
   public String getInternalName() {
     return myInternalName;
   }
 
   @Override
-  public void setInternalName(@Nonnull String name) {
+  public void setInternalName(String name) {
     myInternalName = name;
   }
 

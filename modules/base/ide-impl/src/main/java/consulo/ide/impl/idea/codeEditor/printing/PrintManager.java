@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.SelectionModel;
@@ -41,7 +40,6 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.print.*;
@@ -171,7 +169,7 @@ class PrintManager {
         PerformInBackgroundOption.ALWAYS_BACKGROUND
       ) {
         @Override
-        public void run(@Nonnull ProgressIndicator indicator) {
+        public void run(ProgressIndicator indicator) {
           try {
             ProgressIndicator progress = ProgressManager.getInstance().getProgressIndicator();
             if (painter0 instanceof MultiFilePainter multiFilePainter) {
@@ -241,7 +239,7 @@ class PrintManager {
   }
 
   public static TextPainter initTextPainter(PsiFile psiFile, Editor editor) {
-    return Application.get().runReadAction((Computable<TextPainter>) () -> doInitTextPainter(psiFile, editor));
+    return ReadAction.compute(() -> doInitTextPainter(psiFile, editor));
   }
 
   private static TextPainter doInitTextPainter(PsiFile psiFile, Editor editor) {
@@ -253,7 +251,7 @@ class PrintManager {
     return new TextPainter(doc, highlighter, fileName, psiFile, psiFile.getFileType(), editor);
   }
 
-  public static TextPainter initTextPainter(@Nonnull DocumentEx doc, Project project) {
+  public static TextPainter initTextPainter(DocumentEx doc, Project project) {
     TextPainter[] res = new TextPainter[1];
     Application.get().runReadAction(() -> {
       res[0] = doInitTextPainter(doc, project);
@@ -261,7 +259,7 @@ class PrintManager {
     return res[0];
   }
 
-  private static TextPainter doInitTextPainter(@Nonnull DocumentEx doc, Project project) {
+  private static TextPainter doInitTextPainter(DocumentEx doc, Project project) {
     EditorHighlighter highlighter = HighlighterFactory.createHighlighter(project, "unknown");
     highlighter.setText(doc.getCharsSequence());
     return new TextPainter(doc, highlighter, "unknown", project, PlainTextFileType.INSTANCE, null);

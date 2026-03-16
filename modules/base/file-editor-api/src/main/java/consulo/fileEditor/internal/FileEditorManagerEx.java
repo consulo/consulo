@@ -18,10 +18,9 @@ package consulo.fileEditor.internal;
 import consulo.component.util.BusyObject;
 import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
 
 public abstract class FileEditorManagerEx extends FileEditorManager implements BusyObject {
-    public static FileEditorManagerEx getInstanceEx(@Nonnull Project project) {
+    public static FileEditorManagerEx getInstanceEx(Project project) {
         return (FileEditorManagerEx) getInstance(project);
     }
 }

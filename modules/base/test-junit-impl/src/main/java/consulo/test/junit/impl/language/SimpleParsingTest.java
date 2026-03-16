@@ -35,8 +35,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.internal.LoadTextUtil;
 import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.TestInfo;
@@ -58,33 +57,33 @@ public abstract class SimpleParsingTest<TestContext> {
     private final String myDataPath;
     private final String myExtension;
 
-    public SimpleParsingTest(@Nonnull String dataPath, @Nonnull String ext) {
+    public SimpleParsingTest(String dataPath, String ext) {
         myDataPath = dataPath;
         myExtension = ext;
     }
 
-    @Nonnull
-    protected abstract LanguageFileType getFileType(@Nonnull Context context, @Nullable TestContext testContext);
+    
+    protected abstract LanguageFileType getFileType(Context context, @Nullable TestContext testContext);
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected PsiFile createFile(@Nonnull Context context,
+    protected PsiFile createFile(Context context,
                                  @Nullable TestContext testContext,
-                                 @Nonnull String fileName,
-                                 @Nonnull FileType fileType,
-                                 @Nonnull String text) {
+                                 String fileName,
+                                 FileType fileType,
+                                 String text) {
         LanguageVersion languageVersion = resolveLanguageVersion(context, testContext, fileType);
 
         return context.psiFileFactory().createFileFromText(fileName, languageVersion.getLanguage(), languageVersion, text);
     }
 
-    protected void doTest(@Nonnull Context context, @Nullable TestContext testContext) throws Exception {
+    protected void doTest(Context context, @Nullable TestContext testContext) throws Exception {
         //noinspection RequiredXAction
         doTestImpl(context, testContext);
     }
 
-    @Nonnull
-    protected String getFileName(@Nonnull Context context, @Nullable TestContext testContext) {
+    
+    protected String getFileName(Context context, @Nullable TestContext testContext) {
         TestInfo testInfo = context.testInfo();
 
         String testName = testInfo.getTestMethod().get().getName();
@@ -93,15 +92,15 @@ public abstract class SimpleParsingTest<TestContext> {
     }
 
     @RequiredReadAction
-    protected final void doTestImpl(@Nonnull Context context, @Nullable TestContext testContext) throws Exception {
+    protected final void doTestImpl(Context context, @Nullable TestContext testContext) throws Exception {
         PsiFile file = loadPsiFile(context, testContext);
 
         checkResult(context, testContext, file);
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected PsiFile loadPsiFile(@Nonnull Context context, @Nullable TestContext testContext) throws  Exception {
+    protected PsiFile loadPsiFile(Context context, @Nullable TestContext testContext) throws  Exception {
         String fileName = getFileName(context, testContext);
 
         String sourceText = loadText(context, testContext, myExtension);
@@ -128,7 +127,7 @@ public abstract class SimpleParsingTest<TestContext> {
         return file;
     }
 
-    protected void checkResult(@Nonnull Context context, @Nullable TestContext testContext, PsiFile file) throws Exception {
+    protected void checkResult(Context context, @Nullable TestContext testContext, PsiFile file) throws Exception {
         doCheckResult(context, testContext, file, checkAllPsiRoots(), skipSpaces(), includeRanges());
     }
 
@@ -156,7 +155,7 @@ public abstract class SimpleParsingTest<TestContext> {
         }
     }
 
-    @Nonnull
+    
     protected String loadText(Context context, TestContext testContext, String extension) throws Exception {
         TestInfo testInfo = context.testInfo();
         
@@ -183,11 +182,11 @@ public abstract class SimpleParsingTest<TestContext> {
         });
     }
 
-    @Nonnull
+    
     @RequiredReadAction
-    protected LanguageVersion resolveLanguageVersion(@Nonnull Context context,
+    protected LanguageVersion resolveLanguageVersion(Context context,
                                                      @Nullable TestContext testContext,
-                                                     @Nonnull FileType fileType) {
+                                                     FileType fileType) {
         if (fileType instanceof LanguageFileType) {
             return LanguageVersionUtil.findDefaultVersion(((LanguageFileType) fileType).getLanguage());
         }

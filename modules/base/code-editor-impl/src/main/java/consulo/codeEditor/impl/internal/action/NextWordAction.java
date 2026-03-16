@@ -22,7 +22,6 @@ import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.localize.CodeEditorLocalize;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author max
@@ -36,7 +35,7 @@ public class NextWordAction extends TextComponentEditorAction {
         }
 
         @Override
-        public void execute(@Nonnull Editor editor, DataContext dataContext) {
+        public void execute(Editor editor, DataContext dataContext) {
             EditorActionUtil.moveCaretToNextWord(editor, false, editor.getSettings().isCamelWords());
         }
     }

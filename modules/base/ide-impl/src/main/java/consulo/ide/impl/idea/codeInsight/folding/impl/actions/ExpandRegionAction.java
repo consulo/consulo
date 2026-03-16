@@ -23,8 +23,7 @@ import consulo.codeEditor.internal.FoldingUtil;
 import consulo.dataContext.DataContext;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ActionImpl(id = "ExpandRegion")
 public class ExpandRegionAction extends EditorAction {
@@ -34,7 +33,7 @@ public class ExpandRegionAction extends EditorAction {
             ActionLocalize.actionExpandregionDescription(),
             new BaseFoldingHandler() {
                 @Override
-                public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
+                public void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
                     expandRegionAtCaret(editor.getProject(), editor);
                 }
             }

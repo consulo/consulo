@@ -31,8 +31,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiParserFacade;
 import consulo.language.util.CharTable;
 import consulo.util.lang.Pair;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -50,12 +49,12 @@ public class TemplateCodeStyleHelper {
    * @return target white space element for the given offset within the given file (if any); {@code null} otherwise
    */
   @Nullable
-  public static PsiElement findWhiteSpaceNode(@Nonnull PsiFile file, int offset) {
+  public static PsiElement findWhiteSpaceNode(PsiFile file, int offset) {
     return doFindWhiteSpaceNode(file, offset).first;
   }
 
-  @Nonnull
-  private static Pair<PsiElement, CharTable> doFindWhiteSpaceNode(@Nonnull PsiFile file, int offset) {
+  
+  private static Pair<PsiElement, CharTable> doFindWhiteSpaceNode(PsiFile file, int offset) {
     ASTNode astNode = SourceTreeToPsiMap.psiElementToTree(file);
     if (!(astNode instanceof FileElement)) {
       return new Pair<>(null, null);
@@ -107,7 +106,7 @@ public class TemplateCodeStyleHelper {
    */
   @Nullable
   @RequiredReadAction
-  public static TextRange insertNewLineIndentMarker(@Nonnull PsiFile file, @Nonnull Document document, int offset) {
+  public static TextRange insertNewLineIndentMarker(PsiFile file, Document document, int offset) {
     CharSequence text = document.getImmutableCharSequence();
     if (offset <= 0 || offset >= text.length() || !isWhiteSpaceSymbol(text.charAt(offset))) {
       return null;
@@ -137,9 +136,9 @@ public class TemplateCodeStyleHelper {
     return c == ' ' || c == '\t' || c == '\n';
   }
 
-  @Nonnull
+  
   @RequiredReadAction
-  private static String createDummy(@Nonnull PsiFile file) {
+  private static String createDummy(PsiFile file) {
     Language language = file.getLanguage();
     PsiComment comment = null;
     try {

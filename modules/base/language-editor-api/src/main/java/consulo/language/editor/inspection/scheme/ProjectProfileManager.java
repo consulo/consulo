@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author anna

@@ -20,7 +20,6 @@ import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.FontInfo;
 import consulo.ui.ex.SimpleTextAttributes;
 
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +29,7 @@ import java.awt.*;
  */
 public class FontInfoRenderer extends ColoredListCellRenderer<Object> {
   @Override
-  protected void customizeCellRenderer(@Nonnull JList<?> list, Object value, int index, boolean selected, boolean focused) {
+  protected void customizeCellRenderer(JList<?> list, Object value, int index, boolean selected, boolean focused) {
     Font font = list.getFont();
     String text = value == null ? "" : value.toString();
     append(text);
@@ -48,7 +47,7 @@ public class FontInfoRenderer extends ColoredListCellRenderer<Object> {
   }
 
   @Override
-  protected void applyAdditionalHints(@Nonnull Graphics2D g) {
+  protected void applyAdditionalHints(Graphics2D g) {
     g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, DesktopAntialiasingTypeUtil.getKeyForCurrentScope(isEditorFont()));
   }
 

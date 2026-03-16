@@ -31,7 +31,6 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.usage.ConfigurableUsageTarget;
 import consulo.usage.UsageView;
-import jakarta.annotation.Nonnull;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -44,13 +43,13 @@ import java.util.List;
  */
 public class ShowRecentFindUsagesAction extends AnAction {
   @Override
-  public void update(@Nonnull AnActionEvent e) {
+  public void update(AnActionEvent e) {
       e.getPresentation().setEnabled(e.hasData(UsageView.USAGE_VIEW_KEY) && e.hasData(Project.KEY));
   }
 
   @Override
   @RequiredUIAccess
-  public void actionPerformed(@Nonnull AnActionEvent e) {
+  public void actionPerformed(AnActionEvent e) {
     UsageView usageView = e.getRequiredData(UsageView.USAGE_VIEW_KEY);
     Project project = e.getRequiredData(Project.KEY);
     final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(project)).getFindUsagesManager();
@@ -74,7 +73,7 @@ public class ShowRecentFindUsagesAction extends AnAction {
         }
 
         @Override
-        @Nonnull
+        
         public String getTextFor(ConfigurableUsageTarget data) {
           return data == null ? FindLocalize.recentFindUsagesActionNothing().get() : data.getLongDescriptiveName();
         }

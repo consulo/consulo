@@ -18,8 +18,7 @@ package consulo.codeEditor;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a specific caret instance in the editor.
@@ -33,13 +32,13 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * Returns an instance of Editor, current caret belongs to.
    */
-  @Nonnull
+  
   Editor getEditor();
 
   /**
    * Returns an instance of CaretModel, current caret is associated with.
    */
-  @Nonnull
+  
   CaretModel getCaretModel();
 
   /**
@@ -70,14 +69,14 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @param pos the position to move to.
    */
-  void moveToLogicalPosition(@Nonnull LogicalPosition pos);
+  void moveToLogicalPosition(LogicalPosition pos);
 
   /**
    * Moves the caret to the specified visual position.
    *
    * @param pos the position to move to.
    */
-  void moveToVisualPosition(@Nonnull VisualPosition pos);
+  void moveToVisualPosition(VisualPosition pos);
 
   /**
    * Short hand for calling {@link #moveToOffset(int, boolean)} with <code>'false'</code> as a second argument.
@@ -114,7 +113,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the caret position.
    */
-  @Nonnull
+  
   LogicalPosition getLogicalPosition();
 
   /**
@@ -122,7 +121,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @return the caret position.
    */
-  @Nonnull
+  
   VisualPosition getVisualPosition();
 
   /**
@@ -155,7 +154,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position of selected text start if any
    */
-  @Nonnull
+  
   VisualPosition getSelectionStartPosition();
 
   /**
@@ -169,7 +168,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position of selected text end if any;
    */
-  @Nonnull
+  
   VisualPosition getSelectionEndPosition();
 
   /**
@@ -193,7 +192,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
   /**
    * @return    object that encapsulates information about visual position from which the user started to extend the selection if any
    */
-  @Nonnull
+  
   VisualPosition getLeadSelectionPosition();
 
   /**
@@ -254,7 +253,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @param startOffset     start selection offset
    * @param endOffset       end selection offset
    */
-  void setSelection(@jakarta.annotation.Nullable VisualPosition startPosition, int startOffset, @jakarta.annotation.Nullable VisualPosition endPosition, int endOffset);
+  void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset);
 
   /**
    * Selects target range based on its visual boundaries.
@@ -271,7 +270,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    * @param endOffset       end selection offset
    * @param updateSystemSelection whether system selection should be updated (might not have any effect if current editor doesn't support such a feature)
    */
-  void setSelection(@jakarta.annotation.Nullable VisualPosition startPosition, int startOffset, @jakarta.annotation.Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection);
+  void setSelection(@Nullable VisualPosition startPosition, int startOffset, @Nullable VisualPosition endPosition, int endOffset, boolean updateSystemSelection);
 
   /**
    * Removes the selection in the editor.
@@ -324,7 +323,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @see #setVisualAttributes(CaretVisualAttributes)
    */
-  @Nonnull
+  
   CaretVisualAttributes getVisualAttributes();
 
   /**
@@ -332,7 +331,7 @@ public interface Caret extends UserDataHolderEx, Disposable {
    *
    * @see #getVisualAttributes()
    */
-  void setVisualAttributes(@Nonnull CaretVisualAttributes attributes);
+  void setVisualAttributes(CaretVisualAttributes attributes);
 
   /**
    * @return information on whether current selection's direction in known

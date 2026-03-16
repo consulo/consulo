@@ -25,12 +25,11 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DirectoryIndex {
-  @Nonnull
+  
   public static DirectoryIndex getInstance(Project project) {
     assert !project.isDefault() : "Must not call DirectoryIndex for default project";
     return project.getInstance(DirectoryIndex.class);
@@ -43,21 +42,21 @@ public abstract class DirectoryIndex {
    * @deprecated use {@link #getInfoForFile(VirtualFile)} instead
    */
   @Deprecated
-  public abstract DirectoryInfo getInfoForDirectory(@Nonnull VirtualFile dir);
+  public abstract DirectoryInfo getInfoForDirectory(VirtualFile dir);
 
-  @Nonnull
-  public abstract DirectoryInfo getInfoForFile(@Nonnull VirtualFile file);
-
-  @Nullable
-  public abstract ContentFolderTypeProvider getContentFolderType(@Nonnull VirtualFile file, @Nonnull DirectoryInfo info);
-
-  @Nonnull
-  public abstract Query<VirtualFile> getDirectoriesByPackageName(@Nonnull String packageName, boolean includeLibrarySources);
+  
+  public abstract DirectoryInfo getInfoForFile(VirtualFile file);
 
   @Nullable
-  public abstract String getPackageName(@Nonnull VirtualFile dir);
+  public abstract ContentFolderTypeProvider getContentFolderType(VirtualFile file, DirectoryInfo info);
 
-  @Nonnull
+  
+  public abstract Query<VirtualFile> getDirectoriesByPackageName(String packageName, boolean includeLibrarySources);
+
+  @Nullable
+  public abstract String getPackageName(VirtualFile dir);
+
+  
   @RequiredReadAction
-  public abstract OrderEntry[] getOrderEntries(@Nonnull DirectoryInfo info);
+  public abstract OrderEntry[] getOrderEntries(DirectoryInfo info);
 }

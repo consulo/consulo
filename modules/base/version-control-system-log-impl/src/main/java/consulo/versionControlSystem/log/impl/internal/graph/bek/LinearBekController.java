@@ -21,19 +21,18 @@ import consulo.versionControlSystem.log.graph.*;
 import consulo.versionControlSystem.log.graph.action.GraphAction;
 import consulo.versionControlSystem.log.impl.internal.graph.CascadeController;
 import consulo.versionControlSystem.log.impl.internal.graph.GraphChangesUtil;
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public class LinearBekController extends CascadeController {
   private static final Logger LOG = Logger.getInstance(LinearBekController.class);
-  @Nonnull
+  
   private final LinearBekGraph myCompiledGraph;
   private final LinearBekGraphBuilder myLinearBekGraphBuilder;
   private final BekGraphLayout myBekGraphLayout;
 
-  public LinearBekController(@Nonnull BekBaseController controller, @Nonnull PermanentGraphInfo permanentGraphInfo) {
+  public LinearBekController(BekBaseController controller, PermanentGraphInfo permanentGraphInfo) {
     super(controller, permanentGraphInfo);
     myCompiledGraph = new LinearBekGraph(getDelegateGraph());
     myBekGraphLayout = new BekGraphLayout(permanentGraphInfo.getPermanentGraphLayout(), controller.getBekIntMap());
@@ -44,15 +43,15 @@ public class LinearBekController extends CascadeController {
     LOG.info("Linear bek took " + (System.currentTimeMillis() - start) / 1000.0 + " sec");
   }
 
-  @Nonnull
+  
   @Override
-  protected LinearGraphAnswer delegateGraphChanged(@Nonnull LinearGraphAnswer delegateAnswer) {
+  protected LinearGraphAnswer delegateGraphChanged(LinearGraphAnswer delegateAnswer) {
     return delegateAnswer;
   }
 
   @Nullable
   @Override
-  protected LinearGraphAnswer performAction(@Nonnull LinearGraphAction action) {
+  protected LinearGraphAnswer performAction(LinearGraphAction action) {
     if (action.getAffectedElement() != null) {
       if (action.getType() == GraphAction.Type.MOUSE_CLICK) {
         GraphElement graphElement = action.getAffectedElement().getGraphElement();
@@ -92,7 +91,7 @@ public class LinearBekController extends CascadeController {
     return null;
   }
 
-  @Nonnull
+  
   private List<GraphEdge> getAllAdjacentDottedEdges(GraphNode graphElement) {
     return ContainerUtil.filter(
       myCompiledGraph.getAdjacentEdges(graphElement.getNodeIndex(), EdgeFilter.ALL),
@@ -100,7 +99,7 @@ public class LinearBekController extends CascadeController {
     );
   }
 
-  @Nonnull
+  
   private LinearGraphAnswer expandAll() {
     return new LinearGraphAnswer(GraphChangesUtil.SOME_CHANGES) {
       @Nullable
@@ -114,7 +113,7 @@ public class LinearBekController extends CascadeController {
     };
   }
 
-  @Nonnull
+  
   private LinearGraphAnswer collapseAll() {
     final LinearBekGraph.WorkingLinearBekGraph workingGraph = new LinearBekGraph.WorkingLinearBekGraph(myCompiledGraph);
     new LinearBekGraphBuilder(workingGraph, myBekGraphLayout).collapseAll();
@@ -170,7 +169,7 @@ public class LinearBekController extends CascadeController {
     return toCollapse;
   }
 
-  @Nonnull
+  
   private Set<LinearBekGraphBuilder.MergeFragment> collectFragmentsToCollapse(GraphNode node) {
     Set<LinearBekGraphBuilder.MergeFragment> result = new HashSet<>();
 
@@ -203,12 +202,12 @@ public class LinearBekController extends CascadeController {
     return null;
   }
 
-  @Nonnull
+  
   private LinearGraph getDelegateGraph() {
     return getDelegateController().getCompiledGraph();
   }
 
-  @Nonnull
+  
   @Override
   public LinearGraph getCompiledGraph() {
     return myCompiledGraph;
@@ -234,7 +233,7 @@ public class LinearBekController extends CascadeController {
       return myBekIntMap.getBekIndex(usualIndex);
     }
 
-    @Nonnull
+    
     @Override
     public List<Integer> getHeadNodeIndex() {
       List<Integer> bekIndexes = new ArrayList<>();

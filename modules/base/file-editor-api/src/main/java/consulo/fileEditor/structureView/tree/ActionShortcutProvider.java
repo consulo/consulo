@@ -15,10 +15,9 @@
  */
 package consulo.fileEditor.structureView.tree;
 
-import jakarta.annotation.Nonnull;
 
 // used in the implementation of FileStructureNodeProvider to avoid dependency on KeyMapManager in FileStructureNodeProvider.getShortcut()
 public interface ActionShortcutProvider {
-  @Nonnull
+  
   String getActionIdForShortcut();
 }

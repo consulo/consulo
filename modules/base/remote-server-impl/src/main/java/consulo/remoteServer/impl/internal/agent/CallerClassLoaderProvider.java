@@ -1,5 +1,7 @@
 package consulo.remoteServer.impl.internal.agent;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author michael.golubev
  */
@@ -7,7 +9,7 @@ public class CallerClassLoaderProvider {
 
   private ClassLoader myCallerClassLoader;
 
-  public CallerClassLoaderProvider(@jakarta.annotation.Nullable ClassLoader callerClassLoader) {
+  public CallerClassLoaderProvider(@Nullable ClassLoader callerClassLoader) {
     myCallerClassLoader = callerClassLoader;
   }
 

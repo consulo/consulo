@@ -16,27 +16,26 @@
 package consulo.colorScheme.ui;
 
 import consulo.colorScheme.EditorColorsScheme;
-import jakarta.annotation.Nonnull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.util.EventListener;
 
 public interface ColorDescriptionPanel {
-    @Nonnull
+    
     JComponent getPanel();
 
     void resetDefault();
 
-    void reset(@Nonnull EditorSchemeAttributeDescriptor description);
+    void reset(EditorSchemeAttributeDescriptor description);
 
-    void apply(@Nonnull EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme);
+    void apply(EditorSchemeAttributeDescriptor descriptor, EditorColorsScheme scheme);
 
-    void addListener(@Nonnull Listener listener);
+    void addListener(Listener listener);
 
     interface Listener extends EventListener {
         void onSettingsChanged();
 
-        void onHyperLinkClicked(@Nonnull HyperlinkEvent e);
+        void onHyperLinkClicked(HyperlinkEvent e);
     }
 }

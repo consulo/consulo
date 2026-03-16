@@ -31,7 +31,6 @@ import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +45,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         this.runAnnotators = runAnnotators;
     }
 
-    @Nonnull
+    
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.ERROR;
@@ -55,12 +54,12 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
     @RequiredReadAction
     @Override
     public void checkFile(
-        @Nonnull PsiFile originalFile,
-        @Nonnull InspectionManager manager,
-        @Nonnull ProblemsHolder problemsHolder,
-        @Nonnull GlobalInspectionContext globalContext,
-        @Nonnull ProblemDescriptionsProcessor problemDescriptionsProcessor,
-        @Nonnull Object state
+        PsiFile originalFile,
+        InspectionManager manager,
+        ProblemsHolder problemsHolder,
+        GlobalInspectionContext globalContext,
+        ProblemDescriptionsProcessor problemDescriptionsProcessor,
+        Object state
     ) {
         for (Pair<PsiFile, HighlightInfo> pair : runAnnotatorsInGeneralHighlighting(originalFile, highlightErrorElements, runAnnotators)) {
             PsiFile file = pair.first;
@@ -88,9 +87,9 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         }
     }
 
-    @Nonnull
+    
     public static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlighting(
-        @Nonnull PsiFile file,
+        PsiFile file,
         boolean highlightErrorElements,
         boolean runAnnotators
     ) {
@@ -105,7 +104,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         return visitor.result;
     }
 
-    @Nonnull
+    
     @Override
     public LocalizeValue getGroupDisplayName() {
         return getGeneralGroupName();
@@ -122,7 +121,7 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         }
 
         @Override
-        public void visitFile(@Nonnull PsiFile file) {
+        public void visitFile(PsiFile file) {
             VirtualFile virtualFile = file.getVirtualFile();
             if (virtualFile == null) {
                 return;
@@ -132,9 +131,9 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
         }
     }
 
-    @Nonnull
+    
     private static List<Pair<PsiFile, HighlightInfo>> runAnnotatorsInGeneralHighlightingPass(
-        @Nonnull PsiFile file,
+        PsiFile file,
         boolean highlightErrorElements,
         boolean runAnnotators
     ) {
@@ -153,11 +152,11 @@ public abstract class DefaultHighlightVisitorBasedInspection extends GlobalSimpl
             gPass.setHighlightVisitorProducer(() -> List.of(new HighlightVisitorFactory() {
 
                 @Override
-                public boolean suitableForFile(@Nonnull PsiFile file) {
+                public boolean suitableForFile(PsiFile file) {
                     return true;
                 }
 
-                @Nonnull
+                
                 @Override
                 public HighlightVisitor createVisitor() {
                     gPass.incVisitorUsageCount(1);

@@ -16,7 +16,6 @@
 package consulo.web.internal.ui.image;
 
 import consulo.ui.impl.image.ImageReference;
-import jakarta.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -37,7 +36,7 @@ public class WebImageReference implements ImageReference {
     return myIsSVG;
   }
 
-  @Nonnull
+  
   public byte[] getData() {
     if (myX2Data != null) {
       return myX2Data;

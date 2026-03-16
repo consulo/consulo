@@ -19,7 +19,7 @@ import consulo.document.util.TextRange;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class BlockRangesMap {
   private final LeafBlockWrapper myLastBlock;

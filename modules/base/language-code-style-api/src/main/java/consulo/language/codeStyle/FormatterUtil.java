@@ -23,8 +23,7 @@ import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
 import consulo.undoRedo.CommandProcessor;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public class FormatterUtil {
         return type == TokenType.WHITE_SPACE || (type != TokenType.ERROR_ELEMENT && node.getTextLength() == 0);
     }
 
-    public static boolean isOneOf(@Nullable ASTNode node, @Nonnull IElementType... types) {
+    public static boolean isOneOf(@Nullable ASTNode node, IElementType... types) {
         if (node == null) {
             return false;
         }
@@ -60,17 +59,17 @@ public class FormatterUtil {
     }
 
     @Nullable
-    public static ASTNode getPrevious(@Nullable ASTNode node, @Nonnull IElementType... typesToIgnore) {
+    public static ASTNode getPrevious(@Nullable ASTNode node, IElementType... typesToIgnore) {
         return getNextOrPrevious(node, false, typesToIgnore);
     }
 
     @Nullable
-    public static ASTNode getNext(@Nullable ASTNode node, @Nonnull IElementType... typesToIgnore) {
+    public static ASTNode getNext(@Nullable ASTNode node, IElementType... typesToIgnore) {
         return getNextOrPrevious(node, true, typesToIgnore);
     }
 
     @Nullable
-    private static ASTNode getNextOrPrevious(@Nullable ASTNode node, boolean isNext, @Nonnull IElementType... typesToIgnore) {
+    private static ASTNode getNextOrPrevious(@Nullable ASTNode node, boolean isNext, IElementType... typesToIgnore) {
         if (node == null) {
             return null;
         }
@@ -96,7 +95,7 @@ public class FormatterUtil {
     }
 
     @Nullable
-    public static ASTNode getPreviousLeaf(@Nullable ASTNode node, @Nonnull IElementType... typesToIgnore) {
+    public static ASTNode getPreviousLeaf(@Nullable ASTNode node, IElementType... typesToIgnore) {
         ASTNode prev = getPrevious(node, typesToIgnore);
         if (prev == null) {
             return null;
@@ -230,9 +229,9 @@ public class FormatterUtil {
      * @param whiteSpaceRange   target range which text should be replaced by the given one
      */
     public static void replaceInnerWhiteSpace(
-        @Nonnull String newWhiteSpaceText,
-        @Nonnull ASTNode holder,
-        @Nonnull TextRange whiteSpaceRange
+        String newWhiteSpaceText,
+        ASTNode holder,
+        TextRange whiteSpaceRange
     ) {
         CodeStyleInternalHelper.getInstance().replaceInnerWhiteSpace(newWhiteSpaceText, holder, whiteSpaceRange);
     }
