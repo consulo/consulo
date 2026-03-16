@@ -1,33 +1,21 @@
-/*
- * Copyright 2000-2014 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 /**
  * Concurrent weak key:K -> strong value:V map.
- * Null keys are allowed
+ * Null keys are NOT allowed
  * Null values are NOT allowed
+ * To create, use {@link Maps#newConcurrentWeakHashMap()}
  */
 public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V> {
-  private static class WeakKey<K> extends WeakReference<K> implements KeyReference<K> {
+  private static final class WeakKey<K> extends WeakReference<K> implements KeyReference<K> {
     private final int myHash; /* Hashcode of key, stored here since the key may be tossed by the GC */
     private final HashingStrategy<? super K> myStrategy;
 
@@ -38,25 +26,26 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof KeyReference)) return false;
-      K t = get();
-      //noinspection unchecked
-      K u = ((KeyReference<K>)o).get();
-      if (t == null || u == null) return false;
-      return t == u || myStrategy.equals(t, u);
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof KeyReference)) {
+        return false;
+      }
+      K key = get();
+      @SuppressWarnings("unchecked")
+      K otherKey = ((KeyReference<K>) o).get();
+      if (key == null || otherKey == null) {
+        return false;
+      }
+      return key == otherKey || myStrategy.equals(key, otherKey);
     }
 
     @Override
     public int hashCode() {
       return myHash;
     }
-  }
-
-  @Override
-  protected KeyReference<K> createKeyReference(K key, HashingStrategy<? super K> hashingStrategy) {
-    return new WeakKey<>(key, hashingStrategy.hashCode(key), hashingStrategy, myReferenceQueue);
   }
 
   public ConcurrentWeakHashMap(float loadFactor) {
@@ -69,5 +58,10 @@ public final class ConcurrentWeakHashMap<K, V> extends ConcurrentRefHashMap<K, V
 
   public ConcurrentWeakHashMap(HashingStrategy<? super K> hashingStrategy) {
     super(hashingStrategy);
+  }
+
+  @Override
+  protected KeyReference<K> createKeyReference(K key, HashingStrategy<? super K> hashingStrategy) {
+    return new WeakKey<>(key, hashingStrategy.hashCode(key), hashingStrategy, myReferenceQueue);
   }
 }

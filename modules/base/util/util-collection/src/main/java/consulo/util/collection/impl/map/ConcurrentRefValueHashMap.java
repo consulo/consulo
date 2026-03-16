@@ -1,18 +1,4 @@
-/*
- * Copyright 2000-2015 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.util.collection.impl.map;
 
 import consulo.util.lang.StringUtil;
@@ -20,6 +6,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.ReferenceQueue;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -28,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
  * Null values are NOT allowed
  */
 public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K, V> {
-  private final ConcurrentMap<K, ValueReference<K, V>> myMap = new java.util.concurrent.ConcurrentHashMap<>();
+  private final ConcurrentMap<K, ValueReference<K, V>> myMap = new ConcurrentHashMap<>();
   protected final ReferenceQueue<V> myQueue = new ReferenceQueue<>();
 
   interface ValueReference<K, V> {
@@ -38,12 +25,15 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   }
 
   // returns true if some refs were tossed
-  boolean processQueue() {
+  public boolean processQueue() {
     boolean processed = false;
 
     while (true) {
-      @SuppressWarnings("unchecked") ValueReference<K, V> ref = (ValueReference<K, V>)myQueue.poll();
-      if (ref == null) break;
+      @SuppressWarnings("unchecked")
+      ValueReference<K, V> ref = (ValueReference<K, V>)myQueue.poll();
+      if (ref == null) {
+        break;
+      }
       myMap.remove(ref.getKey(), ref);
       processed = true;
     }
@@ -54,23 +44,29 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
   @Override
   public V get(Object key) {
     ValueReference<K, V> ref = myMap.get(key);
-    if (ref == null) return null;
+    if (ref == null) {
+      return null;
+    }
     return ref.get();
   }
 
   @Nullable
   @Override
   public V put(K key, V value) {
-    processQueue();
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
     ValueReference<K, V> oldRef = myMap.put(key, createValueReference(key, value));
+    processQueue();
     return oldRef != null ? oldRef.get() : null;
   }
 
-  public abstract ValueReference<K, V> createValueReference(K key, V value);
+  abstract ValueReference<K, V> createValueReference(K key, V value);
 
   @Nullable
   @Override
   public V putIfAbsent(K key, V value) {
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
     ValueReference<K, V> newRef = createValueReference(key, value);
     while (true) {
       processQueue();
@@ -88,37 +84,45 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
 
   @Override
   public boolean remove(Object key, Object value) {
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
+    @SuppressWarnings("unchecked")
+    boolean removed = myMap.remove(key, createValueReference((K)key, (V)value));
     processQueue();
-    //noinspection unchecked
-    return myMap.remove(key, createValueReference((K)key, (V)value));
+    return removed;
   }
 
   @Nullable
   @Override
   public boolean replace(K key, V oldValue, V newValue) {
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(oldValue);
+    Objects.requireNonNull(newValue);
+    boolean replaced = myMap.replace(key, createValueReference(key, oldValue), createValueReference(key, newValue));
     processQueue();
-    return myMap.replace(key, createValueReference(key, oldValue), createValueReference(key, newValue));
+    return replaced;
   }
 
   @Nullable
   @Override
   public V replace(K key, V value) {
-    processQueue();
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
     ValueReference<K, V> ref = myMap.replace(key, createValueReference(key, value));
+    processQueue();
     return ref == null ? null : ref.get();
   }
 
   @Nullable
   @Override
   public V remove(Object key) {
-    processQueue();
     ValueReference<K, V> ref = myMap.remove(key);
+    processQueue();
     return ref == null ? null : ref.get();
   }
 
   @Override
   public void putAll(Map<? extends K, ? extends V> t) {
-    processQueue();
     for (Entry<? extends K, ? extends V> entry : t.entrySet()) {
       V v = entry.getValue();
       if (v != null) {
@@ -126,6 +130,7 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
         put(key, v);
       }
     }
+    processQueue();
   }
 
   @Override
@@ -179,8 +184,8 @@ public abstract class ConcurrentRefValueHashMap<K, V> implements ConcurrentMap<K
     Set<K> keys = keySet();
     Set<Entry<K, V>> entries = new HashSet<>();
 
-    for (final K key : keys) {
-      final V value = get(key);
+    for (K key : keys) {
+      V value = get(key);
       if (value != null) {
         entries.add(new Entry<>() {
           @Override

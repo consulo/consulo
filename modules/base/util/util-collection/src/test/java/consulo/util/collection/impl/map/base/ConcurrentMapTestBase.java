@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.collection.impl.map;
+package consulo.util.collection.impl.map.base;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -47,6 +46,26 @@ public abstract class ConcurrentMapTestBase {
     }
 
     protected boolean nullValuesProhibited() {
+        return true;
+    }
+
+    protected boolean containsKeySupported() {
+        return true;
+    }
+
+    protected boolean containsValueSupported() {
+        return true;
+    }
+
+    protected boolean keySetSupported() {
+        return true;
+    }
+
+    protected boolean entrySetSupported() {
+        return true;
+    }
+
+    protected boolean equalsAndHashCodeSupported() {
         return true;
     }
 
@@ -192,9 +211,8 @@ public abstract class ConcurrentMapTestBase {
             assertThat(m.put(new CI(i), true)).isNull();
         }
         for (int i = 0; i < size; i++) {
-            assertThat(m)
-                .containsKey(new CI(i))
-                .containsKey(new DI(i));
+            assertThat(m.get(new CI(i))).isTrue();
+            assertThat(m.get(new DI(i))).isTrue();
         }
     }
 
@@ -214,12 +232,12 @@ public abstract class ConcurrentMapTestBase {
             assertThat(m.putIfAbsent(bis, true)).isNull();
             assertThat(m.get(bis)).isNotNull();
             if (m.putIfAbsent(bss, true) == null) {
-                assertThat(m).containsKey(bss);
+                assertThat(m.get(bss)).isNotNull();
             }
-            assertThat(m).containsKey(bis);
+            assertThat(m.get(bis)).isNotNull();
         }
         for (int i = 0; i < size; i++) {
-            assertThat(m).containsKey(Collections.singletonList(new BI(i)));
+            assertThat(m.get(Collections.singletonList(new BI(i)))).isNotNull();
         }
     }
 
@@ -250,23 +268,22 @@ public abstract class ConcurrentMapTestBase {
         int size = 10;
         ConcurrentMap<Object, Object> map = emptyMap();
         Random rng = new Random();
+        List<Object> testData = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            Object x = switch (rng.nextInt(4)) {
+            testData.add(switch (rng.nextInt(4)) {
                 case 0 -> new Object();
                 case 1 -> new CollidingObject(Integer.toString(i));
                 default -> new ComparableCollidingObject(Integer.toString(i));
-            };
+            });
+        }
+        for (Object x : testData) {
             assertThat(map.put(x, x)).isNull();
         }
-        int count = 0;
-        for (Object k : map.keySet()) {
+        for (Object k : testData) {
             assertThat(map.get(k)).isSameAs(k);
-            ++count;
         }
-        assertThat(map)
-            .hasSize(size)
-            .hasSize(count);
-        for (Object k : map.keySet()) {
+        assertThat(map).hasSize(size);
+        for (Object k : testData) {
             assertThat(map.put(k, k)).isSameAs(k);
         }
     }
@@ -282,29 +299,44 @@ public abstract class ConcurrentMapTestBase {
     @DisplayName("Maps with same contents are equal")
     @Test
     public void testEquals() {
-        ConcurrentMap<Object, String> map1 = map5();
-        ConcurrentMap<Object, String> map2 = map5();
-        assertThat(map1).isEqualTo(map2);
-        assertThat(map2).isEqualTo(map1);
-        map1.clear();
-        assertThat(map1).isNotEqualTo(map2);
-        assertThat(map2).isNotEqualTo(map1);
+        ConcurrentMap<Object, String> map = map5();
+        assertThat(map).isEqualTo(map);
+        if (equalsAndHashCodeSupported()) {
+            assertThat(map).isEqualTo(MAP5);
+            assertThat(MAP5).isEqualTo(map);
+            map.clear();
+            assertThat(map).isNotEqualTo(MAP5);
+            assertThat(MAP5).isNotEqualTo(map);
+        }
+        else {
+            assertThat(map).isNotEqualTo(MAP5);
+        }
     }
 
     @DisplayName("containsKey returns true for contained key")
     @Test
     public void testContainsKey() {
-        assertThat(map5())
-            .containsKeys(KEYS)
-            .doesNotContainKey(ABSENT_KEY);
+        if (containsKeySupported()) {
+            assertThat(map5())
+                .containsKeys(KEYS)
+                .doesNotContainKey(ABSENT_KEY);
+        }
+        else {
+            assertThatThrownBy(() -> emptyMap().containsKey("foo")).isInstanceOf(UnsupportedOperationException.class);
+        }
     }
 
     @DisplayName("containsValue returns true for held values")
     @Test
     public void testContainsValue() {
-        assertThat(map5())
-            .containsValues(VALUES)
-            .doesNotContainValue("Z");
+        if (containsValueSupported()) {
+            assertThat(map5())
+                .containsValues(VALUES)
+                .doesNotContainValue("Z");
+        }
+        else {
+            assertThatThrownBy(() -> emptyMap().containsValue(ABSENT_KEY)).isInstanceOf(UnsupportedOperationException.class);
+        }
     }
 
     @DisplayName("get returns the correct element at the given key, or null if not present")
@@ -328,38 +360,47 @@ public abstract class ConcurrentMapTestBase {
     @DisplayName("keySet returns a Set containing all the keys")
     @Test
     public void testKeySet() {
-        assertThat(map5().keySet())
-            .hasSize(5)
-            .contains(KEYS);
+        if (keySetSupported()) {
+            assertThat(map5().keySet())
+                .hasSize(5)
+                .contains(KEYS);
+        }
+        else {
+            assertThatThrownBy(() -> emptyMap().keySet()).isInstanceOf(UnsupportedOperationException.class);
+        }
     }
 
     @DisplayName("Test keySet().removeAll on empty map")
     @Test
     public void testKeySetEmptyRemoveAll() {
-        ConcurrentMap<Object, String> map = emptyMap();
-        Set<Object> set = map.keySet();
-        set.removeAll(Collections.emptyList());
-        assertThat(map).isEmpty();
-        assertThat(set).isEmpty();
-        // following is test for JDK-8163353
-        set.removeAll(Collections.emptySet());
-        assertThat(map).isEmpty();
-        assertThat(set).isEmpty();
+        if (keySetSupported()) {
+            ConcurrentMap<Object, String> map = emptyMap();
+            Set<Object> set = map.keySet();
+            set.removeAll(Collections.emptyList());
+            assertThat(map).isEmpty();
+            assertThat(set).isEmpty();
+            // following is test for JDK-8163353
+            set.removeAll(Collections.emptySet());
+            assertThat(map).isEmpty();
+            assertThat(set).isEmpty();
+        }
     }
 
-    @DisplayName("keySet.toArray returns contains all keys")
+    @DisplayName("keySet.toArray contains all keys")
     @Test
     public void testKeySetToArray() {
-        ConcurrentMap<Object, String> map = map5();
-        Set<Object> s = map.keySet();
-        Object[] ar = s.toArray();
-        assertThat(ar).hasSize(5);
-        assertThat(s.containsAll(Arrays.asList(ar))).isTrue();
-        ar[0] = ABSENT_KEY;
-        assertThat(s.containsAll(Arrays.asList(ar))).isFalse();
+        if (keySetSupported()) {
+            ConcurrentMap<Object, String> map = map5();
+            Set<Object> s = map.keySet();
+            Object[] ar = s.toArray();
+            assertThat(ar).hasSize(5);
+            assertThat(s.containsAll(Arrays.asList(ar))).isTrue();
+            ar[0] = ABSENT_KEY;
+            assertThat(s.containsAll(Arrays.asList(ar))).isFalse();
+        }
     }
 
-    @DisplayName("Values.toArray contains all values")
+    @DisplayName("values.toArray contains all values")
     @Test
     public void testValuesToArray() {
         ConcurrentMap<Object, String> map = map5();
@@ -374,13 +415,15 @@ public abstract class ConcurrentMapTestBase {
     @SuppressWarnings("unchecked")
     @Test
     public void testEntrySetToArray() {
-        ConcurrentMap<Object, String> map = map5();
-        Object[] ar = map.entrySet().toArray();
-        assertThat(ar).hasSize(5);
-        for (int i = 0; i < 5; ++i) {
-            Map.Entry<Object, String> entry = (Map.Entry<Object, String>) ar[i];
-            assertThat(KEYS).contains(entry.getKey());
-            assertThat(VALUES).contains(entry.getValue());
+        if (entrySetSupported()) {
+            ConcurrentMap<Object, String> map = map5();
+            Object[] ar = map.entrySet().toArray();
+            assertThat(ar).hasSize(5);
+            for (int i = 0; i < 5; ++i) {
+                Map.Entry<Object, String> entry = (Map.Entry<Object, String>) ar[i];
+                assertThat(KEYS).contains(entry.getKey());
+                assertThat(VALUES).contains(entry.getValue());
+            }
         }
     }
 
@@ -396,19 +439,23 @@ public abstract class ConcurrentMapTestBase {
     @SuppressWarnings("WhileLoopReplaceableByForEach")
     @Test
     public void testEntrySet() {
-        ConcurrentMap<Object, String> map = map5();
-        Set<Map.Entry<Object, String>> s = map.entrySet();
-        assertThat(s).hasSize(5);
-        Iterator<Map.Entry<Object, String>> it = s.iterator();
-        while (it.hasNext()) {
-            Map.Entry<Object, String> e = it.next();
-            assertTrue(
-                (e.getKey().equals(KEYS[0]) && e.getValue().equals(VALUES[0]))
-                    || (e.getKey().equals(KEYS[1]) && e.getValue().equals(VALUES[1]))
-                    || (e.getKey().equals(KEYS[2]) && e.getValue().equals(VALUES[2]))
-                    || (e.getKey().equals(KEYS[3]) && e.getValue().equals(VALUES[3]))
-                    || (e.getKey().equals(KEYS[4]) && e.getValue().equals(VALUES[4]))
-            );
+        if (entrySetSupported()) {
+            Set<Map.Entry<Object, String>> s = map5().entrySet();
+            assertThat(s).hasSize(5);
+            Iterator<Map.Entry<Object, String>> it = s.iterator();
+            while (it.hasNext()) {
+                Map.Entry<Object, String> e = it.next();
+                assertTrue(
+                    (e.getKey().equals(KEYS[0]) && e.getValue().equals(VALUES[0]))
+                        || (e.getKey().equals(KEYS[1]) && e.getValue().equals(VALUES[1]))
+                        || (e.getKey().equals(KEYS[2]) && e.getValue().equals(VALUES[2]))
+                        || (e.getKey().equals(KEYS[3]) && e.getValue().equals(VALUES[3]))
+                        || (e.getKey().equals(KEYS[4]) && e.getValue().equals(VALUES[4]))
+                );
+            }
+        }
+        else {
+            assertThatThrownBy(() -> emptyMap().entrySet()).isInstanceOf(UnsupportedOperationException.class);
         }
     }
 
@@ -416,10 +463,13 @@ public abstract class ConcurrentMapTestBase {
     @Test
     public void testPutAll() {
         ConcurrentMap<Object, String> p = emptyMap();
-        p.putAll(map5());
-        assertThat(p)
-            .hasSize(5)
-            .containsKeys(KEYS);
+        p.putAll(MAP5);
+        assertThat(p).hasSize(5);
+        assertThat(p.get(KEYS[0])).isSameAs(VALUES[0]);
+        assertThat(p.get(KEYS[1])).isSameAs(VALUES[1]);
+        assertThat(p.get(KEYS[2])).isSameAs(VALUES[2]);
+        assertThat(p.get(KEYS[3])).isSameAs(VALUES[3]);
+        assertThat(p.get(KEYS[4])).isSameAs(VALUES[4]);
     }
 
     @DisplayName("putIfAbsent works when the given key is not present")
@@ -442,7 +492,7 @@ public abstract class ConcurrentMapTestBase {
     public void testReplace() {
         ConcurrentMap<Object, String> map = map5();
         assertThat(map.replace(ABSENT_KEY, "Z")).isNull();
-        assertThat(map).doesNotContainKey(ABSENT_KEY);
+        assertThat(map.get(ABSENT_KEY)).isNull();
     }
 
     @DisplayName("replace succeeds if the key is already present")
@@ -480,18 +530,16 @@ public abstract class ConcurrentMapTestBase {
         assertThat(map.get(KEYS[4])).isNull();
     }
 
-    @DisplayName("remove(key,value) removes only if pair present")
+    @DisplayName("remove(key, value) removes only if pair present")
     @Test
     public void testRemove2() {
         ConcurrentMap<Object, String> map = map5();
         map.remove(KEYS[4], "E");
-        assertThat(map)
-            .hasSize(4)
-            .doesNotContainKey(KEYS[4]);
+        assertThat(map).hasSize(4);
+        assertThat(map.get(KEYS[4])).isNull();
         map.remove(KEYS[3], "A");
-        assertThat(map)
-            .hasSize(4)
-            .containsKey(KEYS[3]);
+        assertThat(map).hasSize(4);
+        assertThat(map.get(KEYS[3])).isSameAs("D");
     }
 
     @Test
@@ -516,16 +564,16 @@ public abstract class ConcurrentMapTestBase {
     @Test
     public void testGetNPE() {
         if (nullKeysProhibited()) {
-            assertThatThrownBy(() -> emptyMap().get(null)).isInstanceOf(NullPointerException.class);
+            assertThatThrownBy(() -> map5().get(null)).isInstanceOf(NullPointerException.class);
         }
     }
 
-    @DisplayName("containsKey() is not supported for ref maps")
+    @DisplayName("containsKey(null) throws NPE")
     @SuppressWarnings("NullAway")
     @Test
     public void testContainsKeyNPE() {
-        if (nullKeysProhibited()) {
-            assertThatThrownBy(() -> emptyMap().containsKey(null)).isInstanceOf(NullPointerException.class);
+        if (nullKeysProhibited() && containsKeySupported()) {
+            assertThatThrownBy(() -> map5().containsKey(null)).isInstanceOf(NullPointerException.class);
         }
     }
 
@@ -533,7 +581,7 @@ public abstract class ConcurrentMapTestBase {
     @SuppressWarnings("NullAway")
     @Test
     public void testContainsValueNPE() {
-        if (nullValuesProhibited()) {
+        if (nullValuesProhibited() && containsValueSupported()) {
             assertThatThrownBy(() -> emptyMap().containsValue(null)).isInstanceOf(NullPointerException.class);
         }
     }
@@ -624,8 +672,7 @@ public abstract class ConcurrentMapTestBase {
     @Test
     public void testRemove1NPE() {
         if (nullKeysProhibited()) {
-            ConcurrentMap<Object, String> c = emptyMap();
-            c.put(KEYS[0], "foobar");
+            ConcurrentMap<Object, String> c = map5();
             assertThatThrownBy(() -> c.remove(null)).isInstanceOf(NullPointerException.class);
         }
     }
@@ -635,8 +682,7 @@ public abstract class ConcurrentMapTestBase {
     @Test
     public void testRemove2NPE() {
         if (nullKeysProhibited()) {
-            ConcurrentMap<Object, String> c = emptyMap();
-            c.put(KEYS[0], "foobar");
+            ConcurrentMap<Object, String> c = map5();
             assertThatThrownBy(() -> c.remove(null, "whatever")).isInstanceOf(NullPointerException.class);
         }
     }
@@ -644,11 +690,10 @@ public abstract class ConcurrentMapTestBase {
     @DisplayName("remove(x, null) returns false")
     @SuppressWarnings({"ConstantConditions", "MismatchedQueryAndUpdateOfCollection", "NullAway"})
     @Test
-    public void testRemove3() {
+    public void testRemove3NPE() {
         if (nullValuesProhibited()) {
-            ConcurrentMap<Object, String> c = emptyMap();
-            c.put(KEYS[0], "foobar");
-            assertFalse(c.remove(KEYS[0], null));
+            ConcurrentMap<Object, String> c = map5();
+            assertThatThrownBy(() -> c.remove(KEYS[0], null)).isInstanceOf(NullPointerException.class);
         }
     }
 }

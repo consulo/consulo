@@ -1332,20 +1332,29 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @return {@code true} if the specified object is equal to this map
    */
   public boolean equals(Object o) {
-    if (o != this) {
-      if (!(o instanceof Map)) return false;
-      Map<?, ?> m = (Map<?, ?>)o;
-      Node<K, V>[] t;
-      int f = (t = table) == null ? 0 : t.length;
-      Traverser<K, V> it = new Traverser<K, V>(t, f, 0, f);
-      for (Node<K, V> p; (p = it.advance()) != null; ) {
-        V val = p.val;
-        Object v = m.get(p.key);
-        if (v == null || (v != val && !v.equals(val))) return false;
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof Map<?, ?> m)) {
+      return false;
+    }
+    Node<K, V>[] t;
+    int f = (t = table) == null ? 0 : t.length;
+    Traverser<K, V> it = new Traverser<K, V>(t, f, 0, f);
+    for (Node<K, V> p; (p = it.advance()) != null; ) {
+      V val = p.val;
+      Object v = m.get(p.key);
+      if (v == null || (v != val && !v.equals(val))) {
+        return false;
       }
-      for (Map.Entry<?, ?> e : m.entrySet()) {
-        Object mk, mv, v;
-        if ((mk = e.getKey()) == null || (mv = e.getValue()) == null || (v = get(mk)) == null || (mv != v && !mv.equals(v))) return false;
+    }
+    for (Entry<?, ?> e : m.entrySet()) {
+      Object mk, mv, v;
+      if ((mk = e.getKey()) == null
+        || (mv = e.getValue()) == null
+        || (v = get(mk)) == null
+        || (mv != v && !mv.equals(v))) {
+        return false;
       }
     }
     return true;
@@ -1363,7 +1372,6 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
       this.loadFactor = lf;
     }
   }
-
 
   // ConcurrentMap methods
 
@@ -1385,7 +1393,8 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws NullPointerException if the specified key is null
    */
   public boolean remove(Object key, Object value) {
-    if (key == null) throw new NullPointerException();
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
     return value != null && replaceNode(key, null, value) != null;
   }
 
@@ -1395,7 +1404,9 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
    * @throws NullPointerException if any of the arguments are null
    */
   public boolean replace(K key, V oldValue, V newValue) {
-    if (key == null || oldValue == null || newValue == null) throw new NullPointerException();
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(oldValue);
+    Objects.requireNonNull(newValue);
     return replaceNode(key, newValue, oldValue) != null;
   }
 

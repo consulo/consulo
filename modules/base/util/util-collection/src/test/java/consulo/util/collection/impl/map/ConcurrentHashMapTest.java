@@ -15,6 +15,7 @@
  */
 package consulo.util.collection.impl.map;
 
+import consulo.util.collection.impl.map.base.ConcurrentMapTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -137,19 +138,6 @@ public class ConcurrentHashMapTest extends ConcurrentMapTestBase {
     public void testContainsNPE() {
         assertThatThrownBy(() -> emptyMap().contains(null)).isInstanceOf(NullPointerException.class);
     }
-
-//    @DisplayName("A deserialized/reserialized map equals original")
-//    @Test
-//    public void testSerialization() throws Exception {
-//        Map<Object, String> x = map5();
-//        Map<Object, String> y = serialClone(x);
-//
-//        assertThat(x)
-//            .isNotSameAs(y)
-//            .hasSameSizeAs(y)
-//            .isEqualTo(y);
-//        assertThat(y).isEqualTo(x);
-//    }
 
 //    @DisplayName("SetValue of an EntrySet entry sets value in the map.")
 //    @SuppressWarnings("unchecked")

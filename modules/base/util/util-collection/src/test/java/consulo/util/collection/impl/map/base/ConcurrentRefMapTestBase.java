@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.collection.impl.map;
+package consulo.util.collection.impl.map.base;
 
 import consulo.util.collection.HashingStrategy;
 import org.junit.jupiter.api.DisplayName;
@@ -23,37 +23,31 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author UNV
  * @since 2026-03-15
  */
-public abstract class ConcurrentRefHashMapTestBase extends ConcurrentMapTestBase {
-    @DisplayName("containsValue is not supported in ref maps")
+public abstract class ConcurrentRefMapTestBase extends ConcurrentMapTestBase {
     @Override
-    @Test
-    public void testContainsValue() {
-        assertThatThrownBy(() -> emptyMap().containsValue(ABSENT_KEY)).isInstanceOf(UnsupportedOperationException.class);
-    }
-
-    @DisplayName("containsValue is not supported in ref maps")
-    @Override
-    @SuppressWarnings("NullAway")
-    @Test
-    public void testContainsValueNPE() {
-        assertThatThrownBy(() -> emptyMap().containsValue(null)).isInstanceOf(UnsupportedOperationException.class);
+    protected boolean containsValueSupported() {
+        return false;
     }
 
     @DisplayName("hashCode() equals sum of each key.hashCode ^ value.hashCode")
     @Test
     public void testHashCode() {
         ConcurrentMap<Object, String> map = map5();
-        int sum = 0;
+        if (equalsAndHashCodeSupported()) {
+            int sum = 0;
 
-        for (Map.Entry<Object, String> e : map.entrySet()) {
-            sum += HashingStrategy.canonical().hashCode(e.getKey()) ^ e.getValue().hashCode();
+            for (Map.Entry<Object, String> e : MAP5.entrySet()) {
+                sum += HashingStrategy.canonical().hashCode(e.getKey()) ^ e.getValue().hashCode();
+            }
+            assertThat(map.hashCode()).isEqualTo(sum);
         }
-        assertThat(map.hashCode()).isEqualTo(sum);
+        else {
+            assertThat(map.hashCode()).isEqualTo(System.identityHashCode(map));
+        }
     }
 }

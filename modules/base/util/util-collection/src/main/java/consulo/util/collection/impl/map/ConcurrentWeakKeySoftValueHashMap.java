@@ -1,31 +1,12 @@
-/*
- * Copyright 2000-2016 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
+// Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.util.collection.impl.map;
 
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import org.jspecify.annotations.Nullable;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.lang.ref.*;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
@@ -34,14 +15,20 @@ import java.util.function.Supplier;
  * Concurrent map with weak keys and soft values.
  * Null keys are NOT allowed
  * Null values are NOT allowed
+ * To create, use {@link Maps#newConcurrentWeakKeySoftValueHashMap()}
  */
 public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K, V> {
   private final ConcurrentMap<KeyReference<K, V>, ValueReference<K, V>> myMap;
-  protected final ReferenceQueue<K> myKeyQueue = new ReferenceQueue<>();
-  protected final ReferenceQueue<V> myValueQueue = new ReferenceQueue<>();
-  protected final HashingStrategy<? super K> myHashingStrategy;
+  final ReferenceQueue<K> myKeyQueue = new ReferenceQueue<>();
+  final ReferenceQueue<V> myValueQueue = new ReferenceQueue<>();
+  final HashingStrategy<? super K> myHashingStrategy;
 
-  public ConcurrentWeakKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, HashingStrategy<? super K> hashingStrategy) {
+  public ConcurrentWeakKeySoftValueHashMap(
+      int initialCapacity,
+      float loadFactor,
+      int concurrencyLevel,
+      HashingStrategy<? super K> hashingStrategy
+  ) {
     myHashingStrategy = hashingStrategy;
     ConcurrentHashMap<KeyReference<K, V>, ValueReference<K, V>> map =
         new ConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
@@ -71,7 +58,7 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     V get();
   }
 
-  public static class WeakKey<K, V> extends WeakReference<K> implements KeyReference<K, V> {
+  static final class WeakKey<K, V> extends WeakReference<K> implements KeyReference<K, V> {
     private final int myHash; // Hash code of the key, stored here since the key may be tossed by the GC
     private final HashingStrategy<? super K> myStrategy;
     private final ValueReference<K, V> myValueReference;
@@ -84,13 +71,22 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof KeyReference)) return false;
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof KeyReference)) {
+        return false;
+      }
       K t = get();
-      K other = ((KeyReference<K, V>)o).get();
-      if (t == null || other == null) return false;
-      if (t == other) return true;
+      @SuppressWarnings("unchecked")
+      K other = ((KeyReference<K, V>) o).get();
+      if (t == null || other == null) {
+        return false;
+      }
+      if (t == other) {
+        return true;
+      }
       return myHash == o.hashCode() && myStrategy.equals(t, other);
     }
 
@@ -105,9 +101,9 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  public static class SoftValue<K, V> extends SoftReference<V> implements ValueReference<K, V> {
+  static final class SoftValue<K, V> extends SoftReference<V> implements ValueReference<K, V> {
     @Nullable
-    protected volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
+    volatile KeyReference<K, V> myKeyReference = null; // can't make it final because of circular dependency of KeyReference to ValueReference
 
     private SoftValue(V value, ReferenceQueue<? super V> queue) {
       super(value, queue);
@@ -116,12 +112,16 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     // When referent is collected, equality should be identity-based (for the processQueues() remove this very same SoftValue)
     // otherwise it's just canonical equals on referents for replace(K,V,V) to work
     @Override
-    public final boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null) return false;
+    public boolean equals(@Nullable Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null) {
+        return false;
+      }
 
       V v = get();
-      Object thatV = ((ValueReference)o).get();
+      Object thatV = ((ValueReference<K, V>)o).get();
       return v != null && v.equals(thatV);
     }
 
@@ -132,12 +132,15 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  public KeyReference<K, V> createKeyReference(K k, V v) {
+  KeyReference<K, V> createKeyReference(K k, V v) {
     ValueReference<K, V> valueReference = createValueReference(v, myValueQueue);
-    WeakKey<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
+    KeyReference<K, V> keyReference = new WeakKey<>(k, valueReference, myHashingStrategy, myKeyQueue);
     if (valueReference instanceof SoftValue) {
-      ((SoftValue)valueReference).myKeyReference = keyReference;
+      ((SoftValue<K, V>) valueReference).myKeyReference = keyReference;
     }
+    // to avoid queueing in myValueQueue before setting its myKeyReference to not-null value
+    Reference.reachabilityFence(k);
+    Reference.reachabilityFence(v);
     return keyReference;
   }
 
@@ -157,22 +160,27 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
   @Override
   public void clear() {
-    processQueues();
     myMap.clear();
+    processQueue();
   }
 
   /////////////////////////////
-  private static class HardKey<K, V> implements KeyReference<K, V> {
+  private static class HardKey<K, V> extends PhantomReference<K> implements KeyReference<K, V> {
     @Nullable
     private K myKey = null;
-    private int myHash = 0;
+    private int myHash;
+
+    HardKey() {
+      super(null, null);
+    }
 
     private void set(K key, int hash) {
       myKey = key;
       myHash = hash;
     }
 
-    private void clear() {
+    @Override
+    public void clear() {
       myKey = null;
     }
 
@@ -182,9 +190,12 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
       return myKey;
     }
 
+    /**
+     * @see WeakKey#equals(Object)
+     */
     @Override
     public boolean equals(Object o) {
-      return o.equals(this); // see WeakKey.equals()
+      return o.equals(this);
     }
 
     @Override
@@ -198,11 +209,13 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
     }
   }
 
-  private static final ThreadLocal<HardKey> HARD_KEY = ThreadLocal.withInitial(HardKey::new);
+  private static final ThreadLocal<HardKey<?, ?>> HARD_KEY = ThreadLocal.withInitial(HardKey::new);
 
   private HardKey<K, V> createHardKey(Object o) {
-    @SuppressWarnings("unchecked") K key = (K)o;
-    @SuppressWarnings("unchecked") HardKey<K, V> hardKey = HARD_KEY.get();
+    @SuppressWarnings("unchecked")
+    K key = (K) o;
+    @SuppressWarnings("unchecked")
+    HardKey<K, V> hardKey = (HardKey<K, V>) HARD_KEY.get();
     hardKey.set(key, myHashingStrategy.hashCode(key));
     return hardKey;
   }
@@ -212,11 +225,14 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V get(Object key) {
-    HardKey<K, V> hardKey = createHardKey(key);
-    ValueReference<K, V> valueReference = myMap.get(hardKey);
-    V v = consulo.util.lang.ref.SoftReference.deref(valueReference);
-    hardKey.clear();
-    return v;
+    HardKey<K, V> hardKey = createHardKey(Objects.requireNonNull(key));
+    try {
+      ValueReference<K, V> valueReference = myMap.get(hardKey);
+      return valueReference == null ? null : valueReference.get();
+    }
+    finally {
+      hardKey.clear();
+    }
   }
 
   @Override
@@ -232,17 +248,20 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V remove(Object key) {
-    processQueues();
-    HardKey<K, V> hardKey = createHardKey(key);
-    ValueReference<K, V> valueReference = myMap.remove(hardKey);
-    V v = consulo.util.lang.ref.SoftReference.deref(valueReference);
-    hardKey.clear();
-    return v;
+    HardKey<K, V> hardKey = createHardKey(Objects.requireNonNull(key));
+    try {
+      ValueReference<K, V> valueReference = myMap.remove(hardKey);
+      return valueReference == null ? null : valueReference.get();
+    }
+    finally {
+      hardKey.clear();
+      processQueue();
+    }
   }
 
   @Override
   public void putAll(Map<? extends K, ? extends V> m) {
-    for (Map.Entry<? extends K, ? extends V> e : m.entrySet()) {
+    for (Entry<? extends K, ? extends V> e : m.entrySet()) {
       put(e.getKey(), e.getValue());
     }
   }
@@ -250,27 +269,33 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public V put(K key, V value) {
-    processQueues();
-
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
     KeyReference<K, V> keyReference = createKeyReference(key, value);
     ValueReference<K, V> valueReference = keyReference.getValueReference();
     ValueReference<K, V> prevValReference = myMap.put(keyReference, valueReference);
-
-    return consulo.util.lang.ref.SoftReference.deref(prevValReference);
+    processQueue();
+    return prevValReference == null ? null : prevValReference.get();
   }
 
-  private boolean processQueues() {
+  public boolean processQueue() {
     boolean removed = false;
     KeyReference<K, V> keyReference;
-    while ((keyReference = (KeyReference<K, V>)myKeyQueue.poll()) != null) {
+    //noinspection unchecked
+    while ((keyReference = (KeyReference<K, V>) myKeyQueue.poll()) != null) {
       ValueReference<K, V> valueReference = keyReference.getValueReference();
       removed |= myMap.remove(keyReference, valueReference);
     }
 
     ValueReference<K, V> valueReference;
-    while ((valueReference = (ValueReference<K, V>)myValueQueue.poll()) != null) {
+    //noinspection unchecked
+    while ((valueReference = (ValueReference<K, V>) myValueQueue.poll()) != null) {
       keyReference = valueReference.getKeyReference();
-      removed |= myMap.remove(keyReference, valueReference);
+      // keyReference could be null when createValueReference() was called and abandoned immediately, e.g. in replace(K, V)
+      // in this case just ignore this ref, it's not in the map anyway
+      if (keyReference != null) {
+        removed |= myMap.remove(keyReference, valueReference);
+      }
     }
 
     return removed;
@@ -283,7 +308,14 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
 
   @Override
   public Collection<V> values() {
-    throw new UnsupportedOperationException();
+    List<V> values = new ArrayList<>();
+    for (ValueReference<K, V> valueReference : myMap.values()) {
+      V v = valueReference == null ? null : valueReference.get();
+      if (v != null) {
+        values.add(v);
+      }
+    }
+    return values;
   }
 
   @Override
@@ -294,55 +326,97 @@ public class ConcurrentWeakKeySoftValueHashMap<K, V> implements ConcurrentMap<K,
   @Nullable
   @Override
   public boolean remove(Object key, Object value) {
-    processQueues();
-
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
     HardKey<K, V> hardKey = createHardKey(key);
-    ValueReference<K, V> valueReference = myMap.get(hardKey);
-    V v = consulo.util.lang.ref.SoftReference.deref(valueReference);
-
-    boolean result = value.equals(v) && myMap.remove(hardKey, valueReference);
-    hardKey.clear();
-    return result;
-  }
-
-  @Nullable
-  @Override
-  public V putIfAbsent(K key, V value) {
-    KeyReference<K, V> keyRef = createKeyReference(key, value);
-    ValueReference<K, V> newRef = keyRef.getValueReference();
-    while (true) {
-      processQueues();
-      ValueReference<K, V> oldRef = myMap.putIfAbsent(keyRef, newRef);
-      if (oldRef == null) return null;
-      V oldVal = oldRef.get();
-      if (oldVal == null) {
-        if (myMap.replace(keyRef, oldRef, newRef)) return null;
-      }
-      else {
-        return oldVal;
-      }
+    try {
+      ValueReference<K, V> valueReference = myMap.get(hardKey);
+      V v = valueReference == null ? null : valueReference.get();
+      return value.equals(v) && myMap.remove(hardKey, valueReference);
+    }
+    finally {
+      hardKey.clear();
+      processQueue();
     }
   }
 
   @Nullable
   @Override
-  public boolean replace(K key, V oldValue, V newValue) {
-    processQueues();
-    KeyReference<K, V> oldKeyReference = createKeyReference(key, oldValue);
-    ValueReference<K, V> oldValueReference = oldKeyReference.getValueReference();
-    KeyReference<K, V> newKeyReference = createKeyReference(key, newValue);
-    ValueReference<K, V> newValueReference = newKeyReference.getValueReference();
+  public V putIfAbsent(K key, V value) {
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
+    KeyReference<K, V> keyRef = createKeyReference(key, value);
+    ValueReference<K, V> newRef = keyRef.getValueReference();
+    V prev;
+    while (true) {
+      ValueReference<K, V> oldRef = myMap.putIfAbsent(keyRef, newRef);
+      if (oldRef == null) {
+        prev = null;
+        break;
+      }
+      final V oldVal = oldRef.get();
+      if (oldVal == null) {
+        if (myMap.replace(keyRef, oldRef, newRef)) {
+          prev = null;
+          break;
+        }
+      }
+      else {
+        prev = oldVal;
+        break;
+      }
+      processQueue();
+    }
+    processQueue();
+    return prev;
+  }
 
-    return myMap.replace(oldKeyReference, oldValueReference, newValueReference);
+  @Nullable
+  @Override
+  public boolean replace(K key, V oldValue, V newValue) {
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(oldValue);
+    Objects.requireNonNull(newValue);
+    HardKey<K, V> oldKeyReference = createHardKey(key);
+    ValueReference<K, V> oldValueReference;
+    try {
+      oldValueReference = createValueReference(oldValue, myValueQueue);
+      ValueReference<K, V> newValueReference = createValueReference(newValue, myValueQueue);
+
+      boolean replaced = myMap.replace(oldKeyReference, oldValueReference, newValueReference);
+      processQueue();
+      return replaced;
+    }
+    finally {
+      oldKeyReference.clear();
+      // we must not let these values got into a ref queue while performing operations with them
+      Reference.reachabilityFence(oldValue);
+      Reference.reachabilityFence(newValue);
+    }
   }
 
   @Nullable
   @Override
   public V replace(K key, V value) {
-    processQueues();
-    KeyReference<K, V> keyReference = createKeyReference(key, value);
-    ValueReference<K, V> valueReference = keyReference.getValueReference();
-    ValueReference<K, V> result = myMap.replace(keyReference, valueReference);
-    return consulo.util.lang.ref.SoftReference.deref(result);
+    Objects.requireNonNull(key);
+    Objects.requireNonNull(value);
+    HardKey<K, V> keyReference = createHardKey(key);
+    try {
+      ValueReference<K, V> valueReference = createValueReference(value, myValueQueue);
+      ValueReference<K, V> result = myMap.replace(keyReference, valueReference);
+      V prev = result == null ? null : result.get();
+      processQueue();
+      return prev;
+    }
+    finally {
+      keyReference.clear();
+      // we must not let these values got into a ref queue while performing operations with them
+      Reference.reachabilityFence(value);
+    }
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return this == obj;
   }
 }
