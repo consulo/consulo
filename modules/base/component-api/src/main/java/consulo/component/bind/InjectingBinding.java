@@ -21,26 +21,21 @@ import java.lang.reflect.Type;
 
 /**
  * @author VISTALL
- * @since 13-Jun-22
+ * @since 2022-06-13
  */
 public interface InjectingBinding {
   Type[] EMPTY_TYPES = new Type[0];
 
-  
   default String getApiClassName() {
     return getApiClass().getName();
   }
 
-  
   Class getApiClass();
 
-  
   Class getImplClass();
 
-  
   Class getComponentAnnotationClass();
 
-  
   ComponentScope getComponentScope();
 
   int getComponentProfiles();
@@ -49,10 +44,8 @@ public interface InjectingBinding {
     return getParameterTypes().length;
   }
 
-  
   Type[] getParameterTypes();
 
-  
   Object create(Object[] args);
 
   default boolean isLazy() {

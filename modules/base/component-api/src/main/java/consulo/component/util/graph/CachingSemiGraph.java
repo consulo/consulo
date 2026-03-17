@@ -47,7 +47,7 @@ public class CachingSemiGraph<Node> implements GraphGenerator.SemiGraph<Node> {
 
   @Override
   public Iterator<Node> getIn(Node n) {
-    return myIn.get(n).iterator();
+    return Objects.requireNonNull(myIn.get(n)).iterator();
   }
 
   //<editor-fold desc="Deprecated stuff.">

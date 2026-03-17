@@ -17,6 +17,7 @@ package consulo.component.util.localize;
 
 import consulo.platform.Platform;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -31,10 +32,13 @@ public abstract class BundleBase {
 
   public static boolean assertKeyIsFound = false;
 
-  public static String messageOrDefault(@Nullable ResourceBundle bundle,
-                                        String key,
-                                        @Nullable String defaultValue,
-                                        Object... params) {
+  @Nullable
+  public static String messageOrDefault(
+    @Nullable ResourceBundle bundle,
+    String key,
+    @Nullable String defaultValue,
+    Object... params
+  ) {
     if (bundle == null) return defaultValue;
 
     String value;
@@ -58,7 +62,6 @@ public abstract class BundleBase {
     return format(value, params);
   }
 
-  
   public static String format(String value, Object... params) {
     if (params.length > 0 && value.indexOf('{') >= 0) {
       return MessageFormat.format(value, params);
@@ -67,11 +70,13 @@ public abstract class BundleBase {
     return value;
   }
 
-  
+  @Nullable
   public static String message(ResourceBundle bundle, String key, Object... params) {
     return messageOrDefault(bundle, key, null, params);
   }
 
+  @Contract("null -> null; !null -> !null")
+  @Nullable
   public static String replaceMnemonicAmpersand(@Nullable String value) {
     if (value == null) {
       return null;

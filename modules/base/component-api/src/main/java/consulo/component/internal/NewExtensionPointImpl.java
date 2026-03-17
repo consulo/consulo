@@ -35,7 +35,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -49,11 +48,14 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     private static final Logger LOG = Logger.getInstance(NewExtensionPointImpl.class);
 
     private static class CacheValue<K> {
-        final List<Pair<K, PluginDescriptor>> myExtensionCache;
+        @Nullable
+        final List<ExtensionValue<K>> myExtensionCache;
+        @Nullable
         final List<K> myUnwrapExtensionCache;
+        @Nullable
         final List<InjectingBinding> myInjectingBindings;
 
-        private CacheValue(@Nullable List<Pair<K, PluginDescriptor>> extensionCache, @Nullable List<InjectingBinding> injectingBindings) {
+        private CacheValue(@Nullable List<ExtensionValue<K>> extensionCache, @Nullable List<InjectingBinding> injectingBindings) {
             myExtensionCache = extensionCache;
             myUnwrapExtensionCache = extensionCache == null ? null : new UnwrapList<>(extensionCache);
             myInjectingBindings = injectingBindings;
@@ -61,15 +63,15 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     private static class UnwrapList<K> extends AbstractList<K> {
-        private final List<Pair<K, PluginDescriptor>> myResult;
+        private final List<ExtensionValue<K>> myResult;
 
-        private UnwrapList(List<Pair<K, PluginDescriptor>> result) {
+        private UnwrapList(List<ExtensionValue<K>> result) {
             myResult = result;
         }
 
         @Override
         public K get(int index) {
-            return myResult.get(index).getFirst();
+            return myResult.get(index).extension();
         }
 
         @Override
@@ -79,18 +81,22 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     private final String myApiClassName;
-    private Class<T> myApiClass;
+    @Nullable
+    private Class<T> myApiClass = null;
 
     private final ComponentManager myComponentManager;
     private final Runnable myCheckCanceled;
     private final ComponentScope myComponentScope;
     private final Supplier<ComponentManager> myApplicationGetter;
 
-    private Map<Class, Object> myInstanceOfCacheValue;
-    private Map<ExtensionPointCacheKey, Object> myCaches;
+    @Nullable
+    private Map<Class, Object> myInstanceOfCacheValue = null;
+    @Nullable
+    private Map<ExtensionPointCacheKey, Object> myCaches = null;
     private long myModificationCount;
     private volatile CacheValue<T> myCacheValue;
-    private volatile Boolean myHasAnyExtension;
+    @Nullable
+    private volatile Boolean myHasAnyExtension = null;
 
     @SuppressWarnings("unchecked")
     public NewExtensionPointImpl(
@@ -130,13 +136,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         myHasAnyExtension = null;
     }
 
-    
     @Override
     public List<T> sort(List<T> extensionsList) {
         return sortImpl(extensionsList);
     }
 
-    
     @SuppressWarnings("unchecked")
     private static <K> List<K> sortImpl(List<K> extensionsList) {
         List<LoadingOrder.Orderable> orders = new ArrayList<>(extensionsList.size());
@@ -146,11 +150,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                 orders.add(new InvalidOrderable<>(extension));
             }
             else {
-                orders.add(new ExtensionImplOrderable<>(Pair.create(extension, plugin)));
+                orders.add(new ExtensionImplOrderable<>(new ExtensionValue<>(extension, plugin)));
             }
         }
         LoadingOrder.sort(orders);
-        return orders.stream().map(orderable -> (K)orderable.getObjectValue()).toList();
+        return orders.stream().map(orderable -> (K) orderable.getObjectValue()).toList();
     }
 
     @Nullable
@@ -162,15 +166,17 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             instanceOfCacheValue = myInstanceOfCacheValue = Maps.newConcurrentHashMap(HashingStrategy.identity());
         }
 
-        Object result = instanceOfCacheValue.computeIfAbsent(extensionClass, aClass -> {
-            K instance = ContainerUtil.findInstance(getExtensionList(), extensionClass);
-            return instance == null ? ObjectUtil.NULL : instance;
-        });
+        Object result = instanceOfCacheValue.computeIfAbsent(
+            extensionClass,
+            aClass -> {
+                K instance = ContainerUtil.findInstance(getExtensionList(), extensionClass);
+                return instance == null ? ObjectUtil.NULL : instance;
+            }
+        );
 
-        return result == ObjectUtil.NULL ? null : (K)result;
+        return result == ObjectUtil.NULL ? null : (K) result;
     }
 
-    
     @Override
     @SuppressWarnings("unchecked")
     public <K> K getOrBuildCache(ExtensionPointCacheKey<T, K> key) {
@@ -179,13 +185,12 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             caches = myCaches = Maps.newConcurrentHashMap(HashingStrategy.identity());
         }
 
-        return (K)caches.computeIfAbsent(key, k -> key.getFactory().apply(new ExtensionWalker<>() {
+        return (K) caches.computeIfAbsent(key, k -> key.getFactory().apply(new ExtensionWalker<>() {
             @Override
             public void walk(Consumer<T> consumer) {
                 forEachExtensionSafe(consumer);
             }
 
-            
             @Override
             public Function<List<T>, List<T>> sorter() {
                 return NewExtensionPointImpl::sortImpl;
@@ -194,7 +199,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Pair<T, PluginDescriptor>> build(@Nullable List<InjectingBinding> injectingBindings) {
+    private List<ExtensionValue<T>> build(@Nullable List<InjectingBinding> injectingBindings) {
         if (injectingBindings == null) {
             throw new IllegalArgumentException("cache dropped");
         }
@@ -213,7 +218,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         InjectingContainer injectingContainer = myComponentManager.getInjectingContainer();
 
-        List<Pair<T, PluginDescriptor>> extensions = new ArrayList<>(injectingBindings.size());
+        List<ExtensionValue<T>> extensions = new ArrayList<>(injectingBindings.size());
         for (InjectingBinding binding : injectingBindings) {
             if (!InjectingBindingHolder.isValid(binding, myComponentManager.getProfiles())) {
                 continue;
@@ -232,7 +237,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                     ExtensionInstanceRef.CURRENT_CREATION.set(instanceRef);
                 }
 
-                extension = (T)injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
+                extension =
+                    (T) injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
 
                 if (instanceRef != null) {
                     ExtensionInstanceRef.CURRENT_CREATION.remove();
@@ -247,14 +253,14 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
                     continue;
                 }
 
-                PluginDescriptor plugin = PluginManager.getPlugin(binding.getImplClass());
-                Pair<T, PluginDescriptor> pair = Pair.create(extension, plugin);
-                if (extensions.contains(pair)) {
+                PluginDescriptor plugin = Objects.requireNonNull(PluginManager.getPlugin(binding.getImplClass()));
+                ExtensionValue<T> extensionValue = new ExtensionValue(extension, plugin);
+                if (extensions.contains(extensionValue)) {
                     LOG.error("Extension " + extension.getClass() + " duplicated. Extension: " + getName());
                     continue;
                 }
 
-                extensions.add(pair);
+                extensions.add(extensionValue);
             }
             catch (ProcessCanceledException e) {
                 throw e;
@@ -266,24 +272,24 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         // do not allow extend extenders, and preview recorder
         if (apiClass != ExtensionExtender.class && apiClass != ExtensionPreviewRecorder.class) {
-            for (ExtensionExtender extender : myApplicationGetter.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
+            //noinspection GetExtensionPoint
+            myApplicationGetter.get().getExtensionPoint(ExtensionExtender.class).forEach(extender -> {
                 if (extender.getExtensionClass() == apiClass) {
-                    PluginDescriptor descriptor = PluginManager.getPlugin(extender.getClass());
-                    assert descriptor != null;
+                    PluginDescriptor descriptor = Objects.requireNonNull(PluginManager.getPlugin(extender.getClass()));
 
                     if (extender.hasAnyExtensions(myComponentManager)) {
-                        extender.extend(myComponentManager, it -> extensions.add(Pair.create((T)it, descriptor)));
+                        extender.extend(myComponentManager, it -> extensions.add(new ExtensionValue(it, descriptor)));
                     }
                 }
-            }
+            });
         }
 
-        PluginDescriptor apiPlugin = PluginManager.getPlugin(apiClass);
+        PluginDescriptor apiPlugin = Objects.requireNonNull(PluginManager.getPlugin(apiClass));
 
         // prepare for sorting
         List<ExtensionImplOrderable<T>> orders = new ArrayList<>(extensions.size());
-        for (Pair<T, PluginDescriptor> pair : extensions) {
-            ExtensionImplOrderable<T> orderable = new ExtensionImplOrderable<>(pair);
+        for (ExtensionValue<T> extension : extensions) {
+            ExtensionImplOrderable<T> orderable = new ExtensionImplOrderable<>(extension);
 
             orderable.reportFirstLastRestriction(apiPlugin);
 
@@ -294,22 +300,21 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         // set new order
         for (int i = 0; i < orders.size(); i++) {
-            extensions.set(i, orders.get(i).getValue());
+            ExtensionImplOrderable<T> order = orders.get(i);
+            extensions.set(i, order.getValue());
         }
 
-        Pair[] array = extensions.toArray(new Pair[extensions.size()]);
-        return List.of(array);
+        return List.of(extensions.toArray(ExtensionValue[]::new));
     }
 
-    
-    private List<Pair<T, PluginDescriptor>> buildOrGet() {
+    private List<ExtensionValue<T>> buildOrGet() {
         CacheValue<T> cacheValue = myCacheValue;
 
-        List<Pair<T, PluginDescriptor>> extensionCache = cacheValue.myExtensionCache;
+        List<ExtensionValue<T>> extensionCache = cacheValue.myExtensionCache;
         if (extensionCache == null) {
-            List<Pair<T, PluginDescriptor>> result = build(cacheValue.myInjectingBindings);
+            List<ExtensionValue<T>> result = build(cacheValue.myInjectingBindings);
             CacheValue<T> value = set(result);
-            extensionCache = value.myExtensionCache;
+            extensionCache = Objects.requireNonNull(value.myExtensionCache);
         }
         return extensionCache;
     }
@@ -317,11 +322,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     @Nullable
     @Override
     public T findFirstSafe(@InheritCallerContext Predicate<T> predicate) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 if (predicate.test(t)) {
                     return t;
@@ -337,11 +342,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     @Nullable
     @Override
     public <R> R computeSafeIfAny(@InheritCallerContext Function<? super T, ? extends R> processor) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 R r = processor.apply(t);
                 if (r != null) {
@@ -355,17 +360,16 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return null;
     }
 
-    
     @Override
     public <R, CR extends Collection<? super R>> CR collectMapped(
         CR results,
         @InheritCallerContext Function<? super T, ? extends R> processor
     ) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 R result = processor.apply(t);
                 if (result != null) {
@@ -379,18 +383,17 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return results;
     }
 
-    
     @Override
     public <K, V, M extends Map<? super K, ? super V>> M collectMapped(
         M results,
         @InheritCallerContext Function<? super T, ? extends K> keyMapper,
         @InheritCallerContext Function<? super T, ? extends V> valueMapper
     ) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 K key = keyMapper.apply(t);
                 V value = valueMapper.apply(t);
@@ -405,17 +408,13 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return results;
     }
 
-    
     @Override
-    public <CE extends Collection<T>> CE collectFiltered(
-        CE results,
-        @InheritCallerContext Predicate<? super T> predicate
-    ) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+    public <CE extends Collection<T>> CE collectFiltered(CE results, @InheritCallerContext Predicate<? super T> predicate) {
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 if (predicate.test(t)) {
                     results.add(t);
@@ -430,11 +429,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Override
     public void forEachExtensionSafe(@InheritCallerContext Consumer<? super T> consumer) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 consumer.accept(t);
             }
@@ -446,11 +445,11 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     @Override
     public void forEachBreakable(@InheritCallerContext Function<? super T, Flow> breakableConsumer) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, n = extensionCache.size(); i < n; i++) {
-            T t = extensionCache.get(i).getKey();
+            T t = extensionCache.get(i).extension();
             try {
                 if (breakableConsumer.apply(t) == Flow.BREAK) {
                     break;
@@ -465,21 +464,21 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     @Override
     @SuppressWarnings("unchecked")
     public void processWithPluginDescriptor(@InheritCallerContext BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-        List<Pair<T, PluginDescriptor>> extensionCache = buildOrGet();
+        List<ExtensionValue<T>> extensionCache = buildOrGet();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < extensionCache.size(); i++) {
-            Pair<T, PluginDescriptor> pair = extensionCache.get(i);
+            ExtensionValue<T> extensionValue = extensionCache.get(i);
             try {
-                consumer.accept(pair.getKey(), pair.getSecond());
+                consumer.accept(extensionValue.extension(), extensionValue.pluginDescriptor());
             }
             catch (Throwable e) {
-                ExtensionLogger.checkException(e, pair.getKey());
+                ExtensionLogger.checkException(e, extensionValue.extension());
             }
         }
     }
 
-    public CacheValue<T> set(List<Pair<T, PluginDescriptor>> list) {
+    public CacheValue<T> set(List<ExtensionValue<T>> list) {
         CacheValue<T> value = new CacheValue<>(list, null);
         myCacheValue = value;
 
@@ -505,15 +504,17 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
         // if we have extenders for this extension, always return
         if (extensionClass != ExtensionExtender.class) {
-            for (ExtensionExtender extender : myApplicationGetter.get().getExtensionPoint(ExtensionExtender.class).getExtensionList()) {
-                if (extender.getExtensionClass() == extensionClass && extender.hasAnyExtensions(myComponentManager)) {
-                    return myHasAnyExtension = true;
-                }
+            @SuppressWarnings("GetExtensionPoint")
+            boolean hasAnyExtension = myApplicationGetter.get().getExtensionPoint(ExtensionExtender.class).anyMatchSafe(
+                extender -> extender.getExtensionClass() == extensionClass && extender.hasAnyExtensions(myComponentManager)
+            );
+            if (hasAnyExtension) {
+                return myHasAnyExtension = true;
             }
         }
 
         // at this moment myExtensionAdapters must exists
-        return myHasAnyExtension = !cacheValue.myInjectingBindings.isEmpty();
+        return myHasAnyExtension = !Objects.requireNonNull(cacheValue.myInjectingBindings).isEmpty();
     }
 
     @Override
@@ -521,7 +522,6 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         return myModificationCount;
     }
 
-    
     @Override
     public List<T> getExtensionList() {
         CacheValue<T> cacheValue = myCacheValue;
@@ -531,18 +531,16 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             return extensionCache;
         }
 
-        List<Pair<T, PluginDescriptor>> result = build(cacheValue.myInjectingBindings);
+        List<ExtensionValue<T>> result = build(cacheValue.myInjectingBindings);
         CacheValue<T> value = set(result);
-        return value.myUnwrapExtensionCache;
+        return Objects.requireNonNull(value.myUnwrapExtensionCache);
     }
 
-    
     @Override
     public String getClassName() {
         return myApiClassName;
     }
 
-    
     @Override
     public Class<T> getExtensionClass() {
         return Objects.requireNonNull(myApiClass, "apiClass not initialized");

@@ -27,8 +27,9 @@ public interface SchemeImporter<T extends Named> {
     
     @SuppressWarnings({"unchecked", "GetExtensionPoint"})
     public static <S extends Named> Collection<SchemeImporter<S>> getExtensions(Class<S> schemeClass) {
-        List<SchemeImporter> importers = RootComponentHolder.getRootComponent().getExtensionPoint(SchemeImporter.class)
-            .collectFiltered(schemeImporter -> schemeClass == schemeImporter.getSchemeClass());
+        List<SchemeImporter> importers =
+            RootComponentHolder.get().getExtensionPoint(SchemeImporter.class)
+                .collectFiltered(schemeImporter -> schemeClass == schemeImporter.getSchemeClass());
         return (List) importers;
     }
 

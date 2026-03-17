@@ -37,6 +37,7 @@ public class ExtensionValueCache<E> implements Supplier<E> {
         myCachedModificationCount = extensionPoint.getModificationCount();
     }
 
+    @Nullable
     @Override
     public E get() {
         if (myExtensionPoint.getModificationCount() != myCachedModificationCount) {

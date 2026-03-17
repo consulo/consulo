@@ -147,7 +147,7 @@ public class ExternalizablePropertyContainer extends AbstractProperty.AbstractPr
 
     @Override
     public List<T> readValue(Element dataElement) {
-      List<T> list = new SmartList<T>();
+      List<T> list = new SmartList<>();
       for (Element element : dataElement.getChildren()) {
         if (NULL_ELEMENT.equals(element.getName())) {
           list.add(null);

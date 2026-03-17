@@ -18,27 +18,27 @@ package consulo.component.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
-import consulo.logging.Logger;
-import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author VISTALL
- * @since 11-Jun-24
+ * @since 2024-06-11
  */
 class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
-  private static final Logger LOG = Logger.getInstance(ExtensionImplOrderable.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionImplOrderable.class);
 
   private final String myOrderId;
-  private final Pair<K, PluginDescriptor> myValue;
+  private final ExtensionValue<K> myValue;
 
   private LoadingOrder myLoadingOrder;
 
-  ExtensionImplOrderable(Pair<K, PluginDescriptor> value) {
+  ExtensionImplOrderable(ExtensionValue<K> value) {
     myValue = value;
 
-    K extensionImpl = myValue.getFirst();
+    K extensionImpl = myValue.extension();
     Class<?> extensionImplClass = extensionImpl.getClass();
 
     ExtensionImpl extensionImplAnnotation = extensionImplClass.getAnnotation(ExtensionImpl.class);
@@ -56,28 +56,30 @@ class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
 
   protected void reportFirstLastRestriction(PluginDescriptor apiPlugin) {
     // we allow it in platform impl
-    if (PluginIds.isPlatformPlugin(myValue.getValue().getPluginId())) {
+    if (PluginIds.isPlatformPlugin(myValue.pluginDescriptor().getPluginId())) {
       return;
     }
 
     if (myLoadingOrder == LoadingOrder.FIRST || myLoadingOrder == LoadingOrder.LAST) {
-      if (apiPlugin.getPluginId() != myValue.getValue().getPluginId()) {
-        LOG.error("Usage order [first, last] is restricted for owner plugin impl only. Class: %s, Plugin: %s, Owner Plugin: %s"
-                    .formatted(myValue.getKey().toString(),
-                               myValue.getValue().getPluginId().getIdString(),
-                               apiPlugin.getPluginId().getIdString()));
+      if (apiPlugin.getPluginId() != myValue.pluginDescriptor().getPluginId()) {
+        LOG.error(
+            "Usage order [first, last] is restricted for owner plugin impl only. Class: {}, Plugin: {}, Owner Plugin: {}",
+            myValue.extension(),
+            myValue.pluginDescriptor().getPluginId().getIdString(),
+            apiPlugin.getPluginId().getIdString()
+        );
         myLoadingOrder = LoadingOrder.ANY;
       }
     }
   }
 
-  public Pair<K, PluginDescriptor> getValue() {
+  public ExtensionValue<K> getValue() {
     return myValue;
   }
 
   @Override
   public Object getObjectValue() {
-    return myValue.getKey();
+    return myValue.extension();
   }
 
   @Nullable

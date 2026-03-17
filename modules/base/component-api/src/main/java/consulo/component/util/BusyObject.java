@@ -30,7 +30,6 @@ public interface BusyObject {
   AsyncResult<Void> getReady(Object requestor);
 
   abstract class Impl implements BusyObject {
-
     private final Map<Object, AsyncResult<Void>> myReadyCallbacks = new WeakHashMap<>();
 
     public abstract boolean isReady();
@@ -43,10 +42,10 @@ public interface BusyObject {
       if (!isReady()) return;
 
       if (readyRequestor != null) {
-        Pair<AsyncResult<Void>, List<AsyncResult<Void>>> callbacks = getReadyCallbacks(readyRequestor);
-        callbacks.getFirst().setDone();
-        for (AsyncResult<Void> each : callbacks.getSecond()) {
-          each.setRejected();
+        ReadyCallbacks callbacks = getReadyCallbacks(readyRequestor);
+        callbacks.done().setDone();
+        for (AsyncResult<Void> rejected : callbacks.rejected()) {
+          rejected.setRejected();
         }
       }
       else {
@@ -73,7 +72,6 @@ public interface BusyObject {
       }
     }
 
-    
     private AsyncResult<Void> addReadyCallback(Object requestor) {
       synchronized (myReadyCallbacks) {
         AsyncResult<Void> cb = myReadyCallbacks.get(requestor);
@@ -94,23 +92,24 @@ public interface BusyObject {
       }
     }
 
-    private Pair<AsyncResult<Void>, List<AsyncResult<Void>>> getReadyCallbacks(Object readyRequestor) {
+    private ReadyCallbacks getReadyCallbacks(Object readyRequestor) {
       synchronized (myReadyCallbacks) {
         AsyncResult<Void> done = myReadyCallbacks.get(readyRequestor);
         if (done == null) {
-          done = new AsyncResult<Void>();
+          done = new AsyncResult<>();
         }
 
         myReadyCallbacks.remove(readyRequestor);
-        ArrayList<AsyncResult<Void>> rejected = new ArrayList<>();
-        rejected.addAll(myReadyCallbacks.values());
+        List<AsyncResult<Void>> rejected = new ArrayList<>(myReadyCallbacks.values());
         myReadyCallbacks.clear();
-        return new Pair<>(done, rejected);
+        return new ReadyCallbacks(done, rejected);
       }
     }
 
-    public static class Simple extends Impl {
+    private record ReadyCallbacks(AsyncResult<Void> done, List<AsyncResult<Void>> rejected) {
+    }
 
+    public static class Simple extends Impl {
       private final AtomicInteger myBusyCount = new AtomicInteger();
 
       @Override
@@ -118,7 +117,6 @@ public interface BusyObject {
         return myBusyCount.get() == 0;
       }
 
-      
       public ActionCallback execute(ActiveRunnable runnable) {
         myBusyCount.addAndGet(1);
         ActionCallback cb = runnable.run();

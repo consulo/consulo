@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.component.util.config;
 
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
 
 public interface Externalizer<T> {
-  
   String VALUE_ATTRIBUTE = "value";
-  Externalizer<String> STRING = new BaseExternalizer<String>() {
+  Externalizer<String> STRING = new BaseExternalizer<>() {
+    @Nullable
     @Override
     public String readValue(Element dataElement) {
       return dataElement.getAttributeValue(VALUE_ATTRIBUTE);
     }
   };
-  Externalizer<Integer> INTEGER = new BaseExternalizer<Integer>() {
+  Externalizer<Integer> INTEGER = new BaseExternalizer<>() {
+    @Nullable
     @Override
     public Integer readValue(Element dataElement) {
       try {
@@ -47,20 +48,20 @@ public interface Externalizer<T> {
   Externalizer<Storage> STORAGE = new StorageExternalizer();
 
   abstract class BaseExternalizer<T> implements Externalizer<T> {
-
     @Override
     public void writeValue(Element dataElement, T value) {
       dataElement.setAttribute(VALUE_ATTRIBUTE, value.toString());
     }
   }
 
-  Externalizer<Boolean> BOOLEAN = new BaseExternalizer<Boolean>() {
+  Externalizer<Boolean> BOOLEAN = new BaseExternalizer<>() {
     @Override
     public Boolean readValue(Element dataElement) {
       return Boolean.valueOf(dataElement.getAttributeValue(VALUE_ATTRIBUTE));
     }
   };
 
+  @Nullable
   T readValue(Element dataElement);
 
   void writeValue(Element dataElement, T value);

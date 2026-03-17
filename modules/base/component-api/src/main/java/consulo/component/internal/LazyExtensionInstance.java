@@ -21,14 +21,15 @@ import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 27/01/2023
+ * @since 2023-01-27
  */
 public class LazyExtensionInstance<Api, Impl extends Api> implements Supplier<Impl> {
-
   private final LazyValue<Impl> myInstance;
 
   public LazyExtensionInstance(Class<Api> apiClass, Class<Impl> implClass) {
-    myInstance = LazyValue.notNull(() -> RootComponentHolder.getRootComponent().getExtensionPoint(apiClass).findExtensionOrFail(implClass));
+    myInstance = LazyValue.notNull(
+        () -> RootComponentHolder.get().getExtensionPoint(apiClass).findExtensionOrFail(implClass)
+    );
   }
 
   @Override

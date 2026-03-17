@@ -19,6 +19,7 @@ import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
 import org.jdom.*;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,7 +29,9 @@ import org.jspecify.annotations.Nullable;
 public abstract class PathMacroMap {
   private static final Logger LOG = Logger.getInstance(PathMacroMap.class);
 
-  public abstract String substitute(String text, boolean caseSensitive);
+  @Contract("null,_ -> null; !null,_ -> !null")
+  @Nullable
+  public abstract String substitute(@Nullable String text, boolean caseSensitive);
 
   public final void substitute(Element e, boolean caseSensitive) {
     substitute(e, caseSensitive, false);

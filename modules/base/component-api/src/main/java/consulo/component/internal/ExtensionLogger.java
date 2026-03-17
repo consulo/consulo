@@ -19,18 +19,20 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.ControlFlowException;
+import consulo.util.lang.StringUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 2025-04-19
  */
 public class ExtensionLogger {
-    public static void checkException(Throwable e, Object value) {
+    public static void checkException(Throwable e, @Nullable Object value) {
         if (e instanceof ControlFlowException) {
             throw ControlFlowException.rethrow(e);
         }
 
         Logger logger = Logger.getInstance(ExtensionPoint.class);
-        PluginExceptionUtil.logPluginError(logger, e.getMessage(), e, value != null ? value.getClass() : Void.TYPE);
+        PluginExceptionUtil.logPluginError(logger, StringUtil.notNullize(e.getMessage()), e, value != null ? value.getClass() : Void.TYPE);
     }
 }
