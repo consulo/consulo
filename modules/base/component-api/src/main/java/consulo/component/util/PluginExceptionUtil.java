@@ -23,7 +23,10 @@ import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -39,9 +42,8 @@ public class PluginExceptionUtil {
    *
    * @param pluginClass a problematic class which caused the error
    */
-  
   public static PluginException createByClass(String errorMessage, @Nullable Throwable cause, Class<?> pluginClass) {
-    PluginId pluginId = PluginManager.getPluginId(pluginClass);
+    PluginId pluginId = Objects.requireNonNull(PluginManager.getPluginId(pluginClass));
     return new PluginException(errorMessage, cause, pluginId);
   }
 
@@ -50,23 +52,21 @@ public class PluginExceptionUtil {
    *
    * @param pluginClass a problematic class which caused the error
    */
-  
   public static PluginException createByClass(Throwable cause, Class<?> pluginClass) {
-    String message = cause.getMessage();
+    String message = StringUtil.notNullize(cause.getMessage());
 
-    PluginId pluginId = PluginManager.getPluginId(pluginClass);
-    return new PluginException(message != null ? message : "", cause, pluginId);
+    PluginId pluginId = Objects.requireNonNull(PluginManager.getPluginId(pluginClass));
+    return new PluginException(message, cause, pluginId);
   }
 
-  
   public static Set<PluginId> findAllPluginIds(Throwable t) {
     if (t instanceof PluginException) {
       PluginId pluginId = ((PluginException)t).getPluginId();
       return Set.of(pluginId);
     }
 
-    if (t instanceof ExtensionException) {
-      Class extensionClass = ((ExtensionException)t).getExtensionClass();
+    if (t instanceof ExtensionException ee) {
+      Class extensionClass = ee.getExtensionClass();
       PluginId pluginId = PluginManager.getPluginId(extensionClass);
       if (pluginId == null) {
         LOG.error("There no plugin for extension class: " + extensionClass);
@@ -98,7 +98,7 @@ public class PluginExceptionUtil {
     return pluginIds.stream().filter(pluginId -> !PluginIds.isPlatformPlugin(pluginId)).findFirst().orElse(null);
   }
 
-  public static void logPluginError(Logger log, String message, Throwable t, Class<?> aClass) {
+  public static void logPluginError(Logger log, String message, @Nullable Throwable t, Class<?> aClass) {
     PluginDescriptor plugin = PluginManager.getPlugin(aClass);
 
     if (plugin == null) {

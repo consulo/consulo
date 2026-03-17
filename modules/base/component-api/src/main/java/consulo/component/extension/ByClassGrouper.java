@@ -15,8 +15,9 @@
  */
 package consulo.component.extension;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +25,7 @@ import java.util.function.Function;
 
 /**
  * @author VISTALL
- * @since 28-Jun-22
+ * @since 2022-06-28
  */
 public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Function<Class, E>> {
   private static class GetterImpl<S> implements Function<Class, S> {
@@ -34,6 +35,7 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
       walker.walk(extension -> myExtensionsByClass.put(getClassFunc.apply(extension), extension));
     }
 
+    @Nullable
     @Override
     public S apply(Class aClass) {
       S extension = myExtensionsByClass.get(aClass);
@@ -50,6 +52,7 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
       return null;
     }
 
+    @Nullable
     protected <S> S processUntil(Class baseClass, Set<Class> processed, Function<Class, S> getter) {
       if (!processed.add(baseClass)) {
         return null;
@@ -79,7 +82,6 @@ public final class ByClassGrouper<E> implements Function<ExtensionWalker<E>, Fun
     }
   }
 
-  
   public static <K> Function<ExtensionWalker<K>, Function<Class, K>> build(Function<K, Class> getClassFunc) {
     return new ByClassGrouper<>(getClassFunc);
   }

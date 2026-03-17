@@ -16,6 +16,8 @@
 package consulo.component.macro;
 
 import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -41,8 +43,10 @@ public class ExpandMacroToPathMap extends PathMacroMap {
     myMacroExpands.putAll(another.myMacroExpands);
   }
 
+  @Contract("null,_ -> null; !null,_ -> !null")
+  @Nullable
   @Override
-  public String substitute(String text, boolean caseSensitive) {
+  public String substitute(@Nullable String text, boolean caseSensitive) {
     if (text == null) {
       //noinspection ConstantConditions
       return null;

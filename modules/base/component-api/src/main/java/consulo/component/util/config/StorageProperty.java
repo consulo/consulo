@@ -16,8 +16,8 @@
 
 package consulo.component.util.config;
 
-
 import java.util.Iterator;
+import java.util.Objects;
 
 public class StorageProperty extends AbstractProperty<Storage> {
   private final String myName;
@@ -26,24 +26,27 @@ public class StorageProperty extends AbstractProperty<Storage> {
     myName = name;
   }
 
+  @Override
   public Storage getDefault(AbstractProperty.AbstractPropertyContainer container) {
     Storage.MapStorage storage = new Storage.MapStorage();
     set(container, storage);
     return storage;
   }
 
+  @Override
   public Storage copy(Storage storage) {
-    if (!(storage instanceof Storage.MapStorage))
+    if (!(storage instanceof Storage.MapStorage mapStorage))
       throw new UnsupportedOperationException(storage.getClass().getName());
-    Iterator<String> keys = ((Storage.MapStorage)storage).getKeys();
+    Iterator<String> keys = mapStorage.getKeys();
     Storage.MapStorage copy = new Storage.MapStorage();
     while (keys.hasNext()) {
       String key = keys.next();
-      copy.put(key, storage.get(key));
+      copy.put(key, Objects.requireNonNull(storage.get(key)));
     }
     return copy;
   }
 
+  @Override
   public String getName() {
     return myName;
   }

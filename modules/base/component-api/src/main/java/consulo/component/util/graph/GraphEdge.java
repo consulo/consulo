@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.internal;
-
-import org.jspecify.annotations.Nullable;
-
-import java.util.function.Consumer;
+package consulo.component.util.graph;
 
 /**
- * @author VISTALL
- * @since 2023-01-26
+ * @author UNV
+ * @since 2026-03-17
  */
-public class ExtensionInstanceRef {
-  public static ThreadLocal<ExtensionInstanceRef> CURRENT_CREATION = new ThreadLocal<>();
-
-  @Nullable
-  public Consumer<Object> setter = null;
-
-  public ExtensionInstanceRef() {
-  }
+public record GraphEdge<Node>(Node from, Node to) {
 }

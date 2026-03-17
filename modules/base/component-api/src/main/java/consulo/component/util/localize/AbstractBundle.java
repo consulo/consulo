@@ -16,6 +16,7 @@
 package consulo.component.util.localize;
 
 import consulo.annotation.DeprecationInfo;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -44,7 +45,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Deprecated
 @DeprecationInfo("Migrate to new localize")
 public abstract class AbstractBundle {
-  private Reference<ResourceBundle> myBundle;
+  @Nullable
+  private Reference<ResourceBundle> myBundle = null;
   private final String myPathToBundle;
 
   protected AbstractBundle() {
@@ -55,6 +57,7 @@ public abstract class AbstractBundle {
     myPathToBundle = pathToBundle;
   }
 
+  @Nullable
   public String getMessage(String key, Object... params) {
     return BundleBase.message(getBundle(), key, params);
   }
@@ -71,7 +74,6 @@ public abstract class AbstractBundle {
 
   private static final Map<ClassLoader, Map<String, ResourceBundle>> ourCache = new ConcurrentHashMap<>();
 
-  
   public static ResourceBundle getResourceBundle(String pathToBundle, ClassLoader loader) {
     Map<String, ResourceBundle> map = ourCache.computeIfAbsent(loader, classLoader -> new ConcurrentHashMap<>());
     return map.computeIfAbsent(pathToBundle, s -> ResourceBundle.getBundle(s, Locale.getDefault(), loader));

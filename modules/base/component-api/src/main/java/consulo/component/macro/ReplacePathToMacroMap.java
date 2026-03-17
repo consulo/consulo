@@ -19,6 +19,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Attribute;
 
@@ -32,6 +33,7 @@ import java.util.Map;
  * @see PathMacroManager
  */
 public class ReplacePathToMacroMap extends PathMacroMap {
+    @Nullable
     private List<String> myPathsIndex = null;
     private final Map<String, String> myMacroMap = new LinkedHashMap<>();
 
@@ -56,8 +58,10 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         }
     }
 
+    @Contract("null,_ -> null; !null,_ -> !null")
+    @Nullable
     @Override
-    public String substitute(String text, boolean caseSensitive) {
+    public String substitute(@Nullable String text, boolean caseSensitive) {
         if (text == null) {
             //noinspection ConstantConditions
             return null;
@@ -194,7 +198,6 @@ public class ReplacePathToMacroMap extends PathMacroMap {
         return myPathsIndex;
     }
 
-    
     public String getAttributeValue(Attribute attribute, @Nullable PathMacroFilter filter, boolean caseSensitive, boolean recursively) {
         String oldValue = attribute.getValue();
         if (recursively || (filter != null && filter.recursePathMacros(attribute))) {
@@ -223,5 +226,4 @@ public class ReplacePathToMacroMap extends PathMacroMap {
     public void put(String path, String replacement) {
         myMacroMap.put(path, replacement);
     }
-
 }

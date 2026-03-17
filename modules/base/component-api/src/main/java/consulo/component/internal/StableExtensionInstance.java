@@ -15,15 +15,18 @@
  */
 package consulo.component.internal;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 27/01/2023
+ * @since 2023-01-27
  */
 public class StableExtensionInstance<Impl> implements Supplier<Impl> {
-  private Impl myValue;
+  @Nullable
+  private Impl myValue = null;
 
   public StableExtensionInstance() {
   }

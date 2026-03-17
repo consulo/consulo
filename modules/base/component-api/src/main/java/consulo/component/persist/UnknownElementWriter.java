@@ -56,8 +56,9 @@ public class UnknownElementWriter {
     Arrays.sort(sortedNames);
     for (String name : sortedNames) {
       T known = knownNameToWriter.get(name);
-      if(known == null) {
-        outElement.addContent(myUnknownElements.get(name).clone());
+      if (known == null) {
+        Element element = Objects.requireNonNull(myUnknownElements.get(name));
+        outElement.addContent(element.clone());
       }
       else {
         writer.accept(known);

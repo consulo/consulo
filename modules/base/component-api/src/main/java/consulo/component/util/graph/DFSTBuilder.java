@@ -23,24 +23,48 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntStack;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
-import consulo.util.lang.Couple;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 /**
- * @author dsl, ven
+ * @author dsl
+ * @author ven
  */
 public class DFSTBuilder<Node> {
   private final OutboundSemiGraph<Node> myGraph;
-  private final ObjectIntMap<Node> myNodeToNNumber; // node -> node number in topological order [0..size). Independent nodes are in reversed loading order (loading order is the graph.getNodes() order)
-  private final Node[] myInvN; // node number in topological order [0..size) -> node
-  private Couple<Node> myBackEdge;
 
+  /**
+   * node -> node number in topological order [0..size).
+   * Independent nodes are in reversed loading order (loading order is the graph.getNodes() order).
+   */
+  private final ObjectIntMap<Node> myNodeToNNumber;
+
+  /**
+   * node number in topological order [0..size) -> node
+   */
+  private final Node[] myInvN;
+
+  @Nullable
+  private GraphEdge<Node> myBackEdge = null;
+
+  @Nullable
   private Comparator<Node> myComparator;
-  private final IntList mySCCs = IntLists.newArrayList(); // strongly connected component sizes
-  private final ObjectIntMap<Node> myNodeToTNumber = ObjectMaps.newObjectIntHashMap(); // node -> number in scc topological order. Independent scc are in reversed loading order
 
-  private final Node[] myInvT; // number in (enumerate all nodes scc by scc) order -> node
+  /**
+   * strongly connected component sizes
+   */
+  private final IntList mySCCs = IntLists.newArrayList();
+
+  /**
+   * node -> number in scc topological order. Independent scc are in reversed loading order.
+   */
+  private final ObjectIntMap<Node> myNodeToTNumber = ObjectMaps.newObjectIntHashMap();
+
+  /**
+   * number in (enumerate all nodes scc by scc) order -> node
+   */
+  private final Node[] myInvT;
   private final Node[] myAllNodes;
 
   public DFSTBuilder(Graph<Node> graph) {
@@ -100,11 +124,17 @@ public class DFSTBuilder<Node> {
       }
     }
 
-    private final Stack<Frame> frames = new Stack<Frame>(); // recursion stack
+    /**
+     * recursion stack
+     */
+    private final Stack<Frame> frames = new Stack<>();
     private final ObjectIntMap<Node> nodeIndex = ObjectMaps.newObjectIntHashMap();
     private int dfsIndex;
     private int sccsSizeCombined;
-    private final IntList topo = IntLists.newArrayList(index.length); // nodes in reverse topological order
+    /**
+     * nodes in reverse topological order
+     */
+    private final IntList topo = IntLists.newArrayList(index.length);
 
     private void build() {
       Arrays.fill(index, -1);
@@ -115,7 +145,7 @@ public class DFSTBuilder<Node> {
       for (int i = 0; i < index.length; i++) {
         if (index[i] == -1) {
           frames.push(new Frame(i));
-          List<List<Node>> sccs = new ArrayList<List<Node>>();
+          List<List<Node>> sccs = new ArrayList<>();
 
           strongConnect(sccs);
 
@@ -185,7 +215,7 @@ public class DFSTBuilder<Node> {
             lowLink[i] = Math.min(lowLink[i], index[nextI]);
 
             if (myBackEdge == null) {
-              myBackEdge = Couple.of(myAllNodes[nextI], myAllNodes[i]);
+              myBackEdge = new GraphEdge<>(myAllNodes[nextI], myAllNodes[i]);
             }
           }
         }
@@ -194,7 +224,7 @@ public class DFSTBuilder<Node> {
         // we are really back, pop a scc
         if (lowLink[i] == index[i]) {
           // found yer
-          List<Node> scc = new ArrayList<Node>();
+          List<Node> scc = new ArrayList<>();
           int pushedI;
           do {
             pushedI = nodesOnStack.pop();
@@ -209,7 +239,6 @@ public class DFSTBuilder<Node> {
     }
   }
 
-  
   public Comparator<Node> comparator() {
     if (myComparator == null) {
       ObjectIntMap<Node> map = isAcyclic() ? myNodeToNNumber : myNodeToTNumber;
@@ -218,7 +247,8 @@ public class DFSTBuilder<Node> {
     return myComparator;
   }
 
-  public Couple<Node> getCircularDependency() {
+  @Nullable
+  public GraphEdge<Node> getCircularDependency() {
     return myBackEdge;
   }
 
@@ -226,12 +256,10 @@ public class DFSTBuilder<Node> {
     return getCircularDependency() == null;
   }
 
-  
   public Node getNodeByNNumber(int n) {
     return myInvN[n];
   }
 
-  
   public Node getNodeByTNumber(int n) {
     return myInvT[n];
   }
@@ -240,21 +268,18 @@ public class DFSTBuilder<Node> {
    * @return the list containing the number of nodes in strongly connected components.
    * Respective nodes could be obtained via {@link #getNodeByTNumber(int)}.
    */
-  
   public IntList getSCCs() {
     return mySCCs;
   }
 
-  
   public Collection<Collection<Node>> getComponents() {
     final IntList componentSizes = getSCCs();
     if (componentSizes.isEmpty()) return List.of();
 
-    return new MyCollection<Collection<Node>>(componentSizes.size()) {
-      
+    return new MyCollection<>(componentSizes.size()) {
       @Override
       public Iterator<Collection<Node>> iterator() {
-        return new MyIterator<Collection<Node>>(componentSizes.size()) {
+        return new MyIterator<>(componentSizes.size()) {
           private int offset;
 
           @Override
@@ -263,11 +288,10 @@ public class DFSTBuilder<Node> {
             final int cOffset = offset;
             if (cSize == 0) return List.of();
             offset += cSize;
-            return new MyCollection<Node>(cSize) {
-              
+            return new MyCollection<>(cSize) {
               @Override
               public Iterator<Node> iterator() {
-                return new MyIterator<Node>(cSize) {
+                return new MyIterator<>(cSize) {
                   @Override
                   public Node get(int i) {
                     return getNodeByTNumber(cOffset + i);
@@ -321,9 +345,8 @@ public class DFSTBuilder<Node> {
     }
   }
 
-  
   public List<Node> getSortedNodes() {
-    List<Node> result = new ArrayList<Node>(myGraph.getNodes());
+    List<Node> result = new ArrayList<>(myGraph.getNodes());
     Collections.sort(result, comparator());
     return result;
   }
