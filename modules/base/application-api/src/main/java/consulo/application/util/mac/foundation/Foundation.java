@@ -43,8 +43,7 @@ public class Foundation {
     myObjcMsgSend = nativeLibrary.getFunction("objc_msgSend");
   }
 
-  static Callback ourRunnableCallback;
-
+  static @Nullable Callback ourRunnableCallback = null;
 
   public static void init() { /* fake method to init foundation */ }
 
@@ -66,7 +65,6 @@ public class Foundation {
     return myFoundationLibrary.sel_registerName(s);
   }
 
-  
   private static Object[] prepInvoke(ID id, Pointer selector, Object[] args) {
     Object[] invokArgs = new Object[args.length + 2];
     invokArgs[0] = id;
@@ -126,8 +124,7 @@ public class Foundation {
     return myFoundationLibrary.class_isMetaClass(cls);
   }
 
-  @Nullable
-  public static String stringFromSelector(Pointer selector) {
+  public static @Nullable String stringFromSelector(Pointer selector) {
     ID id = myFoundationLibrary.NSStringFromSelector(selector);
     if (id.intValue() > 0) {
       return toStringViaUTF8(id);
@@ -140,7 +137,7 @@ public class Foundation {
     return myFoundationLibrary.objc_getClass(clazz);
   }
 
-  public static String fullUserName() {
+  public static @Nullable String fullUserName() {
     return toStringViaUTF8(myFoundationLibrary.NSFullUserName());
   }
 
@@ -173,16 +170,23 @@ public class Foundation {
       }
 
       byte[] utf16Bytes = s.getBytes("UTF-16LE");
-      return invoke(invoke(invoke("NSString", "alloc"), "initWithBytes:length:encoding:", utf16Bytes, utf16Bytes.length, convertCFEncodingToNS(FoundationLibrary.kCFStringEncodingUTF16LE)),
-                    "autorelease");
+      return invoke(
+        invoke(
+          invoke("NSString", "alloc"),
+          "initWithBytes:length:encoding:",
+          utf16Bytes,
+          utf16Bytes.length,
+          convertCFEncodingToNS(FoundationLibrary.kCFStringEncodingUTF16LE)
+        ),
+        "autorelease"
+      );
     }
     catch (UnsupportedEncodingException x) {
       throw new RuntimeException(x);
     }
   }
 
-  @Nullable
-  public static String toStringViaUTF8(ID cfString) {
+  public static @Nullable String toStringViaUTF8(ID cfString) {
     if (cfString.intValue() == 0) return null;
 
     int lengthInChars = myFoundationLibrary.CFStringGetLength(cfString);
@@ -194,8 +198,7 @@ public class Foundation {
     return Native.toString(buffer);
   }
 
-  @Nullable
-  public static String getEncodingName(long nsStringEncoding) {
+  public static @Nullable String getEncodingName(long nsStringEncoding) {
     long cfEncoding = myFoundationLibrary.CFStringConvertNSStringEncodingToEncoding(nsStringEncoding);
     ID pointer = myFoundationLibrary.CFStringConvertEncodingToIANACharSetName(cfEncoding);
     return toStringViaUTF8(pointer);
@@ -221,7 +224,7 @@ public class Foundation {
     myFoundationLibrary.CFRetain(id);
   }
 
-  public static void cfRelease(ID... ids) {
+  public static void cfRelease(@Nullable ID... ids) {
     for (ID id : ids) {
       if (id != null) {
         myFoundationLibrary.CFRelease(id);
@@ -233,7 +236,7 @@ public class Foundation {
     return invoke("NSThread", "isMainThread").intValue() > 0;
   }
 
-  private static final Map<String, RunnableInfo> ourMainThreadRunnables = new HashMap<String, RunnableInfo>();
+  private static final Map<String, RunnableInfo> ourMainThreadRunnables = new HashMap<>();
   private static long ourCurrentRunnableCount = 0;
   private static final Object RUNNABLE_LOCK = new Object();
 
@@ -257,7 +260,13 @@ public class Foundation {
 
     ID ideaRunnable = getObjcClass("IdeaRunnable");
     ID runnableObject = invoke(invoke(ideaRunnable, "alloc"), "init");
-    invoke(runnableObject, "performSelectorOnMainThread:withObject:waitUntilDone:", createSelector("run:"), nsString(String.valueOf(ourCurrentRunnableCount)), Boolean.valueOf(waitUntilDone));
+    invoke(
+      runnableObject,
+      "performSelectorOnMainThread:withObject:waitUntilDone:",
+      createSelector("run:"),
+      nsString(String.valueOf(ourCurrentRunnableCount)),
+      waitUntilDone
+    );
     invoke(runnableObject, "release");
   }
 
@@ -429,35 +438,29 @@ public class Foundation {
 
     @Override
     public Object fromNative(Object o, FromNativeContext fromNativeContext) {
-      switch (Native.LONG_SIZE) {
-        case 4:
-          return new CGFloat((Float)o);
-        case 8:
-          return new CGFloat((Double)o);
-      }
-      throw new IllegalStateException();
+      return switch (Native.LONG_SIZE) {
+        case 4 -> new CGFloat((Float) o);
+        case 8 -> new CGFloat((Double) o);
+        default -> throw new IllegalStateException();
+      };
     }
 
     @Override
     public Object toNative() {
-      switch (Native.LONG_SIZE) {
-        case 4:
-          return (float)value;
-        case 8:
-          return value;
-      }
-      throw new IllegalStateException();
+      return switch (Native.LONG_SIZE) {
+        case 4 -> (float) value;
+        case 8 -> value;
+        default -> throw new IllegalStateException();
+      };
     }
 
     @Override
     public Class<?> nativeType() {
-      switch (Native.LONG_SIZE) {
-        case 4:
-          return Float.class;
-        case 8:
-          return Double.class;
-      }
-      throw new IllegalStateException();
+      return switch (Native.LONG_SIZE) {
+        case 4 -> Float.class;
+        case 8 -> Double.class;
+        default -> throw new IllegalStateException();
+      };
     }
   }
 

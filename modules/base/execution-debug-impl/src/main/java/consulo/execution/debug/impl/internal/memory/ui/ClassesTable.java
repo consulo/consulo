@@ -1,6 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.execution.debug.impl.internal.memory.ui;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
@@ -9,6 +10,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.localize.XDebuggerLocalize;
 import consulo.execution.debug.memory.InstancesTracker;
 import consulo.execution.debug.memory.TrackerForNewInstancesBase;
 import consulo.execution.debug.memory.TrackingType;
@@ -16,6 +18,7 @@ import consulo.execution.debug.memory.TypeInfo;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
@@ -75,18 +78,21 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     private boolean myOnlyWithInstances;
     private MinusculeMatcher myMatcher = NameUtil.buildMatcher("*").build();
     private String myFilteringPattern = "";
-    private final MergingUpdateQueue myFilterTypingMergeQueue = new MergingUpdateQueue(
-        "Classes table typing merging queue", 500, true,
-        this, this, this, true).setRestartTimerOnAdd(true);
+    private final MergingUpdateQueue myFilterTypingMergeQueue =
+        new MergingUpdateQueue("Classes table typing merging queue", 500, true, this, this, this, true).setRestartTimerOnAdd(true);
 
     private volatile List<TypeInfo> myItems = Collections.unmodifiableList(new ArrayList<>());
     private boolean myIsShowCounts = true;
     private MouseListener myMouseListener = null;
 
     @SuppressWarnings("WeakerAccess")
-    public ClassesTable(Project project, ClassesFilteredViewBase parent, boolean onlyWithDiff,
-                        boolean onlyWithInstances,
-                        boolean onlyTracked) {
+    public ClassesTable(
+        Project project,
+        ClassesFilteredViewBase parent,
+        boolean onlyWithDiff,
+        boolean onlyWithInstances,
+        boolean onlyTracked
+    ) {
         myModel = getTableModel();
         setModel(myModel);
 
@@ -126,7 +132,6 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         };
     }
 
-    
     protected DiffViewTableModel getTableModel() {
         return new DiffViewTableModel();
     }
@@ -164,7 +169,6 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         setRowSorter(sorter);
     }
 
-    
     protected List<RowSorter.SortKey> getTableSortingKeys() {
         return Arrays.asList(
             new RowSorter.SortKey(DiffViewTableModel.DIFF_COLUMN_INDEX, SortOrder.DESCENDING),
@@ -174,7 +178,6 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
     }
 
     public interface ReferenceCountProvider {
-
         int getTotalCount(TypeInfo ref);
 
         int getDiffCount(TypeInfo ref);
@@ -208,11 +211,13 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         return myMouseListener != null;
     }
 
+    @RequiredUIAccess
     public void makeClickable(Runnable onClick) {
         releaseMouseListener();
 
         AnAction action = new AnAction() {
             @Override
+            @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {
                 onClick.run();
                 releaseMouseListener();
@@ -224,6 +229,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
         MyMouseAdapter listener = new MyMouseAdapter() {
             @Override
+            @RequiredUIAccess
             public void mouseClicked(MouseEvent e) {
                 onClick.run();
                 releaseMouseListener();
@@ -244,8 +250,8 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
                 setBackground(mouseOnTable ? CLICKABLE_COLOR : JBColor.background());
                 SimpleTextAttributes linkAttributes = mouseOnTable ? UNDERLINE_LINK_ATTRIBUTES : LINK_ATTRIBUTES;
                 getEmptyText().clear()
-                    .appendText(XDebuggerBundle.message("memory.view.no.classes.loaded")).appendText(LocalizeValue.space())
-                    .appendText(XDebuggerBundle.message("memory.view.load.classes"), linkAttributes).appendText(LocalizeValue.space());
+                    .appendText(XDebuggerLocalize.memoryViewNoClassesLoaded()).appendText(LocalizeValue.space())
+                    .appendText(XDebuggerLocalize.memoryViewLoadClasses(), linkAttributes).appendText(LocalizeValue.space());
             }
         };
 
@@ -260,11 +266,13 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         abstract void updateTable(boolean mouseOnTable);
     }
 
+    @RequiredUIAccess
     void exitClickableMode() {
         releaseMouseListener();
         getEmptyText().setText(StatusText.getDefaultEmptyText());
     }
 
+    @RequiredUIAccess
     private void releaseMouseListener() {
         UIAccess.assertIsUIThread();
         if (isInClickableMode()) {
@@ -320,6 +328,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         }
     }
 
+    @RequiredUIAccess
     @SuppressWarnings("WeakerAccess")
     public void updateClassesOnly(List<? extends TypeInfo> classes) {
         myIsShowCounts = false;
@@ -328,12 +337,14 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         updateCountsInternal(class2Count);
     }
 
+    @RequiredUIAccess
     @SuppressWarnings("WeakerAccess")
     public void updateContent(Map<TypeInfo, Long> class2Count) {
         myIsShowCounts = true;
         updateCountsInternal(class2Count);
     }
 
+    @RequiredUIAccess
     void hideContent(String emptyText) {
         releaseMouseListener();
         getEmptyText().setText(emptyText);
@@ -345,6 +356,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         myModel.show();
     }
 
+    @RequiredUIAccess
     private void updateCountsInternal(Map<TypeInfo, Long> class2Count) {
         releaseMouseListener();
         getEmptyText().setText(StatusText.getDefaultEmptyText());
@@ -372,8 +384,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
         if (newSelectedIndex != -1 && !myModel.isHidden()) {
             int ix = convertRowIndexToView(newSelectedIndex);
-            changeSelection(ix,
-                DiffViewTableModel.CLASSNAME_COLUMN_INDEX, false, false);
+            changeSelection(ix, DiffViewTableModel.CLASSNAME_COLUMN_INDEX, false, false);
         }
 
         fireTableDataChanged();
@@ -392,6 +403,7 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         return null;
     }
 
+    @RequiredUIAccess
     public void clean(String emptyText) {
         clearSelection();
         releaseMouseListener();
@@ -404,12 +416,12 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     @Override
     public void dispose() {
-        ApplicationManager.getApplication().invokeLater(() -> clean(""));
+        Application.get().invokeLater(() -> clean(""));
     }
 
     private boolean isUnderMouseCursor() {
-        if (ApplicationManager.getApplication().isUnitTestMode() ||
-            ApplicationManager.getApplication().isHeadlessEnvironment()) {
+        Application application = Application.get();
+        if (application.isUnitTestMode() || application.isHeadlessEnvironment()) {
             return false;
         }
         try {
@@ -473,22 +485,21 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
         }
     }
 
-    
     protected AbstractTableColumnDescriptor[] getColumnDescriptors() {
         return new AbstractTableColumnDescriptor[]{
-            new AbstractTableColumnDescriptor(XDebuggerBundle.message("memory.view.table.column.name.class"), TypeInfo.class) {
+            new AbstractTableColumnDescriptor(XDebuggerLocalize.memoryViewTableColumnNameClass(), TypeInfo.class) {
                 @Override
                 public Object getValue(int ix) {
                     return getTypeInfoAt(ix);
                 }
             },
-            new AbstractTableColumnDescriptor(XDebuggerBundle.message("memory.view.table.column.name.count"), Long.class) {
+            new AbstractTableColumnDescriptor(XDebuggerLocalize.memoryViewTableColumnNameCount(), Long.class) {
                 @Override
                 public Object getValue(int ix) {
                     return myCounts.getOrDefault(getTypeInfoAt(ix), UNKNOWN_VALUE).myCurrentCount;
                 }
             },
-            new AbstractTableColumnDescriptor(XDebuggerBundle.message("memory.view.table.column.name.diff"), DiffValue.class) {
+            new AbstractTableColumnDescriptor(XDebuggerLocalize.memoryViewTableColumnNameDiff(), DiffValue.class) {
                 @Override
                 public Object getValue(int ix) {
                     return myCounts.getOrDefault(getTypeInfoAt(ix), UNKNOWN_VALUE);
@@ -562,8 +573,14 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     public abstract static class MyTableCellRenderer extends ColoredTableCellRenderer {
         @Override
-        protected void customizeCellRenderer(JTable table, @Nullable Object value, boolean isSelected,
-                                             boolean hasFocus, int row, int column) {
+        protected void customizeCellRenderer(
+            JTable table,
+            @Nullable Object value,
+            boolean isSelected,
+            boolean hasFocus,
+            int row,
+            int column
+        ) {
 
             if (hasFocus) {
                 setBorder(new EmptyBorder(getBorder().getBorderInsets(this)));
@@ -579,17 +596,21 @@ public class ClassesTable extends JBTable implements DataProvider, Disposable {
 
     private class MyClassColumnRenderer extends MyTableCellRenderer {
         @Override
-        protected void addText(Object value, boolean isSelected,
-                               int row) {
+        protected void addText(Object value, boolean isSelected, int row) {
             String presentation = ((TypeInfo) value).name();
             append(" ");
             if (isSelected) {
                 FList<MatcherTextRange> textRanges = myMatcher.matchingFragments(presentation);
                 if (textRanges != null) {
-                    SimpleTextAttributes attributes = new SimpleTextAttributes(getBackground(), getForeground(), null,
-                        SimpleTextAttributes.STYLE_SEARCH_MATCH);
-                    SpeedSearchUtil.appendColoredFragments(this, presentation, textRanges,
-                        SimpleTextAttributes.REGULAR_ATTRIBUTES, attributes);
+                    SimpleTextAttributes attributes =
+                        new SimpleTextAttributes(getBackground(), getForeground(), null, SimpleTextAttributes.STYLE_SEARCH_MATCH);
+                    SpeedSearchUtil.appendColoredFragments(
+                        this,
+                        presentation,
+                        textRanges,
+                        SimpleTextAttributes.REGULAR_ATTRIBUTES,
+                        attributes
+                    );
                 }
             }
             else {

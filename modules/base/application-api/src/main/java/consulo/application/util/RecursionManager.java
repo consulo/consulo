@@ -66,8 +66,7 @@ public class RecursionManager {
      * This is same as {@link RecursionGuard#doPreventingRecursion(Object, boolean, Supplier)},
      * without a need to bother to create {@link RecursionGuard}.
      */
-    @Nullable
-    public static <T> T doPreventingRecursion(Object key, boolean memoize, Supplier<T> computation) {
+    public static @Nullable <T> T doPreventingRecursion(Object key, boolean memoize, Supplier<T> computation) {
         return createGuard(computation.getClass().getName()).doPreventingRecursion(key, memoize, computation);
     }
 
@@ -80,7 +79,7 @@ public class RecursionManager {
     public static <Key> RecursionGuard<Key> createGuard(final String id) {
         return new RecursionGuard<>() {
             @Override
-            public <T> T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation) {
+            public <T> @Nullable T doPreventingRecursion(Key key, boolean memoize, Supplier<T> computation) {
                 MyKey realKey = new MyKey(id, key, true);
                 CalculationStack stack = ourStack.get();
 
@@ -131,7 +130,6 @@ public class RecursionManager {
                 }
             }
 
-            
             @Override
             public List<Key> currentStack() {
                 List<Key> result = new ArrayList<>();
@@ -170,7 +168,6 @@ public class RecursionManager {
      *
      * @return an object representing the current stack state, managed by {@link RecursionManager}
      */
-    
     public static RecursionGuard.StackStamp markStack() {
         int stamp = ourStack.get().reentrancyCount;
         return () -> stamp == ourStack.get().reentrancyCount;
@@ -191,7 +188,7 @@ public class RecursionManager {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(@Nullable Object obj) {
             if (!(obj instanceof MyKey that && guardId.equals(that.guardId))) {
                 return false;
             }
@@ -225,8 +222,7 @@ public class RecursionManager {
             return false;
         }
 
-        @Nullable
-        MemoizedValue getMemoizedValue(MyKey realKey) {
+        @Nullable MemoizedValue getMemoizedValue(MyKey realKey) {
             List<SoftReference<MemoizedValue>> refs = intermediateCache.get(realKey);
             if (refs != null) {
                 for (SoftReference<MemoizedValue> ref : refs) {
@@ -320,10 +316,10 @@ public class RecursionManager {
     }
 
     private static class MemoizedValue {
-        final Object value;
+        final @Nullable Object value;
         final MyKey[] dependencies;
 
-        MemoizedValue(Object value, MyKey[] dependencies) {
+        MemoizedValue(@Nullable Object value, MyKey[] dependencies) {
             this.value = value;
             this.dependencies = dependencies;
         }

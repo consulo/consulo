@@ -6,18 +6,15 @@ import consulo.util.collection.FList;
 import org.jspecify.annotations.Nullable;
 
 class MatcherWithFallback extends MinusculeMatcher {
-  
   private final MinusculeMatcher myMainMatcher;
 
-  @Nullable
-  private final MinusculeMatcher myFallbackMatcher;
+  private final @Nullable MinusculeMatcher myFallbackMatcher;
 
   MatcherWithFallback(MinusculeMatcher mainMatcher, @Nullable MinusculeMatcher fallbackMatcher) {
     myMainMatcher = mainMatcher;
     myFallbackMatcher = fallbackMatcher;
   }
 
-  
   @Override
   public String getPattern() {
     return myMainMatcher.getPattern();
@@ -28,25 +25,27 @@ class MatcherWithFallback extends MinusculeMatcher {
     return myMainMatcher.matches(name) || myFallbackMatcher != null && myFallbackMatcher.matches(name);
   }
 
-  @Nullable
   @Override
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> mainRanges = myMainMatcher.matchingFragments(name);
-    boolean useMainRanges = mainRanges != null && !mainRanges.isEmpty() || myFallbackMatcher == null;
-
-    return useMainRanges ? mainRanges : myFallbackMatcher.matchingFragments(name);
+    return mainRanges != null && !mainRanges.isEmpty() || myFallbackMatcher == null
+      ? mainRanges
+      : myFallbackMatcher.matchingFragments(name);
   }
 
   @Override
   public int matchingDegree(String name, boolean valueStartCaseMatch, @Nullable FList<? extends MatcherTextRange> fragments) {
     FList<MatcherTextRange> mainRanges = myMainMatcher.matchingFragments(name);
-    boolean useMainRanges = mainRanges != null && !mainRanges.isEmpty() || myFallbackMatcher == null;
-
-    return useMainRanges ? myMainMatcher.matchingDegree(name, valueStartCaseMatch, fragments) : myFallbackMatcher.matchingDegree(name, valueStartCaseMatch, fragments);
+    return mainRanges != null && !mainRanges.isEmpty() || myFallbackMatcher == null
+      ? myMainMatcher.matchingDegree(name, valueStartCaseMatch, fragments)
+      : myFallbackMatcher.matchingDegree(name, valueStartCaseMatch, fragments);
   }
 
   @Override
   public String toString() {
-    return "MatcherWithFallback{" + "myMainMatcher=" + myMainMatcher + ", myFallbackMatcher=" + myFallbackMatcher + '}';
+    return "MatcherWithFallback{" +
+      "myMainMatcher=" + myMainMatcher +
+      ", myFallbackMatcher=" + myFallbackMatcher +
+      '}';
   }
 }

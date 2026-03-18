@@ -13,6 +13,8 @@ import org.jetbrains.annotations.TestOnly;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * @author peter
  */
@@ -22,7 +24,6 @@ public class CamelHumpMatcher extends PrefixMatcher {
   private final boolean myCaseSensitive;
   private static boolean ourForceStartMatching;
   private final boolean myTypoTolerant;
-
 
   public CamelHumpMatcher(String prefix) {
     this(prefix, true);
@@ -49,8 +50,10 @@ public class CamelHumpMatcher extends PrefixMatcher {
   public boolean isStartMatch(CompositeStringHolder element) {
     for (String s : CompletionUtilCore.iterateLookupStrings(element)) {
       FList<MatcherTextRange> ranges = myCaseInsensitiveMatcher.matchingFragments(s);
-      if (ranges == null) continue;
-      if (ranges.isEmpty() || skipUnderscores(s) >= ranges.get(0).getStartOffset()) {
+      if (ranges == null) {
+        continue;
+      }
+      if (ranges.isEmpty() || skipUnderscores(s) >= Objects.requireNonNull(ranges.get(0)).getStartOffset()) {
         return true;
       }
     }

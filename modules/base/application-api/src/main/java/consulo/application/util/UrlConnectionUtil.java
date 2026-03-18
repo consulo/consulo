@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
 import consulo.application.Application;
@@ -24,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -35,8 +35,7 @@ public class UrlConnectionUtil {
   private UrlConnectionUtil() {
   }
 
-  @Nullable
-  public static InputStream getConnectionInputStream(URLConnection connection, ProgressIndicator pi) {
+  public static @Nullable InputStream getConnectionInputStream(URLConnection connection, ProgressIndicator pi) {
     try {
       return getConnectionInputStreamWithException(connection, pi);
     }
@@ -62,34 +61,36 @@ public class UrlConnectionUtil {
         }
 
         pi.setIndeterminate(true);
-        pi.setText(pi.getText());
+        pi.setTextValue(pi.getTextValue());
         if (getterFuture.isDone()) break;
       }
       catch (Exception e) {
         throw new ProcessCanceledException(e);
       }
     }
-    if (getter.getException() != null) {
-      throw getter.getException();
+
+    IOException ioException = getter.getException();
+    if (ioException != null) {
+      throw ioException;
     }
 
-    return getter.getInputStream();
+    return Objects.requireNonNull(getter.getInputStream());
   }
 
   private static class InputStreamGetter implements Runnable {
-    private InputStream myInputStream;
+    private @Nullable InputStream myInputStream;
     private final URLConnection myUrlConnection;
-    private IOException myException;
+    private @Nullable IOException myException = null;
 
     public InputStreamGetter(URLConnection urlConnection) {
       myUrlConnection = urlConnection;
     }
 
-    public IOException getException() {
+    public @Nullable IOException getException() {
       return myException;
     }
 
-    public InputStream getInputStream() {
+    public @Nullable InputStream getInputStream() {
       return myInputStream;
     }
 
@@ -103,8 +104,7 @@ public class UrlConnectionUtil {
         myInputStream = null;
       }
       catch (Exception e) {
-        myException = new IOException();
-        myException.initCause(e);
+        myException = new IOException(e);
         myInputStream = null;
       }
     }

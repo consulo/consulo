@@ -96,13 +96,11 @@ public class SystemInfo {
     return Collections.emptyMap();
   });
 
-  @Nullable
-  public static String getUnixReleaseName() {
+  public static @Nullable String getUnixReleaseName() {
     return ourOsReleaseInfo.get().get("NAME");
   }
 
-  @Nullable
-  public static String getUnixReleaseVersion() {
+  public static @Nullable String getUnixReleaseVersion() {
     return ourOsReleaseInfo.get().get("VERSION");
   }
 

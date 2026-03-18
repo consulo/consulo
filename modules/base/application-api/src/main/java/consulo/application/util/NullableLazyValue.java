@@ -28,9 +28,8 @@ import java.util.function.Supplier;
 public abstract class NullableLazyValue<T> implements Supplier<T>{
   public static <E> NullableLazyValue<E> createValue(final Supplier<? extends E> factory) {
     return new NullableLazyValue<E>() {
-      @Nullable
       @Override
-      protected E compute() {
+      protected @Nullable E compute() {
         return factory.get();
       }
     };
@@ -41,14 +40,11 @@ public abstract class NullableLazyValue<T> implements Supplier<T>{
   }
 
   private boolean myComputed;
-  @Nullable
-  private T myValue;
+  private @Nullable T myValue;
 
-  @Nullable
-  protected abstract T compute();
+  protected abstract @Nullable T compute();
 
-  @Nullable
-  public T getValue() {
+  public @Nullable T getValue() {
     if (!myComputed) {
       myValue = compute();
       myComputed = true;
@@ -57,7 +53,7 @@ public abstract class NullableLazyValue<T> implements Supplier<T>{
   }
 
   @Override
-  public T get() {
+  public @Nullable T get() {
     return getValue();
   }
 }

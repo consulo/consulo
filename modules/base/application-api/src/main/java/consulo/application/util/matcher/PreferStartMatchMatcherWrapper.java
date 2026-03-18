@@ -5,6 +5,8 @@ import consulo.util.collection.FList;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
+
 public class PreferStartMatchMatcherWrapper extends MinusculeMatcher {
   public static final int START_MATCH_WEIGHT = 10000;
   
@@ -21,7 +23,7 @@ public class PreferStartMatchMatcherWrapper extends MinusculeMatcher {
   }
 
   @Override
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     return myDelegateMatcher.matchingFragments(name);
   }
 
@@ -30,7 +32,7 @@ public class PreferStartMatchMatcherWrapper extends MinusculeMatcher {
     int degree = myDelegateMatcher.matchingDegree(name, valueStartCaseMatch, fragments);
     if (fragments == null || fragments.isEmpty()) return degree;
 
-    if (fragments.getHead().getStartOffset() == 0) {
+    if (Objects.requireNonNull(fragments.getHead()).getStartOffset() == 0) {
       degree += START_MATCH_WEIGHT;
     }
     return degree;

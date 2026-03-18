@@ -69,7 +69,7 @@ public class MetaRegistryImpl implements MetaDataService, MetaDataRegistrar {
 
     private final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> myCachedMetaCache = new UserDataCache<>() {
         @Override
-        protected CachedValue<PsiMetaData> compute(PsiElement element, Object p) {
+        protected CachedValue<PsiMetaData> compute(PsiElement element, @Nullable Object p) {
             return CachedValuesManager.getManager(element.getProject()).createCachedValue(
                 () -> {
                     ensureContributorsLoaded();

@@ -39,7 +39,7 @@ public abstract class FileTypeRegistry {
     @Deprecated
     @DeprecationInfo("Use constructor injection")
     public static FileTypeRegistry getInstance() {
-        return RootComponentHolder.getRootComponent().getInstance(FileTypeRegistry.class);
+        return RootComponentHolder.get().getInstance(FileTypeRegistry.class);
     }
 
     /**

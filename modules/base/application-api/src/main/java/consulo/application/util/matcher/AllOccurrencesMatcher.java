@@ -6,6 +6,7 @@ import consulo.util.collection.FList;
 import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * {@link FixingLayoutMatcher} extension that returns all matches (not just the first one)
@@ -18,7 +19,6 @@ public class AllOccurrencesMatcher extends MinusculeMatcher {
     delegate = new FixingLayoutMatcher(pattern, options, hardSeparators);
   }
 
-  
   @Override
   public String getPattern() {
     return delegate.getPattern();
@@ -29,9 +29,8 @@ public class AllOccurrencesMatcher extends MinusculeMatcher {
     return delegate.matchingDegree(name, valueStartCaseMatch, fragments);
   }
 
-  @Nullable
   @Override
-  public FList<MatcherTextRange> matchingFragments(String name) {
+  public @Nullable FList<MatcherTextRange> matchingFragments(String name) {
     FList<MatcherTextRange> match = delegate.matchingFragments(name);
     if (match != null && !match.isEmpty()) {
       List<FList<MatcherTextRange>> allMatchesReversed = new ArrayList<>();
@@ -42,7 +41,7 @@ public class AllOccurrencesMatcher extends MinusculeMatcher {
           reversedWithAbsoluteOffsets = reversedWithAbsoluteOffsets.prepend(r.shiftRight(lastOffset));
         }
         allMatchesReversed.add(reversedWithAbsoluteOffsets);
-        lastOffset = reversedWithAbsoluteOffsets.get(0).getEndOffset();
+        lastOffset = Objects.requireNonNull(reversedWithAbsoluteOffsets.get(0)).getEndOffset();
         match = delegate.matchingFragments(name.substring(lastOffset));
       }
       match = FList.emptyList();

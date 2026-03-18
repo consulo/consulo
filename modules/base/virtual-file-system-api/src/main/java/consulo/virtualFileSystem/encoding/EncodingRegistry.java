@@ -21,7 +21,6 @@ public interface EncodingRegistry {
   /**
    * @return charset configured in Settings|File Encodings|IDE encoding
    */
-  
   Charset getDefaultCharset();
 
   /**
@@ -49,26 +48,29 @@ public interface EncodingRegistry {
   /**
    * @return encoding used by default in {@link consulo.ide.impl.idea.execution.configurations.GeneralCommandLine}
    */
-  
   Charset getDefaultConsoleEncoding();
 
-  
   @Deprecated
   @DeprecationInfo("Use constructor injection")
   public static EncodingRegistry getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(EncodingRegistry.class);
+    return RootComponentHolder.get().getInstance(EncodingRegistry.class);
   }
 
   @Deprecated
   @DeprecationInfo("Use method with registry inside")
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(VirtualFile fileBefore, ThrowableSupplier<? extends VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(
+      VirtualFile fileBefore,
+      ThrowableSupplier<? extends VirtualFile, E> action
+  ) throws E {
     return doActionAndRestoreEncoding(getInstance(), fileBefore, action);
   }
 
   @Nullable
-  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(EncodingRegistry registry,
-                                                                             VirtualFile fileBefore,
-                                                                             ThrowableSupplier<? extends VirtualFile, E> action) throws E {
+  public static <E extends Throwable> VirtualFile doActionAndRestoreEncoding(
+    EncodingRegistry registry,
+    VirtualFile fileBefore,
+    ThrowableSupplier<? extends VirtualFile, E> action
+  ) throws E {
     Charset charsetBefore = registry.getEncoding(fileBefore, true);
     VirtualFile fileAfter = null;
     try {

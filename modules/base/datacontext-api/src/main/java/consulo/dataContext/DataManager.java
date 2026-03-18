@@ -28,34 +28,28 @@ import org.jspecify.annotations.Nullable;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface DataManager {
- 
   public static DataManager getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(DataManager.class);
+    return RootComponentHolder.get().getInstance(DataManager.class);
   }
 
   /**
    * @return {@link DataContext} constructed by the current focused component
    * @deprecated use either {@link #getDataContext(consulo.ui.Component)} or {@link #getDataContextFromFocus()}
    */
- 
   DataContext getDataContext();
 
- 
   AsyncDataContext createAsyncDataContext(DataContext dataContext);
 
   /**
    * @return {@link DataContext} constructed by the currently focused component.
    */
- 
   Promise<DataContext> getDataContextFromFocusAsync();
 
- 
   AsyncResult<DataContext> getDataContextFromFocus();
 
   /**
    * @return {@link DataContext} constructed by the specified <code>component</code>
    */
- 
   DataContext getDataContext(consulo.ui.@Nullable Component component);
 
   /**
@@ -79,10 +73,8 @@ public interface DataManager {
 
   /**
    * @return {@link DataContext} constructed be the specified <code>component</code>
-   * and the point specified by <code>x</code> and <code>y</code> coordinate inside the
-   * component.
-   * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside
-   *                                            component's bounds
+   * and the point specified by <code>x</code> and <code>y</code> coordinate inside the component.
+   * @throws java.lang.IllegalArgumentException if point <code>(x, y)</code> is not inside component's bounds
    */
   default DataContext getDataContext(java.awt.Component component, int x, int y) {
     throw new UnsupportedOperationException();

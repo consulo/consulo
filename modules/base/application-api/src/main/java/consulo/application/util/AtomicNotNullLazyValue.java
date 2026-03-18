@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.application.util;
 
 import consulo.annotation.DeprecationInfo;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -27,10 +27,8 @@ import java.util.function.Supplier;
 @Deprecated
 @DeprecationInfo("Use LazyValue")
 public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
-  
   public static <K> AtomicNotNullLazyValue<K> createValue(final Supplier<K> value) {
-    return new AtomicNotNullLazyValue<K>() {
-      
+    return new AtomicNotNullLazyValue<>() {
       @Override
       protected K compute() {
         return Objects.requireNonNull(value.get());
@@ -38,10 +36,9 @@ public abstract class AtomicNotNullLazyValue<T> extends NotNullLazyValue<T> {
     };
   }
 
-  private volatile T myValue;
+  private volatile @Nullable T myValue;
 
   @Override
-  
   public final T getValue() {
     T value = myValue;
     if (value != null) {

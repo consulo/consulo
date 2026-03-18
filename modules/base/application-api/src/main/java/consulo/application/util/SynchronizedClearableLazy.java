@@ -1,7 +1,9 @@
 package consulo.application.util;
 
 import consulo.util.lang.ObjectUtil;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
@@ -21,24 +23,24 @@ public class SynchronizedClearableLazy<T> implements Supplier<T> {
         return (T) NOT_YET_INITIALIZED;
     }
 
-    private T nullize(T t) {
+    private @Nullable T nullize(@Nullable T t) {
         return isInitialized(t) ? t : null;
     }
 
-    private boolean isInitialized(T t) {
+    private boolean isInitialized(@Nullable T t) {
         return t != NOT_YET_INITIALIZED;
     }
 
     /**
      * Returns the computed value if it has been initialized; otherwise returns null.
      */
-    public T getValueIfInitialized() {
+    public @Nullable T getValueIfInitialized() {
         return nullize(computedValue.get());
     }
 
     @Override
     public T get() {
-        T currentValue = computedValue.get();
+        T currentValue = Objects.requireNonNull(computedValue.get());
         if (isInitialized(currentValue)) {
             return currentValue;
         }
@@ -66,7 +68,7 @@ public class SynchronizedClearableLazy<T> implements Supplier<T> {
      * Checks if the value has been initialized.
      */
     public boolean isInitialized() {
-        return isInitialized(computedValue.get());
+        return isInitialized(Objects.requireNonNull(computedValue.get()));
     }
 
     @Override
@@ -77,7 +79,7 @@ public class SynchronizedClearableLazy<T> implements Supplier<T> {
     /**
      * Resets the computed value to uninitialized state and returns the previous value if it was initialized.
      */
-    public T drop() {
+    public @Nullable T drop() {
         return nullize(computedValue.getAndSet(notYetInitialized()));
     }
 

@@ -146,7 +146,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
                 }
 
                 if (myGutter == null) {
-                    myGutter = new MyActiveAnnotationGutter((Project) getProject(), myHyperlinks, indicator);
+                    myGutter = new MyActiveAnnotationGutter((Project) getRequiredProject(), myHyperlinks, indicator);
                     myEditor.getGutter().registerTextAnnotation(myGutter, myGutter);
                 }
 

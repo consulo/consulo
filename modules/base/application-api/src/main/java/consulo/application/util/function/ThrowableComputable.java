@@ -17,6 +17,7 @@ package consulo.application.util.function;
 
 import consulo.util.lang.function.ThrowableSupplier;
 
+@Deprecated
 @FunctionalInterface
 public interface ThrowableComputable<T, E extends Throwable> extends ThrowableSupplier<T, E> {
   T compute() throws E;

@@ -15,8 +15,7 @@ public class FixingLayoutMatcher extends MatcherWithFallback {
     super(new MinusculeMatcherImpl(pattern, options, hardSeparators), withFixedLayout(pattern, options, hardSeparators));
   }
 
-  @Nullable
-  public static String fixLayout(String pattern) {
+  public static @Nullable String fixLayout(String pattern) {
     boolean hasLetters = false;
     boolean onlyWrongLetters = true;
     for (int i = 0; i < pattern.length(); i++) {
@@ -43,7 +42,7 @@ public class FixingLayoutMatcher extends MatcherWithFallback {
     return null;
   }
 
-  private static MinusculeMatcher withFixedLayout(String pattern, NameUtil.@Nullable MatchingCaseSensitivity options, String hardSeparators) {
+  private static @Nullable MinusculeMatcher withFixedLayout(String pattern, NameUtil.@Nullable MatchingCaseSensitivity options, String hardSeparators) {
     String s = fixLayout(pattern);
     if (s != null && !s.equals(pattern)) {
       return new MinusculeMatcherImpl(s, options, hardSeparators);

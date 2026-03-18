@@ -8,15 +8,18 @@ import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.logging.Logger;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 
 /**
  * @author Konstantin Bulenkov
@@ -26,9 +29,8 @@ import java.text.SimpleDateFormat;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
-  private static final Logger LOG = Logger.getInstance(DateTimeFormatManager.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DateTimeFormatManager.class);
 
-  
   public static DateTimeFormatManager getInstance() {
     return Application.get().getInstance(DateTimeFormatManager.class);
   }
@@ -39,15 +41,14 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
   private boolean myOverrideSystemDateFormat = false;
   private boolean myUse24HourTime = true;
 
-  @Nullable
   @Override
-  public Element getState() {
+  public @Nullable Element getState() {
     return XmlSerializer.serialize(this);
   }
 
   @Override
   public void loadState(Element state) {
-    DateTimeFormatManager loaded = XmlSerializer.deserialize(state, DateTimeFormatManager.class);
+    DateTimeFormatManager loaded = Objects.requireNonNull(XmlSerializer.deserialize(state, DateTimeFormatManager.class));
     XmlSerializerUtil.copyBean(loaded, this);
   }
 
@@ -75,18 +76,16 @@ public class DateTimeFormatManager implements PersistentStateComponent<Element> 
     return myPrettyFormattingAllowed;
   }
 
-  @Nullable
-  public DateFormat getDateFormat() {
+  public @Nullable DateFormat getDateFormat() {
     try {
       return new SimpleDateFormat(myPattern);
     }
     catch (IllegalArgumentException e) {
-      LOG.warn(e);
+      LOG.warn("Exception while creating date format", e);
     }
     return null;
   }
 
-  
   public String getDateFormatPattern() {
     return myPattern;
   }

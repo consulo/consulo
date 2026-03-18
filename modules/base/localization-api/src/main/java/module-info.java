@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.jspecify.annotations.NullMarked;
 
 /**
  * @author UNV
  * @since 2026-01-12
  */
-import org.jspecify.annotations.NullMarked;
-
 @NullMarked
 module consulo.localization.api {
     requires transitive consulo.annotation;

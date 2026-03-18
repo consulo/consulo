@@ -32,6 +32,7 @@ public abstract class BundleBase {
 
   public static boolean assertKeyIsFound = false;
 
+  @Contract("_,_,null,_ -> null; _,_,!null,_ -> !null")
   @Nullable
   public static String messageOrDefault(
     @Nullable ResourceBundle bundle,

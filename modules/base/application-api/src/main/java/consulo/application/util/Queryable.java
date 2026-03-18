@@ -25,30 +25,28 @@ import java.util.Map;
 @Deprecated
 @DeprecationInfo("Almost unused - drop later")
 public interface Queryable {
-
   void putInfo(Map<String, String> info);
 
   class PrintInfo {
-    private final String[] myIdKeys;
-    private final String[] myInfoKeys;
+    private final String @Nullable [] myIdKeys;
+    private final String @Nullable [] myInfoKeys;
 
     public PrintInfo() {
       this(null, null);
     }
 
-    public PrintInfo(@Nullable String[] idKeys) {
+    public PrintInfo(String @Nullable [] idKeys) {
       this(idKeys, null);
     }
 
-    public PrintInfo(@Nullable String[] idKeys, @Nullable String[] infoKeys) {
+    public PrintInfo(String @Nullable [] idKeys, String @Nullable [] infoKeys) {
       myIdKeys = idKeys;
       myInfoKeys = infoKeys;
     }
   }
 
   class Util {
-    @Nullable
-    public static String print(Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
+    public static @Nullable String print(Queryable ui, @Nullable PrintInfo printInfo, @Nullable Contributor contributor) {
       PrintInfo print = printInfo != null ? printInfo : new PrintInfo();
 
       Map<String, String> map = new LinkedHashMap<>();
@@ -88,8 +86,7 @@ public interface Queryable {
       return id + (info.length() > 0 ? " " + info.toString() : "");
     }
 
-    @Nullable
-    public static String print(Queryable ui, @Nullable PrintInfo printInfo) {
+    public static @Nullable String print(Queryable ui, @Nullable PrintInfo printInfo) {
       return print(ui, printInfo, null);
     }
   }
@@ -97,5 +94,4 @@ public interface Queryable {
   interface Contributor {
     void apply(Map<String, String> info);
   }
-
 }

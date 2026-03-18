@@ -17,6 +17,7 @@ package consulo.application.util.diff;
 
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
+import org.jspecify.annotations.Nullable;
 
 class UniqueLCS {
   private final int[] myFirst;
@@ -40,7 +41,7 @@ class UniqueLCS {
     myCount2 = count2;
   }
 
-  public int[][] execute() {
+  public int @Nullable [][] execute() {
     // map: key -> (offset1 + 1)
     // match: offset1 -> (offset2 + 1)
     IntIntMap map = IntMaps.newIntIntHashMap(myCount1 + myCount2);

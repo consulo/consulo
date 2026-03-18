@@ -33,7 +33,7 @@ public class StringSearcher {
   private final int myPatternLength;
   private final int[] mySearchTable = new int[128];
   private final boolean myCaseSensitive;
-  private final boolean myLowecaseTransform;
+  private final boolean myLowercaseTransform;
   private final boolean myForwardDirection;
   private final boolean myJavaIdentifier;
   private final boolean myHandleEscapeSequences;
@@ -62,10 +62,10 @@ public class StringSearcher {
     myForwardDirection = forwardDirection;
     char[] chars = myCaseSensitive ? myPattern.toCharArray() : myPattern.toLowerCase(Locale.US).toCharArray();
     if (chars.length != myPattern.length()) {
-      myLowecaseTransform = false;
+      myLowercaseTransform = false;
       chars = myPattern.toUpperCase(Locale.US).toCharArray();
     } else {
-      myLowecaseTransform = true;
+      myLowercaseTransform = true;
     }
     myPatternArray = chars;
     myPatternLength = myPatternArray.length;
@@ -76,7 +76,6 @@ public class StringSearcher {
                         Character.isJavaIdentifierPart(pattern.charAt(pattern.length() - 1)));
   }
 
-  
   public String getPattern(){
     return myPattern;
   }
@@ -105,7 +104,6 @@ public class StringSearcher {
     return scan(text, null, _start, _end);
   }
 
-  
   public int[] findAllOccurrences(CharSequence text) {
     int end = text.length();
     IntList result = IntLists.newArrayList();
@@ -118,7 +116,7 @@ public class StringSearcher {
     return result.toArray();
   }
 
-  public int scan(CharSequence text, @Nullable char[] textArray, int _start, int _end) {
+  public int scan(CharSequence text, char @Nullable [] textArray, int _start, int _end) {
     if (_start > _end) {
       throw new AssertionError("start > end, " + _start + ">" + _end);
     }
@@ -199,12 +197,12 @@ public class StringSearcher {
     }
   }
 
-  private char normalizedCharAt(CharSequence text, @Nullable char[] textArray, int index) {
+  private char normalizedCharAt(CharSequence text, char @Nullable [] textArray, int index) {
     char lastChar = textArray != null ? textArray[index] : text.charAt(index);
     if (myCaseSensitive) {
       return lastChar;
     }
-    return myLowecaseTransform ? StringUtil.toLowerCase(lastChar) : StringUtil.toUpperCase(lastChar);
+    return myLowercaseTransform ? StringUtil.toLowerCase(lastChar) : StringUtil.toUpperCase(lastChar);
   }
 
   private boolean isSameChar(char charInPattern, char charInText) {
@@ -229,14 +227,14 @@ public class StringSearcher {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
     StringSearcher searcher = (StringSearcher)o;
 
     if (myCaseSensitive != searcher.myCaseSensitive) return false;
-    if (myLowecaseTransform != searcher.myLowecaseTransform) return false;
+    if (myLowercaseTransform != searcher.myLowercaseTransform) return false;
     if (myForwardDirection != searcher.myForwardDirection) return false;
     if (myJavaIdentifier != searcher.myJavaIdentifier) return false;
     if (myHandleEscapeSequences != searcher.myHandleEscapeSequences) return false;
@@ -247,7 +245,7 @@ public class StringSearcher {
   public int hashCode() {
     int result = myPattern.hashCode();
     result = 31 * result + (myCaseSensitive ? 1 : 0);
-    result = 31 * result + (myLowecaseTransform ? 1 : 0);
+    result = 31 * result + (myLowercaseTransform ? 1 : 0);
     result = 31 * result + (myForwardDirection ? 1 : 0);
     result = 31 * result + (myJavaIdentifier ? 1 : 0);
     result = 31 * result + (myHandleEscapeSequences ? 1 : 0);

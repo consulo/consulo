@@ -15,7 +15,8 @@
  */
 package consulo.application.util;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +30,13 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     private final Object myFlushLock;
     private final Consumer<List<T>> myConsumer;
     private int myCnt;
-    private Runnable myFlushListener;
+    private @Nullable Runnable myFlushListener;
     private volatile boolean myPendingFlush;
 
     public BufferedListConsumer(int size, Consumer<List<T>> consumer, int interval) {
         mySize = size;
         myFlushLock = new Object();
-        myBuffer = new ArrayList<T>(size);
+        myBuffer = new ArrayList<>(size);
         myConsumer = consumer;
         myInterval = interval;
         myTs = System.currentTimeMillis();
@@ -62,7 +63,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
 
     private void flushCheck() {
         long ts = System.currentTimeMillis();
-        if ((myBuffer.size() >= mySize) || (myInterval > 0) && ((ts - myInterval) > myTs)) {
+        if (myBuffer.size() >= mySize || myInterval > 0 && ts - myInterval > myTs) {
             flushImpl(ts);
         }
     }
@@ -81,10 +82,9 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
     }
 
     protected void invokeConsumer(Runnable consumerRunnable) {
-        ApplicationManager.getApplication().executeOnPooledThread(consumerRunnable);
+        Application.get().executeOnPooledThread(consumerRunnable);
     }
 
-    
     private Runnable createConsumerRunnable(long ts) {
         return () -> {
             myTs = ts;
@@ -95,7 +95,7 @@ public class BufferedListConsumer<T> implements Consumer<List<T>> {
                     return;
                 }
                 list = myBuffer;
-                myBuffer = new ArrayList<T>(mySize);
+                myBuffer = new ArrayList<>(mySize);
             }
             myConsumer.accept(list);
         };

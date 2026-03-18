@@ -31,19 +31,18 @@ public abstract class AtomicNullableLazyValue<T> extends NullableLazyValue<T> {
   
   public static <T> AtomicNullableLazyValue<T> createValue(final Supplier<? extends T> value) {
     return new AtomicNullableLazyValue<T>() {
-      @Nullable
       @Override
-      protected T compute() {
+      protected @Nullable T compute() {
         return value.get();
       }
     };
   }
 
-  private volatile T myValue;
+  private volatile @Nullable T myValue;
   private volatile boolean myComputed;
 
   @Override
-  public final T getValue() {
+  public final @Nullable T getValue() {
     boolean computed = myComputed;
     T value = myValue;
     if (computed) {

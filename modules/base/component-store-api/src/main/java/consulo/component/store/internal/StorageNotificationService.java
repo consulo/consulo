@@ -24,12 +24,12 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
- * @since 22-Mar-22
+ * @since 2022-03-22
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface StorageNotificationService {
   static StorageNotificationService getInstance() {
-    return RootComponentHolder.getRootComponent().getInstance(StorageNotificationService.class);
+    return RootComponentHolder.get().getInstance(StorageNotificationService.class);
   }
 
   void notify(NotificationType notificationType, String title, String text, @Nullable ComponentManager project);

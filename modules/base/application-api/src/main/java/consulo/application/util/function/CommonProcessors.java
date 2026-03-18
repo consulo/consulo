@@ -133,19 +133,17 @@ public class CommonProcessors {
   }
 
   public abstract static class FindProcessor<T> implements Processor<T> {
-    private T myValue;
+    private @Nullable T myValue = null;
 
     public boolean isFound() {
       return myValue != null;
     }
 
-    @Nullable
-    public T getFoundValue() {
+    public @Nullable T getFoundValue() {
       return myValue;
     }
 
-    @Nullable
-    public T reset() {
+    public @Nullable T reset() {
       T prev = myValue;
       myValue = null;
       return prev;

@@ -36,25 +36,18 @@ public abstract class GraphAlgorithms {
     return Application.get().getInstance(GraphAlgorithms.class);
   }
 
-  @Nullable
-  public abstract <Node> List<Node> findShortestPath(Graph<Node> graph, Node start, Node finish);
+  public abstract @Nullable <Node> List<Node> findShortestPath(Graph<Node> graph, Node start, Node finish);
 
-  
   public abstract <Node> List<List<Node>> findKShortestPaths(Graph<Node> graph, Node start, Node finish, int k, ProgressIndicator progressIndicator);
 
-  
   public abstract <Node> Set<List<Node>> findCycles(Graph<Node> graph, Node node);
 
-  
   public abstract <Node> List<List<Node>> removePathsWithCycles(List<List<Node>> paths);
 
-  
   public abstract <Node> Graph<Node> invertEdgeDirections(Graph<Node> graph);
 
-  
   public abstract <Node> Collection<Chunk<Node>> computeStronglyConnectedComponents(Graph<Node> graph);
 
-  
   public abstract <Node> Graph<Chunk<Node>> computeSCCGraph(Graph<Node> graph);
 
   /**

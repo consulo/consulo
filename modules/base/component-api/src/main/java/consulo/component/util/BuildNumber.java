@@ -15,6 +15,7 @@
  */
 package consulo.component.util;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -42,11 +43,13 @@ public class BuildNumber implements Comparable<BuildNumber> {
     return builder.toString();
   }
 
+  @Contract("null -> null; !null -> !null")
   @Nullable
-  public static BuildNumber fromString(String version) {
+  public static BuildNumber fromString(@Nullable String version) {
     return fromString(version, null);
   }
 
+  @Contract("null,_ -> null; !null,_ -> !null")
   @Nullable
   public static BuildNumber fromString(@Nullable String version, @Nullable String name) {
     if (version == null) {
@@ -70,7 +73,6 @@ public class BuildNumber implements Comparable<BuildNumber> {
     }
   }
 
-  @Nullable
   public static BuildNumber fallback() {
     return fromString(SNAPSHOT);
   }

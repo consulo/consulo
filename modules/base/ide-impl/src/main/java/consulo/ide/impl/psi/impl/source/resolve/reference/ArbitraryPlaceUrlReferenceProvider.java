@@ -26,34 +26,41 @@ import consulo.language.psi.ReferenceProviderType;
 import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @ExtensionImpl
 public class ArbitraryPlaceUrlReferenceProvider extends PsiReferenceProviderByType {
-  private static final UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object> ourRefsCache = new UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object>("psielement.url.refs") {
+  private static final UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object> ourRefsCache =
+      new UserDataCache<CachedValue<PsiReference[]>, PsiElement, Object>("psielement.url.refs") {
     private final AtomicReference<GlobalPathReferenceProvider> myReferenceProvider = new AtomicReference<>();
 
     @Override
-    protected CachedValue<PsiReference[]> compute(PsiElement element, Object p) {
-      return CachedValuesManager.getManager(element.getProject()).createCachedValue(() -> {
-        IssueNavigationConfiguration navigationConfiguration = IssueNavigationConfiguration.getInstance(element.getProject());
+    protected CachedValue<PsiReference[]> compute(PsiElement element, @Nullable Object p) {
+      return CachedValuesManager.getManager(element.getProject()).createCachedValue(
+        () -> {
+          IssueNavigationConfiguration navigationConfiguration = IssueNavigationConfiguration.getInstance(element.getProject());
 
-        List<PsiReference> refs = null;
-        GlobalPathReferenceProvider provider = myReferenceProvider.get();
-        CharSequence commentText = BombedStringUtil.newBombedCharSequence(element.getText(), 500);
-        for (IssueNavigationConfiguration.LinkMatch link : navigationConfiguration.findIssueLinks(commentText)) {
-          if (refs == null) refs = new SmartList<>();
-          if (provider == null) {
-            provider = (GlobalPathReferenceProvider)PathReferenceManager.getInstance().getGlobalWebPathReferenceProvider();
-            myReferenceProvider.lazySet(provider);
+          List<PsiReference> refs = null;
+          GlobalPathReferenceProvider provider = myReferenceProvider.get();
+          CharSequence commentText = BombedStringUtil.newBombedCharSequence(element.getText(), 500);
+          for (IssueNavigationConfiguration.LinkMatch link : navigationConfiguration.findIssueLinks(commentText)) {
+            if (refs == null) {
+              refs = new SmartList<>();
+            }
+            if (provider == null) {
+              provider = (GlobalPathReferenceProvider) PathReferenceManager.getInstance().getGlobalWebPathReferenceProvider();
+              myReferenceProvider.lazySet(provider);
+            }
+            provider.createUrlReference(element, link.getTargetUrl(), link.getRange(), refs);
           }
-          provider.createUrlReference(element, link.getTargetUrl(), link.getRange(), refs);
-        }
-        PsiReference[] references = refs != null ? refs.toArray(new PsiReference[refs.size()]) : PsiReference.EMPTY_ARRAY;
-        return new CachedValueProvider.Result<>(references, element, navigationConfiguration);
-      }, false);
+          PsiReference[] references = refs != null ? refs.toArray(new PsiReference[refs.size()]) : PsiReference.EMPTY_ARRAY;
+          return new CachedValueProvider.Result<>(references, element, navigationConfiguration);
+        },
+        false
+      );
     }
   };
 

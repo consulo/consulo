@@ -15,11 +15,14 @@
  */
 package consulo.util.lang.function;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
- * @since 29/12/2021
+ * @since 2021-12-29
  */
 @FunctionalInterface
 public interface ThrowableSupplier<T, E extends Throwable> {
+  @Nullable
   T get() throws E;
 }

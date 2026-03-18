@@ -15,9 +15,9 @@
  */
 package consulo.util.lang;
 
-
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.function.ThrowableSupplier;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -58,6 +58,7 @@ public class ClassLoaderUtil {
     }
   }
 
+  @Nullable
   public static <T, E extends Throwable> T runWithClassLoader(ClassLoader classLoader, ThrowableSupplier<T, E> computable) throws E {
     ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
     try {

@@ -364,7 +364,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction {
         }
 
         private void runImpl() {
-            StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project) getProject());
+            StoreReloadManager storeReloadManager = StoreReloadManager.getInstance((Project) getRequiredProject());
 
             storeReloadManager.blockReloadingProjectOnExternalChanges();
             myProjectLevelVcsManager.startBackgroundVcsOperation();

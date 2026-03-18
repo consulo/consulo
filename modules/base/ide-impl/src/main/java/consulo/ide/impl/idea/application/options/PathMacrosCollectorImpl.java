@@ -21,8 +21,10 @@ import consulo.component.macro.PathMacroMap;
 import consulo.component.store.internal.PathMacrosService;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroManager;
+import consulo.util.lang.StringUtil;
 import org.jdom.Element;
 
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -72,9 +74,11 @@ public class PathMacrosCollectorImpl extends PathMacroMap {
     return text;
   }
 
+  @Contract("null,_ -> null; !null,_ -> !null")
+  @Nullable
   @Override
-  public String substitute(String text, boolean caseSensitive) {
-    if (text == null || text.isEmpty()) return text;
+  public String substitute(@Nullable String text, boolean caseSensitive) {
+    if (StringUtil.isEmpty(text)) return text;
 
     String protocol = null;
     if (text.length() > 7 && text.charAt(0) == 'f') {

@@ -21,6 +21,7 @@ import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;
 import consulo.platform.Platform;
 import consulo.util.jna.JnaLoader;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ import java.text.SimpleDateFormat;
 @ExtensionImpl
 public class MacDateTimeFormatProvider implements DateTimeFormatProvider {
     @Override
-    public DateFormat[] getFormats(Platform platform) {
+    public DateFormat @Nullable [] getFormats(Platform platform) {
         return platform.os().isMac() && JnaLoader.isLoaded() ? getMacFormats() : null;
     }
 

@@ -63,28 +63,29 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void setSelected(AnActionEvent e, boolean state) {
                 FindSettings.getInstance().setShowResultsInSeparateView(state);
             }
         };
 
-        DumbAwareToggleAction toggleSortAction =
-            new DumbAwareToggleAction(
-                UsageLocalize.sortAlphabeticallyActionText(),
-                LocalizeValue.empty(),
-                PlatformIconGroup.objectbrowserSorted()
-            ) {
-                @Override
-                public boolean isSelected(AnActionEvent e) {
-                    return UsageViewSettings.getInstance().isSortAlphabetically();
-                }
+        DumbAwareToggleAction toggleSortAction = new DumbAwareToggleAction(
+            UsageLocalize.sortAlphabeticallyActionText(),
+            LocalizeValue.empty(),
+            PlatformIconGroup.objectbrowserSorted()
+        ) {
+            @Override
+            public boolean isSelected(AnActionEvent e) {
+                return UsageViewSettings.getInstance().isSortAlphabetically();
+            }
 
-                @Override
-                public void setSelected(AnActionEvent e, boolean state) {
-                    UsageViewSettings.getInstance().setSortAlphabetically(state);
-                    project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
-                }
-            };
+            @Override
+            @RequiredUIAccess
+            public void setSelected(AnActionEvent e, boolean state) {
+                UsageViewSettings.getInstance().setSortAlphabetically(state);
+                project.getMessageBus().syncPublisher(UsageFilteringRuleListener.class).rulesChanged();
+            }
+        };
 
         DumbAwareToggleAction toggleAutoscrollAction = new DumbAwareToggleAction(
             UILocalize.autoscrollToSourceActionName(),
@@ -97,6 +98,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
             }
 
             @Override
+            @RequiredUIAccess
             public void setSelected(AnActionEvent e, boolean state) {
                 UsageViewSettings.getInstance().setAutoScrollToSource(state);
             }
@@ -117,7 +119,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         ContentManagerWatcher.watchContentManager(toolWindow, myFindContentManager);
     }
 
-    
+
     @Override
     public Content addContent(
         String contentName,
@@ -129,7 +131,7 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         return addContent(contentName, null, null, reusable, component, toOpenInNewTab, isLockable);
     }
 
-    
+
     @Override
     public Content addContent(
         String contentName,

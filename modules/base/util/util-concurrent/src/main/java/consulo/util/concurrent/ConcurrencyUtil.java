@@ -39,7 +39,8 @@ public class ConcurrencyUtil {
    * (see <a href="http://gafter.blogspot.com/2006/11/thread-pool-puzzler.html">"A Thread Pool Puzzler"</a>).
    */
   @Nullable
-  public static <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, ExecutorService executorService) throws Throwable {
+  public static <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, @Nullable ExecutorService executorService)
+    throws Throwable {
     if (executorService == null) {
       for (Callable<T> task : tasks) {
         task.call();
@@ -216,6 +217,7 @@ public class ConcurrencyUtil {
     };
   }
 
+  @Nullable
   public static <T, E extends Throwable> T withLock(Lock lock, ThrowableSupplier<T, E> runnable) throws E {
     lock.lock();
     try {

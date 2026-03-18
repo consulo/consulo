@@ -815,7 +815,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         @Override
         public void run(ProgressIndicator indicator) {
             writeState();
-            DaemonCodeAnalyzer.getInstance((Project) getProject()).restart();
+            DaemonCodeAnalyzer.getInstance((Project) getRequiredProject()).restart();
             try {
                 SAXTransformerFactory transformerFactory = (SAXTransformerFactory) TransformerFactory.newInstance();
                 TransformerHandler handler = transformerFactory.newTransformerHandler();
@@ -845,7 +845,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         private void writeState() {
             // read action to prevent project (and storage) from being disposed
             myConsoleProperties.getProject().getApplication().runReadAction(() -> {
-                Project project = (Project) getProject();
+                Project project = (Project) getRequiredProject();
                 if (project.isDisposed()) {
                     return;
                 }
