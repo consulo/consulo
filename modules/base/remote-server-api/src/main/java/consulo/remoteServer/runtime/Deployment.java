@@ -1,5 +1,6 @@
 package consulo.remoteServer.runtime;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
@@ -11,16 +12,11 @@ public interface Deployment {
     
     String getName();
 
-    
-    
     String getPresentableName();
 
-    
     DeploymentStatus getStatus();
 
-    
-    
-    String getStatusText();
+    LocalizeValue getStatusText();
 
     @Nullable
     DeploymentRuntime getRuntime();
@@ -31,11 +27,9 @@ public interface Deployment {
     @Nullable
     DeploymentTask<?> getDeploymentTask();
 
-    
     DeploymentLogManager getOrCreateLogManager(Project project);
 
-    void setStatus(DeploymentStatus status, @Nullable String statusText);
+    void setStatus(DeploymentStatus status, LocalizeValue statusText);
 
-    
     ServerConnection<?> getConnection();
 }

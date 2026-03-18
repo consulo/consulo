@@ -1,5 +1,6 @@
 package consulo.remoteServer.runtime.deployment;
 
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.configuration.deployment.DeploymentSource;
 import consulo.remoteServer.runtime.Deployment;
@@ -43,7 +44,7 @@ public abstract class ServerRuntimeInstance<D extends DeploymentConfiguration> {
         Deployment addDeployment(String deploymentName,
                                  @Nullable DeploymentRuntime deploymentRuntime,
                                  @Nullable DeploymentStatus deploymentStatus,
-                                 @Nullable String deploymentStatusText);
+                                 LocalizeValue deploymentStatusText);
 
         void succeeded();
     }

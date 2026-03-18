@@ -1,11 +1,12 @@
 package consulo.remoteServer.runtime;
 
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
 
 public interface RemoteOperationCallback {
-    void errorOccurred(String errorMessage);
+    void errorOccurred(LocalizeValue errorMessage);
 
-    default void errorOccurred(String errorMessage, DeploymentRuntime failedDeployment) {
+    default void errorOccurred(LocalizeValue errorMessage, DeploymentRuntime failedDeployment) {
         errorOccurred(errorMessage);
     }
 }

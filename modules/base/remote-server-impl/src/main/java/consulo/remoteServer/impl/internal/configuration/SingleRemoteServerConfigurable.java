@@ -6,11 +6,11 @@ import consulo.configurable.internal.ConfigurableUIMigrationUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
-import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.RemoteServerConfigurable;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.ServerConfiguration;
 import consulo.remoteServer.impl.internal.util.DelayedRunner;
+import consulo.remoteServer.localize.RemoteServerLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
@@ -67,7 +67,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
                 if (result) {
                     myAppliedButNeedsCheck = false;
 
-                    setConnectionStatus(false, false, "");
+                    setConnectionStatus(false, false, LocalizeValue.empty());
                     myConnectionTester = null;
 
                     if (modified) {
@@ -76,7 +76,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
                             myInnerApplied = true;
                         }
                         catch (ConfigurationException e) {
-                            setConnectionStatus(true, false, e.getMessage());
+                            setConnectionStatus(true, false, LocalizeValue.ofNullable(e.getMessage()));
                         }
                     }
                 }
@@ -85,7 +85,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
 
             @Override
             protected void run() {
-                setConnectionStatus(false, false, CloudBundle.message("cloud.status.connecting"));
+                setConnectionStatus(false, false, RemoteServerLocalize.cloudStatusConnecting());
 
                 myConnectionTester = new ConnectionTester();
                 myConnectionTester.testConnection();
@@ -98,14 +98,14 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
         return server.getType().createServerConfigurable(configuration);
     }
 
-    private void setConnectionStatus(boolean error, boolean connected, String text) {
+    private void setConnectionStatus(boolean error, boolean connected, LocalizeValue text) {
         myConnected = connected;
         setConnectionStatusText(error, text);
     }
 
-    protected void setConnectionStatusText(boolean error, String text) {
-        myConnectionStatusLabel.setText(UIUtil.toHtml(text));
-        myConnectionStatusLabel.setVisible(StringUtil.isNotEmpty(text));
+    protected void setConnectionStatusText(boolean error, LocalizeValue text) {
+        myConnectionStatusLabel.setText(UIUtil.toHtml(text.get()));
+        myConnectionStatusLabel.setVisible(StringUtil.isNotEmpty(text.get()));
     }
 
     @Override
@@ -147,6 +147,7 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
         return myNew || myConfigurable.isModified() || myInnerApplied || !myServerName.equals(myServer.getName());
     }
 
+    @RequiredUIAccess
     @Override
     public void apply() throws ConfigurationException {
         boolean uncheckedApply = myConfigurable.isModified();
@@ -158,11 +159,13 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
         myInnerApplied = false;
     }
 
+    @RequiredUIAccess
     @Override
     public void reset() {
         myConfigurable.reset();
     }
 
+    @RequiredUIAccess
     @Override
     public void disposeUIResources() {
         myConfigurable.disposeUIResources();
@@ -186,12 +189,12 @@ public class SingleRemoteServerConfigurable extends NamedConfigurable<RemoteServ
             myTester.testConnection(this::testFinished);
         }
 
-        public void testFinished(boolean connected, String connectionStatus) {
+        public void testFinished(boolean connected, LocalizeValue connectionStatus) {
             UIUtil.invokeLaterIfNeeded(() -> {
                 if (myConnectionTester == this) {
                     setConnectionStatus(!connected, connected,
-                        connected ? CloudBundle.message("cloud.status.connection.successful")
-                            : CloudBundle.message("cloud.status.cannot.connect", connectionStatus));
+                        connected ? RemoteServerLocalize.cloudStatusConnectionSuccessful()
+                            : RemoteServerLocalize.cloudStatusCannotConnect(connectionStatus));
                 }
             });
         }

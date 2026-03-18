@@ -4,6 +4,7 @@ package consulo.remoteServer.impl.internal.configuration;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.Semaphore;
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.CloudBundle;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.runtime.ServerConnection;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RemoteServerConnectionTester {
 
     public interface Callback {
-        void connectionTested(boolean wasConnected, String hadStatusText);
+        void connectionTested(boolean wasConnected, LocalizeValue hadStatusText);
     }
 
     private final RemoteServer<?> myServer;
@@ -42,7 +43,7 @@ public class RemoteServerConnectionTester {
             }
 
             @Override
-            public void errorOccurred(String errorMessage) {
+            public void errorOccurred(LocalizeValue errorMessage) {
                 connectedRef.set(false);
                 semaphore.up();
             }

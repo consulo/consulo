@@ -1,6 +1,7 @@
 package consulo.remoteServer.impl.internal.runtime;
 
 import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.remoteServer.runtime.RemoteOperationCallback;
 import consulo.remoteServer.runtime.ServerTaskExecutor;
@@ -37,7 +38,7 @@ public class ServerTaskExecutorImpl implements ServerTaskExecutor {
             }
             catch (Throwable e) {
                 LOG.info(e);
-                callback.errorOccurred(e.getMessage());
+                callback.errorOccurred(LocalizeValue.ofNullable(e.getMessage()));
             }
         });
     }

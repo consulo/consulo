@@ -15,6 +15,7 @@
  */
 package consulo.remoteServer.runtime;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
@@ -30,12 +31,9 @@ public interface ServerConnection<D extends DeploymentConfiguration> {
     
     RemoteServer<?> getServer();
 
-    
     ConnectionStatus getStatus();
 
-    
-    
-    String getStatusText();
+    LocalizeValue getStatusText();
 
     void connect(Runnable onFinished);
 

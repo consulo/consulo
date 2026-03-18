@@ -3358,6 +3358,8 @@ public final class StringUtil {
      * </ul>
      */
     @SuppressWarnings({"StringEquality", "StringEqualitySSR"})
+    @Deprecated
+    @DeprecationInfo("Calling this method - bad idea. Use equals, or other object checking")
     public static boolean areSameInstance(@Nullable String s1, @Nullable String s2) {
         return s1 == s2;
     }

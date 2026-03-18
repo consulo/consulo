@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.runtime.deployment;
 
+import consulo.localize.LocalizeValue;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.impl.internal.runtime.ServerConnectionImpl;
 import consulo.remoteServer.runtime.deployment.DeploymentRuntime;
@@ -19,7 +20,7 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     public LocalDeploymentImpl(ServerRuntimeInstance<D> instance,
                                ServerConnectionImpl<D> connection,
                                DeploymentStatus status,
-                               @Nullable String statusText,
+                               LocalizeValue statusText,
                                @Nullable DeploymentRuntime runtime,
                                DeploymentTask<D> deploymentTask) {
         super(connection,
@@ -59,7 +60,7 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     }
 
     @Override
-    public String getStatusText() {
+    public LocalizeValue getStatusText() {
         return isLocalState() ? super.getStatusText() : myRemoteDeployment.getStatusText();
     }
 
@@ -70,7 +71,7 @@ public class LocalDeploymentImpl<D extends DeploymentConfiguration> extends Depl
     @Override
     public boolean changeState(DeploymentStatus oldStatus,
                                DeploymentStatus newStatus,
-                               @Nullable String statusText,
+                               LocalizeValue statusText,
                                @Nullable DeploymentRuntime runtime) {
         boolean result = super.changeState(oldStatus, newStatus, statusText, runtime);
         if (result && myRemoteDeployment != null) {

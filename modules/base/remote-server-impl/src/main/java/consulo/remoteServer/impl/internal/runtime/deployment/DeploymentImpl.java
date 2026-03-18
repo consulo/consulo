@@ -1,6 +1,7 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.remoteServer.impl.internal.runtime.deployment;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
 import consulo.remoteServer.impl.internal.runtime.ServerConnectionImpl;
@@ -22,7 +23,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     public DeploymentImpl(ServerConnectionImpl<D> connection,
                           String name,
                           DeploymentStatus status,
-                          @Nullable String statusText,
+                          LocalizeValue statusText,
                           @Nullable DeploymentRuntime runtime,
                           @Nullable DeploymentTask<D> deploymentTask) {
         myConnection = connection;
@@ -42,9 +43,9 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public String getStatusText() {
-        String statusText = myState.getStatusText();
-        return statusText != null ? statusText : myState.getStatus().getPresentableText().get();
+    public LocalizeValue getStatusText() {
+        LocalizeValue statusText = myState.getStatusText();
+        return statusText.orIfEmpty(myState.getStatus().getPresentableText());
     }
 
     @Override
@@ -67,7 +68,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
     }
 
     @Override
-    public void setStatus(DeploymentStatus status, @Nullable String statusText) {
+    public void setStatus(DeploymentStatus status, LocalizeValue statusText) {
         myConnection.changeDeploymentState(this, getRuntime(), myState.getStatus(), status, statusText);
     }
 
@@ -84,7 +85,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
 
     public boolean changeState(DeploymentStatus oldStatus,
                                DeploymentStatus newStatus,
-                               @Nullable String statusText,
+                               LocalizeValue statusText,
                                @Nullable DeploymentRuntime runtime) {
         if (myState.getStatus() == oldStatus) {
             myState = new DeploymentState(newStatus, statusText, runtime);
@@ -104,10 +105,10 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
 
     protected static final class DeploymentState {
         private final DeploymentStatus myStatus;
-        private final String myStatusText;
+        private final LocalizeValue myStatusText;
         private final DeploymentRuntime myRuntime;
 
-        private DeploymentState(DeploymentStatus status, @Nullable String statusText, @Nullable DeploymentRuntime runtime) {
+        private DeploymentState(DeploymentStatus status, LocalizeValue statusText, @Nullable DeploymentRuntime runtime) {
             myStatus = status;
             myStatusText = statusText;
             myRuntime = runtime;
@@ -117,7 +118,7 @@ public class DeploymentImpl<D extends DeploymentConfiguration> implements Deploy
             return myStatus;
         }
 
-        public @Nullable String getStatusText() {
+        public LocalizeValue getStatusText() {
             return myStatusText;
         }
 
