@@ -34,19 +34,14 @@ public abstract class TypePresentationService {
     return Application.get().getInstance(TypePresentationService.class);
   }
 
-  @Nullable
-  public abstract Image getIcon(Object o);
+  public abstract @Nullable Image getIcon(Object o);
 
-  @Nullable
-  public abstract String getPresentableName(Object o);
+  public abstract @Nullable String getPresentableName(Object o);
 
-  @Nullable
-  public abstract Image getTypeIcon(Class type);
+  public abstract @Nullable Image getTypeIcon(Class type);
 
-  @Nullable
-  public abstract String getTypeName(Object o);
+  public abstract @Nullable String getTypeName(Object o);
 
-  
   public String getTypeNameOrStub(Object o) {
     String typeName = getTypeName(o);
     return typeName != null ? typeName : getDefaultTypeName(o.getClass());

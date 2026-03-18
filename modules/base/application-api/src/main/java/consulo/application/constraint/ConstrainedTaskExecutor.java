@@ -13,17 +13,15 @@ import java.util.function.BooleanSupplier;
  * @author eldar
  */
 public class ConstrainedTaskExecutor implements Executor {
-  private final
-  
-  ConstrainedExecutionScheduler myExecutionScheduler;
-  private final
-  @Nullable
-  BooleanSupplier myCancellationCondition;
-  private final
-  @Nullable
-  Expiration myExpiration;
+  private final ConstrainedExecutionScheduler myExecutionScheduler;
+  private final @Nullable BooleanSupplier myCancellationCondition;
+  private final @Nullable Expiration myExpiration;
 
-  public ConstrainedTaskExecutor(ConstrainedExecutionScheduler executionScheduler, @Nullable BooleanSupplier cancellationCondition, @Nullable Expiration expiration) {
+  public ConstrainedTaskExecutor(
+    ConstrainedExecutionScheduler executionScheduler,
+    @Nullable BooleanSupplier cancellationCondition,
+    @Nullable Expiration expiration
+  ) {
     myExecutionScheduler = executionScheduler;
     myCancellationCondition = cancellationCondition;
     myExpiration = expiration;

@@ -21,6 +21,7 @@ import consulo.util.lang.ObjectUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,15 +37,17 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile boolean myRunning;
   private volatile boolean myFinished;
 
-  private volatile boolean myIndeterminate = Boolean.parseBoolean(System.getProperty("consulo.ide.impl.progress.indeterminate.by.default", "true"));
-  private volatile Runnable myActivity;
+  private volatile boolean myIndeterminate =
+    Boolean.parseBoolean(System.getProperty("consulo.ide.impl.progress.indeterminate.by.default", "true"));
+  private volatile @Nullable Runnable myActivity = null;
   private volatile boolean myShouldStartActivity = true;
 
-  private Stack<LocalizeValue> myTextStack; // guarded by this
-  private DoubleList myFractionStack; // guarded by this
-  private Stack<LocalizeValue> myText2Stack; // guarded by this
+  private @Nullable Stack<LocalizeValue> myTextStack = null; // guarded by this
+  private @Nullable DoubleList myFractionStack = null; // guarded by this
+  private @Nullable Stack<LocalizeValue> myText2Stack = null; // guarded by this
 
-  private ProgressIndicator myModalityProgress;
+  private @Nullable ProgressIndicator myModalityProgress = null;
+
   private volatile ModalityState myModalityState = ModalityState.nonModal();
   private volatile int myNonCancelableSectionCount;
   private final Object lock = ObjectUtil.sentinel("APIB lock");
@@ -133,8 +136,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     }
   }
 
-  @Nullable
-  protected Throwable getCancellationTrace() {
+  protected @Nullable Throwable getCancellationTrace() {
     if (this instanceof Disposable disposable) {
       return Disposer.getDisposalTrace(disposable);
     }
@@ -146,7 +148,6 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myText = text;
   }
 
-  
   @Override
   public LocalizeValue getTextValue() {
     return myText;
@@ -157,7 +158,6 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myText2 = text;
   }
 
-  
   @Override
   public LocalizeValue getText2Value() {
     return myText2;
@@ -172,8 +172,11 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   public void setFraction(double fraction) {
     if (isIndeterminate()) {
       StackTraceElement[] trace = new Throwable().getStackTrace();
-      Optional<StackTraceElement> first = Arrays.stream(trace).filter(element -> !element.getClassName().startsWith("consulo.ide.impl.idea.openapi.progress.util")).findFirst();
-      String message = "This progress indicator is indeterminate, this may lead to visual inconsistency. " + "Please call setIndeterminate(false) before you start progress.";
+      Optional<StackTraceElement> first = Arrays.stream(trace)
+        .filter(element -> !element.getClassName().startsWith("consulo.ide.impl.idea.openapi.progress.util"))
+        .findFirst();
+      String message = "This progress indicator is indeterminate, this may lead to visual inconsistency. " +
+        "Please call setIndeterminate(false) before you start progress.";
       if (first.isPresent()) {
         message += "\n" + first.get();
       }
@@ -195,13 +198,12 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   @Override
   public void popState() {
     synchronized (getLock()) {
-      LOG.assertTrue(!myTextStack.isEmpty());
-      LocalizeValue oldText = myTextStack.pop();
-      LocalizeValue oldText2 = myText2Stack.pop();
+      LocalizeValue oldText = Objects.requireNonNull(myTextStack).pop();
+      LocalizeValue oldText2 = Objects.requireNonNull(myText2Stack).pop();
       setTextValue(oldText);
       setText2Value(oldText2);
 
-      double oldFraction = myFractionStack.removeByIndex(myFractionStack.size() - 1);
+      double oldFraction = Objects.requireNonNull(myFractionStack).removeByIndex(myFractionStack.size() - 1);
       if (!isIndeterminate()) {
         setFraction(oldFraction);
       }
@@ -232,12 +234,12 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   @Override
-  
   public ModalityState getModalityState() {
     return myModalityState;
   }
 
   @Override
+  @RequiredUIAccess
   public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
     LOG.assertTrue(!isRunning());
     myModalityProgress = modalityProgress;
@@ -252,7 +254,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
 
     if (modalityProgress != null) {
       UIAccess.assertIsUIThread();
-      modalityState = ((ModalityStateWithProgress)modalityState).appendProgress(modalityProgress);
+      modalityState = ((ModalityStateWithProgress) modalityState).appendProgress(modalityProgress);
     }
 
     myModalityState = modalityState;
@@ -309,28 +311,30 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myShouldStartActivity = false;
   }
 
-  
   private Stack<LocalizeValue> getTextStack() {
     Stack<LocalizeValue> stack = myTextStack;
-    if (stack == null) myTextStack = stack = new Stack<>(2);
+   if (stack == null) {
+    myTextStack = stack = new Stack<>(2);
+   }
     return stack;
   }
 
-  
   private DoubleList getFractionStack() {
     DoubleList stack = myFractionStack;
-    if (stack == null) myFractionStack = stack = DoubleLists.newArrayList(2);
+    if (stack == null) {
+      myFractionStack = stack = DoubleLists.newArrayList(2);
+    }
     return stack;
   }
 
-  
   private Stack<LocalizeValue> getText2Stack() {
     Stack<LocalizeValue> stack = myText2Stack;
-    if (stack == null) myText2Stack = stack = new Stack<>(2);
+    if (stack == null) {
+      myText2Stack = stack = new Stack<>(2);
+    }
     return stack;
   }
 
-  
   protected Object getLock() {
     return lock;
   }

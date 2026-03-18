@@ -25,6 +25,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.input.sax.XMLReaders;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.*;
@@ -45,14 +46,14 @@ public class StartupActionScriptManager {
     private static final String action = "unzip";
 
     private File mySource;
-    private FilenameFilter myFilenameFilter;
+    private @Nullable FilenameFilter myFilenameFilter;
     private File myDestination;
 
     public UnzipCommand(File source, File destination) {
       this(source, destination, null);
     }
 
-    public UnzipCommand(File source, File destination, FilenameFilter filenameFilter) {
+    public UnzipCommand(File source, File destination, @Nullable FilenameFilter filenameFilter) {
       myDestination = destination;
       mySource = source;
       myFilenameFilter = filenameFilter;
@@ -66,12 +67,15 @@ public class StartupActionScriptManager {
       return myDestination;
     }
 
-    public FilenameFilter getFilenameFilter() {
+    public @Nullable FilenameFilter getFilenameFilter() {
       return myFilenameFilter;
     }
 
+    @Override
     public String toString() {
-      return action + "[" + mySource.getAbsolutePath() + (myDestination == null ? "" : ", " + myDestination.getAbsolutePath()) + (myFilenameFilter == null ? "" : "," + myFilenameFilter) + "]";
+      return action + "[" + mySource.getAbsolutePath() +
+          (myDestination == null ? "" : ", " + myDestination.getAbsolutePath()) +
+          (myFilenameFilter == null ? "" : "," + myFilenameFilter) + "]";
     }
 
     @Override
@@ -80,9 +84,17 @@ public class StartupActionScriptManager {
         logger.error("Source file " + mySource.getAbsolutePath() + " does not exist for action " + this);
       }
       else if (!canCreateFile(myDestination)) {
-        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), MessageFormat
-                                              .format("<html>Cannot unzip {0}<br>to<br>{1}<br>Please, check your access rights on folder <br>{2}", mySource.getAbsolutePath(), myDestination.getAbsolutePath(), myDestination),
-                                      "Installing Plugin", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(
+          JOptionPane.getRootFrame(),
+          MessageFormat.format(
+            "<html>Cannot unzip {0}<br>to<br>{1}<br>Please, check your access rights on folder <br>{2}",
+            mySource.getAbsolutePath(),
+            myDestination.getAbsolutePath(),
+            myDestination
+          ),
+          "Installing Plugin",
+          JOptionPane.ERROR_MESSAGE
+        );
       }
       else {
         try {
@@ -91,13 +103,19 @@ public class StartupActionScriptManager {
         catch (Exception ex) {
           logger.error(ex);
 
-          JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), MessageFormat
-                  .format("<html>Failed to extract ZIP file {0}<br>to<br>{1}<br>You may need to re-download the plugin you tried to install.", mySource.getAbsolutePath(),
-                          myDestination.getAbsolutePath()), "Installing Plugin", JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(
+            JOptionPane.getRootFrame(),
+            MessageFormat.format(
+              "<html>Failed to extract ZIP file {0}<br>to<br>{1}<br>You may need to re-download the plugin you tried to install.",
+              mySource.getAbsolutePath(),
+              myDestination.getAbsolutePath()
+            ),
+            "Installing Plugin",
+            JOptionPane.ERROR_MESSAGE
+          );
         }
       }
     }
-
   }
 
   public static class CreateFileCommand implements ActionCommand {
@@ -137,6 +155,7 @@ public class StartupActionScriptManager {
       return mySource;
     }
 
+    @Override
     public String toString() {
       return action + "[" + mySource.getAbsolutePath() + "]";
     }
@@ -153,9 +172,16 @@ public class StartupActionScriptManager {
       else if (!FileUtil.delete(mySource)) {
         logger.error("Action " + this + " failed.");
 
-        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
-                                      MessageFormat.format("<html>Cannot delete {0}<br>Please, check your access rights on folder <br>{1}", mySource.getAbsolutePath(), mySource.getAbsolutePath()),
-                                      "Installing Plugin", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(
+          JOptionPane.getRootFrame(),
+          MessageFormat.format(
+            "<html>Cannot delete {0}<br>Please, check your access rights on folder <br>{1}",
+            mySource.getAbsolutePath(),
+            mySource.getAbsolutePath()
+          ),
+          "Installing Plugin",
+          JOptionPane.ERROR_MESSAGE
+        );
       }
     }
   }
@@ -246,7 +272,7 @@ public class StartupActionScriptManager {
             String filter = element.getAttributeValue("filter");
             FilenameFilter filenameFilter = null;
             if ("import".equals(filter)) {
-              Set<String> names = new HashSet<String>();
+              Set<String> names = new HashSet<>();
               for (Element child : element.getChildren()) {
                 names.add(child.getTextTrim());
               }
@@ -346,7 +372,7 @@ public class StartupActionScriptManager {
             }
           }
           else if (filenameFilter != null) {
-            throw new UnsupportedOperationException("Unsupported fiter type: " + filenameFilter.getClass().getName());
+            throw new UnsupportedOperationException("Unsupported filter type: " + filenameFilter.getClass().getName());
           }
         }
       }

@@ -59,7 +59,6 @@ import java.util.Objects;
 public interface ProgressIndicator {
     Key<ProgressIndicator> KEY = Key.of(ProgressIndicator.class);
 
-    
     static ProgressIndicator from(Continuation<?> continuation) {
         ProgressIndicator indicator = continuation.scope().getCopyableUserData(KEY);
         return Objects.requireNonNull(indicator, "ProgressIndicator must be set");
@@ -119,12 +118,10 @@ public interface ProgressIndicator {
     /**
      * @return text above the progress bar, set by {@link #setText(String)}
      */
-    @Nullable
-    default String getText() {
+    default @Nullable String getText() {
         return getTextValue().getNullIfEmpty();
     }
 
-    
     LocalizeValue getTextValue();
 
     /**
@@ -150,12 +147,10 @@ public interface ProgressIndicator {
     /**
      * @return text under the progress bar, set by {@link #setText2(String)}
      */
-    @Nullable
-    default String getText2() {
+    default @Nullable String getText2() {
         return getText2Value().getNullIfEmpty();
     }
 
-    
     LocalizeValue getText2Value();
 
     /**
@@ -201,7 +196,6 @@ public interface ProgressIndicator {
      * By default, depending on implementation, it's {@link ModalityState#NON_MODAL} or current modality at the moment of progress indicator creation.
      * It can be later modified by {@link #setModalityProgress(ProgressIndicator)}, but it mostly makes sense for processes showing modal dialogs.
      */
-    
     ModalityState getModalityState();
 
     /**

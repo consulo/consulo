@@ -10,10 +10,10 @@ import java.lang.management.ThreadInfo;
  */
 public class ThreadDump {
   private final String myRawDump;
-  private final StackTraceElement[] myEdtStack;
+  private final StackTraceElement @Nullable [] myEdtStack;
   private final ThreadInfo[] myThreadInfos;
 
-  ThreadDump(String rawDump, @Nullable StackTraceElement[] edtStack, ThreadInfo[] threadInfos) {
+  ThreadDump(String rawDump, StackTraceElement @Nullable [] edtStack, ThreadInfo[] threadInfos) {
     myRawDump = rawDump;
     myEdtStack = edtStack;
     myThreadInfos = threadInfos;
@@ -30,12 +30,10 @@ public class ThreadDump {
   /**
    * @return state of the AWT thread from the dump
    */
-  @Nullable
-  public StackTraceElement[] getEDTStackTrace() {
+  public StackTraceElement @Nullable [] getEDTStackTrace() {
     return myEdtStack;
   }
 
-  
   ThreadInfo[] getThreadInfos() {
     return myThreadInfos;
   }

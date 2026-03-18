@@ -3,7 +3,7 @@ package consulo.application.progress;
 import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ModalityState;
-
+import org.jspecify.annotations.Nullable;
 
 public class DumbProgressIndicator implements StandardProgressIndicator {
   public static final DumbProgressIndicator INSTANCE = new DumbProgressIndicator();
@@ -89,7 +89,7 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
   }
 
   @Override
-  public void setModalityProgress(ProgressIndicator modalityProgress) {
+  public void setModalityProgress(@Nullable ProgressIndicator modalityProgress) {
   }
 
   @Override

@@ -21,15 +21,16 @@ import consulo.application.progress.TaskInfo;
 import consulo.localize.LocalizeValue;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.WeakList;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBase implements ProgressIndicatorEx {
   private final boolean myReusable;
-  private volatile ProgressIndicatorEx[] myStateDelegates;
-  private volatile WeakList<TaskInfo> myFinished;
+  private volatile ProgressIndicatorEx @Nullable [] myStateDelegates = null;
+  private volatile @Nullable WeakList<TaskInfo> myFinished = null;
   private volatile boolean myWasStarted;
-  private TaskInfo myOwnerTask;
+  private @Nullable TaskInfo myOwnerTask = null;
 
   public AbstractProgressIndicatorExBase(boolean reusable) {
     myReusable = reusable;
@@ -47,7 +48,6 @@ public class AbstractProgressIndicatorExBase extends AbstractProgressIndicatorBa
       myWasStarted = true;
     }
   }
-
 
   @Override
   public void stop() {

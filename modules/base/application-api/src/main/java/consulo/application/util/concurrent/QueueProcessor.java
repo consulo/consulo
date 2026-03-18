@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -153,7 +154,7 @@ public class QueueProcessor<T> {
     }
   }
 
-  public void add(T t, ModalityState state) {
+  public void add(T t, @Nullable ModalityState state) {
     synchronized (myQueue) {
       myModalityState.put(new MyOverrideEquals(t), state);
     }

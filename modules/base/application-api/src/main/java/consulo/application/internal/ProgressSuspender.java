@@ -37,11 +37,10 @@ public class ProgressSuspender implements AutoCloseable {
     private static final Key<ProgressSuspender> PROGRESS_SUSPENDER = Key.create("PROGRESS_SUSPENDER");
 
     private final Object myLock = new Object();
-    private static final Application ourApp = ApplicationManager.getApplication();
-    
+
     private final LocalizeValue mySuspendedText;
     
-    private LocalizeValue myTempReason;
+    private LocalizeValue myTempReason = LocalizeValue.empty();
     private final ProgressSuspenderListener myPublisher;
     private volatile boolean mySuspended;
     private final CheckCanceledHook myHook = this::freezeIfNeeded;
@@ -82,8 +81,7 @@ public class ProgressSuspender implements AutoCloseable {
         return new ProgressSuspender((ProgressIndicatorEx)indicator, suspendedText);
     }
 
-    @Nullable
-    public static ProgressSuspender getSuspender(ProgressIndicator indicator) {
+    public static @Nullable ProgressSuspender getSuspender(ProgressIndicator indicator) {
         return indicator instanceof UserDataHolder ? ((UserDataHolder)indicator).getUserData(PROGRESS_SUSPENDER) : null;
     }
 
@@ -131,7 +129,7 @@ public class ProgressSuspender implements AutoCloseable {
             }
 
             mySuspended = false;
-            myTempReason = null;
+            myTempReason = LocalizeValue.empty();
 
             ((SuspenderProgressManager)ProgressManager.getInstance()).removeCheckCanceledHook(myHook);
 
@@ -142,7 +140,7 @@ public class ProgressSuspender implements AutoCloseable {
     }
 
     private boolean freezeIfNeeded(@Nullable ProgressIndicator current) {
-        if (current == null || !myProgresses.contains(current) || ourApp.isReadAccessAllowed()) {
+        if (current == null || !myProgresses.contains(current) || Application.get().isReadAccessAllowed()) {
             return false;
         }
 

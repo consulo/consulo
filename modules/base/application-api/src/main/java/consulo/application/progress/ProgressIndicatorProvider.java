@@ -36,8 +36,7 @@ public abstract class ProgressIndicatorProvider {
     doCheckCanceled();
   }
 
-  @Nullable
-  public static ProgressIndicator getGlobalProgressIndicator() {
+  public static @Nullable ProgressIndicator getGlobalProgressIndicator() {
     return getInstance().getProgressIndicator();
   }
 

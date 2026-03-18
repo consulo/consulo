@@ -39,8 +39,11 @@ public abstract class JobLauncher {
    * or we were unable to start read action in at least one thread
    * @throws ProcessCanceledException if at least one task has thrown ProcessCanceledException
    */
-  public abstract <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, Predicate<? super T> thingProcessor)
-          throws ProcessCanceledException;
+  public abstract <T> boolean invokeConcurrentlyUnderProgress(
+    List<? extends T> things,
+    ProgressIndicator progress,
+    Predicate<? super T> thingProcessor
+  ) throws ProcessCanceledException;
 
   /**
    * Schedules concurrent execution of #thingProcessor over each element of #things and waits for completion
@@ -58,23 +61,33 @@ public abstract class JobLauncher {
    * @deprecated use {@link #invokeConcurrentlyUnderProgress(List, ProgressIndicator, Predicate)} instead
    */
   @Deprecated
-  public <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things, ProgressIndicator progress, boolean failFastOnAcquireReadAction, Predicate<? super T> thingProcessor)
-          throws ProcessCanceledException {
-    return invokeConcurrentlyUnderProgress(things, progress, ApplicationManager.getApplication().isReadAccessAllowed(), failFastOnAcquireReadAction, thingProcessor);
+  public <T> boolean invokeConcurrentlyUnderProgress(
+    List<? extends T> things,
+    ProgressIndicator progress,
+    boolean failFastOnAcquireReadAction,
+    Predicate<? super T> thingProcessor
+  ) throws ProcessCanceledException {
+    return invokeConcurrentlyUnderProgress(
+      things,
+      progress,
+      Application.get().isReadAccessAllowed(),
+      failFastOnAcquireReadAction,
+      thingProcessor
+    );
   }
 
-
-  public abstract <T> boolean invokeConcurrentlyUnderProgress(List<? extends T> things,
-                                                              ProgressIndicator progress,
-                                                              boolean runInReadAction,
-                                                              boolean failFastOnAcquireReadAction,
-                                                              Predicate<? super T> thingProcessor) throws ProcessCanceledException;
+  public abstract <T> boolean invokeConcurrentlyUnderProgress(
+    List<? extends T> things,
+    ProgressIndicator progress,
+    boolean runInReadAction,
+    boolean failFastOnAcquireReadAction,
+    Predicate<? super T> thingProcessor
+  ) throws ProcessCanceledException;
 
   /**
    * NEVER EVER submit runnable which can lock itself for indeterminate amount of time.
    * This will cause deadlock since this thread pool is an easily exhaustible resource.
    * Use {@link Application#executeOnPooledThread(Runnable)} instead
    */
-  
   public abstract Job<Void> submitToJobThread(Runnable action, @Nullable Consumer<? super Future<?>> onDoneCallback);
 }

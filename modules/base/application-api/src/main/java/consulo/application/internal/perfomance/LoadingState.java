@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.internal.perfomance;
 
-import consulo.util.lang.Comparing;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,6 @@ public enum LoadingState {
     this.displayName = displayName;
   }
 
-  
   static Logger getLogger() {
     return Logger.getInstance(LoadingState.class);
   }
@@ -39,19 +39,26 @@ public enum LoadingState {
 
   private final static Set<Throwable> stackTraces = Sets.newHashSet(new HashingStrategy<Throwable>() {
     @Override
-    public int hashCode(Throwable throwable) {
-      return getCollect(throwable).hashCode();
+    public int hashCode(@Nullable Throwable throwable) {
+      return throwable == null ? 0 : getCollect(throwable).hashCode();
     }
 
     private String getCollect(Throwable throwable) {
-      return Arrays.stream(throwable.getStackTrace()).map(element -> element.getClassName() + element.getMethodName()).collect(Collectors.joining());
+      return Arrays.stream(throwable.getStackTrace())
+          .map(element -> element.getClassName() + element.getMethodName())
+          .collect(Collectors.joining());
     }
 
     @Override
-    public boolean equals(Throwable o1, Throwable o2) {
-      if (o1 == o2) return true;
-      if (o1 == null || o2 == null) return false;
-      return Comparing.equal(getCollect(o1), getCollect(o2));
+    @SuppressWarnings("SimplifiableIfStatement")
+    public boolean equals(@Nullable Throwable o1, @Nullable Throwable o2) {
+      if (o1 == o2) {
+        return true;
+      }
+      if (o1 == null || o2 == null) {
+        return false;
+      }
+      return Objects.equals(getCollect(o1), getCollect(o2));
     }
   });
 
@@ -60,7 +67,7 @@ public enum LoadingState {
       return;
     }
 
-    LoadingState currentState = StartUpMeasurer.currentState.get();
+    LoadingState currentState = Objects.requireNonNull(Objects.requireNonNull(StartUpMeasurer.currentState).get());
     if (currentState.ordinal() >= ordinal() || isKnownViolator()) {
       return;
     }
@@ -71,14 +78,19 @@ public enum LoadingState {
         return;
       }
 
-      getLogger().error("Should be called at least in the state " + this + ", the current state is: " + currentState + "\n" + "Current violators count: " + stackTraces.size() + "\n\n", t);
+      getLogger().error(
+          "Should be called at least in the state " + this + ", the current state is: " + currentState + "\n" +
+              "Current violators count: " + stackTraces.size() + "\n\n",
+          t
+      );
     }
   }
 
   private static boolean isKnownViolator() {
     for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
       String className = element.getClassName();
-      if (className.contains("consulo.ide.impl.idea.util.indexing.IndexInfrastructure") || className.contains("com.intellij.psi.impl.search.IndexPatternSearcher")) {
+      if (className.contains("consulo.ide.impl.idea.util.indexing.IndexInfrastructure")
+          || className.contains("com.intellij.psi.impl.search.IndexPatternSearcher")) {
         return true;
       }
     }
@@ -86,6 +98,6 @@ public enum LoadingState {
   }
 
   public boolean isOccurred() {
-    return StartUpMeasurer.currentState.get().ordinal() >= ordinal();
+    return Objects.requireNonNull(StartUpMeasurer.currentState.get()).ordinal() >= ordinal();
   }
 }

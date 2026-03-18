@@ -28,28 +28,28 @@ public class TooManyUsagesStatus {
   private static final Key<TooManyUsagesStatus> KEY = Key.create("TooManyUsagesStatus");
   private static final Null NULL = new Null();
 
-  
   public static TooManyUsagesStatus getFrom(@Nullable ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
-    if (indicator instanceof UserDataHolder) {
-      data = ((UserDataHolder)indicator).getUserData(KEY);
+    if (indicator instanceof UserDataHolder userDataHolder) {
+      data = userDataHolder.getUserData(KEY);
     }
     if (data == null) data = NULL;
     return data;
   }
-  public static TooManyUsagesStatus createFor(ProgressIndicator indicator) {
+
+  public static @Nullable TooManyUsagesStatus createFor(ProgressIndicator indicator) {
     TooManyUsagesStatus data = null;
-    if (indicator instanceof UserDataHolder) {
+    if (indicator instanceof UserDataHolder userDataHolder) {
       data = new TooManyUsagesStatus();
-      ((UserDataHolder)indicator).putUserData(KEY, data);
+      userDataHolder.putUserData(KEY, data);
     }
     return data;
   }
 
   // return true if dialog needs to be shown
   public boolean switchTooManyUsagesStatus() {
-    return tooManyUsagesStatus.get() == Status.FEW_USAGES &&
-           tooManyUsagesStatus.compareAndSet(Status.FEW_USAGES, Status.WARNING_DIALOG_SHOWN);
+    return tooManyUsagesStatus.get() == Status.FEW_USAGES
+        && tooManyUsagesStatus.compareAndSet(Status.FEW_USAGES, Status.WARNING_DIALOG_SHOWN);
   }
 
   public void userResponded() {

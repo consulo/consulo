@@ -28,8 +28,7 @@ import java.util.function.Consumer;
  * from kotlin
  */
 public class ExpirationUtil {
-  @Nullable
-  static Expiration composeExpiration(Collection<? extends Expiration> expirations) {
+  static @Nullable Expiration composeExpiration(Collection<? extends Expiration> expirations) {
     int size = expirations.size();
     if (size == 0) {
       return null;

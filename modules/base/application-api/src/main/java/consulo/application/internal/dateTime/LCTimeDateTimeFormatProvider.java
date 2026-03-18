@@ -17,6 +17,7 @@ package consulo.application.internal.dateTime;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.platform.Platform;
+import org.jspecify.annotations.Nullable;
 
 import java.text.DateFormat;
 import java.util.Locale;
@@ -28,15 +29,21 @@ import java.util.Locale;
 @ExtensionImpl(order = "last")
 public class LCTimeDateTimeFormatProvider implements DateTimeFormatProvider {
     @Override
-    public DateFormat[] getFormats(Platform platform) {
+    public DateFormat @Nullable [] getFormats(Platform platform) {
         String localeStr = platform.os().getEnvironmentVariable("LC_TIME");
-        if (localeStr == null) return null;
+        if (localeStr == null) {
+            return null;
+        }
 
         localeStr = localeStr.trim();
         int p = localeStr.indexOf('.');
-        if (p > 0) localeStr = localeStr.substring(0, p);
+        if (p > 0) {
+            localeStr = localeStr.substring(0, p);
+        }
         p = localeStr.indexOf('@');
-        if (p > 0) localeStr = localeStr.substring(0, p);
+        if (p > 0) {
+            localeStr = localeStr.substring(0, p);
+        }
 
         Locale locale;
         p = localeStr.indexOf('_');

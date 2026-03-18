@@ -49,16 +49,13 @@ public abstract class TypePresentationProvider<T> {
   
   public abstract Class<T> getItemClass();
 
-  @Nullable
-  public String getName(T t) {
+  public @Nullable String getName(T t) {
     return t.toString();
   }
 
-  @Nullable
-  public String getTypeName(T t) {
+  public @Nullable String getTypeName(T t) {
     return t.toString();
   }
 
-  @Nullable
-  public abstract Image getIcon(T t);
+  public abstract @Nullable Image getIcon(T t);
 }

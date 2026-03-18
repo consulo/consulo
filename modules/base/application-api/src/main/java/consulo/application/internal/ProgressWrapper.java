@@ -56,26 +56,24 @@ public class ProgressWrapper extends AbstractProgressIndicatorBase implements Wr
   }
 
   @Override
-  
   public ProgressIndicator getOriginalProgressIndicator() {
     return myOriginal;
   }
 
   @Contract(value = "null -> null; !null -> !null", pure = true)
-  public static ProgressWrapper wrap(@Nullable ProgressIndicator indicator) {
-    return indicator == null || indicator instanceof ProgressWrapper ? (ProgressWrapper)indicator : new ProgressWrapper(indicator);
+  public static @Nullable ProgressWrapper wrap(@Nullable ProgressIndicator indicator) {
+    return indicator == null ? null
+        : indicator instanceof ProgressWrapper progressWrapper ? progressWrapper : new ProgressWrapper(indicator);
   }
 
   @Contract(value = "null -> null; !null -> !null", pure = true)
-  public static ProgressIndicator unwrap(ProgressIndicator indicator) {
-    return indicator instanceof ProgressWrapper ?
-           ((ProgressWrapper)indicator).getOriginalProgressIndicator() : indicator;
+  public static @Nullable ProgressIndicator unwrap(ProgressIndicator indicator) {
+    return indicator instanceof ProgressWrapper progressWrapper ? progressWrapper.getOriginalProgressIndicator() : indicator;
   }
 
-  
   public static ProgressIndicator unwrapAll(ProgressIndicator indicator) {
-    while (indicator instanceof ProgressWrapper) {
-      indicator = ((ProgressWrapper)indicator).getOriginalProgressIndicator();
+    while (indicator instanceof ProgressWrapper progressWrapper) {
+      indicator = progressWrapper.getOriginalProgressIndicator();
     }
     return indicator;
   }

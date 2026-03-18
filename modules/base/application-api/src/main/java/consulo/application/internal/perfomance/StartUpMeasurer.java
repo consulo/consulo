@@ -141,7 +141,7 @@ public final class StartUpMeasurer {
     return duration;
   }
 
-  public static void addCompletedActivity(long start, long end, String name, ActivityCategory category, String pluginId) {
+  public static void addCompletedActivity(long start, long end, String name, ActivityCategory category, @Nullable String pluginId) {
     if (!isEnabled) {
       return;
     }

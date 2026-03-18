@@ -54,8 +54,7 @@ import org.jspecify.annotations.Nullable;
  * @see DumbAware
  */
 public class IndexNotReadyException extends RuntimeException implements ExceptionWithAttachments {
-  @Nullable
-  private final Throwable myStartTrace;
+  private final @Nullable Throwable myStartTrace;
 
   // constructor is private to not let ForkJoinTask.getThrowableException() clone this by reflection causing invalid nesting etc
   private IndexNotReadyException(@Nullable Throwable startTrace) {
@@ -63,18 +62,15 @@ public class IndexNotReadyException extends RuntimeException implements Exceptio
     myStartTrace = startTrace;
   }
 
-  
   @Override
   public Attachment[] getAttachments() {
     return myStartTrace == null ? Attachment.EMPTY_ARRAY : new Attachment[]{AttachmentFactory.get().create("indexingStart", myStartTrace)};
   }
 
-  
   public static IndexNotReadyException create() {
     return create(null);
   }
 
-  
   public static IndexNotReadyException create(@Nullable Throwable startTrace) {
     return new IndexNotReadyException(startTrace);
   }
