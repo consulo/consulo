@@ -22,12 +22,12 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.reflect.ReflectionUtil;
 
 import java.util.function.Supplier;
 
 public final class WriteAction {
-    
     @Deprecated
     @DeprecationInfo("Use AccessRule.writeAsync()")
     public static AccessToken start() {
@@ -36,13 +36,14 @@ public final class WriteAction {
         return start(aClass);
     }
 
-    
     @Deprecated
     @DeprecationInfo("Use AccessRule.writeAsync()")
+    @RequiredUIAccess
     public static AccessToken start(Class clazz) {
-        return ApplicationManager.getApplication().acquireWriteActionLock(clazz);
+        return Application.get().acquireWriteActionLock(clazz);
     }
 
+    @RequiredUIAccess
     public static void runAndWait(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {
         Application application = Application.get();
         if (application.isDispatchThread()) {
@@ -54,6 +55,7 @@ public final class WriteAction {
         }
     }
 
+    @RequiredUIAccess
     public static <T> T computeAndWait(@RequiredUIAccess @RequiredWriteAction Supplier<T> supplier) {
         Application application = Application.get();
         if (application.isDispatchThread()) {
@@ -65,6 +67,7 @@ public final class WriteAction {
         }
     }
 
+    @RequiredUIAccess
     public static <E extends Throwable> void run(ThrowableRunnable<E> action) throws E {
         compute(() -> {
             action.run();
@@ -72,9 +75,9 @@ public final class WriteAction {
         });
     }
 
-    public static <T, E extends Throwable> T compute(ThrowableComputable<T, E> action) throws E {
-        Application application = Application.get();
-        return application.runWriteAction(action);
+    @RequiredUIAccess
+    public static <T, E extends Throwable> T compute(ThrowableSupplier<T, E> action) throws E {
+        return Application.get().runWriteAction(action);
     }
 
     public static void runLater(@RequiredUIAccess @RequiredWriteAction Runnable runnable) {

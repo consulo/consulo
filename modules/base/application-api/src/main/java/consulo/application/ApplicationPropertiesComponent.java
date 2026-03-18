@@ -19,14 +19,12 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.PropertiesComponent;
 
-
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface ApplicationPropertiesComponent extends PropertiesComponent {
-  
   static ApplicationPropertiesComponent getInstance() {
     return Application.get().getInstance(ApplicationPropertiesComponent.class);
   }

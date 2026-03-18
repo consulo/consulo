@@ -1,11 +1,14 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.application;
 
+import consulo.application.localize.ApplicationLocalize;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.proxy.EventDispatcher;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,26 +34,26 @@ public final class HeavyProcessLatch {
    * Approximate type of heavy operation. Used in {@link TrafficLightRenderer} UI as brief description.
    */
   public enum Type {
-    Indexing("heavyProcess.type.indexing"),
-    Syncing("heavyProcess.type.syncing"),
-    Processing("heavyProcess.type.processing");
+    Indexing(ApplicationLocalize.heavyprocessTypeIndexing()),
+    Syncing(ApplicationLocalize.heavyprocessTypeSyncing()),
+    Processing(ApplicationLocalize.heavyprocessTypeProcessing());
 
-    private final String bundleKey;
+    private final LocalizeValue myDisplayName;
 
-    Type(String bundleKey) {
-      this.bundleKey = bundleKey;
+    Type(LocalizeValue displayName) {
+      this.myDisplayName = displayName;
     }
 
     @Override
     public String toString() {
-      return ApplicationBundle.message(bundleKey);
-    }}
+      return myDisplayName.get();
+    }
+  }
 
   /**
    * @deprecated use {@link #performOperation} instead
    */
   @Deprecated
-  
   public AccessToken processStarted(String displayName) {
     Op op = new Op(Type.Processing, displayName);
     myHeavyProcesses.add(op);
@@ -118,10 +121,11 @@ public final class HeavyProcessLatch {
     return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() != type);
   }
 
-  /**heavyProcessIsRunning
+  /**
+   * heavyProcessIsRunning
    * @return heavy operation currently running, if any, in undefined order
    */
-  public Operation getAnyRunningOperation() {
+  public @Nullable Operation getAnyRunningOperation() {
     Iterator<Operation> iterator = myHeavyProcesses.iterator();
     return iterator.hasNext() ? iterator.next() : null;
   }
@@ -129,7 +133,6 @@ public final class HeavyProcessLatch {
   /**
    * @return all heavy operations currently running, in undefined order, or an empty collection
    */
-  
   public Collection<Operation> getRunningOperations() {
     return new ArrayList<>(myHeavyProcesses);
   }
@@ -143,11 +146,8 @@ public final class HeavyProcessLatch {
   }
 
   public interface Operation {
-    
     Type getType();
 
-    
-    
     String getDisplayName();
   }
 
@@ -169,10 +169,7 @@ public final class HeavyProcessLatch {
 
   private static final class Op implements Operation {
     private final Type myType;
-    private final
-    
-    
-    String myDisplayName;
+    private final String myDisplayName;
 
     Op(Type type, String displayName) {
       myType = type;
@@ -180,17 +177,12 @@ public final class HeavyProcessLatch {
     }
 
     @Override
-    public
-    
-    Type getType() {
+    public Type getType() {
       return myType;
     }
 
     @Override
-    public
-    
-    
-    String getDisplayName() {
+    public String getDisplayName() {
       return myDisplayName;
     }
   }

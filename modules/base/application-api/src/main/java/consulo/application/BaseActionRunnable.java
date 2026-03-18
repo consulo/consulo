@@ -15,11 +15,7 @@
  */
 package consulo.application;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-
 public abstract class BaseActionRunnable<T> {
-
   private boolean mySilentExecution;
 
   public boolean isSilentExecution() {
@@ -39,7 +35,7 @@ public abstract class BaseActionRunnable<T> {
   }
 
   protected Application getApplication() {
-    return ApplicationManager.getApplication();
+    return Application.get();
   }
 
   /** Same as execute() but do not log error if exception occurred. */

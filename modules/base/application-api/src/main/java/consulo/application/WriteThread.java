@@ -1,8 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application;
 
-import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -34,11 +34,11 @@ public final class WriteThread {
    * @return a future representing the result of the scheduled computation
    */
   
-  public static <T> Future<T> submit(ThrowableComputable<? extends T, ?> computable) {
+  public static <T> Future<T> submit(ThrowableSupplier<? extends T, ?> computable) {
     CompletableFuture<T> future = new CompletableFuture<>();
-    ApplicationManager.getApplication().invokeLaterOnWriteThread(() -> {
+    Application.get().invokeLaterOnWriteThread(() -> {
       try {
-        future.complete(computable.compute());
+        future.complete(computable.get());
       }
       catch (Throwable t) {
         future.completeExceptionally(t);

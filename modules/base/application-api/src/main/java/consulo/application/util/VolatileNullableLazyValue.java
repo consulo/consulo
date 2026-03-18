@@ -17,16 +17,13 @@ import java.util.function.Supplier;
 @DeprecationInfo("Use LazyValue")
 public abstract class VolatileNullableLazyValue<T> extends NullableLazyValue<T> {
   private volatile boolean myComputed;
-  @Nullable
-  private volatile T myValue;
+  private volatile @Nullable T myValue;
 
   @Override
-  @Nullable
-  protected abstract T compute();
+  protected abstract @Nullable T compute();
 
   @Override
-  @Nullable
-  public T getValue() {
+  public @Nullable T getValue() {
     boolean computed = myComputed;
     T value = myValue;
     if (!computed) {
@@ -49,13 +46,10 @@ public abstract class VolatileNullableLazyValue<T> extends NullableLazyValue<T> 
   
   public static <T> VolatileNullableLazyValue<T> createValue(final Supplier<? extends T> value) {
     return new VolatileNullableLazyValue<T>() {
-
-      @Nullable
       @Override
-      protected T compute() {
+      protected @Nullable T compute() {
         return value.get();
       }
     };
   }
-
 }

@@ -17,12 +17,12 @@ package consulo.application;
 
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
+import org.jspecify.annotations.Nullable;
 
 public class RunResult<T> extends Result<T> {
+  private @Nullable BaseActionRunnable<T> myActionRunnable;
 
-  private BaseActionRunnable<T> myActionRunnable;
-
-  private Throwable myThrowable;
+  private @Nullable Throwable myThrowable;
 
   protected RunResult() {
   }
@@ -32,22 +32,26 @@ public class RunResult<T> extends Result<T> {
   }
 
   public RunResult<T> run() {
+    if (myActionRunnable == null) {
+      throw new IllegalStateException("Can only run once");
+    }
+
     try {
       myActionRunnable.run(this);
     }
     catch (ProcessCanceledException e) {
-      throw e; // this exception may occur from time to time and it shouldn't be catched
+      throw e; // this exception may occur from time to time and it shouldn't be caught
     }
     catch (Throwable throwable) {
       myThrowable = throwable;
       if (!myActionRunnable.isSilentExecution()) {
-        if (throwable instanceof RuntimeException) throw (RuntimeException)throwable;
-        if (throwable instanceof Error) {
-          throw (Error)throwable;
+        if (throwable instanceof RuntimeException re) {
+          throw re;
         }
-        else {
-          throw new RuntimeException(myThrowable);
+        else if (throwable instanceof Error error) {
+          throw error;
         }
+        throw new RuntimeException(myThrowable);
       }
     }
     finally {
@@ -57,7 +61,7 @@ public class RunResult<T> extends Result<T> {
     return this;
   }
 
-  public T getResultObject() {
+  public @Nullable T getResultObject() {
     return myResult;
   }
 
@@ -71,13 +75,12 @@ public class RunResult<T> extends Result<T> {
 
   public RunResult<T> throwException() throws RuntimeException, Error {
     if (hasException()) {
-      if (myThrowable instanceof RuntimeException) {
-        throw (RuntimeException)myThrowable;
+      if (myThrowable instanceof RuntimeException re) {
+        throw re;
       }
-      if (myThrowable instanceof Error) {
-        throw (Error)myThrowable;
+      else if (myThrowable instanceof Error error) {
+        throw error;
       }
-
       throw new RuntimeException(myThrowable);
     }
     return this;
@@ -87,7 +90,7 @@ public class RunResult<T> extends Result<T> {
     return myThrowable != null;
   }
 
-  public Throwable getThrowable() {
+  public @Nullable Throwable getThrowable() {
     return myThrowable;
   }
 
